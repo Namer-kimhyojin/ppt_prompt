@@ -1,0 +1,15 @@
+{
+  "name": "promptdeck",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:server": "node server/local-server.js",
+    "dev:mock": "node server/start-mock.js",
+    "dev:pollinations": "node server/start-pollinations.js",
+    "dev:gemini": "node server/start-gemini.js",
+    "smoke:test": "node scripts/smoke-test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.54.2"
+  }
+}

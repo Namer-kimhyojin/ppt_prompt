@@ -1,0 +1,7 @@
+node_modules/
+outputs/*
+!outputs/.gitkeep
+server/config.local.js
+.env
+.env.*
+
