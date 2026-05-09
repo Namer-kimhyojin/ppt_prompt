@@ -2,7 +2,7 @@
   const CONFIG_KEY = "promptdeck_image_config";
 
   const DEFAULT_CONFIG = {
-    provider: "pollinations",
+    provider: "mock",
     googleApiKey: "",
     openaiApiKey: "",
   };

@@ -15,7 +15,10 @@
     els.healthBtn = document.getElementById("slideImageHealthBtn");
     els.loadPromptBtn = document.getElementById("slideImageLoadPromptBtn");
     els.loadDeckBtn = document.getElementById("slideImageLoadDeckBtn");
+    els.useMockBtn = document.getElementById("slideImageUseMockBtn");
     els.generateBtn = document.getElementById("slideImageGenerateBtn");
+    els.clearPromptBtn = document.getElementById("slideImageClearPromptBtn");
+    els.resetResultBtn = document.getElementById("slideImageResetResultBtn");
     els.startQueueBtn = document.getElementById("slideImageStartQueueBtn");
     els.pauseQueueBtn = document.getElementById("slideImagePauseQueueBtn");
     els.resumeQueueBtn = document.getElementById("slideImageResumeQueueBtn");
@@ -23,6 +26,7 @@
     els.delayMs = document.getElementById("slideImageDelayMs");
     els.maxRetries = document.getElementById("slideImageMaxRetries");
     els.queueSummary = document.getElementById("slideImageQueueSummary");
+    els.queueProgress = document.getElementById("slideImageQueueProgress");
     els.jobList = document.getElementById("slideImageJobList");
     els.title = document.getElementById("slideImageTitle");
     els.prompt = document.getElementById("slideImagePrompt");
@@ -38,6 +42,50 @@
     els.clearGalleryBtn = document.getElementById("slideImageClearGalleryBtn");
   }
 
+  function ensureUsabilityControls() {
+    const primaryActions = document.getElementById("slideImageGenerateBtn")?.closest(".slide-image-actions");
+    if (primaryActions && !document.getElementById("slideImageUseMockBtn")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "gen-btn secondary";
+      button.id = "slideImageUseMockBtn";
+      button.textContent = "목업으로 테스트";
+      primaryActions.appendChild(button);
+    }
+
+    if (primaryActions && !document.querySelector(".slide-image-workflow")) {
+      const workflow = document.createElement("div");
+      workflow.className = "slide-image-workflow";
+      workflow.setAttribute("aria-label", "이미지 생성 순서");
+      workflow.innerHTML = `
+        <div class="slide-image-step"><b>1</b><span>모드 확인</span></div>
+        <div class="slide-image-step"><b>2</b><span>프롬프트 선택</span></div>
+        <div class="slide-image-step"><b>3</b><span>결과 확인</span></div>
+      `;
+      primaryActions.insertAdjacentElement("afterend", workflow);
+    }
+
+    const promptField = document.getElementById("slideImagePrompt")?.closest(".gen-field");
+    if (promptField && !document.getElementById("slideImageClearPromptBtn")) {
+      const actions = document.createElement("div");
+      actions.className = "slide-image-actions compact";
+      actions.innerHTML = `
+        <button type="button" class="gen-btn ghost" id="slideImageClearPromptBtn">프롬프트 비우기</button>
+        <button type="button" class="gen-btn ghost" id="slideImageResetResultBtn">결과 초기화</button>
+      `;
+      promptField.insertAdjacentElement("afterend", actions);
+    }
+
+    const queueHead = document.querySelector(".slide-image-queue-head");
+    if (queueHead && !document.getElementById("slideImageQueueProgress")) {
+      const progress = document.createElement("div");
+      progress.className = "slide-image-progress";
+      progress.setAttribute("aria-hidden", "true");
+      progress.innerHTML = '<div id="slideImageQueueProgress"></div>';
+      queueHead.insertAdjacentElement("afterend", progress);
+    }
+  }
+
   function setStatus(message, type = "") {
     if (!els.status) return;
     els.status.textContent = message;
@@ -46,7 +94,7 @@
   }
 
   function setBusy(isBusy) {
-    [els.healthBtn, els.loadPromptBtn, els.loadDeckBtn, els.generateBtn, els.startQueueBtn].forEach((button) => {
+    [els.healthBtn, els.loadPromptBtn, els.loadDeckBtn, els.useMockBtn, els.generateBtn, els.startQueueBtn].forEach((button) => {
       if (button) button.disabled = isBusy;
     });
   }
@@ -84,6 +132,15 @@
   function renderQueue(snapshot = queue?.snapshot()) {
     if (!snapshot) return;
     if (els.queueSummary) els.queueSummary.textContent = summarizeJobs(snapshot.jobs);
+    if (els.queueProgress) {
+      const done = snapshot.jobs.filter((job) => job.status === "done").length;
+      const failed = snapshot.jobs.filter((job) => job.status === "failed").length;
+      const total = snapshot.jobs.length || 1;
+      els.queueProgress.style.width = `${Math.round(((done + failed) / total) * 100)}%`;
+    }
+    if (els.pauseQueueBtn) els.pauseQueueBtn.disabled = snapshot.status !== "running";
+    if (els.resumeQueueBtn) els.resumeQueueBtn.disabled = snapshot.status !== "paused";
+    if (els.stopQueueBtn) els.stopQueueBtn.disabled = !["running", "paused"].includes(snapshot.status);
     if (!els.jobList) return;
 
     if (!snapshot.jobs.length) {
@@ -130,6 +187,7 @@
     const cfg = client.loadConfig ? client.loadConfig() : {};
     serverMode = cfg.provider || "pollinations";
     if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[serverMode] || serverMode;
+    if (els.generateBtn) els.generateBtn.textContent = serverMode === "mock" ? "목업 이미지 생성" : "이미지 생성";
     syncProviderSelect(serverMode);
     setStatus(`준비 완료 · ${PROVIDER_LABELS[serverMode] || serverMode}`, "ok");
   }
@@ -154,9 +212,19 @@
     await client.setConfig({ provider, googleApiKey, openaiApiKey });
     serverMode = provider;
     if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[provider] || provider;
+    if (els.generateBtn) els.generateBtn.textContent = provider === "mock" ? "목업 이미지 생성" : "이미지 생성";
     setStatus(`서비스가 ${PROVIDER_LABELS[provider] || provider}(으)로 변경되었습니다.`, "ok");
     document.getElementById("slideImageConfigBody").hidden = true;
     document.getElementById("slideImageConfigToggle").textContent = "설정 열기";
+  }
+
+  async function switchToMockMode() {
+    await client.setConfig({ provider: "mock" });
+    serverMode = "mock";
+    syncProviderSelect("mock");
+    if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS.mock;
+    if (els.generateBtn) els.generateBtn.textContent = "목업 이미지 생성";
+    setStatus("목업 테스트 모드로 전환했습니다. Google 쿼터와 무관하게 테스트할 수 있습니다.", "ok");
   }
 
   function loadCurrentPrompt() {
@@ -204,6 +272,20 @@
     if (els.nextBtn) els.nextBtn.disabled = galleryIndex >= total - 1;
     if (els.clearGalleryBtn) els.clearGalleryBtn.disabled = total === 0;
     if (els.openFolderBtn) els.openFolderBtn.disabled = total === 0;
+  }
+
+  function clearPrompt() {
+    if (els.prompt) els.prompt.value = "";
+    setStatus("프롬프트 입력을 비웠습니다.");
+  }
+
+  function clearGallery() {
+    gallery.length = 0;
+    galleryIndex = -1;
+    if (els.preview) els.preview.innerHTML = "<span>아직 생성된 이미지가 없습니다.</span>";
+    if (els.meta) els.meta.textContent = "";
+    if (els.resultBadge) els.resultBadge.textContent = "결과 없음";
+    updateGalleryNav();
   }
 
   function renderGalleryItem(index) {
@@ -291,10 +373,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    ensureUsabilityControls();
     bindElements();
     if (!els.generateBtn) return;
     setupQueue();
     if (els.healthBtn) els.healthBtn.addEventListener("click", checkServer);
+    if (els.useMockBtn) els.useMockBtn.addEventListener("click", switchToMockMode);
     els.loadPromptBtn.addEventListener("click", loadCurrentPrompt);
     els.loadDeckBtn.addEventListener("click", loadDeckPrompts);
     els.generateBtn.addEventListener("click", generateImage);
@@ -302,6 +386,8 @@
     els.pauseQueueBtn.addEventListener("click", () => queue.pause());
     els.resumeQueueBtn.addEventListener("click", () => queue.resume());
     els.stopQueueBtn.addEventListener("click", () => queue.stop());
+    if (els.clearPromptBtn) els.clearPromptBtn.addEventListener("click", clearPrompt);
+    if (els.resetResultBtn) els.resetResultBtn.addEventListener("click", clearGallery);
 
     // 설정 패널 토글
     const configToggle = document.getElementById("slideImageConfigToggle");
@@ -353,14 +439,7 @@
 
     // 갤러리 초기화
     if (els.clearGalleryBtn) {
-      els.clearGalleryBtn.addEventListener("click", () => {
-        gallery.length = 0;
-        galleryIndex = -1;
-        if (els.preview) els.preview.innerHTML = "<span>아직 생성된 이미지가 없습니다.</span>";
-        if (els.meta) els.meta.textContent = "";
-        if (els.resultBadge) els.resultBadge.textContent = "결과 없음";
-        updateGalleryNav();
-      });
+      els.clearGalleryBtn.addEventListener("click", clearGallery);
     }
 
     updateGalleryNav();
