@@ -3336,12 +3336,12 @@
       ...koreanTextConstraint,
       ...(activeAntiAiPreset
         ? [localizeSentence(
-            `비주얼 스타일 프리셋(${activeAntiAiPreset.labelKo}): ${activeAntiAiPreset.visualHintKo}`,
-            `Visual style preset (${activeAntiAiPreset.labelEn}): ${activeAntiAiPreset.visualHintEn}`
+            `스타일 제약(${activeAntiAiPreset.labelKo}): ${activeAntiAiPreset.visualHintKo}로 렌더링하라`,
+            `Style constraint (${activeAntiAiPreset.labelEn}): render in ${activeAntiAiPreset.visualHintEn}`
           )]
         : []),
       ...validation.errors.map((item) => localizeValue(item)),
-      ...mergedForbiddenTokens.map((item) => `${localizeSentence("금지", "Avoid")}: ${localizeValue(item)}`),
+      ...mergedForbiddenTokens.map((item) => `${localizeSentence("절대 금지", "Strictly avoid")}: ${localizeValue(item)}`),
     ]);
 
     const directTextLines = prunePromptLines(

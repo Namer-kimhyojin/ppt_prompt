@@ -739,28 +739,6 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <button type="button" class="btn-quick">에디토리얼 광고형</button>
                 </div>
                 <textarea id="promotionVisualStyle" class="gen-textarea" rows="4" data-promo-field="visualStyle" placeholder="예: 대담한 타이포, 정돈된 카드형 정보 블록, 산업적 메탈 질감"></textarea>
-
-                <div class="anti-ai-preset-panel">
-                  <div class="anti-ai-preset-header">
-                    <span class="anti-ai-preset-title">AI 느낌 억제</span>
-                    <span class="anti-ai-preset-desc">선택 시 해당 스타일 금지어가 프롬프트에 자동 삽입됩니다</span>
-                    <span class="anti-ai-active-badge" id="antiAiActiveBadge" style="display:none"></span>
-                  </div>
-                  <div class="anti-ai-preset-btns">
-                    <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="flat_vector" aria-pressed="false">
-                      <span class="anti-ai-preset-btn-label">플랫 / 벡터</span>
-                      <span class="anti-ai-preset-btn-desc">기어·회로 콜라주 금지 · 단순 아이콘</span>
-                    </button>
-                    <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="photo_real" aria-pressed="false">
-                      <span class="anti-ai-preset-btn-label">실사 / 사진</span>
-                      <span class="anti-ai-preset-btn-desc">AI 합성 금지 · 실제 촬영 사진 무드</span>
-                    </button>
-                    <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="minimal_typo" aria-pressed="false">
-                      <span class="anti-ai-preset-btn-label">미니멀 / 타이포</span>
-                      <span class="anti-ai-preset-btn-desc">복잡한 오브젝트 금지 · 타이포+여백</span>
-                    </button>
-                  </div>
-                </div>
               </section>
 
             </div>
@@ -923,6 +901,26 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <button type="button" class="btn-quick">과한 색상 남용</button>
               </div>
               <textarea id="promotionForbiddenElements" class="gen-textarea" rows="4" data-promo-field="forbiddenElements" placeholder="예: 과한 네온 효과, 장문 문단, 저해상도 스톡 느낌"></textarea>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label">AI 느낌 억제 <span class="promo-field-badge constraint">금지 규칙</span></label>
+              <p class="gen-config-guide">선택한 프리셋의 금지어와 비주얼 힌트가 프롬프트에 자동 삽입되어 AI 특유의 과도한 합성 느낌을 억제합니다. 중복 선택 시 마지막 선택이 적용됩니다.</p>
+              <div class="anti-ai-preset-btns">
+                <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="flat_vector" aria-pressed="false">
+                  <span class="anti-ai-preset-btn-label">플랫 / 벡터</span>
+                  <span class="anti-ai-preset-btn-desc">기어·회로 콜라주 금지 · 단순 아이콘</span>
+                </button>
+                <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="photo_real" aria-pressed="false">
+                  <span class="anti-ai-preset-btn-label">실사 / 사진</span>
+                  <span class="anti-ai-preset-btn-desc">AI 합성 금지 · 실제 촬영 사진 무드</span>
+                </button>
+                <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="minimal_typo" aria-pressed="false">
+                  <span class="anti-ai-preset-btn-label">미니멀 / 타이포</span>
+                  <span class="anti-ai-preset-btn-desc">복잡한 오브젝트 금지 · 타이포+여백</span>
+                </button>
+              </div>
+              <span class="anti-ai-active-badge" id="antiAiActiveBadge" style="display:none"></span>
             </section>
 
           </div><!-- /promo-common-fields constraints -->
@@ -1143,10 +1141,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </div>
             <div class="slide-image-config-body" id="slideImageConfigBody" hidden>
               <div class="slide-image-config-notice">
-                <strong>🔒 API 키는 내 브라우저에만 저장됩니다</strong>
+                <strong>🔒 API 키는 로컬 서버 런타임에만 적용됩니다</strong>
                 <ul>
-                  <li>입력한 API 키는 서버로 전송되지 않으며, 이 브라우저의 localStorage에만 보관됩니다.</li>
-                  <li>다른 기기나 다른 사람이 같은 URL로 접속해도 내 키는 공유되지 않습니다.</li>
+                  <li>입력한 API 키는 내 컴퓨터에서 실행 중인 로컬 서버에만 전달되며, GitHub에 저장되지 않습니다.</li>
+                  <li>서버를 재시작하면 화면에서 저장한 임시 설정은 초기화됩니다.</li>
                   <li><strong>Pollinations</strong>는 API 키 없이 무료로 사용할 수 있습니다.</li>
                 </ul>
               </div>
@@ -1165,7 +1163,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <input id="slideImageGoogleKey" class="gen-input-text" type="password" placeholder="AIza..." autocomplete="off" />
                   <button type="button" class="gen-btn ghost slide-image-key-toggle" data-target="slideImageGoogleKey">표시</button>
                 </div>
-                <p class="gen-hint">Google AI Studio에서 발급한 Gemini API 키를 입력합니다. 키는 이 브라우저의 localStorage에만 저장되며 외부로 전송되지 않습니다.</p>
+                <p class="gen-hint">Google AI Studio에서 발급한 Gemini API 키를 입력합니다. 비워두고 저장하면 기존 로컬 설정 키를 유지합니다.</p>
               </div>
               <div class="slide-image-config-row" id="slideImageOpenAIKeyRow" hidden>
                 <label class="slide-image-config-label" for="slideImageOpenAIKey">OpenAI API 키</label>
@@ -1173,7 +1171,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <input id="slideImageOpenAIKey" class="gen-input-text" type="password" placeholder="sk-..." autocomplete="off" />
                   <button type="button" class="gen-btn ghost slide-image-key-toggle" data-target="slideImageOpenAIKey">표시</button>
                 </div>
-                <p class="gen-hint">platform.openai.com에서 발급한 API 키를 입력합니다. 키는 이 브라우저의 localStorage에만 저장되며 외부로 전송되지 않습니다.</p>
+                <p class="gen-hint">platform.openai.com에서 발급한 API 키를 입력합니다. 비워두고 저장하면 기존 로컬 설정 키를 유지합니다.</p>
               </div>
               <div class="slide-image-config-actions">
                 <button type="button" class="gen-btn" id="slideImageSaveConfigBtn">설정 저장</button>
@@ -1217,6 +1215,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </div>
             <div class="slide-image-actions">
               <button type="button" class="gen-btn" id="slideImageStartQueueBtn">전체 순차 생성</button>
+              <button type="button" class="gen-btn secondary" id="slideImageRetryFailedBtn">실패 항목만 다시 생성</button>
               <button type="button" class="gen-btn secondary" id="slideImagePauseQueueBtn">일시정지</button>
               <button type="button" class="gen-btn secondary" id="slideImageResumeQueueBtn">재개</button>
               <button type="button" class="gen-btn ghost" id="slideImageStopQueueBtn">중지</button>
@@ -1244,7 +1243,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           </div>
           <div class="slide-image-result-meta" id="slideImageResultMeta"></div>
           <div class="slide-image-gallery-actions">
-            <button type="button" class="gen-btn secondary" id="slideImageOpenFolderBtn" disabled>다운로드 폴더 안내</button>
+            <button type="button" class="gen-btn secondary" id="slideImageOpenFolderBtn" disabled>outputs 폴더 열기</button>
             <button type="button" class="gen-btn ghost" id="slideImageClearGalleryBtn" disabled>갤러리 초기화</button>
           </div>
         </div>
