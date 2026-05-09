@@ -4,4 +4,7 @@ outputs/*
 server/config.local.js
 .env
 .env.*
+.playwright-mcp/
+backup/
+backups/
 

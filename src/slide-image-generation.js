@@ -126,20 +126,12 @@
     openai: "OpenAI DALL·E 3",
   };
 
-  async function checkServer() {
-    setBusy(true);
-    setStatus("로컬 서버 연결을 확인하는 중입니다.");
-    try {
-      const result = await client.checkImageGenerationServer();
-      serverMode = result.provider || "unknown";
-      if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[serverMode] || serverMode;
-      setStatus(`서버 연결 정상 · ${PROVIDER_LABELS[serverMode] || serverMode}`, "ok");
-      syncProviderSelect(serverMode);
-    } catch (error) {
-      setStatus(`서버 연결 실패: ${error.message}. npm run dev:pollinations 실행 여부를 확인하세요.`, "error");
-    } finally {
-      setBusy(false);
-    }
+  function checkServer() {
+    const cfg = client.loadConfig ? client.loadConfig() : {};
+    serverMode = cfg.provider || "pollinations";
+    if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[serverMode] || serverMode;
+    syncProviderSelect(serverMode);
+    setStatus(`준비 완료 · ${PROVIDER_LABELS[serverMode] || serverMode}`, "ok");
   }
 
   function syncProviderSelect(provider) {
@@ -159,16 +151,12 @@
     const provider = document.getElementById("slideImageProvider")?.value;
     const googleApiKey = document.getElementById("slideImageGoogleKey")?.value?.trim() || "";
     const openaiApiKey = document.getElementById("slideImageOpenAIKey")?.value?.trim() || "";
-    try {
-      await client.setConfig({ provider, googleApiKey, openaiApiKey });
-      serverMode = provider;
-      if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[provider] || provider;
-      setStatus(`서비스가 ${PROVIDER_LABELS[provider] || provider}(으)로 변경되었습니다.`, "ok");
-      document.getElementById("slideImageConfigBody").hidden = true;
-      document.getElementById("slideImageConfigToggle").textContent = "설정 열기";
-    } catch (error) {
-      setStatus(`설정 저장 실패: ${error.message}`, "error");
-    }
+    await client.setConfig({ provider, googleApiKey, openaiApiKey });
+    serverMode = provider;
+    if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[provider] || provider;
+    setStatus(`서비스가 ${PROVIDER_LABELS[provider] || provider}(으)로 변경되었습니다.`, "ok");
+    document.getElementById("slideImageConfigBody").hidden = true;
+    document.getElementById("slideImageConfigToggle").textContent = "설정 열기";
   }
 
   function loadCurrentPrompt() {
@@ -304,9 +292,9 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     bindElements();
-    if (!els.healthBtn) return;
+    if (!els.generateBtn) return;
     setupQueue();
-    els.healthBtn.addEventListener("click", checkServer);
+    if (els.healthBtn) els.healthBtn.addEventListener("click", checkServer);
     els.loadPromptBtn.addEventListener("click", loadCurrentPrompt);
     els.loadDeckBtn.addEventListener("click", loadDeckPrompts);
     els.generateBtn.addEventListener("click", generateImage);
@@ -351,13 +339,14 @@
     if (els.prevBtn) els.prevBtn.addEventListener("click", () => renderGalleryItem(galleryIndex - 1));
     if (els.nextBtn) els.nextBtn.addEventListener("click", () => renderGalleryItem(galleryIndex + 1));
 
-    // 폴더 열기
+    // 폴더 열기 (로컬 서버 실행 시에만 동작, 브라우저 환경에서는 다운로드 폴더를 직접 확인)
     if (els.openFolderBtn) {
       els.openFolderBtn.addEventListener("click", async () => {
         try {
           await client.openOutputFolder();
+          setStatus("이미지는 브라우저 다운로드 폴더에 저장됩니다.", "ok");
         } catch {
-          setStatus("폴더 열기 실패: 서버가 실행 중인지 확인하세요.", "error");
+          setStatus("다운로드 폴더를 직접 열어 확인해주세요.", "ok");
         }
       });
     }
@@ -375,12 +364,6 @@
     }
 
     updateGalleryNav();
-
-    const tabBtn = document.getElementById("tabBtnSlideImage");
-    if (tabBtn) {
-      tabBtn.addEventListener("click", () => {
-        if (serverMode === "unknown") checkServer();
-      });
-    }
+    checkServer();
   });
 })();
