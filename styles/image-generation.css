@@ -32,6 +32,32 @@
   border-top: 1px solid var(--line);
 }
 
+.slide-image-config-notice {
+  margin-top: 14px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: var(--accent-soft, #eef2fb);
+  border: 1px solid rgba(59, 99, 191, 0.15);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.slide-image-config-notice strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.slide-image-config-notice ul {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
 .slide-image-config-row {
   display: flex;
   flex-direction: column;
