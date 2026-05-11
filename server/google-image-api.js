@@ -72,7 +72,7 @@ async function writeMockImage({ slideId, title, prompt }) {
     filename,
     filePath,
     mimeType: "image/svg+xml",
-    model: config.imageModel,
+    model: "mock",
   };
 }
 

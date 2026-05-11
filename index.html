@@ -6,7 +6,7 @@
   <title>PromptDeck | 발표자료 프롬프트 설계기</title>
   <meta
     name="description"
-    content="발표자료용 이미지 프롬프트를 페이지 유형, 색상, 레이아웃, 금지 규칙까지 구조적으로 설계하는 도구"
+    content="이미지 프롬프트를 페이지 유형, 색상, 레이아웃, 금지 규칙까지 구조적으로 설계하는 도구"
   />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,11 +16,20 @@
     rel="stylesheet"
   />
   <link rel="icon" href="data:," />
+  <script>
+    (() => {
+      const saved = localStorage.getItem("promptdeck_theme");
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
+    })();
+  </script>
   <link rel="stylesheet" href="styles/base.css" />
   <link rel="stylesheet" href="styles/designer.css" />
   <link rel="stylesheet" href="styles/generator.css" />
   <link rel="stylesheet" href="styles/promotion.css" />
+  <link rel="stylesheet" href="styles/promotion-planner.css" />
   <link rel="stylesheet" href="styles/image-generation.css" />
+  <link rel="stylesheet" href="styles/theme.css" />
 </head>
 <body>
   <header class="app-header">
@@ -28,15 +37,19 @@
       <div class="brand-mark">PD</div>
       <div class="brand-copy">
         <h1 class="brand-title">PromptDeck</h1>
-        <p class="brand-subtitle">발표자료용 이미지 프롬프트를 구조적으로 설계하는 워크스페이스</p>
+        <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스</p>
       </div>
     </div>
     <div class="header-actions" id="tabActions">
       <button type="button" class="btn ghost" id="btnClearSelections">선택 전체 해제</button>
       <button type="button" class="btn ghost" id="btnReset">초기화</button>
-      <button type="button" class="btn primary" id="btnCopy">한글 프롬프트 복사</button>
-      <button type="button" class="btn secondary" id="btnCopyEn">영문 프롬프트 복사</button>
+      <button type="button" class="btn secondary" id="btnCopy">한글 프롬프트 복사</button>
+      <button type="button" class="btn primary" id="btnCopyEn">영문 프롬프트 복사</button>
     </div>
+    <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="다크 모드로 전환" aria-pressed="false">
+      <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+      <span class="theme-toggle-text">다크</span>
+    </button>
   </header>
 
   <nav class="app-tabs" role="tablist">
@@ -46,11 +59,14 @@
     <button type="button" class="app-tab-btn" id="tabBtnGenerator" role="tab" aria-selected="false" aria-controls="paneGenerator">
       슬라이드 분리기
     </button>
-    <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
-      홍보용 이미지
-    </button>
     <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">
       슬라이드 이미지 생성
+    </button>
+    <button type="button" class="app-tab-btn" id="tabBtnPromotionPlanner" role="tab" aria-selected="false" aria-controls="panePromotionPlanner">
+      홍보 이미지 기획
+    </button>
+    <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
+      홍보용 이미지
     </button>
   </nav>
 
@@ -1124,6 +1140,226 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
     </div>
   </div>
 
+  <div class="tab-pane planner-wrap" id="panePromotionPlanner" role="tabpanel">
+    <div class="planner-main">
+      <section class="gen-section planner-builder-section">
+        <div class="gen-section-head">
+          <h2>홍보 이미지 기획</h2>
+          <span class="gen-badge" id="plannerPurposeBadge">사업공고</span>
+        </div>
+        <div class="gen-content planner-content">
+          <section class="planner-card planner-card-wide">
+            <label class="gen-config-label" for="plannerQuickBrief">빠른 요청</label>
+            <p class="gen-config-guide">세부 설정을 몰라도 한 문장으로 시작할 수 있습니다. 아래 세부 항목은 이 요청을 구조화하는 보조 장치입니다.</p>
+            <textarea id="plannerQuickBrief" class="gen-textarea" rows="4" placeholder="예: 청년 대상 사업공고 포스터. 성장과 연결의 느낌. 신청 마감과 혜택이 잘 보이게."></textarea>
+            <div class="planner-actions planner-actions-inline">
+              <button type="button" class="gen-btn secondary" id="plannerAnalyzeBtn">요청 분해</button>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">목적</label>
+            <p class="gen-config-guide">자주 쓰는 목적을 우선 배치했습니다.</p>
+            <div class="planner-quick-row planner-sample-row">
+              <button type="button" class="planner-chip" data-planner-sample="business-notice">사업공고 샘플</button>
+              <button type="button" class="planner-chip" data-planner-sample="event">행사안내 샘플</button>
+              <button type="button" class="planner-chip" data-planner-sample="survey">수요/설문 샘플</button>
+              <button type="button" class="planner-chip" data-planner-sample="information">정책정보 샘플</button>
+            </div>
+            <div class="planner-choice-grid" data-planner-choice="purpose">
+              <button type="button" class="planner-choice active" data-value="business-notice">사업공고</button>
+              <button type="button" class="planner-choice" data-value="event">행사안내</button>
+              <button type="button" class="planner-choice" data-value="survey">수요/설문조사</button>
+              <button type="button" class="planner-choice" data-value="information">정책/정보전달</button>
+              <button type="button" class="planner-choice" data-value="general">일반 홍보</button>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">이미지 형태</label>
+            <p class="gen-config-guide">포스터, SNS 이미지, 배너를 중심으로 최적화합니다.</p>
+            <div class="planner-choice-grid" data-planner-choice="assetType">
+              <button type="button" class="planner-choice active" data-value="poster">포스터/전단지</button>
+              <button type="button" class="planner-choice" data-value="kakao">카카오채널 메시지</button>
+              <button type="button" class="planner-choice" data-value="sns-square">일반 SNS 정방형</button>
+              <button type="button" class="planner-choice" data-value="sns-vertical">일반 SNS 세로형</button>
+              <button type="button" class="planner-choice" data-value="mini-banner">미니배너</button>
+              <button type="button" class="planner-choice" data-value="general-banner">일반배너</button>
+              <button type="button" class="planner-choice" data-value="web-banner">웹사이트 메인배너</button>
+            </div>
+          </section>
+
+          <section class="planner-card planner-card-wide">
+            <div class="planner-section-title">
+              <label class="gen-config-label" for="plannerInfoRaw">전달 정보</label>
+              <span class="planner-muted">공고문처럼 붙여넣으면 자동으로 구분합니다.</span>
+            </div>
+            <textarea id="plannerInfoRaw" class="gen-textarea" rows="8" placeholder="예:
+2026 지역기업 성장지원 사업 참여기업 모집
+신청 마감: 2026.06.15
+대상: 지역 중소기업
+지원내용: 기업당 최대 500만원 상당 지원
+접수: 온라인 접수
+문의: 지역산업지원센터
+CTA: 지금 신청하기"></textarea>
+            <div class="planner-parsed-info" id="plannerParsedInfo" aria-live="polite"></div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">메시지 우선순위</label>
+            <div class="planner-choice-grid" data-planner-choice="priority">
+              <button type="button" class="planner-choice active" data-value="title">제목 중심</button>
+              <button type="button" class="planner-choice" data-value="benefit">혜택 중심</button>
+              <button type="button" class="planner-choice" data-value="deadline">일정/마감 중심</button>
+              <button type="button" class="planner-choice" data-value="cta">CTA 중심</button>
+              <button type="button" class="planner-choice" data-value="trust">신뢰 중심</button>
+              <button type="button" class="planner-choice" data-value="problem-solution">문제 해결 중심</button>
+            </div>
+          </section>
+
+          <section class="planner-card planner-idea-card">
+            <label class="gen-config-label">빅아이디어 / 비주얼 은유</label>
+            <p class="gen-config-guide">복잡한 디자인 언어 대신, 원하는 상징과 장면을 간단히 던지는 영역입니다.</p>
+            <div class="planner-quick-row" data-planner-append="bigIdea">
+              <button type="button" class="planner-chip">연결</button>
+              <button type="button" class="planner-chip">성장</button>
+              <button type="button" class="planner-chip">도약</button>
+              <button type="button" class="planner-chip">신뢰</button>
+              <button type="button" class="planner-chip">전환</button>
+            </div>
+            <input id="plannerBigIdea" class="gen-input-text" placeholder="빅아이디어: 예: 연결과 성장" />
+            <div class="planner-quick-row" data-planner-append="visualMetaphor">
+              <button type="button" class="planner-chip">빛의 길</button>
+              <button type="button" class="planner-chip">유리 큐브</button>
+              <button type="button" class="planner-chip">상승 곡선</button>
+              <button type="button" class="planner-chip">문이 열리는 장면</button>
+              <button type="button" class="planner-chip">정보 카드가 연결되는 장면</button>
+            </div>
+            <input id="plannerVisualMetaphor" class="gen-input-text" placeholder="비주얼 은유: 예: 빛의 길이 여러 정보 카드를 연결" />
+            <textarea id="plannerCreativeNote" class="gen-textarea" rows="3" placeholder="추가로 원하는 느낌이나 장면"></textarea>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">레이아웃과 강조</label>
+            <div class="planner-stack">
+              <select id="plannerLayoutFlow" class="gen-select">
+                <option value="title-visual-cta">상단 제목 → 중앙 비주얼 → 하단 CTA</option>
+                <option value="left-text-right-visual">좌측 텍스트 → 우측 비주얼</option>
+                <option value="central-message-cards">중앙 큰 메시지 → 주변 정보 카드</option>
+                <option value="problem-solution-cta">문제 제기 → 해결책 → 신청 CTA</option>
+                <option value="card-grid">카드형 정보 블록</option>
+              </select>
+              <select id="plannerEmphasis" class="gen-select">
+                <option value="title">제목 강조</option>
+                <option value="benefit">혜택 강조</option>
+                <option value="deadline">날짜/마감 강조</option>
+                <option value="cta">CTA 강조</option>
+                <option value="brand">브랜드/기관 신뢰 강조</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">색상과 배경</label>
+            <div class="planner-stack">
+              <select id="plannerColorMode" class="gen-select">
+                <option value="ai">AI에게 맡김</option>
+                <option value="brand">브랜드 색상 사용</option>
+                <option value="manual">직접 지정</option>
+              </select>
+              <select id="plannerBackgroundMode" class="gen-select">
+                <option value="clean">밝고 깨끗한 배경</option>
+                <option value="dark">어두운 배경</option>
+                <option value="solid">단색 배경</option>
+                <option value="pattern">질감/패턴 배경</option>
+                <option value="photo">사진 배경</option>
+              </select>
+              <div class="planner-info-grid">
+                <input id="plannerPrimaryColor" class="gen-input-text" placeholder="메인 색상" />
+                <input id="plannerBackgroundColor" class="gen-input-text" placeholder="배경 색상" />
+                <input id="plannerAccentColor" class="gen-input-text" placeholder="포인트 색상" />
+              </div>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">스타일과 품질</label>
+            <div class="planner-stack">
+              <select id="plannerVisualStyle" class="gen-select">
+                <option value="clean-editorial">정돈된 에디토리얼</option>
+                <option value="public-notice">공공기관 안내형</option>
+                <option value="premium-ad">프리미엄 광고형</option>
+                <option value="minimal-typo">미니멀 타이포</option>
+                <option value="3d-graphic">3D 그래픽</option>
+                <option value="illustration">일러스트</option>
+                <option value="character">캐릭터</option>
+                <option value="photo-real">실사형</option>
+              </select>
+              <div class="planner-quick-row" data-planner-toggle="mood">
+                <button type="button" class="planner-chip" data-value="신뢰감">신뢰감</button>
+                <button type="button" class="planner-chip" data-value="역동적">역동적</button>
+                <button type="button" class="planner-chip" data-value="따뜻함">따뜻함</button>
+                <button type="button" class="planner-chip" data-value="세련됨">세련됨</button>
+                <button type="button" class="planner-chip" data-value="미래지향">미래지향</button>
+              </div>
+              <div class="planner-quick-row" data-planner-toggle="qualityRules">
+                <button type="button" class="planner-chip" data-value="모바일 썸네일 가독성 우선">모바일 가독성</button>
+                <button type="button" class="planner-chip" data-value="CTA가 한눈에 보이게">CTA 명확성</button>
+                <button type="button" class="planner-chip" data-value="정보 과밀 방지">정보 과밀 방지</button>
+                <button type="button" class="planner-chip" data-value="저해상도 스톡 느낌 금지">스톡 느낌 금지</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="planner-card planner-card-wide">
+            <label class="gen-config-label" for="plannerForbidden">금지 요소</label>
+            <div class="planner-quick-row" data-planner-append="forbidden">
+              <button type="button" class="planner-chip">과한 네온 효과</button>
+              <button type="button" class="planner-chip">장문 문단</button>
+              <button type="button" class="planner-chip">정보 과밀 배치</button>
+              <button type="button" class="planner-chip">저해상도 스톡 느낌</button>
+              <button type="button" class="planner-chip">두꺼운 텍스트 외곽선</button>
+            </div>
+            <textarea id="plannerForbidden" class="gen-textarea" rows="3" placeholder="피해야 할 표현이나 요소"></textarea>
+          </section>
+        </div>
+      </section>
+
+      <section class="gen-section planner-preview-section">
+        <div class="gen-section-head">
+          <h2>기획 결과</h2>
+          <span class="gen-badge" id="plannerStatusBadge">초안</span>
+        </div>
+        <div class="gen-content planner-result-content">
+          <section class="planner-result-card">
+            <div class="planner-result-head">
+              <strong>기획 요약</strong>
+            </div>
+            <div class="planner-summary-list" id="plannerSummary"></div>
+          </section>
+          <section class="planner-result-card">
+            <div class="planner-result-head">
+              <strong>검토 노트</strong>
+            </div>
+            <div class="planner-note-list" id="plannerNotes"></div>
+          </section>
+          <section class="planner-result-card planner-prompt-card">
+            <div class="planner-result-head">
+              <strong>최종 프롬프트</strong>
+              <button type="button" class="gen-btn secondary" id="plannerCopyBtn">복사</button>
+            </div>
+            <textarea id="plannerPrompt" class="gen-textarea planner-prompt-output" spellcheck="false"></textarea>
+            <div class="planner-status" id="plannerStatus" aria-live="polite"></div>
+          </section>
+          <div class="planner-actions">
+            <button type="button" class="gen-btn secondary" id="plannerSampleBtn">샘플 채우기</button>
+            <button type="button" class="gen-btn ghost" id="plannerResetBtn">초기화</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
   <div class="tab-pane gen-wrap slide-image-wrap" id="paneSlideImage" role="tabpanel">
     <div class="gen-main slide-image-main">
       <section class="gen-section">
@@ -1141,10 +1377,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </div>
             <div class="slide-image-config-body" id="slideImageConfigBody" hidden>
               <div class="slide-image-config-notice">
-                <strong>🔒 API 키는 로컬 서버 런타임에만 적용됩니다</strong>
+                <strong>🔒 API 키는 로컬 테스트 서버에만 적용됩니다</strong>
                 <ul>
                   <li>입력한 API 키는 내 컴퓨터에서 실행 중인 로컬 서버에만 전달되며, GitHub에 저장되지 않습니다.</li>
-                  <li>서버를 재시작하면 화면에서 저장한 임시 설정은 초기화됩니다.</li>
+                  <li>로컬 테스트 서버를 재시작하면 화면에서 저장한 임시 설정은 초기화됩니다.</li>
                   <li><strong>Pollinations</strong>는 API 키 없이 무료로 사용할 수 있습니다.</li>
                 </ul>
               </div>
@@ -1397,8 +1633,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="app.js"></script>
   <script src="src/promptdeck-api-globals.js"></script>
   <script src="src/tabs.js"></script>
+  <script src="src/theme.js"></script>
   <script src="src/generator.js"></script>
   <script src="src/promotion.js"></script>
+  <script src="src/promotion-planner.js"></script>
   <script src="src/image-generation-client.js"></script>
   <script src="src/generation-queue.js"></script>
   <script src="src/slide-image-generation.js"></script>

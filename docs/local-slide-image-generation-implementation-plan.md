@@ -398,3 +398,28 @@ OUTPUT_STORAGE_BUCKET
 - `gemini-3.1-flash-image-preview`, `gemini-2.5-flash-image` 요청 모두 Google API까지 도달했다.
 - 현재 계정/프로젝트는 이미지 생성 무료 티어 요청 및 입력 토큰 쿼터가 0으로 응답되어 실제 이미지 파일 생성은 차단되었다.
 - 다음 조치: Google AI Studio의 rate limit 페이지 또는 결제/플랜 설정에서 이미지 생성 쿼터 사용 가능 여부를 확인한다.
+
+## 2026-05-09 추가 점검: 버튼 액션 정합성 보강 계획
+
+현재 이미지 생성 탭은 로컬 PC 실행을 우선한다. 따라서 프론트엔드에서 외부 이미지 API를 직접 호출하지 않고, 로컬 Node 서버의 API만 호출하는 구조로 정리한다.
+
+완료한 정리:
+- [x] `src/image-generation-client.js`를 로컬 서버 API 전용 클라이언트로 정리
+  - `GET /api/health`
+  - `GET /api/config`
+  - `POST /api/config`
+  - `POST /api/generate-image`
+  - `POST /api/open-folder`
+- [x] 이미지 생성 결과를 `outputs/` 폴더에 저장하고 화면에서는 `/outputs/{filename}` URL을 표시
+- [x] `outputs 폴더 열기` 버튼을 실제 로컬 서버 API에 연결
+- [x] `서비스 상태 확인` 버튼을 실제 로컬 서버 연결 확인으로 변경
+- [x] `설정 저장` 버튼을 로컬 서버 런타임 설정 변경으로 연결
+- [x] 빈 API 키로 설정 저장 시 기존 로컬 키를 지우지 않도록 서버 처리 보강
+- [x] `실패 항목만 다시 생성` 버튼과 큐 재실행 액션 추가
+
+남은 개발 항목:
+- [ ] 순차 생성 중 현재 생성 중인 슬라이드 번호와 다음 요청까지 남은 시간 표시
+- [ ] 생성 결과와 원본 프롬프트를 함께 묶은 manifest JSON 저장
+- [ ] 이전 실행 결과를 앱 시작 시 다시 불러오기
+- [ ] Google Gemini 이미지 생성 쿼터/과금 상태 안내 UX 개선
+- [ ] 서비스 배포 버전에서는 API 키를 브라우저나 GitHub에 노출하지 않는 백엔드 Secret 구조로 전환

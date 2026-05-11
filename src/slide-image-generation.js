@@ -20,6 +20,7 @@
     els.clearPromptBtn = document.getElementById("slideImageClearPromptBtn");
     els.resetResultBtn = document.getElementById("slideImageResetResultBtn");
     els.startQueueBtn = document.getElementById("slideImageStartQueueBtn");
+    els.retryFailedBtn = document.getElementById("slideImageRetryFailedBtn");
     els.pauseQueueBtn = document.getElementById("slideImagePauseQueueBtn");
     els.resumeQueueBtn = document.getElementById("slideImageResumeQueueBtn");
     els.stopQueueBtn = document.getElementById("slideImageStopQueueBtn");
@@ -84,6 +85,16 @@
       progress.innerHTML = '<div id="slideImageQueueProgress"></div>';
       queueHead.insertAdjacentElement("afterend", progress);
     }
+
+    const queueActions = document.getElementById("slideImageStartQueueBtn")?.closest(".slide-image-actions");
+    if (queueActions && !document.getElementById("slideImageRetryFailedBtn")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "gen-btn secondary";
+      button.id = "slideImageRetryFailedBtn";
+      button.textContent = "실패 항목만 다시 생성";
+      queueActions.insertBefore(button, document.getElementById("slideImagePauseQueueBtn"));
+    }
   }
 
   function setStatus(message, type = "") {
@@ -94,7 +105,7 @@
   }
 
   function setBusy(isBusy) {
-    [els.healthBtn, els.loadPromptBtn, els.loadDeckBtn, els.useMockBtn, els.generateBtn, els.startQueueBtn].forEach((button) => {
+    [els.healthBtn, els.loadPromptBtn, els.loadDeckBtn, els.useMockBtn, els.generateBtn, els.startQueueBtn, els.retryFailedBtn].forEach((button) => {
       if (button) button.disabled = isBusy;
     });
   }
@@ -141,6 +152,10 @@
     if (els.pauseQueueBtn) els.pauseQueueBtn.disabled = snapshot.status !== "running";
     if (els.resumeQueueBtn) els.resumeQueueBtn.disabled = snapshot.status !== "paused";
     if (els.stopQueueBtn) els.stopQueueBtn.disabled = !["running", "paused"].includes(snapshot.status);
+    if (els.retryFailedBtn) {
+      const failedCount = snapshot.jobs.filter((job) => job.status === "failed").length;
+      els.retryFailedBtn.disabled = failedCount === 0 || ["running", "paused"].includes(snapshot.status);
+    }
     if (!els.jobList) return;
 
     if (!snapshot.jobs.length) {
@@ -183,13 +198,21 @@
     openai: "OpenAI DALL·E 3",
   };
 
-  function checkServer() {
-    const cfg = client.loadConfig ? client.loadConfig() : {};
-    serverMode = cfg.provider || "pollinations";
-    if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[serverMode] || serverMode;
-    if (els.generateBtn) els.generateBtn.textContent = serverMode === "mock" ? "목업 이미지 생성" : "이미지 생성";
-    syncProviderSelect(serverMode);
-    setStatus(`준비 완료 · ${PROVIDER_LABELS[serverMode] || serverMode}`, "ok");
+  async function checkServer() {
+    try {
+      const cfg = await client.checkImageGenerationServer();
+      serverMode = cfg.provider || "mock";
+      if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[serverMode] || serverMode;
+      if (els.generateBtn) els.generateBtn.textContent = serverMode === "mock" ? "목업 이미지 생성" : "이미지 생성";
+      syncProviderSelect(serverMode);
+      setStatus(`로컬 서버 연결됨 · ${PROVIDER_LABELS[serverMode] || serverMode}`, "ok");
+      return true;
+    } catch (error) {
+      serverMode = "offline";
+      if (els.serverBadge) els.serverBadge.textContent = "서버 연결 안 됨";
+      setStatus(`로컬 서버 연결 실패: ${error.message}`, "error");
+      return false;
+    }
   }
 
   function syncProviderSelect(provider) {
@@ -209,13 +232,17 @@
     const provider = document.getElementById("slideImageProvider")?.value;
     const googleApiKey = document.getElementById("slideImageGoogleKey")?.value?.trim() || "";
     const openaiApiKey = document.getElementById("slideImageOpenAIKey")?.value?.trim() || "";
-    await client.setConfig({ provider, googleApiKey, openaiApiKey });
-    serverMode = provider;
-    if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[provider] || provider;
-    if (els.generateBtn) els.generateBtn.textContent = provider === "mock" ? "목업 이미지 생성" : "이미지 생성";
-    setStatus(`서비스가 ${PROVIDER_LABELS[provider] || provider}(으)로 변경되었습니다.`, "ok");
-    document.getElementById("slideImageConfigBody").hidden = true;
-    document.getElementById("slideImageConfigToggle").textContent = "설정 열기";
+    try {
+      await client.setConfig({ provider, googleApiKey, openaiApiKey });
+      serverMode = provider;
+      if (els.serverBadge) els.serverBadge.textContent = PROVIDER_LABELS[provider] || provider;
+      if (els.generateBtn) els.generateBtn.textContent = provider === "mock" ? "목업 이미지 생성" : "이미지 생성";
+      setStatus(`서비스가 ${PROVIDER_LABELS[provider] || provider}(으)로 변경되었습니다.`, "ok");
+      document.getElementById("slideImageConfigBody").hidden = true;
+      document.getElementById("slideImageConfigToggle").textContent = "설정 열기";
+    } catch (error) {
+      setStatus(`설정 저장 실패: ${error.message}`, "error");
+    }
   }
 
   async function switchToMockMode() {
@@ -296,7 +323,7 @@
       els.preview.innerHTML = "";
       const img = document.createElement("img");
       img.alt = item.title;
-      img.src = `${item.url}?t=${item.ts}`;
+      img.src = item.url;
       els.preview.appendChild(img);
     }
     if (els.meta) {
@@ -332,6 +359,7 @@
       setStatus(`이미지 생성 실패: ${error.message}`, "error");
     } finally {
       setBusy(false);
+      renderQueue();
     }
   }
 
@@ -343,6 +371,26 @@
     if (!queue.snapshot().jobs.length) return;
 
     setStatus("순차 생성을 시작합니다.");
+    await queue.run({
+      delayMs: Number(els.delayMs?.value || 0),
+      maxRetries: Number(els.maxRetries?.value || 0),
+    });
+  }
+
+  async function retryFailedQueue() {
+    const failedJobs = queue.snapshot().jobs.filter((job) => job.status === "failed");
+    if (!failedJobs.length) {
+      setStatus("다시 생성할 실패 항목이 없습니다.");
+      return;
+    }
+
+    queue.setJobs(failedJobs.map((job) => ({
+      slideId: job.slideId,
+      title: job.title,
+      label: job.label,
+      prompt: job.prompt,
+    })));
+    setStatus(`실패 항목 ${failedJobs.length}개만 다시 생성합니다.`);
     await queue.run({
       delayMs: Number(els.delayMs?.value || 0),
       maxRetries: Number(els.maxRetries?.value || 0),
@@ -383,6 +431,7 @@
     els.loadDeckBtn.addEventListener("click", loadDeckPrompts);
     els.generateBtn.addEventListener("click", generateImage);
     els.startQueueBtn.addEventListener("click", startQueue);
+    if (els.retryFailedBtn) els.retryFailedBtn.addEventListener("click", retryFailedQueue);
     els.pauseQueueBtn.addEventListener("click", () => queue.pause());
     els.resumeQueueBtn.addEventListener("click", () => queue.resume());
     els.stopQueueBtn.addEventListener("click", () => queue.stop());
@@ -430,9 +479,9 @@
       els.openFolderBtn.addEventListener("click", async () => {
         try {
           await client.openOutputFolder();
-          setStatus("이미지는 브라우저 다운로드 폴더에 저장됩니다.", "ok");
-        } catch {
-          setStatus("다운로드 폴더를 직접 열어 확인해주세요.", "ok");
+          setStatus("outputs 폴더를 열었습니다.", "ok");
+        } catch (error) {
+          setStatus(`outputs 폴더 열기 실패: ${error.message}`, "error");
         }
       });
     }

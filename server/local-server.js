@@ -119,8 +119,12 @@ async function handleSetConfig(req, res) {
   try {
     const body = await readJsonBody(req);
     if (body.provider && PROVIDERS[body.provider]) runtimeConfig.provider = body.provider;
-    if (typeof body.googleApiKey === "string") runtimeConfig.googleApiKey = body.googleApiKey;
-    if (typeof body.openaiApiKey === "string") runtimeConfig.openaiApiKey = body.openaiApiKey;
+    if (typeof body.googleApiKey === "string" && body.googleApiKey.trim()) {
+      runtimeConfig.googleApiKey = body.googleApiKey.trim();
+    }
+    if (typeof body.openaiApiKey === "string" && body.openaiApiKey.trim()) {
+      runtimeConfig.openaiApiKey = body.openaiApiKey.trim();
+    }
 
     const needsKey = PROVIDERS[runtimeConfig.provider]?.needsKey;
     const hasKey = runtimeConfig.provider === "google"
@@ -187,4 +191,3 @@ const server = http.createServer((req, res) => {
 server.listen(config.port, config.host, () => {
   console.log(`PromptDeck local server: http://${config.host}:${config.port}`);
 });
-

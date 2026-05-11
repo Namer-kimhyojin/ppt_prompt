@@ -1101,20 +1101,26 @@ select option {
 .promo-quick-btns {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
   margin-bottom: 8px;
 }
 
 .btn-quick {
-  min-height: 24px;
-  padding: 0 10px;
+  flex: 1 1 96px;
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid var(--line);
   background: #f8fbfe;
   font-size: 11px;
+  line-height: 1.35;
   color: var(--ink-soft);
   cursor: pointer;
   transition: var(--transition);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .btn-quick:hover {
@@ -1128,6 +1134,26 @@ select option {
   border-color: #bfd3ff;
   color: var(--accent);
   box-shadow: inset 0 0 0 1px rgba(31, 94, 255, 0.08);
+}
+
+.promo-step-body .gen-config-fields,
+.promo-type-fields .gen-config-fields {
+  align-items: stretch;
+}
+
+.promo-step-body .gen-config-group,
+.promo-type-fields .gen-config-group {
+  min-width: 0;
+}
+
+.promo-step-body .gen-config-fields:has(> .gen-config-group:only-child) > .gen-config-group,
+.promo-type-fields .gen-config-fields:has(> .gen-config-group:only-child) > .gen-config-group {
+  grid-column: 1 / -1;
+}
+
+.promo-step-body .gen-config-group .gen-textarea,
+.promo-type-fields .gen-config-group .gen-textarea {
+  min-width: 0;
 }
 
 @media (max-width: 960px) {
