@@ -23,6 +23,8 @@ const state = {
   selections: createEmptySelections(),
 };
 
+let activeUserTemplateIndex = null;
+
 function clonePromptLineOverrides(overrides = {}) {
   const next = {};
 
@@ -2424,7 +2426,11 @@ function renderTemplates() {
     button.type = "button";
     button.className = "template-chip";
     button.textContent = template.name;
-    button.addEventListener("click", () => applyTemplate(template));
+    button.addEventListener("click", () => {
+      activeUserTemplateIndex = null;
+      applyTemplate(template);
+      renderTemplates();
+    });
     builtInGrid.appendChild(button);
   });
   wrap.appendChild(builtInGrid);
@@ -2446,9 +2452,23 @@ function renderTemplates() {
 
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "template-chip user";
+      button.className = `template-chip user ${activeUserTemplateIndex === index ? "active" : ""}`.trim();
       button.textContent = template.name;
-      button.addEventListener("click", () => applyTemplate(template));
+      button.addEventListener("click", () => {
+        activeUserTemplateIndex = index;
+        applyTemplate(template);
+        renderTemplates();
+      });
+
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "template-save-btn";
+      saveBtn.textContent = "저장";
+      saveBtn.title = "현재 설정값으로 덮어쓰기";
+      saveBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        updateUserTemplateFromCurrent(index);
+      });
 
       const delBtn = document.createElement("button");
       delBtn.type = "button";
@@ -2460,7 +2480,7 @@ function renderTemplates() {
         deleteUserTemplate(index);
       });
 
-      container.append(button, delBtn);
+      container.append(button, saveBtn, delBtn);
       userGrid.appendChild(container);
     });
     wrap.appendChild(userGrid);
@@ -2492,49 +2512,127 @@ function saveUserTemplates(templates) {
   localStorage.setItem("pd_user_templates", JSON.stringify(templates));
 }
 
-function saveCurrentAsTemplate() {
-  const name = prompt("저장할 템플릿의 이름을 입력해 주세요.", `내 템플릿 ${new Date().toLocaleDateString()}`);
-  if (!name || !name.trim()) return;
+function toTemplateArrayValue(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  return value ? [value] : [];
+}
 
+function writeTemplateArrayValue(selections, key, values) {
+  selections[key] = isMultiSelect(key) ? values : (values[0] || null);
+}
+
+function normalizeTemplateSelections(template) {
+  const selections = { ...(template.selections || {}) };
+  const getValues = (key) => toTemplateArrayValue(selections[key]);
+  const setValues = (key, values) => writeTemplateArrayValue(selections, key, values);
+  const clearKey = (key) => {
+    selections[key] = isMultiSelect(key) ? [] : null;
+  };
+
+  const titleRule = selections["title-bar-rule"];
+  const usesReferenceTitleBar = TITLE_BAR_MODE_REF.includes(titleRule);
+  const usesMinimalTitleBar = TITLE_BAR_MODE_MINIMAL.includes(titleRule);
+  const usesFullReference = REFERENCE_SCOPE_FULL.includes(selections["reference-scope"]);
+
+  if (usesReferenceTitleBar && !selections["reference-scope"]) {
+    selections["reference-scope"] = "타이틀바만 참조";
+  }
+
+  if (usesFullReference) {
+    FULL_REFERENCE_OMITTED_KEYS.forEach(clearKey);
+  } else if (usesReferenceTitleBar || usesMinimalTitleBar) {
+    HEADER_DESIGN_KEYS_OVERRIDDEN_BY_PRESERVE.forEach(clearKey);
+  }
+
+  if (getValues("header-slot-right").includes("페이지 번호")) {
+    clearKey("page-number");
+    setValues("footer-elem", getValues("footer-elem").filter((value) => value !== "페이지 넘버"));
+  }
+
+  if (getValues("footer-elem").includes("페이지 넘버")) {
+    clearKey("page-number");
+  }
+
+  if (selections["footer-bar"] === "없음") {
+    FOOTER_DEPENDENT_KEYS.forEach(clearKey);
+  }
+
+  if (selections["bg-style"] === "AI 위임") {
+    selections["bg-tone"] = "AI 위임";
+  } else if (selections["bg-style"] === "단색 배경" || selections["bg-style"] === "장식 없음 (기본)") {
+    clearKey("bg-tone");
+  }
+
+  return { ...template, selections };
+}
+
+function createTemplateSnapshot(name) {
   const selections = {};
-  Object.keys(state.selections).forEach(key => {
+  Object.keys(state.selections).forEach((key) => {
     const val = state.selections[key];
     if (Array.isArray(val)) {
-      selections[key] = val.map(v => v.text);
+      selections[key] = val.map((v) => v.text);
     } else if (val) {
       selections[key] = val.text;
     }
   });
 
-  const newTemplate = {
+  return normalizeTemplateSelections({
     name: name.trim(),
     pageType: state.pageType,
-    selections: selections,
+    selections,
     customRatio: { ...state.customRatio },
     colorSystem: { ...state.colorSystem },
     barSettings: { ...state.barSettings },
     bgSolidColor: state.bgSolidColor,
     promptLineOverrides: clonePromptLineOverrides(state.promptLineOverrides),
-    custom: true
-  };
+    custom: true,
+  });
+}
 
+function saveCurrentAsTemplate() {
+  const name = prompt("저장할 템플릿의 이름을 입력해 주세요.", `내 템플릿 ${new Date().toLocaleDateString()}`);
+  if (!name || !name.trim()) return;
+
+  const newTemplate = createTemplateSnapshot(name);
   const templates = getUserTemplates();
   templates.push(newTemplate);
+  activeUserTemplateIndex = templates.length - 1;
   saveUserTemplates(templates);
   renderTemplates();
   showToast(`"${newTemplate.name}" 템플릿을 저장했습니다.`);
+}
+
+function updateUserTemplateFromCurrent(index) {
+  const templates = getUserTemplates();
+  const current = templates[index];
+  if (!current) return;
+  if (!confirm(`"${current.name}" 프리셋을 현재 설정값으로 덮어쓸까요?`)) return;
+
+  const updated = createTemplateSnapshot(current.name);
+  templates[index] = { ...updated, custom: true };
+  activeUserTemplateIndex = index;
+  saveUserTemplates(templates);
+  renderTemplates();
+  showToast(`"${updated.name}" 프리셋 설정값을 저장했습니다.`);
 }
 
 function deleteUserTemplate(index) {
   if (!confirm("이 템플릿을 정말 삭제할까요?")) return;
   const templates = getUserTemplates();
   const removed = templates.splice(index, 1);
+  if (activeUserTemplateIndex === index) {
+    activeUserTemplateIndex = null;
+  } else if (activeUserTemplateIndex > index) {
+    activeUserTemplateIndex -= 1;
+  }
   saveUserTemplates(templates);
   renderTemplates();
   showToast(`"${removed[0].name}" 템플릿을 삭제했습니다.`);
 }
 
 function applyTemplate(template) {
+  template = normalizeTemplateSelections(template);
   state.pageType = template.pageType || state.pageType;
   state.selections = createEmptySelections();
   state.colorSystem = { ...DEFAULT_COLOR_SYSTEM };

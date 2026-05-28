@@ -1,4 +1,4 @@
-﻿.workspace {
+.workspace {
   display: grid;
   grid-template-columns: minmax(560px, 1.1fr) minmax(380px, 0.9fr);
   gap: 22px;
@@ -1311,6 +1311,13 @@
   background: rgba(31, 94, 255, 0.02);
 }
 
+.template-chip.user.active {
+  border-style: solid;
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: rgba(31, 94, 255, 0.08);
+}
+
 .template-group-title {
   font-size: 11px;
   font-weight: 800;
@@ -1353,8 +1360,37 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
+.template-save-btn {
+  position: absolute;
+  top: -7px;
+  right: 18px;
+  min-width: 34px;
+  height: 20px;
+  padding: 0 7px;
+  border: 1px solid var(--accent-faint);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  opacity: 0;
+  transition: 200ms ease;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+}
+
 .template-chip-container:hover .template-del-btn {
   opacity: 1;
+}
+
+.template-chip-container:hover .template-save-btn {
+  opacity: 1;
+}
+
+.template-save-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .template-del-btn:hover {
