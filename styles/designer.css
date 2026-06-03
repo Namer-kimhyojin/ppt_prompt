@@ -2176,6 +2176,180 @@
   }
 }
 
+@media (max-width: 640px) {
+  .workspace {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .builder-panel,
+  .preview-panel {
+    gap: 12px;
+  }
+
+  .preview-panel {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .panel-card,
+  .preview-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .editor-section {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .panel-card-head,
+  .preview-card-head,
+  .editor-section-head,
+  .option-group-head,
+  .prompt-block-head,
+  .prompt-override-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .section-head-actions,
+  .group-head-actions,
+  .prompt-override-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .editor-section-grid,
+  .process-checklist,
+  .page-type-grid,
+  .option-grid,
+  .option-grid.wide,
+  .color-fields,
+  .prompt-override-fields,
+  .custom-photo-subject-field,
+  .bg-solid-color-field,
+  .bar-settings-row {
+    grid-template-columns: 1fr;
+  }
+
+  .option-group.wide {
+    grid-column: auto;
+  }
+
+  .option-group {
+    padding: 13px;
+    border-radius: 14px;
+  }
+
+  .option-card {
+    min-height: 78px;
+    grid-template-columns: 32px minmax(0, 1fr) 20px;
+    padding: 12px;
+  }
+
+  .option-card-icon {
+    width: 32px;
+    min-width: 32px;
+    height: 28px;
+    border-radius: 9px;
+  }
+
+  .palette-preview {
+    grid-template-columns: repeat(5, 16px);
+    gap: 4px;
+  }
+
+  .palette-swatch {
+    width: 16px;
+    height: 16px;
+  }
+
+  .palette-hex-summary {
+    grid-column: 1 / -1;
+    white-space: normal;
+  }
+
+  .template-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .template-chip-container {
+    flex-basis: 100%;
+  }
+
+  .summary-chips,
+  .prompt-ctrl-row {
+    gap: 8px;
+  }
+
+  .summary-chip {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .prompt-block {
+    border-radius: 14px;
+  }
+
+  .prompt-block-body,
+  .prompt-override-textarea,
+  .group-prompt-editor-textarea,
+  .add-forbidden-rule-textarea {
+    font-size: 11px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .custom-photo-subject-hint {
+    grid-column: auto;
+  }
+
+  .toast {
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+    transform: translateY(16px);
+    text-align: center;
+    border-radius: 14px;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 420px) {
+  .workspace {
+    padding: 10px;
+  }
+
+  .panel-card-title,
+  .preview-card-title,
+  .editor-section-title {
+    font-size: 15px;
+  }
+
+  .option-card {
+    grid-template-columns: 1fr 20px;
+  }
+
+  .option-card-icon {
+    display: none;
+  }
+
+  .clear-btn,
+  .option-mode,
+  .option-apply-badge {
+    min-height: 28px;
+    font-size: 10.5px;
+  }
+}
+
 /* ?? 湲덉?洹쒖튃 鍮꾪솢?깊솕 / ?ъ슜??洹쒖튃 ??????????????????????????? */
 .group-prompt-editor-item.is-disabled-rule,
 .prompt-override-item.is-disabled-rule {
