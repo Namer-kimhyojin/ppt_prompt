@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="styles/generator.css" />
   <link rel="stylesheet" href="styles/promotion.css" />
   <link rel="stylesheet" href="styles/image-generation.css" />
+  <link rel="stylesheet" href="styles/map-prompt.css" />
   <link rel="stylesheet" href="styles/slide-document.css" />
   <link rel="stylesheet" href="styles/theme.css" />
 </head>
@@ -61,6 +62,9 @@
     </button>
     <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">
       API 이미지 생성
+    </button>
+    <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">
+      지도 이미지
     </button>
     <button type="button" class="app-tab-btn" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">
       부속 양식
@@ -1254,6 +1258,120 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           <div class="slide-image-gallery-actions">
             <button type="button" class="gen-btn secondary" id="slideImageOpenFolderBtn" disabled>outputs 폴더 열기</button>
             <button type="button" class="gen-btn ghost" id="slideImageClearGalleryBtn" disabled>갤러리 초기화</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="tab-pane gen-wrap map-wrap" id="paneMapPrompt" role="tabpanel">
+    <div class="gen-main map-main">
+      <section class="gen-section map-builder-section">
+        <div class="gen-section-head">
+          <h2>지도 강조 이미지 프롬프트</h2>
+          <span class="gen-badge">Reference Map → Business Visual</span>
+        </div>
+        <div class="gen-content">
+          <div class="map-intro">
+            <strong>첨부할 지도 이미지를 기준으로 특정 구역을 강조하는 사업계획서용 이미지를 설계합니다.</strong>
+            <span>프롬프트와 함께 지도 이미지를 모델에 첨부하고, 아래 항목에는 어떤 지역을 어떤 방식으로 강조할지 입력합니다.</span>
+          </div>
+
+          <div class="gen-row">
+            <div class="gen-field">
+              <label for="mapProjectName">사업/문서명</label>
+              <input id="mapProjectName" class="gen-input-text" type="text" placeholder="예: ○○ 산업단지 조성사업 사업계획서" />
+            </div>
+            <div class="gen-field">
+              <label for="mapOutputType">이미지 용도</label>
+              <select id="mapOutputType" class="gen-select">
+                <option value="business-plan">사업계획서 본문 삽입 이미지</option>
+                <option value="proposal-slide">제안 발표용 슬라이드 지도</option>
+                <option value="executive-summary">요약 보고서 핵심 위치도</option>
+                <option value="site-analysis">입지 분석·권역 설명 이미지</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapReferenceNote">첨부 지도 이미지 설명</label>
+            <textarea id="mapReferenceNote" class="gen-textarea" rows="4" placeholder="예: 시·군 경계와 주요 도로가 표시된 행정구역 지도. 사용자가 붉은 펜으로 표시한 영역이 대상 부지임."></textarea>
+            <p class="gen-hint">실제 지도 이미지는 프롬프트와 함께 별도로 첨부하세요. 이 입력은 모델이 참조 이미지를 해석하는 기준 설명입니다.</p>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapTargetArea">강조할 특정 구역</label>
+            <textarea id="mapTargetArea" class="gen-textarea" rows="4" placeholder="예: 지도 중앙 남동쪽의 ○○읍 일대, ○○IC와 국도 00호선 사이 대상 부지."></textarea>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapContextInfo">주변 맥락과 사업 메시지</label>
+            <textarea id="mapContextInfo" class="gen-textarea" rows="5" placeholder="예: 광역 교통망 접근성, 배후 산업단지와의 연계, 후보지의 전략적 위치를 강조."></textarea>
+          </div>
+
+          <div class="gen-field">
+            <div class="gen-inline-head">
+              <label>강조 기법</label>
+              <button type="button" class="gen-btn ghost" id="mapTechniqueClearBtn">선택 해제</button>
+            </div>
+            <div class="map-technique-grid" id="mapTechniqueGrid"></div>
+          </div>
+
+          <div class="gen-row">
+            <div class="gen-field">
+              <label for="mapVisualTone">시각 톤</label>
+              <select id="mapVisualTone" class="gen-select">
+                <option value="official">공공기관 보고서형 · 절제된 전문성</option>
+                <option value="premium">고급 사업제안서형 · 선명한 설득력</option>
+                <option value="technical">입지 분석형 · 데이터/도면 느낌</option>
+                <option value="minimal">미니멀 위치도형 · 핵심 구역만 강조</option>
+              </select>
+            </div>
+            <div class="gen-field">
+              <label for="mapCanvas">출력 규격</label>
+              <select id="mapCanvas" class="gen-select">
+                <option value="16:9 landscape business presentation image">16:9 발표자료</option>
+                <option value="A4 landscape report figure">A4 가로 보고서 그림</option>
+                <option value="A4 portrait report figure">A4 세로 보고서 그림</option>
+                <option value="wide executive summary map figure">와이드 요약 보고서</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapLabels">표시할 라벨/범례</label>
+            <textarea id="mapLabels" class="gen-textarea" rows="3" placeholder="예: 대상지, 주변 산업단지, 고속도로 IC, 주요 교통축, 행정구역명"></textarea>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapExclusions">피해야 할 요소</label>
+            <textarea id="mapExclusions" class="gen-textarea" rows="3" placeholder="예: 부정확한 지명 추가, 실제 경계 왜곡, 과도한 3D 효과, 장식적 네온, 복잡한 배경"></textarea>
+          </div>
+
+          <div class="gen-actions">
+            <button type="button" class="gen-btn" id="mapGeneratePromptBtn">프롬프트 생성</button>
+            <button type="button" class="gen-btn secondary" id="mapCopyPromptBtn">프롬프트 복사</button>
+            <button type="button" class="gen-btn secondary" id="mapSampleBtn">샘플 채우기</button>
+            <button type="button" class="gen-btn ghost" id="mapResetBtn">초기화</button>
+          </div>
+          <div class="gen-warn" id="mapMessage"></div>
+        </div>
+      </section>
+
+      <section class="gen-section map-preview-section">
+        <div class="gen-section-head">
+          <h2>생성 프롬프트</h2>
+          <span class="gen-badge" id="mapPromptBadge">대기 중</span>
+        </div>
+        <div class="gen-content">
+          <textarea id="mapPromptPreview" class="gen-textarea map-prompt-preview" rows="26" readonly></textarea>
+          <div class="map-guide-panel">
+            <strong>사용 방법</strong>
+            <ol>
+              <li>강조할 구역이 표시된 지도 이미지를 이미지 생성 모델에 첨부합니다.</li>
+              <li>이 탭에서 생성한 프롬프트를 함께 입력합니다.</li>
+              <li>결과 이미지에서 지명·경계·도로명은 원본 지도와 대조해 검수합니다.</li>
+            </ol>
           </div>
         </div>
       </section>
@@ -2642,6 +2760,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/image-generation-client.js"></script>
   <script src="src/generation-queue.js"></script>
   <script src="src/slide-image-generation.js"></script>
+  <script src="src/map-prompt.js"></script>
   <script src="src/slide-document.js"></script>
 </body>
 </html>

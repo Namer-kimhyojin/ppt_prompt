@@ -21,6 +21,11 @@
       pane: document.getElementById("paneSlideImage"),
       actions: "slideImage",
     },
+    mapPrompt: {
+      button: document.getElementById("tabBtnMapPrompt"),
+      pane: document.getElementById("paneMapPrompt"),
+      actions: "mapPrompt",
+    },
     slideDocument: {
       button: document.getElementById("tabBtnSlideDocument"),
       pane: document.getElementById("paneSlideDocument"),
@@ -35,6 +40,7 @@
     generator: "분리",
     promotion: "홍보",
     slideImage: "이미지",
+    mapPrompt: "지도",
     slideDocument: "부속",
   };
   const actionSets = {
@@ -64,6 +70,12 @@
       { label: "이미지 생성", targetId: "slideImageGenerateBtn", className: "btn primary" },
       { label: "전체 순차 생성", targetId: "slideImageStartQueueBtn", className: "btn secondary" },
       { label: "outputs 열기", targetId: "slideImageOpenFolderBtn", className: "btn ghost" },
+    ],
+    mapPrompt: [
+      { label: "프롬프트 생성", targetId: "mapGeneratePromptBtn", className: "btn primary" },
+      { label: "프롬프트 복사", targetId: "mapCopyPromptBtn", className: "btn secondary" },
+      { label: "샘플 채우기", targetId: "mapSampleBtn", className: "btn secondary" },
+      { label: "초기화", targetId: "mapResetBtn", className: "btn ghost" },
     ],
     slideDocument: [
       { label: "프롬프트 복사", targetId: "slideDocCopyPromptBtn", className: "btn primary" },
@@ -146,6 +158,10 @@
 
     if (currentTab === "slideImage") {
       return document.getElementById("slideImagePrompt")?.value?.trim() || "";
+    }
+
+    if (currentTab === "mapPrompt") {
+      return document.getElementById("mapPromptPreview")?.value?.trim() || "";
     }
 
     if (currentTab === "slideDocument") {
@@ -328,6 +344,7 @@
   window.PromptDeckTabs = {
     switchTab,
     syncHeaderActionStates,
+    syncMobileActions,
   };
 
   Object.keys(tabs).forEach((key) => {
