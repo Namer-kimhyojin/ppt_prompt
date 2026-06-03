@@ -2348,6 +2348,18 @@
     min-height: 28px;
     font-size: 10.5px;
   }
+
+  .bg-solid-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bg-solid-row .bar-hex-input,
+  .bg-solid-row .bar-color-input {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 /* ?? 湲덉?洹쒖튃 鍮꾪솢?깊솕 / ?ъ슜??洹쒖튃 ??????????????????????????? */
