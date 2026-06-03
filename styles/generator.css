@@ -667,3 +667,103 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 640px) {
+  .gen-main {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .gen-section {
+    border-radius: 14px;
+  }
+
+  .gen-section-head,
+  .gen-inline-head,
+  .gen-lint-head,
+  .gen-modal-head,
+  .gen-modal-foot,
+  .gen-split-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gen-section-head,
+  .gen-content,
+  .gen-modal-body {
+    padding: 14px;
+  }
+
+  .gen-row,
+  .gen-stats,
+  .gen-viewer,
+  .gen-viewer-toolbar,
+  .gen-config-fields,
+  .gen-split-builder-fields,
+  .gen-split-preset-list {
+    grid-template-columns: 1fr;
+  }
+
+  .gen-actions,
+  .gen-inline-actions,
+  .gen-edit-toolbar,
+  .gen-modal-foot {
+    width: 100%;
+  }
+
+  .gen-btn,
+  .gen-actions .btn,
+  .gen-inline-actions .btn,
+  .gen-edit-toolbar .btn {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .gen-slide-list {
+    min-height: 180px;
+    max-height: 260px;
+  }
+
+  .gen-pre,
+  .gen-editor-panel .gen-textarea {
+    min-height: 280px;
+    max-height: none;
+    font-size: 12px;
+  }
+
+  .gen-modal-dialog,
+  .gen-split-modal-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+    margin: 8px auto;
+    border-radius: 14px;
+  }
+
+  .gen-modal-head,
+  .gen-modal-foot {
+    padding: 12px 14px;
+  }
+
+  .gen-config-group {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .gen-main {
+    padding: 10px;
+  }
+
+  .gen-section-head h2 {
+    font-size: 15px;
+  }
+
+  .gen-content {
+    padding: 12px;
+  }
+
+  .gen-btn {
+    width: 100%;
+    padding: 0 12px;
+  }
+}

@@ -1586,3 +1586,99 @@ select option {
   color: #dc2626;
   border-color: #fca5a5;
 }
+
+@media (max-width: 640px) {
+  .promo-main {
+    gap: 12px;
+  }
+
+  .promo-preview-section {
+    position: static;
+    height: auto;
+    overflow: visible;
+    border-radius: 14px;
+  }
+
+  .promo-step-summary,
+  .promo-advanced-summary,
+  .promo-aux-summary,
+  .promo-preview-topbar,
+  .promo-panel-head,
+  .promo-prompt-header,
+  .promo-size-mode-row,
+  .promo-size-preset-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .promo-step-summary::after,
+  .promo-aux-summary::after {
+    align-self: flex-end;
+    margin-left: 0;
+  }
+
+  .promo-step-body,
+  .promo-advanced-body,
+  .promo-prompt-body,
+  .promo-aux-area,
+  .promo-preview-topbar {
+    padding: 12px;
+  }
+
+  .promo-preview-topbar-controls,
+  .promo-preview-topbar-actions,
+  .promo-action-bar-primary,
+  .promo-action-bar-secondary,
+  .promo-prompt-header-actions,
+  .promo-variation-row {
+    width: 100%;
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+
+  .promo-action-bar-secondary {
+    justify-content: flex-start;
+  }
+
+  .promo-template-grid,
+  .promo-commercial-grid,
+  .promo-automation-grid,
+  .promo-lint-grid,
+  .promo-optimization-toolbar,
+  .promo-preview-grid,
+  .promo-action-choice-grid,
+  .promo-visual-preset-grid,
+  .promo-size-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .promo-type-tabs,
+  .promo-segmented,
+  .promo-ai-mode-btns {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .promo-type-tab,
+  .promo-segment-btn,
+  .promo-ai-mode-btn,
+  .promo-copy-btn,
+  .promo-color-clear,
+  .promo-size-preset-save-btn {
+    width: 100%;
+  }
+
+  .promo-color-row,
+  .promo-color-row-inline,
+  .gen-inline-row,
+  .promo-size-mode-left,
+  .promo-size-preset-panel {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .promo-unit-select {
+    max-width: none;
+    flex-basis: 100%;
+  }
+}

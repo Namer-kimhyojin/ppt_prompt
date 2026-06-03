@@ -364,3 +364,70 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .slide-image-main {
+    gap: 12px;
+  }
+
+  .slide-image-config-head,
+  .slide-image-queue-head,
+  .slide-image-gallery-nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .slide-image-config-body,
+  .slide-image-queue-panel {
+    padding: 12px;
+  }
+
+  .slide-image-config-key-row,
+  .slide-image-config-actions,
+  .slide-image-actions,
+  .slide-image-gallery-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .slide-image-actions .gen-btn,
+  .slide-image-config-actions .gen-btn,
+  .slide-image-gallery-actions .gen-btn {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .slide-image-prompt {
+    min-height: 260px;
+  }
+
+  .slide-image-preview {
+    border-radius: 12px;
+  }
+
+  .slide-image-job {
+    grid-template-columns: 1fr;
+  }
+
+  .slide-image-job-status {
+    justify-self: start;
+  }
+
+  .slide-image-job-list {
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 420px) {
+  .slide-image-config-head,
+  .slide-image-config-body,
+  .slide-image-queue-panel {
+    padding: 10px;
+  }
+
+  .slide-image-actions .gen-btn,
+  .slide-image-config-actions .gen-btn,
+  .slide-image-gallery-actions .gen-btn {
+    flex-basis: 100%;
+  }
+}
