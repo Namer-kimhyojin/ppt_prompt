@@ -316,6 +316,7 @@ button {
     min-height: 38px;
     padding: 9px 6px;
     border-radius: 10px;
+    font-size: 0;
   }
 
   body {
@@ -327,17 +328,20 @@ button {
     text-align: center;
   }
 
-  .app-tab-btn::after {
+  .app-tab-btn::before {
     content: attr(data-mobile-label);
-  }
-
-  .app-tab-btn {
-    font-size: 0;
-  }
-
-  .app-tab-btn::after {
+    display: block;
+    overflow: hidden;
+    color: currentColor;
     font-size: 12px;
     font-weight: 800;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-tab-btn::after {
+    content: "";
   }
 
   .app-tab-btn.active {
@@ -382,7 +386,7 @@ button {
     font-size: 0;
   }
 
-  .app-tab-btn::after {
+  .app-tab-btn::before {
     font-size: 12px;
   }
 }
