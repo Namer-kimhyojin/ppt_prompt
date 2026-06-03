@@ -89,6 +89,26 @@
   box-shadow: inset 0 0 0 4px var(--surface);
 }
 
+.map-visual-panel {
+  display: grid;
+  gap: 12px;
+  margin: 4px 0 16px;
+  padding: 14px;
+  border: 1px solid rgba(20, 108, 148, 0.18);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(20, 108, 148, 0.055), rgba(15, 23, 42, 0.025)),
+    var(--surface);
+}
+
+.map-visual-panel .gen-field {
+  margin-bottom: 0;
+}
+
+.map-visual-panel .gen-inline-head {
+  margin-bottom: 0;
+}
+
 .map-prompt-preview {
   min-height: 620px;
   font-family: "JetBrains Mono", "Pretendard", monospace;
@@ -141,6 +161,11 @@
     grid-template-columns: 1fr;
   }
 
+  .map-visual-panel {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
   .map-technique-card {
     min-height: 76px;
   }
@@ -157,6 +182,7 @@
 
   .map-intro,
   .map-guide-panel,
+  .map-visual-panel,
   .map-technique-card {
     border-radius: 12px;
     padding-top: 12px;

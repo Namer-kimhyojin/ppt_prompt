@@ -63,6 +63,52 @@
     minimal: "Use a minimal location-map style: keep only essential boundaries, labels, and emphasis elements for fast comprehension.",
   };
 
+  const COLOR_PALETTE_PROMPTS = {
+    "gov-blue": "Use a public-sector blue palette: deep navy, steel blue, cool gray, white background, and one controlled accent color.",
+    "green-growth": "Use a regional-development green palette: deep green, sage, light gray, white, and a small lime or teal accent.",
+    "infra-orange": "Use an infrastructure emphasis palette: charcoal, warm orange, muted blue-gray, and clean off-white.",
+    "mono-accent": "Use a monochrome base map with one strong accent color for the target district and key routes.",
+    ai: "Choose the optimal palette based on the attached map, target district visibility, business message, and label readability; do not use arbitrary decorative colors.",
+  };
+
+  const HIGHLIGHT_COLOR_PROMPTS = {
+    blue: "Use blue as the main highlight color for trust, planning stability, and public-sector credibility.",
+    red: "Use restrained red only for the target district focal outline; keep it professional and not alarm-like.",
+    green: "Use green as the main highlight color for development potential, land-use planning, and environmental/regional linkage.",
+    orange: "Use orange as the main highlight color for transport access, infrastructure corridors, and development momentum.",
+    cyan: "Use cyan or blue-green as the main highlight color for data, innovation, and network connectivity.",
+    ai: "Select the highlight color that has the best contrast against the attached map while remaining suitable for a formal business plan.",
+  };
+
+  const BASE_STYLE_PROMPTS = {
+    "clean-vector": "Convert the reference into a clean vector-map style with simplified roads, boundaries, rivers, and labels while preserving geography.",
+    "desaturated-original": "Keep the original map feel but desaturate and clean it so overlays and labels remain readable.",
+    "paper-report": "Use a refined report-figure map style with subtle paper texture, clean linework, and soft neutral surfaces.",
+    "technical-blueprint": "Use a technical planning-map style with precise linework, pale blueprint tones, grid hints, and measured annotations.",
+    "satellite-muted": "Use a restrained satellite or aerial-map treatment only if it supports the reference image; keep colors muted and labels readable.",
+  };
+
+  const BACKGROUND_PROMPTS = {
+    "white-report": "Place the map on a clean white report background with enough whitespace for a caption or legend.",
+    "soft-panel": "Use a subtle panel/card background around the map with light shadow and restrained report styling.",
+    "full-bleed-map": "Use the map as the full image canvas while keeping margins clean and avoiding any external frame.",
+    "muted-context": "Keep the target area crisp and make surrounding context slightly muted, low-contrast, and non-competing.",
+    "transparent-overlay": "Use transparent analytical overlays above the base map; never hide important geography or labels.",
+  };
+
+  const LABEL_DENSITY_PROMPTS = {
+    minimal: "Use minimal labels: target site, one or two key access points, and only the most important regional anchor.",
+    balanced: "Use balanced labels suitable for a business plan: target site, administrative area, major roads, nearby hubs, and compact legend.",
+    detailed: "Use detailed but organized labels for site analysis: key roads, hubs, nearby industrial bases, administrative names, and influence zones.",
+  };
+
+  const DEPTH_STYLE_PROMPTS = {
+    flat: "Use a flat, clean, highly legible report style with no unnecessary 3D effects.",
+    "subtle-depth": "Use subtle depth only through soft shadows, transparent layers, and inset panels; keep the map accurate.",
+    "premium-layered": "Use a premium layered composition with refined inset zoom, soft panels, and restrained shadows.",
+    "no-3d": "Avoid 3D, perspective distortion, extruded land, or cinematic map effects; prioritize geographic accuracy.",
+  };
+
   const OUTPUT_LABELS = {
     "business-plan": "business plan body figure",
     "proposal-slide": "proposal presentation slide map visual",
@@ -77,6 +123,12 @@
     targetArea: "",
     contextInfo: "",
     visualTone: "official",
+    colorPalette: "gov-blue",
+    highlightColor: "blue",
+    baseStyle: "clean-vector",
+    backgroundTreatment: "white-report",
+    labelDensity: "balanced",
+    depthStyle: "flat",
     canvas: "16:9 landscape business presentation image",
     labels: "",
     exclusions: "",
@@ -126,6 +178,12 @@
     state.targetArea = $("mapTargetArea")?.value.trim() || "";
     state.contextInfo = $("mapContextInfo")?.value.trim() || "";
     state.visualTone = $("mapVisualTone")?.value || DEFAULT_STATE.visualTone;
+    state.colorPalette = $("mapColorPalette")?.value || DEFAULT_STATE.colorPalette;
+    state.highlightColor = $("mapHighlightColor")?.value || DEFAULT_STATE.highlightColor;
+    state.baseStyle = $("mapBaseStyle")?.value || DEFAULT_STATE.baseStyle;
+    state.backgroundTreatment = $("mapBackgroundTreatment")?.value || DEFAULT_STATE.backgroundTreatment;
+    state.labelDensity = $("mapLabelDensity")?.value || DEFAULT_STATE.labelDensity;
+    state.depthStyle = $("mapDepthStyle")?.value || DEFAULT_STATE.depthStyle;
     state.canvas = $("mapCanvas")?.value || DEFAULT_STATE.canvas;
     state.labels = $("mapLabels")?.value.trim() || "";
     state.exclusions = $("mapExclusions")?.value.trim() || "";
@@ -138,6 +196,12 @@
     $("mapTargetArea").value = state.targetArea;
     $("mapContextInfo").value = state.contextInfo;
     $("mapVisualTone").value = state.visualTone;
+    $("mapColorPalette").value = state.colorPalette;
+    $("mapHighlightColor").value = state.highlightColor;
+    $("mapBaseStyle").value = state.baseStyle;
+    $("mapBackgroundTreatment").value = state.backgroundTreatment;
+    $("mapLabelDensity").value = state.labelDensity;
+    $("mapDepthStyle").value = state.depthStyle;
     $("mapCanvas").value = state.canvas;
     $("mapLabels").value = state.labels;
     $("mapExclusions").value = state.exclusions;
@@ -169,6 +233,18 @@
       line("Project or document name", state.projectName, "Business plan location map"),
       line("Canvas", state.canvas, "16:9 landscape business presentation image"),
       `- Tone: ${TONE_PROMPTS[state.visualTone] || TONE_PROMPTS.official}`,
+      "",
+      "[VISUAL SYSTEM]",
+      `- Color palette: ${COLOR_PALETTE_PROMPTS[state.colorPalette] || COLOR_PALETTE_PROMPTS["gov-blue"]}`,
+      `- Target highlight color: ${HIGHLIGHT_COLOR_PROMPTS[state.highlightColor] || HIGHLIGHT_COLOR_PROMPTS.blue}`,
+      `- Base map treatment: ${BASE_STYLE_PROMPTS[state.baseStyle] || BASE_STYLE_PROMPTS["clean-vector"]}`,
+      `- Background treatment: ${BACKGROUND_PROMPTS[state.backgroundTreatment] || BACKGROUND_PROMPTS["white-report"]}`,
+      `- Label density: ${LABEL_DENSITY_PROMPTS[state.labelDensity] || LABEL_DENSITY_PROMPTS.balanced}`,
+      `- Depth and texture: ${DEPTH_STYLE_PROMPTS[state.depthStyle] || DEPTH_STYLE_PROMPTS.flat}`,
+      "- Maintain enough contrast between the highlighted district, base map, labels, and surrounding context.",
+      "- Color choices must support business-plan readability; avoid decorative gradients or trendy colors that weaken map accuracy.",
+      "",
+      "[COMPOSITION RULES]",
       "- The image must look like a professional figure inserted into a Korean business plan or government proposal, not a generic travel map.",
       "- Prioritize readability, geographic clarity, and persuasive emphasis over decoration.",
       "",
@@ -235,6 +311,12 @@
     state.targetArea = "지도 중앙 동측의 ○○읍 일대 대상 부지. 인근 고속도로 IC와 국도 교차부, 배후 산업단지와의 연결성이 중요함.";
     state.contextInfo = "대상지는 광역 교통망 접근성이 높고, 기존 산업거점과 연계 가능한 전략적 입지임을 사업계획서 본문에서 설득해야 함.";
     state.visualTone = "official";
+    state.colorPalette = "gov-blue";
+    state.highlightColor = "blue";
+    state.baseStyle = "clean-vector";
+    state.backgroundTreatment = "white-report";
+    state.labelDensity = "balanced";
+    state.depthStyle = "subtle-depth";
     state.canvas = "16:9 landscape business presentation image";
     state.labels = "대상지, ○○IC, 주요 간선도로, 인근 산업단지, 배후권역, 행정구역명";
     state.exclusions = "새로운 지명 창작, 실제 도로 위치 왜곡, 과도한 네온 효과, 복잡한 3D 건물, 관광 안내지도 같은 분위기";
@@ -259,6 +341,12 @@
       "mapTargetArea",
       "mapContextInfo",
       "mapVisualTone",
+      "mapColorPalette",
+      "mapHighlightColor",
+      "mapBaseStyle",
+      "mapBackgroundTreatment",
+      "mapLabelDensity",
+      "mapDepthStyle",
       "mapCanvas",
       "mapLabels",
       "mapExclusions",

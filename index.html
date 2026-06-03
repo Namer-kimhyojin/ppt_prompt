@@ -1338,6 +1338,77 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </div>
           </div>
 
+          <div class="map-visual-panel">
+            <div class="gen-inline-head">
+              <label>비주얼 세부 설정</label>
+              <span class="gen-badge">Tone / Color / Detail</span>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <label for="mapColorPalette">색상 팔레트</label>
+                <select id="mapColorPalette" class="gen-select">
+                  <option value="gov-blue">공공 보고서형 블루 · 네이비/스틸블루/화이트</option>
+                  <option value="green-growth">지역개발형 그린 · 딥그린/세이지/라임 포인트</option>
+                  <option value="infra-orange">인프라 강조형 오렌지 · 차콜/오렌지/라이트그레이</option>
+                  <option value="mono-accent">모노톤 + 포인트 · 회색 지도/단일 강조색</option>
+                  <option value="ai">AI 위임 · 지도 내용과 사업 메시지에 맞춰 선택</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <label for="mapHighlightColor">강조 색상</label>
+                <select id="mapHighlightColor" class="gen-select">
+                  <option value="blue">신뢰감 있는 블루</option>
+                  <option value="red">위치 집중용 레드</option>
+                  <option value="green">개발/환경 연계 그린</option>
+                  <option value="orange">교통/인프라 강조 오렌지</option>
+                  <option value="cyan">첨단/데이터 느낌 시안</option>
+                  <option value="ai">AI 위임 · 원본 지도 대비에 맞춰 선택</option>
+                </select>
+              </div>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <label for="mapBaseStyle">지도 베이스 처리</label>
+                <select id="mapBaseStyle" class="gen-select">
+                  <option value="clean-vector">클린 벡터 지도화</option>
+                  <option value="desaturated-original">원본 지도 저채도 보정</option>
+                  <option value="paper-report">보고서용 종이 질감 지도</option>
+                  <option value="technical-blueprint">기술 도면/블루프린트 느낌</option>
+                  <option value="satellite-muted">절제된 위성/항공사진 기반</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <label for="mapBackgroundTreatment">배경 처리</label>
+                <select id="mapBackgroundTreatment" class="gen-select">
+                  <option value="white-report">화이트 보고서 배경</option>
+                  <option value="soft-panel">은은한 패널/카드 배경</option>
+                  <option value="full-bleed-map">지도 전체 화면형</option>
+                  <option value="muted-context">주변부 흐림/저채도 처리</option>
+                  <option value="transparent-overlay">반투명 분석 레이어 중심</option>
+                </select>
+              </div>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <label for="mapLabelDensity">라벨 밀도</label>
+                <select id="mapLabelDensity" class="gen-select">
+                  <option value="minimal">최소 라벨 · 대상지와 핵심 거점만</option>
+                  <option value="balanced">균형 라벨 · 사업계획서 기본 수준</option>
+                  <option value="detailed">상세 라벨 · 입지 분석용</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <label for="mapDepthStyle">입체감/질감</label>
+                <select id="mapDepthStyle" class="gen-select">
+                  <option value="flat">평면형 · 가장 명료한 보고서 스타일</option>
+                  <option value="subtle-depth">은은한 입체감 · 그림자/레이어 약하게</option>
+                  <option value="premium-layered">고급 레이어형 · 인셋/패널/음영 활용</option>
+                  <option value="no-3d">3D 배제 · 지도 정확성 최우선</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <div class="gen-field">
             <label for="mapLabels">표시할 라벨/범례</label>
             <textarea id="mapLabels" class="gen-textarea" rows="3" placeholder="예: 대상지, 주변 산업단지, 고속도로 IC, 주요 교통축, 행정구역명"></textarea>
