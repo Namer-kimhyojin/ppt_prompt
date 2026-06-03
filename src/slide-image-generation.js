@@ -110,7 +110,18 @@
     });
   }
 
+  function activePaneId() {
+    return document.querySelector(".tab-pane.active")?.id || "";
+  }
+
+  function getPromotionPrompt() {
+    return document.getElementById("promotionPromptPreview")?.value?.trim() || "";
+  }
+
   function getCurrentDesignerPrompt() {
+    if (activePaneId() === "panePromotion") {
+      return getPromotionPrompt();
+    }
     if (typeof window.buildPromptParts === "function") {
       const lang = window.state?.lang || "ko";
       return window.buildPromptParts(lang)

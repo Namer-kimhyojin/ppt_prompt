@@ -1,4 +1,4 @@
-﻿.gen-wrap {
+.gen-wrap {
   --gen-accent: var(--accent);
   --gen-accent2: var(--success);
   --gen-code: #1e293b;
@@ -609,6 +609,34 @@
   border-color: rgba(31, 94, 255, 0.35);
   background: #f7fbff;
   transform: translateY(-1px);
+}
+
+.gen-number-preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.gen-number-preset {
+  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid #d6e1ee;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gen-number-preset:hover:not(:disabled) {
+  border-color: rgba(31, 94, 255, 0.35);
+  background: #f7fbff;
+}
+
+.gen-number-preset:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .gen-split-builder-fields {

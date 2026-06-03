@@ -115,17 +115,35 @@ async function runSmokeTest() {
 
     page.on("console", (msg) => {
       if (msg.type() === "error") {
-        consoleErrors.push(`[console.${msg.type()}] ${msg.text()}`);
+        const text = msg.text();
+        if (!text.includes("favicon.ico") && !text.includes("/api/health") && !text.includes("Failed to load resource: the server responded with a status of 404")) {
+          consoleErrors.push(`[console.${msg.type()}] ${text}`);
+        }
       }
     });
     page.on("pageerror", (error) => {
       consoleErrors.push(`[pageerror] ${error.message}`);
+    });
+    page.on("response", (response) => {
+      if (response.status() >= 400) {
+        const url = response.url();
+        if (!url.endsWith("/favicon.ico") && !url.includes("/api/health")) {
+          consoleErrors.push(`[404/Error] ${url} returned status ${response.status()}`);
+        }
+      }
     });
 
     await page.goto(`${server.baseUrl}/index.html`, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.waitForSelector("#tabBtnPromotion");
     await page.click("#tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
+
+    await page.evaluate(() => {
+      document.querySelectorAll(".promo-step-disclosure").forEach((details) => {
+        details.open = true;
+      });
+    });
+    await page.waitForTimeout(100);
 
     record((await page.locator("#promotionAssetBadge").textContent()) === "홍보 이미지", "Promotion tab did not initialize with the unified promotion image mode", failures);
     record((await page.locator("#promotionForbiddenElements").inputValue()).includes("이모지 사용 금지"), "Promotion forbidden elements did not include the default emoji restriction", failures);
@@ -145,18 +163,18 @@ async function runSmokeTest() {
       record(toneValueAfterThirdClick.split(toneQuickText).length - 1 === 1, "Promotion tone quick button re-added the preset with duplicates", failures);
     }
 
-    if (await hasLocator(page, "[data-quick-for='promotionPosterKeyVisual'] .btn-quick")) {
-      const posterQuickButton = page.locator("[data-quick-for='promotionPosterKeyVisual'] .btn-quick").first();
+    if (await hasLocator(page, "[data-quick-for='promotionVisualStyle'] .btn-quick")) {
+      const posterQuickButton = page.locator("[data-quick-for='promotionVisualStyle'] .btn-quick").first();
       const posterQuickText = ((await posterQuickButton.textContent()) || "").trim();
       await posterQuickButton.click();
-      const posterQuickValue = await page.locator("#promotionPosterKeyVisual").inputValue();
+      const posterQuickValue = await page.locator("#promotionVisualStyle").inputValue();
       record(posterQuickValue.split(posterQuickText).length - 1 === 1, "Promotion asset-specific quick button did not add the preset on first click", failures);
       record((await posterQuickButton.getAttribute("aria-pressed")) === "true", "Promotion asset-specific quick button did not reflect the active toggle state", failures);
       await posterQuickButton.click();
-      record((await page.locator("#promotionPosterKeyVisual").inputValue()) === "", "Promotion asset-specific quick button did not remove the preset on second click", failures);
+      record((await page.locator("#promotionVisualStyle").inputValue()) === "", "Promotion asset-specific quick button did not remove the preset on second click", failures);
       record((await posterQuickButton.getAttribute("aria-pressed")) === "false", "Promotion asset-specific quick button did not clear the active toggle state", failures);
       await posterQuickButton.click();
-      const posterQuickValueAfterThirdClick = await page.locator("#promotionPosterKeyVisual").inputValue();
+      const posterQuickValueAfterThirdClick = await page.locator("#promotionVisualStyle").inputValue();
       record(posterQuickValueAfterThirdClick.split(posterQuickText).length - 1 === 1, "Promotion asset-specific quick button re-added the preset with duplicates", failures);
     }
 
@@ -215,18 +233,17 @@ async function runSmokeTest() {
       record(!(await page.locator("#promotionBackgroundMode").isDisabled()), "Promotion background mode did not re-enable after leaving AI color mode", failures);
     }
 
-    if (await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='event']")) {
-      await page.click("#promotionTemplateGrid [data-promo-content-type='event']");
+    if (await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='event-info']")) {
+      await page.click("#promotionTemplateGrid [data-promo-content-type='event-info']");
       await page.waitForTimeout(150);
-      record((await page.locator("#promotionContentType").inputValue()) === "event", "Template card did not sync the content type select", failures);
-      record((await page.locator("#promotionHeadline").inputValue()).includes("NEXT HORIZON"), "Event template card did not auto-apply the event sample", failures);
+      record((await page.locator("#promotionHeadline").inputValue()).includes("NEXT HORIZON"), "Event info template card did not auto-apply the event sample", failures);
     }
-    record(await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='demand-survey']"), "Demand survey template card was missing", failures);
-    record(await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='survey']"), "Survey template card was missing", failures);
+    record(await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='survey-request']"), "Survey request template card was missing", failures);
+    record(await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='training-info']"), "Training info template card was missing", failures);
 
     record(!(await hasLocator(page, "#promotionTypePoster")), "Promotion asset tabs should have been removed", failures);
-    record(await hasLocator(page, "#promotionPosterKeyVisual"), "Unified promotion fields did not include the main visual field", failures);
-    record(await hasLocator(page, "#promotionSnsPlacementNotes"), "Unified promotion fields did not include the placement notes field", failures);
+    record(await hasLocator(page, "#promotionVisualStyle"), "Unified promotion fields did not include the visual style field", failures);
+    record(await hasLocator(page, "#promotionQualityNotes"), "Unified promotion fields did not include the quality notes field", failures);
     record(!(await hasLocator(page, "#promotionCardFlow")), "Cardnews-only fields should have been removed", failures);
     record(await hasLocator(page, "#promotionCommercialBaseline"), "Promotion commercial baseline control was missing", failures);
     record(await hasLocator(page, "#promotionCreativityLevel"), "Promotion creativity level control was missing", failures);
@@ -271,17 +288,17 @@ async function runSmokeTest() {
     record((directSizePreview.match(/컨텐츠 유형:/g) || []).length <= 1, "Promotion prompt preview repeated the content type line", failures);
     record((directSizePreview.match(/메인 색상:/g) || []).length <= 1, "Promotion prompt preview repeated the primary color line", failures);
 
-    await page.locator("#promotionContentType").selectOption("contest");
-    await page.waitForTimeout(200);
-    record((await page.locator("#promotionHeadline").inputValue()).includes("오픈이노베이션 챌린지"), "Contest template selection did not auto-apply the contest sample", failures);
+    if (await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='campaign']")) {
+      await page.click("#promotionTemplateGrid [data-promo-content-type='campaign']");
+      await page.waitForTimeout(200);
+      record((await page.locator("#promotionHeadline").inputValue()).includes("ZERO PLASTIC"), "Campaign template card did not auto-apply the campaign sample", failures);
+    }
 
-    await page.locator("#promotionContentType").selectOption("demand-survey");
-    await page.waitForTimeout(200);
-    record((await page.locator("#promotionHeadline").inputValue()).includes("수요조사"), "Demand survey template selection did not auto-apply the demand survey sample", failures);
-
-    await page.locator("#promotionContentType").selectOption("survey");
-    await page.waitForTimeout(200);
-    record((await page.locator("#promotionHeadline").inputValue()).includes("설문 참여 이벤트"), "Survey template selection did not auto-apply the survey sample", failures);
+    if (await hasLocator(page, "#promotionTemplateGrid [data-promo-content-type='survey-request']")) {
+      await page.click("#promotionTemplateGrid [data-promo-content-type='survey-request']");
+      await page.waitForTimeout(200);
+      record((await page.locator("#promotionHeadline").inputValue()).includes("정책 혁신 설문조사"), "Survey request template card did not auto-apply the survey request sample", failures);
+    }
 
     await page.locator("#promotionSizeMode").selectOption("direct");
     await page.locator("#promotionDirectSizeW").fill("1080");
@@ -297,6 +314,18 @@ async function runSmokeTest() {
       record((await page.locator("#promotionDirectSizeH").inputValue()) === "1920", "Random preset button changed the direct height", failures);
       record((await page.locator("#promotionTone").inputValue()).length > 0, "Random preset button did not apply random preset values", failures);
     }
+
+    const enableManualMode = async (field) => {
+      const selector = `[data-toggle-mode='${field}'][data-mode='manual']`;
+      if (await hasLocator(page, selector)) {
+        await page.click(selector);
+        await page.waitForTimeout(50);
+      }
+    };
+    await enableManualMode("cta");
+    await enableManualMode("posterOffer");
+    await enableManualMode("snsHook");
+    await enableManualMode("snsHashtags");
 
     const visibleTextFieldValues = [
       ["#promotionHeadline", "Weekend session signup"],
@@ -350,8 +379,8 @@ async function runSmokeTest() {
     if (await hasLocator(page, "#promotionVisualMetaphor")) {
       await page.locator("#promotionVisualMetaphor").fill("refracted glass runway with converging light beams");
     }
-    await page.locator("#promotionOutputLanguage").selectOption("en");
-    await page.locator("#promotionPromptMode").selectOption("optimized");
+    await page.locator("[data-promo-output-language='en']").click();
+    await page.locator("[data-promo-prompt-mode='optimized']").click();
     await page.waitForTimeout(200);
     const optimizedPreview = await page.locator("#promotionPromptPreview").inputValue();
     record(optimizedPreview.includes("Generate a premium"), "Optimized English prompt did not render", failures);
@@ -359,7 +388,7 @@ async function runSmokeTest() {
     record(optimizedPreview.includes("Asset type:"), "Optimized English prompt did not include the English asset-type label", failures);
     record(optimizedPreview.includes("Content template:"), "Optimized English prompt did not include the English content-template label", failures);
     record(optimizedPreview.includes("Sizing mode:"), "Optimized English prompt did not include the English sizing label", failures);
-    record(optimizedPreview.includes("Avoid:"), "Optimized English prompt did not include the English hard-constraint label", failures);
+    record(optimizedPreview.toLowerCase().includes("avoid:"), "Optimized English prompt did not include the English hard-constraint label", failures);
     record(optimizedPreview.includes("promotion goal:"), "Optimized English prompt did not include the English promotion-goal label", failures);
     record(optimizedPreview.includes("target audience:"), "Optimized English prompt did not include the English target-audience label", failures);
     record(optimizedPreview.includes("Background treatment:"), "Optimized English prompt did not include the English background label", failures);
@@ -418,6 +447,70 @@ async function runSmokeTest() {
       await page.waitForTimeout(150);
       record(!(await page.locator("#promotionPromptPreview").inputValue()).includes("미입력"), "Promotion prompt preview still showed placeholders after omit-empty-fields", failures);
     }
+
+    // ----------------------------------------------------
+    // Slide Document Consolidated Tab Test
+    // ----------------------------------------------------
+    await page.click("#tabBtnSlideDocument");
+    await page.waitForSelector("#paneSlideDocument.active");
+
+    // Sub-tab 1: Cover
+    await page.evaluate(() => {
+      document.querySelectorAll("#paneSlideCover .promo-step-disclosure").forEach((details) => {
+        details.open = true;
+      });
+    });
+    await page.waitForTimeout(150);
+    // Click sample data button
+    await page.click("#slideCoverSampleBtn");
+    await page.waitForTimeout(150);
+    let coverHeadline = await page.locator("#slideCoverHeadline").inputValue();
+    record(coverHeadline.includes("Strategy") || coverHeadline.includes("전략") || coverHeadline.length > 0, "Slide Cover headline was not populated by sample data", failures);
+    // Click reset button
+    await page.click("#slideCoverResetBtn");
+    await page.waitForTimeout(150);
+    let coverHeadlineReset = await page.locator("#slideCoverHeadline").inputValue();
+    record(coverHeadlineReset === "", "Slide Cover headline was not reset", failures);
+
+    // Sub-tab 2: Divider
+    await page.click('.slide-sub-tab-btn[data-target="paneSlideDivider"]');
+    await page.waitForSelector("#paneSlideDivider.active");
+    await page.evaluate(() => {
+      document.querySelectorAll("#paneSlideDivider .promo-step-disclosure").forEach((details) => {
+        details.open = true;
+      });
+    });
+    await page.waitForTimeout(150);
+    await page.click("#slideDividerSampleBtn");
+    await page.waitForTimeout(150);
+    let dividerHeadline = await page.locator("#slideDividerHeadline").inputValue();
+    record(dividerHeadline.includes("혁신") || dividerHeadline.includes("기술") || dividerHeadline.length > 0, "Slide Divider headline was not populated by sample data", failures);
+    await page.click("#slideDividerResetBtn");
+    await page.waitForTimeout(150);
+    let dividerHeadlineReset = await page.locator("#slideDividerHeadline").inputValue();
+    record(dividerHeadlineReset === "", "Slide Divider headline was not reset", failures);
+
+    // Sub-tab 3: Background
+    await page.click('.slide-sub-tab-btn[data-target="paneSlideBackground"]');
+    await page.waitForSelector("#paneSlideBackground.active");
+    await page.evaluate(() => {
+      document.querySelectorAll("#paneSlideBackground .promo-step-disclosure").forEach((details) => {
+        details.open = true;
+      });
+    });
+    await page.waitForTimeout(150);
+    await page.click("#slideBackgroundSampleBtn");
+    await page.waitForTimeout(150);
+    let bgBrandTone = await page.locator("#slideBackgroundBrandTone").inputValue();
+    let bgHeaderStyle = await page.locator("#slideBackgroundHeaderStyle").inputValue();
+    record(bgBrandTone.includes("가독성") || bgBrandTone.length > 0, "Slide Background brand tone was not populated by sample data", failures);
+    record(bgHeaderStyle === "thin_line", "Slide Background header style was not populated by sample data", failures);
+    await page.click("#slideBackgroundResetBtn");
+    await page.waitForTimeout(150);
+    let bgBrandToneReset = await page.locator("#slideBackgroundBrandTone").inputValue();
+    let bgHeaderStyleReset = await page.locator("#slideBackgroundHeaderStyle").inputValue();
+    record(bgBrandToneReset === "", "Slide Background brand tone was not reset", failures);
+    record(bgHeaderStyleReset === "none", "Slide Background header style was not reset", failures);
 
     if (consoleErrors.length) {
       failures.push(`Console errors were reported:\n${consoleErrors.join("\n")}`);

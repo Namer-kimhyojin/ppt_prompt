@@ -21,10 +21,10 @@
       pane: document.getElementById("paneSlideImage"),
       actions: "slideImage",
     },
-    promotionPlanner: {
-      button: document.getElementById("tabBtnPromotionPlanner"),
-      pane: document.getElementById("panePromotionPlanner"),
-      actions: "promotionPlanner",
+    slideDocument: {
+      button: document.getElementById("tabBtnSlideDocument"),
+      pane: document.getElementById("paneSlideDocument"),
+      actions: "slideDocument",
     },
   };
 
@@ -45,18 +45,17 @@
       { label: "텍스트 리셋", targetId: "promotionResetTextBtn", className: "btn ghost" },
       { label: "전체 초기화", targetId: "promotionResetBtn", className: "btn ghost" },
     ],
-    promotionPlanner: [
-      { label: "프롬프트 복사", targetId: "plannerCopyBtn", className: "btn primary" },
-      { label: "요청 분해", targetId: "plannerAnalyzeBtn", className: "btn secondary" },
-      { label: "샘플 채우기", targetId: "plannerSampleBtn", className: "btn secondary" },
-      { label: "초기화", targetId: "plannerResetBtn", className: "btn ghost" },
-    ],
     slideImage: [
       { label: "상태 확인", targetId: "slideImageHealthBtn", className: "btn ghost" },
       { label: "목록 가져오기", targetId: "slideImageLoadDeckBtn", className: "btn secondary" },
       { label: "이미지 생성", targetId: "slideImageGenerateBtn", className: "btn primary" },
       { label: "전체 순차 생성", targetId: "slideImageStartQueueBtn", className: "btn secondary" },
       { label: "outputs 열기", targetId: "slideImageOpenFolderBtn", className: "btn ghost" },
+    ],
+    slideDocument: [
+      { label: "프롬프트 복사", targetId: "slideDocCopyPromptBtn", className: "btn primary" },
+      { label: "샘플 채우기", targetId: "slideDocSampleBtn", className: "btn secondary" },
+      { label: "초기화", targetId: "slideDocResetBtn", className: "btn ghost" },
     ],
   };
 
@@ -109,6 +108,11 @@
 
     renderHeaderActions(tabs[nextTab]?.actions || "designer");
   }
+
+  window.PromptDeckTabs = {
+    switchTab,
+    syncHeaderActionStates,
+  };
 
   Object.keys(tabs).forEach((key) => {
     if (!tabs[key].button) return;

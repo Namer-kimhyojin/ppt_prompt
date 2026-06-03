@@ -1,4 +1,4 @@
-﻿;
+;
 
     // ?? ?щ씪?대뱶蹂??앹꽦湲?濡쒖쭅 ????????????????????????????????????????
     (function () {
@@ -82,6 +82,9 @@
       document.querySelectorAll(".gen-split-preset").forEach((el) => {
         el.addEventListener("click", () => appendPresetSplitRule(el.dataset.ruleType, el.dataset.rulePattern));
       });
+      document.querySelectorAll(".gen-number-preset").forEach((el) => {
+        el.addEventListener("click", () => applyNumberExamplePreset(el.dataset.numberExample));
+      });
       document.querySelectorAll("[data-close-config-modal]").forEach((el) => {
         el.addEventListener("click", closeConfigModal);
       });
@@ -122,18 +125,95 @@
         return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       }
 
+      function stripRegexCapture(value) {
+        return String(value || "")
+          .trim()
+          .replace(/^\^/, "")
+          .replace(/\$$/, "")
+          .replace(/^\((.*)\)$/, "$1");
+      }
+
+      function looksLikeRegex(value) {
+        return /[\\[\]{}()+*?|^$]/.test(String(value || ""));
+      }
+
+      function sampleFromRegex(value) {
+        return stripRegexCapture(value)
+          .replace(/\\d/g, "1")
+          .replace(/\[A-Z\]/g, "A")
+          .replace(/\[a-z\]/g, "a")
+          .replace(/\[A-Za-z\]/g, "A")
+          .replace(/\[IVXLCDM\]/g, "IV")
+          .replace(/\[가-힣\]/g, "가")
+          .replace(/[\\[\]{}()+*?|]/g, "")
+          .slice(0, 8) || "X1";
+      }
+
+      function inferNumberPatternFromExample(rawValue) {
+        const value = String(rawValue || "").trim();
+        if (!value) return { pattern: ".+", sample: "X1" };
+
+        if (looksLikeRegex(value)) {
+          const pattern = stripRegexCapture(value);
+          return { pattern, sample: sampleFromRegex(pattern) };
+        }
+
+        const sample = value.split(/[,，]/)[0].trim() || value;
+        const tokens = [];
+        let index = 0;
+
+        while (index < sample.length) {
+          const rest = sample.slice(index);
+          const digit = rest.match(/^\d+/);
+          const upper = rest.match(/^[A-Z]+/);
+          const lower = rest.match(/^[a-z]+/);
+          const korean = rest.match(/^[가-힣]+/);
+
+          if (digit) {
+            tokens.push(digit[0].length === 1 ? "\\d+" : `\\d{${digit[0].length}}`);
+            index += digit[0].length;
+          } else if (/^[IVXLCDM]+$/.test(sample)) {
+            tokens.push("[IVXLCDM]+");
+            index = sample.length;
+          } else if (upper) {
+            tokens.push(upper[0].length === 1 ? "[A-Z]" : "[A-Z]+");
+            index += upper[0].length;
+          } else if (lower) {
+            tokens.push(lower[0].length === 1 ? "[a-z]" : "[a-z]+");
+            index += lower[0].length;
+          } else if (korean) {
+            tokens.push(korean[0].length === 1 ? "[가-힣]" : "[가-힣]+");
+            index += korean[0].length;
+          } else {
+            tokens.push(escapeRegex(sample[index]));
+            index += 1;
+          }
+        }
+
+        return { pattern: tokens.join(""), sample };
+      }
+
       function numberPatternMeta(kind, customValue = "") {
         if (kind === "digits") {
           return { pattern: "\\d+", sample: "1" };
         }
+        if (kind === "digits3") {
+          return { pattern: "\\d{3}", sample: "001" };
+        }
         if (kind === "letterDigits") {
           return { pattern: "[A-Z]\\d+", sample: "A1" };
         }
+        if (kind === "letters") {
+          return { pattern: "[A-Z]+", sample: "A" };
+        }
+        if (kind === "roman") {
+          return { pattern: "[IVXLCDM]+", sample: "IV" };
+        }
+        if (kind === "koreanDigits") {
+          return { pattern: "[가-힣]\\d+", sample: "가1" };
+        }
         if (kind === "custom") {
-          return {
-            pattern: customValue.trim() || ".+",
-            sample: customValue.trim() ? customValue.trim().replace(/[\\^$()[\]{}+*?|]/g, "").slice(0, 4) || "X1" : "X1",
-          };
+          return inferNumberPatternFromExample(customValue);
         }
         return { pattern: "\\d{2}", sample: "01" };
       }
@@ -159,11 +239,17 @@
       function updateSplitRuleBuilderPreview() {
         const isCustom = $("genSplitBuilderNumber").value === "custom";
         $("genSplitBuilderNumberCustom").disabled = !isCustom;
-        if (!isCustom) $("genSplitBuilderNumberCustom").value = "";
 
         const built = buildSplitRuleFromBuilder();
         $("genSplitBuilderPreviewRegex").value = built.rule;
         $("genSplitBuilderPreviewSample").value = built.sample;
+      }
+
+      function applyNumberExamplePreset(example) {
+        $("genSplitBuilderNumber").value = "custom";
+        $("genSplitBuilderNumberCustom").disabled = false;
+        $("genSplitBuilderNumberCustom").value = example || "";
+        updateSplitRuleBuilderPreview();
       }
 
       function openSplitRulesModal() {
@@ -1124,6 +1210,7 @@
           item.className = "gen-slide-item";
           item.style.margin = "0";
           item.style.flex = "1";
+          item.style.minWidth = "0";
           item.dataset.index = String(index);
           item.innerHTML = `${displayNo(record)}${record.selections ? " <span style='color:var(--gen-accent);font-size:11px;'>(개별)</span>" : ""}<small>${escapeHtml(record.title)}</small>`;
           item.addEventListener("click", () => selectSlide(index));
@@ -1131,11 +1218,14 @@
           const configBtn = document.createElement("button");
           configBtn.type = "button";
           configBtn.className = "gen-btn secondary";
-          configBtn.style.padding = "0 8px";
+          configBtn.style.padding = "4px 8px";
           configBtn.style.margin = "0";
+          configBtn.style.flexShrink = "0";
+          configBtn.style.fontSize = "11px";
+          configBtn.style.whiteSpace = "nowrap";
           configBtn.title = "슬라이드 개별 프롬프트 설정";
           configBtn.setAttribute("aria-label", "슬라이드 개별 프롬프트 설정");
-          configBtn.innerHTML = "&#9881;";
+          configBtn.innerHTML = "개별 설정 &#9881;";
           configBtn.addEventListener("click", (event) => {
             event.stopPropagation();
             openConfigModal(index);
@@ -1162,6 +1252,7 @@
           item.className = "gen-slide-item";
           item.style.margin = "0";
           item.style.flex = "1";
+          item.style.minWidth = "0";
           item.dataset.index = String(index);
           item.innerHTML = `${displayNo(record)}${hasSlideSpecificConfig(record) ? " <span style='color:var(--gen-accent);font-size:11px;'>(개별)</span>" : ""}<small>${escapeHtml(record.title)}</small>`;
           item.addEventListener("click", () => selectSlide(index));
@@ -1169,11 +1260,14 @@
           const configBtn = document.createElement("button");
           configBtn.type = "button";
           configBtn.className = "gen-btn secondary";
-          configBtn.style.padding = "0 8px";
+          configBtn.style.padding = "4px 8px";
           configBtn.style.margin = "0";
+          configBtn.style.flexShrink = "0";
+          configBtn.style.fontSize = "11px";
+          configBtn.style.whiteSpace = "nowrap";
           configBtn.title = "개별 슬라이드 프롬프트 설정";
           configBtn.setAttribute("aria-label", "개별 슬라이드 프롬프트 설정");
-          configBtn.innerHTML = "&#9881;";
+          configBtn.innerHTML = "개별 설정 &#9881;";
           configBtn.addEventListener("click", (event) => {
             event.stopPropagation();
             openConfigModal(index);

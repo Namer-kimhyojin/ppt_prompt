@@ -9,12 +9,12 @@
   const PROMOTION_COLOR_PRESETS_KEY = "promptdeck-promotion-color-presets-v1";
   const PROMOTION_SIZE_PRESETS_KEY = "promptdeck-promotion-size-presets-v1";
   const ASSET_TYPES = ["image"];
-  const CONTENT_TYPE_VALUES = ["none", "event", "contest", "training", "demand-survey", "survey"];
+  const CONTENT_TYPE_VALUES = ["none", "campaign", "result-promo", "event-info", "survey-request", "training-info", "biz-promo"];
   const COLOR_STRATEGY_VALUES = ["manual", "ai"];
 
   const ASSET_DEFAULTS = {
     image: {
-      contentType: "event",
+      contentType: "event-info",
       sizeMode: "ratio",
       ratio: "4:5",
       orientation: "vertical",
@@ -52,7 +52,7 @@
     cta: "",
     tone: "",
     visualStyle: "",
-    antiAiStyle: "",
+    antiAiStyle: "general",
     qualityNotes: "",
     colorStrategy: "manual",
     primaryColor: "",
@@ -64,7 +64,9 @@
     mandatoryElements: "",
     forbiddenElements: "이모지 사용 금지",
     posterKeyVisual: "",
+    posterKeyVisualEnabled: "false",
     posterInfoLayout: "",
+    posterInfoLayoutEnabled: "false",
     posterOffer: "",
     posterOfferEnabled: "true",
     posterOfferMode: "ai",
@@ -75,9 +77,13 @@
     snsHashtagsEnabled: "true",
     snsHashtagsMode: "ai",
     snsVisualFocus: "",
+    snsVisualFocusEnabled: "false",
     snsPlacementNotes: "",
+    snsPlacementNotesEnabled: "false",
     ctaEnabled: "true",
     ctaMode: "ai",
+    qrEnabled: "false",
+    qrUrl: "",
     bigIdea: "",
     visualMetaphor: "",
     variationMode: "none",
@@ -125,6 +131,8 @@
     promotionSubheadline: "visible",
     promotionBodyCopy: "visible",
     promotionCta: "visible",
+    promotionQrEnabled: "constraint",
+    promotionQrUrl: "instruction",
     promotionTone: "instruction",
     promotionVisualStyle: "instruction",
     promotionQualityNotes: "instruction",
@@ -148,8 +156,8 @@
     omitEmptyFields: "빈 항목 자동 제거",
     dedupePromptLines: "중복 문구 제거",
     autoResolveConflicts: "상충 규칙 자동 정리",
-    commercialBaseline: "상업 품질 기준",
-    creativityLevel: "창의성 강도",
+    commercialBaseline: "상업 완성도 기준",
+    creativityLevel: "구성 실험 강도",
     variationMode: "다양성 변형 지시",
     sizeMode: "규격 입력 방식",
     ratio: "비율",
@@ -165,11 +173,13 @@
     headline: "헤드라인",
     subheadline: "서브 카피",
     bodyCopy: "본문 포인트",
-    cta: "CTA",
+    cta: "엑션버튼(CTA)",
+    qrEnabled: "QR코드 사용 여부",
+    qrUrl: "QR코드 연결 주소",
     tone: "브랜드 톤",
     visualStyle: "비주얼 스타일",
     antiAiStyle: "AI 느낌 억제",
-    qualityNotes: "품질 보정 지시",
+    qualityNotes: "결과물 결함 방지",
     colorStrategy: "색상 전략",
     bigIdea: "Big Idea",
     visualMetaphor: "비주얼 은유",
@@ -214,7 +224,9 @@
     headline: "headline",
     subheadline: "sub copy",
     bodyCopy: "body points",
-    cta: "CTA",
+    cta: "action button (CTA)",
+    qrEnabled: "QR code usage",
+    qrUrl: "QR code target URL",
     tone: "brand tone",
     visualStyle: "visual style",
     antiAiStyle: "anti-AI style preset",
@@ -242,19 +254,16 @@
   const QUICK_BTNS = {
     tone: [
       "신뢰감 있는",
-      "모던한",
-      "역동적인",
-      "친근한",
-      "미니멀한",
-      "전문적인",
-      "고급스러운",
-      "심플한",
-      "프리미엄",
-      "스마트한",
-      "따뜻한",
+      "대담한",
       "임팩트 있는",
-      "차분한",
+      "전문적인",
       "세련된",
+      "친근한",
+      "역동적인",
+      "모던한",
+      "미니멀한",
+      "따뜻한",
+      "스마트한",
       "브랜드 광고 같은",
     ],
     visualStyle: [
@@ -354,21 +363,22 @@
       "왼쪽 정렬축 유지",
     ],
     bigIdea: [
-      "연결",
-      "돌파",
-      "신뢰",
-      "전환",
-      "미래",
       "참여",
-      "속도",
+      "성장",
+      "신뢰",
+      "변화",
+      "연결",
+      "혁신",
+      "소통",
     ],
     visualMetaphor: [
-      "유리 큐브",
-      "빛의 축",
-      "데이터 흐름",
-      "프레임 돌출",
-      "구조물 교차",
-      "레이어 겹침",
+      "상승 곡선",
+      "빛의 경로",
+      "확산하는 물결",
+      "맞물린 기어",
+      "정렬된 큐브",
+      "열린 프레임",
+      "겹치는 레이어",
     ],
   };
 
@@ -379,6 +389,17 @@
       "텍스트 가장자리 또렷함",
       "픽셀 깨짐 없음",
       "썸네일 축소 시에도 핵심 문구 가독성 유지",
+      "작은 글자 번짐 방지",
+      "노이즈 없는 깨끗한 표면",
+      "인물 얼굴 왜곡 방지",
+      "손가락 및 로고 형태 왜곡 방지",
+      "제품 윤곽선 선명",
+      "과한 합성 광택 방지",
+      "스톡 이미지 같은 질감 방지",
+      "과한 광원·네온 번짐·렌즈 플레어 방지",
+      "장난감 같은 3D 오브젝트와 가짜 홀로그램 금지",
+      "실사 합성의 원근·스케일·그림자·색온도 일관성 유지",
+      "외부 프레임 없는 단일 완성 이미지",
     ],
     en: [
       "advertising-grade high-resolution quality",
@@ -386,6 +407,17 @@
       "crisp text edges",
       "no pixelation",
       "headline legible at thumbnail size",
+      "prevent small text blurring",
+      "clean noise-free surfaces",
+      "prevent face distortion",
+      "prevent hand and logo distortion",
+      "sharp product contours",
+      "avoid over-rendered synthetic gloss",
+      "avoid cheap stock photo appearance",
+      "avoid excessive lighting effects, neon bloom, and lens flare",
+      "no toy-like 3D objects or fake holograms",
+      "keep photorealistic compositing consistent in perspective, scale, shadows, and color temperature",
+      "single finished image with no outer frame",
     ],
   };
 
@@ -533,9 +565,228 @@
     },
   ];
 
+  const CONTENT_PROMOTION_STRATEGIES = {
+    none: {
+      linesKo: [
+        "목적이 직접 입력형이므로 헤드라인과 핵심 혜택을 먼저 읽히게 하고, 나머지 정보는 보조 레이어로 낮춘다",
+        "브랜드 광고처럼 하나의 강한 장면을 만들되, 임의 정보나 장식 텍스트를 추가하지 않는다",
+      ],
+      linesEn: [
+        "Because this is a custom brief, make the headline and core benefit read first, while pushing secondary information into supporting layers",
+        "Create one strong brand-advertising scene, but do not invent extra information or decorative text",
+      ],
+    },
+    campaign: {
+      linesKo: [
+        "감정적 공감과 참여 동기를 먼저 만들고, 캠페인 슬로건을 강한 첫 인상으로 고정한다",
+        "상징 오브젝트나 은유 장면을 활용해 메시지를 설명하지 않고 직관적으로 느끼게 만든다",
+        "행동 유도는 참여 선언, 서약, 공유, 신청 중 하나로 명확하게 좁힌다",
+      ],
+      linesEn: [
+        "Build emotional empathy and participation motive first, then lock the campaign slogan as the strongest first impression",
+        "Use a symbolic object or metaphorical scene so the message is felt intuitively rather than explained literally",
+        "Narrow the action prompt to one clear behavior such as pledge, share, register, or join",
+      ],
+    },
+    "result-promo": {
+      linesKo: [
+        "핵심 수치와 성과 타이틀을 가장 먼저 보이게 하고, 신뢰감을 주는 정보 카드 구조로 정돈한다",
+        "성과 데이터는 장식이 아니라 증거처럼 보여야 하며, 숫자·출처·라벨의 가독성을 최우선으로 둔다",
+        "비주얼 은유는 상승, 확장, 누적, 신뢰 같은 방향으로 제한해 과장된 축제 분위기를 피한다",
+      ],
+      linesEn: [
+        "Make the key metric and outcome title read first, then organize supporting information into trustworthy information cards",
+        "Performance data must read like evidence rather than decoration; prioritize legibility of numbers, sources, and labels",
+        "Limit visual metaphors to growth, expansion, accumulation, or trust; avoid exaggerated celebratory styling",
+      ],
+    },
+    "event-info": {
+      linesKo: [
+        "행사명과 날짜·장소·신청 행동을 빠르게 읽히게 하고, 분위기는 참여하고 싶은 장면으로 연출한다",
+        "메인 비주얼은 행사 경험을 상상하게 만드는 인물, 공간, 조명, 움직임 중 하나로 잡는다",
+        "정보 박스는 하단 또는 한쪽 축에 묶어 포스터처럼 즉시 스캔 가능하게 만든다",
+      ],
+      linesEn: [
+        "Make the event title, date, location, and registration action readable quickly, while staging the mood as an experience people want to join",
+        "Use one main visual cue such as people, venue, light, or motion to make the event experience imaginable",
+        "Group event details into a bottom or side information zone so the image scans like a poster",
+      ],
+    },
+    "survey-request": {
+      linesKo: [
+        "참여 부담을 낮추는 친근한 첫 인상과 짧은 소요 시간·혜택·의미를 명확히 보여준다",
+        "딱딱한 조사 문서처럼 보이지 않게 라운드 카드, 부드러운 색면, 간단한 아이콘을 활용한다",
+        "CTA는 선물·의견·참여 의미 중 하나를 중심으로 가볍고 즉각적인 행동으로 만든다",
+      ],
+      linesEn: [
+        "Create a friendly first impression that lowers participation friction, while clearly showing duration, reward, and purpose",
+        "Avoid a rigid survey-document look by using rounded cards, soft color fields, and simple icons",
+        "Shape the CTA around reward, opinion, or contribution so the action feels light and immediate",
+      ],
+    },
+    "training-info": {
+      linesKo: [
+        "교육 혜택, 성장 가능성, 마감일을 한눈에 보이게 하고 신청 동기를 분명히 만든다",
+        "학습·성장 은유는 계단, 빛, 경로, 열린 문, 상승 그래프처럼 긍정적이고 전문적인 상징을 사용한다",
+        "커리큘럼 정보는 길게 설명하지 말고 핵심 혜택 2~3개로 압축해 카드화한다",
+      ],
+      linesEn: [
+        "Make training benefits, growth potential, and deadline visible at a glance, with a clear reason to apply",
+        "Use positive professional learning metaphors such as stairs, light, paths, open doors, or rising graphs",
+        "Do not explain curriculum at length; compress it into 2 to 3 benefit cards",
+      ],
+    },
+    "biz-promo": {
+      linesKo: [
+        "지원 혜택과 신청 자격을 명확히 보여주되, 스타트업·비즈니스 광고처럼 에너지 있는 장면을 만든다",
+        "비주얼은 기회, 연결, 확장, 투자, 파트너십을 상징하는 오브젝트나 공간 구조로 잡는다",
+        "과도한 네온이나 장난감 같은 3D를 피하고, 전문성과 성장감을 동시에 준다",
+      ],
+      linesEn: [
+        "Show program benefits and eligibility clearly while creating an energetic startup or business-advertising scene",
+        "Build the visual around objects or spatial structures symbolizing opportunity, connection, expansion, investment, or partnership",
+        "Avoid excessive neon or toy-like 3D; balance professionalism with growth energy",
+      ],
+    },
+  };
+
+  const CREATIVE_DIVERSITY_PROFILES = {
+    stable: {
+      linesKo: [
+        "동일한 정보라도 흔한 공지형 템플릿을 피하고, 색면·여백·타이포 스케일 중 하나에 차별점을 둔다",
+        "결과물은 안정적이어야 하지만 스톡 이미지처럼 평범하거나 무난한 안내문처럼 보이면 안 된다",
+      ],
+      linesEn: [
+        "Even with the same information, avoid a generic notice-template look by differentiating one element: color fields, whitespace, or type scale",
+        "The result should remain stable, but must not look like a generic stock image or plain announcement",
+      ],
+    },
+    balanced: {
+      linesKo: [
+        "서로 다른 결과가 나오도록 타이포 중심, 오브젝트 중심, 공간 분할 중 하나를 과감하게 선택한다",
+        "하나의 신선한 시각 아이디어를 반드시 포함하되, 헤드라인과 CTA의 가독성은 절대 희생하지 않는다",
+        "뻔한 중앙 정렬 포스터 대신 비대칭 축, 오버랩 레이어, 대담한 크롭 중 하나를 활용한다",
+      ],
+      linesEn: [
+        "Choose one decisive direction among typography-led, object-led, or spatially split composition so outputs vary meaningfully",
+        "Include one fresh visual idea, but never sacrifice headline or CTA readability",
+        "Avoid a predictable centered poster by using one of: asymmetric axis, overlapping layers, or bold cropping",
+      ],
+    },
+    experimental: {
+      linesKo: [
+        "예측 가능한 템플릿 구성을 피하고, 비대칭·블리드·색면 분할·초현실적 은유 중 하나를 명확히 사용한다",
+        "장면은 광고 아트디렉션처럼 의도적으로 낯설고 기억에 남아야 하며, 단순 정보 나열로 끝나면 안 된다",
+        "단, 문구 왜곡·정보 누락·CTA 가독성 저하는 허용하지 않는다",
+      ],
+      linesEn: [
+        "Avoid predictable templates and clearly use one of: asymmetry, bleed, color-field split, or surreal metaphor",
+        "The scene should feel intentionally distinctive and memorable like advertising art direction, not just a list of information",
+        "However, do not allow text distortion, missing information, or reduced CTA readability",
+      ],
+    },
+  };
+
   const AI_TOGGLE_FIELDS = new Set(["posterOffer", "snsHook", "snsHashtags", "cta"]);
+  const FIELD_ENABLE_TOGGLE_FIELDS = new Set(["posterKeyVisual", "posterInfoLayout", "snsVisualFocus", "snsPlacementNotes"]);
+
+  const STEP5_QUALITY_OPTIONS = [
+    "텍스트 가장자리 선명",
+    "작은 글자 번짐 방지",
+    "저해상도 픽셀 깨짐 방지",
+    "노이즈 없는 깨끗한 표면",
+    "인물 얼굴 왜곡 방지",
+    "손가락·로고 형태 왜곡 방지",
+    "제품 윤곽선 선명",
+    "과한 합성 광택 방지",
+    "스톡 이미지 같은 질감 방지",
+  ];
+
+  const STEP3_VISUAL_OPTION_GROUPS = {
+    tone: ["신뢰감", "전문적", "따뜻함", "활기", "프리미엄", "차분함"],
+    bigIdea: ["연결", "성장", "참여", "전환", "기회", "신뢰"],
+    visualMetaphor: ["빛의 경로", "열린 문", "상승 곡선", "연결된 카드", "투명한 큐브", "중심으로 모이는 흐름"],
+    visualStyle: [
+      "실사 중심",
+      "에디토리얼 광고형",
+      "미니멀 정보형",
+      "인포그래픽형",
+      "3D 오브젝트",
+      "대담한 타이포그래피",
+      "플랫 일러스트",
+      "아이소메트릭",
+      "데이터 시각화형",
+      "콜라주형",
+      "제품 광고형",
+      "공공 안내형",
+      "매거진 커버형",
+      "모션 그래픽 느낌",
+      "따뜻한 캐릭터형",
+      "하이엔드 캠페인형",
+      "테크 UI형",
+      "포토그래픽 포스터형",
+    ],
+  };
+
+  const STEP3_IDEA_PRESETS = [
+    {
+      id: "trust",
+      label: "신뢰형",
+      desc: "공공성, 기관 신뢰, 안정적인 안내",
+      fields: {
+        tone: "신뢰감, 전문적, 차분함",
+        bigIdea: "신뢰",
+        visualMetaphor: "안정적인 중심축과 정돈된 정보 카드",
+        visualStyle: "미니멀 정보형, 에디토리얼 광고형",
+      },
+    },
+    {
+      id: "growth",
+      label: "성장형",
+      desc: "기회, 확장, 참여 동기",
+      fields: {
+        tone: "활기, 긍정적, 미래지향",
+        bigIdea: "성장",
+        visualMetaphor: "상승 곡선과 빛의 경로",
+        visualStyle: "캠페인 광고형, 대담한 타이포그래피",
+      },
+    },
+    {
+      id: "connection",
+      label: "연결형",
+      desc: "네트워크, 협력, 커뮤니티",
+      fields: {
+        tone: "따뜻함, 신뢰감, 현대적",
+        bigIdea: "연결",
+        visualMetaphor: "여러 카드와 경로가 하나의 중심으로 연결되는 장면",
+        visualStyle: "인포그래픽형, 미니멀 정보형",
+      },
+    },
+    {
+      id: "premium",
+      label: "프리미엄형",
+      desc: "고급 캠페인, 선명한 키비주얼",
+      fields: {
+        tone: "프리미엄, 세련된, 절제된",
+        bigIdea: "전환",
+        visualMetaphor: "빛이 통과하는 투명한 큐브와 넓은 여백",
+        visualStyle: "에디토리얼 광고형, 실사 중심, 대담한 타이포그래피",
+      },
+    },
+  ];
 
   const ANTI_AI_PRESETS = [
+    {
+      id: "general",
+      labelKo: "일반/범용",
+      labelEn: "General / Universal",
+      descKo: "스타일 왜곡 없는 AI 결함 억제 · 형태/화질 보정",
+      descEn: "Style-agnostic suppression · general quality corrections",
+      visualHintKo: "왜곡 없는 자연스러운 비주얼 구조, 형태적 안정성과 균형",
+      visualHintEn: "natural visual structure without distortion, formal stability and balance",
+      forbiddenKo: "이모지 사용 금지, 광택 CTA 버튼, 저해상도 스톡 느낌, 비정상적 형태 왜곡, 뭉개진 손가락, 붕괴된 외곽선, 부자연스럽고 조악한 인공 광택, 엉성한 AI 스톡 느낌",
+      forbiddenEn: "no emoji usage, glossy action buttons, low-resolution stock appearance, deformed shapes, mutated fingers, collapsed outlines, unnatural cheap synthetic gloss, poorly crafted AI stock aesthetic",
+    },
     {
       id: "flat_vector",
       labelKo: "플랫/벡터",
@@ -570,6 +821,90 @@
       forbiddenEn: "complex background objects, decorative particles, AI-generated textures, excessive graphic elements, cluttered collage",
     },
   ];
+
+  Object.assign(COMMERCIAL_BASELINE_PROFILES, {
+    off: {
+      labelKo: "기본",
+      labelEn: "Basic",
+      linesKo: [],
+      linesEn: [],
+    },
+    standard: {
+      labelKo: "실무형",
+      labelEn: "Production-ready",
+      linesKo: [
+        "기본적인 상업 홍보물 수준의 선명도와 정돈된 마감을 유지한다",
+        "정보가 과장되지 않게 보이도록 안정적인 밀도와 균형을 유지한다",
+      ],
+      linesEn: [
+        "Maintain production-ready clarity and a clean commercial finish",
+        "Keep density and balance stable so the information does not feel exaggerated",
+      ],
+    },
+    premium: {
+      labelKo: "프리미엄",
+      labelEn: "Premium",
+      linesKo: [
+        "캠페인 키비주얼 수준의 정교한 마감, 선명한 초점, 고급스러운 표면 품질을 만든다",
+        "장식보다 완성도를 우선해 모든 요소가 의도적으로 정돈된 광고 시안처럼 보이게 한다",
+      ],
+      linesEn: [
+        "Deliver campaign-key-visual polish with refined finishing, clear focal control, and premium surface quality",
+        "Prioritize finish over decoration so every element feels intentionally controlled",
+      ],
+    },
+    luxury: {
+      labelKo: "하이엔드",
+      labelEn: "High-end luxury",
+      linesKo: [
+        "하이엔드 브랜드 캠페인처럼 절제된 밀도, 정밀한 질감, 값비싸 보이는 마감을 구현한다",
+        "과장된 효과보다 여백, 표면, 조명, 디테일의 정교함으로 완성도를 높인다",
+      ],
+      linesEn: [
+        "Create a high-end campaign finish with restrained density, precise material detail, and expensive-looking polish",
+        "Use whitespace, surface, lighting, and detail refinement rather than exaggerated effects",
+      ],
+    },
+  });
+
+  Object.assign(CREATIVITY_LEVEL_PROFILES, {
+    stable: {
+      labelKo: "안정형",
+      labelEn: "Stable",
+      linesKo: [
+        "검증된 정보형 구성을 사용하고 시선 흐름을 예측 가능하게 유지한다",
+        "구성 실험보다 정보 전달 안정성과 오독 방지를 우선한다",
+      ],
+      linesEn: [
+        "Use a proven informational composition with a predictable eye path",
+        "Prioritize communication stability and misread prevention over layout experimentation",
+      ],
+    },
+    balanced: {
+      labelKo: "균형형",
+      labelEn: "Balanced",
+      linesKo: [
+        "기본 정보 구조는 유지하되 하나의 신선한 구성 포인트만 허용한다",
+        "시선 흐름이 깨지지 않는 범위에서 비대칭, 크기 대비, 여백 변화를 제한적으로 사용한다",
+      ],
+      linesEn: [
+        "Keep the core information structure while allowing one fresh composition idea",
+        "Use asymmetry, scale contrast, or whitespace variation only where the eye path remains clear",
+      ],
+    },
+    experimental: {
+      labelKo: "실험형",
+      labelEn: "Experimental",
+      linesKo: [
+        "비대칭, 겹침, 프레임 절단, 과감한 스케일 대비 같은 구성 실험을 허용한다",
+        "단, 핵심 문구와 주요 정보의 판독성은 반드시 유지한다",
+      ],
+      linesEn: [
+        "Allow composition experiments such as asymmetry, overlap, frame cuts, and bold scale contrast",
+        "Keep the main copy and key information readable at all times",
+      ],
+    },
+  });
 
   const DEFAULT_COLOR_PRESETS = [
     {
@@ -680,6 +1015,28 @@
       backgroundMode: "image",
       backgroundColor: "#050505",
       backgroundDetails: "화려한 네온 사인 광원 효과",
+      isDefault: true,
+    },
+    {
+      id: "preset_luxury_orange",
+      name: "럭셔리 오렌지 (에르메스 테마)",
+      primaryColor: "#F37021",
+      secondaryColor: "#4A3C31",
+      accentColor: "#D4AF37",
+      backgroundMode: "solid",
+      backgroundColor: "#F9F6F0",
+      backgroundDetails: "고급스러운 크림 질감 배경",
+      isDefault: true,
+    },
+    {
+      id: "preset_luxury_mint",
+      name: "럭셔리 민트 (티파니 테마)",
+      primaryColor: "#0ABAB5",
+      secondaryColor: "#8A8D8F",
+      accentColor: "#1C2833",
+      backgroundMode: "solid",
+      backgroundColor: "#F4F7F6",
+      backgroundDetails: "깨끗하고 매끄러운 쿨그레이 배경",
       isDefault: true,
     }
   ];
@@ -831,148 +1188,176 @@
   };
 
   const CONTENT_TYPE_TEMPLATES = {
-    event: {
-      name: "행사 개최 안내",
-      goal: "행사 인지도 제고 및 참가 유도",
-      audience: "잠재 참가자, 관련 업계 종사자, 일반 시민",
-      tone: "신뢰감, 전문적인, 역동적, 축제 분위기",
-      visualStyle: "대담한 타이포그래픽, 실사 위주, 매거진 편집형, 화려한 포인트 컬러",
-      qualityNotes: "고대비 가독성, 행사 핵심 정보(일시/장소) 시각적 위계 강조, 광고 이미지급 디테일",
-      mandatoryElements: "행사명, 일시, 장소, 신청 방법, 주최/주관 로고 영역",
-      forbiddenElements: "장황한 텍스트, 흐릿한 배경 이미지, 불명확한 CTA",
-      posterKeyVisual: "행사 주제를 상징하는 오브젝트 또는 현장감 넘치는 실사 이미지",
-      posterInfoLayout: "상단 헤드라인 고정, 하단 정보 카드 배치",
+    campaign: {
+      name: "캠페인",
+      goal: "캠페인 동참 및 대중 인식 확산",
+      audience: "일반 대중, 잠재 참여자",
+      tone: "임팩트 있는, 대담한, 세련된, 브랜드 광고 같은",
+      visualStyle: "대담한 타이포그래픽, 하이엔드 제품광고형, 캠페인 광고형, 강렬한 대비",
+      qualityNotes: "광고 이미지급 디테일, 텍스트와 배경 대비 선명, 타이포 가장자리 또렷하게",
+      mandatoryElements: "캠페인 슬로건, 로고, 참여 태그",
+      forbiddenElements: "이모지 사용 금지, 장문 문단, 정보 과밀 배치",
+      posterKeyVisual: "대형 헤드라인과 단일 오브젝트, 추상적 그래픽",
+      posterInfoLayout: "여백 강조, 상단 헤드라인 고정",
+      cardnewsFlow: "문제 제시(공감) → 캠페인 핵심 가치 → 대안/비전 → 참여 안내(CTA)",
+      snsVisualFocus: "헤드라인과 핵심 문구 중심",
+    },
+    "result-promo": {
+      name: "성과홍보",
+      goal: "주요 성과 발표 및 신뢰도 확보",
+      audience: "파트너사, 일반 시민, 주요 이해관계자",
+      tone: "신뢰감 있는, 전문적인, 차분한, 명확한",
+      visualStyle: "데이터 중심 레이아웃, 인포그래픽형, 미니멀 그리드형",
+      qualityNotes: "텍스트와 배경 대비 선명, 노이즈 없는 깨끗한 표면, 브랜드 색상 정확도 유지",
+      mandatoryElements: "성과 타이틀, 주요 수치 데이터, 로고, 출처",
+      forbiddenElements: "과한 네온 효과, 흐릿한 배경 이미지, 불명확한 수치 표기",
+      posterKeyVisual: "데이터 시각화, 기하학적 패턴",
+      posterInfoLayout: "그리드 분할, 좌측 정렬축 통일",
+      cardnewsFlow: "성과 요약 → 핵심 지표 3개 → 향후 비전 → 문의/피드백",
+      snsVisualFocus: "정보카드 중심 (수치 및 인포그래픽)",
+    },
+    "event-info": {
+      name: "행사안내 (참여요청)",
+      goal: "행사 개최 안내 및 참가 신청 유도",
+      audience: "신청 대상자, 유관 기관 실무자, 참여 희망자",
+      tone: "역동적인, 세련된, 모던한, 친근한",
+      visualStyle: "매거진 편집형, 실사 위주, 에디토리얼 광고형",
+      qualityNotes: "행사 핵심 정보(일시/장소) 시각적 위계 강조, 모바일 썸네일 가독성 우선, CTA 버튼 한눈에 읽히게",
+      mandatoryElements: "행사명, 일시, 장소, 신청 방법(QR/링크), 주최/주관 로고",
+      forbiddenElements: "장황한 본문, 흐릿한 인물 사진, 가독성 낮은 폰트",
+      posterKeyVisual: "인물 클로즈업, 대형 헤드라인과 단일 오브젝트",
+      posterInfoLayout: "상단 헤드라인 고정, 하단 정보 박스 일체형",
       cardnewsFlow: "행사 취지 → 프로그램 핵심 → 참가 혜택 → 신청 안내(CTA)",
-      snsVisualFocus: "행사 타이틀과 일시가 가장 먼저 보이도록 중앙 집중형 배치",
+      snsVisualFocus: "헤드라인과 CTA 이중 강조",
     },
-    contest: {
-      name: "공모사업 홍보",
-      goal: "공모전 참여 및 제안서 접수 유도",
-      audience: "대학생, 스타트업, 예비 창업자, 창작자 그룹",
-      tone: "창의적인, 세련된, 임팩트 있는, 도전적인",
-      visualStyle: "3D 그래픽, 플랫 디자인, 네온 무드, 기하학적 패턴 활용",
-      qualityNotes: "공모 주제의 상징성 부각, 상금/혜택 수치를 큰 폰트로 강조, 타이포 가장자리 또렷하게",
-      mandatoryElements: "공모 주제, 시상 내역, 접수 기간, 홈페이지 URL, 참가 자격",
-      forbiddenElements: "촌스러운 원색 그라데이션, 작은 수치 표기, 올드한 스톡 이미지",
-      posterKeyVisual: "도전과 창의성을 나타내는 기하학적 3D 오브젝트",
-      posterInfoLayout: "Z자 흐름 레이아웃, 시상 내역을 중앙에 배치",
-      cardnewsFlow: "공모 배경 → 주제 및 상금 → 참가 방법 → 접수 마감 강조",
-      snsVisualFocus: "총 상금 규모와 '접수 중' 배지가 시선을 끌도록 배치",
+    "survey-request": {
+      name: "설문조사 (참여요청)",
+      goal: "설문 참여율 향상 및 의견 수집",
+      audience: "서비스 이용자, 설문 조사 대상 고객층",
+      tone: "친근한, 따뜻한, 심플한, 차분한",
+      visualStyle: "파스텔 톤, 미니멀 그리드형, 라운드 형태의 요소",
+      qualityNotes: "모바일 썸네일 가독성 우선, 텍스트와 배경 대비 선명, CTA 버튼 한눈에 읽히게",
+      mandatoryElements: "설문 주제, 소요 시간, 경품 혜택, 참여 링크(QR)",
+      forbiddenElements: "딱딱한 관공서 느낌, 정보 과밀 배치, 장문 문단",
+      posterKeyVisual: "친근한 상징 아이콘, 심플한 그래픽",
+      posterInfoLayout: "중앙 집중형, 정보 카드 1개로 묶기",
+      cardnewsFlow: "참여 유도 훅 → 설문 목적 → 경품 혜택 → 참여 방법(CTA)",
+      snsVisualFocus: "CTA 버튼 중심 (선물 쿠폰 등)",
     },
-    training: {
-      name: "교육생 모집",
-      goal: "교육 과정 신청 및 인원 확보",
-      audience: "취업 준비생, 스킬업 희망 실무자, 대학 졸업 예정자",
-      tone: "친근한, 전문적인, 스마트한, 미래지향적",
-      visualStyle: "인포그래픽형, 인물 클로즈업(밝은 미소), 미니멀 그리드형, 블루/그린 계열의 신뢰감 있는 색상",
-      qualityNotes: "커리큘럼 가독성 최우선, 모집 마감일 임팩트 있게 처리, 인물 피부톤 자연스럽게",
-      mandatoryElements: "교육 과정명, 교육 기간, 신청 자격, 모집 마감일, 교육 혜택(수강료 등)",
-      forbiddenElements: "복잡한 도표, 어두운 인물 사진, 가독성 낮은 명조체 본문",
-      posterKeyVisual: "성장과 배움을 상징하는 상징물 또는 밝은 표정의 학습자 이미지",
-      posterInfoLayout: "좌측 텍스트 강조, 우측 비주얼 배치 (또는 상하 분할)",
-      cardnewsFlow: "고민/니즈 공감 → 교육 해결책 → 커리큘럼 요약 → 수강생 후기 → 신청",
-      snsVisualFocus: "교육 명칭과 '전액 무료' 등 핵심 혜택을 최상단 배치",
+    "training-info": {
+      name: "교육안내 (참여요청)",
+      goal: "교육생 모집 및 신청 등록 유도",
+      audience: "취업 준비생, 역량 강화 희망 실무자",
+      tone: "스마트한, 전문적인, 신뢰감 있는, 성장을 돕는",
+      visualStyle: "인포그래픽형, 미니멀 그리드형, 정돈된 에디토리얼 레이아웃",
+      qualityNotes: "커리큘럼 및 혜택 가독성 최우선, 모집 마감일 임팩트 강조, 타이포 가장자리 또렷하게",
+      mandatoryElements: "교육 과정명, 교육 기간, 신청 자격, 접수 마감일, 교육 혜택(수강료 등)",
+      forbiddenElements: "복잡한 도표, 두꺼운 텍스트 외곽선, 어두운 무드",
+      posterKeyVisual: "성장/배움을 상징하는 오브젝트, 단일 기하학 오브젝트",
+      posterInfoLayout: "좌측 텍스트 강조, 우측 비주얼 배치, 상하단 레이아웃 분리",
+      cardnewsFlow: "실무 고민 제기 → 교육 해결책 → 상세 혜택/일정 → 지원 양식(CTA)",
+      snsVisualFocus: "인물 반신과 큰 제목 중심",
     },
-    "demand-survey": {
-      name: "수요조사 안내",
-      goal: "시장 요구 사항 파악 및 데이터 수집",
-      audience: "해당 서비스 사용자, 특정 산업군 종사자, 타깃 고객층",
-      tone: "차분한, 전문적인, 미니멀, 정중한",
-      visualStyle: "데이터 중심 레이아웃, 글래스모피즘, 깔끔한 인터페이스 느낌, 화이트/그레이 중심",
-      qualityNotes: "조사 참여의 가치 강조, 답변 소요 시간 명확히 표기, 노이즈 없는 깨끗한 화면",
-      mandatoryElements: "조사 목적, 참여 혜택, 예상 소요 시간, 참여 링크(QR)",
-      forbiddenElements: "화려한 장식, 산만한 배경 패턴, 이모지 과다 사용",
-      posterKeyVisual: "데이터 분석, 설문지, 또는 추상적인 연결망 그래픽",
-      posterInfoLayout: "중앙 집중형, 깔끔한 박스 레이아웃",
-      cardnewsFlow: "조사 취지 → 참여 필요성 → 참여 방법 및 혜택 → 감사 메시지",
-      snsVisualFocus: "참여 혜택(기프티콘 등)을 시각적으로 가장 강조",
-    },
-    survey: {
-      name: "설문조사 참여",
-      goal: "사용자 피드백 수집 및 참여 독려",
-      audience: "기존 고객, 서비스 이용자, 일반 대중",
-      tone: "친근한, 심플한, 따뜻한, 가벼운",
-      visualStyle: "일러스트형, 파스텔 톤, 단순하고 직관적인 레이아웃, 라운드 형태의 요소",
-      qualityNotes: "참여 버튼(CTA)을 버튼 형태로 강조, 모바일 환경 최적화 가독성, 부드러운 조명 효과",
-      mandatoryElements: "설문 주제, 참여 기간, 경품 안내, 참여 링크",
-      forbiddenElements: "딱딱한 관공서 느낌, 작은 본문 텍스트, 복잡한 레이아웃",
-      posterKeyVisual: "친근한 일러스트 캐릭터 또는 선물 상자 아이콘",
-      posterInfoLayout: "상단 비주얼, 하단 큰 제목과 버튼",
-      cardnewsFlow: "궁금증 유발 → 설문 주제 → 경품 안내 → 참여 링크",
-      snsVisualFocus: "선물 이미지와 함께 '5분이면 완료' 문구를 강조",
+    "biz-promo": {
+      name: "사업홍보 (참여요청)",
+      goal: "지원사업 모집 접수 및 파트너 발굴",
+      audience: "기업 실무자, 예비 창업자, 스타트업 임직원",
+      tone: "전문적인, 신뢰감 있는, 세련된, 임팩트 있는",
+      visualStyle: "3D 그래픽, 글래스모피즘, 브랜드 포스터형",
+      qualityNotes: "광고 이미지급 디테일, 브랜드 색상 정확도 유지, CTA 버튼 한눈에 읽히게",
+      mandatoryElements: "사업명, 지원 내용, 접수 기간, 신청 자격 및 방법, 주관 기관 로고",
+      forbiddenElements: "촌스러운 원색 배색, 저해상도 스톡 이미지, 정보 과밀 배치",
+      posterKeyVisual: "기하학적 3D 오브젝트, 추상적 그래픽",
+      posterInfoLayout: "Z자 흐름, 정보 카드 1개로 묶기",
+      cardnewsFlow: "사업 추진 목적 → 핵심 지원 혜택 → 신청 자격 및 일정 → 온라인 접수(CTA)",
+      snsVisualFocus: "헤드라인과 CTA 이중 강조",
     },
   };
 
   const CONTENT_TYPE_TEMPLATES_EN = {
-    event: {
-      name: "event announcement",
-      goal: "Increase event awareness and drive attendance",
-      audience: "potential attendees, industry professionals, general public",
-      tone: "trustworthy, professional, dynamic, festive",
-      visualStyle: "bold typography, photo-real direction, editorial magazine layout, vivid accent colors",
-      qualityNotes: "high-contrast readability, strong visual hierarchy for key event information such as date and venue, advertising-grade detail",
-      mandatoryElements: "event title, date and time, venue, registration method, organizer logo area",
-      forbiddenElements: "lengthy text blocks, blurry background imagery, unclear CTA",
-      posterKeyVisual: "an object that symbolizes the event theme or a vivid editorial-style event image",
-      posterInfoLayout: "headline locked at the top, information card layout at the bottom",
-      cardnewsFlow: "event purpose → key program highlights → attendance benefits → registration CTA",
-      snsVisualFocus: "center-weighted composition where the event title and date are seen first",
+    campaign: {
+      name: "Campaign",
+      goal: "Drive campaign participation and raise public awareness",
+      audience: "general public, potential participants",
+      tone: "impactful, bold, refined, brand advertisement style",
+      visualStyle: "bold typography, high-end product advertisement layout, campaign advertisement layout, high-contrast palette",
+      qualityNotes: "advertising-grade detail, strong text-to-background contrast, crisp typography edges",
+      mandatoryElements: "campaign slogan, logo, participation hashtags",
+      forbiddenElements: "emojis, long paragraphs, cluttered layout",
+      posterKeyVisual: "large headline with a single hero object, abstract graphics",
+      posterInfoLayout: "whitespace-focused, headline locked at top",
+      cardnewsFlow: "problem empathy → core campaign values → vision/alternative → participation CTA",
+      snsVisualFocus: "headline and core message centered",
     },
-    contest: {
-      name: "contest promotion",
-      goal: "Drive contest participation and proposal submissions",
-      audience: "university students, startups, aspiring founders, creator groups",
-      tone: "creative, refined, impactful, ambitious",
-      visualStyle: "3D graphics, flat design, neon mood, geometric pattern usage",
-      qualityNotes: "emphasize the symbolic nature of the contest theme, highlight prize or benefit figures in large type, keep typography edges crisp",
-      mandatoryElements: "contest theme, prize details, submission period, website URL, eligibility requirements",
-      forbiddenElements: "cheap primary-color gradients, tiny numerical details, dated stock imagery",
-      posterKeyVisual: "a geometric 3D object expressing challenge and creativity",
-      posterInfoLayout: "Z-flow layout with prize information centered",
-      cardnewsFlow: "contest background → theme and prize → participation method → deadline emphasis",
-      snsVisualFocus: "place the total prize scale and an 'open for submissions' badge where they draw attention first",
+    "result-promo": {
+      name: "Result Promotion",
+      goal: "Announce key performance outcomes and establish trust",
+      audience: "partners, citizens, key stakeholders",
+      tone: "trustworthy, professional, calm, clear",
+      visualStyle: "data-led layout, infographic style, minimal grid layout",
+      qualityNotes: "strong text-to-background contrast, clean noise-free surfaces, brand color accuracy",
+      mandatoryElements: "performance title, key numeric data, logo, data source",
+      forbiddenElements: "excessive neon effects, blurry backgrounds, unclear numbers",
+      posterKeyVisual: "data visualization, geometric pattern",
+      posterInfoLayout: "grid split, unified left alignment",
+      cardnewsFlow: "result summary → 3 key metrics → future vision → contact/feedback",
+      snsVisualFocus: "information card focus (numbers and infographics)",
     },
-    training: {
-      name: "training recruitment",
-      goal: "Drive course applications and secure enrollment",
-      audience: "job seekers, working professionals seeking upskilling, soon-to-graduate university students",
-      tone: "friendly, professional, smart, future-oriented",
-      visualStyle: "infographic style, close-up portraits with bright expressions, minimal grid layout, trustworthy blue/green palette",
-      qualityNotes: "curriculum readability comes first, make the recruitment deadline feel impactful, keep skin tones natural",
-      mandatoryElements: "course title, training period, eligibility, application deadline, training benefits such as tuition support",
-      forbiddenElements: "complex charts, dark portraits, low-readability serif body text",
-      posterKeyVisual: "a symbol of growth and learning or a learner image with a bright expression",
-      posterInfoLayout: "text-forward layout on the left with visuals on the right, or a vertical split",
-      cardnewsFlow: "pain point empathy → training solution → curriculum summary → student proof → application CTA",
-      snsVisualFocus: "place the course name and the strongest benefit such as 'fully funded' at the top",
+    "event-info": {
+      name: "Event Announcement",
+      goal: "Announce event schedule and drive registration",
+      audience: "target applicants, partner agency practitioners, prospective attendees",
+      tone: "dynamic, refined, modern, friendly",
+      visualStyle: "editorial magazine layout, photo-real direction, editorial advertising style",
+      qualityNotes: "visual hierarchy for event details (date/location), mobile thumbnail legibility, prominent CTA button",
+      mandatoryElements: "event title, date and time, location, application method (QR/link), organizer logo",
+      forbiddenElements: "wordy body copy, blurry portrait photos, low-readability font choice",
+      posterKeyVisual: "portrait close-up, large headline with a single hero object",
+      posterInfoLayout: "headline locked at top, integrated bottom information box",
+      cardnewsFlow: "event purpose → key program highlights → participation benefits → registration CTA",
+      snsVisualFocus: "dual emphasis on headline and CTA",
     },
-    "demand-survey": {
-      name: "demand survey announcement",
-      goal: "Identify market needs and collect data",
-      audience: "service users, professionals in the target industry, target customer groups",
-      tone: "calm, professional, minimal, respectful",
-      visualStyle: "data-led layout, glassmorphism, clean interface mood, white and gray dominant palette",
-      qualityNotes: "emphasize the value of participating, clearly show expected response time, keep the surface clean and noise-free",
-      mandatoryElements: "survey purpose, participation benefit, estimated completion time, participation link or QR",
-      forbiddenElements: "flashy decoration, distracting background patterns, excessive emoji usage",
-      posterKeyVisual: "data analysis, a questionnaire motif, or an abstract network-style graphic",
-      posterInfoLayout: "centered clean box layout",
-      cardnewsFlow: "survey purpose → why participation matters → participation method and benefit → thank-you message",
-      snsVisualFocus: "make the participation benefit, such as a gift coupon, the most visually emphasized element",
+    "survey-request": {
+      name: "Survey Request",
+      goal: "Drive survey response rates and collect feedback",
+      audience: "service users, survey target audience segments",
+      tone: "friendly, warm, simple, calm",
+      visualStyle: "pastel tone, minimal grid layout, rounded elements",
+      qualityNotes: "mobile thumbnail legibility, strong text-to-background contrast, prominent CTA button",
+      mandatoryElements: "survey topic, estimated duration, reward details, participation link (QR)",
+      forbiddenElements: "rigid bureaucratic look, cluttered layout, long paragraphs",
+      posterKeyVisual: "friendly symbolic icon, simple graphic",
+      posterInfoLayout: "centered layout, single information card group",
+      cardnewsFlow: "hook copy → survey purpose → reward details → participation method CTA",
+      snsVisualFocus: "CTA button focus (gift coupon etc.)",
     },
-    survey: {
-      name: "survey participation",
-      goal: "Collect user feedback and encourage participation",
-      audience: "existing customers, service users, general audience",
-      tone: "friendly, simple, warm, light",
-      visualStyle: "illustrative style, pastel tone, simple intuitive layout, rounded elements",
-      qualityNotes: "present the CTA as a strong button, optimize readability for mobile, use soft lighting",
-      mandatoryElements: "survey topic, participation period, prize information, participation link",
-      forbiddenElements: "rigid bureaucratic mood, tiny body text, cluttered layout",
-      posterKeyVisual: "a friendly illustrated character or a gift-box icon",
-      posterInfoLayout: "visual at the top, bold title and button at the bottom",
-      cardnewsFlow: "curiosity hook → survey topic → prize info → participation link",
-      snsVisualFocus: "highlight a gift image together with a line such as 'done in 5 minutes'",
+    "training-info": {
+      name: "Training Recruitment",
+      goal: "Recruit trainees and drive course applications",
+      audience: "job seekers, professionals seeking upskilling",
+      tone: "smart, professional, trustworthy, growth-oriented",
+      visualStyle: "infographic style, minimal grid layout, organized editorial layout",
+      qualityNotes: "curriculum and benefit readability, recruitment deadline emphasis, crisp typography edges",
+      mandatoryElements: "course title, training period, eligibility, application deadline, program benefits (tuition details)",
+      forbiddenElements: "complex tables, thick text outlines, dark background colors",
+      posterKeyVisual: "growth/learning symbolic object, single geometric object",
+      posterInfoLayout: "text-first on left and visual on right, top-bottom layout split",
+      cardnewsFlow: "practical dilemma → training solution → key benefits/dates → application form CTA",
+      snsVisualFocus: "subject portrait and bold title focus",
+    },
+    "biz-promo": {
+      name: "Business Promotion",
+      goal: "Drive public project applications and recruit business partners",
+      audience: "business practitioners, aspiring founders, startup employees",
+      tone: "professional, trustworthy, refined, impactful",
+      visualStyle: "3D graphics, glassmorphism, brand poster layout",
+      qualityNotes: "advertising-grade detail, brand color accuracy, prominent CTA button",
+      mandatoryElements: "program title, support details, application period, eligibility and method, host agency logo",
+      forbiddenElements: "cheap primary colors, low-resolution stock images, cluttered layout",
+      posterKeyVisual: "geometric 3D object, abstract graphics",
+      posterInfoLayout: "Z-flow layout, single information card group",
+      cardnewsFlow: "project goal → key program benefits → eligibility and dates → online application CTA",
+      snsVisualFocus: "dual emphasis on headline and CTA",
     },
   };
 
@@ -1019,169 +1404,202 @@
         promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "좌측 정렬축 유지"],
       },
     },
-    event: {
-      paletteId: "preset_modern_dark",
-      state: {
-        contentType: "event",
-        sizeMode: "ratio",
-        ratio: "4:5",
-        orientation: "vertical",
-        directSizeUnit: "px",
-        directSizeW: "",
-        directSizeH: "",
-        headline: "NEXT HORIZON: 2026 글로벌 산업 혁신 포럼",
-        subheadline: "지속 가능한 미래를 위한 기술과 정책의 융합 / 대한민국 최대 규모 산업 컨퍼런스",
-        bodyCopy: "- 2026. 06. 18 (목) - 19 (금)\n- 서울 코엑스(COEX) 그랜드볼룸\n- 글로벌 10개국 50인의 기조연설 및 세션\n- 공식 홈페이지를 통한 선착순 사전 등록",
-        cta: "지금 바로 사전 등록하기 (Early Bird 20% 할인)",
-        posterOffer: "사전 등록 시 VIP 네트워킹 세션 참여권 및 요약 리포트 증정",
-        snsHook: "이번 포럼, 선착순 등록이 먼저입니다",
-        snsHashtags: "#산업혁신포럼 #사전등록 #글로벌컨퍼런스",
-      },
-      quickFields: {
-        promotionGoal: ["사전 등록 유도"],
-        promotionAudience: ["국내외 기업 의사결정자"],
-        promotionTone: ["프리미엄", "신뢰감 있는", "세련된", "브랜드 광고 같은"],
-        promotionVisualStyle: ["하이엔드 제품광고형", "매거진 편집형", "대담한 타이포그래피"],
-        promotionQualityNotes: ["광고 이미지급 디테일", "텍스트와 배경 대비 선명", "타이포 가장자리 또렷하게"],
-        promotionBackgroundDetails: ["딥 네이비 그라데이션 배경", "추상 광원 오버레이", "텍스트 영역만 어둡게 오버레이"],
-        promotionMandatoryElements: ["행사명", "일정", "장소", "QR코드 영역", "로고"],
-        promotionForbiddenElements: ["이모지 사용 금지", "두꺼운 텍스트 외곽선", "장문 문단", "저해상도 스톡 느낌"],
-        promotionPosterKeyVisual: ["추상적 그래픽", "대형 헤드라인과 단일 오브젝트"],
-        promotionPosterInfoLayout: ["상단 헤드라인 고정", "정보 카드 1개로 묶기"],
-        promotionSnsVisualFocus: ["헤드라인과 CTA 양축 강조"],
-        promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "상하단 UI 영역 피해 배치"],
-      },
-    },
-    contest: {
+    campaign: {
       paletteId: "preset_vibrant_energy",
       state: {
-        contentType: "contest",
+        contentType: "campaign",
         sizeMode: "ratio",
         ratio: "4:5",
         orientation: "vertical",
         directSizeUnit: "px",
         directSizeW: "",
         directSizeH: "",
-        headline: "2026 K-스타트업 오픈이노베이션 챌린지",
-        subheadline: "대기업 현업과 함께 검증하는 PoC 연계형 공모 프로그램 / 우수팀 후속 투자 검토",
-        bodyCopy: "- 접수 기간: 2026. 07. 01 ~ 07. 31\n- 모집 대상: 예비창업팀, 스타트업, 대학(원)생 팀\n- 총 상금 5,000만원 및 실증 지원\n- 공식 홈페이지를 통한 온라인 접수",
-        cta: "제안서 접수하기",
-        posterOffer: "결선 진출팀 대상 PoC 연계 및 투자 IR 멘토링 제공",
-        snsHook: "총상금 5,000만원, 지금 도전하세요",
-        snsHashtags: "#오픈이노베이션 #스타트업챌린지 #공모사업",
+        headline: "지구를 구하는 작은 약속: ZERO PLASTIC 2026",
+        subheadline: "일상의 플라스틱 소비를 50% 줄이는 탄소 중립 참여 캠페인",
+        bodyCopy: "- 하루 한 번 텀블러 사용 인증\n- 에코백 사용 및 다회용기 장보기 동참\n- 누적 참여자 1만 명 달성 시 친환경 숲 조성\n- 캠페인 웹사이트에서 실시간 서약 진행",
+        cta: "탄소중립 서약 참여하기",
+        posterOffer: "서약 참여 선착순 1,000명에게 친환경 스타터 키트 무료 증정",
+        snsHook: "플라스틱 없는 하루, 당신의 작은 실천으로 시작됩니다",
+        snsHashtags: "#제로플라스틱 #탄소중립 #에코캠페인",
       },
       quickFields: {
-        promotionGoal: ["이벤트 참여 유도"],
-        promotionAudience: ["대학생 구직자"],
-        promotionTone: ["임팩트 있는", "세련된", "모던한"],
-        promotionVisualStyle: ["3D 그래픽", "캠페인 광고형", "대담한 타이포그래피"],
-        promotionQualityNotes: ["광고 이미지급 디테일", "CTA 버튼 한눈에 읽히게", "타이포 가장자리 또렷하게"],
-        promotionBackgroundDetails: ["기하학 라인 패턴", "추상 광원 오버레이", "텍스트 영역만 어둡게 오버레이"],
-        promotionMandatoryElements: ["행사명", "일정", "신청 링크", "CTA 버튼"],
-        promotionForbiddenElements: ["이모지 사용 금지", "과한 네온 효과", "장문 문단", "저해상도 스톡 느낌"],
-        promotionPosterKeyVisual: ["기하학적 패턴", "추상적 그래픽"],
-        promotionPosterInfoLayout: ["Z자 흐름", "중앙 집중형"],
-        promotionSnsVisualFocus: ["CTA 버튼 중심"],
-        promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "헤드라인과 배경 대비 강하게"],
-      },
-    },
-    training: {
-      paletteId: "preset_corporate_blue",
-      state: {
-        contentType: "training",
-        sizeMode: "ratio",
-        ratio: "4:5",
-        orientation: "vertical",
-        directSizeUnit: "px",
-        directSizeW: "",
-        directSizeH: "",
-        headline: "실무형 AI 데이터 분석 부트캠프 6기",
-        subheadline: "비전공자도 따라오는 프로젝트 중심 집중 과정 / 수료 후 포트폴리오와 취업 연계까지",
-        bodyCopy: "- 교육 기간: 2026. 08. 03 ~ 10. 30\n- 전액 지원 선발 과정 / 월별 학습 장려금 제공\n- 현업 멘토 프로젝트와 1:1 커리어 코칭\n- 신청 마감: 2026. 07. 20",
-        cta: "지금 지원하기",
-        posterOffer: "사전 설명회 참석자에게 커리큘럼 가이드북 제공",
-        snsHook: "AI 실무 커리어, 이번 기수에서 시작하세요",
-        snsHashtags: "#데이터분석 #부트캠프 #교육생모집",
-      },
-      quickFields: {
-        promotionGoal: ["사전 등록 유도"],
-        promotionAudience: ["20~30대 취업 준비생"],
-        promotionTone: ["친근한", "스마트한", "신뢰감 있는"],
-        promotionVisualStyle: ["인포그래픽형", "미니멀 그리드형", "실사 위주"],
-        promotionQualityNotes: ["모바일 썸네일 가독성 우선", "텍스트와 배경 대비 선명", "CTA 버튼 한눈에 읽히게"],
-        promotionBackgroundDetails: ["은은한 그리드 패턴", "텍스트 영역만 어둡게 오버레이"],
-        promotionMandatoryElements: ["행사명", "일정", "신청 링크", "CTA 버튼"],
-        promotionForbiddenElements: ["이모지 사용 금지", "두꺼운 텍스트 외곽선", "정보 과밀 배치"],
-        promotionPosterKeyVisual: ["인물 클로즈업", "데이터 시각화"],
-        promotionPosterInfoLayout: ["좌측 텍스트 강조, 우측 비주얼 배치", "정보 카드 1개로 묶기"],
-        promotionSnsVisualFocus: ["인물 반신과 큰 제목 중심"],
+        promotionGoal: ["캠페인 동참 및 대중 인식 확산"],
+        promotionAudience: ["일반 대중", "잠재 참여자"],
+        promotionTone: ["임팩트 있는", "대담한", "세련된", "브랜드 광고 같은"],
+        promotionVisualStyle: ["대담한 타이포그래픽", "하이엔드 제품광고형", "캠페인 광고형"],
+        promotionQualityNotes: ["광고 이미지급 디테일", "텍스트와 배경 대비 선명", "타이포 가장자리 또렷하게"],
+        promotionBackgroundDetails: ["고급스러운 질감 배경", "추상 광원 오버레이", "텍스트 영역만 어둡게 오버레이"],
+        promotionMandatoryElements: ["캠페인 슬로건", "로고", "참여 태그"],
+        promotionForbiddenElements: ["이모지 사용 금지", "장문 문단", "정보 과밀 배치"],
+        promotionPosterKeyVisual: ["대형 헤드라인과 단일 오브젝트", "추상적 그래픽"],
+        promotionPosterInfoLayout: ["여백 강조", "상단 헤드라인 고정"],
+        promotionSnsVisualFocus: ["헤드라인과 핵심 문구 중심"],
         promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "텍스트 블록 2개 이하 유지"],
       },
     },
-    "demand-survey": {
-      paletteId: "preset_minimal_mono",
+    "result-promo": {
+      paletteId: "preset_corporate_blue",
       state: {
-        contentType: "demand-survey",
+        contentType: "result-promo",
         sizeMode: "ratio",
         ratio: "4:5",
         orientation: "vertical",
         directSizeUnit: "px",
         directSizeW: "",
         directSizeH: "",
-        headline: "2026 스마트제조 전환 수요조사",
-        subheadline: "현장 자동화와 AI 도입 과제를 파악해 맞춤형 지원사업을 설계합니다",
-        bodyCopy: "- 응답 시간: 약 3분\n- 조사 대상: 제조기업 실무자 및 의사결정자\n- 참여 기업 대상 결과 리포트 제공\n- 응답 기간: 2026. 06. 01 ~ 06. 21",
-        cta: "수요조사 참여하기",
-        posterOffer: "응답 완료 기업에 요약 인사이트 리포트 우선 제공",
-        snsHook: "3분 응답으로 내년 지원사업 방향을 바꿔보세요",
-        snsHashtags: "#스마트제조 #수요조사 #기업지원",
+        headline: "2025 스마트 청년 창업 지원 사업 성과 보고",
+        subheadline: "도전하는 청년 기업들과 함께 만든 혁신적 성장 지표를 공유합니다",
+        bodyCopy: "- 청년 스타트업 누적 150개사 육성 완료\n- 신규 고용 창출 450명 및 후속 투자 유치 210억 원 달성\n- 글로벌 시장 진출 지원 및 수출 계약 50억 원 계약 완료\n- 2026년도 예산 대폭 확대로 청년 기업 동반성장 강화",
+        cta: "상세 성과 인포그래픽 보기",
+        posterOffer: "보고서 PDF 다운로드 시 우수 스타트업 디렉토리 북 동시 제공",
+        snsHook: "청년 스타트업과 함께 만든 기적 같은 혁신 성과를 공개합니다",
+        snsHashtags: "#스타트업지원 #사업성과 #청년창업",
       },
       quickFields: {
-        promotionGoal: ["신규 서비스 관심 유도"],
-        promotionAudience: ["중소기업 실무자"],
-        promotionTone: ["차분한", "전문적인", "미니멀한"],
-        promotionVisualStyle: ["미니멀 그리드형", "인포그래픽형", "에디토리얼 광고형"],
-        promotionQualityNotes: ["텍스트와 배경 대비 선명", "노이즈 없는 깨끗한 표면", "타이포 가장자리 또렷하게"],
+        promotionGoal: ["주요 성과 발표 및 신뢰도 확보"],
+        promotionAudience: ["파트너사", "일반 시민", "주요 이해관계자"],
+        promotionTone: ["신뢰감 있는", "전문적인", "차분한", "명확한"],
+        promotionVisualStyle: ["데이터 중심 레이아웃", "인포그래픽형", "미니멀 그리드형"],
+        promotionQualityNotes: ["텍스트와 배경 대비 선명", "노이즈 없는 깨끗한 표면", "브랜드 색상 정확도 유지"],
         promotionBackgroundDetails: ["은은한 그리드 패턴", "텍스트 영역만 어둡게 오버레이"],
-        promotionMandatoryElements: ["브랜드명", "신청 링크", "QR코드 영역"],
-        promotionForbiddenElements: ["이모지 사용 금지", "과한 네온 효과", "과한 색상 남용"],
+        promotionMandatoryElements: ["성과 타이틀", "주요 수치 데이터", "로고", "출처"],
+        promotionForbiddenElements: ["과한 네온 효과", "흐릿한 배경 이미지", "불명확한 수치 표기"],
         promotionPosterKeyVisual: ["데이터 시각화", "기하학적 패턴"],
-        promotionPosterInfoLayout: ["중앙 집중형", "그리드 분할"],
-        promotionSnsVisualFocus: ["정보카드 중심"],
-        promotionSnsPlacementNotes: ["텍스트 블록 2개 이하 유지", "안전영역 침범 금지", "좌측 정렬축 유지"],
+        promotionPosterInfoLayout: ["그리드 분할", "좌측 정렬축 통일"],
+        promotionSnsVisualFocus: ["정보카드 중심 (수치 및 인포그래픽)"],
+        promotionSnsPlacementNotes: ["텍스트 블록 2개 이하 유지", "안전영역 침범 금지", "왼쪽 정렬축 유지"],
       },
     },
-    survey: {
-      paletteId: "preset_soft_creative",
+    "event-info": {
+      paletteId: "preset_modern_dark",
       state: {
-        contentType: "survey",
+        contentType: "event-info",
         sizeMode: "ratio",
         ratio: "4:5",
         orientation: "vertical",
         directSizeUnit: "px",
         directSizeW: "",
         directSizeH: "",
-        headline: "서비스 만족도 설문 참여 이벤트",
-        subheadline: "더 나은 사용 경험을 위해 2분 설문에 참여하고 모바일 쿠폰 혜택을 받아보세요",
-        bodyCopy: "- 참여 기간: 2026. 05. 10 ~ 05. 31\n- 응답자 전원 커피 쿠폰 증정\n- 추첨을 통해 10명 백화점 상품권 제공\n- 모바일 링크 또는 QR코드로 바로 참여",
-        cta: "지금 설문 참여하기",
-        posterOffer: "응답 완료 시 즉시 응모 처리",
-        snsHook: "2분 설문 참여하고 커피 쿠폰 받기",
-        snsHashtags: "#설문이벤트 #고객의견 #참여혜택",
+        headline: "NEXT HORIZON: 2026 글로벌 기술 포럼",
+        subheadline: "디지털 전환과 AI 생태계의 내일을 조망하는 국내 최대 오프라인 세미나",
+        bodyCopy: "- 일시: 2026. 09. 15 (화) 10:00 ~ 17:00\n- 장소: 서울 크리에이티브 파크 그랜드볼룸\n- 연사: AI 및 로보틱스 산업 분야 최고 권위자 5인 기조강연\n- 비용: 무료 (사전 등록 마감: 09. 08)",
+        cta: "선착순 사전 등록 신청",
+        posterOffer: "사전 등록자 전원 강연 핵심 요약 자료집 및 네트워킹 초청장 발송",
+        snsHook: "디지털 혁신의 미래, 현장에서 직접 경험하세요",
+        snsHashtags: "#테크포럼 #인공지능 #사전등록",
       },
       quickFields: {
-        promotionGoal: ["이벤트 참여 유도"],
-        promotionAudience: ["브랜드 관심 고객"],
-        promotionTone: ["친근한", "따뜻한", "스마트한"],
-        promotionVisualStyle: ["파스텔 톤", "캠페인 광고형", "실사 위주"],
-        promotionQualityNotes: ["모바일 썸네일 가독성 우선", "CTA 버튼 한눈에 읽히게", "텍스트와 배경 대비 선명"],
-        promotionBackgroundDetails: ["현장 사진 흐림 처리 배경", "텍스트 영역만 어둡게 오버레이"],
-        promotionMandatoryElements: ["브랜드명", "신청 링크", "CTA 버튼", "QR코드 영역"],
-        promotionForbiddenElements: ["이모지 사용 금지", "정보 과밀 배치", "장문 문단"],
-        promotionPosterKeyVisual: ["자연 풍경", "인물 클로즈업"],
+        promotionGoal: ["행사 개최 안내 및 참가 신청 유도"],
+        promotionAudience: ["신청 대상자", "유관 기관 실무자", "참여 희망자"],
+        promotionTone: ["역동적인", "세련된", "모던한", "친근한"],
+        promotionVisualStyle: ["매거진 편집형", "실사 위주", "에디토리얼 광고형"],
+        promotionQualityNotes: ["행사 핵심 정보(일시/장소) 시각적 위계 강조", "모바일 썸네일 가독성 우선", "CTA 버튼 한눈에 읽히게"],
+        promotionBackgroundDetails: ["딥 네이비 그라데이션 배경", "추상 광원 오버레이", "텍스트 영역만 어둡게 오버레이"],
+        promotionMandatoryElements: ["행사명", "일시", "장소", "신청 방법(QR/링크)", "주최/주관 로고"],
+        promotionForbiddenElements: ["장황한 본문", "흐릿한 인물 사진", "가독성 낮은 폰트"],
+        promotionPosterKeyVisual: ["인물 클로즈업", "대형 헤드라인과 단일 오브젝트"],
         promotionPosterInfoLayout: ["상단 헤드라인 고정", "하단 정보 박스 일체형"],
-        promotionSnsVisualFocus: ["CTA 버튼 중심"],
-        promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "모바일 썸네일 축소 시도 가독성 유지"],
+        promotionSnsVisualFocus: ["헤드라인과 CTA 이중 강조"],
+        promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "모바일 썸네일 축소 시 가독성 유지"],
+      },
+    },
+    "survey-request": {
+      paletteId: "preset_soft_creative",
+      state: {
+        contentType: "survey-request",
+        sizeMode: "ratio",
+        ratio: "4:5",
+        orientation: "vertical",
+        directSizeUnit: "px",
+        directSizeW: "",
+        directSizeH: "",
+        headline: "2026 시민 참여형 정책 혁신 설문조사",
+        subheadline: "더 편리한 공공 서비스를 만들기 위해 여러분의 소중한 의견을 들려주세요",
+        bodyCopy: "- 참여 기간: 2026. 06. 10 ~ 06. 30\n- 참여 대상: 공공 서비스를 이용하는 누구나\n- 설문 시간: 약 3분 (총 10개 문항)\n- 모바일 링크 및 QR코드로 참여",
+        cta: "3분 설문 참여하기",
+        posterOffer: "참여 완료자 전원 커피 쿠폰 지급 및 추첨 100명 3만원 상당 경품 제공",
+        snsHook: "여러분의 한마디가 내일의 정책을 바꿉니다",
+        snsHashtags: "#시민소통 #정책설문 #의견제출",
+      },
+      quickFields: {
+        promotionGoal: ["설문 참여율 향상 및 의견 수집"],
+        promotionAudience: ["서비스 이용자", "설문 조사 대상 고객층"],
+        promotionTone: ["친근한", "따뜻한", "심플한", "차분한"],
+        promotionVisualStyle: ["파스텔 톤", "미니멀 그리드형", "라운드 형태의 요소"],
+        promotionQualityNotes: ["모바일 썸네일 가독성 우선", "텍스트와 배경 대비 선명", "CTA 버튼 한눈에 읽히게"],
+        promotionBackgroundDetails: ["부드러운 질감 배경", "텍스트 영역만 어둡게 오버레이"],
+        promotionMandatoryElements: ["설문 주제", "소요 시간", "경품 혜택", "참여 링크(QR)"],
+        promotionForbiddenElements: ["딱딱한 관공서 느낌", "정보 과밀 배치", "장문 문단"],
+        promotionPosterKeyVisual: ["친근한 상징 아이콘", "심플한 그래픽"],
+        promotionPosterInfoLayout: ["중앙 집중형", "정보 카드 1개로 묶기"],
+        promotionSnsVisualFocus: ["CTA 버튼 중심 (선물 쿠폰 등)"],
+        promotionSnsPlacementNotes: ["텍스트 블록 2개 이하 유지", "안전영역 침범 금지"],
+      },
+    },
+    "training-info": {
+      paletteId: "preset_corporate_blue",
+      state: {
+        contentType: "training-info",
+        sizeMode: "ratio",
+        ratio: "4:5",
+        orientation: "vertical",
+        directSizeUnit: "px",
+        directSizeW: "",
+        directSizeH: "",
+        headline: "2026 미래 인재 스킬업: 데이터 분석 전문가 과정",
+        subheadline: "실제 비즈니스 프로젝트로 배우는 전액 국비 지원 부트캠프 교육생 모집",
+        bodyCopy: "- 교육 일정: 2026. 10. 12 ~ 12. 18 (10주)\n- 지원 자격: 미취업 청년 및 데이터 실무 스킬업 희망자\n- 혜택: 전액 무료 교육 + 매월 학습 장려금 30만원 지원\n- 접수 기한: 2026. 09. 25 까지",
+        cta: "부트캠프 즉시 지원하기",
+        posterOffer: "지원자 전원 기초 SQL 온라인 VOD 강의 및 커리큘럼 로드맵 무료 배포",
+        snsHook: "비전공자도 가능합니다. 데이터 분석 실무형 인재로 도약하세요",
+        snsHashtags: "#국비부트캠프 #데이터전문가 #무료교육",
+      },
+      quickFields: {
+        promotionGoal: ["교육생 모집 및 신청 등록 유도"],
+        promotionAudience: ["취업 준비생", "역량 강화 희망 실무자"],
+        promotionTone: ["스마트한", "전문적인", "신뢰감 있는", "성장을 돕는"],
+        promotionVisualStyle: ["인포그래픽형", "미니멀 그리드형", "정돈된 에디토리얼 레이아웃"],
+        qualityNotes: ["커리큘럼 및 혜택 가독성 최우선", "모집 마감일 임팩트 강조", "타이포 가장자리 또렷하게"],
+        promotionBackgroundDetails: ["은은한 그리드 패턴", "텍스트 영역만 어둡게 오버레이"],
+        promotionMandatoryElements: ["교육 과정명", "교육 기간", "신청 자격", "접수 마감일", "교육 혜택(수강료 등)"],
+        promotionForbiddenElements: ["복잡한 도표", "두꺼운 텍스트 외곽선", "어두운 무드"],
+        promotionPosterKeyVisual: ["성장/배움을 상징하는 오브젝트", "단일 기하학 오브젝트"],
+        promotionPosterInfoLayout: ["좌측 텍스트 강조, 우측 비주얼 배치", "상하단 레이아웃 분리"],
+        promotionSnsVisualFocus: ["인물 반신과 큰 제목 중심"],
+        promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "왼쪽 정렬축 유지"],
+      },
+    },
+    "biz-promo": {
+      paletteId: "preset_vibrant_energy",
+      state: {
+        contentType: "biz-promo",
+        sizeMode: "ratio",
+        ratio: "4:5",
+        orientation: "vertical",
+        directSizeUnit: "px",
+        directSizeW: "",
+        directSizeH: "",
+        headline: "2026 유망 벤처기업 도약 패키지 지원사업",
+        subheadline: "기술 상용화와 판로 개척을 위한 스케일업 자금 및 비즈니스 멘토링 연계",
+        bodyCopy: "- 지원 대상: 창업 3년 이상 7년 미만의 혁신 성장 벤처기업\n- 지원 금액: 기업당 최대 1억 원 (사업화 자금)\n- 접수 기간: 2026. 08. 01 ~ 08. 25 18:00\n- 접수 방법: 정부 창업지원 포털 온라인 신청",
+        cta: "사업 공고 및 제안서 접수",
+        posterOffer: "온라인 설명회 영상 및 FAQ 가이드북 실시간 무료 다운로드 제공",
+        snsHook: "혁신 벤처의 스케일업 파트너, 최대 1억원의 사업화 지원을 신청하세요",
+        snsHashtags: "#지원사업 #스케일업 #창업지원",
+      },
+      quickFields: {
+        promotionGoal: ["지원사업 모집 접수 및 파트너 발굴"],
+        promotionAudience: ["기업 실무자", "예비 창업자", "스타트업 임직원"],
+        promotionTone: ["전문적인", "신뢰감 있는", "세련된", "임팩트 있는"],
+        promotionVisualStyle: ["3D 그래픽", "글래스모피즘", "브랜드 포스터형"],
+        promotionQualityNotes: ["광고 이미지급 디테일", "브랜드 색상 정확도 유지", "CTA 버튼 한눈에 읽히게"],
+        promotionBackgroundDetails: ["기하학적 3D 오브젝트", "추상적 그래픽"],
+        promotionMandatoryElements: ["사업명", "지원 내용", "접수 기간", "신청 자격 및 방법", "주관 기관 로고"],
+        promotionForbiddenElements: ["촌스러운 원색 배색", "저해상도 스톡 이미지", "정보 과밀 배치"],
+        promotionPosterKeyVisual: ["기하학적 3D 오브젝트", "추상적 그래픽"],
+        promotionPosterInfoLayout: ["Z자 흐름", "정보 카드 1개로 묶기"],
+        promotionSnsVisualFocus: ["헤드라인과 CTA 이중 강조"],
+        promotionSnsPlacementNotes: ["상단 25% 훅 카피", "하단 CTA 버튼 영역 분리", "헤드라인과 배경 대비 강하게"],
       },
     },
   };
@@ -1344,7 +1762,9 @@
       return formatQuickButtonValues(filtered, targetInput, nextValue);
     }
 
-    return formatQuickButtonValues([...values, trimValue(nextValue)], targetInput, nextValue);
+    const maxCount = targetInput?.id === "promotionVisualStyle" ? 2 : Infinity;
+    const nextValues = [...values, trimValue(nextValue)].slice(-maxCount);
+    return formatQuickButtonValues(nextValues, targetInput, nextValue);
   }
 
   function syncQuickButtonStates(scope = root) {
@@ -1423,6 +1843,9 @@
   function randomFieldSelectionCount(fieldId) {
     if (["promotionGoal", "promotionAudience"].includes(fieldId)) {
       return { min: 1, max: 1 };
+    }
+    if (fieldId === "promotionVisualStyle") {
+      return { min: 1, max: 2 };
     }
     if (["promotionPosterKeyVisual", "promotionPosterInfoLayout", "promotionSnsVisualFocus"].includes(fieldId)) {
       return { min: 1, max: 2 };
@@ -1922,6 +2345,12 @@
     "교육생 모집": "training recruitment",
     "수요조사 안내": "demand survey announcement",
     "설문조사 참여": "survey participation",
+    "캠페인": "campaign",
+    "성과홍보": "result promotion",
+    "행사안내(참여요청)": "event announcement",
+    "설문조사(참여요청)": "survey request",
+    "교육안내(참여요청)": "training recruitment",
+    "사업홍보(참여요청)": "business promotion",
     "직접 입력": "custom input",
     "크기 직접 입력": "exact size input",
     "비율 설정": "aspect ratio preset",
@@ -1967,18 +2396,86 @@
     "미래": "future",
     "참여": "participation",
     "속도": "speed",
+    "성장": "growth",
+    "변화": "change",
+    "혁신": "innovation",
+    "소통": "communication",
     "유리 큐브": "glass cube",
     "빛의 축": "light axis",
     "데이터 흐름": "data flow",
     "프레임 돌출": "frame breakout",
     "구조물 교차": "intersecting structures",
     "레이어 겹침": "layer overlap",
+    "상승 곡선": "upward curve",
+    "빛의 경로": "light path",
+    "확산하는 물결": "expanding ripple",
+    "맞물린 기어": "interlocking gears",
+    "정렬된 큐브": "aligned cubes",
+    "열린 프레임": "open frame",
+    "겹치는 레이어": "overlapping layers",
     "행사 참가 신청 전환": "drive event sign-ups",
     "사전 등록 유도": "drive pre-registration",
     "브랜드 인지도 제고": "increase brand awareness",
     "이벤트 참여 유도": "drive event participation",
     "신규 서비스 관심 유도": "generate interest in a new service",
     "상담 문의 전환": "convert viewers into consultation inquiries",
+    "캠페인 동참 및 대중 인식 확산": "drive campaign participation and public awareness",
+    "주요 성과 발표 및 신뢰도 확보": "announce key outcomes and establish trust",
+    "행사 개최 안내 및 참가 신청 유도": "announce event details and drive registrations",
+    "설문 참여율 향상 및 의견 수집": "improve survey response rate and gather feedback",
+    "교육생 모집 및 신청 등록 유도": "recruit trainees and drive course registrations",
+    "지원사업 모집 접수 및 파트너 발굴": "recruit business partners and solicit project applications",
+    "일반 대중": "general public",
+    "잠재 참여자": "potential participants",
+    "파트너사": "partner agencies",
+    "일반 시민": "citizens",
+    "주요 이해관계자": "key stakeholders",
+    "신청 대상자": "target applicants",
+    "유관 기관 실무자": "partner agency practitioners",
+    "참여 희망자": "prospective attendees",
+    "서비스 이용자": "service users",
+    "설문 조사 대상 고객층": "survey target audience segments",
+    "취업 준비생": "job seekers",
+    "역량 강화 희망 실무자": "professionals seeking upskilling",
+    "기업 실무자": "business practitioners",
+    "예비 창업자": "aspiring founders",
+    "스타트업 임직원": "startup employees",
+    "20~30대 취업 준비생": "job seekers in their 20s and 30s",
+    "MZ 직장인": "millennial and Gen Z professionals",
+    "대학생 구직자": "university student job seekers",
+    "중소기업 실무자": "SME practitioners",
+    "국내외 기업 의사결정자": "domestic and global business decision-makers",
+    "브랜드 관심 고객": "brand-interested customers",
+    "브랜드명": "brand name",
+    "행사명": "event title",
+    "일정": "schedule",
+    "장소": "location",
+    "신청 링크": "registration link",
+    "CTA 버튼": "CTA button",
+    "로고": "logo",
+    "QR코드 영역": "QR code area",
+    "캠페인 슬로건": "campaign slogan",
+    "참여 태그": "participation hashtags",
+    "성과 타이틀": "performance title",
+    "주요 수치 데이터": "key numeric data",
+    "출처": "data source",
+    "일시": "date and time",
+    "신청 방법(QR/링크)": "application method (QR/link)",
+    "주최/주관 로고": "organizer logo",
+    "설문 주제": "survey topic",
+    "소요 시간": "estimated duration",
+    "경품 혜택": "reward details",
+    "참여 링크(QR)": "participation link (QR)",
+    "교육 과정명": "course title",
+    "교육 기간": "training period",
+    "신청 자격": "eligibility",
+    "접수 마감일": "application deadline",
+    "교육 혜택(수강료 등)": "program benefits (tuition details)",
+    "사업명": "program title",
+    "지원 내용": "support details",
+    "접수 기간": "application period",
+    "신청 자격 및 방법": "eligibility and method",
+    "주관 기관 로고": "host agency logo",
     "20~30대 취업 준비생": "job seekers in their 20s and 30s",
     "MZ 직장인": "millennial and Gen Z professionals",
     "대학생 구직자": "university student job seekers",
@@ -2173,6 +2670,72 @@
     "카드뉴스는 카드 흐름을 적어두면 장별 메시지 연결이 좋아집니다.": "Card-news prompts work better when the card flow is defined.",
     "SNS 이미지는 첫 줄 훅이 있으면 시선 유도가 훨씬 쉬워집니다.": "SNS images guide attention more effectively when an opening hook is present.",
     "SNS는 안전영역이나 CTA 위치 메모를 남기면 플랫폼별 잘림 위험을 줄일 수 있습니다.": "For SNS formats, adding safe-area or CTA placement notes reduces platform-specific cropping risk.",
+
+    // Step 3 Visual Option Groups & Idea Presets translations
+    "전문적": "professional",
+    "따뜻함": "warm",
+    "활기": "vibrant",
+    "차분함": "calm",
+    "긍정적": "positive",
+    "미래지향": "future-oriented",
+    "절제된": "restrained",
+    "연결": "connectivity",
+    "성장": "growth",
+    "참여": "engagement",
+    "전환": "conversion",
+    "기회": "opportunity",
+    "신뢰": "trust",
+    "빛의 경로": "path of light",
+    "열린 문": "open door",
+    "상승 곡선": "ascending curve",
+    "연결된 카드": "connected cards",
+    "투명한 큐브": "transparent cube",
+    "중심으로 모이는 흐름": "converging flow to the center",
+    "안정적인 중심축과 정돈된 정보 카드": "stable central axis and structured information cards",
+    "상승 곡선과 빛의 경로": "ascending curve and path of light",
+    "여러 카드와 경로가 하나의 중심으로 연결되는 장면": "multiple cards and paths connecting to a single center",
+    "빛이 통과하는 투명한 큐브와 넓은 여백": "transparent cube with light passing through and ample whitespace",
+    "실사 중심": "photo-real focus",
+    "미니멀 정보형": "minimal information layout",
+    "3D 오브젝트": "3D objects",
+    "플랫 일러스트": "flat illustration",
+    "아이소메트릭": "isometric",
+    "데이터 시각화형": "data visualization",
+    "콜라주형": "collage style",
+    "제품 광고형": "product advertising style",
+    "공공 안내형": "public announcement style",
+    "매거진 커버형": "magazine cover style",
+    "모션 그래픽 느낌": "motion graphics feel",
+    "따뜻한 캐릭터형": "warm character-led style",
+    "하이엔드 캠페인형": "high-end campaign look",
+    "포토그래픽 포스터형": "photographic poster style",
+
+    // Additional Template Presets translations
+    "고급스러운 질감 배경": "premium textured background",
+    "헤드라인과 핵심 문구 중심": "focus on headline and key copy",
+    "불명확한 수치 표기": "unclear numeric representation",
+    "정보카드 중심 (수치 및 인포그래픽)": "focus on information card (metrics and infographics)",
+    "장황한 본문": "wordy body copy",
+    "흐릿한 인물 사진": "blurry human photographs",
+    "가독성 낮은 폰트": "low-readability fonts",
+    "모바일 썸네일 축소 시 가독성 유지": "maintain readability when scaled down to mobile thumbnail",
+    "라운드 형태의 요소": "rounded design elements",
+    "부드러운 질감 배경": "soft textured background",
+    "친근한 상징 아이콘": "friendly symbolic icon",
+    "심플한 그래픽": "simple graphics",
+    "CTA 버튼 중심 (선물 쿠폰 등)": "focus on CTA button (gift coupons, etc.)",
+    "정돈된 에디토리얼 레이아웃": "structured editorial layout",
+    "커리큘럼 및 혜택 가독성 최우선": "highest priority on curriculum and benefit readability",
+    "모집 마감일 임팩트 강조": "emphasize recruitment deadline with high impact",
+    "성장/배움을 상징하는 오브젝트": "object symbolizing growth and learning",
+    "단일 기하학 오브젝트": "single geometric object",
+    "상하단 레이아웃 분리": "separated top and bottom layout",
+    "글래스모피즘": "glassmorphism",
+    "기하학적 3D 오브젝트": "geometric 3D object",
+    "촌스러운 원색 배색": "cheap primary-color schemes",
+    "좌측 정렬축 유지": "maintain left alignment axis",
+    "QR코드를 사용하려면 연결 주소를 입력하는 편이 좋습니다. 주소가 없으면 프롬프트에는 QR 자리만 배정됩니다.": "To use a QR code, it is recommended to enter a target URL. Without one, only a placeholder area will be reserved in the prompt.",
+    "QR코드 연결 주소는 http:// 또는 https://로 시작하는 전체 URL을 권장합니다.": "QR code target URL should ideally be a full URL starting with http:// or https://.",
   };
 
   function translateFragment(value) {
@@ -2257,12 +2820,74 @@
     return [...ko];
   }
 
+  const SYSTEM_QUALITY_PHRASES = new Set([
+    "텍스트 가장자리 선명",
+    "텍스트 가장자리 또렷함",
+    "타이포 가장자리 또렷하게",
+    "작은 글자 번짐 방지",
+    "저해상도 픽셀 깨짐 방지",
+    "픽셀 깨짐 없음",
+    "노이즈 없는 깨끗한 표면",
+    "인물 얼굴 왜곡 방지",
+    "손가락·로고 형태 왜곡 방지",
+    "손가락 및 로고 형태 왜곡 방지",
+    "제품 윤곽선 선명",
+    "과한 합성 광택 방지",
+    "스톡 이미지 같은 질감 방지",
+    "과한 광원·네온 번짐·렌즈 플레어 방지",
+    "장난감 같은 3D 오브젝트와 가짜 홀로그램 금지",
+    "실사 합성의 원근·스케일·그림자·색온도 일관성 유지",
+    "외부 프레임 없는 단일 완성 이미지",
+    "광고 이미지급 디테일",
+    "광고 이미지급 고해상도 품질",
+    "텍스트와 배경 대비 선명",
+    "썸네일 축소 시에도 핵심 문구 가독성 유지",
+    "모바일 썸네일 가독성 우선",
+    "저해상도 스톡 느낌 금지",
+    "이모지 사용 금지",
+    "광택 CTA 버튼 금지",
+    "광택 CTA 버튼",
+    "crisp typography edges",
+    "crisp text edges",
+    "prevent small text blurring",
+    "no pixelation",
+    "clean noise-free surfaces",
+    "prevent face distortion",
+    "prevent hand and logo distortion",
+    "sharp product contours",
+    "avoid over-rendered synthetic gloss",
+    "avoid cheap stock photo appearance",
+    "avoid excessive lighting effects, neon bloom, and lens flare",
+    "no toy-like 3D objects or fake holograms",
+    "keep photorealistic compositing consistent in perspective, scale, shadows, and color temperature",
+    "single finished image with no outer frame",
+    "advertising-grade detail",
+    "advertising-grade high-resolution quality",
+    "strong text-to-background contrast",
+    "headline legible at thumbnail size",
+    "no emoji usage",
+    "glossy action buttons",
+    "low-resolution stock appearance"
+  ]);
+
+  function isSystemQualityPhrase(phrase) {
+    const normalized = phrase.toLowerCase().replace(/[\s·.,]/g, "");
+    for (const sys of SYSTEM_QUALITY_PHRASES) {
+      const sysNormalized = sys.toLowerCase().replace(/[\s·.,]/g, "");
+      if (normalized === sysNormalized || normalized.includes(sysNormalized) || sysNormalized.includes(normalized)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function splitQualityNoteLines(value) {
     return uniqueValues(
       String(value || "")
         .split(/[\r\n,]+/)
         .map((item) => item.trim())
         .filter(Boolean)
+        .filter((item) => !isSystemQualityPhrase(item))
     );
   }
 
@@ -2323,6 +2948,9 @@
     }
     if (!trimValue(state.bigIdea) && !trimValue(state.visualMetaphor) && state.creativityLevel !== "stable") {
       notes.push("창의성 강도를 높였지만 Big Idea 또는 비주얼 은유가 없어 결과 방향이 평범해질 수 있습니다.");
+    }
+    if (state.variationMode === "none" && state.creativityLevel !== "stable") {
+      notes.push("다양성 변형 지시가 꺼져 있어 결과가 기본 템플릿형으로 반복될 수 있습니다. 타이포/비주얼/실험적 중 하나를 선택하면 결과 폭이 넓어집니다.");
     }
     if (trimValue(state.visualStyle) && !trimValue(state.bigIdea) && !trimValue(state.visualMetaphor)) {
       notes.push("스타일 지시는 충분하지만 상징 개념이 비어 있어 결과가 템플릿형으로 흐를 수 있습니다.");
@@ -2443,10 +3071,10 @@
     }
 
     if (state.assetType === "poster") {
-      if (!String(state.posterKeyVisual || "").trim()) {
+      if (isEnabled(state.posterKeyVisualEnabled) && !String(state.posterKeyVisual || "").trim()) {
         warnings.push("포스터는 메인 비주얼 포인트를 적어두면 결과 품질이 더 안정적입니다.");
       }
-      if (!String(state.posterInfoLayout || "").trim()) {
+      if (isEnabled(state.posterInfoLayoutEnabled) && !String(state.posterInfoLayout || "").trim()) {
         warnings.push("포스터는 정보 배치 방식을 적어두면 위계가 덜 흔들립니다.");
       }
     }
@@ -2465,8 +3093,17 @@
       if (!String(state.snsHook || "").trim()) {
         warnings.push("SNS 이미지는 첫 줄 훅이 있으면 시선 유도가 훨씬 쉬워집니다.");
       }
-      if (!String(state.snsPlacementNotes || "").trim()) {
+      if (isEnabled(state.snsPlacementNotesEnabled) && !String(state.snsPlacementNotes || "").trim()) {
         warnings.push("SNS는 안전영역이나 CTA 위치 메모를 남기면 플랫폼별 잘림 위험을 줄일 수 있습니다.");
+      }
+    }
+
+    if (isEnabled(state.qrEnabled)) {
+      const qrUrl = String(state.qrUrl || "").trim();
+      if (!qrUrl) {
+        warnings.push("QR코드를 사용하려면 연결 주소를 입력하는 편이 좋습니다. 주소가 없으면 프롬프트에는 QR 자리만 배정됩니다.");
+      } else if (!/^https?:\/\//i.test(qrUrl)) {
+        warnings.push("QR코드 연결 주소는 http:// 또는 https://로 시작하는 전체 URL을 권장합니다.");
       }
     }
 
@@ -2480,8 +3117,8 @@
     if (!validation.errors.length && !validation.warnings.length) {
       node.innerHTML = `
         <div class="promo-validation-item is-ok">
-          <strong>입력 상태 양호</strong>
-          <span>현재 입력으로 프롬프트를 복사하거나 설정을 저장할 수 있습니다.</span>
+          <strong>${localizeSentence("입력 상태 양호", "All Inputs Valid")}</strong>
+          <span>${localizeSentence("현재 입력으로 프롬프트를 복사하거나 설정을 저장할 수 있습니다.", "You can now copy the prompt or save your configuration with the current inputs.")}</span>
         </div>
       `;
       return;
@@ -2491,16 +3128,16 @@
     if (validation.errors.length) {
       blocks.push(`
         <div class="promo-validation-item is-error">
-          <strong>보완이 필요한 항목</strong>
-          <span>${validation.errors.map((item) => escapeHtml(item)).join("<br />")}</span>
+          <strong>${localizeSentence("보완이 필요한 항목", "Required Fixes")}</strong>
+          <span>${validation.errors.map((item) => escapeHtml(localizeValue(item))).join("<br />")}</span>
         </div>
       `);
     }
     if (validation.warnings.length) {
       blocks.push(`
         <div class="promo-validation-item is-warning">
-          <strong>품질 개선 힌트</strong>
-          <span>${validation.warnings.map((item) => escapeHtml(item)).join("<br />")}</span>
+          <strong>${localizeSentence("품질 개선 힌트", "Quality Improvement Hints")}</strong>
+          <span>${validation.warnings.map((item) => escapeHtml(localizeValue(item))).join("<br />")}</span>
         </div>
       `);
     }
@@ -2574,6 +3211,18 @@
     `;
   }
 
+  function renderFieldEnableHeader(fieldKey) {
+    const enabled = isEnabled(state[`${fieldKey}Enabled`]);
+    return `
+      <div class="promo-ai-toggle-header">
+        <label class="promo-ai-toggle-switch" title="사용 여부">
+          <input type="checkbox" class="promo-field-toggle-enabled" data-field-toggle="${fieldKey}"${enabled ? " checked" : ""} />
+          <span class="promo-ai-toggle-track"></span>
+        </label>
+      </div>
+    `;
+  }
+
   function renderTypeFields() {
     const host = $("promotionTypeFields");
     if (!host) return;
@@ -2586,17 +3235,18 @@
             const wideClass = field.wide ? " gen-config-group-wide" : "";
             const fieldId = field.domId || `promotionField_${field.key}`;
             const hasToggle = AI_TOGGLE_FIELDS.has(field.key);
-            const enabled = !hasToggle || isEnabled(state[`${field.key}Enabled`]);
+            const hasEnableToggle = FIELD_ENABLE_TOGGLE_FIELDS.has(field.key);
+            const enabled = (hasToggle || hasEnableToggle) ? isEnabled(state[`${field.key}Enabled`]) : true;
             const isAiMode = hasToggle && state[`${field.key}Mode`] !== "manual";
-            const inputDisabled = hasToggle && (!enabled || isAiMode);
+            const inputDisabled = (hasToggle && (!enabled || isAiMode)) || (hasEnableToggle && !enabled);
             return `
-              <section class="gen-config-group${wideClass}${hasToggle && !enabled ? " promo-field-disabled" : ""}">
+              <section class="gen-config-group${wideClass}${(hasToggle || hasEnableToggle) && !enabled ? " promo-field-disabled" : ""}">
                 <div class="gen-config-label-row">
                   <label class="gen-config-label" for="${fieldId}">
                     ${escapeHtml(field.label)}
                     ${kindBadgeHtml(field.kind)}
                   </label>
-                  ${hasToggle ? renderAiToggleHeader(field.key) : ""}
+                  ${hasToggle ? renderAiToggleHeader(field.key) : hasEnableToggle ? renderFieldEnableHeader(field.key) : ""}
                 </div>
                 <p class="gen-config-guide">${escapeHtml(field.guide || "")}</p>
                 ${inputDisabled ? `<div class="promo-ai-placeholder">${isAiMode ? "AI가 자동으로 생성합니다" : "사용 안 함"}</div>` : renderControl(field)}
@@ -2611,6 +3261,7 @@
     bindQuickButtons(host);
     syncQuickButtonStates(host);
     bindAiToggleControls(host);
+    bindFieldEnableControls(host);
   }
 
   const STATIC_TOGGLE_SYNC = {
@@ -2648,6 +3299,17 @@
     });
   }
 
+  function bindFieldEnableControls(scope) {
+    scope.querySelectorAll("[data-field-toggle]").forEach((checkbox) => {
+      checkbox.addEventListener("change", () => {
+        const field = checkbox.dataset.fieldToggle;
+        state[`${field}Enabled`] = String(checkbox.checked);
+        renderTypeFields();
+        renderPreview();
+      });
+    });
+  }
+
   function bindFieldInputs(scope) {
     scope.querySelectorAll("[data-promo-field]").forEach((input) => {
       const handler = () => {
@@ -2658,9 +3320,17 @@
         if (
           input.id === "promotionRatio" ||
           input.id === "promotionSizeMode" ||
-          input.id === "promotionDirectSizeUnit"
+          input.id === "promotionDirectSizeUnit" ||
+          input.id === "promotionDirectSizeW" ||
+          input.id === "promotionDirectSizeH" ||
+          input.id === "promotionCustomRatioW" ||
+          input.id === "promotionCustomRatioH" ||
+          input.id === "promotionOrientation"
         ) {
           syncSizeModeUI();
+        }
+        if (input.id === "promotionQrEnabled" || input.id === "promotionQrUrl") {
+          syncQrCodeUI();
         }
         if (
           input.id === "promotionColorStrategy" ||
@@ -2684,7 +3354,7 @@
       const picker = $(pickerId);
       if (!input || !picker) return;
 
-      picker.addEventListener("input", () => {
+      picker.addEventListener("change", () => {
         input.value = picker.value;
         state[stateKey] = picker.value;
         syncColorFieldUI();
@@ -2832,33 +3502,10 @@
         renderPreview();
       });
     });
-
-    root.querySelectorAll("[data-anti-ai-preset]").forEach((button) => {
-      if (button.tagName !== "BUTTON") return;
-      button.addEventListener("click", () => {
-        const id = button.dataset.antiAiPreset;
-        state.antiAiStyle = state.antiAiStyle === id ? "" : id;
-        syncAntiAiPresetUI();
-        renderPreview();
-      });
-    });
-
     bindAiToggleControls(root);
   }
 
-  function syncAntiAiPresetUI() {
-    root.querySelectorAll("[data-anti-ai-preset]").forEach((button) => {
-      const active = button.dataset.antiAiPreset === state.antiAiStyle;
-      button.classList.toggle("active", active);
-      button.setAttribute("aria-pressed", String(active));
-    });
-    const badge = $("antiAiActiveBadge");
-    if (badge) {
-      const preset = ANTI_AI_PRESETS.find((p) => p.id === state.antiAiStyle);
-      badge.textContent = preset ? `AI 억제: ${preset.labelKo}` : "";
-      badge.style.display = preset ? "" : "none";
-    }
-  }
+  function syncAntiAiPresetUI() {}
 
   function pruneEmptyFields() {
     sanitizeStateValues();
@@ -2906,6 +3553,10 @@
     state.commercialBaseline = DEFAULT_STATE.commercialBaseline;
     state.creativityLevel = DEFAULT_STATE.creativityLevel;
     state.variationMode = DEFAULT_STATE.variationMode;
+    state.posterKeyVisualEnabled = DEFAULT_STATE.posterKeyVisualEnabled;
+    state.posterInfoLayoutEnabled = DEFAULT_STATE.posterInfoLayoutEnabled;
+    state.snsVisualFocusEnabled = DEFAULT_STATE.snsVisualFocusEnabled;
+    state.snsPlacementNotesEnabled = DEFAULT_STATE.snsPlacementNotesEnabled;
     state.backgroundMode = "solid";
     promptDirty = false;
     syncStaticFields();
@@ -2955,19 +3606,23 @@
     if (nameInput) nameInput.value = "";
     const select = $("promotionPalettePresetSelect");
     if (select) select.value = preset.id;
+    applySelectedPalettePreset({ silent: true });
     status("현재 색상 팔레트를 저장했습니다.", "success");
   }
 
-  function applySelectedPalettePreset() {
+  function applySelectedPalettePreset(options = {}) {
     const select = $("promotionPalettePresetSelect");
     const presetId = select?.value;
+    const shouldNotify = !options.silent;
     if (!presetId) {
+      if (!shouldNotify) return;
       status("적용할 색상 팔레트를 먼저 선택하세요.", "error");
       return;
     }
 
     const preset = colorPresets.find((item) => item.id === presetId);
     if (!preset) {
+      if (!shouldNotify) return;
       status("선택한 색상 팔레트를 찾을 수 없습니다.", "error");
       return;
     }
@@ -2979,6 +3634,7 @@
     syncStaticFields();
     syncColorFieldUI();
     renderPreview();
+    if (!shouldNotify) return;
     status("선택한 색상 팔레트를 적용했습니다.", "success");
   }
 
@@ -3068,6 +3724,99 @@
     return getResolvedRatioLabel();
   }
 
+  function toPositiveNumber(value) {
+    const number = Number(String(value || "").replace(/,/g, "").trim());
+    return Number.isFinite(number) && number > 0 ? number : 0;
+  }
+
+  function parseRatioLabel(label) {
+    const parts = String(label || "")
+      .split(":")
+      .map((value) => toPositiveNumber(value));
+    return parts.length === 2 && parts[0] && parts[1]
+      ? { width: parts[0], height: parts[1] }
+      : null;
+  }
+
+  function getSizePreviewSpec() {
+    if (state.sizeMode === "direct") {
+      const width = toPositiveNumber(state.directSizeW);
+      const height = toPositiveNumber(state.directSizeH);
+      if (width && height) {
+        return {
+          width,
+          height,
+          label: `${width}×${height} ${state.directSizeUnit || "px"}`,
+          source: "direct",
+        };
+      }
+    }
+
+    const ratio = parseRatioLabel(getResolvedRatioLabel()) || { width: 4, height: 5 };
+    return {
+      width: ratio.width,
+      height: ratio.height,
+      label: formatRatio(ratio.width, ratio.height),
+      source: state.ratio === "custom" ? "custom" : "ratio",
+    };
+  }
+
+  function getSizePreviewCopy(width, height, source) {
+    const ratio = width / height;
+    const directSuffix = source === "direct" ? " 입력한 실제 크기를 축소해 표시했습니다." : "";
+
+    if (ratio >= 1.65) {
+      return {
+        title: "넓은 배너형 이미지",
+        desc: `웹 배너, 헤더, 가로 광고처럼 좌우 흐름을 쓰기 좋습니다.${directSuffix}`,
+      };
+    }
+    if (ratio > 1.12) {
+      return {
+        title: "넓은 카드형 이미지",
+        desc: `썸네일, 카드뉴스 표지, 발표 화면형 홍보 이미지에 적합합니다.${directSuffix}`,
+      };
+    }
+    if (ratio >= 0.88) {
+      return {
+        title: "정방형에 가까운 이미지",
+        desc: `SNS 피드와 카드형 홍보 이미지처럼 균형 잡힌 구성이 쉽습니다.${directSuffix}`,
+      };
+    }
+    if (ratio >= 0.58) {
+      return {
+        title: "긴 카드형 이미지",
+        desc: `SNS 피드, 포스터, 모바일 노출에 적합한 비율입니다.${directSuffix}`,
+      };
+    }
+    return {
+      title: "긴 세로 스토리형 이미지",
+      desc: `스토리, 릴스 커버, 모바일 전면 노출처럼 위아래 흐름이 강한 구성입니다.${directSuffix}`,
+    };
+  }
+
+  function syncSizePreviewUI() {
+    const frame = $("promotionSizePreviewFrame");
+    const ratioText = $("promotionSizePreviewRatio");
+    const title = $("promotionSizePreviewTitle");
+    const desc = $("promotionSizePreviewDesc");
+    if (!frame || !ratioText || !title || !desc) return;
+
+    const spec = getSizePreviewSpec();
+    const maxWidth = 118;
+    const maxHeight = 112;
+    const scale = Math.min(maxWidth / spec.width, maxHeight / spec.height);
+    const frameWidth = Math.max(38, Math.round(spec.width * scale));
+    const frameHeight = Math.max(38, Math.round(spec.height * scale));
+    const copy = getSizePreviewCopy(spec.width, spec.height, spec.source);
+
+    frame.style.width = `${frameWidth}px`;
+    frame.style.height = `${frameHeight}px`;
+    ratioText.textContent = spec.label;
+    title.textContent = copy.title;
+    desc.textContent = copy.desc;
+  }
+
   function syncSizeModeUI() {
     const ratioBox = $("promotionRatioModeBox");
     const directBox = $("promotionDirectSizeBox");
@@ -3088,6 +3837,7 @@
     }
     if (unitLabelW) unitLabelW.textContent = directUnit;
     if (unitLabelH) unitLabelH.textContent = directUnit;
+    syncSizePreviewUI();
   }
 
   function isFieldManualActive(field) {
@@ -3143,10 +3893,10 @@
       ["forbiddenElements", state.forbiddenElements],
     ];
 
-    entries.push(["posterKeyVisual", state.posterKeyVisual]);
-    entries.push(["posterInfoLayout", state.posterInfoLayout]);
-    entries.push(["snsVisualFocus", state.snsVisualFocus]);
-    entries.push(["snsPlacementNotes", state.snsPlacementNotes]);
+    if (isEnabled(state.posterKeyVisualEnabled)) entries.push(["posterKeyVisual", state.posterKeyVisual]);
+    if (isEnabled(state.posterInfoLayoutEnabled)) entries.push(["posterInfoLayout", state.posterInfoLayout]);
+    if (isEnabled(state.snsVisualFocusEnabled)) entries.push(["snsVisualFocus", state.snsVisualFocus]);
+    if (isEnabled(state.snsPlacementNotesEnabled)) entries.push(["snsPlacementNotes", state.snsPlacementNotes]);
 
     return entries
       .map(([key, value]) => ({
@@ -3283,11 +4033,38 @@
     return [...(profile.linesKo || [])];
   }
 
+  function qrCodePromptLines() {
+    if (!isEnabled(state.qrEnabled)) return [];
+    const qrUrl = String(state.qrUrl || "").trim();
+    return prunePromptLines([
+      localizeSentence(
+        "QR코드 사용: 이미지 하단 또는 엑션버튼 주변에 명확한 QR코드 공간을 배정하고, 주변 여백을 충분히 확보한다.",
+        "QR code requested: reserve a clear QR-code area near the bottom or near the action button, with enough quiet space around it."
+      ),
+      localizeSentence(
+        "실제 스캔 가능한 QR코드를 이미지 생성 모델이 정확히 만들지 못할 수 있으므로, 최종 편집에서 실제 QR 이미지를 삽입할 수 있는 빈 자리 또는 플레이스홀더로 구성한다.",
+        "Because the image model may not create a reliably scannable QR code, compose this as a blank slot or placeholder where the real QR image can be inserted during final editing."
+      ),
+      qrUrl
+        ? localizeSentence(
+            `QR 연결 주소 참고: ${qrUrl}`,
+            `QR target URL reference: ${qrUrl}`
+          )
+        : "",
+      localizeSentence(
+        "QR 안내문구: 'QR코드로 바로가기' 또는 'QR로 신청하기'처럼 짧고 읽기 쉬운 안내문구를 QR 영역 옆에 배치한다.",
+        "QR helper text: place a short readable label such as 'Scan the QR code' or 'Apply via QR' next to the QR area."
+      ),
+    ]);
+  }
+
   function createPromptSections(validation, lint) {
     const textEntries = visibleTextEntries();
     const instructionItems = instructionEntries();
     const commercialProfile = COMMERCIAL_BASELINE_PROFILES[state.commercialBaseline] || COMMERCIAL_BASELINE_PROFILES[DEFAULT_STATE.commercialBaseline];
     const creativityProfile = CREATIVITY_LEVEL_PROFILES[state.creativityLevel] || CREATIVITY_LEVEL_PROFILES[DEFAULT_STATE.creativityLevel];
+    const promotionStrategyProfile = CONTENT_PROMOTION_STRATEGIES[state.contentType] || CONTENT_PROMOTION_STRATEGIES.none;
+    const diversityProfile = CREATIVE_DIVERSITY_PROFILES[state.creativityLevel] || CREATIVE_DIVERSITY_PROFILES.balanced;
     const compositionExcludedKeys = new Set([
       "contentType",
       "sizeMode",
@@ -3325,15 +4102,42 @@
           ]
         : [];
 
-    const activeAntiAiPreset = ANTI_AI_PRESETS.find((p) => p.id === state.antiAiStyle) || null;
+    const activeAntiAiPreset = ANTI_AI_PRESETS.find((p) => p.id === "general") || null;
     const antiAiForbiddenTokens = activeAntiAiPreset
       ? splitKeywordValues(localizeSentence(activeAntiAiPreset.forbiddenKo, activeAntiAiPreset.forbiddenEn))
       : [];
-    const userForbiddenTokens = splitKeywordValues(state.forbiddenElements);
-    const mergedForbiddenTokens = [...new Set([...userForbiddenTokens, ...antiAiForbiddenTokens])];
+    const userForbiddenTokens = splitKeywordValues(state.forbiddenElements).filter((token) => {
+      const norm = token.trim().toLowerCase().replace(/[\s·.,]/g, "");
+      return !antiAiForbiddenTokens.some((t) => t.trim().toLowerCase().replace(/[\s·.,]/g, "") === norm);
+    });
+    const mergedForbiddenTokens = [...userForbiddenTokens, ...antiAiForbiddenTokens];
+
+    const defaultHardConstraintLines = [
+      localizeSentence(
+        "이미지 안 텍스트는 사용자가 제공한 문구와 AI 자동 생성 요청 항목만 사용하고, 임의 문장·가짜 한글·중복 문구·의미 없는 장식 텍스트를 추가하지 않는다.",
+        "Use only the user-provided copy and explicitly requested AI-generated copy on the image; do not add arbitrary sentences, fake Korean, duplicated copy, or meaningless decorative text."
+      ),
+      localizeSentence(
+        "헤드라인, 서브카피, 행동버튼 문구, 숫자, 날짜, 장소는 획이 뭉개지지 않는 또렷한 타이포그래피로 렌더링하고 철자·숫자·띄어쓰기를 왜곡하지 않는다.",
+        "Render headlines, sub-copy, action button text, numbers, dates, and locations with crisp typography; do not distort spelling, numerals, or spacing."
+      ),
+      localizeSentence(
+        "실제 존재하는 기업·기관·정부 로고, 상표, 엠블럼, 워터마크를 임의로 생성하거나 모사하지 않는다. 필요한 경우 깨끗한 빈 자리 또는 중립 플레이스홀더로 남긴다.",
+        "Do not invent or imitate real company, institution, government logos, trademarks, emblems, or watermarks. Leave a clean blank area or neutral placeholder if needed."
+      ),
+      localizeSentence(
+        "주요 헤드라인, 핵심 수치, 행동버튼, QR 자리 등 필수 정보는 캔버스 가장자리에서 충분히 떨어진 안전영역 안에 배치한다.",
+        "Place key information such as the headline, key numbers, action button, and QR placeholder inside a safe area with enough margin from the canvas edges."
+      ),
+      localizeSentence(
+        "결과물은 목업 화면, 포스터를 든 장면, 프레임 안 미리보기, 흰 외부 여백이 아니라 바로 배포 가능한 단일 홍보 이미지여야 한다.",
+        "The result must be a single ready-to-use promotion image, not a mockup screen, poster-in-hand scene, framed preview, or image with external white margins."
+      ),
+    ];
 
     const hardConstraintLines = prunePromptLines([
       ...koreanTextConstraint,
+      ...defaultHardConstraintLines,
       ...(activeAntiAiPreset
         ? [localizeSentence(
             `스타일 제약(${activeAntiAiPreset.labelKo}): ${activeAntiAiPreset.visualHintKo}로 렌더링하라`,
@@ -3345,16 +4149,16 @@
     ]);
 
     const directTextLines = prunePromptLines(
-      textEntries.map((entry, index) => `${index + 1}. ${localizeValue(entry.label)}: ${localizeValue(entry.value)}`)
+      textEntries.map((entry) => `${localizeValue(entry.label)}: ${localizeValue(entry.value)}`)
     );
 
     const AI_AUTO_FIELD_DEFS = [
       {
         field: "cta",
-        labelKo: "CTA 문구",
-        labelEn: "CTA copy",
-        directiveKo: "CTA 문구를 홍보 목적과 핵심 타깃에 맞춰 즉각적인 행동을 유도하는 형태로 생성하라",
-        directiveEn: "Generate a CTA copy that drives immediate action, matched to the promotion goal and target audience",
+        labelKo: "엑션버튼(CTA) 문구",
+        labelEn: "action button (CTA) copy",
+        directiveKo: "엑션버튼(CTA) 문구를 홍보 목적과 핵심 타깃에 맞춰 즉각적인 행동을 유도하는 형태로 생성하라",
+        directiveEn: "Generate an action button (CTA) copy that drives immediate action, matched to the promotion goal and target audience",
       },
       {
         field: "posterOffer",
@@ -3388,6 +4192,39 @@
         ))
     );
 
+    const promotionStrategyLines = prunePromptLines([
+      `${localizeSentence("광고 목적", "promotion goal")}: ${localizeValue(state.goal || CONTENT_TYPE_TEMPLATES[state.contentType]?.goal || "직접 입력 목적")}`,
+      `${localizeSentence("타깃 대상", "target audience")}: ${localizeValue(state.audience || CONTENT_TYPE_TEMPLATES[state.contentType]?.audience || "직접 입력 대상")}`,
+      ...getLocalizedProfileLines(promotionStrategyProfile),
+      localizeSentence(
+        "이 이미지는 정보 안내물이 아니라 시선 포획, 메시지 압축, 행동 유도를 수행하는 광고 키비주얼이어야 한다.",
+        "This image must function as an advertising key visual that captures attention, compresses the message, and drives action, not as a plain information notice."
+      ),
+    ]);
+
+    const attentionFlowLines = prunePromptLines([
+      localizeSentence(
+        "시선 흐름 1순위: 헤드라인 또는 가장 중요한 후킹 문구",
+        "Attention order 1: headline or most important hook copy"
+      ),
+      localizeSentence(
+        "시선 흐름 2순위: 메인 비주얼 오브젝트, 인물, 상징 장면, 또는 핵심 데이터",
+        "Attention order 2: main visual object, person, symbolic scene, or key data"
+      ),
+      localizeSentence(
+        "시선 흐름 3순위: 혜택, 일정, 장소, 핵심 조건 등 보조 정보",
+        "Attention order 3: supporting details such as benefit, date, location, or key condition"
+      ),
+      localizeSentence(
+        "시선 흐름 4순위: 엑션버튼, QR 자리, 링크 안내 같은 행동 유도 요소",
+        "Attention order 4: action button, QR placeholder, link guide, or other conversion element"
+      ),
+      localizeSentence(
+        "텍스트 블록은 가능하면 3개 이하로 묶고, 모든 작은 텍스트는 정보 카드 또는 하단 정보 영역에 정돈한다.",
+        "Keep text blocks to 3 or fewer when possible, and organize small text into information cards or a bottom information zone."
+      ),
+    ]);
+
     const commercialLines = prunePromptLines([
       `${localizeSentence("상업 품질 기준", "Commercial baseline")}: ${localizeSentence(commercialProfile.labelKo, commercialProfile.labelEn)}`,
       ...getLocalizedProfileLines(commercialProfile),
@@ -3396,7 +4233,8 @@
     const designLines = prunePromptLines([
       ...instructionItems
         .filter((entry) => !compositionExcludedKeys.has(entry.key))
-        .map((entry, index) => `${index + 1}. ${localizeValue(entry.label)}: ${localizeValue(entry.value)}`),
+        .map((entry) => `${localizeValue(entry.label)}: ${localizeValue(entry.value)}`),
+      ...qrCodePromptLines(),
     ]);
 
     const creativityLines = prunePromptLines([
@@ -3404,6 +4242,11 @@
       state.visualMetaphor ? `${localizeSentence("비주얼 은유", "Visual metaphor")}: ${localizeValue(state.visualMetaphor)}` : "",
       `${localizeSentence("레이아웃 실험 범위", "Layout experimentation")}: ${localizeSentence(creativityProfile.labelKo, creativityProfile.labelEn)}`,
       ...getLocalizedProfileLines(creativityProfile),
+      ...getLocalizedProfileLines(diversityProfile),
+      localizeSentence(
+        "같은 입력값이라도 매번 동일한 템플릿 구도로 반복하지 말고, 선택한 창의성 강도 안에서 색면, 크롭, 오브젝트 스케일, 정보 카드 형태, 배경 은유 중 일부를 변주한다.",
+        "Even with the same inputs, do not repeat the same template composition every time; within the selected creativity level, vary color fields, cropping, object scale, information-card shape, or background metaphor."
+      ),
     ]);
 
     const colorLines = prunePromptLines(
@@ -3436,14 +4279,7 @@
 
     const qualityLines = prunePromptLines([
       ...getDefaultQualityTagLines(),
-      ...(state.qualityNotes
-        ? splitQualityNoteLines(state.qualityNotes).map((item) => localizeValue(item))
-        : [
-            localizeSentence(
-              "텍스트 가장자리 또렷함, 픽셀 깨짐 없음, 썸네일 축소 시에도 핵심 문구 가독성 유지.",
-              "Crisp text edges, no pixelation, headline legible at thumbnail size."
-            ),
-          ]),
+      ...splitQualityNoteLines(state.qualityNotes).map((item) => localizeValue(item)),
     ]);
 
     const variationLines = (() => {
@@ -3462,10 +4298,12 @@
 
     const sections = [
       { priority: 10, title: localizeHeading("출력 대상", "Output target"), lines: targetLines },
+      { priority: 15, title: localizeHeading("광고 전략", "Promotion strategy"), lines: promotionStrategyLines },
       { priority: 20, title: localizeHeading("상업 품질 기준", "Commercial baseline"), lines: commercialLines },
       { priority: 30, title: localizeHeading("하드 제약", "Hard constraints"), lines: hardConstraintLines },
       { priority: 35, title: localizeHeading("AI 자동 생성 요청", "AI auto-generate requests"), lines: aiAutoLines },
       { priority: 40, title: localizeHeading("이미지에 직접 포함할 텍스트 (한국어 원문 그대로 렌더링)", "Text to render exactly as-is — Korean source text, do not translate"), lines: directTextLines },
+      { priority: 45, title: localizeHeading("시선 흐름", "Attention flow"), lines: attentionFlowLines },
       { priority: 50, title: localizeHeading("구성/배치 지시", "Composition and layout guidance"), lines: resolveConflictLines(designLines, lint) },
       { priority: 60, title: localizeHeading("창의 방향", "Creative direction"), lines: creativityLines },
       { priority: 65, title: localizeHeading("비주얼 구성 방향", "Visual composition direction"), lines: variationLines },
@@ -3526,17 +4364,21 @@
       buildRoleStatement(),
     ];
 
-    const sectionLines = sections.flatMap((section) => ["", `## ${section.title}`, ...section.lines]);
+    const sectionLines = sections.flatMap((section) => [
+      "",
+      `## ${section.title}`,
+      ...section.lines.flatMap((line) => line.split(/\r?\n/)).map((line) => `- ${line.trim().replace(/^-\s*/, "")}`),
+    ]);
 
     const footer = [
       "",
       `## ${localizeHeading("우선순위", "Priority order")}`,
-      localizeSentence("1. 이미지 내 텍스트 언어 규칙 (한국어 단독 표기) 및 금지 규칙 준수", "1. On-image text language rule (Korean only) and all hard constraints"),
-      localizeSentence("2. AI 자동 생성 항목 (CTA·오퍼·훅·태그) 적절히 생성 후 배치", "2. Generate AI auto-requested items (CTA, offer, hook, hashtags) and place them appropriately"),
-      localizeSentence("3. 텍스트 위계와 가독성 (헤드라인 → CTA 순)", "3. Text hierarchy and readability (headline → CTA)"),
-      localizeSentence("4. 상업 품질 기준 및 창의 방향 반영", "4. Commercial baseline and creative direction"),
-      localizeSentence("5. 구성·배치·비주얼 구성 방향 반영", "5. Composition, layout, and visual composition direction"),
-      localizeSentence("6. 색상·배경 시스템 일관성 및 품질 보정", "6. Color system, background, and quality refinements"),
+      localizeSentence("- 이미지 내 텍스트 언어 규칙 (한국어 단독 표기) 및 금지 규칙 준수", "- On-image text language rule (Korean only) and all hard constraints"),
+      localizeSentence("- AI 자동 생성 항목 (CTA·오퍼·훅·태그) 적절히 생성 후 배치", "- Generate AI auto-requested items (CTA, offer, hook, hashtags) and place them appropriately"),
+      localizeSentence("- 텍스트 위계와 가독성 (헤드라인 → CTA 순)", "- Text hierarchy and readability (headline → CTA)"),
+      localizeSentence("- 상업 품질 기준 및 창의 방향 반영", "- Commercial baseline and creative direction"),
+      localizeSentence("- 구성·배치·비주얼 구성 방향 반영", "- Composition, layout, and visual composition direction"),
+      localizeSentence("- 색상·배경 시스템 일관성 및 품질 보정", "- Color system, background, and quality refinements"),
     ];
 
     return [...intro, ...sectionLines, ...footer].join("\n");
@@ -3544,7 +4386,11 @@
 
   function renderOptimizedPrompt(validation, lint) {
     const sections = createPromptSections(validation, lint);
-    const compressed = sections.flatMap((section) => section.lines.map((line) => `- ${line.replace(/^\d+\.\s*/, "")}`));
+    const compressed = sections.flatMap((section) =>
+      section.lines
+        .flatMap((line) => line.split(/\r?\n/))
+        .map((line) => `- ${line.replace(/^\d+\.\s*/, "").trim().replace(/^-\s*/, "")}`)
+    );
     const assetLabelEn = ASSET_PROMPT_TARGET_EN[state.assetType] || ASSET_LABELS[state.assetType];
     const contentNameEn = state.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES_EN[state.contentType]?.name || "") : "";
     const contentNameKo = state.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES[state.contentType]?.name || "") : "";
@@ -3560,6 +4406,14 @@
       localizeSentence(
         "텍스트 정확성, 타이포그래피 위계, 레이아웃 명확성, CTA 집중도와 상업 광고 수준의 완성도를 최우선으로 처리하라.",
         "Prioritize exact text fidelity, typography hierarchy, layout clarity, strong CTA focus, and campaign-grade commercial finish."
+      ),
+      localizeSentence(
+        "평범한 템플릿형 안내 이미지로 만들지 말고, 타이포그래피 중심·상징 오브젝트 중심·공간 분할 중심 중 하나의 광고 콘셉트를 과감하게 선택해 차별화된 결과를 만든다.",
+        "Do not produce a generic template-like notice image; decisively choose one advertising concept such as typography-led, symbolic-object-led, or spatially split composition to create a distinctive result."
+      ),
+      localizeSentence(
+        "창의성은 장식 추가가 아니라 시선 흐름, 크롭, 여백, 오브젝트 스케일, 정보 카드 구조의 변주로 표현한다.",
+        "Express creativity through variation in eye flow, cropping, whitespace, object scale, and information-card structure rather than by adding decoration."
       ),
       ...(state.outputLanguage !== "en"
         ? [localizeSentence(
@@ -3669,7 +4523,21 @@
     }
 
     const section = $("promotionCtaSection");
-    if (section) section.classList.toggle("promo-field-disabled", !enabled);
+    if (section) section.classList.toggle("promo-field-disabled", !enabled && !isEnabled(state.qrEnabled));
+  }
+
+  function syncQrCodeUI() {
+    const enabled = isEnabled(state.qrEnabled);
+    const checkbox = $("promotionQrEnabled");
+    const urlWrap = $("promotionQrUrlWrap");
+    const urlInput = $("promotionQrUrl");
+
+    if (checkbox) checkbox.checked = enabled;
+    if (urlWrap) urlWrap.style.display = enabled ? "" : "none";
+    if (urlInput) urlInput.disabled = !enabled;
+
+    const section = $("promotionCtaSection");
+    if (section) section.classList.toggle("promo-field-disabled", !isEnabled(state.ctaEnabled) && !enabled);
   }
 
   function syncPosterOfferToggleUI() {
@@ -3855,6 +4723,7 @@
     syncColorFieldUI();
     syncQuickButtonStates(root);
     syncCtaToggleUI();
+    syncQrCodeUI();
     syncPosterOfferToggleUI();
     syncSnsHookToggleUI();
     syncSnsHashtagsToggleUI();
@@ -4114,8 +4983,193 @@
     });
   }
 
+  function applyStep5ChoiceTaxonomy() {
+    const step = $("promotionStepConstraints");
+    if (!step) return;
+
+    const setText = (selector, text) => {
+      const node = step.querySelector(selector);
+      if (node) node.textContent = text;
+    };
+    const setHtml = (selector, html) => {
+      const node = step.querySelector(selector);
+      if (node) node.innerHTML = html;
+    };
+    const setOptions = (selectId, labels) => {
+      const select = $(selectId);
+      if (!select) return;
+      Array.from(select.options).forEach((option) => {
+        if (labels[option.value]) option.textContent = labels[option.value];
+      });
+    };
+    const setSegmentLabels = (selector, labels, dataKey) => {
+      step.querySelectorAll(selector).forEach((button) => {
+        const value = button.dataset[dataKey];
+        if (labels[value]) button.textContent = labels[value];
+      });
+    };
+
+    setText(".promo-step-copy small", "피해야 할 요소, 상업 완성도.");
+    setText("label[for='promotionForbiddenElements'] + .gen-config-guide", "다른 단계에서 이미 지정한 색상, 배경, 액션버튼, 배치가 아니라 제외할 표현만 적습니다.");
+
+
+    setHtml("label[for='promotionCommercialBaseline']", `상업 완성도 기준 <span class="promo-field-badge instruction">품질 단계</span>`);
+    setText("label[for='promotionCommercialBaseline'] + .promo-control-hint", "내용·색상·배치가 아니라 결과물의 마감 밀도를 정합니다. 보통 premium이 적합합니다.");
+    setOptions("promotionCommercialBaseline", { off: "기본", standard: "실무형", premium: "프리미엄", luxury: "하이엔드" });
+    setSegmentLabels("[data-promo-commercial-baseline]", { off: "기본", standard: "실무형", premium: "프리미엄", luxury: "하이엔드" }, "promoCommercialBaseline");
+
+    setHtml("label[for='promotionCreativityLevel']", `구성 실험 강도 <span class="promo-field-badge instruction">위험도</span>`);
+    setText("label[for='promotionCreativityLevel'] + .promo-control-hint", "색상이나 스타일이 아니라 화면 구성의 실험 폭만 조절합니다. 보통 balanced가 안정적입니다.");
+    setOptions("promotionCreativityLevel", { stable: "안정형", balanced: "균형형", experimental: "실험형" });
+    setSegmentLabels("[data-promo-creativity-level]", { stable: "안정형", balanced: "균형형", experimental: "실험형" }, "promoCreativityLevel");
+
+    setText("label[for='promotionQualityNotes']", "결과물 결함 방지");
+    setText("label[for='promotionQualityNotes'] + .gen-config-guide", "내용 추가나 배치 지시가 아니라 텍스트 깨짐, 저해상도, 왜곡, 노이즈 같은 산출물 결함만 지정합니다.");
+    const qualityContainer = step.querySelector(".promo-quick-btns[data-quick-for='promotionQualityNotes']");
+    if (qualityContainer) {
+      qualityContainer.innerHTML = STEP5_QUALITY_OPTIONS
+        .map((item) => `<button type="button" class="btn-quick">${escapeHtml(item)}</button>`)
+        .join("");
+    }
+    const qualityInput = $("promotionQualityNotes");
+    if (qualityInput) {
+      qualityInput.placeholder = "예: 텍스트 가장자리는 선명하게, 작은 글자는 번짐 없이, 인물 얼굴과 손가락 왜곡 방지";
+    }
+  }
+
+  function replaceQuickButtons(container, values) {
+    if (!container) return;
+    container.innerHTML = values
+      .map((item) => `<button type="button" class="btn-quick">${escapeHtml(item)}</button>`)
+      .join("");
+  }
+
+  function applyActionCtaQrHierarchy() {
+    const section = $("promotionCtaSection");
+    if (!section) return;
+    section.classList.add("gen-config-group-wide", "promo-action-choice-section");
+    section.innerHTML = `
+      <div class="promo-action-choice-grid">
+        <div class="promo-action-choice-card" id="promotionCtaChoiceCard">
+          <div class="gen-config-label-row">
+            <label class="gen-config-label" for="promotionCta">엑션버튼(CTA) <span class="promo-field-badge visible">이미지 텍스트</span></label>
+            <div class="promo-ai-toggle-header">
+              <label class="promo-ai-toggle-switch" title="사용 여부">
+                <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="cta" checked />
+                <span class="promo-ai-toggle-track"></span>
+              </label>
+              <div class="promo-ai-mode-btns" id="promotionCtaModeBtns">
+                <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="cta" data-mode="ai">AI 자동</button>
+                <button type="button" class="promo-ai-mode-btn" data-toggle-mode="cta" data-mode="manual">직접 입력</button>
+              </div>
+            </div>
+          </div>
+          <p class="gen-config-guide">사용자가 마지막에 어떤 행동을 하길 원하는지 명확히 적습니다.</p>
+          <div id="promotionCtaInput" style="display:none">
+            <input id="promotionCta" class="gen-input-text" type="text" data-promo-field="cta" placeholder="예: 지금 신청하기" />
+          </div>
+          <div id="promotionCtaAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+        </div>
+        <div class="promo-action-choice-card" id="promotionQrChoiceCard">
+          <div class="gen-config-label-row">
+            <label class="gen-config-label" for="promotionQrEnabled">QR코드 <span class="promo-field-badge instruction">연결 안내</span></label>
+            <label class="promo-qr-toggle">
+              <input type="checkbox" id="promotionQrEnabled" data-promo-field="qrEnabled" />
+              <span>사용</span>
+            </label>
+          </div>
+          <p class="gen-config-guide">실제 연결 가능한 QR코드는 정확히 생성되지 않을 수 있어, 최종 제작 시 실제 QR 이미지를 별도로 삽입하는 것을 권장합니다.</p>
+          <div id="promotionQrUrlWrap" class="promo-qr-url-wrap" style="display:none">
+            <label class="gen-config-label" for="promotionQrUrl">QR코드 연결 주소</label>
+            <input id="promotionQrUrl" class="gen-input-text" type="url" data-promo-field="qrUrl" placeholder="예: https://example.com/apply" />
+            <p class="gen-hint">프롬프트에는 QR코드 공간 배정과 안내문구가 추가됩니다.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function applyStep3ChoiceTaxonomy() {
+    const step = $("promotionStepVisual");
+    if (!step) return;
+    const setText = (selector, text) => {
+      const node = step.querySelector(selector);
+      if (node) node.textContent = text;
+    };
+    const setHtml = (selector, html) => {
+      const node = step.querySelector(selector);
+      if (node) node.innerHTML = html;
+    };
+
+    setText(".promo-step-copy strong", "비주얼 방향");
+    setText(".promo-step-copy small", "전체 아이디어를 먼저 고르고, 톤·상징·표현방식만 짧게 보완합니다.");
+
+    const body = step.querySelector(".promo-step-body");
+    if (body && !$("promotionVisualIdeaPresets")) {
+      body.insertAdjacentHTML("afterbegin", `
+        <section class="gen-config-group gen-config-group-wide promo-visual-preset-panel" id="promotionVisualIdeaPresets">
+          <label class="gen-config-label">아이디어 빠른 선택</label>
+          <p class="gen-config-guide">하나를 고르면 톤, 핵심 개념, 비주얼 은유, 스타일이 함께 정리됩니다. 이후 세부 항목은 직접 수정할 수 있습니다.</p>
+          <div class="promo-visual-preset-grid">
+            ${STEP3_IDEA_PRESETS.map((preset) => `
+              <button type="button" class="promo-visual-preset-btn" data-visual-idea-preset="${escapeHtml(preset.id)}">
+                <strong>${escapeHtml(preset.label)}</strong>
+                <span>${escapeHtml(preset.desc)}</span>
+              </button>
+            `).join("")}
+          </div>
+        </section>
+      `);
+    }
+
+    const subgroupLabels = step.querySelectorAll(".promo-visual-subgroup-label");
+    const subgroupDescs = step.querySelectorAll(".promo-visual-subgroup-desc");
+    if (subgroupLabels[0]) subgroupLabels[0].textContent = "아이디어";
+    if (subgroupDescs[0]) subgroupDescs[0].textContent = "무드와 상징을 선택합니다";
+    if (subgroupLabels[1]) subgroupLabels[1].textContent = "표현 방식";
+    if (subgroupDescs[1]) subgroupDescs[1].textContent = "그래픽 스타일만 선택합니다";
+
+    setText("label[for='promotionTone']", "톤");
+    setText("label[for='promotionTone'] + .gen-config-guide", "브랜드가 전달해야 할 감정만 짧게 고릅니다.");
+    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionTone']"), STEP3_VISUAL_OPTION_GROUPS.tone);
+
+    setHtml("label[for='promotionBigIdea']", `핵심 개념 <span class="promo-field-badge instruction">아이디어</span>`);
+    setText("label[for='promotionBigIdea'] + .gen-config-guide", "이미지 한 장이 말해야 할 중심 아이디어를 고릅니다.");
+    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionBigIdea']"), STEP3_VISUAL_OPTION_GROUPS.bigIdea);
+
+    setHtml("label[for='promotionVisualMetaphor']", `상징 장면 <span class="promo-field-badge instruction">아이디어</span>`);
+    setText("label[for='promotionVisualMetaphor'] + .gen-config-guide", "직접 설명 대신 이미지로 보여줄 장면을 1개만 고릅니다.");
+    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionVisualMetaphor']"), STEP3_VISUAL_OPTION_GROUPS.visualMetaphor);
+
+    setText("label[for='promotionVisualStyle']", "표현 스타일");
+    setText("label[for='promotionVisualStyle'] + .gen-config-guide", "색상과 배경은 4단계에서 정하고, 여기서는 표현 방식만 고릅니다.");
+    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionVisualStyle']"), STEP3_VISUAL_OPTION_GROUPS.visualStyle);
+
+    $("promotionBigIdea")?.setAttribute("data-promo-field", "bigIdea");
+    $("promotionVisualMetaphor")?.setAttribute("data-promo-field", "visualMetaphor");
+  }
+
+  function bindStep3IdeaPresets() {
+    root.querySelectorAll("[data-visual-idea-preset]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const preset = STEP3_IDEA_PRESETS.find((item) => item.id === button.dataset.visualIdeaPreset);
+        if (!preset) return;
+        Object.entries(preset.fields).forEach(([key, value]) => {
+          state[key] = value;
+        });
+        promptDirty = false;
+        syncStaticFields();
+        syncQuickButtonStates(root);
+        renderPreview();
+      });
+    });
+  }
+
   function init() {
     attachStaticFieldBadges();
+    applyActionCtaQrHierarchy();
+    applyStep3ChoiceTaxonomy();
+    applyStep5ChoiceTaxonomy();
     loadColorPresets();
     renderColorPresetOptions();
     loadSizePresets();
@@ -4127,6 +5181,7 @@
     bindOptimizationControls();
     bindColorPickers();
     bindColorClearButtons();
+    bindStep3IdeaPresets();
     bindLoadInput();
     bindPromptEditor();
     $("promotionSampleBtn")?.addEventListener("click", applySample);
@@ -4135,6 +5190,7 @@
     $("promotionLoadBtn")?.addEventListener("click", loadSettings);
     $("promotionPaletteSaveBtn")?.addEventListener("click", saveCurrentPalettePreset);
     $("promotionPaletteApplyBtn")?.addEventListener("click", applySelectedPalettePreset);
+    $("promotionPalettePresetSelect")?.addEventListener("change", () => applySelectedPalettePreset({ silent: true }));
     $("promotionPaletteDeleteBtn")?.addEventListener("click", deleteSelectedPalettePreset);
     $("promotionResetBtn")?.addEventListener("click", resetAll);
     $("promotionPruneEmptyBtn")?.addEventListener("click", pruneEmptyFields);
