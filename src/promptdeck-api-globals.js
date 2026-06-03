@@ -39,9 +39,12 @@ function normalizeSelectionItem(key, item) {
 
 function normalizeSelectionSnapshot(selections = {}) {
   const next = createEmptySelections();
+  const migrated = typeof migrateSelectionSnapshotForMece === "function"
+    ? migrateSelectionSnapshotForMece(selections)
+    : selections;
 
   Object.keys(next).forEach((key) => {
-    const value = selections[key];
+    const value = migrated[key];
     if (Array.isArray(value)) {
       next[key] = value.map((item) => normalizeSelectionItem(key, item)).filter(Boolean);
       return;
@@ -312,12 +315,13 @@ function buildPromptFromConfig(config, userInput = {}, lang = "ko") {
 
 function validatePromptConfig(config, userInput = {}, lang = "ko") {
   return withPromptConfig(config, userInput, () => {
-    const conflicts = getConflicts().map((item) => ({
+    const conflicts = (typeof getResolvedConflicts === "function" ? getResolvedConflicts() : getConflicts()).map((item) => ({
       keyA: item.a.key,
       keyB: item.b.key,
       message: item.msg,
       messageEn: item.msgEn,
-      severity: "error",
+      severity: item.severity === "block" ? "error" : item.severity || "warning",
+      action: item.action || "choose-one",
     }));
 
     const pageType = getCurrentPageType();
@@ -394,8 +398,10 @@ function validatePromptConfig(config, userInput = {}, lang = "ko") {
       userInput: currentUserInput,
     };
 
+    const errorConflictCount = conflicts.filter((item) => item.severity === "error").length;
+
     return {
-      ok: conflicts.length === 0 && warnings.length === 0,
+      ok: errorConflictCount === 0 && warnings.length === 0,
       conflicts,
       warnings,
       summary: {
