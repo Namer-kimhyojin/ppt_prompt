@@ -104,7 +104,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 4px;
   padding: 0 28px;
   background: var(--tabs-bg);
   backdrop-filter: blur(16px);
@@ -294,12 +294,10 @@ button {
 
 @media (max-width: 720px) {
   .app-header {
-    position: static;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 10px;
     padding: 12px 14px;
-    overflow-x: visible;
   }
 
   .brand-block {
@@ -326,10 +324,30 @@ button {
     padding: 0 10px;
   }
 
+  .header-actions {
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
   .app-tabs-bar {
     top: 0;
-    padding: 6px 10px;
     display: block;
+    padding: 6px 10px;
+  }
+
+  .app-tabs-bar .header-actions {
+    display: none;
+  }
+
+  .header-actions .btn {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
   }
 
   .app-tabs {
@@ -337,309 +355,16 @@ button {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4px;
     overflow-x: visible;
-    scrollbar-width: none;
-  }
-
-  .app-tabs-bar .header-actions {
-    display: none;
+    padding: 0;
   }
 
   .app-tab-btn {
     width: 100%;
+    min-width: 0;
     min-height: 38px;
     padding: 9px 6px;
     border-radius: 10px;
-    font-size: 0;
-  }
-
-  body {
-    padding-bottom: 86px;
-  }
-
-  .app-tab-btn {
-    min-width: 0;
     text-align: center;
-  }
-
-  .app-tab-btn::before {
-    content: attr(data-mobile-label);
-    display: block;
-    overflow: hidden;
-    color: currentColor;
-    font-size: 12px;
-    font-weight: 800;
-    line-height: 1.2;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .app-tab-btn::after {
-    content: "";
-  }
-
-  .app-tab-btn.active {
-    background: rgba(31, 94, 255, 0.08);
-  }
-
-  .app-tab-btn.active::after {
-    left: 12px;
-    right: 12px;
-    bottom: 3px;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-header {
-    padding: 10px 12px;
-  }
-
-  .brand-block {
-    flex-basis: 100%;
-  }
-
-  .brand-subtitle {
-    display: none;
-  }
-
-  .theme-toggle {
-    min-height: 34px;
-    font-size: 12px;
-  }
-
-  .app-tab-btn {
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 9px 4px;
-    font-size: 0;
-  }
-
-  .app-tab-btn::before {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 360px) {
-  .app-tabs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.mobile-action-bar,
-.mobile-prompt-sheet {
-  display: none;
-}
-
-@media (max-width: 720px) {
-  .mobile-action-bar {
-    position: fixed;
-    z-index: 1300;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    display: grid;
-    grid-template-columns: minmax(66px, 0.9fr) repeat(3, minmax(0, 1fr)) 42px;
-    gap: 6px;
-    align-items: center;
-    padding: 8px;
-    border: 1px solid rgba(183, 196, 214, 0.72);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.2);
-    backdrop-filter: blur(14px);
-  }
-
-  .mobile-action-meta {
-    min-width: 0;
-    display: grid;
-    gap: 2px;
-    padding-left: 4px;
-  }
-
-  .mobile-action-kicker {
-    color: var(--ink-faint);
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  .mobile-action-title {
-    overflow: hidden;
-    color: var(--ink);
-    font-size: 13px;
-    font-weight: 900;
-    line-height: 1.15;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .mobile-action-btn,
-  .mobile-action-more,
-  .mobile-action-menu-btn,
-  .mobile-prompt-close {
-    min-width: 0;
-    min-height: 42px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 850;
-    cursor: pointer;
-  }
-
-  .mobile-action-btn.primary {
-    border-color: transparent;
-    background: linear-gradient(135deg, #1f5eff 0%, #0f3fb8 100%);
-    color: #fff;
-  }
-
-  .mobile-action-btn.secondary {
-    background: var(--surface);
-    color: var(--ink);
-  }
-
-  .mobile-action-btn.ghost,
-  .mobile-action-more {
-    background: var(--surface-alt);
-    color: var(--ink-soft);
-  }
-
-  .mobile-action-btn:disabled,
-  .mobile-action-more:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-
-  .mobile-action-more {
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  .mobile-action-menu {
-    position: absolute;
-    right: 8px;
-    bottom: calc(100% + 8px);
-    width: min(220px, calc(100vw - 28px));
-    display: grid;
-    gap: 6px;
-    padding: 8px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: var(--surface);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .mobile-action-menu[hidden] {
-    display: none;
-  }
-
-  .mobile-action-menu-btn {
-    width: 100%;
-    padding: 0 12px;
-    background: var(--surface-alt);
-    color: var(--ink);
-    text-align: left;
-  }
-
-  .mobile-prompt-sheet {
-    position: fixed;
-    inset: 0;
-    z-index: 1400;
-    display: block;
-  }
-
-  .mobile-prompt-sheet[hidden] {
-    display: none;
-  }
-
-  .mobile-prompt-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.48);
-  }
-
-  .mobile-prompt-panel {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: grid;
-    grid-template-rows: auto minmax(220px, 1fr) auto;
-    max-height: min(82vh, 720px);
-    padding: 14px;
-    border-radius: 22px 22px 0 0;
-    background: var(--surface);
-    box-shadow: 0 -20px 48px rgba(15, 23, 42, 0.22);
-  }
-
-  .mobile-prompt-head,
-  .mobile-prompt-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .mobile-prompt-head strong {
-    display: block;
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.25;
-  }
-
-  .mobile-prompt-close {
-    width: 42px;
-    background: var(--surface-alt);
-    color: var(--ink);
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  .mobile-prompt-text {
-    width: 100%;
-    min-height: 260px;
-    margin: 12px 0;
-    padding: 12px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: var(--surface-alt);
-    color: var(--ink);
-    font-family: "JetBrains Mono", "Pretendard", monospace;
-    font-size: 12px;
-    line-height: 1.55;
-    resize: none;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-
-  .mobile-prompt-actions .mobile-action-btn {
-    flex: 1;
-  }
-
-  body.mobile-sheet-open {
-    overflow: hidden;
-  }
-}
-
-@media (max-width: 420px) {
-  .mobile-action-bar {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) 38px;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    gap: 5px;
-    padding: 7px;
-    border-radius: 16px;
-  }
-
-  .mobile-action-meta {
-    display: none;
-  }
-
-  .mobile-action-btn,
-  .mobile-action-more {
-    min-height: 40px;
-    border-radius: 11px;
-    font-size: 11px;
   }
 }
 
@@ -676,8 +401,6 @@ button {
 .lang-btn:hover,
 .option-card:hover,
 .page-type-card:hover,
-.tree-branch-button:hover,
-.tree-leaf:hover,
 .template-chip:hover {
   transform: translateY(-1px);
 }
@@ -696,8 +419,6 @@ button {
 .lang-btn:focus-visible,
 .option-card:focus-visible,
 .page-type-card:focus-visible,
-.tree-branch-button:focus-visible,
-.tree-leaf:focus-visible,
 .template-chip:focus-visible {
   outline: 3px solid rgba(31, 94, 255, 0.18);
   outline-offset: 2px;

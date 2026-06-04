@@ -202,7 +202,7 @@ function formatPromptDiffPromptSettings(value, lang = "ko") {
   if (!value) return lang === "ko" ? "기본 출력 설정" : "Default prompt settings";
   const tokens = [
     value.addPreamble ? (lang === "ko" ? "역할 지시문 포함" : "Preamble on") : (lang === "ko" ? "역할 지시문 제외" : "Preamble off"),
-    value.koreanContent ? "Korean slide text" : "Original slide text",
+    value.koreanContent ? (lang === "ko" ? "텍스트 원문 보존" : "Preserve source text") : (lang === "ko" ? "텍스트 원문 보존 해제" : "Source text preservation off"),
     value.outputMode === "prose" ? "Prose" : "Block",
   ];
   return tokens.join(", ");

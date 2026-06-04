@@ -212,8 +212,6 @@ button {
 .lang-btn:hover,
 .option-card:hover,
 .page-type-card:hover,
-.tree-branch-button:hover,
-.tree-leaf:hover,
 .template-chip:hover {
   transform: translateY(-1px);
 }
@@ -232,8 +230,6 @@ button {
 .lang-btn:focus-visible,
 .option-card:focus-visible,
 .page-type-card:focus-visible,
-.tree-branch-button:focus-visible,
-.tree-leaf:focus-visible,
 .template-chip:focus-visible {
   outline: 3px solid rgba(31, 94, 255, 0.18);
   outline-offset: 2px;
@@ -473,168 +469,6 @@ button {
   color: var(--ink-soft);
 }
 
-.option-tree {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.tree-branch {
-  position: relative;
-  padding-left: 14px;
-}
-
-.tree-branch::before {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 10px;
-  bottom: 10px;
-  width: 1px;
-  background: rgba(183, 196, 214, 0.8);
-}
-
-.tree-branch-button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background: var(--surface-alt);
-  text-align: left;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.tree-branch.active .tree-branch-button {
-  border-color: rgba(31, 94, 255, 0.34);
-  background: rgba(31, 94, 255, 0.08);
-}
-
-.tree-branch.completed:not(.active) .tree-branch-button {
-  border-color: rgba(23, 114, 69, 0.18);
-}
-
-.tree-index {
-  min-width: 36px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--ink-soft);
-}
-
-.tree-branch.active .tree-index,
-.tree-branch.completed .tree-index {
-  background: linear-gradient(135deg, #1f5eff 0%, #0f3fb8 100%);
-  border-color: transparent;
-  color: #fff;
-}
-
-.tree-copy {
-  min-width: 0;
-  flex: 1;
-}
-
-.tree-title {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.tree-status {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--ink-soft);
-}
-
-.tree-arrow {
-  color: var(--ink-faint);
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.tree-leaves {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 8px 0 0 16px;
-  padding-left: 14px;
-  border-left: 1px dashed rgba(183, 196, 214, 0.95);
-}
-
-.tree-leaf {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.tree-leaf-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(81, 100, 125, 0.28);
-  flex-shrink: 0;
-}
-
-.tree-leaf-label {
-  font-size: 12px;
-  color: var(--ink-soft);
-  line-height: 1.45;
-}
-
-.tree-leaf.selected {
-  border-color: rgba(31, 94, 255, 0.2);
-  background: rgba(31, 94, 255, 0.06);
-}
-
-.tree-leaf.selected .tree-leaf-dot {
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(31, 94, 255, 0.1);
-}
-
-.tree-leaf.selected .tree-leaf-label {
-  color: var(--ink);
-}
-
-.tree-leaf.customized .tree-leaf-label::after {
-  content: "수정";
-  margin-left: 6px;
-  padding: 2px 5px;
-  border-radius: 999px;
-  background: rgba(175, 104, 18, 0.1);
-  color: #a35c12;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.tree-leaf.disabled {
-  opacity: 0.42;
-}
-
-.tree-leaf.disabled:hover {
-  transform: none;
-  background: transparent;
-}
-
 .editor-sections {
   display: flex;
   flex-direction: column;
@@ -677,11 +511,6 @@ button {
 .option-group.wide {
   grid-column: span 2;
   width: 100%;
-}
-
-.option-group.tree-focus-target {
-  border-color: rgba(31, 94, 255, 0.34);
-  box-shadow: 0 0 0 4px rgba(31, 94, 255, 0.08);
 }
 
 .option-group.disabled {

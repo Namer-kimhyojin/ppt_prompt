@@ -7,7 +7,7 @@ const state = {
   barSettings: createDefaultBarSettings(),
   promptSettings: {
     addPreamble: true,       // 프롬프트 서두 지시문 포함
-    koreanContent: false,    // 슬라이드 내 텍스트를 한국어로 작성
+    koreanContent: true,     // 슬라이드 내 텍스트 원문 보존
     outputMode: "block",     // "block" | "prose"  블록형 vs 자연어 단일 문단
   },
   bgSolidColor: "#F5F6F7",   // 배경 베이스가 '단색 배경'일 때 사용할 HEX
@@ -546,6 +546,35 @@ function buildColorSystemText(lang) {
   }
 }
 
+function buildFooterBarSettingsText(lang) {
+  const { footerEnabled, footerHeight, footerColor } = state.barSettings;
+  const footerMode = state.selections["footer-bar"]?.text || "";
+  const color = formatThemeColorValue(footerColor, lang);
+  const shouldRenderFooter = footerEnabled || (footerMode && footerMode !== "없음");
+
+  if (!shouldRenderFooter) {
+    return lang === "ko"
+      ? "\u25B8 바닥글 높이·컬러: 적용 안 함 — 슬라이드 하단에 별도 바닥글 선이나 바 구조를 사용하지 않음"
+      : "\u25B8 Footer size/color: not applied — do not render any separate footer line or footer bar at the bottom of the slide";
+  }
+
+  if (footerMode === "선 형태") {
+    return lang === "ko"
+      ? `\u25B8 바닥글 설정: 선 형태  |  기준 높이/여백: ${footerHeight}px  |  라인 컬러: ${color}`
+      : `\u25B8 Footer settings: line-only  |  reference height/spacing: ${footerHeight}px  |  line color: ${color}`;
+  }
+
+  if (footerMode === "바 형태") {
+    return lang === "ko"
+      ? `\u25B8 바닥글 설정: 바 형태  |  높이: ${footerHeight}px  |  바 컬러: ${color}`
+      : `\u25B8 Footer settings: filled bar  |  height: ${footerHeight}px  |  bar color: ${color}`;
+  }
+
+  return lang === "ko"
+    ? `\u25B8 바닥글 설정: 사용  |  높이: ${footerHeight}px  |  컬러: ${color}`
+    : `\u25B8 Footer settings: enabled  |  height: ${footerHeight}px  |  color: ${color}`;
+}
+
 function buildHeaderSlotGridText(lang) {
   const ratio  = state.selections["header-slot-ratio"];
   const left   = state.selections["header-slot-left"];
@@ -857,6 +886,41 @@ function getSelectionPromptText(key, item) {
   }
 
   switch (key) {
+    case "format":
+      return {
+        ko: `출력 규격 및 비율: ${ko}`,
+        en: `canvas format and ratio: ${stripPromptPrefix(en, ["canvas format", "aspect ratio"])}`,
+      };
+    case "mood":
+      return {
+        ko: `메인 스타일: ${ko}`,
+        en: `main style: ${stripPromptPrefix(en, ["main style", "presentation mood"])}`,
+      };
+    case "quality":
+      return {
+        ko: `이미지 품질: ${ko}`,
+        en: `image quality: ${stripPromptPrefix(en, ["image quality"])}`,
+      };
+    case "screen-elements":
+      return {
+        ko: `화면 구성 요소: ${ko}`,
+        en: `screen elements: ${stripPromptPrefix(en, ["screen elements"])}`,
+      };
+    case "material":
+      return {
+        ko: `렌더링 스타일: ${ko}`,
+        en: `rendering style: ${stripPromptPrefix(en, ["rendering style"])}`,
+      };
+    case "lighting":
+      return {
+        ko: `시각 연출: ${ko}`,
+        en: `visual treatment: ${stripPromptPrefix(en, ["visual treatment"])}`,
+      };
+    case "bg":
+      return {
+        ko: `배경 베이스: ${ko}`,
+        en: `background base: ${stripPromptPrefix(en, ["background base"])}`,
+      };
     case "layout":
       return {
         ko: `구조 레이아웃: ${ko}`,
@@ -902,15 +966,105 @@ function getSelectionPromptText(key, item) {
         ko: `로고 처리 정책: ${ko}`,
         en: `logo handling policy: ${stripPromptPrefix(en, ["logo handling"])}`,
       };
+    case "header-bg":
+      return {
+        ko: `헤더 배경: ${ko}`,
+        en: `header background: ${stripPromptPrefix(en, ["header background"])}`,
+      };
+    case "header-shape":
+      return {
+        ko: `헤더 바 형태: ${ko}`,
+        en: `header shape: ${stripPromptPrefix(en, ["header shape", "header bar shape"])}`,
+      };
+    case "header-line":
+      return {
+        ko: `헤더 강조선: ${ko}`,
+        en: `header accent line: ${stripPromptPrefix(en, ["header accent line", "header line"])}`,
+      };
+    case "header-icon":
+      return {
+        ko: `헤더 아이콘: ${ko}`,
+        en: `header icon: ${stripPromptPrefix(en, ["header icon"])}`,
+      };
+    case "header-align":
+      return {
+        ko: `헤더 텍스트 정렬: ${ko}`,
+        en: `header text alignment: ${stripPromptPrefix(en, ["header text alignment", "header alignment"])}`,
+      };
+    case "header-slot-ratio":
+      return {
+        ko: `타이틀바 슬롯 비율: ${ko}`,
+        en: `header slot ratio: ${stripPromptPrefix(en, ["header slot ratio"])}`,
+      };
+    case "header-slot-left":
+      return {
+        ko: `타이틀바 좌측 슬롯: ${ko}`,
+        en: `header left slot: ${stripPromptPrefix(en, ["header left slot"])}`,
+      };
+    case "header-slot-center":
+      return {
+        ko: `타이틀바 중앙 슬롯: ${ko}`,
+        en: `header center slot: ${stripPromptPrefix(en, ["header center slot"])}`,
+      };
+    case "header-slot-right":
+      return {
+        ko: `타이틀바 우측 슬롯: ${ko}`,
+        en: `header right slot: ${stripPromptPrefix(en, ["header right slot"])}`,
+      };
     case "bg-style":
       return {
-        ko: `배경 콘텐츠 레이어: ${ko}`,
-        en: `background content layer: ${stripPromptPrefix(en, ["background content type"])}`,
+        ko: `배경 콘텐츠: ${ko}`,
+        en: `background content: ${stripPromptPrefix(en, ["background content", "background content type"])}`,
+      };
+    case "bg-tone":
+      return {
+        ko: `배경 톤: ${ko}`,
+        en: `background tone: ${stripPromptPrefix(en, ["background tone"])}`,
       };
     case "palette":
       return {
         ko: `컬러 프리셋: ${ko}`,
         en: `color preset: ${stripPromptPrefix(en, ["color scheme"])}`,
+      };
+    case "photo-composite":
+      return {
+        ko: `실사 합성 적용 요소: ${ko}`,
+        en: `photorealistic application element: ${stripPromptPrefix(en, ["photorealistic application element"])}`,
+      };
+    case "photo-subject":
+      return {
+        ko: `실사 이미지 주제: ${ko}`,
+        en: `photo subject: ${stripPromptPrefix(en, ["photo subject"])}`,
+      };
+    case "text-policy":
+      return {
+        ko: `텍스트 반영 방식: ${ko}`,
+        en: `text rendering policy: ${stripPromptPrefix(en, ["text policy", "text rendering policy"])}`,
+      };
+    case "forbidden-rules":
+      return {
+        ko: `추가 금지 규칙: ${ko}`,
+        en: `additional do-not rule: ${stripPromptPrefix(en, ["additional do-not rule"])}`,
+      };
+    case "footer-bar":
+      return {
+        ko: `바닥글 형태: ${ko}`,
+        en: `footer style: ${stripPromptPrefix(en, ["footer style"])}`,
+      };
+    case "footer-elem":
+      return {
+        ko: `바닥글 콘텐츠: ${ko}`,
+        en: `footer content: ${stripPromptPrefix(en, ["footer content"])}`,
+      };
+    case "footer-align":
+      return {
+        ko: `바닥글 콘텐츠 정렬: ${ko}`,
+        en: `footer alignment: ${stripPromptPrefix(en, ["footer alignment", "footer content alignment"])}`,
+      };
+    case "footer-shape":
+      return {
+        ko: `바닥글 세부 형태: ${ko}`,
+        en: `footer shape: ${stripPromptPrefix(en, ["footer shape", "footer detailed shape"])}`,
       };
     case "reference-scope":
       if (REFERENCE_SCOPE_FULL.includes(item.text)) {
@@ -1033,16 +1187,11 @@ function buildPromptSections(options = {}) {
       }
 
       if (key === "footer-bar-settings") {
-        const { footerEnabled, footerHeight, footerColor } = state.barSettings;
         entries.push(makePromptEntry(
           "special:footer-bar-settings",
           OPTION_META[key]?.label || "Footer Bar Settings",
-          footerEnabled
-            ? `\u25B8 \ud558\ub2e8\ubc14 \uc0ac\uc6a9  |  \ub192\uc774: ${footerHeight}px  |  \uceec\ub7ec: ${formatThemeColorValue(footerColor, "ko")}`
-            : `\u25B8 \ud558\ub2e8\ubc14 \uc5c6\uc74c \u2014 \uc2ac\ub77c\uc774\ub4dc \ud558\ub2e8\uc5d0 \ubcc4\ub3c4 \ubc14 \uad6c\uc870\ub97c \uc0ac\uc6a9\ud558\uc9c0 \uc54a\uc74c`,
-          footerEnabled
-            ? `\u25B8 Footer bar: enabled  |  height: ${footerHeight}px  |  color: ${formatThemeColorValue(footerColor, "en")}`
-            : `\u25B8 Footer bar: none \u2014 do not render any footer bar at the bottom of the slide`,
+          buildFooterBarSettingsText("ko"),
+          buildFooterBarSettingsText("en"),
           key,
           null,
           "footer-bar-settings"
@@ -2725,6 +2874,7 @@ function applyPageRulesToUI() {
 
 function renderOptionTree() {
   const tree = document.getElementById("optionTree");
+  if (!tree) return;
   tree.innerHTML = "";
 
   SECTION_DEFS.forEach((section) => {
@@ -2737,6 +2887,7 @@ function renderOptionTree() {
     button.className = "tree-branch-button";
     button.addEventListener("click", () => {
       const conflictKey = getFirstConflictKeyForSection(section.id);
+      closeOptionTreeModal();
       if (conflictKey) {
         focusGroup(conflictKey);
         return;
@@ -2776,7 +2927,10 @@ function renderOptionTree() {
       leaf.type = "button";
       leaf.className = "tree-leaf";
       leaf.dataset.treeKey = key;
-      leaf.addEventListener("click", () => focusGroup(key));
+      leaf.addEventListener("click", () => {
+        closeOptionTreeModal();
+        focusGroup(key);
+      });
 
       const dot = document.createElement("span");
       dot.className = "tree-leaf-dot";
@@ -2806,7 +2960,10 @@ function renderOptionTree() {
   const userButton = document.createElement("button");
   userButton.type = "button";
   userButton.className = "tree-branch-button";
-  userButton.addEventListener("click", () => focusGroup("user-content"));
+  userButton.addEventListener("click", () => {
+    closeOptionTreeModal();
+    focusGroup("user-content");
+  });
 
   const userIndex = document.createElement("span");
   userIndex.className = "tree-index";
@@ -2839,7 +2996,10 @@ function renderOptionTree() {
   userLeaf.type = "button";
   userLeaf.className = "tree-leaf";
   userLeaf.dataset.treeKey = "user-content";
-  userLeaf.addEventListener("click", () => focusGroup("user-content"));
+  userLeaf.addEventListener("click", () => {
+    closeOptionTreeModal();
+    focusGroup("user-content");
+  });
 
   const userDot = document.createElement("span");
   userDot.className = "tree-leaf-dot";
@@ -2963,8 +3123,10 @@ function renderProgress() {
   const done = SECTION_DEFS.filter((section) => section.groups.some((key) => hasSelection(key))).length;
   const total = SECTION_DEFS.length;
   const percent = (done / total) * 100;
-  document.getElementById("progressBar").style.width = `${percent}%`;
-  document.getElementById("progressLabel").textContent = `${done} / ${total} 완료`;
+  const progressBar = document.getElementById("progressBar");
+  const progressLabel = document.getElementById("progressLabel");
+  if (progressBar) progressBar.style.width = `${percent}%`;
+  if (progressLabel) progressLabel.textContent = `${done} / ${total} 완료`;
 }
 
 function renderOverview() {
@@ -2972,7 +3134,8 @@ function renderOverview() {
   const message = nextStep
     ? `지금은 "${nextStep.label}"부터 정하면 흐름이 가장 자연스럽습니다.`
     : "핵심 흐름이 완성되었습니다. 이제 세부 규칙과 문구를 다듬으면 됩니다.";
-  document.getElementById("overviewMessage").textContent = message;
+  const overviewMessage = document.getElementById("overviewMessage");
+  if (overviewMessage) overviewMessage.textContent = message;
 }
 
 function renderProcessGuide() {
@@ -2982,13 +3145,19 @@ function renderProcessGuide() {
   const nextStep = getNextCoreStep();
   const ready = doneCount === total;
 
-  document.getElementById("processStatusTitle").textContent = ready ? "핵심 프롬프트 구조가 준비되었습니다" : `핵심 단계 ${doneCount}/${total} 진행 중`;
-  document.getElementById("processStatusHint").textContent = ready
-    ? "이제 컬러, 헤더, 금지 규칙과 실제 문구를 다듬어 완성도를 올리면 됩니다."
-    : `${nextStep.label} 선택이 다음 우선순위입니다.`;
-  document.getElementById("processStatusBadge").textContent = ready ? "준비 완료" : "진행 중";
+  const statusTitle = document.getElementById("processStatusTitle");
+  const statusHint = document.getElementById("processStatusHint");
+  const statusBadge = document.getElementById("processStatusBadge");
+  if (statusTitle) statusTitle.textContent = ready ? "핵심 프롬프트 구조가 준비되었습니다" : `핵심 단계 ${doneCount}/${total} 진행 중`;
+  if (statusHint) {
+    statusHint.textContent = ready
+      ? "이제 컬러, 헤더, 금지 규칙과 실제 문구를 다듬어 완성도를 올리면 됩니다."
+      : `${nextStep.label} 선택이 다음 우선순위입니다.`;
+  }
+  if (statusBadge) statusBadge.textContent = ready ? "준비 완료" : "진행 중";
 
   const list = document.getElementById("processChecklist");
+  if (!list) return;
   list.innerHTML = "";
 
   items.forEach((item) => {
@@ -3463,14 +3632,7 @@ function buildPromptPartsLegacy(lang) {
       }
 
       if (key === "footer-bar-settings") {
-        const { footerEnabled, footerHeight, footerColor } = state.barSettings;
-        lines.push(lang === "ko"
-          ? footerEnabled
-            ? `\u25B8 \ud558\ub2e8\ubc14 \uc0ac\uc6a9  |  \ub192\uc774: ${footerHeight}px  |  \uceec\ub7ec: ${formatThemeColorValue(footerColor, "ko")}`
-            : `\u25B8 \ud558\ub2e8\ubc14 \uc5c6\uc74c \u2014 \uc2ac\ub77c\uc774\ub4dc \ud558\ub2e8\uc5d0 \ubcc4\ub3c4 \ubc14 \uad6c\uc870\ub97c \uc0ac\uc6a9\ud558\uc9c0 \uc54a\uc74c`
-          : footerEnabled
-            ? `\u25B8 Footer bar: enabled  |  height: ${footerHeight}px  |  color: ${formatThemeColorValue(footerColor, "en")}`
-            : `\u25B8 Footer bar: none \u2014 do not render any footer bar at the bottom of the slide`);
+        lines.push(buildFooterBarSettingsText(lang));
         return;
       }
 
@@ -3718,30 +3880,9 @@ function renderPrompt() {
   const parts = buildPromptParts(state.lang);
   const userInput = getUserInputParts();
   const hasUserInput = hasStructuredUserInput();
-  const doneCount = getCoreFlowStatus().filter((item) => item.done).length;
-  const total = CORE_FLOW_STEPS.length;
-  const ready = doneCount === total;
-  const nextStep = getNextCoreStep();
   const conflicts = getResolvedConflicts();
 
   wrap.innerHTML = "";
-
-  // 진행 상태 배너
-  const banner = document.createElement("div");
-  banner.className = `prompt-banner ${ready ? "ready" : ""}`.trim();
-
-  const bannerTitle = document.createElement("div");
-  bannerTitle.className = "prompt-banner-title";
-  bannerTitle.textContent = ready ? "핵심 프롬프트 구조가 완성되었습니다." : `핵심 단계 ${doneCount}/${total} 완료`;
-
-  const bannerText = document.createElement("div");
-  bannerText.className = "prompt-banner-text";
-  bannerText.textContent = ready
-    ? "이제 컬러, 헤더, 금지 규칙, 실제 문구를 다듬어 이미지 품질을 높이면 됩니다."
-    : `${nextStep.label} 선택이 다음 우선순위입니다.`;
-
-  banner.append(bannerTitle, bannerText);
-  wrap.appendChild(banner);
 
   // 충돌 경고
   if (conflicts.length) {
@@ -3815,7 +3956,7 @@ function renderPrompt() {
   ));
 
   ctrlRow.appendChild(makeToggle(
-    "toggleKorean", "슬라이드 텍스트 한국어",
+    "toggleKorean", "텍스트 원문 보존",
     state.promptSettings.koreanContent,
     (v) => { state.promptSettings.koreanContent = v; renderPrompt(); }
   ));
@@ -3937,11 +4078,11 @@ function buildPreamble(lang) {
 
   lines.push(lang === "ko" ? prefix.ko : prefix.en);
 
-  // 한국어 콘텐츠 명시
+  // 슬라이드 표시 텍스트 원문 보존 명시
   if (state.promptSettings.koreanContent) {
     lines.push(lang === "ko"
-      ? "슬라이드 안에 삽입되는 모든 텍스트·라벨·수치·범례는 반드시 한국어로 작성합니다. 영문 텍스트가 슬라이드 본문에 노출되지 않도록 하세요."
-      : "All text, labels, numbers, and legends placed on the slide must be written in Korean. Do not expose English text in the slide body.");
+      ? "슬라이드 안에 삽입되는 모든 텍스트·라벨·수치·범례는 사용자가 제공한 원문을 그대로 사용합니다. 임의로 번역·요약·의역·표기 변경하지 말고, 필요한 경우 줄바꿈과 배치만 조정하세요."
+      : "Preserve all user-provided slide text, labels, numbers, legends, and captions exactly as written. Do not translate, paraphrase, summarize, or change notation; adjust only line breaks and placement when needed for layout.");
   }
 
   return lines.join("\n");
@@ -4110,7 +4251,7 @@ function resetAll() {
   state.customRatio = { width: 16, height: 9 };
   state.barSettings = createDefaultBarSettings();
   state.selections = createEmptySelections();
-  state.promptSettings = { addPreamble: true, koreanContent: false, outputMode: "block" };
+  state.promptSettings = { addPreamble: true, koreanContent: true, outputMode: "block" };
   state.promptLineOverrides = {};
   state.promptLineDrafts = {};
   state.bgSolidColor = "#F5F6F7";
@@ -4132,6 +4273,28 @@ function showToast(message) {
   toast.classList.add("show");
   window.clearTimeout(showToast.timer);
   showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2400);
+}
+
+let optionTreeReturnFocus = null;
+
+function openOptionTreeModal() {
+  const modal = document.getElementById("optionTreeModal");
+  if (!modal) return;
+  optionTreeReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  updateTreeState();
+  modal.hidden = false;
+  document.body.classList.add("modal-open");
+  const closeButton = modal.querySelector("[data-close-option-tree]");
+  if (closeButton) closeButton.focus();
+}
+
+function closeOptionTreeModal() {
+  const modal = document.getElementById("optionTreeModal");
+  if (!modal || modal.hidden) return;
+  modal.hidden = true;
+  document.body.classList.remove("modal-open");
+  if (optionTreeReturnFocus) optionTreeReturnFocus.focus();
+  optionTreeReturnFocus = null;
 }
 
 function renderAll() {
@@ -4173,6 +4336,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnCopyEn").addEventListener("click", () => copyPrompt("en"));
   document.getElementById("btnClearSelections").addEventListener("click", clearAllSelections);
   document.getElementById("btnReset").addEventListener("click", resetAll);
+  document.getElementById("optionTreeOpenBtn")?.addEventListener("click", openOptionTreeModal);
+  document.querySelectorAll("[data-close-option-tree]").forEach((el) => {
+    el.addEventListener("click", closeOptionTreeModal);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeOptionTreeModal();
+  });
   ["userContent", "userDesignContext", "userExclusions"].forEach((id) => {
     const input = document.getElementById(id);
     if (!input) return;

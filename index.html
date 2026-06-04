@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="styles/designer.css" />
   <link rel="stylesheet" href="styles/generator.css" />
   <link rel="stylesheet" href="styles/promotion.css" />
+  <link rel="stylesheet" href="styles/promotion-planner.css" />
   <link rel="stylesheet" href="styles/image-generation.css" />
   <link rel="stylesheet" href="styles/map-prompt.css" />
   <link rel="stylesheet" href="styles/slide-document.css" />
@@ -56,13 +57,16 @@
         슬라이드 분리기
       </button>
       <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">
-        API 이미지 생성
+        슬라이드 이미지 생성
       </button>
       <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">
         지도 이미지
       </button>
       <button type="button" class="app-tab-btn" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">
         부속 양식
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnPromotionPlanner" role="tab" aria-selected="false" aria-controls="panePromotionPlanner">
+        컨셉 제안
       </button>
       <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
         홍보용 이미지
@@ -85,21 +89,6 @@
     </div>
     <main class="workspace">
       <aside class="builder-panel" id="builderPanel">
-        <section class="panel-card panel-intro-card">
-          <div class="panel-card-head">
-            <div>
-              <h2 class="panel-card-title">진행 개요</h2>
-              <p class="panel-card-subtitle" id="overviewMessage">
-                페이지 유형과 전달 구조부터 선택하면 프롬프트 골격이 먼저 완성됩니다.
-              </p>
-            </div>
-            <span class="panel-badge" id="progressLabel">0 / 8 완료</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <div class="progress-bar" id="progressBar"></div>
-          </div>
-        </section>
-
         <section class="panel-card" id="section-pageType">
           <div class="panel-card-head">
             <div>
@@ -109,17 +98,6 @@
             <span class="panel-badge accent">필수</span>
           </div>
           <div class="page-type-grid" id="pageTypeGrid"></div>
-        </section>
-
-        <section class="panel-card">
-          <div class="panel-card-head">
-            <div>
-              <h2 class="panel-card-title">옵션 트리</h2>
-              <p class="panel-card-subtitle">상위 카테고리와 하위 옵션 그룹을 한 번에 보고 바로 이동할 수 있습니다.</p>
-            </div>
-            <span class="panel-badge">Tree</span>
-          </div>
-          <div class="option-tree" id="optionTree"></div>
         </section>
 
         <div class="editor-sections" id="sectionsRoot"></div>
@@ -167,25 +145,13 @@
       </aside>
 
       <section class="preview-panel">
-        <section class="preview-card" id="processStatus">
-          <div class="preview-card-head">
-            <div>
-              <h2 class="preview-card-title" id="processStatusTitle">핵심 단계 진행 현황</h2>
-              <p class="preview-card-subtitle" id="processStatusHint">
-                아직 단계 선택이 덜 남았습니다. 왼쪽에서 우선순위가 높은 단계부터 채워주세요.
-              </p>
-            </div>
-            <span class="preview-badge" id="processStatusBadge">진행 중</span>
-          </div>
-          <div class="process-checklist" id="processChecklist"></div>
-        </section>
-
         <section class="preview-card">
           <div class="preview-card-head">
             <div>
               <h2 class="preview-card-title">빠른 프리셋</h2>
               <p class="preview-card-subtitle">자주 쓰는 조합을 바로 불러와 시작할 수 있습니다.</p>
             </div>
+            <button type="button" class="btn secondary option-tree-open-btn" id="optionTreeOpenBtn">옵션 트리</button>
           </div>
           <div class="template-chips" id="templateChips"></div>
         </section>
@@ -241,15 +207,7 @@ Global visual style:
 - Render only concise on-slide Korean text: title, header, short labels, key numbers, card titles.
 - Convert long tables into visual matrices, dashboards, pipelines, maps, or cards.
 - No logos, no watermark, no decorative people, no long paragraphs.
-- One slide = one main claim = one central visual structure.
-
-Anti-AI / realism constraints:
-- Avoid obvious AI-generated image aesthetics: no magical glow, no excessive lens flare, no neon bloom, no floating light orbs, no glossy plastic sheen, no waxy surfaces.
-- Do not use oversized 3D objects, toy-like 3D icons, decorative glassmorphism, fake holograms, or cinematic sci-fi lighting unless explicitly requested by the slide content.
-- If photorealistic images are used, keep them natural, context-specific, and documentary-like; avoid uncanny people, distorted hands, fake equipment, impossible reflections, and mismatched shadows.
-- Keep compositing physically plausible: consistent perspective, scale, lighting direction, shadow softness, depth of field, and color temperature across photo layers and information panels.
-- Prefer restrained editorial realism: clean paper-like surfaces, subtle shadows, low-saturation background imagery, and crisp information hierarchy over dramatic CG effects.
-- Any photo layer must support the slide's message, never act as generic stock decoration.</textarea>
+- One slide = one main claim = one central visual structure.</textarea>
             <p class="gen-hint">모든 슬라이드에 공통으로 들어갈 스타일 가이드라인과 모델 지시문을 입력하세요.</p>
           </div>
 
@@ -276,7 +234,7 @@ Anti-AI / realism constraints:
             </div>
             <textarea id="genSplitRules" class="gen-textarea" rows="4">slide|^##\s+슬라이드\s+(\d{2})\.\s*(.+)$
 appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
-            <p class="gen-hint">직접 쓰기 어렵다면 <strong>규칙 도우미 열기</strong>에서 예시를 고르세요. 번호 형식은 `01`, `1`, `A1`, `IV` 같은 실제 예시로 만들 수 있습니다.</p>
+            <p class="gen-hint">한 줄에 하나씩 `type|regex` 형식으로 입력합니다. `type`은 `slide` 또는 `appendix`를 사용하고, 정규식은 `번호`와 `제목`을 캡처하는 2개 그룹을 포함해야 합니다.</p>
           </div>
 
           <div class="gen-row">
@@ -419,29 +377,25 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <strong>기본 베이스</strong>
                 <span>직접 입력 중심으로 텍스트, 스타일, CTA를 균형 있게 정리하는 기본 템플릿</span>
               </button>
-              <button type="button" class="promo-template-card" data-promo-content-type="campaign" aria-pressed="false">
-                <strong>캠페인</strong>
-                <span>슬로건 강조, 대중 인식 확산, 적극적인 관심과 참여를 유도하는 템플릿</span>
+              <button type="button" class="promo-template-card" data-promo-content-type="event" aria-pressed="false">
+                <strong>이벤트 런칭</strong>
+                <span>행사 일정, 참가 대상, 신청 CTA를 한 번에 정리하기 좋은 구성</span>
               </button>
-              <button type="button" class="promo-template-card" data-promo-content-type="result-promo" aria-pressed="false">
-                <strong>성과홍보</strong>
-                <span>성과 발표, 핵심 지표 시각화, 브랜드 신뢰도와 전문성을 높이는 템플릿</span>
+              <button type="button" class="promo-template-card" data-promo-content-type="contest" aria-pressed="false">
+                <strong>캠페인 푸시</strong>
+                <span>공모, 프로모션, 참여 유도처럼 전환 목표가 분명한 홍보용 템플릿</span>
               </button>
-              <button type="button" class="promo-template-card" data-promo-content-type="event-info" aria-pressed="false">
-                <strong>행사안내 (참여요청)</strong>
-                <span>행사 일정, 프로그램, 신청 방법 등 대외 참여를 유도하는 템플릿</span>
+              <button type="button" class="promo-template-card" data-promo-content-type="training" aria-pressed="false">
+                <strong>정보 전달형</strong>
+                <span>교육, 모집, 안내형 콘텐츠처럼 정보 전달 우선순위를 선명하게 정리하는 템플릿</span>
               </button>
-              <button type="button" class="promo-template-card" data-promo-content-type="survey-request" aria-pressed="false">
-                <strong>설문조사 (참여요청)</strong>
-                <span>설문 의견 수집, 응답 소요 시간, 참여 혜택 중심의 가벼운 안내 템플릿</span>
+              <button type="button" class="promo-template-card" data-promo-content-type="demand-survey" aria-pressed="false">
+                <strong>수요 조사형</strong>
+                <span>기업 수요, 시장 반응, 정책 참여 의사를 정중하고 신뢰감 있게 모으는 템플릿</span>
               </button>
-              <button type="button" class="promo-template-card" data-promo-content-type="training-info" aria-pressed="false">
-                <strong>교육안내 (참여요청)</strong>
-                <span>교육 과정 모집, 학습 혜택, 커리큘럼 안내 등 접수 촉진 템플릿</span>
-              </button>
-              <button type="button" class="promo-template-card" data-promo-content-type="biz-promo" aria-pressed="false">
-                <strong>사업홍보 (참여요청)</strong>
-                <span>공모, 지원사업 설명회, 파트너십 구축 등 사업 참여 독려 템플릿</span>
+              <button type="button" class="promo-template-card" data-promo-content-type="survey" aria-pressed="false">
+                <strong>피드백 수집형</strong>
+                <span>설문 참여, 사용자 의견 수집, 경품 CTA처럼 가볍고 반응성 높은 안내형 템플릿</span>
               </button>
             </div>
           </section>
@@ -697,16 +651,16 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <p class="gen-config-guide">콤마로 구분해서 적으면 프롬프트에 그대로 반영됩니다.</p>
                 <div class="promo-quick-btns" data-quick-for="promotionTone">
                   <button type="button" class="btn-quick">신뢰감 있는</button>
-                  <button type="button" class="btn-quick">대담한</button>
-                  <button type="button" class="btn-quick">임팩트 있는</button>
-                  <button type="button" class="btn-quick">전문적인</button>
-                  <button type="button" class="btn-quick">세련된</button>
-                  <button type="button" class="btn-quick">친근한</button>
-                  <button type="button" class="btn-quick">역동적인</button>
                   <button type="button" class="btn-quick">모던한</button>
+                  <button type="button" class="btn-quick">역동적인</button>
+                  <button type="button" class="btn-quick">친근한</button>
                   <button type="button" class="btn-quick">미니멀한</button>
-                  <button type="button" class="btn-quick">따뜻한</button>
+                  <button type="button" class="btn-quick">프리미엄</button>
                   <button type="button" class="btn-quick">스마트한</button>
+                  <button type="button" class="btn-quick">따뜻한</button>
+                  <button type="button" class="btn-quick">임팩트 있는</button>
+                  <button type="button" class="btn-quick">차분한</button>
+                  <button type="button" class="btn-quick">세련된</button>
                   <button type="button" class="btn-quick">브랜드 광고 같은</button>
                 </div>
                 <input id="promotionTone" class="gen-input-text" type="text" data-promo-field="tone" placeholder="예: 신뢰감, 도시적, 또렷함" />
@@ -720,13 +674,12 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <label class="gen-config-label" for="promotionBigIdea">Big Idea <span class="promo-field-badge instruction">설계 지시</span></label>
                 <p class="gen-config-guide">이미지가 한 장으로 상징할 핵심 개념. 메시지와 비주얼을 한 방향으로 묶어줍니다.</p>
                 <div class="promo-quick-btns" data-quick-for="promotionBigIdea">
-                  <button type="button" class="btn-quick">참여</button>
+                  <button type="button" class="btn-quick">연결</button>
+                  <button type="button" class="btn-quick">돌파</button>
                   <button type="button" class="btn-quick">성장</button>
                   <button type="button" class="btn-quick">신뢰</button>
-                  <button type="button" class="btn-quick">변화</button>
-                  <button type="button" class="btn-quick">연결</button>
-                  <button type="button" class="btn-quick">혁신</button>
-                  <button type="button" class="btn-quick">소통</button>
+                  <button type="button" class="btn-quick">전환</button>
+                  <button type="button" class="btn-quick">속도</button>
                 </div>
                 <input id="promotionBigIdea" class="gen-input-text" type="text" placeholder="예: 신뢰를 기반으로 한 미래 산업 연결" />
               </section>
@@ -734,13 +687,11 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <label class="gen-config-label" for="promotionVisualMetaphor">비주얼 은유 <span class="promo-field-badge instruction">설계 지시</span></label>
                 <p class="gen-config-guide">직접 설명 대신 이미지가 메시지를 상징하는 방식. 1~2개만 선명하게 고르세요.</p>
                 <div class="promo-quick-btns" data-quick-for="promotionVisualMetaphor">
+                  <button type="button" class="btn-quick">유리 큐브</button>
+                  <button type="button" class="btn-quick">빛의 축</button>
+                  <button type="button" class="btn-quick">무한 경로</button>
                   <button type="button" class="btn-quick">상승 곡선</button>
-                  <button type="button" class="btn-quick">빛의 경로</button>
-                  <button type="button" class="btn-quick">확산하는 물결</button>
-                  <button type="button" class="btn-quick">맞물린 기어</button>
-                  <button type="button" class="btn-quick">정렬된 큐브</button>
-                  <button type="button" class="btn-quick">열린 프레임</button>
-                  <button type="button" class="btn-quick">겹치는 레이어</button>
+                  <button type="button" class="btn-quick">레이어 겹침</button>
                 </div>
                 <textarea id="promotionVisualMetaphor" class="gen-textarea" rows="3" placeholder="예: 투명한 유리 큐브와 빛의 축이 교차하며 연결과 돌파를 상징"></textarea>
               </section>
@@ -928,15 +879,37 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               <label class="gen-config-label" for="promotionForbiddenElements">피해야 할 요소</label>
               <p class="gen-config-guide">촌스러운 효과, 과도한 텍스트, 금지 색상 등 배제 규칙을 적습니다.</p>
               <div class="promo-quick-btns" data-quick-for="promotionForbiddenElements">
-                <button type="button" class="btn-quick">장문 문단</button>
-                <button type="button" class="btn-quick">정보 과밀 배치</button>
+                <button type="button" class="btn-quick">이모지 사용 금지</button>
                 <button type="button" class="btn-quick">과한 네온 효과</button>
                 <button type="button" class="btn-quick">두꺼운 텍스트 외곽선</button>
+                <button type="button" class="btn-quick">장문 문단</button>
+                <button type="button" class="btn-quick">저해상도 스톡 느낌</button>
+                <button type="button" class="btn-quick">광택 CTA 버튼</button>
+                <button type="button" class="btn-quick">정보 과밀 배치</button>
                 <button type="button" class="btn-quick">과한 색상 남용</button>
               </div>
-              <textarea id="promotionForbiddenElements" class="gen-textarea" rows="4" data-promo-field="forbiddenElements" placeholder="예: 장문 문단, 정보 과밀 배치, 과한 네온 효과"></textarea>
+              <textarea id="promotionForbiddenElements" class="gen-textarea" rows="4" data-promo-field="forbiddenElements" placeholder="예: 과한 네온 효과, 장문 문단, 저해상도 스톡 느낌"></textarea>
             </section>
 
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label">AI 느낌 억제 <span class="promo-field-badge constraint">금지 규칙</span></label>
+              <p class="gen-config-guide">선택한 프리셋의 금지어와 비주얼 힌트가 프롬프트에 자동 삽입되어 AI 특유의 과도한 합성 느낌을 억제합니다. 중복 선택 시 마지막 선택이 적용됩니다.</p>
+              <div class="anti-ai-preset-btns">
+                <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="flat_vector" aria-pressed="false">
+                  <span class="anti-ai-preset-btn-label">플랫 / 벡터</span>
+                  <span class="anti-ai-preset-btn-desc">기어·회로 콜라주 금지 · 단순 아이콘</span>
+                </button>
+                <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="photo_real" aria-pressed="false">
+                  <span class="anti-ai-preset-btn-label">실사 / 사진</span>
+                  <span class="anti-ai-preset-btn-desc">AI 합성 금지 · 실제 촬영 사진 무드</span>
+                </button>
+                <button type="button" class="anti-ai-preset-btn" data-anti-ai-preset="minimal_typo" aria-pressed="false">
+                  <span class="anti-ai-preset-btn-label">미니멀 / 타이포</span>
+                  <span class="anti-ai-preset-btn-desc">복잡한 오브젝트 금지 · 타이포+여백</span>
+                </button>
+              </div>
+              <span class="anti-ai-active-badge" id="antiAiActiveBadge" style="display:none"></span>
+            </section>
 
           </div><!-- /promo-common-fields constraints -->
 
@@ -977,8 +950,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </section>
           </div>
 
-          <!-- 품질 보정 지시 (결과물 결함 방지 자동 적용을 위해 UI 숨김 처리) -->
-          <section class="gen-config-group" style="margin-top:14px; display: none;">
+          <!-- 품질 보정 지시 -->
+          <section class="gen-config-group" style="margin-top:14px;">
             <label class="gen-config-label" for="promotionQualityNotes">품질 보정 지시</label>
             <p class="gen-config-guide">가독성, 디테일, 조명, 텍스트 선명도처럼 결과 품질을 끌어올릴 지시를 적습니다.</p>
             <div class="promo-quick-btns" data-quick-for="promotionQualityNotes">
@@ -1135,6 +1108,226 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           <p class="gen-hint" style="margin: 8px 0 0;">입력값은 브라우저에 임시 보관됩니다. JSON 파일로 저장하면 다음 세션에서 불러올 수 있습니다.</p>
         </div>
 
+      </section>
+    </div>
+  </div>
+
+  <div class="tab-pane planner-wrap" id="panePromotionPlanner" role="tabpanel">
+    <div class="planner-main">
+      <section class="gen-section planner-builder-section">
+        <div class="gen-section-head">
+          <h2>홍보 이미지 기획</h2>
+          <span class="gen-badge" id="plannerPurposeBadge">사업공고</span>
+        </div>
+        <div class="gen-content planner-content">
+          <section class="planner-card planner-card-wide">
+            <label class="gen-config-label" for="plannerQuickBrief">빠른 요청</label>
+            <p class="gen-config-guide">세부 설정을 몰라도 한 문장으로 시작할 수 있습니다. 아래 세부 항목은 이 요청을 구조화하는 보조 장치입니다.</p>
+            <textarea id="plannerQuickBrief" class="gen-textarea" rows="4" placeholder="예: 청년 대상 사업공고 포스터. 성장과 연결의 느낌. 신청 마감과 혜택이 잘 보이게."></textarea>
+            <div class="planner-actions planner-actions-inline">
+              <button type="button" class="gen-btn secondary" id="plannerAnalyzeBtn">요청 분해</button>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">목적</label>
+            <p class="gen-config-guide">자주 쓰는 목적을 우선 배치했습니다.</p>
+            <div class="planner-quick-row planner-sample-row">
+              <button type="button" class="planner-chip" data-planner-sample="business-notice">사업공고 샘플</button>
+              <button type="button" class="planner-chip" data-planner-sample="event">행사안내 샘플</button>
+              <button type="button" class="planner-chip" data-planner-sample="survey">수요/설문 샘플</button>
+              <button type="button" class="planner-chip" data-planner-sample="information">정책정보 샘플</button>
+            </div>
+            <div class="planner-choice-grid" data-planner-choice="purpose">
+              <button type="button" class="planner-choice active" data-value="business-notice">사업공고</button>
+              <button type="button" class="planner-choice" data-value="event">행사안내</button>
+              <button type="button" class="planner-choice" data-value="survey">수요/설문조사</button>
+              <button type="button" class="planner-choice" data-value="information">정책/정보전달</button>
+              <button type="button" class="planner-choice" data-value="general">일반 홍보</button>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">이미지 형태</label>
+            <p class="gen-config-guide">포스터, SNS 이미지, 배너를 중심으로 최적화합니다.</p>
+            <div class="planner-choice-grid" data-planner-choice="assetType">
+              <button type="button" class="planner-choice active" data-value="poster">포스터/전단지</button>
+              <button type="button" class="planner-choice" data-value="kakao">카카오채널 메시지</button>
+              <button type="button" class="planner-choice" data-value="sns-square">일반 SNS 정방형</button>
+              <button type="button" class="planner-choice" data-value="sns-vertical">일반 SNS 세로형</button>
+              <button type="button" class="planner-choice" data-value="mini-banner">미니배너</button>
+              <button type="button" class="planner-choice" data-value="general-banner">일반배너</button>
+              <button type="button" class="planner-choice" data-value="web-banner">웹사이트 메인배너</button>
+            </div>
+          </section>
+
+          <section class="planner-card planner-card-wide">
+            <div class="planner-section-title">
+              <label class="gen-config-label" for="plannerInfoRaw">전달 정보</label>
+              <span class="planner-muted">공고문처럼 붙여넣으면 자동으로 구분합니다.</span>
+            </div>
+            <textarea id="plannerInfoRaw" class="gen-textarea" rows="8" placeholder="예:
+2026 지역기업 성장지원 사업 참여기업 모집
+신청 마감: 2026.06.15
+대상: 지역 중소기업
+지원내용: 기업당 최대 500만원 상당 지원
+접수: 온라인 접수
+문의: 지역산업지원센터
+CTA: 지금 신청하기"></textarea>
+            <div class="planner-parsed-info" id="plannerParsedInfo" aria-live="polite"></div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">메시지 우선순위</label>
+            <div class="planner-choice-grid" data-planner-choice="priority">
+              <button type="button" class="planner-choice active" data-value="title">제목 중심</button>
+              <button type="button" class="planner-choice" data-value="benefit">혜택 중심</button>
+              <button type="button" class="planner-choice" data-value="deadline">일정/마감 중심</button>
+              <button type="button" class="planner-choice" data-value="cta">CTA 중심</button>
+              <button type="button" class="planner-choice" data-value="trust">신뢰 중심</button>
+              <button type="button" class="planner-choice" data-value="problem-solution">문제 해결 중심</button>
+            </div>
+          </section>
+
+          <section class="planner-card planner-idea-card">
+            <label class="gen-config-label">빅아이디어 / 비주얼 은유</label>
+            <p class="gen-config-guide">복잡한 디자인 언어 대신, 원하는 상징과 장면을 간단히 던지는 영역입니다.</p>
+            <div class="planner-quick-row" data-planner-append="bigIdea">
+              <button type="button" class="planner-chip">연결</button>
+              <button type="button" class="planner-chip">성장</button>
+              <button type="button" class="planner-chip">도약</button>
+              <button type="button" class="planner-chip">신뢰</button>
+              <button type="button" class="planner-chip">전환</button>
+            </div>
+            <input id="plannerBigIdea" class="gen-input-text" placeholder="빅아이디어: 예: 연결과 성장" />
+            <div class="planner-quick-row" data-planner-append="visualMetaphor">
+              <button type="button" class="planner-chip">빛의 길</button>
+              <button type="button" class="planner-chip">유리 큐브</button>
+              <button type="button" class="planner-chip">상승 곡선</button>
+              <button type="button" class="planner-chip">문이 열리는 장면</button>
+              <button type="button" class="planner-chip">정보 카드가 연결되는 장면</button>
+            </div>
+            <input id="plannerVisualMetaphor" class="gen-input-text" placeholder="비주얼 은유: 예: 빛의 길이 여러 정보 카드를 연결" />
+            <textarea id="plannerCreativeNote" class="gen-textarea" rows="3" placeholder="추가로 원하는 느낌이나 장면"></textarea>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">레이아웃과 강조</label>
+            <div class="planner-stack">
+              <select id="plannerLayoutFlow" class="gen-select">
+                <option value="title-visual-cta">상단 제목 → 중앙 비주얼 → 하단 CTA</option>
+                <option value="left-text-right-visual">좌측 텍스트 → 우측 비주얼</option>
+                <option value="central-message-cards">중앙 큰 메시지 → 주변 정보 카드</option>
+                <option value="problem-solution-cta">문제 제기 → 해결책 → 신청 CTA</option>
+                <option value="card-grid">카드형 정보 블록</option>
+              </select>
+              <select id="plannerEmphasis" class="gen-select">
+                <option value="title">제목 강조</option>
+                <option value="benefit">혜택 강조</option>
+                <option value="deadline">날짜/마감 강조</option>
+                <option value="cta">CTA 강조</option>
+                <option value="brand">브랜드/기관 신뢰 강조</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">색상과 배경</label>
+            <div class="planner-stack">
+              <select id="plannerColorMode" class="gen-select">
+                <option value="ai">AI에게 맡김</option>
+                <option value="brand">브랜드 색상 사용</option>
+                <option value="manual">직접 지정</option>
+              </select>
+              <select id="plannerBackgroundMode" class="gen-select">
+                <option value="clean">밝고 깨끗한 배경</option>
+                <option value="dark">어두운 배경</option>
+                <option value="solid">단색 배경</option>
+                <option value="pattern">질감/패턴 배경</option>
+                <option value="photo">사진 배경</option>
+              </select>
+              <div class="planner-info-grid">
+                <input id="plannerPrimaryColor" class="gen-input-text" placeholder="메인 색상" />
+                <input id="plannerBackgroundColor" class="gen-input-text" placeholder="배경 색상" />
+                <input id="plannerAccentColor" class="gen-input-text" placeholder="포인트 색상" />
+              </div>
+            </div>
+          </section>
+
+          <section class="planner-card">
+            <label class="gen-config-label">스타일과 품질</label>
+            <div class="planner-stack">
+              <select id="plannerVisualStyle" class="gen-select">
+                <option value="clean-editorial">정돈된 에디토리얼</option>
+                <option value="public-notice">공공기관 안내형</option>
+                <option value="premium-ad">프리미엄 광고형</option>
+                <option value="minimal-typo">미니멀 타이포</option>
+                <option value="3d-graphic">3D 그래픽</option>
+                <option value="illustration">일러스트</option>
+                <option value="character">캐릭터</option>
+                <option value="photo-real">실사형</option>
+              </select>
+              <div class="planner-quick-row" data-planner-toggle="mood">
+                <button type="button" class="planner-chip" data-value="신뢰감">신뢰감</button>
+                <button type="button" class="planner-chip" data-value="역동적">역동적</button>
+                <button type="button" class="planner-chip" data-value="따뜻함">따뜻함</button>
+                <button type="button" class="planner-chip" data-value="세련됨">세련됨</button>
+                <button type="button" class="planner-chip" data-value="미래지향">미래지향</button>
+              </div>
+              <div class="planner-quick-row" data-planner-toggle="qualityRules">
+                <button type="button" class="planner-chip" data-value="모바일 썸네일 가독성 우선">모바일 가독성</button>
+                <button type="button" class="planner-chip" data-value="CTA가 한눈에 보이게">CTA 명확성</button>
+                <button type="button" class="planner-chip" data-value="정보 과밀 방지">정보 과밀 방지</button>
+                <button type="button" class="planner-chip" data-value="저해상도 스톡 느낌 금지">스톡 느낌 금지</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="planner-card planner-card-wide">
+            <label class="gen-config-label" for="plannerForbidden">금지 요소</label>
+            <div class="planner-quick-row" data-planner-append="forbidden">
+              <button type="button" class="planner-chip">과한 네온 효과</button>
+              <button type="button" class="planner-chip">장문 문단</button>
+              <button type="button" class="planner-chip">정보 과밀 배치</button>
+              <button type="button" class="planner-chip">저해상도 스톡 느낌</button>
+              <button type="button" class="planner-chip">두꺼운 텍스트 외곽선</button>
+            </div>
+            <textarea id="plannerForbidden" class="gen-textarea" rows="3" placeholder="피해야 할 표현이나 요소"></textarea>
+          </section>
+        </div>
+      </section>
+
+      <section class="gen-section planner-preview-section">
+        <div class="gen-section-head">
+          <h2>기획 결과</h2>
+          <span class="gen-badge" id="plannerStatusBadge">초안</span>
+        </div>
+        <div class="gen-content planner-result-content">
+          <section class="planner-result-card">
+            <div class="planner-result-head">
+              <strong>기획 요약</strong>
+            </div>
+            <div class="planner-summary-list" id="plannerSummary"></div>
+          </section>
+          <section class="planner-result-card">
+            <div class="planner-result-head">
+              <strong>검토 노트</strong>
+            </div>
+            <div class="planner-note-list" id="plannerNotes"></div>
+          </section>
+          <section class="planner-result-card planner-prompt-card">
+            <div class="planner-result-head">
+              <strong>최종 프롬프트</strong>
+              <button type="button" class="gen-btn secondary" id="plannerCopyBtn">복사</button>
+            </div>
+            <textarea id="plannerPrompt" class="gen-textarea planner-prompt-output" spellcheck="false"></textarea>
+            <div class="planner-status" id="plannerStatus" aria-live="polite"></div>
+          </section>
+          <div class="planner-actions">
+            <button type="button" class="gen-btn secondary" id="plannerSampleBtn">샘플 채우기</button>
+            <button type="button" class="gen-btn ghost" id="plannerResetBtn">초기화</button>
+          </div>
+        </div>
       </section>
     </div>
   </div>
@@ -1521,7 +1714,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
   <!-- 부속 양식 통합 탭 -->
   <div class="tab-pane gen-wrap" id="paneSlideDocument" role="tabpanel" style="flex-direction: column;">
-    
+
     <!-- 세부 서브 탭 바 -->
     <div class="slide-sub-tabs-bar" role="tablist">
       <button type="button" class="slide-sub-tab-btn active" data-target="paneSlideCover">문서 표지 생성</button>
@@ -1537,18 +1730,18 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
     </div>
 
     <div class="slide-sub-panes-container" style="flex: 1; overflow-y: auto;">
-      
+
       <!-- [서브 탭 1] 문서 표지 생성 -->
       <div class="slide-sub-pane active" id="paneSlideCover">
         <div class="gen-main slide-doc-main">
-          
+
           <!-- LEFT PANEL: Inputs & Options -->
           <section class="gen-section slide-doc-builder-section">
             <div class="gen-section-head">
               <h2>문서 표지 기획 및 설정</h2>
               <span class="gen-badge" id="slideCoverAssetBadge">표지 슬라이드</span>
             </div>
-            
+
             <div class="gen-content">
               <!-- STEP 1: 문서 종류 및 규격 -->
               <details class="promo-step-disclosure" id="slideCoverStepType" open>
@@ -1915,14 +2108,14 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
       <!-- [서브 탭 2] 문서 간지 생성 -->
       <div class="slide-sub-pane" id="paneSlideDivider">
         <div class="gen-main slide-doc-main">
-          
+
           <!-- LEFT PANEL: Inputs & Options -->
           <section class="gen-section slide-doc-builder-section">
             <div class="gen-section-head">
               <h2>문서 간지 기획 및 설정</h2>
               <span class="gen-badge" id="slideDividerAssetBadge">간지 슬라이드</span>
             </div>
-            
+
             <div class="gen-content">
               <!-- STEP 1: 문서 종류 및 규격 -->
               <details class="promo-step-disclosure" id="slideDividerStepType" open>
@@ -2346,14 +2539,14 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
       <!-- [서브 탭 3] 문서 배경 생성 -->
       <div class="slide-sub-pane" id="paneSlideBackground">
         <div class="gen-main slide-doc-main">
-          
+
           <!-- LEFT PANEL: Inputs & Options -->
           <section class="gen-section slide-doc-builder-section">
             <div class="gen-section-head">
               <h2>문서 배경 기획 및 설정</h2>
               <span class="gen-badge" id="slideBackgroundAssetBadge">배경 슬라이드</span>
             </div>
-            
+
             <div class="gen-content">
               <!-- STEP 1: 문서 종류 및 규격 -->
               <details class="promo-step-disclosure" id="slideBackgroundStepType" open>
@@ -2739,6 +2932,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
     </div>
   </div>
 
+
   <div class="gen-modal" id="mapThreeDPreviewModal" hidden>
     <div class="gen-modal-backdrop" data-close-map-preview></div>
     <div class="gen-modal-dialog map-sample-dialog" role="dialog" aria-modal="true" aria-labelledby="mapThreeDPreviewTitle">
@@ -2760,6 +2954,25 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
       </div>
       <div class="gen-modal-foot">
         <button type="button" class="gen-btn secondary" data-close-map-preview>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gen-modal" id="optionTreeModal" hidden>
+    <div class="gen-modal-backdrop" data-close-option-tree></div>
+    <div class="gen-modal-dialog option-tree-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="optionTreeModalTitle">
+      <div class="gen-modal-head">
+        <div>
+          <h3 id="optionTreeModalTitle">옵션 트리</h3>
+          <p>상위 카테고리와 하위 옵션 그룹을 한 번에 보고 바로 이동합니다.</p>
+        </div>
+        <button type="button" class="gen-btn ghost" data-close-option-tree>닫기</button>
+      </div>
+      <div class="gen-modal-body">
+        <div class="option-tree option-tree-in-modal" id="optionTree"></div>
+      </div>
+      <div class="gen-modal-foot">
+        <button type="button" class="gen-btn secondary" data-close-option-tree>확인</button>
       </div>
     </div>
   </div>
@@ -2795,13 +3008,13 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
       <div class="gen-modal-head">
         <div>
           <h3 id="genSplitRulesModalTitle">슬라이드 구분 규칙 도우미</h3>
-          <p id="genSplitRulesModalSubtitle">MD 제목 예시를 고르면 정규식은 자동으로 만들어집니다.</p>
+          <p id="genSplitRulesModalSubtitle">정규식을 직접 쓰지 않고도 자주 쓰는 구분 규칙을 만들어 입력창에 추가할 수 있습니다.</p>
         </div>
         <button type="button" class="gen-btn ghost" id="genSplitRulesCloseBtn">닫기</button>
       </div>
       <div class="gen-modal-body">
         <div class="gen-config-note">
-          일반 사용자는 아래 프리셋이나 규칙 만들기만 사용하면 됩니다. 직접 입력창의 정규식은 고급 사용자를 위한 결과값입니다.
+          `slide`는 본문 슬라이드 수에, `appendix`는 부록 수에 반영됩니다. 규칙은 반드시 `번호`와 `제목`을 잡는 2개의 캡처 그룹을 가져야 합니다.
         </div>
 
         <section class="gen-split-section">
@@ -2850,29 +3063,19 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
             <section class="gen-config-group">
               <label class="gen-config-label" for="genSplitBuilderNumber">번호 형식</label>
-              <p class="gen-config-guide">현재 MD에 적힌 번호 모양과 가장 가까운 예시를 고릅니다.</p>
+              <p class="gen-config-guide">01, 1, A1 같은 번호 형태를 고릅니다.</p>
               <select id="genSplitBuilderNumber" class="gen-select">
                 <option value="digits2">두 자리 숫자 01</option>
                 <option value="digits">숫자 1</option>
-                <option value="digits3">세 자리 숫자 001</option>
                 <option value="letterDigits">문자+숫자 A1</option>
-                <option value="letters">영문자 A 또는 AB</option>
-                <option value="roman">로마 숫자 IV</option>
-                <option value="koreanDigits">한글+숫자 가1</option>
-                <option value="custom">예시로 직접 만들기</option>
+                <option value="custom">직접 입력</option>
               </select>
             </section>
 
             <section class="gen-config-group">
-              <label class="gen-config-label" for="genSplitBuilderNumberCustom">직접 입력 번호 정규식 (예시로 입력 가능)</label>
-              <p class="gen-config-guide">빠른 예시를 누르거나 실제 번호 예시를 입력하세요. 고급 사용자는 `[IVX]+` 같은 정규식도 사용할 수 있습니다.</p>
-              <input id="genSplitBuilderNumberCustom" class="gen-input-text" type="text" value="" placeholder="예: IV 또는 A-1" disabled />
-              <div class="gen-number-preset-list" aria-label="직접 번호 형식 빠른 선택">
-                <button type="button" class="gen-number-preset" data-number-example="IV">로마 IV</button>
-                <button type="button" class="gen-number-preset" data-number-example="A">영문 A</button>
-                <button type="button" class="gen-number-preset" data-number-example="A-1">A-1</button>
-                <button type="button" class="gen-number-preset" data-number-example="1-1">1-1</button>
-              </div>
+              <label class="gen-config-label" for="genSplitBuilderNumberCustom">직접 입력 번호 정규식</label>
+              <p class="gen-config-guide">번호 형식을 직접 정하고 싶을 때만 사용합니다. 예: [IVX]+</p>
+              <input id="genSplitBuilderNumberCustom" class="gen-input-text" type="text" value="" placeholder="예: [IVX]+" disabled />
             </section>
 
             <section class="gen-config-group">
@@ -2883,7 +3086,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
             <section class="gen-config-group gen-config-group-wide">
               <label class="gen-config-label" for="genSplitBuilderPreviewRegex">생성된 규칙 미리보기</label>
-              <p class="gen-config-guide">아래 규칙이 실제 입력창에 들어갑니다. 보통은 확인만 하면 됩니다.</p>
+              <p class="gen-config-guide">아래 규칙이 실제 입력창에 들어갑니다.</p>
               <textarea id="genSplitBuilderPreviewRegex" class="gen-textarea" rows="2" readonly></textarea>
             </section>
 
@@ -2923,6 +3126,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/theme.js"></script>
   <script src="src/generator.js"></script>
   <script src="src/promotion.js"></script>
+  <script src="src/promotion-planner.js"></script>
   <script src="src/image-generation-client.js"></script>
   <script src="src/generation-queue.js"></script>
   <script src="src/slide-image-generation.js"></script>

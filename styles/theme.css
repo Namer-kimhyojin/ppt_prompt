@@ -54,8 +54,6 @@
 :root[data-theme="dark"] .page-type-card,
 :root[data-theme="dark"] .template-chip,
 :root[data-theme="dark"] .option-card,
-:root[data-theme="dark"] .tree-branch-button,
-:root[data-theme="dark"] .tree-leaf,
 :root[data-theme="dark"] .summary-card,
 :root[data-theme="dark"] .promo-control-block,
 :root[data-theme="dark"] .promo-template-card,
@@ -206,8 +204,6 @@
 :root[data-theme="dark"] .theme-toggle:focus-visible,
 :root[data-theme="dark"] .option-card:focus-visible,
 :root[data-theme="dark"] .page-type-card:focus-visible,
-:root[data-theme="dark"] .tree-branch-button:focus-visible,
-:root[data-theme="dark"] .tree-leaf:focus-visible,
 :root[data-theme="dark"] .template-chip:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.34);
   outline-offset: 2px;
@@ -232,7 +228,6 @@
   box-shadow: none;
 }
 
-:root[data-theme="dark"] .tree-index,
 :root[data-theme="dark"] .step-index,
 :root[data-theme="dark"] .section-index {
   background: #f4f4f5 !important;
@@ -257,79 +252,6 @@
 :root[data-theme="dark"] .page-type-card[aria-pressed="true"] {
   border-color: rgba(255, 255, 255, 0.28) !important;
   background: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: none !important;
-}
-
-:root[data-theme="dark"] .option-card.has-conflict-warning {
-  border-color: rgba(245, 158, 11, 0.5) !important;
-  background: rgba(245, 158, 11, 0.1) !important;
-}
-
-:root[data-theme="dark"] .option-card.has-conflict-warning.is-block {
-  border-color: rgba(248, 113, 113, 0.52) !important;
-  background: rgba(248, 113, 113, 0.1) !important;
-}
-
-:root[data-theme="dark"] .option-card.has-conflict-warning.is-soften {
-  border-color: rgba(56, 189, 248, 0.42) !important;
-  background: rgba(56, 189, 248, 0.1) !important;
-}
-
-:root[data-theme="dark"] .option-card-warning {
-  background: rgba(245, 158, 11, 0.14) !important;
-  border-color: rgba(245, 158, 11, 0.38) !important;
-  color: #fbbf24 !important;
-}
-
-:root[data-theme="dark"] .option-card-warning.is-block,
-:root[data-theme="dark"] .tree-conflict-badge.is-block {
-  background: rgba(248, 113, 113, 0.14) !important;
-  border-color: rgba(248, 113, 113, 0.34) !important;
-  color: #fca5a5 !important;
-}
-
-:root[data-theme="dark"] .option-card-warning.is-soften,
-:root[data-theme="dark"] .tree-conflict-badge.is-soften {
-  background: rgba(56, 189, 248, 0.14) !important;
-  border-color: rgba(56, 189, 248, 0.32) !important;
-  color: #7dd3fc !important;
-}
-
-:root[data-theme="dark"] .tree-leaf.selected {
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-}
-
-:root[data-theme="dark"] .tree-branch.has-conflict .tree-branch-button,
-:root[data-theme="dark"] .tree-leaf.has-conflict {
-  border-color: rgba(245, 158, 11, 0.48) !important;
-  background: rgba(245, 158, 11, 0.12) !important;
-}
-
-:root[data-theme="dark"] .tree-branch.has-conflict.is-block .tree-branch-button,
-:root[data-theme="dark"] .tree-leaf.has-conflict.is-block {
-  border-color: rgba(248, 113, 113, 0.5) !important;
-  background: rgba(248, 113, 113, 0.1) !important;
-}
-
-:root[data-theme="dark"] .tree-branch.has-conflict.is-soften .tree-branch-button,
-:root[data-theme="dark"] .tree-leaf.has-conflict.is-soften {
-  border-color: rgba(56, 189, 248, 0.42) !important;
-  background: rgba(56, 189, 248, 0.1) !important;
-}
-
-:root[data-theme="dark"] .tree-branch.has-conflict .tree-status,
-:root[data-theme="dark"] .tree-conflict-badge {
-  color: #fbbf24 !important;
-}
-
-:root[data-theme="dark"] .tree-conflict-badge {
-  background: rgba(245, 158, 11, 0.15) !important;
-  border-color: rgba(245, 158, 11, 0.34) !important;
-}
-
-:root[data-theme="dark"] .tree-leaf.selected .tree-leaf-dot {
-  background: #f4f4f5 !important;
   box-shadow: none !important;
 }
 
