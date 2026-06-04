@@ -56,10 +56,7 @@
       { label: "전체 초기화", targetId: "promotionResetBtn", className: "btn ghost" },
     ],
     promotionPlanner: [
-      { label: "프롬프트 복사", targetId: "plannerCopyBtn", className: "btn primary" },
-      { label: "요청 분해", targetId: "plannerAnalyzeBtn", className: "btn secondary" },
-      { label: "샘플 채우기", targetId: "plannerSampleBtn", className: "btn secondary" },
-      { label: "초기화", targetId: "plannerResetBtn", className: "btn ghost" },
+      // 컨셉 제안 탭: 카드별 복사 버튼으로 동작 — 헤더 액션 없음
     ],
     slideImage: [
       { label: "상태 확인", targetId: "slideImageHealthBtn", className: "btn ghost" },

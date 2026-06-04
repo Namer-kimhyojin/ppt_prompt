@@ -51,7 +51,11 @@
     bodyCopy: "",
     cta: "",
     tone: "",
+    toneEnabled: "true",
+    toneMode: "manual",
     visualStyle: "",
+    visualStyleEnabled: "true",
+    visualStyleMode: "manual",
     antiAiStyle: "general",
     qualityNotes: "",
     colorStrategy: "manual",
@@ -85,8 +89,16 @@
     qrEnabled: "false",
     qrUrl: "",
     bigIdea: "",
+    bigIdeaEnabled: "true",
+    bigIdeaMode: "manual",
     visualMetaphor: "",
+    visualMetaphorEnabled: "true",
+    visualMetaphorMode: "manual",
     variationMode: "none",
+    layoutComposition: "centered",
+    layoutCompositionEnabled: "true",
+    layoutCompositionMode: "manual",
+    appliedConceptStyle: "",
   };
 
   const ASSET_LABELS = {
@@ -687,6 +699,65 @@
     },
   };
 
+  const LAYOUT_COMPOSITION_PROFILES = {
+    centered: {
+      labelKo: "중앙 대칭형",
+      labelEn: "Centered symmetrical",
+      linesKo: [
+        "전형적인 중앙 집중 대칭 구도를 사용한다.",
+        "헤드라인과 메인 비주얼, 행동버튼이 캔버스 세로 중앙 축을 기준으로 차례대로 정렬되며, 시선 흐름이 위에서 아래로 정직하게 흐른다.",
+        "좌우 여백을 균등하게 배분하여 안정감을 극대화한다."
+      ],
+      linesEn: [
+        "Apply a classic centered symmetrical composition.",
+        "Align the headline, key visual, and action button sequentially along the vertical center axis of the canvas, ensuring a straightforward top-to-bottom eye flow.",
+        "Distribute margins evenly on both sides to maximize formal stability."
+      ]
+    },
+    "left-heavy": {
+      labelKo: "비대칭 좌측 집중",
+      labelEn: "Asymmetric left-heavy",
+      linesKo: [
+        "캔버스를 4:6 비율의 비대칭 수직 열로 나누어 배치한다.",
+        "모든 텍스트 요소와 행동버튼(CTA)은 좌측 40% 영역(어두운 배경 영역) 내에 왼쪽 정렬하여 밀도 높게 몰아넣는다.",
+        "우측 60% 영역은 텍스트 없이 메인 비주얼 오브젝트의 과감하게 크롭된 모습만을 보여주고, 텍스트가 비주얼 위로 절대 침범하지 않게 한다."
+      ],
+      linesEn: [
+        "Split the canvas into a 4:6 asymmetric vertical columns.",
+        "Place all text elements and the action button neatly left-aligned inside the left 40% column (with a dark overlay/background).",
+        "Reserve the right 60% column solely for the bold cropped visual object, ensuring zero text overlaps onto the key visual."
+      ]
+    },
+    "typo-first": {
+      labelKo: "거대 타이포 분할",
+      labelEn: "Typography-first split",
+      linesKo: [
+        "타이포그래피 중심의 분할 레이아웃을 사용한다.",
+        "거대하게 렌더링된 헤드라인 텍스트가 화면 상단 60%를 가득 채우며 시선을 즉각적으로 사로잡는다.",
+        "메인 비주얼 오브젝트와 콤팩트한 행동버튼(CTA)은 하단 40% 영역에 넓은 빈 여백을 확보한 상태로 작게 배치하여 텍스트의 임팩트를 극대화한다."
+      ],
+      linesEn: [
+        "Employ a typography-driven split composition.",
+        "A gigantic rendered headline text must dominate and occupy the top 60% of the screen area to grab immediate focus.",
+        "Position the main visual object and a compact action button inside the bottom 40% area with generous negative space, maximizing the typographic impact."
+      ]
+    },
+    "clean-split": {
+      labelKo: "사선 공간 분할",
+      labelEn: "Clean diagonal split",
+      linesKo: [
+        "사선 또는 면 대비를 통해 시각 영역을 선명하게 분할한다.",
+        "텍스트가 올라가는 배경 레이어는 아무런 노이즈가 없는 완전한 단색 어두운 면으로 분리하여 가독성을 100% 확보한다.",
+        "반대편 대비되는 밝고 강렬한 색상 필드 영역에 추상적인 기하학 오브젝트를 배치하여, 글씨가 없는 예술 영역과 글씨 영역을 물리적으로 격리한다."
+      ],
+      linesEn: [
+        "Apply a clean diagonal or high-contrast split composition.",
+        "Isolate the text background layer as a pure solid dark surface with zero visual noise behind the letters to guarantee 100% readability.",
+        "Position the abstract geometric object in a contrasting bright color field on the opposite side, physically separating the text zone from the purely artistic visual zone."
+      ]
+    }
+  };
+
   const AI_TOGGLE_FIELDS = new Set(["posterOffer", "snsHook", "snsHashtags", "cta"]);
   const FIELD_ENABLE_TOGGLE_FIELDS = new Set(["posterKeyVisual", "posterInfoLayout", "snsVisualFocus", "snsPlacementNotes"]);
 
@@ -725,6 +796,9 @@
       "하이엔드 캠페인형",
       "테크 UI형",
       "포토그래픽 포스터형",
+      "유리 카드형",
+      "입체 레이어형",
+      "페이퍼 콜라주형",
     ],
   };
 
@@ -1762,7 +1836,7 @@
       return formatQuickButtonValues(filtered, targetInput, nextValue);
     }
 
-    const maxCount = targetInput?.id === "promotionVisualStyle" ? 2 : Infinity;
+    const maxCount = targetInput?.id === "promotionVisualStyle" ? 3 : Infinity;
     const nextValues = [...values, trimValue(nextValue)].slice(-maxCount);
     return formatQuickButtonValues(nextValues, targetInput, nextValue);
   }
@@ -2572,6 +2646,9 @@
     "캠페인 광고형": "campaign advertising look",
     "에디토리얼 광고형": "editorial advertising look",
     "데이터 중심 레이아웃": "data-led composition",
+    "유리 카드형": "frosted glass card overlay, realistic blur and refraction in the glass layers, soft drop shadows below the card, crisp typography rendered on the glass",
+    "입체 레이어형": "Z-depth layered composition, bold headline text partially wrapped behind foreground 3D elements, clean text separation, dramatic 3D pop-out effect",
+    "페이퍼 콜라주형": "layered paper collage, overlapping physical card frames with subtle drop shadows, rich paper textures and edges, editorial layout",
     "광고 이미지급 디테일": "advertising-grade detail",
     "텍스트와 배경 대비 선명": "clear text-to-background contrast",
     "모바일 썸네일 가독성 우선": "mobile thumbnail readability first",
@@ -3044,70 +3121,99 @@
   function validateState() {
     const errors = [];
     const warnings = [];
+    const fieldErrors = {};
+    const fieldWarnings = {};
+
+    function addError(fieldKey, message) {
+      errors.push(message);
+      if (!fieldErrors[fieldKey]) fieldErrors[fieldKey] = [];
+      fieldErrors[fieldKey].push(message);
+    }
+
+    function addWarning(fieldKey, message) {
+      warnings.push(message);
+      if (!fieldWarnings[fieldKey]) fieldWarnings[fieldKey] = [];
+      fieldWarnings[fieldKey].push(message);
+    }
 
     if (!String(state.headline || "").trim()) {
-      errors.push("헤드라인을 입력해야 프롬프트를 복사할 수 있습니다.");
+      addError("headline", "헤드라인을 입력해야 프롬프트를 복사할 수 있습니다.");
     }
     if (!String(state.goal || "").trim()) {
-      errors.push("홍보 목적을 입력해야 메시지 방향이 분명해집니다.");
+      addError("goal", "홍보 목적을 입력해야 메시지 방향이 분명해집니다.");
     }
 
     if (state.sizeMode === "ratio") {
       if (state.ratio === "custom") {
         if (!isPositiveNumberText(state.customRatioW) || !isPositiveNumberText(state.customRatioH)) {
-          errors.push("직접 입력 비율을 사용할 때는 너비와 높이를 모두 숫자로 입력해야 합니다.");
+          addError("customRatio", "직접 입력 비율을 사용할 때는 너비와 높이를 모두 숫자로 입력해야 합니다.");
         }
       }
     } else {
+      const sizeErrors = [];
       validateDimensionPair(
         state.directSizeW,
         state.directSizeH,
         `직접 입력 크기(${state.directSizeUnit})`,
-        errors
+        sizeErrors
       );
+      if (sizeErrors.length) {
+        sizeErrors.forEach(err => addError("directSize", err));
+      }
       if (!String(state.directSizeW || "").trim() && !String(state.directSizeH || "").trim()) {
-        errors.push("크기 직접 입력 방식을 선택했다면 실제 너비와 높이를 입력해야 합니다.");
+        addError("directSize", "크기 직접 입력 방식을 선택했다면 실제 너비와 높이를 입력해야 합니다.");
       }
     }
 
-    if (state.assetType === "poster") {
+    if (state.assetType === "poster" || state.assetType === "image") {
       if (isEnabled(state.posterKeyVisualEnabled) && !String(state.posterKeyVisual || "").trim()) {
-        warnings.push("포스터는 메인 비주얼 포인트를 적어두면 결과 품질이 더 안정적입니다.");
+        addWarning("posterKeyVisual", "포스터는 메인 비주얼 포인트를 적어두면 결과 품질이 더 안정적입니다.");
       }
       if (isEnabled(state.posterInfoLayoutEnabled) && !String(state.posterInfoLayout || "").trim()) {
-        warnings.push("포스터는 정보 배치 방식을 적어두면 위계가 덜 흔들립니다.");
+        addWarning("posterInfoLayout", "포스터는 정보 배치 방식을 적어두면 위계가 덜 흔들립니다.");
       }
     }
 
     if (state.assetType === "cardnews") {
       const cardCount = Number(state.cardnewsCardCount);
       if (!Number.isInteger(cardCount) || cardCount < 3 || cardCount > 10) {
-        errors.push("카드뉴스 카드 수는 3장 이상 10장 이하로 설정하세요.");
+        addError("cardnewsCardCount", "카드뉴스 카드 수는 3장 이상 10장 이하로 설정하세요.");
       }
       if (!String(state.cardnewsFlow || "").trim()) {
-        warnings.push("카드뉴스는 카드 흐름을 적어두면 장별 메시지 연결이 좋아집니다.");
+        addWarning("cardnewsFlow", "카드뉴스는 카드 흐름을 적어두면 장별 메시지 연결이 좋아집니다.");
       }
     }
 
     if (state.assetType === "sns") {
       if (!String(state.snsHook || "").trim()) {
-        warnings.push("SNS 이미지는 첫 줄 훅이 있으면 시선 유도가 훨씬 쉬워집니다.");
+        addWarning("snsHook", "SNS 이미지는 첫 줄 훅이 있으면 시선 유도가 훨씬 쉬워집니다.");
       }
       if (isEnabled(state.snsPlacementNotesEnabled) && !String(state.snsPlacementNotes || "").trim()) {
-        warnings.push("SNS는 안전영역이나 CTA 위치 메모를 남기면 플랫폼별 잘림 위험을 줄일 수 있습니다.");
+        addWarning("snsPlacementNotes", "SNS는 안전영역이나 CTA 위치 메모를 남기면 플랫폼별 잘림 위험을 줄일 수 있습니다.");
       }
     }
 
     if (isEnabled(state.qrEnabled)) {
       const qrUrl = String(state.qrUrl || "").trim();
       if (!qrUrl) {
-        warnings.push("QR코드를 사용하려면 연결 주소를 입력하는 편이 좋습니다. 주소가 없으면 프롬프트에는 QR 자리만 배정됩니다.");
+        addWarning("qrUrl", "QR코드를 사용하려면 연결 주소를 입력하는 편이 좋습니다. 주소가 없으면 프롬프트에는 QR 자리만 배정됩니다.");
       } else if (!/^https?:\/\//i.test(qrUrl)) {
-        warnings.push("QR코드 연결 주소는 http:// 또는 https://로 시작하는 전체 URL을 권장합니다.");
+        addWarning("qrUrl", "QR코드 연결 주소는 http:// 또는 https://로 시작하는 전체 URL을 권장합니다.");
       }
     }
 
-    return { errors, warnings };
+    // 텍스트 과부하로 인한 AI 보수적 레이아웃 회귀 방지 경보
+    const headlineLen = String(state.headline || "").trim().length;
+    if (headlineLen > 25) {
+      addWarning("headline", `헤드라인이 깁니다(${headlineLen}자). 텍스트가 너무 길면 이미지 생성 AI가 가독성을 위해 단조롭고 뻔한 레이아웃을 선택합니다. 20자 이하로 압축하시는 것을 권장합니다.`);
+    }
+
+    const bodyCopyLen = String(state.bodyCopy || "").trim().length;
+    if (bodyCopyLen > 80) {
+      addWarning("bodyCopy", `본문 텍스트가 깁니다(${bodyCopyLen}자). 정보량이 너무 많으면 이미지 구도가 답답한 카드 뉴스 형태로 고정됩니다. 핵심 혜택 위주로 80자 이내 요약 작성을 권장합니다.`);
+    }
+
+    return { errors, warnings, fieldErrors, fieldWarnings };
   }
 
   function renderValidation(validation) {
@@ -3121,6 +3227,7 @@
           <span>${localizeSentence("현재 입력으로 프롬프트를 복사하거나 설정을 저장할 수 있습니다.", "You can now copy the prompt or save your configuration with the current inputs.")}</span>
         </div>
       `;
+      updateFieldWarningsUI(validation);
       return;
     }
 
@@ -3143,7 +3250,145 @@
     }
 
     node.innerHTML = blocks.join("");
+    updateFieldWarningsUI(validation);
   }
+
+  // ⚠️ 경고 아이콘 표시 및 모달 품질 개선 안내 가이드 핵심 제어기
+  const FIELD_DOM_INFO = {
+    headline: { id: "promotionHeadline" },
+    goal: { id: "promotionGoal" },
+    audience: { id: "promotionAudience" },
+    subheadline: { id: "promotionSubheadline" },
+    bodyCopy: { id: "promotionBodyCopy" },
+    cta: { id: "promotionCta" },
+    qrUrl: { id: "promotionQrUrl" },
+    customRatio: { id: "promotionCustomRatioW" },
+    directSize: { id: "promotionDirectSizeW" },
+    posterKeyVisual: { id: "promotionPosterKeyVisual" },
+    posterInfoLayout: { id: "promotionPosterInfoLayout" },
+    cardnewsFlow: { id: "promotionCardFlow" },
+    cardnewsCardCount: { id: "promotionCardCount" },
+    snsHook: { id: "promotionSnsHook" },
+    snsPlacementNotes: { id: "promotionSnsPlacementNotes" }
+  };
+
+  function updateFieldWarningsUI(validation) {
+    const { fieldErrors = {}, fieldWarnings = {} } = validation;
+
+    // 1. 기존의 경고 트리거들을 전부 지웁니다.
+    root.querySelectorAll(".promo-warning-trigger").forEach(el => el.remove());
+
+    // 2. 에러와 경고를 필드 키별로 통합합니다.
+    const mergedWarnings = {};
+    for (const [key, msgs] of Object.entries(fieldErrors)) {
+      if (!mergedWarnings[key]) mergedWarnings[key] = [];
+      mergedWarnings[key].push(...msgs);
+    }
+    for (const [key, msgs] of Object.entries(fieldWarnings)) {
+      if (!mergedWarnings[key]) mergedWarnings[key] = [];
+      mergedWarnings[key].push(...msgs);
+    }
+
+    // 3. 대상 필드별로 경고 아이콘을 라벨 우측에 삽입합니다.
+    for (const [fieldKey, messages] of Object.entries(mergedWarnings)) {
+      const info = FIELD_DOM_INFO[fieldKey];
+      if (!info) continue;
+
+      const inputNode = $(info.id);
+      if (!inputNode) continue;
+
+      const groupNode = inputNode.closest(".gen-config-group, .promo-action-choice-card, .promo-qr-url-wrap");
+      if (!groupNode) continue;
+
+      const labelNode = groupNode.querySelector(".gen-config-label");
+      if (!labelNode) continue;
+
+      // 이미 추가되어 있는 지 확인하고 없으면 신규 삽입
+      if (!labelNode.querySelector(`.promo-warning-trigger[data-warning-field="${fieldKey}"]`)) {
+        const trigger = document.createElement("span");
+        trigger.className = "promo-warning-trigger";
+        trigger.dataset.warningField = fieldKey;
+        trigger.innerHTML = "⚠️";
+        trigger.title = "품질 개선 가이드 확인";
+
+        // 클릭 시 모달 노출 및 전파 방지
+        trigger.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          showWarningModal(fieldKey, messages);
+        });
+
+        labelNode.appendChild(trigger);
+      }
+    }
+  }
+
+  function showWarningModal(fieldKey, messages) {
+    const modal = $("promotionWarningModal");
+    const body = $("promotionWarningModalBody");
+    const title = $("promotionWarningModalTitle");
+    if (!modal || !body || !title) return;
+
+    const labels = {
+      headline: "헤드라인 설계 피드백",
+      goal: "홍보 목적 설정 피드백",
+      customRatio: "직접 비율 설정 피드백",
+      directSize: "직접 크기 설정 피드백",
+      posterKeyVisual: "메인 비주얼 포인트 피드백",
+      posterInfoLayout: "정보 배치 방식 피드백",
+      cardnewsFlow: "카드 흐름 설계 피드백",
+      cardnewsCardCount: "카드 수 설정 피드백",
+      snsHook: "SNS 첫 줄 훅 피드백",
+      snsPlacementNotes: "SNS 배치 메모 피드백",
+      qrUrl: "QR 연결 주소 피드백",
+      bodyCopy: "본문 텍스트 품질 피드백"
+    };
+    title.textContent = labels[fieldKey] || "품질 개선 가이드";
+
+    let html = `<div style="margin-bottom: 12px; font-weight: 700; color: #d35400;">⚠️ 발견된 보완 권장사항:</div>`;
+    html += `<ul style="margin: 0 0 16px 20px; padding: 0; list-style-type: disc;">`;
+    messages.forEach(msg => {
+      html += `<li style="margin-bottom: 8px; color: var(--ink);">${escapeHtml(msg)}</li>`;
+    });
+    html += `</ul>`;
+
+    const tips = {
+      headline: `<strong>💡 레이아웃 품질 향상 팁:</strong>헤드라인 글자수가 20자를 넘어가면 이미지 생성 AI가 가독성 확보를 위해 글자를 아주 크게 깔고 배경을 밋밋하게 미는 단조로운 템플릿 레이아웃으로 회귀합니다.<br/>글자수를 최대한 <strong>20자 이하</strong>로 줄이면, AI가 남는 공간에 훨씬 깊이감 있고 세련된 비주얼을 배치할 여유를 가지게 됩니다.`,
+
+      bodyCopy: `<strong>💡 레이아웃 품질 향상 팁:</strong>본문 텍스트 줄수가 많고 길어지면(80자 이상) 화면 전체가 글자로 꽉 차서 밋밋한 카드뉴스 레이아웃에 갇힙니다.<br/>정보들을 최대한 <strong>핵심 혜택 위주로 요약</strong>하여 입력하면 여백이 넓어지고, AI가 다채로운 이미지 레이어와 텍스트를 유기적으로 합성하여 완성도 높은 광고 컷을 생성합니다.`,
+
+      posterKeyVisual: `<strong>💡 비주얼 은유 팁:</strong>단순한 계단이나 화살표 같은 상투적이고 투박한 오브젝트 대신, '구체적인 공간과 빛의 무드(예: Cinematic dramatic light casting through a modern digital terminal)'를 명시하면 AI가 훨씬 사실적이고 상업 화보급으로 고급스럽게 그려냅니다.`,
+
+      posterInfoLayout: `<strong>💡 배치 합성 팁:</strong>정보가 카드 박스 안에 갇혀서 단편화되지 않도록 하려면 'seamless background blending' 혹은 'non-isolated multi-layered split layout'처럼 이미지가 배경 텍스트와 하나의 레이어로 자연스럽게 오버랩되도록 서술해 보세요.`
+    };
+
+    if (tips[fieldKey]) {
+      html += `
+        <div class="promo-warning-modal-tip">
+          ${tips[fieldKey]}
+        </div>
+      `;
+    }
+
+    body.innerHTML = html;
+    modal.removeAttribute("hidden");
+    document.body.classList.add("modal-open");
+  }
+
+  function hideWarningModal() {
+    const modal = $("promotionWarningModal");
+    if (modal) {
+      modal.setAttribute("hidden", "");
+    }
+    document.body.classList.remove("modal-open");
+  }
+
+  function bindWarningModalEvents() {
+    $("promotionWarningModalCloseBtn")?.addEventListener("click", hideWarningModal);
+    $("promotionWarningModalConfirmBtn")?.addEventListener("click", hideWarningModal);
+    $("promotionWarningModalBackdrop")?.addEventListener("click", hideWarningModal);
+  }
+
 
   function renderControl(field) {
     const fieldId = field.domId || `promotionField_${field.key}`;
@@ -3269,6 +3514,11 @@
     posterOffer: () => syncPosterOfferToggleUI(),
     snsHook: () => syncSnsHookToggleUI(),
     snsHashtags: () => syncSnsHashtagsToggleUI(),
+    tone: () => syncToggleFieldUI("tone"),
+    bigIdea: () => syncToggleFieldUI("bigIdea"),
+    visualMetaphor: () => syncToggleFieldUI("visualMetaphor"),
+    visualStyle: () => syncToggleFieldUI("visualStyle"),
+    layoutComposition: () => syncToggleFieldUI("layoutComposition"),
   };
 
   function bindAiToggleControls(scope) {
@@ -3505,7 +3755,26 @@
     bindAiToggleControls(root);
   }
 
-  function syncAntiAiPresetUI() {}
+  function syncAntiAiPresetUI() {
+    const container = root.querySelector(".anti-ai-preset-btns");
+    if (!container) return;
+    container.querySelectorAll(".anti-ai-preset-btn").forEach((button) => {
+      const isSelected = button.dataset.antiAiPreset === state.antiAiStyle;
+      button.classList.toggle("active", isSelected);
+      button.setAttribute("aria-pressed", isSelected ? "true" : "false");
+    });
+
+    const badge = $("antiAiActiveBadge");
+    if (badge) {
+      const activePreset = ANTI_AI_PRESETS.find((p) => p.id === state.antiAiStyle);
+      if (activePreset && state.antiAiStyle !== "general") {
+        badge.textContent = activePreset.labelKo;
+        badge.style.display = "";
+      } else {
+        badge.style.display = "none";
+      }
+    }
+  }
 
   function pruneEmptyFields() {
     sanitizeStateValues();
@@ -4102,7 +4371,7 @@
           ]
         : [];
 
-    const activeAntiAiPreset = ANTI_AI_PRESETS.find((p) => p.id === "general") || null;
+    const activeAntiAiPreset = ANTI_AI_PRESETS.find((p) => p.id === state.antiAiStyle) || null;
     const antiAiForbiddenTokens = activeAntiAiPreset
       ? splitKeywordValues(localizeSentence(activeAntiAiPreset.forbiddenKo, activeAntiAiPreset.forbiddenEn))
       : [];
@@ -4181,6 +4450,41 @@
         directiveKo: "컨텐츠 유형과 홍보 목적에 맞는 해시태그 5~10개를 생성하라",
         directiveEn: "Generate 5 to 10 hashtags matched to the content type and promotion goal",
       },
+      {
+        field: "tone",
+        labelKo: "브랜드 톤",
+        labelEn: "brand tone",
+        directiveKo: "홍보 목적과 타깃 독자에 맞게 가장 설득력 있고 매력적인 브랜드 톤앤매너(예: 신뢰감, 역동적, 미래지향적 등)를 자동으로 생성하라",
+        directiveEn: "Generate a compelling brand tone and voice suitable for the promotion goal and target audience"
+      },
+      {
+        field: "bigIdea",
+        labelKo: "핵심 개념(Big Idea)",
+        labelEn: "core concept (Big Idea)",
+        directiveKo: "메시지와 비주얼을 하나로 관통하는 창의적인 핵심 개념(Big Idea)을 정의하고 프롬프트 전반에 반영하라",
+        directiveEn: "Generate a creative core concept (Big Idea) that unifies the campaign message and visual identity"
+      },
+      {
+        field: "visualMetaphor",
+        labelKo: "비주얼 은유",
+        labelEn: "visual metaphor",
+        directiveKo: "핵심 개념을 암시하거나 시각적으로 상징할 수 있는 메인 그래픽 메타포 또는 상징적 사물/장면을 생성하라",
+        directiveEn: "Generate a creative visual metaphor or symbolic objects representing the core concept"
+      },
+      {
+        field: "visualStyle",
+        labelKo: "비주얼 스타일",
+        labelEn: "visual style",
+        directiveKo: "타깃 디자인 룩에 걸맞은 사진 기법, 그래픽 텍스처, 질감 및 비주얼 스타일 지시어를 디테일하게 자동 생성하라",
+        directiveEn: "Generate a visual style concept suggestion with detailed style descriptors matching the campaign theme"
+      },
+      {
+        field: "layoutComposition",
+        labelKo: "레이아웃 구도 배치",
+        labelEn: "layout composition",
+        directiveKo: "헤드라인, 본문포인트, CTA, 비주얼 오브젝트를 최적으로 배치할 구도 전략(예: 비대칭, 중앙 대칭, 상단 타이포 중심 등)을 스스로 선택하여 조화롭게 배치하라",
+        directiveEn: "Determine and generate a layout composition strategy (e.g., asymmetrical, centered, or typography-led) that optimally balances the elements"
+      }
     ];
 
     const aiAutoLines = prunePromptLines(
@@ -4195,6 +4499,9 @@
     const promotionStrategyLines = prunePromptLines([
       `${localizeSentence("광고 목적", "promotion goal")}: ${localizeValue(state.goal || CONTENT_TYPE_TEMPLATES[state.contentType]?.goal || "직접 입력 목적")}`,
       `${localizeSentence("타깃 대상", "target audience")}: ${localizeValue(state.audience || CONTENT_TYPE_TEMPLATES[state.contentType]?.audience || "직접 입력 대상")}`,
+      (isEnabled(state.toneEnabled) && state.toneMode === "manual" && state.tone)
+        ? `${localizeSentence("브랜드 톤", "brand tone")}: ${localizeValue(state.tone)}`
+        : "",
       ...getLocalizedProfileLines(promotionStrategyProfile),
       localizeSentence(
         "이 이미지는 정보 안내물이 아니라 시선 포획, 메시지 압축, 행동 유도를 수행하는 광고 키비주얼이어야 한다.",
@@ -4230,16 +4537,44 @@
       ...getLocalizedProfileLines(commercialProfile),
     ]);
 
+    const layoutCompLines = (() => {
+      if (!isEnabled(state.layoutCompositionEnabled) || state.layoutCompositionMode !== "manual") {
+        return [];
+      }
+      const compKey = state.layoutComposition || "centered";
+      const profile = LAYOUT_COMPOSITION_PROFILES[compKey] || LAYOUT_COMPOSITION_PROFILES.centered;
+      const label = localizeSentence(profile.labelKo, profile.labelEn);
+      const lines = state.outputLanguage === "en" ? profile.linesEn
+        : state.outputLanguage === "bilingual"
+          ? profile.linesKo.map((ko, i) => `${ko} / ${profile.linesEn[i] || ko}`)
+          : profile.linesKo;
+      return [
+        `${localizeSentence("레이아웃 구도 배치", "Layout composition")}: ${label}`,
+        ...lines
+      ];
+    })();
+
+    const conceptStyleLine = state.appliedConceptStyle
+      ? [`${localizeSentence("컨셉 제안 비주얼 스타일", "Visual style concept suggestion")}: ${state.appliedConceptStyle}`]
+      : [];
+
     const designLines = prunePromptLines([
+      ...layoutCompLines,
+      ...conceptStyleLine,
       ...instructionItems
-        .filter((entry) => !compositionExcludedKeys.has(entry.key))
+        .filter((entry) => {
+          if (entry.key === "visualStyle" && (!isEnabled(state.visualStyleEnabled) || state.visualStyleMode !== "manual")) {
+            return false;
+          }
+          return !compositionExcludedKeys.has(entry.key);
+        })
         .map((entry) => `${localizeValue(entry.label)}: ${localizeValue(entry.value)}`),
       ...qrCodePromptLines(),
     ]);
 
     const creativityLines = prunePromptLines([
-      state.bigIdea ? `${localizeSentence("핵심 개념", "Core concept")}: ${localizeValue(state.bigIdea)}` : "",
-      state.visualMetaphor ? `${localizeSentence("비주얼 은유", "Visual metaphor")}: ${localizeValue(state.visualMetaphor)}` : "",
+      (isEnabled(state.bigIdeaEnabled) && state.bigIdeaMode === "manual" && state.bigIdea) ? `${localizeSentence("핵심 개념", "Core concept")}: ${localizeValue(state.bigIdea)}` : "",
+      (isEnabled(state.visualMetaphorEnabled) && state.visualMetaphorMode === "manual" && state.visualMetaphor) ? `${localizeSentence("비주얼 은유", "Visual metaphor")}: ${localizeValue(state.visualMetaphor)}` : "",
       `${localizeSentence("레이아웃 실험 범위", "Layout experimentation")}: ${localizeSentence(creativityProfile.labelKo, creativityProfile.labelEn)}`,
       ...getLocalizedProfileLines(creativityProfile),
       ...getLocalizedProfileLines(diversityProfile),
@@ -4277,8 +4612,32 @@
           ]
     );
 
+    const compositeQualityLines = [
+      localizeSentence(
+        "겹쳐지는 레이어 밑에는 부드러운 그림자를 두어 실제 물리적인 깊이감을 형성한다.",
+        "Apply subtle drop shadows beneath overlapping layers to establish a realistic sense of physical depth."
+      ),
+      localizeSentence(
+        "글자가 배치되는 뒷배경은 아무런 시각 노이즈가 없는 완전한 평면/단색 상태를 유지하며 복잡한 텍스처는 그래픽 영역에만 허용한다.",
+        "Keep the background behind the text clean and plain, reserving complex textures only for the artistic graphic zones."
+      ),
+      localizeSentence(
+        "얕은 피사체 심도(DoF)를 활용해 글자는 아주 또렷하게 표현하고 배경 그래픽 요소는 부드럽게 흐리게 처리한다.",
+        "Use slight depth of field to keep the text in sharp focus while making the distant background elements softly out of focus."
+      ),
+      localizeSentence(
+        "중앙 비주얼 오브젝트와 그래픽 요소가 인위적인 둥근 테두리 박스에 갇히지 않도록 하고 전체 배경과 유기적으로 블렌딩(blending)되어야 한다.",
+        "Ensure the central visual object and graphic elements are organically blended with the overall background, without being enclosed in an isolated border frame or box."
+      ),
+      localizeSentence(
+        "평평한 격리형 레이아웃을 지양하고, 다층적인 사선 분할이나 오버랩을 활용해 다채롭고 조화로운 공간감을 구현한다.",
+        "Avoid flat isolated layouts; implement multi-layered overlapping where elements blend seamlessly across spatial segments for a dynamic sense of depth."
+      )
+    ];
+
     const qualityLines = prunePromptLines([
       ...getDefaultQualityTagLines(),
+      ...compositeQualityLines,
       ...splitQualityNoteLines(state.qualityNotes).map((item) => localizeValue(item)),
     ]);
 
@@ -4624,6 +4983,38 @@
     if (section) section.classList.toggle("promo-field-disabled", !enabled);
   }
 
+  function syncToggleFieldUI(fieldKey) {
+    const enabled = isEnabled(state[`${fieldKey}Enabled`]);
+    const isAi = state[`${fieldKey}Mode`] !== "manual";
+    const fieldCamel = fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1);
+
+    const checkbox = root.querySelector(`.promo-ai-toggle-enabled[data-toggle-field='${fieldKey}']`);
+    if (checkbox) checkbox.checked = enabled;
+
+    const modeBtns = $(`promotion${fieldCamel}ModeBtns`);
+    if (modeBtns) {
+      modeBtns.classList.toggle("disabled", !enabled);
+      modeBtns.querySelectorAll(`[data-toggle-mode='${fieldKey}']`).forEach((btn) => {
+        btn.disabled = !enabled;
+        btn.classList.toggle("active", btn.dataset.mode === (isAi ? "ai" : "manual"));
+      });
+    }
+
+    const inputWrap = $(`promotion${fieldCamel}Input`);
+    const aiPlaceholder = $(`promotion${fieldCamel}AiPlaceholder`);
+    if (inputWrap) inputWrap.style.display = enabled && !isAi ? "" : "none";
+    if (aiPlaceholder) {
+      aiPlaceholder.style.display = !enabled || isAi ? "" : "none";
+      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "AI가 자동으로 생성합니다";
+    }
+
+    const inputNode = $(`promotion${fieldCamel}`);
+    if (inputNode) {
+      const section = inputNode.closest(".gen-config-group");
+      if (section) section.classList.toggle("promo-field-disabled", !enabled);
+    }
+  }
+
   function syncStaticFields() {
     root.querySelectorAll("[data-promo-field]").forEach((input) => {
       const value = state[input.dataset.promoField] ?? "";
@@ -4728,6 +5119,11 @@
     syncSnsHookToggleUI();
     syncSnsHashtagsToggleUI();
     syncAntiAiPresetUI();
+    syncToggleFieldUI("tone");
+    syncToggleFieldUI("bigIdea");
+    syncToggleFieldUI("visualMetaphor");
+    syncToggleFieldUI("visualStyle");
+    syncToggleFieldUI("layoutComposition");
   }
 
   function resetAll() {
@@ -4957,9 +5353,29 @@
     });
   }
 
+  function bindAntiAiPresetBtns() {
+    const container = root.querySelector(".anti-ai-preset-btns");
+    if (!container) return;
+    container.querySelectorAll(".anti-ai-preset-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedId = button.dataset.antiAiPreset;
+        if (state.antiAiStyle === selectedId) {
+          state.antiAiStyle = "general";
+        } else {
+          state.antiAiStyle = selectedId;
+        }
+        promptDirty = false;
+        syncAntiAiPresetUI();
+        renderPreview();
+      });
+    });
+  }
+
   function bindStaticInputs() {
     bindFieldInputs(root);
     bindQuickButtons(root);
+    bindAntiAiPresetBtns();
+    bindAiToggleControls(root);
   }
 
   function bindLoadInput() {
@@ -5184,6 +5600,7 @@
     bindStep3IdeaPresets();
     bindLoadInput();
     bindPromptEditor();
+    bindWarningModalEvents();
     $("promotionSampleBtn")?.addEventListener("click", applySample);
     $("promotionRandomPresetBtn")?.addEventListener("click", applyRandomPresets);
     $("promotionSaveBtn")?.addEventListener("click", saveSettings);
@@ -5208,6 +5625,34 @@
     renderTypeFields();
     renderPreview();
   }
+
+  window.applyPromotionConceptStyle = function (style) {
+    if (!style) return;
+
+    state.colorStrategy = "manual";
+
+    // 컨셉 제안 스타일은 왼쪽 패널의 '표현 스타일' 인풋을 수정하지 않고
+    // 독립적인 상태 변수 appliedConceptStyle에 직접 저장하여 우측 프롬프트에만 렌더링되게 처리
+    state.appliedConceptStyle = style.prompt;
+
+    if (style.palette && style.palette.length > 0) {
+      state.primaryColor = style.palette[0] || "";
+      state.secondaryColor = style.palette[1] || "";
+      state.accentColor = style.palette[2] || "";
+      state.backgroundMode = "solid";
+      state.backgroundColor = style.palette[4] || style.palette[3] || "";
+
+      // 5가지 색상이 모두 AI에게 전달되도록 전체 팔레트 목록을 배경 지시사항에 함께 기록
+      const colorList = style.palette.join(", ");
+      state.backgroundDetails = `${style.nameKo} 스타일 배경 (전체 색상 팔레트: ${colorList}). ${style.desc || ""}`;
+    }
+
+    promptDirty = false;
+    syncStaticFields();
+    renderPreview();
+
+    status(`'${style.nameKo}' 콘셉트 스타일과 5가지 색상이 모두 적용되었습니다.`, "success");
+  };
 
   init();
 })();

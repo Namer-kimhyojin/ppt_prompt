@@ -1912,3 +1912,46 @@ select option {
     padding: 12px;
   }
 }
+
+/* 경고 아이콘 및 모달 가이드 스타일 */
+.promo-warning-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  cursor: pointer;
+  color: #e67e22;
+  font-size: 13.5px;
+  vertical-align: middle;
+  transition: transform 0.2s ease, color 0.2s ease;
+  user-select: none;
+  animation: promoPulse 2s infinite ease-in-out;
+}
+
+.promo-warning-trigger:hover {
+  transform: scale(1.25);
+  color: #d35400;
+}
+
+@keyframes promoPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+.promo-warning-modal-tip {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #fbf9f4;
+  border-left: 3px solid #e67e22;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  color: #5d6d86;
+  line-height: 1.5;
+}
+
+.promo-warning-modal-tip strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #d35400;
+}
