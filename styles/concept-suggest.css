@@ -9,27 +9,6 @@
   overflow-y: auto;
 }
 
-/* ── 헤더 ── */
-.concept-hero {
-  padding: 28px 32px 20px;
-  border-bottom: 1px solid var(--border, #e2e8f0);
-}
-
-.concept-hero-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--text-primary, #1a202c);
-  margin: 0 0 6px;
-  letter-spacing: -0.02em;
-}
-
-.concept-hero-sub {
-  font-size: 0.875rem;
-  color: var(--text-secondary, #64748b);
-  margin: 0;
-  line-height: 1.6;
-}
-
 /* ── 필터 바 ── */
 .concept-filter-bar {
   display: flex;
@@ -79,32 +58,33 @@
 
 /* ── 카드 ── */
 .concept-card {
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1.5px solid var(--border, #e2e8f0);
   background: var(--surface, #ffffff);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .concept-card:hover {
-  box-shadow: 0 6px 24px rgba(0,0,0,.10);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.12);
+  transform: translateY(-3px);
+  border-color: var(--accent-muted, #c5c2ff);
 }
 
 /* ── 카드 헤더 (그래디언트) ── */
 .concept-card-header {
-  padding: 20px 18px 16px;
+  padding: 18px 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-height: 90px;
+  gap: 5px;
+  min-height: 86px;
   position: relative;
 }
 
 .concept-card-emoji {
-  font-size: 1.75rem;
+  font-size: 1.625rem;
   line-height: 1;
 }
 
@@ -117,34 +97,36 @@
 }
 
 .concept-card-name-ko {
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   font-weight: 500;
+  opacity: 0.85;
   /* color: JS 인라인 스타일로 동적 적용 */
 }
 
 .concept-card-cat-badge {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 12px;
+  right: 12px;
   padding: 3px 10px;
   border-radius: 999px;
   /* background/color: JS 인라인 스타일로 동적 적용 */
-  font-size: 0.7rem;
-  font-weight: 600;
-  backdrop-filter: blur(4px);
+  font-size: 0.675rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(6px);
 }
 
 /* ── 카드 바디 ── */
 .concept-card-body {
-  padding: 14px 18px 18px;
+  padding: 12px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
 }
 
 .concept-card-desc {
-  font-size: 0.8125rem;
+  font-size: 0.8rem;
   color: var(--text-secondary, #64748b);
   line-height: 1.55;
   margin: 0;
@@ -153,36 +135,36 @@
 /* ── 팔레트 ── */
 .concept-palette {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .concept-palette-dot {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.6);
-  box-shadow: 0 1px 3px rgba(0,0,0,.18);
+  border: 2.5px solid rgba(255,255,255,0.7);
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
   flex-shrink: 0;
   cursor: pointer;
-  transition: transform 0.15s;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   position: relative;
 }
 
 .concept-palette-dot:hover {
-  transform: scale(1.25);
+  transform: scale(1.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
   z-index: 2;
 }
 
 .concept-palette-hex {
   position: absolute;
-  bottom: 24px;
+  bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--text-primary, #1a202c);
+  background: rgba(15, 23, 42, 0.9);
   color: #fff;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;
@@ -199,150 +181,110 @@
 .concept-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
 }
 
 .concept-tag {
-  padding: 2px 9px;
-  border-radius: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
   background: var(--surface-raised, #f1f5f9);
   color: var(--text-secondary, #64748b);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
-}
-
-/* ── 프롬프트 토글 ── */
-.concept-prompt-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 9px 12px;
-  border-radius: 8px;
-  background: var(--surface-raised, #f8fafc);
   border: 1px solid var(--border, #e2e8f0);
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-primary, #1a202c);
-  transition: background 0.15s;
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
-  margin-top: auto;
 }
 
-.concept-prompt-toggle:hover {
-  background: var(--accent-bg, #f0f0ff);
-  border-color: var(--accent, #6c63ff);
-  color: var(--accent, #6c63ff);
-}
-
-.concept-toggle-chevron {
-  font-size: 0.75rem;
-  transition: transform 0.2s;
-  display: inline-block;
-}
-
-.concept-card.expanded .concept-toggle-chevron {
-  transform: rotate(180deg);
-}
-
-/* ── 프롬프트 확장 영역 ── */
-.concept-prompt-area {
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 2px;
-}
-
-.concept-card.expanded .concept-prompt-area {
-  display: flex;
-}
-
+/* ── 프롬프트 영역 (항상 표시) ── */
 .concept-prompt-text {
-  font-size: 0.775rem;
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.6;
-  color: var(--text-primary, #1a202c);
+  font-size: 0.73rem;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  line-height: 1.5;
+  color: var(--text-secondary, #475569);
   background: var(--surface-raised, #f8fafc);
   border: 1px solid var(--border, #e2e8f0);
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 9px 11px;
   white-space: pre-wrap;
   word-break: break-all;
-  margin: 0;
-  resize: none;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: text;
+  margin: 2px 0 0;
+  display: block;
+  max-height: 96px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.concept-prompt-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .concept-copy-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: stretch;
+  gap: 7px;
 }
 
+/* ── 복사 버튼 (secondary) ── */
 .concept-copy-btn {
   flex: 1;
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 8px;
-  border: none;
-  background: var(--accent, #6c63ff);
-  color: #fff;
-  font-size: 0.8125rem;
+  border: 1.5px solid var(--border, #d1d9e6);
+  background: transparent;
+  color: var(--text-secondary, #475569);
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
   font-family: inherit;
-}
-
-.concept-copy-btn:hover {
-  background: var(--accent-hover, #5a52e0);
-}
-
-.concept-copy-btn:active {
-  transform: scale(0.97);
-}
-
-.concept-copy-btn.copied {
-  background: #10b981;
-}
-
-.concept-apply-btn {
-  flex: 1.2;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 1.5px solid var(--accent, #6c63ff);
-  background: var(--surface, #ffffff);
-  color: var(--accent, #6c63ff);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease, transform 0.1s;
-  font-family: inherit;
-}
-
-.concept-apply-btn:hover {
-  background: var(--accent-bg, #f0f0ff);
-  color: var(--accent-hover, #5a52e0);
-}
-
-.concept-apply-btn:active {
-  transform: scale(0.97);
-}
-
-.concept-copy-feedback {
-  font-size: 0.775rem;
-  color: #10b981;
-  font-weight: 600;
-  opacity: 0;
-  transition: opacity 0.2s;
   white-space: nowrap;
 }
 
-.concept-copy-feedback.visible {
-  opacity: 1;
+.concept-copy-btn:hover {
+  border-color: var(--accent, #6c63ff);
+  background: var(--accent-bg, #f0f0ff);
+  color: var(--accent, #6c63ff);
+}
+
+.concept-copy-btn:active {
+  transform: scale(0.96);
+}
+
+.concept-copy-btn.copied {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+  color: #059669;
+}
+
+/* ── 적용 버튼 (primary accent) ── */
+.concept-apply-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--accent, #6c63ff);
+  background: var(--accent, #6c63ff);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s, transform 0.1s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.concept-apply-btn:hover {
+  background: var(--accent-hover, #5a52e8);
+  border-color: var(--accent-hover, #5a52e8);
+  opacity: 0.92;
+}
+
+.concept-apply-btn:active {
+  transform: scale(0.96);
+}
+
+.concept-copy-feedback {
+  display: none;
 }
 
 /* ── 다크 모드 ── */
@@ -358,6 +300,7 @@
 [data-theme="dark"] .concept-tag {
   background: var(--surface-raised, #2d3748);
   color: var(--text-secondary, #94a3b8);
+  border-color: var(--border, #3d4a5c);
 }
 
 [data-theme="dark"] .concept-prompt-text {
@@ -366,24 +309,26 @@
   border-color: var(--border, #2d3748);
 }
 
-[data-theme="dark"] .concept-prompt-toggle {
-  background: var(--surface-raised, #2d3748);
+[data-theme="dark"] .concept-copy-btn {
   border-color: var(--border, #3d4a5c);
+  color: var(--text-secondary, #94a3b8);
+}
+
+[data-theme="dark"] .concept-copy-btn:hover {
+  border-color: var(--accent, #a39eff);
+  background: rgba(163, 158, 255, 0.1);
+  color: var(--accent, #a39eff);
 }
 
 [data-theme="dark"] .concept-apply-btn {
-  background: var(--surface-raised, #2d3748);
-  color: var(--accent, #a39eff);
-  border-color: var(--accent, #a39eff);
+  background: var(--accent, #6c63ff);
+  border-color: var(--accent, #6c63ff);
+  color: #ffffff;
 }
 
 [data-theme="dark"] .concept-apply-btn:hover {
-  background: rgba(163, 158, 255, 0.1);
-  color: var(--accent-hover, #c7c4ff);
-}
-
-[data-theme="dark"] .concept-hero {
-  border-bottom-color: var(--border, #2d3748);
+  background: var(--accent-hover, #5a52e8);
+  border-color: var(--accent-hover, #5a52e8);
 }
 
 [data-theme="dark"] .concept-filter-bar {
@@ -404,10 +349,6 @@
   .concept-grid {
     grid-template-columns: 1fr;
     padding: 16px 16px 32px;
-  }
-
-  .concept-hero {
-    padding: 20px 16px 16px;
   }
 
   .concept-filter-bar {

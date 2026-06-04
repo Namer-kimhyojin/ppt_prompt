@@ -310,6 +310,12 @@
   color: #bfe3c9 !important;
 }
 
+:root[data-theme="dark"] .promo-validation-detail {
+  background: #181818 !important;
+  border-color: #303030 !important;
+  color: #d6d6d6 !important;
+}
+
 :root[data-theme="dark"] .promo-lint-chip.is-info,
 :root[data-theme="dark"] .promo-lint-chip.is-neutral,
 :root[data-theme="dark"] .gen-lint-chip.is-info,
@@ -327,6 +333,27 @@
 
 :root[data-theme="dark"] .gen-modal-backdrop {
   background: var(--overlay-bg);
+}
+
+:root[data-theme="dark"] .promo-warning-modal-card {
+  background: #171717 !important;
+  border-color: #343434 !important;
+  color: #e5e5e5 !important;
+}
+
+:root[data-theme="dark"] .promo-warning-modal-head {
+  border-color: #303030 !important;
+}
+
+:root[data-theme="dark"] .promo-warning-modal-head strong,
+:root[data-theme="dark"] .promo-warning-modal-body {
+  color: #ededed !important;
+}
+
+:root[data-theme="dark"] .promo-warning-modal-close {
+  background: #202020 !important;
+  border-color: #343434 !important;
+  color: #ededed !important;
 }
 
 :root[data-theme="dark"] .promo-color-picker {

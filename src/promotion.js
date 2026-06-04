@@ -52,10 +52,10 @@
     cta: "",
     tone: "",
     toneEnabled: "true",
-    toneMode: "manual",
+    toneMode: "ai",
     visualStyle: "",
     visualStyleEnabled: "true",
-    visualStyleMode: "manual",
+    visualStyleMode: "ai",
     antiAiStyle: "general",
     qualityNotes: "",
     colorStrategy: "manual",
@@ -90,14 +90,14 @@
     qrUrl: "",
     bigIdea: "",
     bigIdeaEnabled: "true",
-    bigIdeaMode: "manual",
+    bigIdeaMode: "ai",
     visualMetaphor: "",
     visualMetaphorEnabled: "true",
-    visualMetaphorMode: "manual",
+    visualMetaphorMode: "ai",
     variationMode: "none",
     layoutComposition: "centered",
     layoutCompositionEnabled: "true",
-    layoutCompositionMode: "manual",
+    layoutCompositionMode: "ai",
     appliedConceptStyle: "",
   };
 
@@ -639,13 +639,13 @@
     "training-info": {
       linesKo: [
         "교육 혜택, 성장 가능성, 마감일을 한눈에 보이게 하고 신청 동기를 분명히 만든다",
-        "학습·성장 은유는 계단, 빛, 경로, 열린 문, 상승 그래프처럼 긍정적이고 전문적인 상징을 사용한다",
-        "커리큘럼 정보는 길게 설명하지 말고 핵심 혜택 2~3개로 압축해 카드화한다",
+        "학습·성장 은유는 계단, 상승 그래프, 경로, 열린 문, 연결된 네트워크 노드, 도약하는 로켓처럼 긍정적이고 전문적인 상징 중에서 다양하게 선택한다",
+        "커리큘럼 정보는 길게 설명하지 말고 핵심 혜택을 겹친 단계 카드, 연결 노드, 메인 은유 안의 텍스트 블록처럼 다양한 정보 묶음 방식으로 정리한다",
       ],
       linesEn: [
         "Make training benefits, growth potential, and deadline visible at a glance, with a clear reason to apply",
-        "Use positive professional learning metaphors such as stairs, light, paths, open doors, or rising graphs",
-        "Do not explain curriculum at length; compress it into 2 to 3 benefit cards",
+        "Use diverse positive professional learning metaphors such as stairs, rising graphs, paths, open doors, connected network nodes, or a rising rocket",
+        "Do not explain curriculum at length; organize the core benefits into diverse visual formats such as overlapping step-up cards, connected nodes, or integrated text blocks inside the main metaphor",
       ],
     },
     "biz-promo": {
@@ -757,6 +757,258 @@
       ]
     }
   };
+
+  const ATTENTION_FLOW_VARIANTS = [
+    {
+      id: "visual-first",
+      labelKo: "패턴 A: 비주얼 중심",
+      labelEn: "Pattern A: visual-first",
+      linesKo: [
+        "Order 1: 메인 비주얼 오브젝트 또는 상징 장면",
+        "Order 2: 헤드라인 또는 가장 중요한 후킹 문구",
+        "Order 3: 혜택, 일정, 장소, 핵심 조건 등 보조 정보",
+        "Order 4: 행동버튼, QR 자리, 링크 안내 같은 행동 유도 요소",
+      ],
+      linesEn: [
+        "Order 1: main visual object or symbolic scene",
+        "Order 2: headline or most important hook copy",
+        "Order 3: supporting details such as benefit, date, location, or key condition",
+        "Order 4: action button, QR placeholder, link guide, or other conversion element",
+      ],
+    },
+    {
+      id: "information-first",
+      labelKo: "패턴 B: 정보 중심",
+      labelEn: "Pattern B: information-first",
+      linesKo: [
+        "Order 1: 헤드라인 또는 핵심 제안",
+        "Order 2: 혜택, 일정, 장소, 핵심 조건 등 보조 정보",
+        "Order 3: 메인 비주얼 오브젝트 또는 상징 장면",
+        "Order 4: 행동버튼, QR 자리, 링크 안내 같은 행동 유도 요소",
+      ],
+      linesEn: [
+        "Order 1: headline or core offer",
+        "Order 2: supporting details such as benefit, date, location, or key condition",
+        "Order 3: main visual object or symbolic scene",
+        "Order 4: action button, QR placeholder, link guide, or other conversion element",
+      ],
+    },
+    {
+      id: "typography-first",
+      labelKo: "패턴 C: 타이포그래피 중심",
+      labelEn: "Pattern C: typography-first",
+      linesKo: [
+        "Order 1: 거대한 헤드라인 타이포그래피",
+        "Order 2: 짧은 서브카피 또는 한 줄 오퍼",
+        "Order 3: 축소된 메인 비주얼 또는 배경 은유",
+        "Order 4: 행동버튼 또는 신청/참여 안내",
+      ],
+      linesEn: [
+        "Order 1: oversized headline typography",
+        "Order 2: short sub-copy or single-line offer",
+        "Order 3: reduced main visual or background metaphor",
+        "Order 4: action button or application/join guide",
+      ],
+    },
+    {
+      id: "proof-first",
+      labelKo: "패턴 D: 증거/수치 중심",
+      labelEn: "Pattern D: proof-first",
+      linesKo: [
+        "Order 1: 핵심 수치, 혜택, 마감일, 장소처럼 행동 판단에 필요한 증거",
+        "Order 2: 헤드라인 또는 캠페인 메시지",
+        "Order 3: 보조 비주얼 은유 또는 브랜드 분위기",
+        "Order 4: 행동버튼, QR 자리, 링크 안내 같은 행동 유도 요소",
+      ],
+      linesEn: [
+        "Order 1: proof needed for action such as key metric, benefit, deadline, or location",
+        "Order 2: headline or campaign message",
+        "Order 3: supporting visual metaphor or brand mood",
+        "Order 4: action button, QR placeholder, link guide, or other conversion element",
+      ],
+    },
+  ];
+
+  const AI_LAYOUT_STRATEGY_OPTIONS = [
+    {
+      labelKo: "Asymmetrical axis composition (비대칭축 구성)",
+      labelEn: "Asymmetrical axis composition",
+      descKo: "정보를 한쪽 축에 몰고 반대편에 비주얼을 과감하게 배치한다.",
+      descEn: "Concentrate information on one axis and place the visual boldly on the opposite side.",
+    },
+    {
+      labelKo: "Split-screen composition (분할 화면 구성)",
+      labelEn: "Split-screen composition",
+      descKo: "화면을 좌우 또는 상하로 명확히 나누어 정보 영역과 비주얼 영역을 분리한다.",
+      descEn: "Divide the canvas vertically or horizontally to separate the information zone and the visual zone.",
+    },
+    {
+      labelKo: "Typography-led minimalist composition (타이포그래피 중심 미니멀 구성)",
+      labelEn: "Typography-led minimalist composition",
+      descKo: "비주얼을 줄이고 글자 크기, 굵기, 여백의 대비로 화면을 구성한다.",
+      descEn: "Reduce visual objects and build the image through type scale, weight, and whitespace contrast.",
+    },
+    {
+      labelKo: "Radial composition from center (중심 방사형 구성)",
+      labelEn: "Radial composition from center",
+      descKo: "중앙 핵심 비주얼에서 정보가 주변으로 퍼지는 구조를 만든다.",
+      descEn: "Place a core visual at the center and arrange information radiating around it.",
+    },
+    {
+      labelKo: "Diagonal progression composition (대각선 진행형 구성)",
+      labelEn: "Diagonal progression composition",
+      descKo: "계단, 성장, 이동, 전환 메시지를 대각선 진행 축으로 표현한다.",
+      descEn: "Express steps, growth, movement, or transition along a diagonal progression axis.",
+    },
+  ];
+
+  const AI_VISUAL_METAPHOR_EXAMPLES = [
+    "stairs",
+    "rising graphs",
+    "paths",
+    "open doors",
+    "connected network nodes",
+    "rising rocket",
+    "spotlight corridor",
+    "bridge",
+    "portal",
+    "expanding orbit",
+  ];
+
+  const INFORMATION_ITEM_LAYOUT_VARIANTS = [
+    {
+      labelKo: "타임라인 리본",
+      labelEn: "timeline ribbon",
+      descKo: "일정, 마감일, 단계 정보를 얇은 흐름선이나 리본 위에 배치한다.",
+      descEn: "Place schedule, deadline, or step details along a slim flow line or ribbon.",
+    },
+    {
+      labelKo: "세로 마일스톤 레일",
+      labelEn: "vertical milestone rail",
+      descKo: "자격, 일정, 혜택, 마감일을 세로 축의 체크포인트처럼 배열한다.",
+      descEn: "Arrange eligibility, schedule, benefits, and deadline as checkpoints on a vertical axis.",
+    },
+    {
+      labelKo: "방사형 정보 노드",
+      labelEn: "radial information nodes",
+      descKo: "중앙 비주얼 주변에 핵심 정보가 노드처럼 퍼지게 구성한다.",
+      descEn: "Let key details radiate as nodes around the central visual.",
+    },
+    {
+      labelKo: "대각선 스텝 시퀀스",
+      labelEn: "diagonal step sequence",
+      descKo: "성장, 신청, 참여 흐름을 대각선 단계 구조로 보여준다.",
+      descEn: "Show growth, application, or participation flow as a diagonal step structure.",
+    },
+    {
+      labelKo: "사이드 정보 레일",
+      labelEn: "side information rail",
+      descKo: "본문 정보는 좌우 한쪽의 정돈된 레일에 묶고 반대편에는 비주얼을 크게 둔다.",
+      descEn: "Group body details into a clean side rail while the visual occupies the opposite side.",
+    },
+    {
+      labelKo: "배지 스택",
+      labelEn: "badge stack",
+      descKo: "마감, 혜택, 자격 같은 핵심 조건을 작은 배지 묶음으로 변주한다.",
+      descEn: "Use compact badge groups for key conditions such as deadline, benefit, and eligibility.",
+    },
+    {
+      labelKo: "비주얼 내장 라벨",
+      labelEn: "integrated labels inside the visual metaphor",
+      descKo: "정보를 별도 카드가 아니라 메인 은유의 일부로 붙여 넣는다.",
+      descEn: "Attach information to the main metaphor instead of using separate cards.",
+    },
+    {
+      labelKo: "컴팩트 표 스트립",
+      labelEn: "compact table strip",
+      descKo: "정확성이 중요한 일정, 장소, 접수 정보를 얇은 표 형태의 스트립으로 정리한다.",
+      descEn: "Organize precise schedule, location, and application details in a slim table-like strip.",
+    },
+  ];
+
+  const QR_PLACEMENT_VARIANTS = [
+    {
+      labelKo: "코너 배지",
+      labelEn: "corner badge",
+      descKo: "QR 자리와 짧은 안내문구를 한쪽 모서리의 독립 배지로 둔다.",
+      descEn: "Place the QR slot and helper text as an independent badge in one corner.",
+    },
+    {
+      labelKo: "사이드 레일 슬롯",
+      labelEn: "side rail slot",
+      descKo: "QR을 정보 레일 안의 한 항목으로 통합한다.",
+      descEn: "Integrate the QR into the information rail as one item.",
+    },
+    {
+      labelKo: "CTA 인접 클러스터",
+      labelEn: "CTA-adjacent cluster",
+      descKo: "행동버튼 주변에 QR을 배치하되 전체 구도를 하단 박스로 고정하지 않는다.",
+      descEn: "Place the QR near the action button without locking the whole composition into a bottom box.",
+    },
+    {
+      labelKo: "플로팅 라벨 블록",
+      labelEn: "floating label block",
+      descKo: "QR을 메인 비주얼 옆에 떠 있는 작은 정보 블록으로 배치한다.",
+      descEn: "Place the QR as a small floating information block near the main visual.",
+    },
+    {
+      labelKo: "상단 유틸리티 영역",
+      labelEn: "top utility area",
+      descKo: "상단 우측 또는 좌측의 보조 정보 영역에 QR을 작게 둔다.",
+      descEn: "Place a compact QR in a top-left or top-right utility area.",
+    },
+    {
+      labelKo: "컴팩트 푸터 스트립",
+      labelEn: "compact footer strip",
+      descKo: "선택한 구도에 맞을 때만 얇은 푸터 스트립에 QR을 둔다.",
+      descEn: "Use a slim footer strip only when it fits the selected composition.",
+    },
+    {
+      labelKo: "정보 노드 통합",
+      labelEn: "integrated information node",
+      descKo: "QR을 일정, 신청방법, 마감 정보와 같은 노드 체계 안에 통합한다.",
+      descEn: "Integrate the QR into the same node system as schedule, application method, or deadline.",
+    },
+  ];
+
+  const MANDATORY_ELEMENT_PLACEMENT_VARIANTS = [
+    {
+      labelKo: "헤더 마이크로 라벨",
+      labelEn: "header micro-label",
+      descKo: "주최기관, 브랜드명, 필수 문구를 상단의 작은 라벨로 둔다.",
+      descEn: "Place organizer, brand name, or required phrase as a small top label.",
+    },
+    {
+      labelKo: "코너 태그",
+      labelEn: "corner tag",
+      descKo: "로고 자리나 필수 문구를 모서리 태그처럼 배치한다.",
+      descEn: "Place a logo slot or required phrase as a corner tag.",
+    },
+    {
+      labelKo: "사이드 레일",
+      labelEn: "side rail",
+      descKo: "필수 정보가 많을 때 한쪽 세로 레일에 정리한다.",
+      descEn: "Use a vertical side rail when there are several required elements.",
+    },
+    {
+      labelKo: "푸터 크레덴셜 스트립",
+      labelEn: "footer credential strip",
+      descKo: "저작권, 출처, 주최/주관 표기가 필요할 때만 얇은 하단 스트립을 사용한다.",
+      descEn: "Use a slim bottom strip only when copyright, source, or organizer credentials require it.",
+    },
+    {
+      labelKo: "CTA 인접 라벨",
+      labelEn: "CTA-adjacent label",
+      descKo: "신청 방법, 바로가기, 필수 행동 문구를 CTA 근처에 붙인다.",
+      descEn: "Attach application method, shortcut, or required action copy near the CTA.",
+    },
+    {
+      labelKo: "통합 캡션",
+      labelEn: "integrated caption",
+      descKo: "필수 문구를 메인 비주얼의 설명 캡션처럼 자연스럽게 통합한다.",
+      descEn: "Integrate required copy as a natural caption for the main visual.",
+    },
+  ];
 
   const AI_TOGGLE_FIELDS = new Set(["posterOffer", "snsHook", "snsHashtags", "cta"]);
   const FIELD_ENABLE_TOGGLE_FIELDS = new Set(["posterKeyVisual", "posterInfoLayout", "snsVisualFocus", "snsPlacementNotes"]);
@@ -3220,6 +3472,39 @@
     const node = $("promotionValidation");
     if (!node) return;
 
+    const fieldHintLabels = {
+      headline: "헤드라인",
+      bodyCopy: "본문 포인트",
+      posterKeyVisual: "메인 비주얼 포인트",
+      posterInfoLayout: "정보 배치 방식",
+      qrUrl: "QR코드 연결 주소",
+      goal: "홍보 목적",
+      directSize: "직접 입력 크기",
+      customRatio: "직접 입력 비율",
+      cardnewsCardCount: "카드뉴스 카드 수",
+      cardnewsFlow: "카드뉴스 흐름",
+      snsHook: "SNS 첫 줄 훅",
+      snsPlacementNotes: "SNS 배치 메모",
+    };
+
+    const renderFieldIssueCards = (fieldMessages, type) => {
+      const entries = Object.entries(fieldMessages || {});
+      if (!entries.length) return "";
+      return entries
+        .map(([fieldKey, messages]) => {
+          const label = fieldHintLabels[fieldKey] || FIELD_LABELS[fieldKey] || fieldKey;
+          return `
+            <div class="promo-validation-detail ${type === "error" ? "is-error" : "is-warning"}">
+              <strong>${escapeHtml(localizeValue(label))}</strong>
+              <ul>
+                ${messages.map((item) => `<li>${escapeHtml(localizeValue(item))}</li>`).join("")}
+              </ul>
+            </div>
+          `;
+        })
+        .join("");
+    };
+
     if (!validation.errors.length && !validation.warnings.length) {
       node.innerHTML = `
         <div class="promo-validation-item is-ok">
@@ -3236,19 +3521,13 @@
       blocks.push(`
         <div class="promo-validation-item is-error">
           <strong>${localizeSentence("보완이 필요한 항목", "Required Fixes")}</strong>
-          <span>${validation.errors.map((item) => escapeHtml(localizeValue(item))).join("<br />")}</span>
+          <span>${localizeSentence("아래 항목을 먼저 수정하면 프롬프트 복사와 이미지 품질이 함께 안정됩니다.", "Fix the items below first to stabilize both prompt copying and image quality.")}</span>
+          <div class="promo-validation-detail-list">
+            ${renderFieldIssueCards(validation.fieldErrors, "error")}
+          </div>
         </div>
       `);
     }
-    if (validation.warnings.length) {
-      blocks.push(`
-        <div class="promo-validation-item is-warning">
-          <strong>${localizeSentence("품질 개선 힌트", "Quality Improvement Hints")}</strong>
-          <span>${validation.warnings.map((item) => escapeHtml(localizeValue(item))).join("<br />")}</span>
-        </div>
-      `);
-    }
-
     node.innerHTML = blocks.join("");
     updateFieldWarningsUI(validation);
   }
@@ -3305,11 +3584,13 @@
 
       // 이미 추가되어 있는 지 확인하고 없으면 신규 삽입
       if (!labelNode.querySelector(`.promo-warning-trigger[data-warning-field="${fieldKey}"]`)) {
-        const trigger = document.createElement("span");
+        const trigger = document.createElement("button");
+        trigger.type = "button";
         trigger.className = "promo-warning-trigger";
         trigger.dataset.warningField = fieldKey;
-        trigger.innerHTML = "⚠️";
+        trigger.innerHTML = "⚠";
         trigger.title = "품질 개선 가이드 확인";
+        trigger.setAttribute("aria-label", "품질 개선 가이드 확인");
 
         // 클릭 시 모달 노출 및 전파 방지
         trigger.addEventListener("click", (e) => {
@@ -3323,10 +3604,40 @@
     }
   }
 
+  function ensureWarningModal() {
+    let modal = $("promotionWarningModal");
+    if (!modal) {
+      const wrapper = document.createElement("div");
+      wrapper.id = "promotionWarningModal";
+      wrapper.className = "promo-warning-modal";
+      wrapper.setAttribute("hidden", "");
+      wrapper.innerHTML = `
+        <div class="promo-warning-modal-backdrop" id="promotionWarningModalBackdrop"></div>
+        <section class="promo-warning-modal-card" role="dialog" aria-modal="true" aria-labelledby="promotionWarningModalTitle">
+          <div class="promo-warning-modal-head">
+            <strong id="promotionWarningModalTitle">품질 개선 가이드</strong>
+            <button type="button" class="promo-warning-modal-close" id="promotionWarningModalCloseBtn" aria-label="닫기">×</button>
+          </div>
+          <div class="promo-warning-modal-body" id="promotionWarningModalBody"></div>
+          <div class="promo-warning-modal-actions">
+            <button type="button" class="gen-btn promo-copy-btn" id="promotionWarningModalConfirmBtn">확인</button>
+          </div>
+        </section>
+      `;
+      document.body.appendChild(wrapper);
+      modal = wrapper;
+      bindWarningModalEvents();
+    }
+
+    return {
+      modal,
+      body: $("promotionWarningModalBody"),
+      title: $("promotionWarningModalTitle"),
+    };
+  }
+
   function showWarningModal(fieldKey, messages) {
-    const modal = $("promotionWarningModal");
-    const body = $("promotionWarningModalBody");
-    const title = $("promotionWarningModalTitle");
+    const { modal, body, title } = ensureWarningModal();
     if (!modal || !body || !title) return;
 
     const labels = {
@@ -3345,7 +3656,7 @@
     };
     title.textContent = labels[fieldKey] || "품질 개선 가이드";
 
-    let html = `<div style="margin-bottom: 12px; font-weight: 700; color: #d35400;">⚠️ 발견된 보완 권장사항:</div>`;
+    let html = `<div style="margin-bottom: 12px; font-weight: 700; color: #d35400;">발견된 보완 권장사항</div>`;
     html += `<ul style="margin: 0 0 16px 20px; padding: 0; list-style-type: disc;">`;
     messages.forEach(msg => {
       html += `<li style="margin-bottom: 8px; color: var(--ink);">${escapeHtml(msg)}</li>`;
@@ -3353,13 +3664,29 @@
     html += `</ul>`;
 
     const tips = {
-      headline: `<strong>💡 레이아웃 품질 향상 팁:</strong>헤드라인 글자수가 20자를 넘어가면 이미지 생성 AI가 가독성 확보를 위해 글자를 아주 크게 깔고 배경을 밋밋하게 미는 단조로운 템플릿 레이아웃으로 회귀합니다.<br/>글자수를 최대한 <strong>20자 이하</strong>로 줄이면, AI가 남는 공간에 훨씬 깊이감 있고 세련된 비주얼을 배치할 여유를 가지게 됩니다.`,
+      headline: `<strong>레이아웃 품질 향상 팁</strong>헤드라인 글자수가 20자를 넘어가면 이미지 생성 AI가 가독성 확보를 위해 글자를 크게 깔고 배경을 단순화하는 경향이 있습니다.<br/>글자수를 최대한 <strong>20자 이하</strong>로 줄이고 핵심 명사와 행동 유도어만 남기면, 남는 공간에 더 깊이감 있는 비주얼을 배치하기 쉬워집니다.`,
 
-      bodyCopy: `<strong>💡 레이아웃 품질 향상 팁:</strong>본문 텍스트 줄수가 많고 길어지면(80자 이상) 화면 전체가 글자로 꽉 차서 밋밋한 카드뉴스 레이아웃에 갇힙니다.<br/>정보들을 최대한 <strong>핵심 혜택 위주로 요약</strong>하여 입력하면 여백이 넓어지고, AI가 다채로운 이미지 레이어와 텍스트를 유기적으로 합성하여 완성도 높은 광고 컷을 생성합니다.`,
+      bodyCopy: `<strong>본문 정보 구성 팁</strong>본문 텍스트가 80자를 넘거나 항목이 길어지면 화면이 카드뉴스형 박스로 고정되기 쉽습니다.<br/>일정, 자격, 혜택, 마감일처럼 의미 단위로 짧게 나누면 타임라인, 노드, 배지, 사이드 레일 같은 다양한 정보 배치가 가능해집니다.`,
 
-      posterKeyVisual: `<strong>💡 비주얼 은유 팁:</strong>단순한 계단이나 화살표 같은 상투적이고 투박한 오브젝트 대신, '구체적인 공간과 빛의 무드(예: Cinematic dramatic light casting through a modern digital terminal)'를 명시하면 AI가 훨씬 사실적이고 상업 화보급으로 고급스럽게 그려냅니다.`,
+      posterKeyVisual: `<strong>비주얼 은유 팁</strong>메인 비주얼 포인트가 비어 있으면 AI가 빈 배경이나 평범한 카드형 안내물로 수렴하기 쉽습니다.<br/>단순한 계단이나 화살표보다 구체적인 공간, 빛의 방향, 깊이감, 상징 장면을 함께 적으면 상업 이미지 느낌이 안정됩니다.`,
 
-      posterInfoLayout: `<strong>💡 배치 합성 팁:</strong>정보가 카드 박스 안에 갇혀서 단편화되지 않도록 하려면 'seamless background blending' 혹은 'non-isolated multi-layered split layout'처럼 이미지가 배경 텍스트와 하나의 레이어로 자연스럽게 오버랩되도록 서술해 보세요.`
+      posterInfoLayout: `<strong>배치 합성 팁</strong>정보 배치 방식을 비워두면 혜택 카드 3개와 하단 정보박스 같은 반복 구도가 나오기 쉽습니다.<br/>타임라인, 세로 레일, 방사형 노드, 대각선 스텝, 비주얼 내장 라벨처럼 원하는 정보 구조를 짧게 지정해 보세요.`,
+
+      qrUrl: `<strong>QR 배치 팁</strong>QR 주소가 있으면 AI가 QR 자리, 안내 문구, 주변 여백을 더 명확하게 설계할 수 있습니다.<br/>실제 스캔 가능한 QR은 이미지 생성 후 편집 단계에서 원본 QR로 교체하는 전제를 유지하는 것이 안전합니다.`,
+
+      goal: `<strong>홍보 목적 정렬 팁</strong>홍보 목적이 명확해야 색상, CTA, 정보 우선순위, 비주얼 은유가 같은 방향으로 정렬됩니다.<br/>예: 신청 유도, 정책 성과 보고, 행사 참여, 브랜드 인지도 강화처럼 최종 행동을 중심으로 적어보세요.`,
+
+      directSize: `<strong>크기 설정 팁</strong>정확한 크기를 입력하면 텍스트 안전영역, QR 자리, CTA 크기 기준이 더 안정적으로 잡힙니다.<br/>실제 게시 채널이나 출력 규격이 정해져 있다면 픽셀 또는 mm 기준으로 입력하는 편이 좋습니다.`,
+
+      customRatio: `<strong>비율 설정 팁</strong>비율이 명확해야 AI가 모바일형, 포스터형, 배너형 중 어느 구도에 맞출지 판단하기 쉽습니다.<br/>모바일 홍보 이미지는 세로형, 웹 배너는 가로형, 카드뉴스는 정방형에 가까운 비율이 안정적입니다.`,
+
+      cardnewsCardCount: `<strong>카드 수 구성 팁</strong>카드 수가 명확하면 장별 메시지 밀도를 조절하기 쉬워지고, 한 장에 정보가 과밀해지는 것을 줄일 수 있습니다.<br/>도입, 문제, 해결, 혜택, 행동 유도처럼 역할별로 나누는 구성이 안정적입니다.`,
+
+      cardnewsFlow: `<strong>카드 흐름 팁</strong>카드 흐름을 적으면 각 장이 같은 레이아웃을 반복하지 않고 도입, 문제, 해결, 행동 유도로 분화됩니다.<br/>각 카드의 역할을 짧게 지정해두면 생성 결과의 일관성이 좋아집니다.`,
+
+      snsHook: `<strong>SNS 훅 작성 팁</strong>첫 줄 훅이 있으면 썸네일 환경에서 가장 먼저 읽힐 문구와 비주얼 중심점을 더 쉽게 잡을 수 있습니다.<br/>짧고 즉각적인 이득, 질문, 숫자, 마감감을 활용해 보세요.`,
+
+      snsPlacementNotes: `<strong>SNS 안전영역 팁</strong>플랫폼 안전영역과 CTA 위치를 적으면 잘림 위험이 줄고 모바일 미리보기에서 핵심 정보가 남습니다.<br/>프로필 영역, 버튼 영역, 하단 UI와 겹치지 않도록 주요 문구 위치를 지정해 주세요.`
     };
 
     if (tips[fieldKey]) {
@@ -4307,8 +4634,16 @@
     const qrUrl = String(state.qrUrl || "").trim();
     return prunePromptLines([
       localizeSentence(
-        "QR코드 사용: 이미지 하단 또는 엑션버튼 주변에 명확한 QR코드 공간을 배정하고, 주변 여백을 충분히 확보한다.",
-        "QR code requested: reserve a clear QR-code area near the bottom or near the action button, with enough quiet space around it."
+        "QR 배치: 생성할 때마다 아래 배치 방식 중 정확히 하나를 선택하고, 선택한 전체 구도 전략에 맞춰 QR 자리와 짧은 안내문구를 배치한다.",
+        "QR placement: for each generation, choose exactly one of the placement styles below and position the QR slot with a short helper label according to the selected overall composition strategy."
+      ),
+      ...QR_PLACEMENT_VARIANTS.map((option) => localizeSentence(
+        `${option.labelKo} — ${option.descKo}`,
+        `${option.labelEn} — ${option.descEn}`
+      )),
+      localizeSentence(
+        "QR을 항상 하단에 두지 말고, 하단 푸터는 선택한 구도에 실제로 맞을 때만 사용한다. 어떤 위치를 선택하더라도 스캔 가능성을 위해 주변 여백은 충분히 확보한다.",
+        "Do not always place the QR at the bottom; use a footer only when it genuinely fits the selected composition. In any placement, keep enough quiet space for scan clarity."
       ),
       localizeSentence(
         "실제 스캔 가능한 QR코드를 이미지 생성 모델이 정확히 만들지 못할 수 있으므로, 최종 편집에서 실제 QR 이미지를 삽입할 수 있는 빈 자리 또는 플레이스홀더로 구성한다.",
@@ -4321,8 +4656,8 @@
           )
         : "",
       localizeSentence(
-        "QR 안내문구: 'QR코드로 바로가기' 또는 'QR로 신청하기'처럼 짧고 읽기 쉬운 안내문구를 QR 영역 옆에 배치한다.",
-        "QR helper text: place a short readable label such as 'Scan the QR code' or 'Apply via QR' next to the QR area."
+        "QR 안내문구: 'QR코드로 바로가기' 또는 'QR로 신청하기'처럼 짧고 읽기 쉬운 안내문구를 QR 영역과 같은 정보 묶음 안에 배치한다.",
+        "QR helper text: place a short readable label such as 'Scan the QR code' or 'Apply via QR' within the same information group as the QR area."
       ),
     ]);
   }
@@ -4421,6 +4756,50 @@
       textEntries.map((entry) => `${localizeValue(entry.label)}: ${localizeValue(entry.value)}`)
     );
 
+    const informationItemLayoutLines = prunePromptLines([
+      localizeSentence(
+        "정보항목 배치: 일정, 자격, 혜택, 마감일, 장소, 신청방법, 연락처, QR 관련 세부사항은 고정 카드가 아니라 자유롭게 조합 가능한 의미 단위로 취급한다.",
+        "Information item layout: treat schedule, eligibility, benefits, deadline, location, application method, contact, and QR-related details as flexible semantic units, not fixed cards."
+      ),
+      localizeSentence(
+        "생성할 때마다 아래 표현 방식 중 정확히 하나 또는 서로 보완되는 두 가지를 선택하고, 선택한 시선 흐름과 레이아웃 구도에 맞춰 정보 묶음 형태를 바꾼다.",
+        "For each generation, choose exactly one or two complementary presentation formats below and vary the information grouping according to the selected attention flow and layout composition."
+      ),
+      ...INFORMATION_ITEM_LAYOUT_VARIANTS.map((option) => localizeSentence(
+        `${option.labelKo} — ${option.descKo}`,
+        `${option.labelEn} — ${option.descEn}`
+      )),
+      localizeSentence(
+        "일정·자격·혜택·마감일이 함께 있을 때 자동으로 '혜택 카드 3개 + 하단 정보박스 1개'로 나누지 않는다. 네 항목을 동등한 노드, 타임라인, 세로 레일, 대각선 단계, 배지 묶음, 비주얼 내장 라벨 등으로 변주한다.",
+        "When schedule, eligibility, benefits, and deadline appear together, do not automatically split them into 'three benefit cards plus one bottom information box.' Vary them as equal nodes, a timeline, a vertical rail, diagonal steps, badge groups, or labels integrated into the visual."
+      ),
+      localizeSentence(
+        "사용자가 입력한 문구, 날짜, 숫자는 원문 그대로 유지하되, 시각적 묶음과 위치는 선택한 구도 전략에 따라 자유롭게 재구성한다.",
+        "Keep user-provided wording, dates, and numbers exactly as written, but freely reorganize the visual grouping and placement according to the selected composition strategy."
+      ),
+    ]);
+
+    const mandatoryElementPlacementLines = String(state.mandatoryElements || "").trim()
+      ? prunePromptLines([
+          localizeSentence(
+            "반드시 포함할 요소 배치: 브랜드명, 로고 자리, 주최기관, 필수 문구, 출처, 신청방법 같은 요구 요소를 모두 같은 하단 박스에 몰아넣지 않는다.",
+            "Mandatory element placement: do not cluster required elements such as brand name, logo slot, organizer, required phrase, source, or application method into the same bottom box."
+          ),
+          localizeSentence(
+            "생성할 때마다 아래 배치 방식 중 선택한 레이아웃 구도에 맞는 방식을 하나 이상 선택한다.",
+            "For each generation, choose one or more placement styles below that fit the selected layout composition."
+          ),
+          ...MANDATORY_ELEMENT_PLACEMENT_VARIANTS.map((option) => localizeSentence(
+            `${option.labelKo} — ${option.descKo}`,
+            `${option.labelEn} — ${option.descEn}`
+          )),
+          localizeSentence(
+            "로고나 실제 기관 마크는 직접 생성하지 말고, 필요한 경우 깨끗한 빈 자리 또는 중립 플레이스홀더로 남긴다.",
+            "Do not generate real logos or official marks; leave a clean blank slot or neutral placeholder when needed."
+          ),
+        ])
+      : [];
+
     const AI_AUTO_FIELD_DEFS = [
       {
         field: "cta",
@@ -4468,8 +4847,8 @@
         field: "visualMetaphor",
         labelKo: "비주얼 은유",
         labelEn: "visual metaphor",
-        directiveKo: "핵심 개념을 암시하거나 시각적으로 상징할 수 있는 메인 그래픽 메타포 또는 상징적 사물/장면을 생성하라",
-        directiveEn: "Generate a creative visual metaphor or symbolic objects representing the core concept"
+        directiveKo: "핵심 개념을 암시하는 메타포를 고정형 카드/화살표로 수렴시키지 말고, 계단, 상승 그래프, 경로, 열린 문, 연결 노드, 로켓, 다리, 포털처럼 다양한 전문적 은유 중 하나로 생성하라",
+        directiveEn: "Generate one diverse professional metaphor for the core concept, such as stairs, rising graphs, paths, open doors, connected nodes, rockets, bridges, or portals; do not converge on generic cards or arrows"
       },
       {
         field: "visualStyle",
@@ -4482,14 +4861,22 @@
         field: "layoutComposition",
         labelKo: "레이아웃 구도 배치",
         labelEn: "layout composition",
-        directiveKo: "헤드라인, 본문포인트, CTA, 비주얼 오브젝트를 최적으로 배치할 구도 전략(예: 비대칭, 중앙 대칭, 상단 타이포 중심 등)을 스스로 선택하여 조화롭게 배치하라",
-        directiveEn: "Determine and generate a layout composition strategy (e.g., asymmetrical, centered, or typography-led) that optimally balances the elements"
+        directiveKo: "아래 구성/배치 지시의 Layout composition strategy 선택지 중 하나를 선택하고, 선택한 전략을 우선 적용하라",
+        directiveEn: "Select one option from the Layout composition strategy choices in the composition guidance below and prioritize that chosen strategy"
       }
     ];
 
     const aiAutoLines = prunePromptLines(
       AI_AUTO_FIELD_DEFS
-        .filter((def) => isEnabled(state[`${def.field}Enabled`]) && state[`${def.field}Mode`] === "ai")
+        .filter((def) => {
+          if (def.field === "visualMetaphor" || def.field === "layoutComposition") {
+            return false;
+          }
+          if (def.field === "visualStyle" && state.appliedConceptStyle) {
+            return false;
+          }
+          return isEnabled(state[`${def.field}Enabled`]) && state[`${def.field}Mode`] === "ai";
+        })
         .map((def) => localizeSentence(
           `[AI 자동 생성] ${def.labelKo}: ${def.directiveKo}`,
           `[AI auto-generate] ${def.labelEn}: ${def.directiveEn}`
@@ -4511,24 +4898,23 @@
 
     const attentionFlowLines = prunePromptLines([
       localizeSentence(
-        "시선 흐름 1순위: 헤드라인 또는 가장 중요한 후킹 문구",
-        "Attention order 1: headline or most important hook copy"
+        "생성할 때마다 아래 시선 흐름 패턴 중 정확히 하나를 무작위로 선택하고, 선택한 패턴을 전체 레이아웃의 우선순위로 사용한다.",
+        "For each generation, randomly choose exactly one of the attention-flow patterns below and use it as the priority order for the entire layout."
+      ),
+      ...ATTENTION_FLOW_VARIANTS.map((variant) => {
+        const lines = state.outputLanguage === "en" ? variant.linesEn
+          : state.outputLanguage === "bilingual"
+            ? variant.linesKo.map((ko, i) => `${ko} / ${variant.linesEn[i] || ko}`)
+            : variant.linesKo;
+        return `${localizeSentence(variant.labelKo, variant.labelEn)} — ${lines.join(" → ")}`;
+      }),
+      localizeSentence(
+        "동일한 입력을 다시 생성할 때 이전과 같은 시선 흐름을 반복하지 말고, 정보 중심/비주얼 중심/타이포 중심/증거 중심 사이에서 변주한다.",
+        "When regenerating the same input, do not repeat the same eye-flow pattern; vary among information-first, visual-first, typography-first, and proof-first structures."
       ),
       localizeSentence(
-        "시선 흐름 2순위: 메인 비주얼 오브젝트, 인물, 상징 장면, 또는 핵심 데이터",
-        "Attention order 2: main visual object, person, symbolic scene, or key data"
-      ),
-      localizeSentence(
-        "시선 흐름 3순위: 혜택, 일정, 장소, 핵심 조건 등 보조 정보",
-        "Attention order 3: supporting details such as benefit, date, location, or key condition"
-      ),
-      localizeSentence(
-        "시선 흐름 4순위: 엑션버튼, QR 자리, 링크 안내 같은 행동 유도 요소",
-        "Attention order 4: action button, QR placeholder, link guide, or other conversion element"
-      ),
-      localizeSentence(
-        "텍스트 블록은 가능하면 3개 이하로 묶고, 모든 작은 텍스트는 정보 카드 또는 하단 정보 영역에 정돈한다.",
-        "Keep text blocks to 3 or fewer when possible, and organize small text into information cards or a bottom information zone."
+        "텍스트 블록은 가능하면 3개 이하로 묶되, 반드시 하단 카드 배열로 고정하지 말고 오버랩 단계, 원형 노드, 비주얼 내부 통합 텍스트 블록 등으로 변주한다.",
+        "Keep text blocks to 3 or fewer when possible, but do not lock them into bottom card rows; vary them as overlapping steps, circular nodes, or integrated text blocks inside the main visual."
       ),
     ]);
 
@@ -4538,9 +4924,31 @@
     ]);
 
     const layoutCompLines = (() => {
-      if (!isEnabled(state.layoutCompositionEnabled) || state.layoutCompositionMode !== "manual") {
+      if (!isEnabled(state.layoutCompositionEnabled)) {
         return [];
       }
+
+      if (state.layoutCompositionMode === "ai") {
+        return prunePromptLines([
+          localizeSentence(
+            "Layout composition strategy: 생성할 때마다 아래 전략 중 정확히 하나를 무작위로 선택하고, 선택한 전략명을 내부 기준으로 삼아 전체 구도를 설계한다.",
+            "Layout composition strategy: for each generation, randomly choose exactly one of the strategies below and use the chosen strategy as the internal basis for the whole composition."
+          ),
+          ...AI_LAYOUT_STRATEGY_OPTIONS.map((option) => localizeSentence(
+            `${option.labelKo} — ${option.descKo}`,
+            `${option.labelEn} — ${option.descEn}`
+          )),
+          localizeSentence(
+            "중앙 정렬 + 하단 카드 2~3개 조합을 기본값으로 반복하지 말고, 선택한 구도 전략이 화면 분할, 시선 흐름, 정보 묶음 형태에 실제로 드러나게 한다.",
+            "Do not repeat the default centered layout with 2 to 3 bottom cards; make the chosen strategy visibly affect screen division, eye flow, and the way information is grouped."
+          ),
+        ]);
+      }
+
+      if (state.layoutCompositionMode !== "manual") {
+        return [];
+      }
+
       const compKey = state.layoutComposition || "centered";
       const profile = LAYOUT_COMPOSITION_PROFILES[compKey] || LAYOUT_COMPOSITION_PROFILES.centered;
       const label = localizeSentence(profile.labelKo, profile.labelEn);
@@ -4555,32 +4963,72 @@
     })();
 
     const conceptStyleLine = state.appliedConceptStyle
-      ? [`${localizeSentence("컨셉 제안 비주얼 스타일", "Visual style concept suggestion")}: ${state.appliedConceptStyle}`]
+      ? [
+          `${localizeSentence("컨셉 제안 비주얼 스타일", "Visual style concept suggestion")}: ${state.appliedConceptStyle}`,
+          localizeSentence(
+            "위 컨셉 제안은 시각 스타일 참고용이며, 홍보 목적·타깃·콘텐츠 유형과 충돌하는 고정 메타포는 그대로 강제하지 않는다. 주제와 맞지 않는 오브젝트나 산업 은유가 포함되어 있으면 색감·질감·무드만 참고하고, 실제 메인 은유는 현재 홍보 메시지에 맞는 학습·성장·기회·전환 계열로 재해석한다.",
+            "The visual style concept above is a style reference, not a fixed metaphor. Do not force any object or industry metaphor that conflicts with the promotion goal, target audience, or content type. If it contains an unrelated object or sector metaphor, keep only its color, texture, and mood cues, and reinterpret the main metaphor around learning, growth, opportunity, or transition."
+          ),
+        ]
       : [];
+
+    const visualMetaphorDiversityLines = (
+      isEnabled(state.visualMetaphorEnabled) &&
+      state.visualMetaphorMode === "ai"
+    ) ? [
+        localizeSentence(
+          `비주얼 은유: AI 위임 — 고정된 단일 은유를 반복하지 말고, ${AI_VISUAL_METAPHOR_EXAMPLES.join(", ")} 같은 긍정적이고 전문적인 메타포 중 하나를 슬라이드 메시지에 맞게 선택한다.`,
+          `Visual metaphor: AI-directed — do not repeat one fixed metaphor; choose a positive professional metaphor suited to the message, such as ${AI_VISUAL_METAPHOR_EXAMPLES.join(", ")}.`
+        ),
+        localizeSentence(
+          "선택한 은유의 형태가 실제 구도에 영향을 주게 한다. 예를 들어 계단은 대각선 진행형, 열린 문은 깊이감 있는 원근형, 네트워크 노드는 방사형/연결형, 상승 그래프는 축 기반 상승 구도를 유도한다.",
+          "Let the chosen metaphor influence the actual composition. For example, stairs imply diagonal progression, open doors imply perspective depth, network nodes imply radial/connected structure, and rising graphs imply an upward axis."
+        ),
+      ]
+    : [];
 
     const designLines = prunePromptLines([
       ...layoutCompLines,
       ...conceptStyleLine,
       ...instructionItems
         .filter((entry) => {
-          if (entry.key === "visualStyle" && (!isEnabled(state.visualStyleEnabled) || state.visualStyleMode !== "manual")) {
-            return false;
+          const visualFields = ["tone", "bigIdea", "visualMetaphor", "visualStyle", "layoutComposition"];
+          if (visualFields.includes(entry.key)) {
+            const enabled = isEnabled(state[`${entry.key}Enabled`]);
+            const isManual = state[`${entry.key}Mode`] === "manual";
+            if (!enabled || !isManual) {
+              return false;
+            }
           }
           return !compositionExcludedKeys.has(entry.key);
         })
         .map((entry) => `${localizeValue(entry.label)}: ${localizeValue(entry.value)}`),
+      ...mandatoryElementPlacementLines,
       ...qrCodePromptLines(),
     ]);
 
     const creativityLines = prunePromptLines([
       (isEnabled(state.bigIdeaEnabled) && state.bigIdeaMode === "manual" && state.bigIdea) ? `${localizeSentence("핵심 개념", "Core concept")}: ${localizeValue(state.bigIdea)}` : "",
       (isEnabled(state.visualMetaphorEnabled) && state.visualMetaphorMode === "manual" && state.visualMetaphor) ? `${localizeSentence("비주얼 은유", "Visual metaphor")}: ${localizeValue(state.visualMetaphor)}` : "",
+      ...visualMetaphorDiversityLines,
       `${localizeSentence("레이아웃 실험 범위", "Layout experimentation")}: ${localizeSentence(creativityProfile.labelKo, creativityProfile.labelEn)}`,
       ...getLocalizedProfileLines(creativityProfile),
       ...getLocalizedProfileLines(diversityProfile),
       localizeSentence(
+        "본문 포인트는 반드시 동일한 직사각형 카드 2~3개로 만들지 말고, 겹친 단계 카드, 연결 원형 노드, 타임라인 조각, 비주얼 은유 내부 텍스트 블록처럼 서로 다른 정보 묶음 방식을 허용한다.",
+        "Do not force body points into the same 2 to 3 rectangular cards; allow diverse information groupings such as overlapping step cards, connected circular nodes, timeline fragments, or text blocks integrated into the visual metaphor."
+      ),
+      localizeSentence(
+        "'혜택 카드 3개 + 하단 정보박스' 공식을 반복 금지 패턴으로 취급한다. 꼭 필요한 경우가 아니라면 정보항목의 수와 성격에 맞춰 카드 개수, 방향, 밀도, 위치를 매번 다르게 설계한다.",
+        "Treat the 'three benefit cards plus bottom information box' formula as an anti-pattern. Unless truly required, vary the number, direction, density, and position of information units according to their count and meaning."
+      ),
+      localizeSentence(
         "같은 입력값이라도 매번 동일한 템플릿 구도로 반복하지 말고, 선택한 창의성 강도 안에서 색면, 크롭, 오브젝트 스케일, 정보 카드 형태, 배경 은유 중 일부를 변주한다.",
         "Even with the same inputs, do not repeat the same template composition every time; within the selected creativity level, vary color fields, cropping, object scale, information-card shape, or background metaphor."
+      ),
+      localizeSentence(
+        "사용 모델이 chaos, stylize, variation 같은 창의성 파라미터를 지원한다면 중간 수준(예: chaos 30~50)을 사용해 메시지는 유지하되 구도와 배치의 예측 가능성을 낮춘다.",
+        "If the image model supports creative parameters such as chaos, stylize, or variation, use a medium level (for example chaos 30-50) to preserve the message while reducing predictable composition."
       ),
     ]);
 
@@ -4609,6 +5057,10 @@
             `${localizeSentence("배경 처리 방식", "Background treatment")}: ${localizeValue(backgroundModeLabel(state.backgroundMode))}`,
             state.backgroundColor ? `${localizeSentence("배경 색상", "Background color")}: ${localizeValue(state.backgroundColor)}` : "",
             state.backgroundDetails ? `${localizeSentence("배경 패턴/이미지 지시", "Background pattern/image guidance")}: ${localizeValue(state.backgroundDetails)}` : "",
+            localizeSentence(
+              "색상과 배경값이 고정되어 있어도 레이아웃을 고정하지 않는다. 동일한 팔레트 안에서 화면 분할, 여백 비율, 오브젝트 크롭, 정보 묶음 방식은 선택된 시선 흐름과 구도 전략에 맞춰 변주한다.",
+              "Even when color and background values are fixed, do not lock the layout. Within the same palette, vary screen division, whitespace ratio, object cropping, and information grouping according to the selected attention-flow and composition strategy."
+            ),
           ]
     );
 
@@ -4662,6 +5114,7 @@
       { priority: 30, title: localizeHeading("하드 제약", "Hard constraints"), lines: hardConstraintLines },
       { priority: 35, title: localizeHeading("AI 자동 생성 요청", "AI auto-generate requests"), lines: aiAutoLines },
       { priority: 40, title: localizeHeading("이미지에 직접 포함할 텍스트 (한국어 원문 그대로 렌더링)", "Text to render exactly as-is — Korean source text, do not translate"), lines: directTextLines },
+      { priority: 42, title: localizeHeading("정보항목 표현 방식", "Information item presentation"), lines: informationItemLayoutLines },
       { priority: 45, title: localizeHeading("시선 흐름", "Attention flow"), lines: attentionFlowLines },
       { priority: 50, title: localizeHeading("구성/배치 지시", "Composition and layout guidance"), lines: resolveConflictLines(designLines, lint) },
       { priority: 60, title: localizeHeading("창의 방향", "Creative direction"), lines: creativityLines },
@@ -4734,7 +5187,7 @@
       `## ${localizeHeading("우선순위", "Priority order")}`,
       localizeSentence("- 이미지 내 텍스트 언어 규칙 (한국어 단독 표기) 및 금지 규칙 준수", "- On-image text language rule (Korean only) and all hard constraints"),
       localizeSentence("- AI 자동 생성 항목 (CTA·오퍼·훅·태그) 적절히 생성 후 배치", "- Generate AI auto-requested items (CTA, offer, hook, hashtags) and place them appropriately"),
-      localizeSentence("- 텍스트 위계와 가독성 (헤드라인 → CTA 순)", "- Text hierarchy and readability (headline → CTA)"),
+      localizeSentence("- 선택된 시선 흐름 패턴에 따른 텍스트 위계와 가독성 유지", "- Maintain text hierarchy and readability according to the selected attention-flow pattern"),
       localizeSentence("- 상업 품질 기준 및 창의 방향 반영", "- Commercial baseline and creative direction"),
       localizeSentence("- 구성·배치·비주얼 구성 방향 반영", "- Composition, layout, and visual composition direction"),
       localizeSentence("- 색상·배경 시스템 일관성 및 품질 보정", "- Color system, background, and quality refinements"),

@@ -1331,7 +1331,157 @@
       palette: ['#0D0D0F', '#1F1F2E', '#3D3D5C', '#FFD700', '#FF3300'],
       prompt: 'A micro-photography of a high-power industrial laser welding head fusing two sheets of dark steel. Intense focal point of blinding blue-white light, radiating golden sparks and molten metal droplets, color palette: #0D0D0F #1F1F2E #3D3D5C #FFD700 #FF3300.',
       tags: ['LaserWelding', 'MetalFusing', 'IndustrialTech']
-    }
+    },
+
+    // ── 추가 스타일 (상업·트렌드 중심) ─────────────────────────
+
+    // modern
+    { id: 'modern-vaporwave', category: 'modern', nameKo: '베이퍼웨이브', nameEn: 'Vaporwave', emoji: '🌆',
+      desc: '90년대 레트로 디지털 미학. 그리드 원근법, 파스텔 네온, 그래디언트 석양.',
+      palette: ['#ff71ce','#01cdfe','#05ffa1','#b967ff','#fffb96'],
+      prompt: `vaporwave aesthetic, retro 80s 90s digital art, perspective grid floor, glowing neon pastel gradients, aesthetic computer graphics, color palette: #ff71ce #01cdfe #05ffa1 #b967ff #fffb96, hot pink for primary glow, electric cyan for secondary neon, mint green for highlight accent, bright violet for grid lines and silhouette, pale yellow for sun or moon disc, synthwave grid horizon, retrowave city silhouette, lo-fi digital texture`,
+      tags: ['레트로','네온','디지털'] },
+
+    { id: 'modern-synthwave', category: 'modern', nameKo: '신스웨이브', nameEn: 'Synthwave', emoji: '🌅',
+      desc: '80년대 신스팝 감성. 네온 지평선, 크롬 텍스트, 레트로 자동차와 야자수.',
+      palette: ['#0d0221','#ff2975','#f222ff','#8c1eff','#fe75fe'],
+      prompt: `synthwave retrowave outrun style illustration, neon sunset over chrome horizon grid, silhouette palm trees and sports car, glowing laser grid road vanishing point perspective, color palette: #0d0221 #ff2975 #f222ff #8c1eff #fe75fe, near-black deep midnight for sky base, hot neon pink-red for sun disc and primary glow, vivid magenta for secondary neon outline, deep violet for distance silhouette, bright pink lavender for horizon gradient, 80s aesthetic, Kavinsky album art mood`,
+      tags: ['신스팝','레트로','네온'] },
+
+    { id: 'modern-dark-academia', category: 'modern', nameKo: '다크 아카데미아', nameEn: 'Dark Academia', emoji: '📚',
+      desc: '고풍스러운 대학 도서관과 학문적 오브제. 세피아 톤과 캔들 빛.',
+      palette: ['#2c1810','#6b4c3b','#c4a882','#e8d5b7','#8b6f47'],
+      prompt: `dark academia aesthetic photograph, vintage university library interior, leather-bound books stacked with antique globe and candle, warm sepia amber candlelight, aged paper texture, oil painting quality, color palette: #2c1810 #6b4c3b #c4a882 #e8d5b7 #8b6f47, deep dark espresso for shadow and mahogany wood, warm chestnut for bookshelf and velvet upholstery, muted gold-beige for aged paper pages, pale warm ivory for candlelit highlight, dusty amber for leather binding, Gothic Revival architecture, academic moody atmosphere`,
+      tags: ['다크','빈티지','학문'] },
+
+    { id: 'modern-acid-design', category: 'modern', nameKo: '애시드 그래픽', nameEn: 'Acid Graphics', emoji: '🌀',
+      desc: '90년대 레이브 문화의 사이키델릭 산성 그래픽. 형광색 물결과 왜곡.',
+      palette: ['#00ff00','#ff00ff','#ffff00','#00ffff','#ff6600'],
+      prompt: `acid house rave graphic design, psychedelic smiley face, distorted warped typography, neon fluorescent colors on black background, 90s techno flyer aesthetic, color palette: #00ff00 #ff00ff #ffff00 #00ffff #ff6600, pure neon green for primary distorted element, hot magenta pink for secondary organic shape, electric yellow for smiley and highlight burst, cyan for warp trail and ghost, bright orange for accent smear, blob liquify effect, UV blacklight reactive palette, underground club flyer aesthetic`,
+      tags: ['사이키델릭','레이브','90s'] },
+
+    // illustration
+    { id: 'illust-anime-cel', category: 'illustration', nameKo: '애니메이션 셀 쉐이딩', nameEn: 'Anime Cel Shading', emoji: '🎌',
+      desc: '일본 애니메이션 특유의 셀 쉐이딩 스타일. 굵은 윤곽선과 평면적 채색.',
+      palette: ['#ffffff','#ffd6e0','#a8d8ea','#f6f6f6','#2d2d2d'],
+      prompt: `anime cel shading illustration style, clean bold black outline strokes, flat color fills with hard shadow division line, manga highlight sparkle on eyes, color palette: #ffffff #ffd6e0 #a8d8ea #f6f6f6 #2d2d2d, pure white for primary highlight and background, soft pink blush for skin tone and cheek flush, powder blue for hair highlight and cloth shadow, near-white gray for secondary flat surface, near-black for clean outline and pupil, Japanese animation style, KyoAni A-1 Pictures production quality`,
+      tags: ['애니메이션','셀쉐이딩','만화'] },
+
+    { id: 'illust-sticker-design', category: 'illustration', nameKo: '스티커 디자인', nameEn: 'Sticker Design', emoji: '✨',
+      desc: '귀엽고 두꺼운 흰 테두리의 스티커 시트. SNS와 앱에서 가장 인기 있는 스타일.',
+      palette: ['#ff6b6b','#ffd93d','#6bcf7f','#4ecdc4','#ffffff'],
+      prompt: `cute sticker design sheet, thick white outline border on each sticker element, kawaii chibi characters and icons, vibrant flat illustration on transparent background, color palette: #ff6b6b #ffd93d #6bcf7f #4ecdc4 #ffffff, coral red for primary character fill, bright sunny yellow for accent and star element, fresh green for nature and plant icon, teal mint for secondary character variant, pure white for sticker border and cut line, emoji sticker pack aesthetic, LINE sticker quality, clean vector illustration`,
+      tags: ['스티커','귀여움','이모티콘'] },
+
+    { id: 'illust-concept-art', category: 'illustration', nameKo: '판타지 컨셉 아트', nameEn: 'Fantasy Concept Art', emoji: '🐉',
+      desc: '게임·영화 업계 수준의 판타지 컨셉 아트. 웅장한 구도와 극적인 조명.',
+      palette: ['#0a0a1a','#1a2a4a','#4a6fa5','#c4a35a','#e8c87a'],
+      prompt: `fantasy game concept art, epic cinematic composition, dramatic rim lighting, detailed environment design, mythical creature or ancient ruins, color palette: #0a0a1a #1a2a4a #4a6fa5 #c4a35a #e8c87a, near-black deep space for shadowed foreground silhouette, dark navy for atmospheric background haze, steel blue for mid-ground environmental detail, warm bronze gold for ancient stone texture, bright gold yellow for magical light source, ArtStation quality, Blizzard Entertainment concept art style`,
+      tags: ['판타지','게임아트','컨셉아트'] },
+
+    { id: 'illust-pastel-kawaii', category: 'illustration', nameKo: '파스텔 가와이', nameEn: 'Pastel Kawaii', emoji: '🍬',
+      desc: '부드러운 파스텔 팔레트의 가와이 캐릭터. 뷰티·팬시 브랜드에서 가장 많이 쓰이는 스타일.',
+      palette: ['#ffd6e7','#c8e6ff','#d4f0c0','#fff0d4','#e8d4f0'],
+      prompt: `pastel kawaii illustration, soft dreamy colors, chubby cute chibi character with big sparkly eyes, fluffy cloud and star accessories, gentle gradient shading, color palette: #ffd6e7 #c8e6ff #d4f0c0 #fff0d4 #e8d4f0, soft cotton candy pink for skin and main element, baby powder blue for hair and sky, mint green for accessory and background accent, pale peach for shadow and warm fill, light lavender for secondary character, Japanese stationery brand Sanrio style`,
+      tags: ['파스텔','가와이','캐릭터'] },
+
+    // photo
+    { id: 'photo-hyperrealistic-portrait', category: 'photo', nameKo: '극사실주의 초상화', nameEn: 'Hyperrealistic Portrait', emoji: '👤',
+      desc: '모공까지 보이는 극사실주의 초상화. 뷰티·패션 광고의 표준 스타일.',
+      palette: ['#f5e6d8','#d4a574','#8b6347','#c4956a','#ffffff'],
+      prompt: `hyperrealistic portrait photography, photorealistic skin texture with visible pores and fine hair, professional beauty retouching, sharp focus catchlight in eyes, soft gradient studio background, color palette: #f5e6d8 #d4a574 #8b6347 #c4956a #ffffff, warm ivory for skin highlight and base tone, golden tan for midtone skin warmth, rich medium brown for shadow and eye definition, amber caramel for hair and warm rim light, pure white for background gradient, Hasselblad medium format aesthetic, Annie Leibovitz lighting style`,
+      tags: ['극사실주의','인물','뷰티'] },
+
+    { id: 'photo-dark-moody', category: 'photo', nameKo: '다크 무드 시네마틱', nameEn: 'Dark Moody Cinematic', emoji: '🎬',
+      desc: '영화 스틸 같은 무거운 감성. 강한 대비와 깊은 섀도우.',
+      palette: ['#0a0a0a','#1a1a2e','#16213e','#533483','#e94560'],
+      prompt: `dark moody cinematic photography, heavy contrast low key lighting, deep crushed blacks, single dramatic light source, film noir atmosphere, color palette: #0a0a0a #1a1a2e #16213e #533483 #e94560, true black for maximum shadow crush and background, deep dark navy for ambient fill shadow, midnight blue-black for environmental shadow, dark desaturated purple for subtle mid-shadow, vivid crimson red for single accent highlight, anamorphic lens flare, ARRI ALEXA cinema camera look, movie still aesthetic`,
+      tags: ['무드','시네마틱','다크'] },
+
+    { id: 'photo-lo-fi-aesthetic', category: 'photo', nameKo: '로파이 감성', nameEn: 'Lo-Fi Aesthetic', emoji: '☕',
+      desc: '흐릿한 필름 그레인, 따뜻한 색온도, 편안한 일상 감성.',
+      palette: ['#d4a96a','#c17f4b','#8b5e3c','#f5e6c8','#a0856b'],
+      prompt: `lo-fi aesthetic photography, warm film grain texture, soft slightly out of focus, cozy indoor scene with study desk or coffee, warm amber evening light through window, color palette: #d4a96a #c17f4b #8b5e3c #f5e6c8 #a0856b, warm golden honey for ambient light wash, medium burnt orange for shadow and wooden surface, deep warm brown for foreground object detail, pale warm cream for window light and paper, muted caramel for mid-tone fill, 35mm film stock grain, Lofi Girl YouTube channel aesthetic`,
+      tags: ['로파이','감성','일상'] },
+
+    // brand
+    { id: 'brand-neon-sign', category: 'brand', nameKo: '네온 사인 광고', nameEn: 'Neon Sign', emoji: '💡',
+      desc: '어두운 배경에 빛나는 레트로 네온 튜브 사인. 바·레스토랑·이벤트에서 인기.',
+      palette: ['#0d0d0d','#ff2d78','#00e5ff','#39ff14','#ff6b00'],
+      prompt: `neon sign advertisement, glowing glass tube neon lettering on dark wall, warm bokeh background light bleed, retro diner or bar atmosphere, realistic neon glow emission, color palette: #0d0d0d #ff2d78 #00e5ff #39ff14 #ff6b00, near-black dark charcoal wall background, hot neon pink-red for primary tube lettering, electric cyan for secondary neon element, toxic neon green for accent symbol or arrow, vivid neon orange for warm highlight sign, 80s retro American diner aesthetic, long exposure photography glow`,
+      tags: ['네온','광고','레트로'] },
+
+    { id: 'brand-graffiti-street', category: 'brand', nameKo: '스트리트 그래피티', nameEn: 'Street Art Graffiti', emoji: '🎨',
+      desc: '도시 벽면의 대형 그래피티 뮤럴. 스트리트웨어·문화 브랜드의 강렬한 표현.',
+      palette: ['#e8e0d8','#d42b2b','#1a1a1a','#f5a623','#4ecdc4'],
+      prompt: `street art graffiti mural, spray paint texture on concrete wall, bold bubble letters with sharp shadow and highlight, urban city backdrop, color palette: #e8e0d8 #d42b2b #1a1a1a #f5a623 #4ecdc4, weathered off-white concrete wall base, fire engine red for primary letter fill, near-black for outline and shadow depth, vivid amber orange for secondary letter variant, teal turquoise for fill highlight and background element, Banksy Keith Haring Jean-Michel Basquiat influence, aerosol can drip detail`,
+      tags: ['그래피티','스트리트아트','도시'] },
+
+    { id: 'brand-tattoo-flash', category: 'brand', nameKo: '타투 플래시 아트', nameEn: 'Tattoo Flash Art', emoji: '🌹',
+      desc: '전통 타투 플래시 스타일. 굵은 윤곽선, 제한된 팔레트, 뱀·장미·독수리 모티프.',
+      palette: ['#1a1a1a','#dc2626','#16a34a','#ca8a04','#0369a1'],
+      prompt: `traditional tattoo flash art sheet, bold black outline technique, limited flat color fill palette, classic American traditional motifs including roses anchors eagles and daggers, clean white background, color palette: #1a1a1a #dc2626 #16a34a #ca8a04 #0369a1, bold near-black for outline and shadow hatching, classic red for rose petal and banner fill, forest green for leaf and foliage, golden amber for scroll and eagle feather, navy blue for water wave and swallow wing, Norman Collins Sailor Jerry vintage style`,
+      tags: ['타투','빈티지','일러스트'] },
+
+    // craft
+    { id: 'craft-digital-painting', category: 'craft', nameKo: '디지털 페인팅', nameEn: 'Digital Painting', emoji: '🖌',
+      desc: '유화와 디지털의 결합. 브러쉬 질감이 살아있는 픽사·게임 스타일 디지털 아트.',
+      palette: ['#1e3a5f','#2d7dd2','#97cc04','#f45d01','#f7c59f'],
+      prompt: `digital painting art, visible brush stroke texture, painterly quality with traditional media feel, richly detailed environment or character, color palette: #1e3a5f #2d7dd2 #97cc04 #f45d01 #f7c59f, deep prussian blue for shadowed background and dramatic sky, bright cobalt blue for mid-distance atmospheric haze, vivid spring green for foliage and nature accent, vivid burnt orange for warm light source and focal warmth, pale peach skin tone for character highlight, Craig Mullins Sparth concept artist quality, Photoshop custom brush strokes`,
+      tags: ['디지털아트','페인팅','브러쉬'] },
+
+    // nature
+    { id: 'nature-solarpunk', category: 'nature', nameKo: '솔라펑크', nameEn: 'Solarpunk', emoji: '🌱',
+      desc: '태양광과 식물이 공존하는 유토피아 미래 도시. 지속가능성 브랜드에서 폭발적 인기.',
+      palette: ['#2d6a4f','#40916c','#74c69d','#b7e4c7','#ffd166'],
+      prompt: `solarpunk utopian cityscape, green architecture covered in vertical gardens and solar panels, art nouveau organic curves merged with sustainable technology, golden sunlight, color palette: #2d6a4f #40916c #74c69d #b7e4c7 #ffd166, deep forest green for primary vegetation and architectural base, medium emerald for plant coverage on building facade, sage mint for sky garden and terrace plant, pale mint-white for solar panel reflection and ambient light, warm golden yellow for sunlight source and flower accent, afrofuturism solarpunk community, regenerative future aesthetic`,
+      tags: ['솔라펑크','미래','친환경'] },
+
+    { id: 'nature-cottagecore', category: 'nature', nameKo: '코티지코어', nameEn: 'Cottagecore', emoji: '🌸',
+      desc: '시골 오두막과 정원의 낭만적 감성. 라이프스타일·음식·패션 브랜드에서 가장 인기.',
+      palette: ['#f5e6d3','#c9a96e','#8fbc8f','#e8c4a0','#a0785a'],
+      prompt: `cottagecore aesthetic, charming countryside cottage surrounded by wildflower meadow, vintage linen tablecloth with fresh bread and dried herbs, golden afternoon sunlight, color palette: #f5e6d3 #c9a96e #8fbc8f #e8c4a0 #a0785a, warm parchment cream for linen fabric and afternoon haze, golden honey amber for wheat and wooden surface, sage herb green for garden plant and moss, peach blush for wildflower and warm shadow, russet brown for wooden furniture and wicker basket, English countryside cottage garden lifestyle, Tasha Tudor illustration mood`,
+      tags: ['코티지코어','전원','감성'] },
+
+    // game
+    { id: 'game-retrowave-racing', category: 'game', nameKo: '레트로웨이브 레이싱', nameEn: 'Retrowave Racing', emoji: '🏎',
+      desc: '80년대 아웃런 게임 스타일. 네온 그리드 도로와 크롬 슈퍼카.',
+      palette: ['#0a0010','#ff006e','#8338ec','#3a86ff','#fb5607'],
+      prompt: `retrowave outrun arcade racing game art, chrome supercar on neon pink grid highway, sunset horizon with silhouette mountains, laser grid road receding to vanishing point, color palette: #0a0010 #ff006e #8338ec #3a86ff #fb5607, ultra-dark navy-black for sky and road base, hot neon pink-red for primary grid line and car body highlight, vivid electric violet for atmospheric glow and rim light, bright blue for background sky gradient, vivid burnt orange for speed trail and exhaust flame, Outrun SEGA arcade game aesthetic, 80s vector game graphic`,
+      tags: ['레트로','레이싱','아케이드'] },
+
+    // fashion
+    { id: 'fashion-editorial-luxury', category: 'fashion', nameKo: '럭셔리 에디토리얼', nameEn: 'Luxury Editorial', emoji: '💎',
+      desc: '보그·하퍼스 바자 수준의 하이패션 에디토리얼. 조각 같은 포즈와 완벽한 조명.',
+      palette: ['#f8f4ef','#c9b99a','#7a6652','#2c1810','#d4af37'],
+      prompt: `high fashion luxury editorial photography, sculptural fashion pose with architectural couture garment, flawless studio lighting with dramatic shadow, color palette: #f8f4ef #c9b99a #7a6652 #2c1810 #d4af37, warm off-white cream for seamless studio backdrop, warm sand for secondary background gradient, muted taupe-brown for shadow and fabric texture, deep dark brown for maximum contrast shadow, rich antique gold for metallic accessory and jewelry, Vogue Italia Harper Bazaar editorial quality, Steven Meisel Richard Avedon inspired`,
+      tags: ['럭셔리','패션','에디토리얼'] },
+
+    { id: 'fashion-streetwear-lookbook', category: 'fashion', nameKo: '스트리트웨어 룩북', nameEn: 'Streetwear Lookbook', emoji: '👟',
+      desc: 'Supreme·Palace 스타일의 스트리트웨어 룩북. 도시 배경과 젊은 에너지.',
+      palette: ['#f0ece4','#1a1a1a','#ff4500','#e8dcc8','#808080'],
+      prompt: `streetwear lookbook photography, urban youth fashion portrait on gritty city street, candid confident pose, color palette: #f0ece4 #1a1a1a #ff4500 #e8dcc8 #808080, warm off-white for model skin highlight and clear background area, near-black for garment base and urban shadow, vivid orange-red for logo or graphic element accent, pale warm cream for neutral clothing base, medium gray for concrete wall and urban environment, Supreme Palace Off-White brand aesthetic, Hypebeast editorial style`,
+      tags: ['스트리트웨어','룩북','도시'] },
+
+    // food
+    { id: 'food-cafe-aesthetic', category: 'food', nameKo: '카페 감성', nameEn: 'Cafe Aesthetic', emoji: '☕',
+      desc: '화이트 테이블과 라떼아트. SNS에서 가장 많이 공유되는 카페 감성 푸드포토.',
+      palette: ['#f8f4f0','#d4a96a','#8b6347','#c4956a','#e8e0d8'],
+      prompt: `cafe aesthetic food photography, artisan latte art in white ceramic cup on marble table, morning light from window, croissant and book styling, color palette: #f8f4f0 #d4a96a #8b6347 #c4956a #e8e0d8, warm off-white for marble table surface and ceramic cup, golden honey amber for espresso crema and latte foam art, rich medium brown for coffee base and dark shadow, warm caramel for croissant and wooden accent, muted warm gray for ambient shadow and atmosphere, Korean cafe Instagram aesthetic, Hario V60 pour-over styling`,
+      tags: ['카페','커피','감성'] },
+
+    { id: 'food-dessert-pastel', category: 'food', nameKo: '디저트 파스텔', nameEn: 'Dessert Pastel', emoji: '🍰',
+      desc: '파스텔 색상의 케이크와 마카롱. 디저트 브랜드 SNS에서 가장 인기 있는 스타일.',
+      palette: ['#fce4ec','#f8bbd0','#f48fb1','#e91e63','#ffffff'],
+      prompt: `pastel dessert food photography, elegant macaron tower and layered cake with fresh flowers, soft pink studio background, overhead and angle shot, color palette: #fce4ec #f8bbd0 #f48fb1 #e91e63 #ffffff, pale blush pink for soft background and macaron shell, soft rose for cake frosting and secondary macaron, medium warm pink for flower petal and ganache drip, vivid hot pink for signature macaron and berry accent, pure white for whipped cream and plate, Ladurée Paris pastel aesthetic, Iza Perez food styling`,
+      tags: ['디저트','파스텔','베이커리'] },
+
+    // science
+    { id: 'science-ai-machine-learning', category: 'science', nameKo: 'AI·머신러닝 시각화', nameEn: 'AI & Machine Learning', emoji: '🤖',
+      desc: '딥러닝 신경망과 데이터 흐름의 추상적 시각화. AI 기업 마케팅에서 필수.',
+      palette: ['#0a0a1a','#00d2ff','#7b2ff7','#ff6b6b','#ffffff'],
+      prompt: `AI machine learning neural network visualization, abstract deep learning architecture diagram, glowing nodes and weighted connections flowing through layers, data particles streaming through network, color palette: #0a0a1a #00d2ff #7b2ff7 #ff6b6b #ffffff, ultra-dark near-black for background void, bright electric cyan for active neuron and data stream, vivid purple for weight connection and layer boundary, warm coral red for error signal and attention highlight, pure white for activated node peak, NVIDIA Anthropic OpenAI brand aesthetic, technology marketing illustration style`,
+      tags: ['AI','머신러닝','테크'] }
   ];
 
   // ── 렌더링 엔진 ─────────────────────────────────────────────
@@ -1356,6 +1506,7 @@
   }
 
   function buildGradient(p) { return `linear-gradient(135deg, ${p[0]} 0%, ${p[1]} 100%)`; }
+
 
   function createCard(style) {
     const card = document.createElement('div');
@@ -1384,10 +1535,6 @@
     const tags = document.createElement('div');
     tags.className = 'concept-tags';
     style.tags.forEach(t => { const tag = document.createElement('span'); tag.className = 'concept-tag'; tag.textContent = `# ${t}`; tags.appendChild(tag); });
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'concept-prompt-toggle';
-    toggle.innerHTML = `프롬프트 보기 <span class="concept-toggle-chevron">▼</span>`;
     const promptArea = document.createElement('div');
     promptArea.className = 'concept-prompt-area';
     const promptText = document.createElement('pre');
@@ -1398,12 +1545,12 @@
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button';
     copyBtn.className = 'concept-copy-btn';
-    copyBtn.textContent = '📋  프롬프트 복사';
+    copyBtn.textContent = '프롬프트 복사';
 
     const applyBtn = document.createElement('button');
     applyBtn.type = 'button';
     applyBtn.className = 'concept-apply-btn';
-    applyBtn.textContent = '🎨  홍보 이미지 적용';
+    applyBtn.textContent = '프롬프트 적용';
 
     const feedback = document.createElement('span');
     feedback.className = 'concept-copy-feedback';
@@ -1411,12 +1558,12 @@
 
     copyBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(style.prompt).then(() => {
-        copyBtn.textContent = '✓  복사됨'; copyBtn.classList.add('copied'); feedback.classList.add('visible');
-        setTimeout(() => { copyBtn.textContent = '📋  프롬프트 복사'; copyBtn.classList.remove('copied'); feedback.classList.remove('visible'); }, 2000);
+        copyBtn.textContent = '✓ 복사됨'; copyBtn.classList.add('copied'); feedback.classList.add('visible');
+        setTimeout(() => { copyBtn.textContent = '프롬프트 복사'; copyBtn.classList.remove('copied'); feedback.classList.remove('visible'); }, 2000);
       }).catch(() => {
         const ta = document.createElement('textarea'); ta.value = style.prompt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-        copyBtn.textContent = '✓  복사됨'; copyBtn.classList.add('copied'); feedback.classList.add('visible');
-        setTimeout(() => { copyBtn.textContent = '📋  프롬프트 복사'; copyBtn.classList.remove('copied'); feedback.classList.remove('visible'); }, 2000);
+        copyBtn.textContent = '✓ 복사됨'; copyBtn.classList.add('copied'); feedback.classList.add('visible');
+        setTimeout(() => { copyBtn.textContent = '프롬프트 복사'; copyBtn.classList.remove('copied'); feedback.classList.remove('visible'); }, 2000);
       });
     });
 
@@ -1434,11 +1581,7 @@
     copyRow.appendChild(applyBtn);
     copyRow.appendChild(feedback);
     promptArea.appendChild(promptText); promptArea.appendChild(copyRow);
-    toggle.addEventListener('click', () => {
-      const isExpanded = card.classList.toggle('expanded');
-      toggle.innerHTML = isExpanded ? `프롬프트 닫기 <span class="concept-toggle-chevron">▼</span>` : `프롬프트 보기 <span class="concept-toggle-chevron">▼</span>`;
-    });
-    body.appendChild(desc); body.appendChild(palette); body.appendChild(tags); body.appendChild(toggle); body.appendChild(promptArea);
+    body.appendChild(desc); body.appendChild(palette); body.appendChild(tags); body.appendChild(promptArea);
     card.appendChild(header); card.appendChild(body);
     return card;
   }

@@ -106,6 +106,7 @@ button {
   justify-content: space-between;
   gap: 4px;
   padding: 0 28px;
+  min-height: 44px;
   background: var(--tabs-bg);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
@@ -244,9 +245,10 @@ button {
   justify-content: flex-end;
   flex-wrap: nowrap;
   max-width: min(760px, 48vw);
+  min-height: 43px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 8px 0;
+  padding: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -257,8 +259,9 @@ button {
 
 .app-tabs-bar .header-actions .btn {
   flex: 0 0 auto;
-  min-height: 38px;
-  padding: 0 14px;
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
   white-space: nowrap;
 }
 

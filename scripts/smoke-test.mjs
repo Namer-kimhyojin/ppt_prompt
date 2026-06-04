@@ -28,6 +28,19 @@ async function hasLocator(page, selector) {
 }
 
 async function verifyQuickToggleBehavior(page, { quickFor, inputSelector, label, failures }) {
+  const fieldMap = {
+    "promotionBigIdea": "bigIdea",
+    "promotionVisualMetaphor": "visualMetaphor"
+  };
+  const field = fieldMap[quickFor];
+  if (field) {
+    const toggleSelector = `[data-toggle-mode='${field}'][data-mode='manual']`;
+    if (await hasLocator(page, toggleSelector)) {
+      await page.click(toggleSelector);
+      await page.waitForTimeout(50);
+    }
+  }
+
   const buttonSelector = `[data-quick-for='${quickFor}'] .btn-quick`;
   const hasButtons = await hasLocator(page, buttonSelector);
   record(hasButtons, `${label} quick preset buttons were missing`, failures);
