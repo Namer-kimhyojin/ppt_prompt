@@ -686,13 +686,24 @@
 }
 
 @media (max-width: 900px) {
-  .app-tabs {
+  .app-tabs-bar {
     padding: 0 18px;
   }
+
+  .app-tabs {
+    padding: 0;
+  }
+
   .gen-inline-head,
   .gen-split-section-head {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-tabs-bar {
+    padding: 6px 10px;
   }
 }
 

@@ -3,6 +3,7 @@
 }
 
 :root[data-theme="dark"] .app-header,
+:root[data-theme="dark"] .app-tabs-bar,
 :root[data-theme="dark"] .app-tabs {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
 }

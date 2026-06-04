@@ -41,38 +41,40 @@
         <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스</p>
       </div>
     </div>
-    <div class="header-actions" id="tabActions">
-      <button type="button" class="btn ghost" id="btnClearSelections">선택 전체 해제</button>
-      <button type="button" class="btn ghost" id="btnReset">초기화</button>
-      <button type="button" class="btn secondary" id="btnCopy">한글 프롬프트 복사</button>
-      <button type="button" class="btn primary" id="btnCopyEn">영문 프롬프트 복사</button>
-    </div>
     <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="다크 모드로 전환" aria-pressed="false">
       <span class="theme-toggle-icon" aria-hidden="true">☾</span>
       <span class="theme-toggle-text">다크</span>
     </button>
   </header>
 
-  <nav class="app-tabs" role="tablist">
-    <button type="button" class="app-tab-btn active" id="tabBtnDesigner" role="tab" aria-selected="true" aria-controls="paneDesigner">
-      슬라이드 프롬프트
-    </button>
-    <button type="button" class="app-tab-btn" id="tabBtnGenerator" role="tab" aria-selected="false" aria-controls="paneGenerator">
-      슬라이드 분리기
-    </button>
-    <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">
-      API 이미지 생성
-    </button>
-    <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">
-      지도 이미지
-    </button>
-    <button type="button" class="app-tab-btn" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">
-      부속 양식
-    </button>
-    <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
-      홍보용 이미지
-    </button>
-  </nav>
+  <div class="app-tabs-bar">
+    <nav class="app-tabs" role="tablist">
+      <button type="button" class="app-tab-btn active" id="tabBtnDesigner" role="tab" aria-selected="true" aria-controls="paneDesigner">
+        슬라이드 프롬프트
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnGenerator" role="tab" aria-selected="false" aria-controls="paneGenerator">
+        슬라이드 분리기
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">
+        API 이미지 생성
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">
+        지도 이미지
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">
+        부속 양식
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
+        홍보용 이미지
+      </button>
+    </nav>
+    <div class="header-actions" id="tabActions">
+      <button type="button" class="btn ghost" id="btnClearSelections">선택 전체 해제</button>
+      <button type="button" class="btn ghost" id="btnReset">초기화</button>
+      <button type="button" class="btn secondary" id="btnCopy">한글 프롬프트 복사</button>
+      <button type="button" class="btn primary" id="btnCopyEn">영문 프롬프트 복사</button>
+    </div>
+  </div>
 
   <div class="tab-pane active" id="paneDesigner" role="tabpanel">
     <div id="slideConfigBanner" style="display:none; background:#fff3e0; color:#e65100; padding:10px 20px; border-bottom:1px solid #ffe0b2;">
@@ -1286,6 +1288,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               <label for="mapOutputType">이미지 용도</label>
               <select id="mapOutputType" class="gen-select">
                 <option value="business-plan">사업계획서 본문 삽입 이미지</option>
+                <option value="result-report">결과보고서 성과·위치 설명 이미지</option>
+                <option value="proposal-document">제안서 본문 설득용 지도 이미지</option>
                 <option value="proposal-slide">제안 발표용 슬라이드 지도</option>
                 <option value="executive-summary">요약 보고서 핵심 위치도</option>
                 <option value="site-analysis">입지 분석·권역 설명 이미지</option>
@@ -1295,17 +1299,53 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
           <div class="gen-field">
             <label for="mapReferenceNote">첨부 지도 이미지 설명</label>
+            <select id="mapReferencePreset" class="gen-select map-text-preset" aria-label="첨부 지도 이미지 설명 프리셋">
+              <option value="">프리셋 선택 · 선택 후 문구 수정 가능</option>
+              <option value="admin-road">행정경계 + 주요 도로 지도</option>
+              <option value="marked-site">사용자 표시 대상지 포함 지도</option>
+              <option value="satellite-site">위성/항공사진 기반 위치도</option>
+              <option value="transport-network">광역 교통망 중심 지도</option>
+              <option value="industrial-context">산업단지·거점 포함 권역도</option>
+              <option value="urban-plan">도시계획·토지이용계획도</option>
+              <option value="business-plan-purpose">사업계획서용 입지 타당성 지도</option>
+              <option value="result-report-purpose">결과보고서용 추진 결과 지도</option>
+              <option value="proposal-purpose">제안서용 비교·설득 지도</option>
+            </select>
             <textarea id="mapReferenceNote" class="gen-textarea" rows="4" placeholder="예: 시·군 경계와 주요 도로가 표시된 행정구역 지도. 사용자가 붉은 펜으로 표시한 영역이 대상 부지임."></textarea>
             <p class="gen-hint">실제 지도 이미지는 프롬프트와 함께 별도로 첨부하세요. 이 입력은 모델이 참조 이미지를 해석하는 기준 설명입니다.</p>
           </div>
 
           <div class="gen-field">
             <label for="mapTargetArea">강조할 특정 구역</label>
+            <select id="mapTargetPreset" class="gen-select map-text-preset" aria-label="강조할 특정 구역 프리셋">
+              <option value="">프리셋 선택 · 선택 후 문구 수정 가능</option>
+              <option value="center-district">지도 중앙 대상 부지</option>
+              <option value="marked-boundary">사용자 표시 경계 내부</option>
+              <option value="ic-corridor">IC·간선도로 인접 구역</option>
+              <option value="station-area">역세권·대중교통 결절부</option>
+              <option value="waterfront-zone">하천·해안 인접 개발 구역</option>
+              <option value="industrial-expansion">기존 산단 확장 후보지</option>
+              <option value="business-core-site">사업계획 핵심 대상지</option>
+              <option value="result-completed-area">결과보고 완료·성과 구역</option>
+              <option value="proposal-priority-area">제안서 우선 제안 구역</option>
+            </select>
             <textarea id="mapTargetArea" class="gen-textarea" rows="4" placeholder="예: 지도 중앙 남동쪽의 ○○읍 일대, ○○IC와 국도 00호선 사이 대상 부지."></textarea>
           </div>
 
           <div class="gen-field">
             <label for="mapContextInfo">주변 맥락과 사업 메시지</label>
+            <select id="mapContextPreset" class="gen-select map-text-preset" aria-label="주변 맥락과 사업 메시지 프리셋">
+              <option value="">프리셋 선택 · 선택 후 문구 수정 가능</option>
+              <option value="accessibility">광역 접근성 강조</option>
+              <option value="industrial-linkage">산업거점 연계 강조</option>
+              <option value="balanced-development">지역 균형발전 명분 강조</option>
+              <option value="tourism-commerce">관광·상권 활성화 강조</option>
+              <option value="public-infra">공공 인프라·생활권 개선 강조</option>
+              <option value="future-growth">미래 성장축·확장성 강조</option>
+              <option value="business-feasibility">사업계획 타당성 메시지</option>
+              <option value="result-performance">결과보고 성과 메시지</option>
+              <option value="proposal-differentiation">제안서 차별화 메시지</option>
+            </select>
             <textarea id="mapContextInfo" class="gen-textarea" rows="5" placeholder="예: 광역 교통망 접근성, 배후 산업단지와의 연계, 후보지의 전략적 위치를 강조."></textarea>
           </div>
 
@@ -1403,7 +1443,37 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <option value="flat">평면형 · 가장 명료한 보고서 스타일</option>
                   <option value="subtle-depth">은은한 입체감 · 그림자/레이어 약하게</option>
                   <option value="premium-layered">고급 레이어형 · 인셋/패널/음영 활용</option>
+                  <option value="business-3d">사업계획서형 3D · 낮은 입체 지도</option>
+                  <option value="isometric-3d">아이소메트릭 3D · 입지 구조 강조</option>
                   <option value="no-3d">3D 배제 · 지도 정확성 최우선</option>
+                </select>
+              </div>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <div class="map-option-head">
+                  <label for="mapThreeDStyle">3D 연출 방식</label>
+                  <button type="button" class="map-sample-btn" id="mapThreeDPreviewBtn">샘플 보기</button>
+                </div>
+                <select id="mapThreeDStyle" class="gen-select">
+                  <option value="none">사용 안 함 · 평면 지도 중심</option>
+                  <option value="raised-site">대상지만 살짝 들어 올리기</option>
+                  <option value="layered-terrain">지형/권역 레이어를 낮게 적층</option>
+                  <option value="extruded-district">대상 구역을 낮은 블록 형태로 강조</option>
+                  <option value="isometric-board">아이소메트릭 보드형 지도</option>
+                  <option value="ai">AI 위임 · 지도 정확도를 해치지 않는 범위에서 결정</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <div class="map-option-head">
+                  <label for="mapCameraAngle">3D 카메라/시점</label>
+                  <button type="button" class="map-sample-btn" id="mapCameraPreviewBtn">샘플 보기</button>
+                </div>
+                <select id="mapCameraAngle" class="gen-select">
+                  <option value="top-down">정투영에 가까운 탑뷰</option>
+                  <option value="low-isometric">낮은 아이소메트릭 시점</option>
+                  <option value="report-perspective">보고서용 약한 원근 시점</option>
+                  <option value="no-perspective">원근 왜곡 최소화</option>
                 </select>
               </div>
             </div>
@@ -2666,6 +2736,31 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <div class="gen-modal" id="mapThreeDPreviewModal" hidden>
+    <div class="gen-modal-backdrop" data-close-map-preview></div>
+    <div class="gen-modal-dialog map-sample-dialog" role="dialog" aria-modal="true" aria-labelledby="mapThreeDPreviewTitle">
+      <div class="gen-modal-head">
+        <div>
+          <h3 id="mapThreeDPreviewTitle">3D 샘플 미리보기</h3>
+          <p id="mapThreeDPreviewSubtitle">선택한 지도 3D 옵션의 예상 연출을 확인합니다.</p>
+        </div>
+        <button type="button" class="gen-btn ghost" data-close-map-preview>닫기</button>
+      </div>
+      <div class="gen-modal-body">
+        <div class="map-sample-modal-body">
+          <div class="map-sample-art" id="mapThreeDPreviewArt" aria-hidden="true"></div>
+          <div class="map-sample-copy">
+            <strong id="mapThreeDPreviewName">샘플</strong>
+            <p id="mapThreeDPreviewDesc"></p>
+          </div>
+        </div>
+      </div>
+      <div class="gen-modal-foot">
+        <button type="button" class="gen-btn secondary" data-close-map-preview>확인</button>
+      </div>
     </div>
   </div>
 

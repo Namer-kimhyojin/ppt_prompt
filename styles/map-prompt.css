@@ -109,6 +109,87 @@
   margin-bottom: 0;
 }
 
+.map-text-preset {
+  margin-bottom: 8px;
+}
+
+.map-option-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.map-option-head label {
+  margin-bottom: 0;
+}
+
+.map-sample-btn {
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid rgba(20, 108, 148, 0.24);
+  border-radius: 999px;
+  background: rgba(20, 108, 148, 0.08);
+  color: var(--map-accent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+
+.map-sample-btn:hover {
+  border-color: rgba(20, 108, 148, 0.42);
+  background: rgba(20, 108, 148, 0.13);
+  transform: translateY(-1px);
+}
+
+.map-sample-dialog {
+  width: min(720px, calc(100vw - 28px));
+}
+
+.map-sample-modal-body {
+  display: grid;
+  gap: 16px;
+}
+
+.map-sample-art {
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 18px;
+  background: #f8fafc;
+}
+
+.map-sample-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.map-sample-copy {
+  display: grid;
+  gap: 7px;
+  padding: 12px 14px;
+  border: 1px solid rgba(20, 108, 148, 0.14);
+  border-radius: 14px;
+  background: rgba(20, 108, 148, 0.06);
+}
+
+.map-sample-copy strong {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.map-sample-copy p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
 .map-prompt-preview {
   min-height: 620px;
   font-family: "JetBrains Mono", "Pretendard", monospace;
@@ -170,6 +251,10 @@
     min-height: 76px;
   }
 
+  .map-sample-dialog {
+    width: calc(100vw - 20px);
+  }
+
   .map-prompt-preview {
     min-height: 360px;
   }
@@ -187,5 +272,15 @@
     border-radius: 12px;
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  .map-option-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .map-sample-btn {
+    width: 100%;
   }
 }
