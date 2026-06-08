@@ -1892,28 +1892,54 @@
   function buildPromotionConceptStyle(style) {
     const promptParts = buildPromotionPromptParts(style);
     const promotionPrompt = [
-      promptParts.visualDNA,
-      promptParts.paletteStrategy,
-      promptParts.textureRendering,
-      promptParts.lightingMood,
-      promptParts.shapeLanguage,
-      promptParts.layoutBehavior,
-      promptParts.typographyGuidance,
-      promptParts.campaignAdaptation,
-      promptParts.objectAdaptation,
-      `Avoid: ${promptParts.avoid}`,
-      `Quality rules: ${promptParts.qualityRules}`,
-      `Source style prompt: ${style.prompt}`
+      `[Concept Style Core]`,
+      `- Concept name: ${style.nameKo} / ${style.nameEn}`,
+      `- Category: ${CAT_KO[style.category] || style.category}`,
+      `- Visual DNA: ${promptParts.visualDNA}`,
+      `- Shape language: ${promptParts.shapeLanguage}`,
+      `- Texture / rendering: ${promptParts.textureRendering}`,
+      `- Lighting / mood: ${promptParts.lightingMood}`,
+      ``,
+      `[Color System]`,
+      `- Palette roles: ${promptParts.paletteStrategy}`,
+      `- Keep the selected palette recognizable, but reserve the strongest contrast for headline, action button, and required information.`,
+      ``,
+      `[Promotion Image Adaptation]`,
+      `- Campaign adaptation: ${promptParts.campaignAdaptation}`,
+      `- Object / metaphor adaptation: ${promptParts.objectAdaptation}`,
+      `- Layout behavior: ${promptParts.layoutBehavior}`,
+      `- Typography guidance: ${promptParts.typographyGuidance}`,
+      ``,
+      `[Direct Field Mapping]`,
+      `- visualStyle: use Visual DNA + Shape language + Texture / rendering.`,
+      `- backgroundDetails: use Palette roles + Lighting / mood + Layout behavior.`,
+      `- bigIdea: use Campaign adaptation to connect the concept with the promotion goal.`,
+      `- visualMetaphor: use Object / metaphor adaptation as the main symbolic scene.`,
+      `- qualityNotes: use Quality rules and keep text readability above decoration.`,
+      `- forbiddenElements: include Avoid rules when the concept could distract from the campaign message.`,
+      ``,
+      `[Execution Rules]`,
+      `- The selected concept must remain visibly traceable in the final image through at least three traits: palette, shape language, rendering texture, lighting, object proportion, background pattern, or information grouping.`,
+      `- The promotion goal, target audience, headline meaning, and action prompt from the Promotion Image tab remain the message source of truth.`,
+      `- If the source concept contains an object or sector metaphor that does not fit the current campaign, preserve the style language and replace only the object meaning.`,
+      `- Avoid: ${promptParts.avoid}`,
+      `- Quality rules: ${promptParts.qualityRules}`,
+      ``,
+      `[Source Style Prompt]`,
+      `${style.prompt}`
     ].join('\n');
 
     return Object.assign({}, style, {
       promptParts,
-      promotionPrompt
+      promotionPrompt,
+      sourcePrompt: style.prompt
     });
   }
 
 
   function createCard(style) {
+    const promotionStyle = buildPromotionConceptStyle(style);
+    const displayPrompt = promotionStyle.promotionPrompt || style.prompt;
     const card = document.createElement('div');
     card.className = 'concept-card';
     card.dataset.category = style.category;
@@ -1944,7 +1970,7 @@
     promptArea.className = 'concept-prompt-area';
     const promptText = document.createElement('pre');
     promptText.className = 'concept-prompt-text';
-    promptText.textContent = style.prompt;
+    promptText.textContent = displayPrompt;
     const copyRow = document.createElement('div');
     copyRow.className = 'concept-copy-row';
     const copyBtn = document.createElement('button');
@@ -1962,11 +1988,11 @@
     feedback.textContent = '✓ 복사 완료!';
 
     copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(style.prompt).then(() => {
+      navigator.clipboard.writeText(displayPrompt).then(() => {
         copyBtn.textContent = '✓ 복사됨'; copyBtn.classList.add('copied'); feedback.classList.add('visible');
         setTimeout(() => { copyBtn.textContent = '프롬프트 복사'; copyBtn.classList.remove('copied'); feedback.classList.remove('visible'); }, 2000);
       }).catch(() => {
-        const ta = document.createElement('textarea'); ta.value = style.prompt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        const ta = document.createElement('textarea'); ta.value = displayPrompt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
         copyBtn.textContent = '✓ 복사됨'; copyBtn.classList.add('copied'); feedback.classList.add('visible');
         setTimeout(() => { copyBtn.textContent = '프롬프트 복사'; copyBtn.classList.remove('copied'); feedback.classList.remove('visible'); }, 2000);
       });
@@ -1974,7 +2000,7 @@
 
     applyBtn.addEventListener('click', () => {
       if (typeof window.applyPromotionConceptStyle === 'function') {
-        window.applyPromotionConceptStyle(buildPromotionConceptStyle(style));
+        window.applyPromotionConceptStyle(promotionStyle);
         const tabBtn = document.getElementById('tabBtnPromotion');
         if (tabBtn) tabBtn.click();
       } else {
