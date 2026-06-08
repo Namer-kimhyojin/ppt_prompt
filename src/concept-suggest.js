@@ -1481,7 +1481,120 @@
       desc: '딥러닝 신경망과 데이터 흐름의 추상적 시각화. AI 기업 마케팅에서 필수.',
       palette: ['#0a0a1a','#00d2ff','#7b2ff7','#ff6b6b','#ffffff'],
       prompt: `AI machine learning neural network visualization, abstract deep learning architecture diagram, glowing nodes and weighted connections flowing through layers, data particles streaming through network, color palette: #0a0a1a #00d2ff #7b2ff7 #ff6b6b #ffffff, ultra-dark near-black for background void, bright electric cyan for active neuron and data stream, vivid purple for weight connection and layer boundary, warm coral red for error signal and attention highlight, pure white for activated node peak, NVIDIA Anthropic OpenAI brand aesthetic, technology marketing illustration style`,
-      tags: ['AI','머신러닝','테크'] }
+      tags: ['AI','머신러닝','테크'] },
+
+    // ── 만화·손글씨·스케치 스타일 ────────────────────────────────
+
+    // 만화 스타일
+    { id: 'comic-american-superhero', category: 'illustration', nameKo: '미국 슈퍼히어로 코믹', nameEn: 'American Superhero Comic', emoji: '🦸',
+      desc: 'Marvel·DC 스타일의 미국 슈퍼히어로 만화. 굵은 선, 역동적인 구도, 강렬한 원색.',
+      palette: ['#1a1a2e','#e63946','#457b9d','#f4a261','#ffffff'],
+      prompt: `American superhero comic book illustration, dynamic action pose with dramatic foreshortening, bold black ink outline, flat halftone dot shading pattern, speech bubble, color palette: #1a1a2e #e63946 #457b9d #f4a261 #ffffff, deep navy for shadow and background, vivid red for hero costume primary, steel blue for sky and secondary costume, warm orange for energy blast and accent, pure white for highlight and panel background, Jack Kirby Neal Adams John Romita Sr. style, Marvel Comics 1970s aesthetic`,
+      tags: ['슈퍼히어로','코믹북','미국만화'] },
+
+    { id: 'comic-franco-belgian', category: 'illustration', nameKo: '프랑코-벨기에 만화', nameEn: 'Franco-Belgian Comics', emoji: '🇧🇪',
+      desc: '탱탱·아스테릭스 스타일의 유럽 만화. 명확한 선화, 플랫 컬러, 유머러스한 표현.',
+      palette: ['#f5f0e8','#2c5f8a','#e8c84a','#c0392b','#3d5a3e'],
+      prompt: `Franco-Belgian bande dessinée comic style, clear ligne claire clean outline with no cross-hatching, flat color fills without gradients, expressive cartoon characters with exaggerated facial features, color palette: #f5f0e8 #2c5f8a #e8c84a #c0392b #3d5a3e, warm off-white parchment for panel background, deep French blue for sky and water, bright golden yellow for hair and sunlight, vivid red for clothing and accent element, deep forest green for foliage, Hergé Tintin style, Uderzo Goscinny Asterix aesthetic`,
+      tags: ['유럽만화','탱탱','벨기에'] },
+
+    { id: 'comic-webtoon', category: 'illustration', nameKo: '한국 웹툰', nameEn: 'Korean Webtoon', emoji: '📱',
+      desc: '네이버·카카오 웹툰 스타일. 세로 스크롤 구성, 반짝이는 눈, 감성적인 색감.',
+      palette: ['#fff9f0','#ffb3c6','#b5deff','#ffd6a5','#a8e6cf'],
+      prompt: `Korean webtoon illustration style, vertical scroll panel layout, large expressive sparkling eyes with detailed iris highlight, soft smooth coloring with subtle gradient, color palette: #fff9f0 #ffb3c6 #b5deff #ffd6a5 #a8e6cf, warm cream white for page background, soft rose pink for blush and romantic element, powder blue for sky and calm atmosphere, warm peach for skin tone warmth, mint green for nature and fresh accent, Naver Webtoon platform aesthetic, romance or slice-of-life genre`,
+      tags: ['웹툰','한국만화','로맨스'] },
+
+    { id: 'comic-shojo-manga', category: 'illustration', nameKo: '소녀 만화 (쇼조)', nameEn: 'Shojo Manga', emoji: '🌸',
+      desc: '꽃잎과 별빛이 가득한 소녀 만화. 繊細한 선, 큰 눈, 감정이 넘치는 표현.',
+      palette: ['#fff0f5','#ffb7d5','#d4a5c9','#f7d6e0','#c8a2c8'],
+      prompt: `shojo manga illustration, delicate fine line art with decorative flower and sparkle screentone patterns, large detailed emotional eyes with multiple highlight reflections, flowing hair with ribbon and bow accessories, color palette: #fff0f5 #ffb7d5 #d4a5c9 #f7d6e0 #c8a2c8, near-white blush pink for background glow, warm bubble gum pink for primary costume and cheek, dusty mauve lavender for shadow and hair, pale rose for secondary element, soft lilac for screentone and atmosphere, Ribon Margaret magazine aesthetic, CLAMP Naoko Takeuchi style`,
+      tags: ['소녀만화','망가','쇼조'] },
+
+    { id: 'comic-graphic-novel-noir', category: 'illustration', nameKo: '그래픽 노블 누아르', nameEn: 'Graphic Novel Noir', emoji: '🕵️',
+      desc: 'Sin City·Watchmen 스타일의 흑백 누아르. 극단적 명암과 간결한 실루엣.',
+      palette: ['#000000','#1a1a1a','#4a4a4a','#ffffff','#c0392b'],
+      prompt: `graphic novel noir illustration, extreme high contrast black and white ink, sharp silhouette against single light source, rain-slicked street reflection, minimal color accent, color palette: #000000 #1a1a1a #4a4a4a #ffffff #c0392b, pure black for dominant shadow and ink fill, very dark charcoal for secondary shadow, dark gray for mid-tone detail, pure white for single light source and highlight, vivid blood red as the only accent color, Frank Miller Sin City aesthetic, Alan Moore Watchmen visual language`,
+      tags: ['누아르','그래픽노블','흑백'] },
+
+    { id: 'comic-underground-comix', category: 'illustration', nameKo: '언더그라운드 코믹스', nameEn: 'Underground Comix', emoji: '🤪',
+      desc: '60-70년대 반문화 언더그라운드 만화. 거칠고 낙서 같은 선, 사이키델릭 색감.',
+      palette: ['#f5e6c8','#d4622a','#2d6e2a','#7b3fa0','#e8c84a'],
+      prompt: `underground comix alternative comics illustration, rough scratchy crosshatch ink line, deliberately crude expressive drawing style, psychedelic swirling background pattern, counter-culture underground press aesthetic, color palette: #f5e6c8 #d4622a #2d6e2a #7b3fa0 #e8c84a, aged newsprint cream for paper texture background, rust burnt orange-red for primary bold element, earthy forest green for organic shape, deep purple for psychedelic pattern, mustard yellow for retro accent, Robert Crumb Gilbert Shelton Zap Comix style`,
+      tags: ['언더그라운드','빈티지','사이키델릭'] },
+
+    { id: 'comic-vintage-newspaper-strip', category: 'illustration', nameKo: '신문 4컷 만화', nameEn: 'Newspaper Comic Strip', emoji: '📰',
+      desc: '피너츠·가필드 스타일의 신문 연재 만화. 단순하고 따뜻한 선화.',
+      palette: ['#fdf6e3','#2c2c2c','#d4a843','#5b8a5b','#c94040'],
+      prompt: `newspaper comic strip illustration, simple clean black outline cartoon style, minimal background detail, expressive round-headed simple characters, dotted halftone printing texture, color palette: #fdf6e3 #2c2c2c #d4a843 #5b8a5b #c94040, aged newsprint ivory for panel background, near-black for clean cartoon outline, warm golden yellow for hair and sunlight, muted sage green for nature element, muted red for costume and accent, Charles Schulz Peanuts Jim Davis Garfield Bill Watterson Calvin and Hobbes aesthetic`,
+      tags: ['신문만화','4컷','클래식'] },
+
+    // 손글씨·레터링 스타일
+    { id: 'letter-brush-calligraphy', category: 'illustration', nameKo: '붓글씨 캘리그라피', nameEn: 'Brush Calligraphy', emoji: '🖋',
+      desc: '먹물 붓글씨의 힘 있는 획. 전통 서예부터 현대 캘리까지 폭넓게 활용.',
+      palette: ['#f8f4ee','#1a1008','#3d2b1f','#8b7355','#c5b48a'],
+      prompt: `brush calligraphy ink lettering, expressive flowing brush strokes with visible ink texture and pressure variation, thin to thick stroke contrast, splatter ink accent, color palette: #f8f4ee #1a1008 #3d2b1f #8b7355 #c5b48a, warm aged paper ivory for textured background, pure sumi ink black for primary brushstroke, very dark sepia-brown for shadow stroke, medium warm brown for secondary brushwork, pale gold for aged paper midtone, Japanese East Asian sumi-e brush calligraphy tradition, modern lettering artist style`,
+      tags: ['캘리그라피','붓글씨','서예'] },
+
+    { id: 'letter-chalk-blackboard', category: 'illustration', nameKo: '칠판 분필 레터링', nameEn: 'Chalkboard Lettering', emoji: '🖊',
+      desc: '칠판 위 분필 손글씨. 카페 메뉴판, 이벤트 보드에서 가장 인기 있는 스타일.',
+      palette: ['#2d4a2d','#c8d8b4','#f0ead8','#a8c090','#e8e0c8'],
+      prompt: `chalkboard lettering illustration, white and cream chalk writing on dark green blackboard texture, hand-drawn decorative borders and floral flourish, menu board or event sign style, color palette: #2d4a2d #c8d8b4 #f0ead8 #a8c090 #e8e0c8, deep forest green for chalkboard surface, sage chalk green for secondary lettering, warm cream for primary chalk text highlight, muted medium green for decorative border element, pale warm cream for chalk dust smear effect, coffee shop menu board aesthetic, Joanne Sharpe chalk artist style`,
+      tags: ['칠판','분필','레터링'] },
+
+    { id: 'letter-blackletter-gothic', category: 'illustration', nameKo: '블랙레터 고딕', nameEn: 'Blackletter Gothic', emoji: '⚜️',
+      desc: '중세 유럽의 고딕 필기체. 금속 장식과 함께 럭셔리·스트리트 브랜드에서 즐겨 사용.',
+      palette: ['#0d0d0d','#c9a84c','#8b1a1a','#1a1a2e','#f5f0e0'],
+      prompt: `blackletter gothic calligraphy, ornate medieval manuscript letterform with thick and thin stroke contrast, decorative serif flourish and swash, color palette: #0d0d0d #c9a84c #8b1a1a #1a1a2e #f5f0e0, near-black ink for primary gothic letterform, antique gold leaf for ornamental border and illuminated initial, deep dark red for secondary letter and wax seal, very dark navy for shadow and background, aged vellum cream for parchment texture, German Fraktur Textura Quadrata style, luxury brand typography aesthetic`,
+      tags: ['고딕','블랙레터','중세'] },
+
+    { id: 'letter-watercolor-lettering', category: 'illustration', nameKo: '수채화 레터링', nameEn: 'Watercolor Lettering', emoji: '🌊',
+      desc: '물감이 번지는 수채화 효과와 손글씨의 조화. 웨딩·브랜딩에서 폭발적 인기.',
+      palette: ['#e8f4f8','#7ec8c8','#f4a7b9','#b8d4a8','#f9c784'],
+      prompt: `watercolor brush lettering, flowing script hand lettering with wet-on-wet watercolor wash bleeding effect, soft paint bloom and granulation texture, floral botanical element, color palette: #e8f4f8 #7ec8c8 #f4a7b9 #b8d4a8 #f9c784, near-white sky blue for wet wash background bloom, soft teal for primary lettering wash, blush rose pink for floral accent and secondary wash, sage mint green for botanical leaf element, soft golden yellow for highlight wash and warmth, wedding invitation stationery aesthetic, Molly Jacques modern calligraphy style`,
+      tags: ['수채화','레터링','웨딩'] },
+
+    { id: 'letter-vintage-sign-painting', category: 'illustration', nameKo: '빈티지 사인 페인팅', nameEn: 'Vintage Sign Painting', emoji: '🪧',
+      desc: '1950년대 미국 상점 간판 스타일. 쉐도우 레터, 아치형 텍스트, 레트로 팔레트.',
+      palette: ['#f5e6c0','#2c4a7c','#c4392b','#f0c040','#3a6b3a'],
+      prompt: `vintage American sign painting illustration, hand-lettered shop sign with drop shadow and inline highlight, arched or banner typography layout, aged retro color scheme, color palette: #f5e6c0 #2c4a7c #c4392b #f0c040 #3a6b3a, warm cream for sign board background and aged highlight, deep patriot blue for primary letter fill, classic American red for border stripe and accent letter, bright golden yellow for secondary lettering and star, forest green for tertiary element and frame, 1950s diner barber shop general store aesthetic, letterpress typography tradition`,
+      tags: ['빈티지','사인','레트로'] },
+
+    // 스케치 스타일
+    { id: 'sketch-pencil-rough', category: 'illustration', nameKo: '연필 러프 스케치', nameEn: 'Pencil Rough Sketch', emoji: '✏️',
+      desc: '연필의 거친 질감이 살아있는 러프 스케치. 아이디어 발상과 창작 과정의 날것 표현.',
+      palette: ['#f8f6f2','#2c2c2c','#8a8a8a','#c8c0b0','#a09080'],
+      prompt: `pencil rough sketch drawing, visible graphite texture and stroke direction, loose gestural lines with construction guidelines showing, light and shadow through hatching and cross-hatching technique, color palette: #f8f6f2 #2c2c2c #8a8a8a #c8c0b0 #a09080, slightly warm off-white for sketch paper texture, dark graphite for primary bold pressure stroke, medium gray for secondary lighter stroke, warm gray-beige for paper mid-tone, muted warm taupe for erasure smudge area, concept artist sketchbook style, Frank Frazetta preliminary sketch aesthetic`,
+      tags: ['연필','스케치','드로잉'] },
+
+    { id: 'sketch-ink-pen', category: 'illustration', nameKo: '펜 잉크 스케치', nameEn: 'Ink Pen Sketch', emoji: '🖊',
+      desc: '파인라이너·만년필의 정밀한 잉크 스케치. 건축·자연물 드로잉에서 많이 사용.',
+      palette: ['#f4f0e8','#1a1410','#4a3e32','#8a7a6a','#c8bca8'],
+      prompt: `ink pen sketch illustration, fine liner technical pen line work, varied line weight from thin detail to bold outline, stippling and hatching for shadow and texture, color palette: #f4f0e8 #1a1410 #4a3e32 #8a7a6a #c8bca8, warm aged paper for background, deep warm near-black for primary ink line, dark brown sepia for secondary shadow stroke, medium warm brown for mid-tone hatch, pale beige for paper grain highlight, Moleskine sketchbook quality, urban sketching plein air style, Alphonse Mucha technical ink drawing`,
+      tags: ['펜드로잉','잉크','세밀화'] },
+
+    { id: 'sketch-fashion-croquis', category: 'illustration', nameKo: '패션 크로키', nameEn: 'Fashion Croquis', emoji: '👗',
+      desc: '패션 디자이너의 길고 우아한 인체 크로키. 빠른 선으로 표현한 의상 스케치.',
+      palette: ['#faf7f2','#1a1a1a','#d4b896','#8c7b6e','#c8a882'],
+      prompt: `fashion croquis illustration, elongated stylized figure with 9-10 head proportion, loose gestural brushstroke garment sketch, confident single-stroke outline, color palette: #faf7f2 #1a1a1a #d4b896 #8c7b6e #c8a882, warm white for fashion sketch pad background, near-black for primary confident croquis outline, warm tan for skin tone wash, muted brown for shadow drape and fold indication, warm medium beige for secondary skin, fashion design school atelier aesthetic, Karl Lagerfeld Christian Dior sketch style`,
+      tags: ['패션','크로키','인체'] },
+
+    { id: 'sketch-architectural', category: 'illustration', nameKo: '건축 스케치', nameEn: 'Architectural Sketch', emoji: '🏛',
+      desc: '건축가의 손 스케치. 1점 투시도법, 빠른 선, 수채화 워시의 조합.',
+      palette: ['#f8f5ef','#1e1a14','#6a9ac4','#c4a878','#8aae8a'],
+      prompt: `architectural hand sketch illustration, one-point perspective building drawing with loose confident line work, watercolor wash fill over ink outline, entourage people and trees for scale, color palette: #f8f5ef #1e1a14 #6a9ac4 #c4a878 #8aae8a, warm cream for sketch paper background, near-black for primary perspective construction line, sky blue watercolor for atmospheric wash and glass, warm ochre brown for stone and brick material, sage green for landscape entourage tree, Zaha Hadid Tadao Ando hand drawing style, architectural visualization sketch`,
+      tags: ['건축','스케치','투시도'] },
+
+    { id: 'sketch-gesture-drawing', category: 'illustration', nameKo: '제스처 드로잉', nameEn: 'Gesture Drawing', emoji: '🤸',
+      desc: '빠른 포즈 캡처의 생동감 있는 제스처 드로잉. 움직임의 에너지와 흐름을 표현.',
+      palette: ['#f5f0ea','#2a2018','#c06030','#6080a0','#90a060'],
+      prompt: `gesture drawing life drawing sketch, rapid 30-second to 2-minute pose capture, fluid dynamic line of action, minimal construction lines showing movement flow and weight, color palette: #f5f0ea #2a2018 #c06030 #6080a0 #90a060, warm ivory for newsprint paper texture, very dark warm brown for primary gesture line, terracotta orange-red for energy line and center of gravity indicator, muted slate blue for shadow mass indication, muted olive green for secondary line weight, Bridgman Vilppu Loomis figure drawing aesthetic, animation character pose study`,
+      tags: ['제스처','인체드로잉','동세'] },
+
+    { id: 'sketch-scientific-illustration', category: 'illustration', nameKo: '과학 세밀화', nameEn: 'Scientific Illustration', emoji: '🔬',
+      desc: '정밀하고 아름다운 과학 도감 스타일. 곤충·식물·해부도의 세밀한 묘사.',
+      palette: ['#f9f5ed','#1a1a0a','#3d6e3d','#8b4513','#4a6fa5'],
+      prompt: `scientific botanical zoological illustration, highly detailed naturalist drawing style with precise anatomical accuracy, stipple and fine crosshatch shading technique, labeled diagram with thin leader lines, color palette: #f9f5ed #1a1a0a #3d6e3d #8b4513 #4a6fa5, aged natural history book paper for background, near-black for precise scientific outline, botanical forest green for plant specimen, warm saddle brown for insect exoskeleton and dried specimen, medium blue for water organism and vein detail, Audubon Haeckel Maria Sibylla Merian natural history illustration style`,
+      tags: ['과학일러스트','세밀화','도감'] }
   ];
 
   // ── 렌더링 엔진 ─────────────────────────────────────────────
@@ -1506,6 +1619,298 @@
   }
 
   function buildGradient(p) { return `linear-gradient(135deg, ${p[0]} 0%, ${p[1]} 100%)`; }
+
+  const PROMOTION_PROMPT_DEFAULTS = {
+    game: {
+      textureRendering: 'game-ready illustration finish with crisp readable details',
+      lightingMood: 'high-contrast focal lighting that supports fast visual recognition',
+      shapeLanguage: 'iconic character-like silhouettes, clear foreground/background separation',
+      layoutBehavior: 'hero object centered with room for campaign headline and CTA',
+      typographyGuidance: 'bold display type or game UI label treatment, keep text short and legible',
+      campaignAdaptation: 'adapt as launch key art, event banner, or reward announcement',
+      objectAdaptation: 'turn the promoted product into a collectible game item or quest object',
+      avoid: 'avoid cluttered HUD overload, unreadable tiny details, and mismatched fantasy props',
+      qualityRules: 'keep silhouettes strong, edges intentional, and palette contrast high'
+    },
+    '3d': {
+      textureRendering: 'polished 3D rendering with controlled material highlights',
+      lightingMood: 'soft studio lighting with ambient occlusion and readable depth',
+      shapeLanguage: 'clean geometric volumes, rounded or faceted forms based on the style',
+      layoutBehavior: 'product or offer object in a clean spatial composition with depth layers',
+      typographyGuidance: 'modern sans-serif typography, placed on simple planes with clear contrast',
+      campaignAdaptation: 'adapt as tech showcase, service explainer, or feature launch visual',
+      objectAdaptation: 'translate the promoted item into a dimensional icon, device, package, or scene prop',
+      avoid: 'avoid plastic-looking overgloss, distorted perspective, and fake terrain unless requested',
+      qualityRules: 'keep lighting believable, materials consistent, and composition uncluttered'
+    },
+    craft: {
+      textureRendering: 'visible handmade texture, material grain, tactile imperfections',
+      lightingMood: 'warm natural or soft studio lighting that preserves material detail',
+      shapeLanguage: 'organic handcrafted shapes with slight irregularity and human touch',
+      layoutBehavior: 'flat lay, tabletop, or poster-like arrangement with calm negative space',
+      typographyGuidance: 'handmade lettering or warm serif/sans pairing, avoid over-polished type',
+      campaignAdaptation: 'adapt as artisan brand, workshop, seasonal offer, or cozy product visual',
+      objectAdaptation: 'render the promoted item as a handmade object, paper piece, textile, or painted motif',
+      avoid: 'avoid sterile digital finish, excessive symmetry, and glossy stock-photo polish',
+      qualityRules: 'preserve tactile cues, readable subject boundaries, and natural color variation'
+    },
+    illustration: {
+      textureRendering: 'illustrated finish using the selected line, fill, or drawing technique',
+      lightingMood: 'stylized lighting that supports the illustration language without photorealism',
+      shapeLanguage: 'clear drawn silhouettes, expressive line weight, controlled decorative detail',
+      layoutBehavior: 'poster, editorial, or character-led composition with strong focal hierarchy',
+      typographyGuidance: 'match type to the illustration era and keep campaign copy integrated but readable',
+      campaignAdaptation: 'adapt as poster, social key visual, story card, or editorial campaign image',
+      objectAdaptation: 'convert the promoted item into a drawn hero motif or supporting prop',
+      avoid: 'avoid generic clip-art, inconsistent line styles, and overcrowded decoration',
+      qualityRules: 'keep line treatment consistent, focal subject clear, and decorative elements intentional'
+    },
+    modern: {
+      textureRendering: 'clean graphic finish with controlled flat, print, or vector treatment',
+      lightingMood: 'minimal implied lighting or high-contrast graphic separation',
+      shapeLanguage: 'geometric forms, bold planes, and simple repeatable visual systems',
+      layoutBehavior: 'grid-based campaign layout with strong headline zone and modular spacing',
+      typographyGuidance: 'confident modern typography, high contrast, tight copy hierarchy',
+      campaignAdaptation: 'adapt as brand campaign, presentation cover, event poster, or social ad',
+      objectAdaptation: 'simplify the promoted item into a bold graphic icon, silhouette, or abstract mark',
+      avoid: 'avoid random decoration, weak alignment, and low-contrast palette mixing',
+      qualityRules: 'maintain grid discipline, color hierarchy, and sharp vector-like edges'
+    },
+    photo: {
+      textureRendering: 'photographic surface detail with realistic lens and material response',
+      lightingMood: 'cinematic or editorial lighting guided by the source style mood',
+      shapeLanguage: 'real-world object silhouettes with believable scale and perspective',
+      layoutBehavior: 'hero product or lifestyle scene with clean space for campaign copy',
+      typographyGuidance: 'restrained editorial typography, placed away from subject detail',
+      campaignAdaptation: 'adapt as advertising key visual, product story, or lifestyle campaign',
+      objectAdaptation: 'stage the promoted item as a real product, prop, or experience anchor',
+      avoid: 'avoid fake-looking composites, warped products, and unreadable busy backgrounds',
+      qualityRules: 'keep realism consistent, lens perspective plausible, and subject detail sharp'
+    },
+    fashion: {
+      textureRendering: 'fashion editorial fabric, styling, and surface detail',
+      lightingMood: 'editorial studio or runway-inspired lighting with clear garment texture',
+      shapeLanguage: 'elegant body lines, garment silhouettes, and refined accessory shapes',
+      layoutBehavior: 'magazine-style hero framing with premium negative space',
+      typographyGuidance: 'luxury editorial type, minimal copy, precise placement',
+      campaignAdaptation: 'adapt as lookbook, premium launch, seasonal campaign, or brand editorial',
+      objectAdaptation: 'style the promoted item as an accessory, garment detail, or fashion set piece',
+      avoid: 'avoid awkward anatomy, cheap styling, and fabric texture mismatch',
+      qualityRules: 'preserve proportions, styling coherence, and premium material cues'
+    },
+    arch: {
+      textureRendering: 'architectural material detail with clean structure and scale cues',
+      lightingMood: 'natural daylight, gallery light, or dramatic architectural shadow',
+      shapeLanguage: 'spatial geometry, clean planes, structural rhythm, human-scale references',
+      layoutBehavior: 'wide composition, perspective depth, and clear copy-safe zones',
+      typographyGuidance: 'architectural sans-serif or editorial serif, restrained and aligned',
+      campaignAdaptation: 'adapt as venue promotion, real estate visual, exhibition, or spatial brand image',
+      objectAdaptation: 'place the promoted item as signage, installation, furnishing, or architectural focal point',
+      avoid: 'avoid impossible construction, broken perspective, and scale confusion',
+      qualityRules: 'keep perspective stable, materials coherent, and spatial hierarchy readable'
+    },
+    sport: {
+      textureRendering: 'dynamic sport finish with motion, fabric, equipment, or field texture',
+      lightingMood: 'energetic arena, outdoor, or action lighting with strong contrast',
+      shapeLanguage: 'athletic diagonals, motion arcs, powerful silhouettes',
+      layoutBehavior: 'action-first composition with bold score, event, or offer space',
+      typographyGuidance: 'condensed bold sport typography, high legibility under motion',
+      campaignAdaptation: 'adapt as match poster, tournament promo, class/event ad, or athlete feature',
+      objectAdaptation: 'make the promoted item part of equipment, prize, jersey, or action moment',
+      avoid: 'avoid weak motion, impossible poses, and confusing team/color hierarchy',
+      qualityRules: 'keep action readable, anatomy plausible, and brand/event information clear'
+    },
+    brand: {
+      textureRendering: 'brand-system polish with consistent surfaces and campaign-ready finish',
+      lightingMood: 'controlled commercial lighting that supports trust and recognition',
+      shapeLanguage: 'repeatable brand motifs, strong logo-safe shapes, tidy iconography',
+      layoutBehavior: 'clear ad layout with headline, visual proof, and conversion area',
+      typographyGuidance: 'brand-safe typography hierarchy, short claims, strong CTA contrast',
+      campaignAdaptation: 'adapt as launch ad, offer card, website hero, or social campaign',
+      objectAdaptation: 'turn the promoted item into the central brand proof or product hero',
+      avoid: 'avoid fake logos, cluttered claims, and off-brand decorative noise',
+      qualityRules: 'prioritize brand consistency, readable claims, and clean commercial composition'
+    },
+    nature: {
+      textureRendering: 'organic natural texture with foliage, terrain, weather, or botanical detail',
+      lightingMood: 'natural ambient light, golden hour, mist, or eco-focused softness',
+      shapeLanguage: 'organic curves, layered landscapes, botanical silhouettes',
+      layoutBehavior: 'scene-led composition with breathable copy space and environmental context',
+      typographyGuidance: 'calm natural typography, avoid overly synthetic effects',
+      campaignAdaptation: 'adapt as eco campaign, travel visual, wellness offer, or outdoor product story',
+      objectAdaptation: 'place the promoted item naturally within landscape, botanical, or outdoor context',
+      avoid: 'avoid fake ecology, over-saturated greens, and inaccurate natural textures',
+      qualityRules: 'keep nature cues believable, atmosphere gentle, and subject relationship clear'
+    },
+    food: {
+      textureRendering: 'appetizing food texture, surface gloss, garnish, and plating detail',
+      lightingMood: 'warm appetizing light or clean menu photography light',
+      shapeLanguage: 'rounded edible forms, plate geometry, ingredient rhythm',
+      layoutBehavior: 'menu, hero dish, or tabletop layout with room for offer text',
+      typographyGuidance: 'clear menu typography, price/offer copy must stay readable',
+      campaignAdaptation: 'adapt as menu promo, delivery ad, seasonal item, or restaurant campaign',
+      objectAdaptation: 'style the promoted item as dish, packaging, ingredient, or table moment',
+      avoid: 'avoid unappetizing colors, warped food anatomy, and messy plating',
+      qualityRules: 'make food look fresh, textures specific, and offer hierarchy clear'
+    },
+    culture: {
+      textureRendering: 'culturally grounded material, pattern, craft, or heritage detail',
+      lightingMood: 'respectful atmospheric lighting that highlights tradition and texture',
+      shapeLanguage: 'heritage motifs, ceremonial symmetry, or locally meaningful ornament',
+      layoutBehavior: 'balanced poster or scene composition with context and dignity',
+      typographyGuidance: 'use culturally appropriate type cues without reducing readability',
+      campaignAdaptation: 'adapt as festival, exhibition, tourism, heritage, or cultural product visual',
+      objectAdaptation: 'integrate the promoted item with relevant craft, pattern, place, or ritual context',
+      avoid: 'avoid costume clichés, inaccurate symbols, and disrespectful cultural mixing',
+      qualityRules: 'keep references respectful, specific, and visually coherent'
+    },
+    science: {
+      textureRendering: 'precise scientific, diagrammatic, glass, metal, or lab texture',
+      lightingMood: 'clean lab light, data glow, or controlled explanatory illumination',
+      shapeLanguage: 'structured diagrams, modular systems, particles, charts, or instruments',
+      layoutBehavior: 'explanatory campaign layout with clear focal evidence and copy-safe zones',
+      typographyGuidance: 'technical sans-serif, labels concise, hierarchy clean',
+      campaignAdaptation: 'adapt as research launch, education poster, explainer, or technical campaign',
+      objectAdaptation: 'translate the promoted item into a specimen, instrument, diagram, or discovery moment',
+      avoid: 'avoid fake scientific labels, impossible instruments, and visual misinformation',
+      qualityRules: 'keep details precise, labels plausible, and visual evidence clear'
+    },
+    bio: {
+      textureRendering: 'biological micro-texture, translucent membranes, organic structures',
+      lightingMood: 'clean clinical light or soft bioluminescent depth',
+      shapeLanguage: 'cellular, molecular, anatomical, or organic network forms',
+      layoutBehavior: 'science-marketing composition with clear subject and calm copy zone',
+      typographyGuidance: 'clinical modern type, avoid sensational medical claims',
+      campaignAdaptation: 'adapt as biotech, health, wellness, research, or product education visual',
+      objectAdaptation: 'relate the promoted item to cell, molecule, ingredient, anatomy, or life-system motif',
+      avoid: 'avoid misleading medical certainty, grotesque anatomy, and inaccurate scale cues',
+      qualityRules: 'preserve biological plausibility, clarity, and trustworthy tone'
+    },
+    energy: {
+      textureRendering: 'energy glow, metal, grid, plasma, battery, or infrastructure detail',
+      lightingMood: 'bright directional glow or industrial clean light with high impact',
+      shapeLanguage: 'arcs, currents, grids, turbines, cells, or power-flow shapes',
+      layoutBehavior: 'forward-motion composition with strong headline and proof area',
+      typographyGuidance: 'bold technical typography, clear metrics and CTA',
+      campaignAdaptation: 'adapt as sustainability, infrastructure, power product, or innovation campaign',
+      objectAdaptation: 'connect the promoted item to power flow, charging, solar, wind, or grid motif',
+      avoid: 'avoid unsafe equipment depictions, fake meters, and chaotic glow effects',
+      qualityRules: 'keep energy direction clear, materials credible, and contrast controlled'
+    },
+    software: {
+      textureRendering: 'digital interface, data, glassmorphism, code, or clean product UI finish',
+      lightingMood: 'controlled screen glow or calm SaaS-style visual light',
+      shapeLanguage: 'modular UI panels, nodes, flows, dashboards, and product-system geometry',
+      layoutBehavior: 'screen-led layout with readable interface zones and campaign copy area',
+      typographyGuidance: 'clean SaaS typography, concise feature labels, strong CTA',
+      campaignAdaptation: 'adapt as SaaS ad, feature announcement, AI launch, or product explainer',
+      objectAdaptation: 'represent the promoted item as an interface, workflow, automation, or data object',
+      avoid: 'avoid unreadable fake UI, excessive neon, and meaningless data clutter',
+      qualityRules: 'make UI elements plausible, hierarchy scannable, and claims visually supported'
+    },
+    heavy: {
+      textureRendering: 'industrial metal, machinery, concrete, logistics, or manufacturing texture',
+      lightingMood: 'realistic factory, workshop, or infrastructure lighting',
+      shapeLanguage: 'large-scale equipment, structural lines, modular components, heavy silhouettes',
+      layoutBehavior: 'robust commercial composition with clear scale and product proof',
+      typographyGuidance: 'strong industrial sans-serif, concise and practical copy',
+      campaignAdaptation: 'adapt as B2B industrial ad, facility story, equipment launch, or service promo',
+      objectAdaptation: 'place the promoted item within machinery, logistics, process, or facility context',
+      avoid: 'avoid unsafe workplace setups, impossible machinery, and dirty visual clutter',
+      qualityRules: 'keep scale believable, surfaces specific, and operational context clear'
+    }
+  };
+
+  const PROMOTION_SIGNAL_PATTERNS = {
+    textureRendering: [
+      'pixel', 'matte', 'paper grain', 'brushstroke', 'canvas', 'halftone', 'stitch', 'fabric',
+      'collage', 'grain', 'gloss', 'metal', 'glass', 'neon', 'watercolor', 'ink', 'pencil',
+      'chalk', 'cross-hatching', 'stippling', 'voxel', 'clay', 'origami'
+    ],
+    lightingMood: [
+      'dramatic', 'chiaroscuro', 'volumetric fog', 'soft warm studio lighting', 'cinematic',
+      'neon', 'glowing', 'golden', 'studio lighting', 'natural light', 'single light source',
+      'ambient occlusion', 'lens flare', 'bioluminescent'
+    ],
+    shapeLanguage: [
+      'geometric', 'rounded', 'angular', 'faceted', 'organic', 'line art', 'bold outline',
+      'silhouette', 'isometric', 'diagonal', 'cubic', 'flat', 'ornate', 'flowing'
+    ],
+    layoutBehavior: [
+      'poster', 'grid', 'dynamic composition', 'isometric', 'vertical scroll', 'panel layout',
+      'flat lay', 'centered', 'minimalist', 'negative space', 'wide composition', 'diagram'
+    ],
+    typographyGuidance: [
+      'typography', 'lettering', 'calligraphy', 'blackletter', 'chalkboard', 'sign painting',
+      'speech bubble', 'label', 'menu board', 'poster'
+    ]
+  };
+
+  function uniqueList(items) {
+    return Array.from(new Set(items.filter(Boolean)));
+  }
+
+  function findPromptSignals(style, group) {
+    const source = `${style.prompt || ''} ${style.desc || ''} ${(style.tags || []).join(' ')}`.toLowerCase();
+    return PROMOTION_SIGNAL_PATTERNS[group].filter(term => source.includes(term.toLowerCase()));
+  }
+
+  function addSignals(baseText, signals) {
+    if (!signals.length) return baseText;
+    return `${baseText}; extracted cues: ${signals.join(', ')}`;
+  }
+
+  function buildPromotionPromptParts(style) {
+    const defaults = PROMOTION_PROMPT_DEFAULTS[style.category] || PROMOTION_PROMPT_DEFAULTS.modern;
+    const tags = style.tags || [];
+    const palette = style.palette || [];
+    const paletteRoles = palette.map((hex, index) => {
+      const role = ['primary', 'secondary', 'accent', 'highlight', 'support'][index] || `color ${index + 1}`;
+      return `${role} ${hex}`;
+    });
+    const styleDNA = uniqueList([style.nameEn, style.nameKo, CAT_KO[style.category], ...tags]).join(' / ');
+    const signalGroups = Object.keys(PROMOTION_SIGNAL_PATTERNS).reduce((acc, key) => {
+      acc[key] = findPromptSignals(style, key);
+      return acc;
+    }, {});
+
+    return {
+      visualDNA: `${styleDNA}. ${style.desc}`,
+      paletteStrategy: `Use the selected concept palette as campaign color roles: ${paletteRoles.join(', ')}.`,
+      textureRendering: addSignals(defaults.textureRendering, signalGroups.textureRendering),
+      lightingMood: addSignals(defaults.lightingMood, signalGroups.lightingMood),
+      shapeLanguage: addSignals(defaults.shapeLanguage, signalGroups.shapeLanguage),
+      layoutBehavior: addSignals(defaults.layoutBehavior, signalGroups.layoutBehavior),
+      typographyGuidance: addSignals(defaults.typographyGuidance, signalGroups.typographyGuidance),
+      campaignAdaptation: defaults.campaignAdaptation,
+      objectAdaptation: defaults.objectAdaptation,
+      avoid: `${defaults.avoid}; avoid losing the original style identity from the source concept.`,
+      qualityRules: `${defaults.qualityRules}; preserve item-level product readability and campaign usability.`
+    };
+  }
+
+  function buildPromotionConceptStyle(style) {
+    const promptParts = buildPromotionPromptParts(style);
+    const promotionPrompt = [
+      promptParts.visualDNA,
+      promptParts.paletteStrategy,
+      promptParts.textureRendering,
+      promptParts.lightingMood,
+      promptParts.shapeLanguage,
+      promptParts.layoutBehavior,
+      promptParts.typographyGuidance,
+      promptParts.campaignAdaptation,
+      promptParts.objectAdaptation,
+      `Avoid: ${promptParts.avoid}`,
+      `Quality rules: ${promptParts.qualityRules}`,
+      `Source style prompt: ${style.prompt}`
+    ].join('\n');
+
+    return Object.assign({}, style, {
+      promptParts,
+      promotionPrompt
+    });
+  }
 
 
   function createCard(style) {
@@ -1569,7 +1974,7 @@
 
     applyBtn.addEventListener('click', () => {
       if (typeof window.applyPromotionConceptStyle === 'function') {
-        window.applyPromotionConceptStyle(style);
+        window.applyPromotionConceptStyle(buildPromotionConceptStyle(style));
         const tabBtn = document.getElementById('tabBtnPromotion');
         if (tabBtn) tabBtn.click();
       } else {
