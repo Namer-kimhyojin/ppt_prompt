@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="styles/image-generation.css" />
   <link rel="stylesheet" href="styles/map-prompt.css" />
   <link rel="stylesheet" href="styles/slide-document.css" />
-  <link rel="stylesheet" href="styles/theme.css" />
+  <link rel="stylesheet" href="styles/theme.css?v=concept-dark-20260605" />
 </head>
 <body>
   <header class="app-header">
@@ -234,7 +234,25 @@ Global visual style:
             </div>
             <textarea id="genSplitRules" class="gen-textarea" rows="4">slide|^##\s+슬라이드\s+(\d{2})\.\s*(.+)$
 appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
-            <p class="gen-hint">한 줄에 하나씩 `type|regex` 형식으로 입력합니다. `type`은 `slide` 또는 `appendix`를 사용하고, 정규식은 `번호`와 `제목`을 캡처하는 2개 그룹을 포함해야 합니다.</p>
+            <p class="gen-hint">한 줄에 하나씩 `type|regex` 형식으로 입력합니다. 도우미에서 만든 규칙은 자동 저장되며, MD 내용과 맞는지 아래에서 바로 확인할 수 있습니다.</p>
+            <div class="gen-split-manage">
+              <div class="gen-split-manage-row">
+                <input id="genSplitRulesName" class="gen-input-text" type="text" placeholder="저장할 규칙 이름" />
+                <button class="gen-btn secondary" id="genSplitRulesSaveNamedBtn" type="button">현재 규칙 저장</button>
+              </div>
+              <div class="gen-split-manage-row">
+                <select id="genSplitRulesSavedSelect" class="gen-select" aria-label="저장된 구분 규칙"></select>
+                <button class="gen-btn ghost" id="genSplitRulesLoadNamedBtn" type="button">불러오기</button>
+                <button class="gen-btn ghost" id="genSplitRulesDeleteNamedBtn" type="button">삭제</button>
+              </div>
+            </div>
+            <div class="gen-split-live">
+              <div class="gen-split-live-head">
+                <strong>실시간 구분 미리보기</strong>
+                <span id="genSplitRulesPreviewBadge">대기 중</span>
+              </div>
+              <div id="genSplitRulesPreview" class="gen-split-live-list" aria-live="polite"></div>
+            </div>
           </div>
 
           <div class="gen-row">
@@ -627,8 +645,57 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </div><!-- /promo-step-body -->
           </details><!-- /step 2 -->
 
+          <section class="gen-config-group gen-config-group-wide promo-visual-mode-section">
+            <div class="gen-config-label-row">
+              <div class="promo-visual-mode-text">
+                <div class="gen-config-label">비주얼 기획 모드</div>
+                <p class="gen-config-guide" id="promotionVisualPlanningModeHint">컨셉 제안 중심 또는 직접 기획 중심으로 최종 프롬프트 구성을 전환합니다.</p>
+              </div>
+              <div class="promo-mode-toggle" id="promotionVisualPlanningModeToggle" role="group" aria-label="비주얼 기획 모드">
+                <button type="button" class="promo-mode-toggle-btn active" data-promo-visual-planning-mode="basic" aria-pressed="true">기본 모드</button>
+                <button type="button" class="promo-mode-toggle-btn" data-promo-visual-planning-mode="detail" aria-pressed="false">상세 모드</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="gen-config-group gen-config-group-wide promo-variation-panel">
+            <div class="gen-config-label-row promo-variation-label-row">
+              <div class="gen-config-label">변형</div>
+              <div class="promo-segmented promo-variation-segmented" id="promotionVariationModeToggle" role="group" aria-label="변형 방향 선택">
+                <button type="button" class="promo-segment-btn active" data-promo-variation="none" aria-pressed="true">없음</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="typo" aria-pressed="false">타이포</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="visual" aria-pressed="false">비주얼</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="experimental" aria-pressed="false">실험적</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="gen-config-group gen-config-group-wide promo-basic-concept-panel" id="promotionBasicConceptPanel" data-promo-mode-panel="basic">
+            <div class="gen-config-label-row" style="margin-bottom:10px">
+              <div class="gen-config-label">비주얼 컨셉</div>
+            </div>
+            <div id="promotionConceptEmpty" class="promo-concept-empty">
+              <p class="promo-concept-empty-text">컨셉이 아직 적용되지 않았습니다. 컨셉 제안 탭에서 스타일을 선택하면 자동으로 반영됩니다.</p>
+              <button type="button" class="promo-concept-nav-btn" id="promotionConceptSelectBtn">컨셉 제안으로 이동 →</button>
+            </div>
+            <div id="promotionConceptApplied" class="promo-concept-applied" hidden>
+              <div class="promo-concept-card">
+                <div class="promo-concept-card-header">
+                  <span class="promo-concept-card-emoji" id="promotionConceptEmoji"></span>
+                  <div class="promo-concept-card-meta">
+                    <span class="promo-concept-card-name" id="promotionConceptName"></span>
+                    <span class="promo-concept-card-cat" id="promotionConceptCat"></span>
+                  </div>
+                  <button type="button" class="promo-concept-change-btn" id="promotionConceptChangeBtn">컨셉 변경</button>
+                </div>
+                <p class="promo-concept-card-desc" id="promotionConceptCardDesc"></p>
+                <div class="promo-concept-card-palette" id="promotionConceptCardPalette"></div>
+              </div>
+            </div>
+          </section>
+
           <!-- ── STEP 3: 비주얼 방향 ── -->
-          <details class="promo-step-disclosure" id="promotionStepVisual" open>
+          <details class="promo-step-disclosure" id="promotionStepVisual" data-promo-mode-panel="detail" open>
             <summary class="promo-step-summary">
               <span class="promo-step-num">3</span>
               <div class="promo-step-copy">
@@ -825,7 +892,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           </details><!-- /step 3 -->
 
           <!-- ── STEP 4: 색상 & 배경 ── -->
-          <details class="promo-step-disclosure" id="promotionStepColor">
+          <details class="promo-step-disclosure" id="promotionStepColor" data-promo-mode-panel="detail">
             <summary class="promo-step-summary">
               <span class="promo-step-num">4</span>
               <div class="promo-step-copy">
@@ -933,7 +1000,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           </details><!-- /step 4 -->
 
           <!-- ── STEP 5: 제약 & 품질 · 고급 방향 ── -->
-          <details class="promo-step-disclosure" id="promotionStepConstraints">
+          <details class="promo-step-disclosure" id="promotionStepConstraints" data-promo-mode-panel="detail">
             <summary class="promo-step-summary">
               <span class="promo-step-num">5</span>
               <div class="promo-step-copy">
@@ -1107,99 +1174,37 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           </select>
         </div>
 
-        <!-- ② 프롬프트 textarea (패널 남은 높이 전부) -->
+        <!-- ② 통계 바 (topbar 바로 아래, 항상 가시 영역에 위치) -->
+        <div class="promo-stats-bar" id="promotionStatsBar">
+          <div class="promo-stats-row">
+            <span class="promo-stat-chip" id="promotionStatSections">섹션 –</span>
+            <span class="promo-stat-chip" id="promotionStatLines">– 줄</span>
+            <span class="promo-stat-chip promo-stat-tokens" id="promotionStatTokens">≈ – 토큰</span>
+          </div>
+          <div class="promo-token-gauge" id="promotionTokenGauge">
+            <div class="promo-token-gauge-fill" id="promotionTokenGaugeFill"></div>
+          </div>
+        </div>
+
+        <!-- ③ 프롬프트 textarea (패널 남은 높이 전부) -->
         <div class="promo-prompt-body">
           <textarea class="gen-textarea promo-pre promo-prompt-editor" id="promotionPromptPreview" spellcheck="false"></textarea>
-          <div class="promo-status" id="promotionStatus" aria-live="polite"></div>
         </div>
 
-        <!-- ③ 하단 보조 영역 (접기/펼치기) -->
-        <div class="promo-aux-area">
-
-          <!-- 자동화 옵션 + 변형 -->
-          <div class="promo-automation-bar">
-            <label class="promo-automation-toggle-compact" for="promotionOmitEmptyFields" title="빈 항목 제외">
-              <input type="checkbox" id="promotionOmitEmptyFields" data-promo-optimization-option="omit-empty-fields" checked />
-              <span>빈 항목 제외</span>
-            </label>
-            <label class="promo-automation-toggle-compact" for="promotionDedupePromptLines" title="중복 줄 제거">
-              <input type="checkbox" id="promotionDedupePromptLines" data-promo-optimization-option="dedupe-prompt-lines" checked />
-              <span>중복 제거</span>
-            </label>
-            <label class="promo-automation-toggle-compact" for="promotionAutoResolveConflicts" title="충돌 자동 정리">
-              <input type="checkbox" id="promotionAutoResolveConflicts" data-promo-optimization-option="auto-resolve-conflicts" checked />
-              <span>충돌 정리</span>
-            </label>
-            <div class="promo-variation-row">
-              <span class="promo-control-label-inline">변형</span>
-              <div class="promo-segmented promo-variation-segmented" id="promotionVariationModeToggle" role="group" aria-label="변형 방향 선택">
-                <button type="button" class="promo-segment-btn active" data-promo-variation="none" aria-pressed="true">없음</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="typo" aria-pressed="false">타이포</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="visual" aria-pressed="false">비주얼</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="experimental" aria-pressed="false">실험적</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lint 패널 -->
-          <div class="promo-lint-shell" id="promotionLintPanel">
-            <div class="promo-lint-toolbar">
-              <div class="promo-lint-metrics" id="promotionLintMetrics">
-                <span class="promo-lint-chip is-neutral">대기 중</span>
-              </div>
-              <span class="promo-inline-badge subtle" id="promotionLintBadge">Lint ready</span>
-            </div>
-            <div class="promo-lint-grid">
-              <section class="promo-lint-column">
-                <span class="promo-control-label">검토 노트</span>
-                <div class="promo-lint-list" id="promotionLintList"></div>
-              </section>
-              <section class="promo-lint-column">
-                <span class="promo-control-label">최적화 요약</span>
-                <div class="promo-lint-list" id="promotionOptimizationSummary"></div>
-              </section>
-            </div>
-            <div class="promo-quick-action-row" id="promotionQuickActions">
-              <button type="button" class="promo-quick-action-btn" id="promotionPruneEmptyBtn" data-promo-quick-action="prune-empty-fields">빈 항목 제거</button>
-              <button type="button" class="promo-quick-action-btn" id="promotionResetTextBtn" data-promo-quick-action="reset-text-only">텍스트 리셋</button>
-              <button type="button" class="promo-quick-action-btn" id="promotionResetStyleBtn" data-promo-quick-action="reset-style-only">스타일 리셋</button>
-              <button type="button" class="promo-quick-action-btn" id="promotionResetColorsBtn" data-promo-quick-action="reset-colors-background">색상 리셋</button>
-              <button type="button" class="promo-quick-action-btn" id="promotionReapplyTemplateBtn" data-promo-quick-action="reapply-template">템플릿 재적용</button>
-              <button type="button" class="promo-quick-action-btn is-primary" id="promotionOptimizePromptBtn" data-promo-quick-action="optimize-prompt">최적화 실행</button>
-            </div>
-          </div>
-
-          <!-- 입력 요약 (접기) -->
-          <details class="promo-aux-disclosure">
-            <summary class="promo-aux-summary">입력 요약 · 설계 방향</summary>
-            <div class="promo-aux-body">
-              <div class="gen-config-summary" id="promotionSummary"></div>
-              <div class="promo-preview-grid">
-                <section class="gen-config-group">
-                  <label class="gen-config-label">이미지에 들어갈 텍스트</label>
-                  <div class="promo-data-list" id="promotionVisibleTextList"></div>
-                </section>
-                <section class="gen-config-group">
-                  <label class="gen-config-label">디자인 / 전략 지시</label>
-                  <div class="promo-data-list" id="promotionInstructionList"></div>
-                </section>
-              </div>
-              <section class="gen-config-group gen-config-group-wide promo-guidance-card">
-                <label class="gen-config-label">현재 설계 방향</label>
-                <div class="promo-guidance" id="promotionGuidance"></div>
-              </section>
-            </div>
-          </details>
-
-          <p class="gen-hint" style="margin: 8px 0 0;">입력값은 브라우저에 임시 보관됩니다. JSON 파일로 저장하면 다음 세션에서 불러올 수 있습니다.</p>
-        </div>
 
       </section>
     </div>
   </div>
 
   <div class="tab-pane concept-suggest-wrap" id="panePromotionPlanner" role="tabpanel">
-<div class="concept-filter-bar" id="conceptFilterBar"></div>
+    <div class="concept-toolbar">
+      <div class="concept-search-wrap">
+        <input type="search" id="conceptSearchInput" class="concept-search-input" placeholder="스타일 검색 (이름·태그·설명…)" autocomplete="off" />
+        <button type="button" class="concept-search-clear" id="conceptSearchClear" aria-label="검색 초기화" hidden>✕</button>
+      </div>
+      <div class="concept-result-count" id="conceptResultCount"></div>
+    </div>
+    <div class="concept-filter-bar" id="conceptFilterBar"></div>
     <div class="concept-grid" id="conceptGrid"></div>
   </div>
 
@@ -2938,15 +2943,27 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               <select id="genSplitBuilderNumber" class="gen-select">
                 <option value="digits2">두 자리 숫자 01</option>
                 <option value="digits">숫자 1</option>
+                <option value="digits3">세 자리 숫자 001</option>
                 <option value="letterDigits">문자+숫자 A1</option>
+                <option value="letters">문자 A</option>
+                <option value="roman">로마 숫자 IV</option>
+                <option value="koreanDigits">한글+숫자 가1</option>
                 <option value="custom">직접 입력</option>
               </select>
+              <div class="gen-number-preset-list" aria-label="번호 예시 빠른 선택">
+                <button type="button" class="gen-number-preset" data-number-example="01">01</button>
+                <button type="button" class="gen-number-preset" data-number-example="1">1</button>
+                <button type="button" class="gen-number-preset" data-number-example="A1">A1</button>
+                <button type="button" class="gen-number-preset" data-number-example="IV">IV</button>
+                <button type="button" class="gen-number-preset" data-number-example="가1">가1</button>
+                <button type="button" class="gen-number-preset" data-number-example="1-1">1-1</button>
+              </div>
             </section>
 
             <section class="gen-config-group">
               <label class="gen-config-label" for="genSplitBuilderNumberCustom">직접 입력 번호 정규식</label>
-              <p class="gen-config-guide">번호 형식을 직접 정하고 싶을 때만 사용합니다. 예: [IVX]+</p>
-              <input id="genSplitBuilderNumberCustom" class="gen-input-text" type="text" value="" placeholder="예: [IVX]+" disabled />
+              <p class="gen-config-guide">정규식 대신 실제 번호 예시를 넣어도 됩니다. 예: 01, A1, 1-1</p>
+              <input id="genSplitBuilderNumberCustom" class="gen-input-text" type="text" value="" placeholder="예: 1-1 또는 [IVX]+" disabled />
             </section>
 
             <section class="gen-config-group">
@@ -2965,6 +2982,14 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               <label class="gen-config-label" for="genSplitBuilderPreviewSample">예시 헤더</label>
               <p class="gen-config-guide">현재 설정으로 인식될 예시입니다.</p>
               <input id="genSplitBuilderPreviewSample" class="gen-input-text" type="text" readonly />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <div class="gen-split-live-head">
+                <strong>이 규칙 적용 미리보기</strong>
+                <span id="genSplitBuilderLiveBadge">대기 중</span>
+              </div>
+              <div id="genSplitBuilderLivePreview" class="gen-split-live-list" aria-live="polite"></div>
             </section>
           </div>
         </section>

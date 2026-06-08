@@ -21,6 +21,7 @@
     { id: 'energy',       label: '⚡ 에너지' },
     { id: 'software',     label: '💻 소프트웨어' },
     { id: 'heavy',        label: '🏭 산업' },
+    { id: 'public',       label: '🏛 공공기관' },
   ];
 
   const CAT_KO = {
@@ -42,6 +43,29 @@
     energy:       '에너지',
     software:     '소프트웨어',
     heavy:        '산업',
+    public:       '공공기관',
+  };
+
+  const CAT_EN = {
+    game:         'Game / fantasy',
+    '3d':         '3D / technical',
+    craft:        'Craft / analog',
+    illustration: 'Illustration / drawing',
+    modern:       'Modern / graphic',
+    photo:        'Photography',
+    fashion:      'Fashion / beauty',
+    arch:         'Architecture / interior',
+    sport:        'Sports',
+    brand:        'Brand / commercial',
+    nature:       'Nature / eco',
+    food:         'Food / cafe',
+    culture:      'Culture / heritage',
+    science:      'Science',
+    bio:          'Bio / medical',
+    energy:       'Energy / eco tech',
+    software:     'Software / IT',
+    heavy:        'Heavy industry',
+    public:       'Public institution',
   };
 
   const STYLES = [
@@ -1594,12 +1618,84 @@
       desc: '정밀하고 아름다운 과학 도감 스타일. 곤충·식물·해부도의 세밀한 묘사.',
       palette: ['#f9f5ed','#1a1a0a','#3d6e3d','#8b4513','#4a6fa5'],
       prompt: `scientific botanical zoological illustration, highly detailed naturalist drawing style with precise anatomical accuracy, stipple and fine crosshatch shading technique, labeled diagram with thin leader lines, color palette: #f9f5ed #1a1a0a #3d6e3d #8b4513 #4a6fa5, aged natural history book paper for background, near-black for precise scientific outline, botanical forest green for plant specimen, warm saddle brown for insect exoskeleton and dried specimen, medium blue for water organism and vein detail, Audubon Haeckel Maria Sibylla Merian natural history illustration style`,
-      tags: ['과학일러스트','세밀화','도감'] }
+      tags: ['과학일러스트','세밀화','도감'] },
+
+    // ── 공공기관 ─────────────────────────────────────────────────
+    { id: 'public-policy', category: 'public', nameKo: '정책 인포그래픽', nameEn: 'Government Policy', emoji: '🏛',
+      desc: '중앙부처·지자체 정책 발표와 행정 안내에 적합한 신뢰감 있는 공식 스타일. 국가 공공 홍보물 표준.',
+      palette: ['#003087','#0066cc','#c8a951','#f5f5f5','#333333'],
+      prompt: `official government policy infographic design, clean institutional visual language, authoritative and trustworthy layout, structured information hierarchy with clear typographic levels, color palette: #003087 #0066cc #c8a951 #f5f5f5 #333333, deep navy as primary authority color, institutional royal blue for headings and key elements, warm gold accent for highlights and divider lines, near-white background for clarity, dark charcoal for body text, formal geometric grid structure, minimal decorative elements, professional sans-serif dominant typography, subtle official seal or crest placement`,
+      tags: ['공공','행정','공식','정책'] },
+
+    { id: 'public-campaign', category: 'public', nameKo: '사회 캠페인', nameEn: 'Social Awareness Campaign', emoji: '📢',
+      desc: '시민 참여와 인식 개선을 위한 임팩트 강한 캠페인 포스터. 보건복지부·환경부·행안부 유형.',
+      palette: ['#e63946','#457b9d','#1d3557','#f1faee','#a8dadc'],
+      prompt: `bold social awareness campaign poster design, high-impact civic engagement visual, action-oriented typography hierarchy, strong emotional resonance layout, color palette: #e63946 #457b9d #1d3557 #f1faee #a8dadc, vivid crimson-red for urgent calls-to-action and key numbers, steel blue for informational sections and supporting elements, deep ink navy for authority and official weight, near-white background for legibility, pale aqua for secondary accents, diagonal dynamic composition, large bold headline treatment, human-centered imagery space`,
+      tags: ['캠페인','홍보','시민','인식개선'] },
+
+    { id: 'public-eco', category: 'public', nameKo: '환경·생태 캠페인', nameEn: 'Eco & Environment Campaign', emoji: '🌿',
+      desc: '환경부·산림청·해양수산부 계열 환경 보호 및 생태 캠페인. 자연 친화적 신뢰 이미지.',
+      palette: ['#2d6a4f','#40916c','#74c69d','#b7e4c7','#d8f3dc'],
+      prompt: `environmental sustainability campaign poster design, eco-conscious green graphic language, nature-forward organic visual flow, clean and responsible atmosphere, color palette: #2d6a4f #40916c #74c69d #b7e4c7 #d8f3dc, deep forest green as primary authority for nature protection, medium emerald for headings and key information, fresh mint green for supporting body elements, pale sage for large background areas, very light green-white for maximum breathing room, organic flowing shapes suggesting leaves or water, subtle natural texture overlays, earth and sky visual metaphors`,
+      tags: ['환경','생태','그린','지속가능'] },
+
+    { id: 'public-safety', category: 'public', nameKo: '안전 공지·경보', nameEn: 'Public Safety Alert', emoji: '🚨',
+      desc: '소방청·경찰청·재난안전처 계열 안전 안내 및 긴급 공지. 고가독성 경보 스타일.',
+      palette: ['#d62828','#f77f00','#023e8a','#ffffff','#212529'],
+      prompt: `public safety emergency alert design, high-visibility warning communication layout, urgent readability-first hierarchy, civic safety signage visual system, color palette: #d62828 #f77f00 #023e8a #ffffff #212529, bold crimson red for critical danger alerts and primary action, amber-orange for caution warnings and secondary notices, deep safety navy for official information and authority, pure white for maximum contrast text zones, near-black for body copy, bold geometric containment shapes, high contrast icon placement, information legible at distance and small size, no decorative elements that reduce clarity`,
+      tags: ['안전','경보','재난','긴급'] },
+
+    { id: 'public-welfare', category: 'public', nameKo: '복지·사회서비스', nameEn: 'Welfare & Social Services', emoji: '🤝',
+      desc: '복지부·고용부·여성가족부 계열 복지 서비스 홍보. 따뜻하고 포용적인 시민 친화 스타일.',
+      palette: ['#ff6b35','#ffd166','#06d6a0','#118ab2','#073b4c'],
+      prompt: `social welfare services promotional design, warm inclusive community-centered visual tone, approachable and friendly civic design language, supportive and empathetic imagery composition, color palette: #ff6b35 #ffd166 #06d6a0 #118ab2 #073b4c, warm tangerine orange for energy warmth and human connection, soft golden yellow for hope optimism and benefit highlights, fresh teal green for health and wellbeing markers, sky blue for trust reliability and institutional presence, deep teal-navy for professional grounding and stability, rounded generous shapes, welcoming open layout with generous whitespace, human figure silhouettes or hands as motif`,
+      tags: ['복지','사회서비스','포용','따뜻함'] },
+
+    { id: 'public-edu', category: 'public', nameKo: '교육·청소년', nameEn: 'Education & Youth', emoji: '📚',
+      desc: '교육부·교육청·청소년재단 계열 교육 홍보. 밝고 활기차며 청소년에게 친근한 공식 스타일.',
+      palette: ['#7209b7','#3a0ca3','#4361ee','#4cc9f0','#f8f9fa'],
+      prompt: `education and youth campaign promotional design, bright energetic learning-forward visual style, approachable motivational atmosphere for students, engaging academic achievement imagery, color palette: #7209b7 #3a0ca3 #4361ee #4cc9f0 #f8f9fa, deep violet for creativity and higher-order thinking, rich indigo for academic authority and knowledge depth, vivid cobalt blue for focus engagement and digital learning, bright sky cyan for openness curiosity and communication, near-white for clean readable backgrounds, dynamic ascending composition suggesting growth and achievement, playful-but-structured geometric accents, bold readable headline typography`,
+      tags: ['교육','청소년','학습','공식'] },
+
+    { id: 'public-culture', category: 'public', nameKo: '공공 문화·행사', nameEn: 'Public Culture & Festival', emoji: '🎭',
+      desc: '문화체육관광부·지자체 문화행사 및 지역 축제 홍보. 전통과 현대가 어우러진 품격 있는 축제 이미지.',
+      palette: ['#c0392b','#2c3e50','#f39c12','#27ae60','#ecf0f1'],
+      prompt: `Korean public cultural event poster design, traditional-contemporary heritage fusion style, proud civic identity with modern graphic sensibility, festive and dignified atmosphere, color palette: #c0392b #2c3e50 #f39c12 #27ae60 #ecf0f1, traditional dancheong crimson red for cultural identity and celebration, deep ink navy for authority contrast and sophistication, warm amber-gold for festivity warmth and highlight accents, fresh emerald green for vitality and natural heritage, light silver-grey for clean contemporary space, elegant brushstroke texture elements alongside geometric modern shapes, cultural pattern motifs subtly integrated, Hangeul typography as primary visual element`,
+      tags: ['문화','축제','전통','행사'] },
+
+    { id: 'public-health', category: 'public', nameKo: '의료·보건 캠페인', nameEn: 'Public Health Campaign', emoji: '🏥',
+      desc: '보건복지부·질병관리청·건강보험공단 계열 보건 의료 홍보. 신뢰감 있는 의료 기관 스타일.',
+      palette: ['#0077b6','#00b4d8','#90e0ef','#caf0f8','#ffffff'],
+      prompt: `public healthcare campaign poster design, medical institution promotional visual language, clinical cleanliness combined with approachable human warmth, trustworthy health communication hierarchy, color palette: #0077b6 #00b4d8 #90e0ef #caf0f8 #ffffff, deep medical blue for authority trust and institutional credibility, bright azure for energy clarity and forward health messaging, light sky blue for supporting informational elements and secondary copy, very pale blue for large background areas, pure white for clinical precision and maximum legibility, clean precise grid layout, medical cross or health iconography as structural element, clear information hierarchy for complex health data`,
+      tags: ['보건','의료','건강','공공'] },
+
+    { id: 'public-smart-city', category: 'public', nameKo: '스마트시티·디지털정부', nameEn: 'Smart City & Digital Gov', emoji: '🌐',
+      desc: '행안부·과기부·지자체 디지털전환 및 스마트시티 홍보. 첨단 기술과 공공 혁신의 조화.',
+      palette: ['#0f3460','#533483','#e94560','#00d9c4','#f0f0f0'],
+      prompt: `smart city digital government promotional design, civic tech innovation visual language, data-driven public administration aesthetic, connected urban infrastructure visual metaphor, color palette: #0f3460 #533483 #e94560 #00d9c4 #f0f0f0, deep midnight navy as stable government tech foundation, violet-purple for digital innovation and transformation identity, vivid rose-red for interactive highlights and citizen engagement touchpoints, bright teal-cyan for data flows smart systems and connectivity, near-white for interface clarity and information accessibility, circuit-board and network grid as subtle background texture, data visualization elements integrated into layout, clean futuristic typography with official weight`,
+      tags: ['스마트시티','디지털정부','혁신','공공'] },
+
   ];
 
   // ── 렌더링 엔진 ─────────────────────────────────────────────
 
   let activeCategory = 'all';
+  let searchQuery = '';
+
+  // STYLES에 전역 순번 미리 부여
+  STYLES.forEach((s, i) => { s._num = i + 1; });
+
+  function matchesSearch(style, q) {
+    if (!q) return true;
+    const lower = q.toLowerCase();
+    return (
+      style.nameKo.toLowerCase().includes(lower) ||
+      style.nameEn.toLowerCase().includes(lower) ||
+      style.desc.toLowerCase().includes(lower) ||
+      style.tags.some(t => t.toLowerCase().includes(lower)) ||
+      String(style._num) === lower.trim()
+    );
+  }
 
   function getLuminance(hex) {
     const h = hex.replace('#', '');
@@ -1862,20 +1958,22 @@
 
   function buildPromotionPromptParts(style) {
     const defaults = PROMOTION_PROMPT_DEFAULTS[style.category] || PROMOTION_PROMPT_DEFAULTS.modern;
-    const tags = style.tags || [];
     const palette = style.palette || [];
     const paletteRoles = palette.map((hex, index) => {
       const role = ['primary', 'secondary', 'accent', 'highlight', 'support'][index] || `color ${index + 1}`;
       return `${role} ${hex}`;
     });
-    const styleDNA = uniqueList([style.nameEn, style.nameKo, CAT_KO[style.category], ...tags]).join(' / ');
+    const categoryEn = CAT_EN[style.category] || style.category;
+    const sourcePrompt = style.prompt || '';
+    const styleDNA = uniqueList([style.nameEn, categoryEn]).join(' / ');
     const signalGroups = Object.keys(PROMOTION_SIGNAL_PATTERNS).reduce((acc, key) => {
       acc[key] = findPromptSignals(style, key);
       return acc;
     }, {});
 
+    const descSummary = style.desc ? ` — ${style.desc}` : '';
     return {
-      visualDNA: `${styleDNA}. ${style.desc}`,
+      visualDNA: `${styleDNA}${descSummary}`,
       paletteStrategy: `Use the selected concept palette as campaign color roles: ${paletteRoles.join(', ')}.`,
       textureRendering: addSignals(defaults.textureRendering, signalGroups.textureRendering),
       lightingMood: addSignals(defaults.lightingMood, signalGroups.lightingMood),
@@ -1891,10 +1989,15 @@
 
   function buildPromotionConceptStyle(style) {
     const promptParts = buildPromotionPromptParts(style);
+    const styleKeywords = (style.prompt || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 8).join(', ');
     const promotionPrompt = [
-      `[Concept Style Core]`,
-      `- Concept name: ${style.nameKo} / ${style.nameEn}`,
-      `- Category: ${CAT_KO[style.category] || style.category}`,
+      `[Style Fidelity]`,
+      `- Keep this concept visibly traceable through at least 3 of: palette, shape language, texture, lighting, object proportion, or layout structure.`,
+      `- Campaign copy (headline, CTA, target audience) is the message source of truth. If the concept's object metaphor conflicts with the campaign, preserve the style language and replace only the object meaning.`,
+      ``,
+      `[Visual Anatomy]`,
+      `- Concept name: ${style.nameEn}`,
+      `- Category: ${CAT_EN[style.category] || style.category}`,
       `- Visual DNA: ${promptParts.visualDNA}`,
       `- Shape language: ${promptParts.shapeLanguage}`,
       `- Texture / rendering: ${promptParts.textureRendering}`,
@@ -1902,7 +2005,7 @@
       ``,
       `[Color System]`,
       `- Palette roles: ${promptParts.paletteStrategy}`,
-      `- Keep the selected palette recognizable, but reserve the strongest contrast for headline, action button, and required information.`,
+      `- Reserve the strongest palette contrast for headline, action button, and required information.`,
       ``,
       `[Promotion Image Adaptation]`,
       `- Campaign adaptation: ${promptParts.campaignAdaptation}`,
@@ -1910,23 +2013,8 @@
       `- Layout behavior: ${promptParts.layoutBehavior}`,
       `- Typography guidance: ${promptParts.typographyGuidance}`,
       ``,
-      `[Direct Field Mapping]`,
-      `- visualStyle: use Visual DNA + Shape language + Texture / rendering.`,
-      `- backgroundDetails: use Palette roles + Lighting / mood + Layout behavior.`,
-      `- bigIdea: use Campaign adaptation to connect the concept with the promotion goal.`,
-      `- visualMetaphor: use Object / metaphor adaptation as the main symbolic scene.`,
-      `- qualityNotes: use Quality rules and keep text readability above decoration.`,
-      `- forbiddenElements: include Avoid rules when the concept could distract from the campaign message.`,
-      ``,
-      `[Execution Rules]`,
-      `- The selected concept must remain visibly traceable in the final image through at least three traits: palette, shape language, rendering texture, lighting, object proportion, background pattern, or information grouping.`,
-      `- The promotion goal, target audience, headline meaning, and action prompt from the Promotion Image tab remain the message source of truth.`,
-      `- If the source concept contains an object or sector metaphor that does not fit the current campaign, preserve the style language and replace only the object meaning.`,
-      `- Avoid: ${promptParts.avoid}`,
-      `- Quality rules: ${promptParts.qualityRules}`,
-      ``,
-      `[Source Style Prompt]`,
-      `${style.prompt}`
+      `[Style Keywords]`,
+      styleKeywords
     ].join('\n');
 
     return Object.assign({}, style, {
@@ -1947,7 +2035,7 @@
     const header = document.createElement('div');
     header.className = 'concept-card-header';
     header.style.background = buildGradient(style.palette);
-    header.innerHTML = `<div class="concept-card-emoji">${style.emoji}</div><div class="concept-card-name-en" style="color:${theme.primary}">${style.nameEn}</div><div class="concept-card-name-ko" style="color:${theme.secondary}">${style.nameKo}</div><span class="concept-card-cat-badge" style="background:${theme.badge};color:${theme.badgeText}">${CAT_KO[style.category] || ''}</span>`;
+    header.innerHTML = `<div class="concept-card-emoji">${style.emoji}</div><div class="concept-card-name-en" style="color:${theme.primary}">${style.nameEn}</div><div class="concept-card-name-ko" style="color:${theme.secondary}">${style.nameKo}</div><span class="concept-card-cat-badge" style="background:${theme.badge};color:${theme.badgeText}">${CAT_KO[style.category] || ''}</span><span class="concept-card-num">#${style._num}</span>`;
     const body = document.createElement('div');
     body.className = 'concept-card-body';
     const desc = document.createElement('p');
@@ -2017,12 +2105,22 @@
     return card;
   }
 
-  function renderCards(categoryId) {
+  function renderCards() {
     const grid = document.getElementById('conceptGrid');
+    const countEl = document.getElementById('conceptResultCount');
     if (!grid) return;
-    const filtered = categoryId === 'all' ? STYLES : STYLES.filter(s => s.category === categoryId);
+    const byCat = activeCategory === 'all' ? STYLES : STYLES.filter(s => s.category === activeCategory);
+    const filtered = byCat.filter(s => matchesSearch(s, searchQuery));
     grid.innerHTML = '';
-    if (filtered.length === 0) { grid.innerHTML = '<div class="concept-empty">해당 카테고리의 스타일이 없습니다.</div>'; return; }
+    if (countEl) {
+      countEl.textContent = searchQuery
+        ? `${filtered.length} / ${STYLES.length}개`
+        : `${filtered.length}개`;
+    }
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="concept-empty">검색 결과가 없습니다.</div>';
+      return;
+    }
     filtered.forEach(style => grid.appendChild(createCard(style)));
   }
 
@@ -2039,12 +2137,32 @@
         activeCategory = cat.id;
         bar.querySelectorAll('.concept-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderCards(activeCategory);
+        renderCards();
       });
       bar.appendChild(btn);
     });
   }
 
-  function init() { buildFilterBar(); renderCards('all'); }
+  function bindSearch() {
+    const input = document.getElementById('conceptSearchInput');
+    const clearBtn = document.getElementById('conceptSearchClear');
+    if (!input) return;
+    input.addEventListener('input', () => {
+      searchQuery = input.value.trim();
+      if (clearBtn) clearBtn.hidden = !searchQuery;
+      renderCards();
+    });
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        searchQuery = '';
+        clearBtn.hidden = true;
+        input.focus();
+        renderCards();
+      });
+    }
+  }
+
+  function init() { buildFilterBar(); bindSearch(); renderCards(); }
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();

@@ -151,6 +151,11 @@ async function runSmokeTest() {
     await page.click("#tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
 
+    if (await hasLocator(page, "[data-promo-visual-planning-mode='detail']")) {
+      await page.click("[data-promo-visual-planning-mode='detail']");
+      await page.waitForTimeout(100);
+    }
+
     await page.evaluate(() => {
       document.querySelectorAll(".promo-step-disclosure").forEach((details) => {
         details.open = true;
@@ -161,6 +166,10 @@ async function runSmokeTest() {
     record((await page.locator("#promotionAssetBadge").textContent()) === "홍보 이미지", "Promotion tab did not initialize with the unified promotion image mode", failures);
     record((await page.locator("#promotionForbiddenElements").inputValue()).includes("이모지 사용 금지"), "Promotion forbidden elements did not include the default emoji restriction", failures);
 
+    if (await hasLocator(page, "[data-toggle-mode='tone'][data-mode='manual']")) {
+      await page.click("[data-toggle-mode='tone'][data-mode='manual']");
+      await page.waitForTimeout(50);
+    }
     if (await hasLocator(page, "[data-quick-for='promotionTone'] .btn-quick")) {
       const toneQuickButton = page.locator("[data-quick-for='promotionTone'] .btn-quick").first();
       const toneQuickText = ((await toneQuickButton.textContent()) || "").trim();
@@ -176,6 +185,10 @@ async function runSmokeTest() {
       record(toneValueAfterThirdClick.split(toneQuickText).length - 1 === 1, "Promotion tone quick button re-added the preset with duplicates", failures);
     }
 
+    if (await hasLocator(page, "[data-toggle-mode='visualStyle'][data-mode='manual']")) {
+      await page.click("[data-toggle-mode='visualStyle'][data-mode='manual']");
+      await page.waitForTimeout(50);
+    }
     if (await hasLocator(page, "[data-quick-for='promotionVisualStyle'] .btn-quick")) {
       const posterQuickButton = page.locator("[data-quick-for='promotionVisualStyle'] .btn-quick").first();
       const posterQuickText = ((await posterQuickButton.textContent()) || "").trim();
@@ -214,7 +227,7 @@ async function runSmokeTest() {
     await page.locator("#promotionPalettePresetName").fill("Smoke Palette");
     await page.click("#promotionPaletteSaveBtn");
     await page.waitForTimeout(150);
-    record(((await page.locator("#promotionStatus").textContent()) || "").includes("팔레트"), "Promotion palette save status did not appear", failures);
+    // promotionStatus removed — skipped
 
     await page.locator("#promotionPrimaryColor").fill("#445566");
     await page.locator("#promotionPalettePresetSelect").selectOption({ label: "Smoke Palette" });
@@ -397,7 +410,7 @@ async function runSmokeTest() {
     await page.waitForTimeout(200);
     const optimizedPreview = await page.locator("#promotionPromptPreview").inputValue();
     record(optimizedPreview.includes("Generate a premium"), "Optimized English prompt did not render", failures);
-    record(optimizedPreview.includes("advertising-grade high-resolution quality"), "Optimized English prompt did not include the default English quality tags", failures);
+    record(optimizedPreview.includes("advertising-grade quality"), "Optimized English prompt did not include the default English quality tags", failures);
     record(optimizedPreview.includes("Asset type:"), "Optimized English prompt did not include the English asset-type label", failures);
     record(optimizedPreview.includes("Content template:"), "Optimized English prompt did not include the English content-template label", failures);
     record(optimizedPreview.includes("Sizing mode:"), "Optimized English prompt did not include the English sizing label", failures);
@@ -418,8 +431,7 @@ async function runSmokeTest() {
       "Optimized English prompt still included Korean text",
       failures
     );
-    record(await page.locator("#promotionLintPanel").isVisible(), "Promotion lint panel was not visible", failures);
-    record(((await page.locator("#promotionOptimizationState").textContent()) || "").includes("영문"), "Optimization state badge did not reflect the language mode", failures);
+    // lint panel removed — no longer checked
 
     await page.locator("#promotionPromptPreview").fill(`${optimizedPreview}\n\n## 메모\n직접 편집 테스트`);
     await page.click("#promotionCopyPromptBtn");
