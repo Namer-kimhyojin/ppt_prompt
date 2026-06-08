@@ -1,9 +1,11 @@
 ;
 
-    // ?? ?щ씪?대뱶蹂??앹꽦湲?濡쒖쭅 ????????????????????????????????????????
+    // Slide prompt generator logic
     (function () {
       const $ = (id) => document.getElementById(id);
       const DEFAULT_SPLIT_RULES = $("genSplitRules").value.trim();
+      const SPLIT_RULES_DRAFT_KEY = "slidePromptGenerator.splitRulesDraft";
+      const SPLIT_RULES_LIBRARY_KEY = "slidePromptGenerator.splitRulesLibrary";
 
       const genState = {
         latestOutput: "",
@@ -12,6 +14,7 @@
         currentIndex: 0,
         isEditing: false,
         savedPrompts: loadSavedPrompts(),
+        savedSplitRules: loadSavedSplitRules(),
         commonConfig: null,
         configModalIndex: null,
         configDraft: null
@@ -50,6 +53,8 @@
         const file = event.target.files[0];
         if (!file) return;
         $("genMdInput").value = await file.text();
+        renderSplitRulesPreview();
+        renderBuilderLivePreview();
         setMessage(`파일을 불러왔습니다: ${file.name}`, false);
       });
 
@@ -79,6 +84,18 @@
       $("genSplitRulesAppendBtn").addEventListener("click", () => applyBuiltSplitRule("append"));
       $("genSplitRulesReplaceBtn").addEventListener("click", () => applyBuiltSplitRule("replace"));
       $("genSplitRulesClearBtn").addEventListener("click", clearSplitRulesEditor);
+      $("genSplitRules").addEventListener("input", handleSplitRulesInput);
+      $("genMdInput").addEventListener("input", () => {
+        renderSplitRulesPreview();
+        renderBuilderLivePreview();
+      });
+      $("genMaxChars").addEventListener("input", () => {
+        renderSplitRulesPreview();
+        renderBuilderLivePreview();
+      });
+      $("genSplitRulesSaveNamedBtn").addEventListener("click", saveNamedSplitRules);
+      $("genSplitRulesLoadNamedBtn").addEventListener("click", loadNamedSplitRules);
+      $("genSplitRulesDeleteNamedBtn").addEventListener("click", deleteNamedSplitRules);
       document.querySelectorAll(".gen-split-preset").forEach((el) => {
         el.addEventListener("click", () => appendPresetSplitRule(el.dataset.ruleType, el.dataset.rulePattern));
       });
@@ -113,12 +130,215 @@
         }
       });
       updateSplitRuleBuilderPreview();
+      restoreSplitRulesDraft();
+      renderSavedSplitRulesOptions();
+      renderSplitRulesPreview();
       renderLintPanel(null);
 
       function setMessage(text, isError = true) {
         const el = $("genMessage");
         el.textContent = text || "";
         el.className = "gen-warn" + (isError ? "" : " ok");
+      }
+
+      function restoreSplitRulesDraft() {
+        try {
+          const saved = localStorage.getItem(SPLIT_RULES_DRAFT_KEY);
+          if (saved && saved.trim()) {
+            $("genSplitRules").value = saved;
+          }
+        } catch {
+          // 저장소 접근이 막혀도 기본 규칙으로 계속 동작합니다.
+        }
+      }
+
+      function persistSplitRulesDraft() {
+        try {
+          localStorage.setItem(SPLIT_RULES_DRAFT_KEY, $("genSplitRules").value);
+        } catch {
+          setMessage("브라우저 저장소에 구분 규칙을 저장하지 못했습니다.", true);
+        }
+      }
+
+      function handleSplitRulesInput() {
+        persistSplitRulesDraft();
+        renderSplitRulesPreview();
+      }
+
+      function loadSavedSplitRules() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(SPLIT_RULES_LIBRARY_KEY) || "[]");
+          return Array.isArray(parsed) ? parsed.filter((item) => item && item.name && item.rules) : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function persistSavedSplitRules() {
+        try {
+          localStorage.setItem(SPLIT_RULES_LIBRARY_KEY, JSON.stringify(genState.savedSplitRules));
+        } catch {
+          setMessage("브라우저 저장소에 저장 규칙 목록을 기록하지 못했습니다.", true);
+        }
+      }
+
+      function renderSavedSplitRulesOptions() {
+        const select = $("genSplitRulesSavedSelect");
+        if (!select) return;
+        const options = genState.savedSplitRules.map((item, index) => {
+          const selected = index === 0 ? " selected" : "";
+          return `<option value="${index}"${selected}>${escapeHtml(item.name)}</option>`;
+        });
+        select.innerHTML = options.length
+          ? options.join("")
+          : `<option value="">저장된 규칙 없음</option>`;
+        select.disabled = options.length === 0;
+        $("genSplitRulesLoadNamedBtn").disabled = options.length === 0;
+        $("genSplitRulesDeleteNamedBtn").disabled = options.length === 0;
+      }
+
+      function saveNamedSplitRules() {
+        const rules = $("genSplitRules").value.trim();
+        if (!rules) return setMessage("저장할 구분 규칙이 없습니다.");
+
+        try {
+          parseSplitRules(rules);
+        } catch (error) {
+          renderSplitRulesPreview();
+          return setMessage(error.message || "규칙을 먼저 수정해주세요.");
+        }
+
+        const fallbackName = `구분 규칙 ${new Date().toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}`;
+        const name = $("genSplitRulesName").value.trim() || fallbackName;
+        const existingIndex = genState.savedSplitRules.findIndex((item) => item.name === name);
+        const item = { name, rules, savedAt: new Date().toISOString() };
+
+        if (existingIndex >= 0) {
+          genState.savedSplitRules.splice(existingIndex, 1, item);
+        } else {
+          genState.savedSplitRules.unshift(item);
+        }
+
+        genState.savedSplitRules = genState.savedSplitRules.slice(0, 20);
+        persistSavedSplitRules();
+        renderSavedSplitRulesOptions();
+        $("genSplitRulesName").value = "";
+        setMessage(`구분 규칙을 저장했습니다: ${name}`, false);
+      }
+
+      function getSelectedSavedSplitRules() {
+        const select = $("genSplitRulesSavedSelect");
+        if (!select || select.disabled) return null;
+        const index = Number.parseInt(select.value, 10);
+        return Number.isFinite(index) ? { item: genState.savedSplitRules[index], index } : null;
+      }
+
+      function loadNamedSplitRules() {
+        const selected = getSelectedSavedSplitRules();
+        if (!selected?.item) return;
+        $("genSplitRules").value = selected.item.rules;
+        persistSplitRulesDraft();
+        renderSplitRulesPreview();
+        setMessage(`저장된 구분 규칙을 불러왔습니다: ${selected.item.name}`, false);
+      }
+
+      function deleteNamedSplitRules() {
+        const selected = getSelectedSavedSplitRules();
+        if (!selected?.item) return;
+        const [removed] = genState.savedSplitRules.splice(selected.index, 1);
+        persistSavedSplitRules();
+        renderSavedSplitRulesOptions();
+        setMessage(`저장된 구분 규칙을 삭제했습니다: ${removed.name}`, false);
+      }
+
+      function previewRecordHtml(record, index) {
+        const typeLabel = isSlideRecord(record) ? "본문" : "부록";
+        return [
+          `<div class="gen-split-preview-item">`,
+          `<span>${index + 1}</span>`,
+          `<strong>${escapeHtml(typeLabel)} ${escapeHtml(record.slide_no || "-")}</strong>`,
+          `<em>${escapeHtml(record.title || "제목 없음")}</em>`,
+          `</div>`
+        ].join("");
+      }
+
+      function renderSplitRulesPreview() {
+        const list = $("genSplitRulesPreview");
+        const badge = $("genSplitRulesPreviewBadge");
+        if (!list || !badge) return;
+
+        const rulesText = $("genSplitRules").value.trim();
+        const markdown = $("genMdInput").value.trim();
+        const maxChars = Number.parseInt($("genMaxChars").value, 10) || 3600;
+
+        if (!rulesText) {
+          badge.textContent = "규칙 없음";
+          badge.className = "is-error";
+          list.innerHTML = `<div class="gen-split-preview-empty">구분 규칙을 하나 이상 입력하거나 도우미에서 추가하세요.</div>`;
+          return;
+        }
+
+        try {
+          const rules = parseSplitRules(rulesText);
+          if (!markdown) {
+            badge.textContent = `${rules.length}개 규칙 유효`;
+            badge.className = "is-ok";
+            list.innerHTML = rules.map((rule, index) => (
+              `<div class="gen-split-preview-item"><span>${index + 1}</span><strong>${escapeHtml(rule.type)}</strong><em>${escapeHtml(rule.source)}</em></div>`
+            )).join("");
+            return;
+          }
+
+          const records = parseMarkdown(markdown, maxChars, rulesText);
+          if (!records.length) {
+            badge.textContent = "0개 인식";
+            badge.className = "is-error";
+            list.innerHTML = `<div class="gen-split-preview-empty">현재 MD에서 이 규칙과 일치하는 슬라이드 시작점을 찾지 못했습니다.</div>`;
+            return;
+          }
+
+          const slideCount = records.filter((record) => isSlideRecord(record)).length;
+          const appendixCount = records.length - slideCount;
+          badge.textContent = `${records.length}개 인식`;
+          badge.className = "is-ok";
+          list.innerHTML = records.slice(0, 8).map(previewRecordHtml).join("")
+            + (records.length > 8 ? `<div class="gen-split-preview-more">외 ${records.length - 8}개 더 인식됨</div>` : "");
+          if (slideCount || appendixCount) {
+            badge.textContent = `본문 ${slideCount} / 부록 ${appendixCount}`;
+          }
+        } catch (error) {
+          badge.textContent = "규칙 오류";
+          badge.className = "is-error";
+          list.innerHTML = `<div class="gen-split-preview-empty">${escapeHtml(error.message || "구분 규칙을 해석하지 못했습니다.")}</div>`;
+        }
+      }
+
+      function renderBuilderLivePreview() {
+        const list = $("genSplitBuilderLivePreview");
+        const badge = $("genSplitBuilderLiveBadge");
+        if (!list || !badge) return;
+
+        const built = buildSplitRuleFromBuilder();
+        const markdown = $("genMdInput").value.trim() || built.sample;
+        const maxChars = Number.parseInt($("genMaxChars").value, 10) || 3600;
+
+        try {
+          const records = parseMarkdown(markdown, maxChars, built.rule);
+          if (!records.length) {
+            badge.textContent = "0개 인식";
+            badge.className = "is-error";
+            list.innerHTML = `<div class="gen-split-preview-empty">현재 MD에서 이 규칙과 일치하는 시작점을 찾지 못했습니다.</div>`;
+            return;
+          }
+          badge.textContent = `${records.length}개 인식`;
+          badge.className = "is-ok";
+          list.innerHTML = records.slice(0, 5).map(previewRecordHtml).join("")
+            + (records.length > 5 ? `<div class="gen-split-preview-more">외 ${records.length - 5}개 더 인식됨</div>` : "");
+        } catch (error) {
+          badge.textContent = "규칙 오류";
+          badge.className = "is-error";
+          list.innerHTML = `<div class="gen-split-preview-empty">${escapeHtml(error.message || "미리보기를 만들지 못했습니다.")}</div>`;
+        }
       }
 
       function escapeRegex(value) {
@@ -243,6 +463,7 @@
         const built = buildSplitRuleFromBuilder();
         $("genSplitBuilderPreviewRegex").value = built.rule;
         $("genSplitBuilderPreviewSample").value = built.sample;
+        renderBuilderLivePreview();
       }
 
       function applyNumberExamplePreset(example) {
@@ -272,6 +493,8 @@
 
         if (mode === "replace") {
           target.value = normalizedRule;
+          persistSplitRulesDraft();
+          renderSplitRulesPreview();
           return;
         }
 
@@ -284,6 +507,8 @@
           existing.push(normalizedRule);
         }
         target.value = existing.join("\n");
+        persistSplitRulesDraft();
+        renderSplitRulesPreview();
       }
 
       function applyBuiltSplitRule(mode = "append") {
@@ -299,11 +524,15 @@
 
       function resetSplitRules() {
         $("genSplitRules").value = DEFAULT_SPLIT_RULES;
+        persistSplitRulesDraft();
+        renderSplitRulesPreview();
         setMessage("슬라이드 구분 규칙을 기본값으로 되돌렸습니다.", false);
       }
 
       function clearSplitRulesEditor() {
         $("genSplitRules").value = "";
+        persistSplitRulesDraft();
+        renderSplitRulesPreview();
         setMessage("슬라이드 구분 규칙 입력창을 비웠습니다.", false);
       }
 
@@ -669,6 +898,9 @@
          if (data.markdown) $("genMdInput").value = data.markdown;
          if (data.commonPrompt) $("genCommonPrompt").value = data.commonPrompt;
          $("genSplitRules").value = data.splitRules || DEFAULT_SPLIT_RULES;
+         persistSplitRulesDraft();
+         renderSplitRulesPreview();
+         renderBuilderLivePreview();
          genState.commonConfig = data.commonConfig ? deepClone(data.commonConfig) : createBasePromptConfig();
          if (data.records) {
              genState.records = data.records;
@@ -1192,6 +1424,8 @@
         showViewer();
         renderLintPanel(null);
         updateRecordStats([]);
+        renderSplitRulesPreview();
+        renderBuilderLivePreview();
         setMessage("");
       }
 
@@ -1510,6 +1744,8 @@
 ### 레이아웃
 - 5개 질문 카드와 응답 카드
 `;
+        renderSplitRulesPreview();
+        renderBuilderLivePreview();
         setMessage("예시 MD를 넣었습니다.", false);
       }
     })();

@@ -716,9 +716,10 @@
   }
 
   function getOptionVal(val, customVal, mappingsKo, mappingsEn, prefixKo = "", prefixEn = "") {
-    if (val === "none") return null;
+    if (!val || val === "none") return null;
     if (val === "custom") {
-      const cv = customVal || "";
+      const cv = String(customVal || "").trim();
+      if (!cv) return null;
       return { ko: prefixKo + cv, en: prefixEn + cv };
     }
     const mKo = mappingsKo[val] || val;
@@ -1053,7 +1054,7 @@
     let idxEn = 1;
 
     const addLine = (resolved, labelKo, labelEn) => {
-      if (resolved) {
+      if (resolved?.ko?.trim() || resolved?.en?.trim()) {
         layoutLinesKo.push(`${idxKo++}. ${labelKo}: ${resolved.ko}`);
         layoutLinesEn.push(`${idxEn++}. ${labelEn}: ${resolved.en}`);
       }
@@ -1139,8 +1140,12 @@
 - Background ${state.backgroundColor}: use as the full canvas background of the ${docLabel.toLowerCase()} slide — other elements may layer on top
 - Accent ${state.accentColor}: use SPARINGLY (≤10% of total area) for CTA accent lines, key icons, numbers, underlines — do NOT overuse`;
     } else {
-      colorSystemKo = `- 주조색, 보조색, 배경색, 강조색: 특정 고정 Hex 코드를 따르지 않고, 전체적인 슬라이드 주제와 지정된 브랜드 톤앤매너에 맞게 AI가 유기적이고 자율적인 어울리는 프리미엄 색상을 직접 선택하여 조화롭게 배색해 주십시오. 강조색은 전체 면적의 10% 이내로 제한하십시오.`;
-      colorSystemEn = `- Palette (Primary, Secondary, Background, Accent): Autonomously select a harmonious, premium palette matching the visual metaphor and brand tone. Restrict accent color to ≤10% of total area.`;
+      colorSystemKo = `- 주조색, 보조색, 배경색, 강조색: 특정 고정 Hex 코드를 따르지 않고, 전체적인 슬라이드 주제와 지정된 브랜드 톤앤매너에 맞게 AI가 유기적이고 자율적인 어울리는 프리미엄 색상을 직접 선택하여 조화롭게 배색해 주십시오.
+- 배경-텍스트 대비를 최우선으로 하며, 채도 낮은 2~3색 기반에 강조색 1개만 강하게 사용하십시오.
+- 강조색은 전체 면적의 10% 이내로 제한하고, 장식보다 제목·번호·구조선 같은 정보 위계에 사용하십시오.`;
+      colorSystemEn = `- Palette (Primary, Secondary, Background, Accent): Autonomously select a harmonious, premium palette matching the visual metaphor and brand tone.
+- Prioritize background-to-text contrast; use a restrained low-saturation 2-3 color base with only one strong accent color.
+- Restrict accent color to ≤10% of total area and use it for hierarchy such as titles, numbers, and structural lines rather than decoration.`;
     }
 
     // Placements and placeholders — 입력값이 없는 항목은 프롬프트에 포함하지 않음
@@ -1258,6 +1263,36 @@
 - Ensure sufficient contrast between text and background decorations to guarantee legibility`;
     }
 
+    const docIntentKo = prefix === "Cover"
+      ? `[문서 표지 품질 강화 지시]
+- 표지는 문서 전체의 첫인상을 결정하는 타이틀 키비주얼입니다. 제목 판독성, 기관/프로젝트 신뢰감, 주제 상징성을 우선순위로 설계하십시오.
+- 정보 밀도는 낮게 유지하고, 헤드라인·서브타이틀·메타 정보의 위계를 명확히 분리하십시오.
+- 비주얼 장식은 타이틀을 압도하지 말고, 주제의 방향성과 브랜드 톤을 보조하는 구조적 배경으로 작동해야 합니다.`
+      : prefix === "Divider"
+        ? `[문서 간지 품질 강화 지시]
+- 간지는 다음 섹션이 시작됨을 분명히 알리는 전환 슬라이드입니다. 장 번호 또는 섹션 제목을 시각적 앵커로 삼아 즉시 인식되게 하십시오.
+- 본문 슬라이드보다 정보 밀도를 낮추고, 표지보다 절제된 리듬으로 구역 전환감과 정돈감을 만드십시오.
+- 장식 요소는 번호·타이틀·구분선의 방향성을 강화해야 하며, 임의의 포스터형 배경으로 흐르지 않게 하십시오.`
+        : `[문서 배경 품질 강화 지시]
+- 배경은 이후 텍스트, 표, 차트, 아이콘이 올라갈 작업용 템플릿입니다. 중앙 콘텐츠 안전 영역의 가독성을 최우선으로 보장하십시오.
+- 장식 밀도는 가장자리, 프레임, 코너, 헤더/푸터 주변에 집중하고 중앙 본문 영역에는 저대비 패턴·복잡한 질감·강한 광원을 넣지 마십시오.
+- 완성 이미지는 단독 포스터가 아니라 반복 사용 가능한 본문 슬라이드 배경이어야 하며, 후속 편집 요소가 올라와도 시각적으로 깨끗해야 합니다.`;
+
+    const docIntentEn = prefix === "Cover"
+      ? `[Document Cover Quality Reinforcement]
+- The cover is the title key visual that defines the first impression of the whole document. Prioritize title readability, institutional/project credibility, and thematic symbolism.
+- Keep information density low and clearly separate the hierarchy of headline, subtitle, and metadata.
+- Visual decoration must not overpower the title; it should work as a structured background that supports the topic direction and brand tone.`
+      : prefix === "Divider"
+        ? `[Document Divider Quality Reinforcement]
+- The divider must clearly signal the beginning of the next section. Use the chapter number or section title as the visual anchor for immediate recognition.
+- Keep information density lower than body slides and use a more restrained rhythm than the cover to create a polished transition.
+- Decorative elements must reinforce the direction of the number, title, and divider line, not drift into a generic poster background.`
+        : `[Document Background Quality Reinforcement]
+- The background is a reusable working template for later text, tables, charts, and icons. Prioritize readability in the central content-safe area.
+- Concentrate decorative density around edges, frames, corners, headers, and footers; avoid low-contrast patterns, complex textures, or strong light sources in the central body area.
+- The result must be a reusable body-slide background rather than a standalone poster, and it must stay visually clean after later editing elements are placed on top.`;
+
     // Logo & QR prompt blocks
     const logoPositionMapKo = { top_left: "좌측 상단", top_right: "우측 상단", bottom_left: "좌측 하단", bottom_right: "우측 하단", top_center: "상단 중앙" };
     const logoPositionMapEn = { top_left: "top-left", top_right: "top-right", bottom_left: "bottom-left", bottom_right: "bottom-right", top_center: "top-center" };
@@ -1334,6 +1369,8 @@ ${conflictBlock}
 [디자인 연출 및 레이아웃 구조]
 ${layoutLinesKo.join("\n")}
 
+${docIntentKo}
+
 [컬러 시스템 — 용도별 적용 기준]
 ${colorSystemKo}
 
@@ -1362,10 +1399,12 @@ ${logoBlockKo}${qrBlockKo}
 
 [Document ${prefix} Page Design Specifications]
 Standard & Direction: ${layoutRatio}, ${orientationTextEn}
-Asset Style Target: ${prefix === "Cover" ? "Title Cover Slide" : prefix === "Divider" ? "Chapter/Section Divider Slide" : "nt Background Template Slide"}
+Asset Style Target: ${prefix === "Cover" ? "Title Cover Slide" : prefix === "Divider" ? "Chapter/Section Divider Slide" : "Content Background Template Slide"}
 ${conflictBlockEn}
 [Visual Theme & Layout Strategy]
 ${layoutLinesEn.join("\n")}
+
+${docIntentEn}
 
 [Color System & Palette — Role-Based Application]
 ${colorSystemEn}
