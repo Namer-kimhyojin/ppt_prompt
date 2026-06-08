@@ -2006,6 +2006,52 @@
       .filter(Boolean);
   }
 
+  function splitSentenceLines(value) {
+    return uniqueValues(
+      String(value || "")
+        .split(/\r?\n+/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+    );
+  }
+
+  function splitForbiddenValues(value) {
+    return uniqueValues(
+      String(value || "")
+        .split(/\r?\n+/)
+        .flatMap((line) => {
+          const trimmed = line.trim();
+          if (!trimmed) return [];
+          if (/^(컨셉별|컨셉|Concept|Avoid|Quality|홍보용 이미지 제작 입력값|AI 자동생성)/i.test(trimmed)) {
+            return [trimmed];
+          }
+          return trimmed.split(/[,/]+/).map((item) => item.trim()).filter(Boolean);
+        })
+    );
+  }
+
+  const CONCEPT_INJECTION_PATTERNS = [
+    /^컨셉 제안 적용:/,
+    /^Visual DNA:/i,
+    /^질감\/렌더링:/,
+    /^조명\/무드:/,
+    /^형태 언어:/,
+    /^컨셉 기반 홍보 적응:/,
+    /^컨셉 기반 오브젝트\/은유:/,
+    /^컨셉 색상 전략:/,
+    /^컨셉 조명\/무드:/,
+    /^컨셉 레이아웃:/,
+    /^컨셉 타이포그래피:/,
+    /^컨셉 품질 규칙:/,
+    /^컨셉별 회피:/,
+  ];
+
+  function stripConceptInjectedLines(value) {
+    return normalizeLines(value)
+      .filter((line) => !CONCEPT_INJECTION_PATTERNS.some((pattern) => pattern.test(line)))
+      .join("\n");
+  }
+
   function normalizePromptLineForDedupe(value) {
     return String(value || "")
       .replace(/^[-*]\s+/, "")
@@ -2257,6 +2303,40 @@
         return true;
       })
       .join("\n");
+  }
+
+  function summarizeDisplayTextPoint(line, maxLength = 18) {
+    const cleaned = String(line || "")
+      .replace(/^[-*•]\s*/, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!cleaned) return "";
+    const colonParts = cleaned.split(/\s*[:：]\s*/);
+    const candidate = colonParts.length > 1 && colonParts[0].length <= 10
+      ? `${colonParts[0]}: ${colonParts.slice(1).join(": ").trim()}`
+      : cleaned;
+    if (candidate.length <= maxLength) return candidate;
+    return `${candidate.slice(0, maxLength).replace(/[,\s·:：-]+$/g, "")}…`;
+  }
+
+  function getDisplayBodyPointLines() {
+    const sourcePoints = normalizeLines(state.bodyCopy).slice(0, 4);
+    if (!sourcePoints.length) return [];
+    const displayPoints = sourcePoints
+      .map((line) => summarizeDisplayTextPoint(line))
+      .filter(Boolean)
+      .slice(0, 3);
+    if (!displayPoints.length) return [];
+    return prunePromptLines([
+      localizeSentence(
+        `이미지 표시용 본문 포인트: ${displayPoints.join(" / ")}`,
+        `On-image body points: ${displayPoints.join(" / ")}`
+      ),
+      localizeSentence(
+        "위 표시용 포인트는 원문 본문을 그대로 길게 복붙하지 말고, 이미지 안에서는 2~3개의 짧은 정보 라벨로 렌더링한다. 원문의 날짜·숫자·고유명사는 유지한다.",
+        "Do not paste the full source body copy onto the image. Render it as 2 to 3 short information labels while preserving source dates, numbers, and proper nouns."
+      ),
+    ]);
   }
 
   function kindBadgeHtml(kind) {
@@ -3245,8 +3325,7 @@
 
   function splitQualityNoteLines(value) {
     return uniqueValues(
-      String(value || "")
-        .split(/[\r\n,]+/)
+      splitSentenceLines(value)
         .map((item) => item.trim())
         .filter(Boolean)
         .filter((item) => !isSystemQualityPhrase(item))
@@ -3272,7 +3351,7 @@
 
     const toneTokens = splitKeywordValues(state.tone);
     const styleTokens = splitKeywordValues(state.visualStyle);
-    const forbiddenTokens = splitKeywordValues(state.forbiddenElements);
+    const forbiddenTokens = splitForbiddenValues(state.forbiddenElements);
     const bodyLines = normalizeLines(state.bodyCopy);
 
     if (toneTokens.includes("미니멀") && bodyLines.length > 3) {
@@ -4637,6 +4716,97 @@
     });
   }
 
+  const FINAL_PROMPT_CONFLICT_RULES = [
+    {
+      id: "ai-color-vs-manual",
+      test: () => isAiColorStrategy(),
+      patterns: [/^메인 색상:/, /^보조 색상:/, /^포인트 색상:/, /^배경 색상:/, /^Primary color:/, /^Secondary color:/, /^Accent color:/, /^Background color:/],
+    },
+    {
+      id: "manual-color-vs-ai",
+      test: () => !isAiColorStrategy(),
+      patterns: [/AI에게 맡기기/, /Let AI direct both the color palette and the background/],
+    },
+    {
+      id: "concept-style-vs-ai-style",
+      test: () => Boolean(state.appliedConceptStyle),
+      patterns: [/^\[AI 자동 생성\] 비주얼 스타일:/, /^\[AI auto-generate\] visual style:/],
+    },
+    {
+      id: "qr-none-vs-qr",
+      test: () => !isEnabled(state.qrEnabled),
+      patterns: [/QR 배치:/, /QR placement:/, /QR 연결 주소/, /QR target URL/],
+    },
+    {
+      id: "hashtags-forbidden",
+      test: () => /해시태그 제외|해시태그 본문 노출 금지|no hashtags|exclude hashtags/i.test(state.forbiddenElements),
+      patterns: [/해시태그\/태그:/, /hashtags\/tags:/],
+    },
+  ];
+
+  function isFinalPromptConflictLine(line) {
+    if (!isEnabled(state.autoResolveConflicts)) return false;
+    return FINAL_PROMPT_CONFLICT_RULES.some((rule) =>
+      rule.test() && rule.patterns.some((pattern) => pattern.test(line))
+    );
+  }
+
+  function finalLinePriority(line) {
+    if (/원문 그대로|verbatim|do not translate|철자|숫자|text fidelity|텍스트 정확성/i.test(line)) return 10;
+    if (/컨셉-홍보 브리지|Concept-to-campaign bridge|적용된 컨셉|Applied concept|컨셉 Visual DNA|Concept visual DNA/i.test(line)) return 9;
+    if (/광고 목적|promotion goal|타깃|target audience|헤드라인|headline/i.test(line)) return 8;
+    if (/절대 금지|Strictly avoid|금지|avoid/i.test(line)) return 7;
+    if (/품질|quality|가독성|readability/i.test(line)) return 6;
+    return 1;
+  }
+
+  function normalizeFinalPromptLine(line) {
+    return String(line || "")
+      .replace(/^[-*]\s*/, "")
+      .replace(/\s+/g, " ")
+      .replace(/\s*\/\s*/g, " / ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function normalizeFinalPromptConceptFamily(line) {
+    const raw = String(line || "").trim();
+    const lower = raw.toLowerCase();
+    const value = raw.replace(/^[-*]\s*/, "").replace(/^[^:]+:\s*/, "").trim().toLowerCase();
+    if (/^(컨셉 기반 홍보 적응|컨셉 홍보 적응|항목 반영 - 홍보 적응|concept campaign adaptation|field mapping - campaign adaptation)/i.test(raw)) {
+      return `concept-campaign:${value}`;
+    }
+    if (/^(컨셉 기반 오브젝트\/은유|컨셉 오브젝트 적응|항목 반영 - 오브젝트\/은유|concept object adaptation|field mapping - object\/metaphor)/i.test(raw)) {
+      return `concept-object:${value}`;
+    }
+    if (/^(컨셉 타이포|컨셉 타이포 지침|항목 반영 - 타이포그래피|concept typography)/i.test(raw)) {
+      return `concept-typography:${value}`;
+    }
+    return lower;
+  }
+
+  function finalizePromptLines(lines) {
+    const kept = [];
+    const seen = new Map();
+    lines.forEach((line) => {
+      const trimmed = trimValue(line);
+      if (!trimmed || isFinalPromptConflictLine(trimmed)) return;
+      const key = normalizeFinalPromptLine(trimmed);
+      const familyKey = normalizeFinalPromptConceptFamily(trimmed);
+      const existingIndex = seen.get(key) ?? seen.get(familyKey);
+      if (existingIndex === undefined) {
+        seen.set(key, kept.length);
+        seen.set(familyKey, kept.length);
+        kept.push(trimmed);
+        return;
+      }
+      if (finalLinePriority(trimmed) > finalLinePriority(kept[existingIndex])) {
+        kept[existingIndex] = trimmed;
+      }
+    });
+    return kept;
+  }
+
   function resolveConflictLines(lines, lint) {
     if (!isEnabled(state.autoResolveConflicts) || (!lint.conflicts.length && !lint.duplicates.length)) {
       return lines;
@@ -4680,7 +4850,9 @@
 
   function conceptPromptPartsFromStyle(style) {
     const structuredCandidate = style?.promptParts || style?.structuredPrompt || style?.promotionPrompt || {};
-    const structured = structuredCandidate && typeof structuredCandidate === "object" ? structuredCandidate : {};
+    const structured = state.outputLanguage === "ko"
+      ? {}
+      : (structuredCandidate && typeof structuredCandidate === "object" ? structuredCandidate : {});
     const palette = Array.isArray(style?.palette) ? style.palette.join(", ") : stringifyConceptPart(style?.palette);
     const prompt = stringifyConceptPart(style?.prompt);
     const desc = stringifyConceptPart(style?.desc);
@@ -4726,6 +4898,36 @@
         typographyGuidance: "브랜드 헤드라인과 CTA의 대비, 정렬축, 여백을 일관되게 유지한다.",
         avoid: "가짜 로고 생성, 과장된 브랜드 마크, 촌스러운 원색 효과",
       },
+      arch: {
+        campaignAdaptation: "공간감과 구조미를 홍보 메시지의 안정감, 신뢰감, 참여 동선으로 번역한다.",
+        objectAdaptation: "건축·인테리어 요소는 실제 장소 홍보가 아니라 정보가 놓이는 공간, 안내 사인, 책상 위 참여 장면, 깨끗한 프레임으로 바꾼다.",
+        typographyGuidance: "절제된 산세리프 계열 타이포와 정렬축을 사용하고, 헤드라인 주변에는 충분한 여백을 둔다.",
+        avoid: "부동산·쇼룸 홍보처럼 보이는 공간 중심 이미지, 불가능한 구조, 깨진 원근, 스케일 혼란",
+      },
+      craft: {
+        campaignAdaptation: "수공예 질감은 친근함, 정성, 참여의 온도를 높이는 배경 언어로 번역한다.",
+        objectAdaptation: "홍보 주제를 종이 조각, 손작업 오브젝트, 라벨, 스티커, 작은 소품으로 재해석한다.",
+        typographyGuidance: "손맛은 장식에만 쓰고 핵심 정보는 읽기 쉬운 정돈된 글자로 유지한다.",
+        avoid: "과한 수작업 질감으로 인한 가독성 저하, 지나치게 유아적인 장식",
+      },
+      illustration: {
+        campaignAdaptation: "일러스트 스타일은 메시지를 쉽게 이해시키는 상징 장면과 친근한 키비주얼로 번역한다.",
+        objectAdaptation: "홍보 주제를 그려진 오브젝트, 인물 없는 상징 장면, 간단한 아이콘형 소품으로 변환한다.",
+        typographyGuidance: "그림체와 어울리되 헤드라인은 선명한 타이포그래피로 분리한다.",
+        avoid: "클립아트 느낌, 서로 다른 선화 스타일 혼합, 장식 과밀",
+      },
+      fashion: {
+        campaignAdaptation: "패션 에디토리얼 감성은 프리미엄한 여백, 세련된 크롭, 정제된 무드로 번역한다.",
+        objectAdaptation: "의상 자체보다 소재감, 실루엣, 룩북식 배치, 고급 소품 언어를 홍보 주제에 맞게 차용한다.",
+        typographyGuidance: "짧고 고급스러운 헤드라인 중심으로 구성하고 본문 정보는 작고 정돈된 레일로 둔다.",
+        avoid: "홍보 목적과 무관한 모델 중심 이미지, 어색한 인체, 과한 런웨이 연출",
+      },
+      food: {
+        campaignAdaptation: "음식 스타일은 혜택과 참여 동기를 따뜻하고 즉각적인 감각으로 번역한다.",
+        objectAdaptation: "홍보 주제를 접시, 테이블, 패키지, 재료 배치 같은 친숙한 정보 오브젝트로 바꾼다.",
+        typographyGuidance: "메뉴판처럼 가격·기간·혜택 정보를 짧고 읽기 쉽게 배열한다.",
+        avoid: "식욕만 강조되어 홍보 목적이 사라지는 구성, 과한 광택, 지저분한 테이블",
+      },
     };
     const categoryProfile = categoryProfiles[category] || {
       campaignAdaptation: "컨셉의 시각적 특징을 홍보 목적, 타깃, 헤드라인 의미에 맞는 키비주얼로 번역한다.",
@@ -4736,7 +4938,9 @@
 
     const text = sourceText.toLowerCase();
     const derived = {
-      visualDNA: [desc, prompt].filter(Boolean).join("\n"),
+      visualDNA: state.outputLanguage === "ko"
+        ? [styleDNA, desc].filter(Boolean).join(". ")
+        : [desc, prompt].filter(Boolean).join("\n"),
       paletteStrategy: palette ? `컨셉 팔레트 전체를 유지하되, 강조색은 CTA와 핵심 정보에 제한적으로 사용한다.\n${palette}` : "",
       textureRendering: /watercolor|paper|collage|grain|texture|clay|glass|metal|oil|pencil|수채|종이|질감|클레이|유리|메탈|색연필/.test(text)
         ? "컨셉 원문에 포함된 재질감과 렌더링 방식을 배경, 키비주얼, 정보 묶음의 표면 처리에 반영한다."
@@ -4783,6 +4987,56 @@
     state.appliedConceptObjectAdaptation = stringifyConceptPart(parts.objectAdaptation);
     state.appliedConceptAvoid = stringifyConceptPart(parts.avoid);
     state.appliedConceptQualityRules = stringifyConceptPart(parts.qualityRules);
+  }
+
+  function getContentConceptBridgeOverrides(parts) {
+    if (!state.contentType || state.contentType === "none") return {};
+    const isInteriorLike = /공간|인테리어|건축|home|interior|architecture|scandinavian|hygge/i.test(
+      `${state.appliedConceptName} ${state.appliedConceptCategory} ${parts.visualDNA} ${parts.shapeLanguage}`
+    );
+    const softSpaceCue = isInteriorLike
+      ? "선택 컨셉의 밝은 공간감, 따뜻한 표면, 정돈된 책상/홈오피스/거실 무드를 유지하되"
+      : "선택 컨셉의 색감, 형태 언어, 렌더링 무드를 유지하되";
+
+    const profiles = {
+      "survey-request": {
+        campaignAdaptation: `${softSpaceCue}, 설문 참여를 부담 없는 3분 일상 행동처럼 느끼게 만드는 친근한 참여 장면으로 번역한다.`,
+        objectAdaptation: "모바일 설문 카드, 체크리스트, 의견 카드, QR 자리, 작은 식물이나 소품을 메인 오브젝트로 묶어 참여 흐름을 보여준다.",
+        layoutBehavior: "헤드라인은 상단 또는 좌측 큰 타이포로 두고, 기간·대상·소요시간·QR 참여는 3~4개의 라운드 배지나 사이드 레일로 정리한다.",
+        typographyGuidance: "정책/설문 문구는 딱딱한 공문서 느낌을 피하고, 짧고 부드러운 안내형 산세리프 타이포로 구성한다.",
+        avoid: "부동산·쇼룸 홍보처럼 보이는 공간 중심 이미지, 설문 목적이 사라지는 인테리어 장식 과잉, 작은 본문 난립",
+      },
+      "event-info": {
+        campaignAdaptation: `${softSpaceCue}, 행사 참여를 기대감 있는 일정 안내와 명확한 신청 행동으로 번역한다.`,
+        objectAdaptation: "캘린더, 티켓, 입장 패스, 장소 핀, 신청 버튼을 컨셉 스타일의 메인 비주얼로 구성한다.",
+        layoutBehavior: "행사명과 일시는 가장 큰 정보 축으로 두고 장소·신청방법·QR은 보조 정보 레일로 분리한다.",
+        typographyGuidance: "일시와 장소 숫자는 큰 크기와 고대비로 처리하고, CTA는 한눈에 보이는 버튼형으로 둔다.",
+        avoid: "행사 정보보다 배경 장식이 먼저 보이는 구성, 일정/장소 누락, 과밀한 하단 정보 박스",
+      },
+      "training-info": {
+        campaignAdaptation: `${softSpaceCue}, 교육 신청을 성장·기회·실무 역량 향상의 장면으로 번역한다.`,
+        objectAdaptation: "노트북, 교재, 성장 계단, 체크 배지, 커리큘럼 카드 등을 컨셉 스타일로 재해석한다.",
+        layoutBehavior: "과정명과 모집 마감일을 우선 배치하고, 기간·자격·혜택은 단계형 카드나 세로 레일로 정리한다.",
+        typographyGuidance: "과정명은 명확하게, 혜택과 마감일은 배지형 강조로 처리한다.",
+        avoid: "복잡한 커리큘럼 표, 어두운 학원 광고 느낌, 성장 메시지와 무관한 장식",
+      },
+      "biz-promo": {
+        campaignAdaptation: `${softSpaceCue}, 지원사업 참여를 신뢰감 있는 기회 제안과 명확한 접수 행동으로 번역한다.`,
+        objectAdaptation: "사업 안내 문서, 성장 그래프, 연결 노드, 지원 패키지, 신청 포털을 컨셉 스타일로 구성한다.",
+        layoutBehavior: "사업명과 지원 내용을 가장 먼저 읽히게 하고, 대상·기간·방법은 정보 노드로 분리한다.",
+        typographyGuidance: "전문적이고 신뢰감 있는 타이포를 사용하되 CTA는 선명한 색상 대비로 강조한다.",
+        avoid: "스타트업 클리셰 아이콘 과다, 불명확한 지원 내용, 지나치게 딱딱한 관공서 문서 느낌",
+      },
+      campaign: {
+        campaignAdaptation: `${softSpaceCue}, 캠페인 메시지를 직관적인 상징 행동과 참여 동기로 압축한다.`,
+        objectAdaptation: "캠페인 슬로건을 뒷받침하는 하나의 상징 오브젝트와 짧은 참여 라벨을 중심으로 구성한다.",
+        layoutBehavior: "슬로건·상징 오브젝트·CTA가 삼각 구도로 읽히게 하고 보조 정보는 최소화한다.",
+        typographyGuidance: "슬로건은 가장 큰 타이포로, 참여 행동은 짧은 버튼형 문구로 처리한다.",
+        avoid: "상징만 남고 행동 유도가 사라지는 이미지, 장식적 캠페인 포스터 과잉",
+      },
+    };
+
+    return profiles[state.contentType] || {};
   }
 
   function getAppliedConceptLines() {
@@ -4923,6 +5177,45 @@
     ]);
   }
 
+  function getPaletteRoleSplitLines() {
+    if (!state.appliedConceptStyle || isAiColorStrategy()) return [];
+    const conceptPalette = trimValue(state.appliedConceptPalette);
+    const manualColors = [
+      state.primaryColor,
+      state.secondaryColor,
+      state.accentColor,
+      state.backgroundColor,
+    ].map(trimValue).filter(Boolean);
+    if (!conceptPalette || !manualColors.length) return [];
+    return prunePromptLines([
+      localizeSentence(
+        `색상 역할 분리: 사용자가 지정한 색상(${manualColors.join(", ")})은 브랜드 신호, 헤드라인 대비, 행동버튼 강조에 우선 사용하고, 컨셉 팔레트(${conceptPalette})는 배경 질감, 조명, 보조 오브젝트, 정보 묶음의 분위기에 적용한다.`,
+        `Palette role split: use the user-specified colors (${manualColors.join(", ")}) first for brand signals, headline contrast, and action-button emphasis; apply the concept palette (${conceptPalette}) to background texture, lighting, supporting objects, and information-group mood.`
+      ),
+      localizeSentence(
+        "두 팔레트가 충돌하면 새 색상을 추가하지 말고, 사용자 색상은 전경/행동 유도에, 컨셉 색상은 후경/공간감에 배치해 같은 이미지 안에서 역할을 분리한다.",
+        "If the two palettes conflict, do not add new colors; place user colors in the foreground and action path, and concept colors in the background and spatial mood."
+      ),
+    ]);
+  }
+
+  function shouldRestrictAiAutoForCurrentInput() {
+    const bodyLength = String(state.bodyCopy || "").trim().length;
+    const manualSignalCount = [
+      state.headline,
+      state.subheadline,
+      state.bodyCopy,
+      state.goal,
+      state.audience,
+      state.mandatoryElements,
+    ].filter((value) => trimValue(value)).length;
+    return state.appliedConceptStyle || state.contentType === "none" || bodyLength >= 80 || manualSignalCount >= 4;
+  }
+
+  function isLowRiskAutoField(field) {
+    return field === "cta" || field === "posterOffer";
+  }
+
   function getConceptAwareAutoDirective(def) {
     const base = localizeSentence(
       `[AI 자동 생성] ${def.labelKo}: ${def.directiveKo}`,
@@ -5044,7 +5337,7 @@
     const antiAiForbiddenTokens = activeAntiAiPreset
       ? splitKeywordValues(localizeSentence(activeAntiAiPreset.forbiddenKo, activeAntiAiPreset.forbiddenEn))
       : [];
-    const userForbiddenTokens = splitKeywordValues(state.forbiddenElements).filter((token) => {
+    const userForbiddenTokens = splitForbiddenValues(state.forbiddenElements).filter((token) => {
       const norm = token.trim().toLowerCase().replace(/[\s·.,]/g, "");
       return !antiAiForbiddenTokens.some((t) => t.trim().toLowerCase().replace(/[\s·.,]/g, "") === norm);
     });
@@ -5209,6 +5502,9 @@
           if (def.field === "visualStyle" && state.appliedConceptStyle) {
             return false;
           }
+          if (shouldRestrictAiAutoForCurrentInput() && !isLowRiskAutoField(def.field)) {
+            return false;
+          }
           return isEnabled(state[`${def.field}Enabled`]) && state[`${def.field}Mode`] === "ai";
         })
         .map((def) => getConceptAwareAutoDirective(def))
@@ -5228,6 +5524,12 @@
             "비주얼 스타일은 이미 컨셉 제안으로 지정되어 있으므로 AI는 별도의 신규 스타일 후보를 만들지 말고, 선택된 컨셉을 광고 키비주얼 구성에 적용하는 방식만 구체화한다.",
             "Because the visual style is already defined by the concept suggestion, AI must not invent a separate new style; it should only specify how to apply the selected concept to the advertising key visual."
           ),
+          ...(shouldRestrictAiAutoForCurrentInput()
+            ? [localizeSentence(
+                "직접 입력 정보가 충분하므로 AI 자동생성은 행동버튼 문구와 짧은 한 줄 오퍼 보완에만 사용하고, 헤드라인·본문·컨셉·레이아웃 방향을 새로 만들거나 확장하지 않는다.",
+                "Because the direct input is already sufficient, use AI auto-generation only to refine the action-button copy and a short offer line; do not recreate or expand the headline, body copy, concept, or layout direction."
+              )]
+            : []),
         ])
       : [];
 
@@ -5271,6 +5573,7 @@
       ...getLocalizedProfileLines(commercialProfile),
     ]);
     const conceptBridgeLines = getConceptBridgeLines();
+    const displayBodyPointLines = getDisplayBodyPointLines();
 
     const layoutCompLines = (() => {
       if (!isEnabled(state.layoutCompositionEnabled)) {
@@ -5413,6 +5716,7 @@
             `${localizeSentence("배경 처리 방식", "Background treatment")}: ${localizeValue(backgroundModeLabel(state.backgroundMode))}`,
             state.backgroundColor ? `${localizeSentence("배경 색상", "Background color")}: ${localizeValue(state.backgroundColor)}` : "",
             state.backgroundDetails ? `${localizeSentence("배경 패턴/이미지 지시", "Background pattern/image guidance")}: ${localizeValue(state.backgroundDetails)}` : "",
+            ...getPaletteRoleSplitLines(),
             localizeSentence(
               "색상과 배경값이 고정되어 있어도 레이아웃을 고정하지 않는다. 동일한 팔레트 안에서 화면 분할, 여백 비율, 오브젝트 크롭, 정보 묶음 방식은 선택된 시선 흐름과 구도 전략에 맞춰 변주한다.",
               "Even when color and background values are fixed, do not lock the layout. Within the same palette, vary screen division, whitespace ratio, object cropping, and information grouping according to the selected attention-flow and composition strategy."
@@ -5473,6 +5777,7 @@
       { priority: 35, title: localizeHeading("AI 자동 생성 요청", "AI auto-generate requests"), lines: aiAutoLines },
       { priority: 36, title: localizeHeading("컨셉-자동생성 정렬 규칙", "Concept and AI alignment rules"), lines: conceptAutoAlignmentLines },
       { priority: 40, title: localizeHeading("이미지에 직접 포함할 텍스트 (한국어 원문 그대로 렌더링)", "Text to render exactly as-is — Korean source text, do not translate"), lines: directTextLines },
+      { priority: 41, title: localizeHeading("이미지 표시용 축약", "On-image display compression"), lines: displayBodyPointLines },
       { priority: 42, title: localizeHeading("정보항목 표현 방식", "Information item presentation"), lines: informationItemLayoutLines },
       { priority: 45, title: localizeHeading("시선 흐름", "Attention flow"), lines: attentionFlowLines },
       { priority: 50, title: localizeHeading("구성/배치 지시", "Composition and layout guidance"), lines: resolveConflictLines(designLines, lint) },
@@ -5486,7 +5791,7 @@
     return sections
       .map((section) => ({
         ...section,
-        lines: section.lines.filter((line) => {
+        lines: finalizePromptLines(section.lines).filter((line) => {
           const normalized = normalizePromptLineForDedupe(line);
           if (!normalized || seenLines.has(normalized)) return false;
           seenLines.add(normalized);
@@ -5532,6 +5837,47 @@
     );
   }
 
+  function getRecommendedCompositionDirective() {
+    const bodyCount = normalizeLines(state.bodyCopy).length;
+    if (state.contentType === "survey-request") {
+      return localizeSentence(
+        "이번 입력의 추천 구도는 타이포그래피 중심 정보형이다. 큰 헤드라인과 짧은 참여 동기를 먼저 읽히게 하고, 기간·대상·소요시간·QR 참여는 작은 배지나 사이드 레일로 정리한다.",
+        "For this input, use a typography-led information composition. Make the large headline and short participation motive read first, then organize period, audience, duration, and QR participation as small badges or a side rail."
+      );
+    }
+    if (state.contentType === "event-info") {
+      return localizeSentence(
+        "이번 입력의 추천 구도는 분할 화면 정보형이다. 행사명·일시·장소를 가장 먼저 읽히게 하고, 신청/QR/부가 혜택은 보조 정보 레일로 분리한다.",
+        "For this input, use a split-screen information composition. Make event title, date, and venue read first, then separate application, QR, and supporting benefits into a secondary information rail."
+      );
+    }
+    if (bodyCount >= 4) {
+      return localizeSentence(
+        "이번 입력의 추천 구도는 헤드라인 분리형 사이드 정보 레일이다. 본문 정보가 많으므로 세부 항목은 한쪽 레일에 촘촘히 묶고, 헤드라인과 메인 비주얼 영역은 크게 분리한다.",
+        "For this input, use a headline-separated side information rail. Because there are many body details, group details densely in one side rail while reserving a large separate headline and main-visual zone."
+      );
+    }
+    return localizeSentence(
+      "이번 입력의 추천 구도는 타이포그래피 중심 키비주얼이다. 헤드라인과 행동 유도 요소를 가장 큰 시선축으로 두고, 컨셉 오브젝트는 메시지를 보조하는 한 개의 상징으로 제한한다.",
+      "For this input, use a typography-led key visual. Treat the headline and action prompt as the largest eye-flow axis, and limit concept objects to one symbol that supports the message."
+    );
+  }
+
+  function shouldSkipOptimizedLine(line) {
+    const trimmed = String(line || "").trim();
+    return /^(패턴 [A-D]|Pattern [A-D]|타임라인 리본|세로 마일스톤|방사형 정보|대각선 스텝|사이드 정보|배지 스택|비주얼 내장|컴팩트 표|Asymmetrical axis|Split-screen|Typography-led|Radial composition|Diagonal progression)/.test(trimmed)
+      || /생성할 때마다 아래|For each generation|무작위로 선택|randomly choose|정확히 하나 또는 서로 보완|one or two complementary/i.test(trimmed)
+      || /동일한 입력을 다시 생성|When regenerating the same input|같은 입력값이라도|Even with the same inputs/i.test(trimmed)
+      || /chaos|stylize|variation|혜택 카드 3개|three benefit cards/i.test(trimmed)
+      || /아래 표현 방식|presentation formats below|아래 시선 흐름|attention-flow patterns below/i.test(trimmed);
+  }
+
+  function shouldSkipOptimizedTextLine(line) {
+    const hasDisplayCompression = getDisplayBodyPointLines().length > 0;
+    if (!hasDisplayCompression) return false;
+    return /^(본문 포인트|body points):/i.test(String(line || "").trim());
+  }
+
   function renderReviewPrompt(validation, lint) {
     const sections = createPromptSections(validation, lint);
     const intro = [
@@ -5544,7 +5890,8 @@
     const sectionLines = sections.flatMap((section) => [
       "",
       `## ${section.title}`,
-      ...section.lines.flatMap((line) => line.split(/\r?\n/)).map((line) => `- ${line.trim().replace(/^-\s*/, "")}`),
+      ...finalizePromptLines(section.lines.flatMap((line) => line.split(/\r?\n/)))
+        .map((line) => `- ${line.trim().replace(/^-\s*/, "")}`),
     ]);
 
     const footer = [
@@ -5567,8 +5914,10 @@
   function renderOptimizedPrompt(validation, lint) {
     const sections = createPromptSections(validation, lint);
     const compressed = sections.flatMap((section) =>
-      section.lines
+      finalizePromptLines(section.lines)
         .flatMap((line) => line.split(/\r?\n/))
+        .filter((line) => !shouldSkipOptimizedLine(line.trim()))
+        .filter((line) => !shouldSkipOptimizedTextLine(line.trim()))
         .map((line) => `- ${line.replace(/^\d+\.\s*/, "").trim().replace(/^-\s*/, "")}`)
     );
     const assetLabelEn = ASSET_PROMPT_TARGET_EN[state.assetType] || ASSET_LABELS[state.assetType];
@@ -5595,6 +5944,7 @@
         "창의성은 장식 추가가 아니라 시선 흐름, 크롭, 여백, 오브젝트 스케일, 정보 카드 구조의 변주로 표현한다.",
         "Express creativity through variation in eye flow, cropping, whitespace, object scale, and information-card structure rather than by adding decoration."
       ),
+      getRecommendedCompositionDirective(),
       ...(state.outputLanguage !== "en"
         ? [localizeSentence(
             "이미지 내 모든 텍스트는 한국어로만 표기하고, 영어로 번역하거나 영문을 병기하지 않는다.",
@@ -6461,6 +6811,7 @@
     state.conceptInfluenceMode = "strong";
 
     const conceptParts = conceptPromptPartsFromStyle(style);
+    Object.assign(conceptParts, getContentConceptBridgeOverrides(conceptParts));
     applyConceptPartsToState(conceptParts);
     state.visualStyleEnabled = "true";
     state.visualStyleMode = "manual";
@@ -6468,6 +6819,12 @@
     state.bigIdeaMode = "manual";
     state.visualMetaphorEnabled = "true";
     state.visualMetaphorMode = "manual";
+    state.visualStyle = stripConceptInjectedLines(state.visualStyle);
+    state.bigIdea = stripConceptInjectedLines(state.bigIdea);
+    state.visualMetaphor = stripConceptInjectedLines(state.visualMetaphor);
+    state.backgroundDetails = stripConceptInjectedLines(state.backgroundDetails);
+    state.qualityNotes = stripConceptInjectedLines(state.qualityNotes);
+    state.forbiddenElements = stripConceptInjectedLines(state.forbiddenElements) || DEFAULT_STATE.forbiddenElements;
 
     const conceptVisualStyle = [
       state.appliedConceptName ? `컨셉 제안 적용: ${state.appliedConceptName}` : "",
