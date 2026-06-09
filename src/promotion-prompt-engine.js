@@ -46,7 +46,7 @@ window.PROMO_PROMPT = (function () {
     normalizePromptLineForDedupe,
   } = window.PROMO_UTILS;
 
-  const { translateFragment } = window.PROMO_I18N;
+  const { translateFragment, splitQualityNoteLines } = window.PROMO_I18N;
 
   // State reference — bound by init(), points to promotion.js's `state` object
   let _s = {};

@@ -1699,15 +1699,6 @@ window.PROMO_DATA = (function () {
     },
   };
 
-  const state = deepClone(DEFAULT_STATE);
-  let visitedAssetTypes = new Set([DEFAULT_STATE.assetType]);
-  let latestValidation = validateState();
-  let latestLint = { conflicts: [], duplicates: [], notes: [], summary: [] };
-  let promptDraft = "";
-  let promptDirty = false;
-  let colorPresets = [];
-  let sizePresets = [];
-
   const CONTENT_TYPE_SAMPLE_PROFILES = {
     none: {
       paletteId: "preset_modern_dark",
