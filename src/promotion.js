@@ -4094,6 +4094,7 @@
       checkbox.addEventListener("change", () => {
         const field = checkbox.dataset.toggleField;
         state[`${field}Enabled`] = String(checkbox.checked);
+        promptDirty = false;
         if (STATIC_TOGGLE_SYNC[field]) {
           STATIC_TOGGLE_SYNC[field]();
         } else {
@@ -4107,6 +4108,7 @@
       btn.addEventListener("click", () => {
         const field = btn.dataset.toggleMode;
         state[`${field}Mode`] = btn.dataset.mode;
+        promptDirty = false;
         if (STATIC_TOGGLE_SYNC[field]) {
           STATIC_TOGGLE_SYNC[field]();
         } else {
@@ -4132,6 +4134,7 @@
     scope.querySelectorAll("[data-promo-field]").forEach((input) => {
       const handler = () => {
         state[input.dataset.promoField] = input.type === "checkbox" ? String(input.checked) : input.value;
+        promptDirty = false;
         if (input.id === "promotionContentType") {
           applyContentTypeTemplate(input.value);
         }
@@ -5356,7 +5359,7 @@
   }
 
   function isLowRiskAutoField(field) {
-    return field === "cta" || field === "posterOffer";
+    return field === "cta" || field === "posterOffer" || field === "snsHook" || field === "snsHashtags";
   }
 
   function getConceptAwareAutoDirective(def) {
@@ -5577,21 +5580,16 @@
         : [];
       const extraAll = [...userExtra, ...antiExtra].filter(Boolean);
 
-      const hint = localizeSentence(
-        "(이미지 AI의 Negative Prompt 필드에 직접 붙여넣기)",
-        "(Paste directly into the Negative Prompt field of your image AI)"
-      );
       if (state.outputLanguage === "en") {
-        return prunePromptLines([hint, [...BASE_EN, ...extraAll].join(", ")]);
+        return prunePromptLines([[...BASE_EN, ...extraAll].join(", ")]);
       }
       if (state.outputLanguage === "bilingual") {
         return prunePromptLines([
-          hint,
           `KO: ${[...BASE_KO, ...extraAll].join(", ")}`,
           `EN: ${[...BASE_EN, ...extraAll].join(", ")}`,
         ]);
       }
-      return prunePromptLines([hint, [...BASE_KO, ...extraAll].join(", ")]);
+      return prunePromptLines([[...BASE_KO, ...extraAll].join(", ")]);
     })();
 
     const directTextLines = prunePromptLines(
@@ -6057,7 +6055,7 @@
       { priority: 65, title: localizeHeading("비주얼 구성 방향", "Visual composition direction"), lines: variationLines },
       { priority: 70, title: localizeHeading("색상 시스템", "Color system"), lines: colorLines },
       { priority: 80, title: localizeHeading("이미지 품질 기준", "Image quality standards"), lines: qualityLines },
-      { priority: 90, title: localizeHeading("네거티브 프롬프트", "Negative prompt"), lines: negativePromptLines },
+      { priority: 90, title: localizeHeading("제외할 표현", "Negative prompt"), lines: negativePromptLines },
     ];
 
     const seenLines = new Set();
