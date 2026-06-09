@@ -652,9 +652,7 @@ function createPromptSections(validation, lint) {
   const textEntries = _h.visibleTextEntries();
   const instructionItems = _h.instructionEntries();
   const commercialProfile = COMMERCIAL_BASELINE_PROFILES[_s.commercialBaseline] || COMMERCIAL_BASELINE_PROFILES[DEFAULT_STATE.commercialBaseline];
-  const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREATIVITY_LEVEL_PROFILES[DEFAULT_STATE.creativityLevel];
   const promotionStrategyProfile = CONTENT_PROMOTION_STRATEGIES[_s.contentType] || CONTENT_PROMOTION_STRATEGIES.none;
-  const diversityProfile = CREATIVE_DIVERSITY_PROFILES[_s.creativityLevel] || CREATIVE_DIVERSITY_PROFILES.balanced;
   const compositionExcludedKeys = new Set([
     "contentType",
     "sizeMode",
@@ -940,7 +938,7 @@ function createPromptSections(validation, lint) {
         if (def.field === "visualMetaphor" || def.field === "layoutComposition") {
           return false;
         }
-        if (def.field === "visualStyle" && _h.isBasicVisualPlanningMode() && _h.hasBasicConceptPromptInput()) {
+        if (def.field === "visualStyle" && _h.isBasicVisualPlanningMode()) {
           return false;
         }
         if (shouldRestrictAiAutoForCurrentInput() && !isLowRiskAutoField(def.field)) {
@@ -989,8 +987,8 @@ function createPromptSections(validation, lint) {
         ]
       : [
           _h.localizeSentence(
-            "생성할 때마다 아래 시선 흐름 패턴 중 정확히 하나를 무작위로 선택하고, 선택한 패턴을 전체 레이아웃의 우선순위로 사용한다.",
-            "For each generation, randomly choose exactly one of the attention-flow patterns below and use it as the priority order for the entire layout."
+            "아래 시선 흐름 패턴 중 이번 콘텐츠와 타깃에 가장 적합한 하나를 선택해 전체 레이아웃의 우선순위로 사용한다.",
+            "Select the one attention-flow pattern below that best fits the current content and target audience, and use it as the layout priority."
           ),
           ...ATTENTION_FLOW_VARIANTS.map((variant) => {
             const lines = _s.outputLanguage === "en" ? variant.linesEn
@@ -1000,12 +998,8 @@ function createPromptSections(validation, lint) {
             return `${_h.localizeSentence(variant.labelKo, variant.labelEn)} — ${lines.join(" → ")}`;
           }),
           _h.localizeSentence(
-            "동일한 입력을 다시 생성할 때 이전과 같은 시선 흐름을 반복하지 말고, 정보 중심/비주얼 중심/타이포 중심/증거 중심 사이에서 변주한다.",
-            "When regenerating the same input, do not repeat the same eye-flow pattern; vary among information-first, visual-first, typography-first, and proof-first structures."
-          ),
-          _h.localizeSentence(
-            "텍스트 블록은 가능하면 3개 이하로 묶되, 반드시 하단 카드 배열로 고정하지 말고 오버랩 단계, 원형 노드, 비주얼 내부 통합 텍스트 블록 등으로 변주한다.",
-            "Keep text blocks to 3 or fewer when possible, but do not lock them into bottom card rows; vary them as overlapping steps, circular nodes, or integrated text blocks inside the main visual."
+            "텍스트 블록은 가능하면 3개 이하로 묶되, 하단 카드 배열이 콘텐츠에 맞으면 그대로 사용하고, 오버랩 단계·원형 노드·비주얼 내부 통합 텍스트 블록도 선택지로 고려한다.",
+            "Keep text blocks to 3 or fewer when possible; if bottom card rows suit the content use them, but also consider overlapping steps, circular nodes, or integrated text blocks inside the main visual."
           ),
         ]
   );
@@ -1075,7 +1069,7 @@ function createPromptSections(validation, lint) {
       return [];
     }
 
-    if (_h.isBasicVisualPlanningMode() && _h.hasBasicConceptPromptInput()) {
+    if (_h.isBasicVisualPlanningMode()) {
       return [];
     }
 
@@ -1092,7 +1086,7 @@ function createPromptSections(validation, lint) {
   })();
 
   const designLines = prunePromptLines([
-    ...layoutCompLines,
+    ...(_h.isDetailVisualPlanningMode() ? layoutCompLines : []),
     ...(_h.isDetailVisualPlanningMode() ? instructionItems : [])
       .filter((entry) => {
         const visualFields = ["tone", "bigIdea", "visualMetaphor", "visualStyle", "layoutComposition"];
@@ -1113,35 +1107,19 @@ function createPromptSections(validation, lint) {
     ...qrCodePromptLines(),
   ]);
 
+  // 비주얼 방향성: bigIdea, visualMetaphor 수동 입력값 + AI 은유 다양성 지시
+  // (구성 실험 강도·위험도 프로파일은 제거됨 — 변형 시드가 방향성을 담당)
   const creativityLines = prunePromptLines([
     (_h.isDetailVisualPlanningMode() && isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea) ? `${_h.localizeSentence("핵심 개념", "Core concept")}: ${_h.localizeValue(_s.bigIdea)}` : "",
     (_h.isDetailVisualPlanningMode() && isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor) ? `${_h.localizeSentence("비주얼 은유", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}` : "",
     ...visualMetaphorDiversityLines,
-    _h.isDetailVisualPlanningMode() ? `${_h.localizeSentence("레이아웃 실험 범위", "Layout experimentation")}: ${_h.localizeSentence(creativityProfile.labelKo, creativityProfile.labelEn)}` : "",
-    ...(_h.isDetailVisualPlanningMode() ? getLocalizedProfileLines(creativityProfile) : []),
-    ...(_h.isDetailVisualPlanningMode() ? getLocalizedProfileLines(diversityProfile) : []),
-    _h.isDetailVisualPlanningMode() ? _h.localizeSentence(
-      "본문 포인트는 반드시 동일한 직사각형 카드 2~3개로 만들지 말고, 겹친 단계 카드, 연결 원형 노드, 타임라인 조각, 비주얼 은유 내부 텍스트 블록처럼 서로 다른 정보 묶음 방식을 허용한다.",
-      "Do not force body points into the same 2 to 3 rectangular cards; allow diverse information groupings such as overlapping step cards, connected circular nodes, timeline fragments, or text blocks integrated into the visual metaphor."
-    ) : "",
-    _h.isDetailVisualPlanningMode() ? _h.localizeSentence(
-      "'혜택 카드 3개 + 하단 정보박스' 공식을 반복 금지 패턴으로 취급한다. 꼭 필요한 경우가 아니라면 정보항목의 수와 성격에 맞춰 카드 개수, 방향, 밀도, 위치를 매번 다르게 설계한다.",
-      "Treat the 'three benefit cards plus bottom information box' formula as an anti-pattern. Unless truly required, vary the number, direction, density, and position of information units according to their count and meaning."
-    ) : "",
-    _h.isDetailVisualPlanningMode() ? _h.localizeSentence(
-      "같은 입력값이라도 매번 동일한 템플릿 구도로 반복하지 말고, 선택한 창의성 강도 안에서 색면, 크롭, 오브젝트 스케일, 정보 카드 형태, 배경 은유 중 일부를 변주한다.",
-      "Even with the same inputs, do not repeat the same template composition every time; within the selected creativity level, vary color fields, cropping, object scale, information-card shape, or background metaphor."
-    ) : "",
-    _h.isDetailVisualPlanningMode() ? _h.localizeSentence(
-      "사용 모델이 chaos, stylize, variation 같은 창의성 파라미터를 지원한다면 중간 수준(예: chaos 30~50)을 사용해 메시지는 유지하되 구도와 배치의 예측 가능성을 낮춘다.",
-      "If the image model supports creative parameters such as chaos, stylize, or variation, use a medium level (for example chaos 30-50) to preserve the message while reducing predictable composition."
-    ) : "",
   ]);
 
   const backgroundDetailLines = _h.getNonConceptPromptLines(_s.backgroundDetails);
-  const backgroundDetailsForPrompt = backgroundDetailLines
-    .filter((line) => !((_h.isBasicVisualPlanningMode() && _h.hasBasicConceptPromptInput()) && /스타일 배경|전체 색상 팔레트|컨셉 질감|고대비 단색|저노이즈/.test(line)))
-    .join("\n");
+  // 기본 모드에서는 배경 상세 지시가 컨셉 비주얼 DNA와 충돌하므로 완전히 제외한다.
+  const backgroundDetailsForPrompt = _h.isBasicVisualPlanningMode()
+    ? ""
+    : backgroundDetailLines.join("\n");
   const colorLines = prunePromptLines(
     _h.isBasicVisualPlanningMode() && _h.hasBasicConceptPromptInput()
       ? (() => {
@@ -1208,7 +1186,25 @@ function createPromptSections(validation, lint) {
         ]
   );
 
+  // 변형 모드가 활성일 때만 레이아웃 반복 방지 압박을 추가한다.
+  // 기본 모드("none")에서는 상업적으로 검증된 표준 구성도 허용해야 하므로 제외한다.
+  const hasVariationMode = _s.variationMode && _s.variationMode !== "none";
+
   const compositeQualityLines = [
+    ...(hasVariationMode ? [
+      _h.localizeSentence(
+        "본문 포인트를 동일한 직사각형 카드 2~3개로 반복하지 말고, 겹친 단계 카드, 연결 원형 노드, 타임라인 조각, 비주얼 은유 내부 텍스트 블록처럼 서로 다른 정보 묶음 방식을 허용한다.",
+        "Do not repeat body points in identical 2-3 rectangular cards; allow varied groupings such as overlapping step cards, connected circular nodes, timeline fragments, or text blocks embedded in the visual metaphor."
+      ),
+      _h.localizeSentence(
+        "'혜택 카드 3개 + 하단 정보박스' 공식을 반복 금지 패턴으로 취급한다. 정보 항목의 수와 성격에 맞춰 카드 개수, 방향, 밀도, 위치를 콘텐츠에 맞게 설계한다.",
+        "Treat the 'three benefit cards plus bottom info box' as an overused pattern. Vary the number, direction, density, and position of information units to fit the actual content."
+      ),
+      _h.localizeSentence(
+        "선택된 변형 방향을 반영해 색면, 크롭, 오브젝트 스케일, 정보 카드 형태, 배경 처리 중 적절한 요소에 변주를 적용한다.",
+        "Apply variation to appropriate elements such as color fields, cropping, object scale, card shape, or background treatment in line with the selected composition direction."
+      ),
+    ] : []),
     _h.localizeSentence(
       "겹쳐지는 레이어 밑에는 부드러운 그림자를 두어 실제 물리적인 깊이감을 형성한다.",
       "Apply subtle drop shadows beneath overlapping layers to establish a realistic sense of physical depth."
@@ -1257,6 +1253,55 @@ function createPromptSections(validation, lint) {
     ]);
   })();
 
+  // 키비주얼 배치 — 상세 모드 + auto 아닐 때만 발동
+  const keyVisualPlacementLines = (() => {
+    if (!_h.isDetailVisualPlanningMode()) return [];
+    const placement = _s.keyVisualPlacement;
+    if (!placement || placement === "auto") return [];
+
+    if (placement === "background") {
+      return prunePromptLines([
+        _h.localizeSentence("키비주얼 배치: 배경 처리", "Key visual placement: background layer"),
+        _h.localizeSentence(
+          "키비주얼·비주얼 오브젝트는 배경층(color wash, 반투명 이미지, 질감 레이어)에만 배치하고, 전경에 독립 오브젝트로 등장하지 않는다.",
+          "Place the key visual and visual objects only in the background layer as color washes, semi-transparent images, or texture layers; they must not appear as standalone foreground objects."
+        ),
+        _h.localizeSentence(
+          "전경은 헤드라인·정보 카드·CTA 텍스트 위계가 완전히 점유하며, 어떤 비주얼 오브젝트도 텍스트 가독성을 방해하는 위치에 오지 않는다.",
+          "The foreground is fully occupied by the headline, information card, and CTA hierarchy; no visual object may obstruct text readability."
+        ),
+        _h.localizeSentence(
+          "배경 비주얼의 채도·명도를 낮추거나 가우시안 블러·반투명 오버레이를 적용해 텍스트와의 명도 대비를 확보한다.",
+          "Reduce the saturation and brightness of the background visual, or apply a Gaussian blur or semi-transparent overlay to ensure adequate contrast between background and text."
+        ),
+        _h.localizeSentence(
+          "콘텐츠 정보의 명확성을 최우선으로 하며, 배경은 분위기·브랜드 인상만 전달하는 보조 역할을 한다.",
+          "Content clarity is the top priority; the background serves only to convey atmosphere and brand impression."
+        ),
+      ]);
+    }
+
+    if (placement === "foreground") {
+      return prunePromptLines([
+        _h.localizeSentence("키비주얼 배치: 전면 배치", "Key visual placement: foreground"),
+        _h.localizeSentence(
+          "키비주얼·비주얼 오브젝트를 전경 중심에 강하게 배치하고, 시선이 비주얼 → 헤드라인 → CTA 순으로 흐르도록 설계한다.",
+          "Place the key visual and visual objects prominently in the foreground center; design the eye flow as visual → headline → CTA."
+        ),
+        _h.localizeSentence(
+          "텍스트는 비주얼 오브젝트 주변(상단·하단·측면)에 배치하며 오브젝트와 충돌하지 않게 공간을 나눈다.",
+          "Position text around the visual object (above, below, or to the side) and divide the space to prevent collision between text and object."
+        ),
+        _h.localizeSentence(
+          "배경은 비주얼 오브젝트를 돋보이게 하는 보조 역할로만 처리하며, 배경 요소가 오브젝트의 실루엣과 경쟁하지 않도록 한다.",
+          "Treat the background as a supporting layer that makes the visual object stand out; background elements must not compete with the object's silhouette."
+        ),
+      ]);
+    }
+
+    return [];
+  })();
+
   const sections = [
     { priority: 10, title: _h.localizeHeading("출력 대상", "Output target"), lines: targetLines },
     { priority: 15, title: _h.localizeHeading("광고 전략", "Promotion strategy"), lines: promotionStrategyLines },
@@ -1272,6 +1317,7 @@ function createPromptSections(validation, lint) {
     { priority: 50, title: _h.localizeHeading("레이아웃 구성", "Layout & composition"), lines: resolveConflictLines(designLines, lint) },
     { priority: 60, title: _h.localizeHeading("비주얼 방향성", "Visual direction"), lines: creativityLines },
     { priority: 65, title: _h.localizeHeading("비주얼 구성 방향", "Visual composition direction"), lines: variationLines },
+    { priority: 67, title: _h.localizeHeading("키비주얼 배치", "Key visual placement"), lines: keyVisualPlacementLines },
     { priority: 70, title: _h.localizeHeading("색상 시스템", "Color system"), lines: colorLines },
     { priority: 80, title: _h.localizeHeading("이미지 품질 기준", "Image quality standards"), lines: qualityLines },
     { priority: 90, title: _h.localizeHeading("제외할 표현", "Negative prompt"), lines: negativePromptLines },

@@ -665,7 +665,11 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <button type="button" class="promo-segment-btn active" data-promo-variation="none" aria-pressed="true">없음</button>
                 <button type="button" class="promo-segment-btn" data-promo-variation="typo" aria-pressed="false">타이포</button>
                 <button type="button" class="promo-segment-btn" data-promo-variation="visual" aria-pressed="false">비주얼</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="color-graphic" aria-pressed="false">컬러 그래픽</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="cinematic" aria-pressed="false">감성 배경</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="proof" aria-pressed="false">수치/증거</button>
                 <button type="button" class="promo-segment-btn" data-promo-variation="experimental" aria-pressed="false">실험적</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="content-focus" aria-pressed="false">콘텐츠 집중</button>
               </div>
             </div>
           </section>
@@ -882,6 +886,19 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <div id="promotionLayoutCompositionAiPlaceholder" class="promo-ai-placeholder" style="display:none">AI가 자동으로 생성합니다</div>
               </section>
 
+              <!-- 키비주얼 배치 -->
+              <section class="gen-config-group">
+                <div class="gen-config-label-row">
+                  <label class="gen-config-label">키비주얼 배치</label>
+                </div>
+                <p class="gen-config-guide">키비주얼·비주얼 오브젝트를 전경 또는 배경 중 어느 층에 배치할지 제어합니다.</p>
+                <div class="promo-segmented" id="promotionKeyVisualPlacementToggle" role="group" aria-label="키비주얼 배치 선택">
+                  <button type="button" class="promo-segment-btn active" data-promo-kv-placement="auto" aria-pressed="true">AI 위임</button>
+                  <button type="button" class="promo-segment-btn" data-promo-kv-placement="background" aria-pressed="false">배경 처리</button>
+                  <button type="button" class="promo-segment-btn" data-promo-kv-placement="foreground" aria-pressed="false">전면 배치</button>
+                </div>
+              </section>
+
             </div>
           </div><!-- /레이아웃 -->
 
@@ -908,7 +925,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               <p class="gen-config-guide">브랜드 팔레트와 배경을 직접 지정할 수도 있고, 전체 분위기와 CTA 위계에 맞게 색상과 배경 구성을 AI에게 함께 맡길 수도 있습니다.</p>
               <select id="promotionColorStrategy" class="gen-select" data-promo-field="colorStrategy">
                 <option value="manual">직접 지정</option>
-                <option value="ai">색상+배경 AI 위임</option>
+                <option value="ai" selected>색상+배경 AI 위임</option>
               </select>
               <p class="gen-hint promo-inline-hint">`색상+배경 AI 위임`을 선택하면 메인/보조/포인트 색상과 배경 처리 방식까지 프롬프트 안에서 AI가 직접 제안하고, 아래 수동 입력은 잠시 비활성화됩니다.</p>
             </section>
@@ -1087,20 +1104,6 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <button type="button" class="promo-segment-btn" data-promo-commercial-baseline="luxury" aria-pressed="false">luxury</button>
               </div>
             </section>
-            <section class="promo-control-block promo-control-block-secondary">
-              <label class="promo-control-label" for="promotionCreativityLevel">창의성 강도 <span class="promo-field-badge instruction">구성 조건</span></label>
-              <p class="promo-control-hint">레이아웃 실험 폭. <code>balanced</code>가 정보와 창의의 균형점입니다.</p>
-              <select id="promotionCreativityLevel" class="gen-select" data-promo-creativity-level>
-                <option value="stable">stable</option>
-                <option value="balanced" selected>balanced</option>
-                <option value="experimental">experimental</option>
-              </select>
-              <div class="promo-segmented" id="promotionCreativityLevelToggle" role="group" aria-label="창의성 강도 빠른 토글">
-                <button type="button" class="promo-segment-btn" data-promo-creativity-level="stable" aria-pressed="false">stable</button>
-                <button type="button" class="promo-segment-btn active" data-promo-creativity-level="balanced" aria-pressed="true">balanced</button>
-                <button type="button" class="promo-segment-btn" data-promo-creativity-level="experimental" aria-pressed="false">experimental</button>
-              </div>
-            </section>
           </div>
 
           <!-- 품질 보정 지시 -->
@@ -1180,15 +1183,19 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             <span class="promo-stat-chip" id="promotionStatSections">섹션 –</span>
             <span class="promo-stat-chip" id="promotionStatLines">– 줄</span>
             <span class="promo-stat-chip promo-stat-tokens" id="promotionStatTokens">≈ – 토큰</span>
+            <button type="button" class="promo-viewer-edit-btn" id="promotionViewerToggleBtn" title="직접 편집 모드로 전환">✎ 편집</button>
           </div>
           <div class="promo-token-gauge" id="promotionTokenGauge">
             <div class="promo-token-gauge-fill" id="promotionTokenGaugeFill"></div>
           </div>
         </div>
 
-        <!-- ③ 프롬프트 textarea (패널 남은 높이 전부) -->
+        <!-- ③ 프롬프트 body: 뷰어(기본) + textarea(편집 모드) -->
         <div class="promo-prompt-body">
-          <textarea class="gen-textarea promo-pre promo-prompt-editor" id="promotionPromptPreview" spellcheck="false"></textarea>
+          <!-- 섹션 뷰어: 변경된 섹션 글자색 하이라이트, promptDirty=false 일 때 표시 -->
+          <div id="promotionPromptViewer" class="promo-prompt-viewer" aria-live="polite"></div>
+          <!-- 직접 편집 textarea: 편집 모드 또는 promptDirty=true 일 때 표시 -->
+          <textarea class="gen-textarea promo-pre promo-prompt-editor promo-mode-hidden" id="promotionPromptPreview" spellcheck="false"></textarea>
         </div>
 
 
