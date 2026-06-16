@@ -237,7 +237,9 @@ window.PROMO_PROMPT = (function () {
       // 대괄호 섹션 헤더 처리 (대괄호를 제거하거나 서술형 문장 성분으로 가공)
       if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
         const header = trimmed.slice(1, -1);
-        keptLines.push(`Regarding ${header}:`);
+        const parts = header.split(/\s*[\/|·]\s*/);
+        const englishHeader = parts.find(p => !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p)) || header;
+        keptLines.push(`Regarding ${englishHeader.trim()}:`);
         continue;
       }
 
@@ -263,12 +265,46 @@ window.PROMO_PROMPT = (function () {
         keptLines.push("• Leave logo zones as empty neutral placeholders.");
         continue;
       }
-      keptLines.push(trimmed);
+
+      // 한글과 영어가 혼용된 라인인 경우, 한글 문구나 단어를 제거하는 일반 정제 규칙 적용 (따옴표 내 텍스트 보호)
+      if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed)) {
+        const quotes = [];
+        let placeholderText = trimmed.replace(/"([^"]*)"/g, (match, p1) => {
+          quotes.push(p1);
+          return `__QUOTE_PLACEHOLDER_${quotes.length - 1}__`;
+        });
+
+        if (/ko:\s*(.*?)\s*[\/|·]?\s*en:\s*(.*)/i.test(placeholderText)) {
+          const match = placeholderText.match(/en:\s*(.*)/i);
+          if (match) {
+            placeholderText = "• " + match[1].trim();
+          }
+        } else {
+          const parts = placeholderText.split(/\s*[\/|·|—|-]\s*/);
+          const englishParts = parts.filter(p => !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p));
+          if (englishParts.length > 0) {
+            placeholderText = englishParts.join(" ").trim();
+          } else {
+            if (quotes.length === 0) continue;
+            placeholderText = "";
+          }
+        }
+
+        trimmed = placeholderText.replace(/__QUOTE_PLACEHOLDER_(\d+)__/g, (match, p1) => {
+          return `"${quotes[parseInt(p1, 10)]}"`;
+        });
+      }
+
+      // 정제된 결과물이 비었거나 순수 한글 잔여물이 있다면 스킵
+      trimmed = trimmed.replace(/^[-•]\s*/, "").trim();
+      if (!trimmed || (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed) && !/"[^"]*[ㄱ-ㅎ|ㅏ-ㅣ|가-힣][^"]*"/.test(trimmed))) {
+        continue;
+      }
+
+      keptLines.push("• " + trimmed);
     }
     
     let joined = keptLines.join("\n");
-    // 리스트 기호(-)를 불릿(•)으로 변경하여 마크다운 대시가 텍스트 렌더링에 노출될 위험 감소
-    joined = joined.replace(/^-\s+/gm, "• ");
     return joined;
   }
 

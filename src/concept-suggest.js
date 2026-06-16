@@ -600,9 +600,10 @@
     if (targetEngine === 'imagen') {
       const positiveAvoid = convertAvoidToPositive(promptParts.avoid);
       const prefix = IMAGEN_MEDIUM_PREFIXES[style.category] || "A premium promotional campaign graphic design";
+      const cleanVisualDNA = promptParts.visualDNA.split(' — ')[0];
       const fluidPrompt = [
         `${prefix} in the style of ${style.nameEn} (${CAT_EN[style.category] || style.category}).`,
-        `The visual DNA is characterized by ${promptParts.visualDNA}.`,
+        `The visual DNA is characterized by ${cleanVisualDNA}.`,
         `The composition features a shape language of ${promptParts.shapeLanguage}, rendered with ${promptParts.textureRendering}, and illuminated by ${promptParts.lightingMood}.`,
         `The color palette system employs the following strategy: ${promptParts.paletteStrategy}. Reserve the strongest color contrast for key elements like the headline, action button, and essential campaign details.`,
         `For the promotional campaign, the scene is adapted for a ${promptParts.campaignAdaptation}, representing the primary product or offer as a ${promptParts.objectAdaptation}.`,
