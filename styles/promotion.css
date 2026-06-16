@@ -94,7 +94,9 @@
   margin-top: 0;
 }
 
-.promo-basic-concept-panel {
+.promo-basic-concept-panel,
+.promo-layout-composition-panel,
+.promo-variation-panel {
   margin-bottom: 10px;
   padding: 14px 16px;
 }
@@ -218,7 +220,9 @@
   display: none !important;
 }
 
-.promo-basic-mode .promo-basic-concept-panel {
+.promo-basic-mode .promo-basic-concept-panel,
+.promo-basic-mode .promo-layout-composition-panel,
+.promo-basic-mode .promo-variation-panel {
   border-color: color-mix(in srgb, var(--accent, #4a6fa5) 32%, var(--line));
   background: color-mix(in srgb, var(--accent, #4a6fa5) 4%, var(--surface, #fff));
 }

@@ -954,6 +954,157 @@ function actionElementLabelEn() {
     : "action button, link guide, application guide, or other conversion element";
 }
 
+function getCompositionMatrixGuideline(compKey, varMode) {
+  if (varMode === "none" || !varMode) {
+    return null;
+  }
+
+  // 13개 레이아웃 구도와 8개 변형 간의 융합 매트릭스 테이블
+  const matrix = {
+    // 1. centered (중앙 대칭형)
+    "centered_typo": {
+      ko: "시각적 중력 중심(Center of gravity)인 화면 정중앙에 거대한 헤드라인 타이포그래피를 대칭 정렬하여 주인공으로 배치하고, 다른 일러스트/오브젝트는 극도로 절제하여 비워둔다.",
+      en: "Align a massive headline typography symmetrically at the absolute center of gravity, keeping visual illustrations or objects strictly minimized to highlight the textual message."
+    },
+    "centered_visual": {
+      ko: "화면 정중앙에 고해상도의 선명한 단일 키비주얼 오브젝트를 배치하고, 헤드라인과 CTA 텍스트는 오브젝트의 상단과 하단에 대칭 균형을 이루도록 정렬한다.",
+      en: "Place a single, high-fidelity visual object at the absolute center, and align the headline and CTA symmetrically above and below the object to maintain balanced centering."
+    },
+    "centered_cinematic": {
+      ko: "여운이 있는 시네마틱 풀블리드 배경의 한가운데로 헤드라인을 단정하게 정렬하여 얹고, 텍스트 가독성을 확보하기 위해 배경 중앙부에 미세한 감광 처리를 더한다.",
+      en: "Gently overlay the title text at the center of an atmospheric, full-bleed cinematic scene, applying a subtle dimming filter behind the center text to secure maximum legibility."
+    },
+
+    // 2. left-heavy (비대칭 좌측 집중)
+    "left-heavy_typo": {
+      ko: "화면 좌측 종선(Left axis)을 기준으로 볼드한 타이포그래피를 줄바꿈하여 강력한 수직 텍스트 벽을 형성하고, 우측 절반은 시각적 쉼표 역할을 하는 완전한 공백으로 남겨둔다.",
+      en: "Align bold typography tightly against the left axis to form a dominant vertical text column, leaving the right half completely empty as a visual negative space."
+    },
+    "left-heavy_visual": {
+      ko: "정보와 헤드라인은 좌측 사양에 맞춰 정밀하게 정렬하고, 우측 영역 전경에는 시선을 강하게 끄는 메인 비주얼 오브젝트를 비대칭으로 크롭 배치하여 완벽한 비대칭 균형을 완성한다.",
+      en: "Precisely align the headline and info blocks on the left, while cropping a strong visual object into the right foreground area to establish a balanced asymmetric composition."
+    },
+    "left-heavy_cinematic": {
+      ko: "좌측에 정보를 안정적으로 정렬해 배치하되, 우측 공간에는 영화적 피사계 심도가 얕게 적용된 배경 피사체를 블렌딩하여 감성적인 공간 깊이감을 유도한다.",
+      en: "Anchor text and information blocks firmly on the left, while placing a cinematic subject with a shadow depth of field on the right to induce atmospheric depth."
+    },
+
+    // 3. typo-first (거대 타이포 분할)
+    "typo-first_typo": {
+      ko: "상단 영역의 거대 타이포그래피를 그리드 바깥까지 확장되게 정렬해 시선을 사로잡고, 하단에는 최소한의 정보 배지만 질서정연하게 나열한다.",
+      en: "Stretch giant typography in the upper section near the grid margins for high-impact visual weight, while neatly lining up tiny supporting badges in the lower section."
+    },
+    "typo-first_visual": {
+      ko: "상단에 캔버스 가로폭을 가득 채우는 거대 헤드라인을 배치하고, 하단 정보 영역 중앙에 작고 정교한 미니멀 오브젝트를 배치해 크기 대비로 시선을 끈다.",
+      en: "Span a massive headline across the upper screen, and place a small, highly detailed minimal object centered in the lower area to create a dramatic scale contrast."
+    },
+
+    // 4. clean-split (사선/색면 분할)
+    "clean-split_color-graphic": {
+      ko: "명확한 사선 또는 수직 색면 분할면을 기준으로 면의 명도 대비를 극대화하고, 나뉜 한쪽 면은 브랜드의 포인트 컬러 그래픽만으로, 반대쪽 면은 깨끗한 텍스트로 격리한다.",
+      en: "Maximize the contrast of a sharp diagonal or vertical split; occupy one segment strictly with bold brand-color graphics, and reserve the opposing segment for clean text."
+    },
+    "clean-split_visual": {
+      ko: "색상으로 면을 분할하고, 나뉜 경계선 또는 한쪽 면 위에 키비주얼 오브젝트를 얹어 면 분할 구도가 밋밋한 2D 플랫 레이아웃으로 느껴지지 않도록 유도한다.",
+      en: "Split the canvas with clean colors, overlaying the key visual object across the dividing line to keep the flat split layout from looking like a flat 2D print."
+    },
+
+    // 5. proof-first (증거/수치 중심)
+    "asym-axis_proof": {
+      ko: "비대칭 축 위에 거대한 강조 수치와 숫자를 탑처럼 쌓아 올려 시선을 강하게 점유하고, 설명 캡션은 축 옆에 보조적으로 배치한다.",
+      en: "Stack large proof statistics like a vertical pillar on the asymmetric axis to dominate visual attention, positioning supporting annotations neatly to the side."
+    }
+  };
+
+  const key = `${compKey}_${varMode}`;
+  return matrix[key] || null;
+}
+
+function getCompositionStrategyLines() {
+  const compEnabled = isEnabled(_s.layoutCompositionEnabled);
+  const compMode = _s.layoutCompositionMode;
+  const varMode = _s.variationMode;
+  const hasVar = varMode && varMode !== "none";
+
+  if (!compEnabled && !hasVar) {
+    return [];
+  }
+
+  // 1. 레이아웃 구도 라인 추출
+  let compLabel = "";
+  let compLines = [];
+  if (compEnabled) {
+    if (compMode === "ai") {
+      compLabel = _h.localizeSentence("AI 자동 추천 구도", "AI-recommended layout");
+      compLines = [
+        _h.localizeSentence(
+          "레이아웃 기본 원칙: 콘텐츠의 정보량과 목적에 맞춰 가장 읽기 쉬운 배치를 선택한다.",
+          "Layout default principle: choose the most readable arrangement for the content volume and campaign goal."
+        ),
+        _h.localizeSentence(
+          "헤드라인, 핵심 정보, 행동버튼(CTA) 순서의 시선 흐름을 유지한다.",
+          "Maintain a clear eye flow from headline to key information to action button (CTA)."
+        ),
+        _h.localizeSentence(
+          "텍스트가 복잡한 배경 위에 올라가지 않게 하고, 텍스트 영역과 비주얼 영역을 명확히 분리한다.",
+          "Do not place text over a busy background; clearly separate text zones from visual zones."
+        ),
+      ];
+    } else {
+      const compKey = _s.layoutComposition || "centered";
+      const profile = LAYOUT_COMPOSITION_PROFILES[compKey] || LAYOUT_COMPOSITION_PROFILES.centered;
+      compLabel = _h.localizeSentence(profile.labelKo, profile.labelEn);
+      compLines = _s.outputLanguage === "en" ? profile.linesEn
+        : _s.outputLanguage === "bilingual"
+          ? profile.linesKo.map((ko, i) => `${ko} / ${profile.linesEn[i] || ko}`)
+          : profile.linesKo;
+    }
+  }
+
+  // 2. 변형 라인 추출
+  let varLabel = "";
+  let varLines = [];
+  if (hasVar) {
+    const seed = VARIATION_SEEDS.find((s) => s.id === varMode);
+    if (seed) {
+      varLabel = _h.localizeSentence(seed.labelKo, seed.labelEn);
+      varLines = _s.outputLanguage === "en" ? seed.linesEn
+        : _s.outputLanguage === "bilingual"
+          ? seed.linesKo.map((ko, i) => `${ko} / ${seed.linesEn[i] || ko}`)
+          : seed.linesKo;
+    }
+  }
+
+  // 3. 융합 가이드라인 추출
+  let fusedGuideline = "";
+  if (compEnabled && compMode === "manual" && hasVar) {
+    const compKey = _s.layoutComposition || "centered";
+    const matrixItem = getCompositionMatrixGuideline(compKey, varMode);
+    if (matrixItem) {
+      fusedGuideline = _h.localizeSentence(matrixItem.ko, matrixItem.en);
+    }
+  }
+
+  // 4. 단일 섹션으로 조립하여 리턴
+  const title = _h.localizeSentence("구도 및 표현 전략", "Composition & Visual Strategy");
+  const headerLines = [];
+
+  if (compLabel && varLabel) {
+    headerLines.push(`${title}: ${compLabel} + ${varLabel}`);
+  } else if (compLabel) {
+    headerLines.push(`${_h.localizeSentence("레이아웃 구도 배치", "Layout composition")}: ${compLabel}`);
+  } else if (varLabel) {
+    headerLines.push(`${_h.localizeSentence("비주얼 구성 방향", "Visual composition direction")}: ${varLabel}`);
+  }
+
+  return prunePromptLines([
+    ...headerLines,
+    ...(fusedGuideline ? [`* ${_h.localizeSentence("융합 연출 지침", "Fused design guidance")}: ${fusedGuideline}`] : []),
+    ...compLines,
+    ...varLines,
+  ]);
+}
+
 function createPromptSections(validation, lint) {
   const textEntries = _h.visibleTextEntries();
   const instructionItems = _h.instructionEntries();
@@ -1537,11 +1688,14 @@ function createPromptSections(validation, lint) {
   })();
 
   const designLines = prunePromptLines([
-    ...layoutCompLines,
     ...instructionItems
       .filter((entry) => {
         const visualFields = ["tone", "bigIdea", "visualMetaphor", "visualStyle", "layoutComposition"];
         if (visualFields.includes(entry.key)) {
+          // 기본 모드일 때는 layoutComposition을 제외한 상세 모드 수동 비주얼 필드 배제
+          if (_h.isBasicVisualPlanningMode() && entry.key !== "layoutComposition") {
+            return false;
+          }
           const enabled = isEnabled(_s[`${entry.key}Enabled`]);
           const isManual = _s[`${entry.key}Mode`] === "manual";
           if (!enabled || !isManual) {
@@ -1562,43 +1716,47 @@ function createPromptSections(validation, lint) {
 const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREATIVITY_LEVEL_PROFILES.balanced;
   const creativityLevelLines = getLocalizedProfileLines(creativityProfile);
 
-  const creativityLines = prunePromptLines([
-    (isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea) ? `${_h.localizeSentence("핵심 개념", "Core concept")}: ${_h.localizeValue(_s.bigIdea)}` : "",
-    (isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor) ? `${_h.localizeSentence("비주얼 은유", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}` : "",
-    ...visualMetaphorDiversityLines,
-    ...creativityLevelLines,
-  ]);
+  const creativityLines = _h.isBasicVisualPlanningMode()
+    ? []
+    : prunePromptLines([
+        (isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea) ? `${_h.localizeSentence("핵심 개념", "Core concept")}: ${_h.localizeValue(_s.bigIdea)}` : "",
+        (isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor) ? `${_h.localizeSentence("비주얼 은유", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}` : "",
+        ...visualMetaphorDiversityLines,
+        ...creativityLevelLines,
+      ]);
 
   const backgroundDetailLines = _h.getNonConceptPromptLines(_s.backgroundDetails);
   const backgroundDetailsForPrompt = _h.isBasicVisualPlanningMode()
     ? ""
     : backgroundDetailLines.join("\n");
   const colorLines = prunePromptLines(
-    _h.isBasicVisualPlanningMode() && _h.hasBasicConceptPromptInput()
-      ? (() => {
-          const hasRich = !!trimValue(_s.appliedConceptPromotionPrompt);
-          if (hasRich) return [];
-          return [
-            _h.localizeSentence(
-              "색상 출처: 컨셉 제안의 Color System을 기본 모드의 색상 기준으로 사용한다.",
-              "Color source: use the concept suggestion's Color System as the basic-mode color standard."
-            ),
-            _s.appliedConceptPaletteStrategy
-              ? `${_h.localizeSentence("컨셉 색상 전략", "Concept color strategy")}: ${_h.localizeValue(_s.appliedConceptPaletteStrategy)}`
-              : "",
-            _s.appliedConceptPalette
-              ? `${_h.localizeSentence("컨셉 팔레트", "Concept palette")}: ${_h.localizeValue(_s.appliedConceptPalette)}`
-              : "",
-            _h.localizeSentence(
-              "헤드라인, 핵심 정보, 행동버튼은 컨셉 팔레트 안에서 가장 높은 대비를 확보하고, 배경·질감·보조 오브젝트는 팔레트의 낮은 대비 색상으로 정리한다.",
-              "Keep the headline, key information, and action button in the highest-contrast colors within the concept palette; use lower-contrast palette colors for background, texture, and supporting objects."
-            ),
-            _h.localizeSentence(
-              "위에 명시된 hex 색상값을 정확히 사용한다. AI가 유사한 다른 색상으로 임의 대체하지 않는다.",
-              "Use the hex color values specified above exactly as written. Do not substitute with visually similar alternatives."
-            ),
-          ];
-        })()
+    _h.isBasicVisualPlanningMode()
+      ? (_h.hasBasicConceptPromptInput()
+          ? (() => {
+              const hasRich = !!trimValue(_s.appliedConceptPromotionPrompt);
+              if (hasRich) return [];
+              return [
+                _h.localizeSentence(
+                  "색상 출처: 컨셉 제안의 Color System을 기본 모드의 색상 기준으로 사용한다.",
+                  "Color source: use the concept suggestion's Color System as the basic-mode color standard."
+                ),
+                _s.appliedConceptPaletteStrategy
+                  ? `${_h.localizeSentence("컨셉 색상 전략", "Concept color strategy")}: ${_h.localizeValue(_s.appliedConceptPaletteStrategy)}`
+                  : "",
+                _s.appliedConceptPalette
+                  ? `${_h.localizeSentence("컨셉 팔레트", "Concept palette")}: ${_h.localizeValue(_s.appliedConceptPalette)}`
+                  : "",
+                _h.localizeSentence(
+                  "헤드라인, 핵심 정보, 행동버튼은 컨셉 팔레트 안에서 가장 높은 대비를 확보하고, 배경·질감·보조 오브젝트는 팔레트의 낮은 대비 색상으로 정리한다.",
+                  "Keep the headline, key information, and action button in the highest-contrast colors within the concept palette; use lower-contrast palette colors for background, texture, and supporting objects."
+                ),
+                _h.localizeSentence(
+                  "위에 명시된 hex 색상값을 정확히 사용한다. AI가 유사한 다른 색상으로 임의 대체하지 않는다.",
+                  "Use the hex color values specified above exactly as written. Do not substitute with visually similar alternatives."
+                ),
+              ];
+            })()
+          : []) // 기본 모드이면서 컨셉이 적용되지 않은 상태일 경우 색상 가이드 제외
       : _h.isAiColorStrategy()
       ? [
           `${_h.localizeSentence("색상/배경 전략", "Color and background strategy")}: ${_h.localizeSentence("색상과 배경 모두 AI에게 맡기기", "Let AI direct both the color palette and the background")}`,
@@ -1639,48 +1797,50 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
         ]
   );
 
-  const hasVariationMode = _s.variationMode && _s.variationMode !== "none";
+  const hasVariationMode = !_h.isBasicVisualPlanningMode() && _s.variationMode && _s.variationMode !== "none";
 
-  const compositeQualityLines = [
-    ...(hasVariationMode ? [
-      _h.localizeSentence(
-        "본문 포인트를 동일한 직사각형 카드 2~3개로 반복하지 말고, 겹친 단계 카드, 연결 원형 노드, 타임라인 조각, 비주얼 은유 내부 텍스트 블록처럼 서로 다른 정보 묶음 방식을 허용한다.",
-        "Do not repeat body points in identical 2-3 rectangular cards; allow varied groupings such as overlapping step cards, connected circular nodes, timeline fragments, or text blocks embedded in the visual metaphor."
-      ),
-      _h.localizeSentence(
-        "'혜택 카드 3개 + 하단 정보박스' 공식을 반복 금지 패턴으로 취급한다. 정보 항목의 수와 성격에 맞춰 카드 개수, 방향, 밀도, 위치를 콘텐츠에 맞게 설계한다.",
-        "Treat the 'three benefit cards plus bottom info box' as an overused pattern. Vary the number, direction, density, and position of information units to fit the actual content."
-      ),
-      _h.localizeSentence(
-        "선택된 변형 방향을 반영해 색면, 크롭, 오브젝트 스케일, 정보 카드 형태, 배경 처리 중 적절한 요소에 변주를 적용한다.",
-        "Apply variation to appropriate elements such as color fields, cropping, object scale, card shape, or background treatment in line with the selected composition direction."
-      ),
-    ] : []),
-    _h.localizeSentence(
-      "겹쳐지는 레이어 밑에는 부드러운 그림자를 두어 실제 물리적인 깊이감을 형성한다.",
-      "Apply subtle drop shadows beneath overlapping layers to establish a realistic sense of physical depth."
-    ),
-    _h.localizeSentence(
-      "글자가 배치되는 뒷배경은 아무런 시각 노이즈가 없는 완전한 평면/단색 상태를 유지하며 복잡한 텍스처는 그래픽 영역에만 허용한다.",
-      "Keep the background behind the text clean and plain, reserving complex textures only for the artistic graphic zones."
-    ),
-    _h.localizeSentence(
-      "얕은 피사체 심도(DoF)를 활용해 글자는 아주 또렷하게 표현하고 배경 그래픽 요소는 부드럽게 흐리게 처리한다.",
-      "Use slight depth of field to keep the text in sharp focus while making the distant background elements softly out of focus."
-    ),
-    _h.localizeSentence(
-      "중앙 비주얼 오브젝트와 그래픽 요소가 인위적인 둥근 테두리 박스에 갇히지 않도록 하고 전체 배경과 유기적으로 블렌딩(blending)되어야 한다.",
-      "Ensure the central visual object and graphic elements are organically blended with the overall background, without being enclosed in an isolated border frame or box."
-    ),
-    _h.localizeSentence(
-      "평평한 격리형 레이아웃을 지양하고, 다층적인 사선 분할이나 오버랩을 활용해 다채롭고 조화로운 공간감을 구현한다.",
-      "Avoid flat isolated layouts; implement multi-layered overlapping where elements blend seamlessly across spatial segments for a dynamic sense of depth."
-    ),
-    _h.localizeSentence(
-      "공간 깊이를 세 레이어로 구분한다 — 전경(포커스 대상·CTA·핵심 텍스트) / 중경(보조 비주얼·컨셉 키비주얼) / 원경(배경 분위기·컬러워시·질감). 각 레이어 간 깊이 차이를 명확히 표현한다.",
-      "Structure the visual space across three depth layers — foreground (focal subject, CTA, key text) / midground (supporting visual, concept key visual) / background (atmosphere, color wash, texture). Make the depth separation between layers visually distinct."
-    ),
-  ];
+  const compositeQualityLines = _h.isBasicVisualPlanningMode()
+    ? []
+    : [
+        ...(hasVariationMode ? [
+          _h.localizeSentence(
+            "본문 포인트를 동일한 직사각형 카드 2~3개로 반복하지 말고, 겹친 단계 카드, 연결 원형 노드, 타임라인 조각, 비주얼 은유 내부 텍스트 블록처럼 서로 다른 정보 묶음 방식을 허용한다.",
+            "Do not repeat body points in identical 2-3 rectangular cards; allow varied groupings such as overlapping step cards, connected circular nodes, timeline fragments, or text blocks embedded in the visual metaphor."
+          ),
+          _h.localizeSentence(
+            "'혜택 카드 3개 + 하단 정보박스' 공식을 반복 금지 패턴으로 취급한다. 정보 항목의 수와 성격에 맞춰 카드 개수, 방향, 밀도, 위치를 콘텐츠에 맞게 설계한다.",
+            "Treat the 'three benefit cards plus bottom info box' as an overused pattern. Vary the number, direction, density, and position of information units to fit the actual content."
+          ),
+          _h.localizeSentence(
+            "선택된 변형 방향을 반영해 색면, 크롭, 오브젝트 스케일, 정보 카드 형태, 배경 처리 중 적절한 요소에 변주를 적용한다.",
+            "Apply variation to appropriate elements such as color fields, cropping, object scale, card shape, or background treatment in line with the selected composition direction."
+          ),
+        ] : []),
+        _h.localizeSentence(
+          "겹쳐지는 레이어 밑에는 부드러운 그림자를 두어 실제 물리적인 깊이감을 형성한다.",
+          "Apply subtle drop shadows beneath overlapping layers to establish a realistic sense of physical depth."
+        ),
+        _h.localizeSentence(
+          "글자가 배치되는 뒷배경은 아무런 시각 노이즈가 없는 완전한 평면/단색 상태를 유지하며 복잡한 텍스처는 그래픽 영역에만 허용한다.",
+          "Keep the background behind the text clean and plain, reserving complex textures only for the artistic graphic zones."
+        ),
+        _h.localizeSentence(
+          "얕은 피사체 심도(DoF)를 활용해 글자는 아주 또렷하게 표현하고 배경 그래픽 요소는 부드럽게 흐리게 처리한다.",
+          "Use slight depth of field to keep the text in sharp focus while making the distant background elements softly out of focus."
+        ),
+        _h.localizeSentence(
+          "중앙 비주얼 오브젝트와 그래픽 요소가 인위적인 둥근 테두리 박스에 갇히지 않도록 하고 전체 배경과 유기적으로 블렌딩(blending)되어야 한다.",
+          "Ensure the central visual object and graphic elements are organically blended with the overall background, without being enclosed in an isolated border frame or box."
+        ),
+        _h.localizeSentence(
+          "평평한 격리형 레이아웃을 지양하고, 다층적인 사선 분할이나 오버랩을 활용해 다채롭고 조화로운 공간감을 구현한다.",
+          "Avoid flat isolated layouts; implement multi-layered overlapping where elements blend seamlessly across spatial segments for a dynamic sense of depth."
+        ),
+        _h.localizeSentence(
+          "공간 깊이를 세 레이어로 구분한다 — 전경(포커스 대상·CTA·핵심 텍스트) / 중경(보조 비주얼·컨셉 키비주얼) / 원경(배경 분위기·컬러워시·질감). 각 레이어 간 깊이 차이를 명확히 표현한다.",
+          "Structure the visual space across three depth layers — foreground (focal subject, CTA, key text) / midground (supporting visual, concept key visual) / background (atmosphere, color wash, texture). Make the depth separation between layers visually distinct."
+        ),
+      ];
 
   const relaxQualityLinesForNonPhoto = (lines) => {
     if (_s.targetEngine !== "imagen") return lines;
@@ -1703,7 +1863,10 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
     });
   };
 
-  const qualityNoteLines = _h.getNonConceptPromptLines(_s.qualityNotes);
+  const qualityNoteLines = _h.isBasicVisualPlanningMode()
+    ? []
+    : _h.getNonConceptPromptLines(_s.qualityNotes);
+
   const qualityLines = relaxQualityLinesForNonPhoto(prunePromptLines([
     ..._h.getDefaultQualityTagLines(),
     ...compositeQualityLines,
@@ -1712,6 +1875,7 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
   ]));
 
   const variationLines = (() => {
+    if (_h.isBasicVisualPlanningMode()) return []; // 기본 모드 시 무조건 제외
     const seed = VARIATION_SEEDS.find((s) => s.id === _s.variationMode);
     if (!seed) return [];
     const label = _h.localizeSentence(seed.labelKo, seed.labelEn);
@@ -1725,9 +1889,16 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
     ]);
   })();
 
-  // 키비주얼 배치 — 상세 모드 + auto 아닐 때만 발동
+  // 키비주얼 배치 — 상세 모드 + auto 아닐 때만 발동 + 변형(variation) 설정과 충돌 방지
   const keyVisualPlacementLines = (() => {
     if (!_h.isDetailVisualPlanningMode()) return [];
+
+    // 변형 모드가 visual(비주얼 중심), cinematic(감성 배경), typo(타이포 중심)인 경우 중복/충돌 방지를 위해 생략
+    const varMode = _s.variationMode;
+    if (varMode === "visual" || varMode === "cinematic" || varMode === "typo") {
+      return [];
+    }
+
     const placement = _s.keyVisualPlacement;
     if (!placement || placement === "auto") return [];
 
@@ -1788,7 +1959,7 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
     { priority: 45, title: _h.localizeHeading("시선 흐름", "Attention flow"), lines: attentionFlowLines },
     { priority: 50, title: _h.localizeHeading("레이아웃 구성", "Layout & composition"), lines: resolveConflictLines(designLines, lint) },
     { priority: 60, title: _h.localizeHeading("비주얼 방향성", "Visual direction"), lines: creativityLines },
-    { priority: 65, title: _h.localizeHeading("비주얼 구성 방향", "Visual composition direction"), lines: variationLines },
+    { priority: 65, title: _h.localizeHeading("구도 및 표현 전략", "Composition & Visual Strategy"), lines: getCompositionStrategyLines() },
     { priority: 67, title: _h.localizeHeading("키비주얼 배치", "Key visual placement"), lines: keyVisualPlacementLines },
     { priority: 70, title: _h.localizeHeading("색상 시스템", "Color system"), lines: colorLines },
     { priority: 80, title: _h.localizeHeading("이미지 품질 기준", "Image quality standards"), lines: qualityLines },
@@ -1881,6 +2052,9 @@ function buildRoleStatement() {
 const _pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 function getRecommendedCompositionDirective() {
+  if (typeof _s !== "undefined" && _s.layoutCompositionMode === "manual") {
+    return "";
+  }
   const bodyCount = normalizeLines(_s.bodyCopy).length;
 
   if (_s.contentType === "survey-request") {

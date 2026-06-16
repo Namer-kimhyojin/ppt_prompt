@@ -331,22 +331,6 @@
             </div>
           </section>
 
-          <section class="gen-config-group gen-config-group-wide promo-variation-panel">
-            <div class="gen-config-label-row promo-variation-label-row">
-              <div class="gen-config-label">변형</div>
-              <div class="promo-segmented promo-variation-segmented" id="promotionVariationModeToggle" role="group" aria-label="변형 방향 선택">
-                <button type="button" class="promo-segment-btn active" data-promo-variation="none" aria-pressed="true">없음</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="typo" aria-pressed="false">타이포</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="visual" aria-pressed="false">비주얼</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="color-graphic" aria-pressed="false">컬러 그래픽</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="cinematic" aria-pressed="false">감성 배경</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="proof" aria-pressed="false">수치/증거</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="experimental" aria-pressed="false">실험적</button>
-                <button type="button" class="promo-segment-btn" data-promo-variation="content-focus" aria-pressed="false">콘텐츠 집중</button>
-              </div>
-            </div>
-          </section>
-
           <section class="gen-config-group gen-config-group-wide promo-basic-concept-panel" id="promotionBasicConceptPanel" data-promo-mode-panel="basic">
             <div class="gen-config-label-row" style="margin-bottom:10px">
               <div class="gen-config-label">비주얼 컨셉</div>
@@ -367,6 +351,57 @@
                 </div>
                 <p class="promo-concept-card-desc" id="promotionConceptCardDesc"></p>
                 <div class="promo-concept-card-palette" id="promotionConceptCardPalette"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="gen-config-group gen-config-group-wide promo-layout-composition-panel">
+            <div class="gen-config-label-row" style="margin-bottom:10px">
+              <label class="gen-config-label" for="promotionLayoutComposition">레이아웃 구도 배치 <span class="promo-warning-icon-wrapper" data-warning-field="layoutComposition"></span></label>
+              <div class="promo-ai-toggle-header">
+                <label class="promo-ai-toggle-switch" title="사용 여부">
+                  <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="layoutComposition" checked />
+                  <span class="promo-ai-toggle-track"></span>
+                </label>
+                <div class="promo-ai-mode-btns" id="promotionLayoutCompositionModeBtns">
+                  <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="layoutComposition" data-mode="ai">AI 자동</button>
+                  <button type="button" class="promo-ai-mode-btn" data-toggle-mode="layoutComposition" data-mode="manual">직접 입력</button>
+                </div>
+              </div>
+            </div>
+            <p class="gen-config-guide">AI가 텍스트와 비주얼 요소들을 화면상에 배치할 물리적 비율을 결정합니다.</p>
+            <div id="promotionLayoutCompositionInput" style="display:none">
+              <select id="promotionLayoutComposition" class="gen-select" data-promo-field="layoutComposition">
+                <option value="centered">중앙 대칭형 (안정적인 카드 뉴스)</option>
+                <option value="left-heavy">비대칭 좌측 집중 (좌측 정보 / 우측 크롭 비주얼)</option>
+                <option value="typo-first">거대 타이포 분할 (상단 거대 타이포 / 하단 미니멀 오브젝트)</option>
+                <option value="clean-split">사선 공간 분할 (색상 대비를 통한 영역 분리)</option>
+                <option value="visual-first">패턴 A: 비주얼 중심</option>
+                <option value="information-first">패턴 B: 정보 중심</option>
+                <option value="typography-first">패턴 C: 타이포그래피 중심</option>
+                <option value="proof-first">패턴 D: 증거/수치 중심</option>
+                <option value="asym-axis">비대칭축 구성</option>
+                <option value="split-screen">분할 화면 구성</option>
+                <option value="typo-minimal">타이포그래피 중심 미니멀 구성</option>
+                <option value="radial-center">중심 방사형 구성</option>
+                <option value="diagonal-progression">대각선 진행형 구성</option>
+              </select>
+            </div>
+            <div id="promotionLayoutCompositionAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+          </section>
+
+          <section class="gen-config-group gen-config-group-wide promo-variation-panel">
+            <div class="gen-config-label-row promo-variation-label-row">
+              <div class="gen-config-label">변형</div>
+              <div class="promo-segmented promo-variation-segmented" id="promotionVariationModeToggle" role="group" aria-label="변형 방향 선택">
+                <button type="button" class="promo-segment-btn active" data-promo-variation="none" aria-pressed="true">없음</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="typo" aria-pressed="false">타이포</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="visual" aria-pressed="false">비주얼</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="color-graphic" aria-pressed="false">컬러 그래픽</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="cinematic" aria-pressed="false">감성 배경</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="proof" aria-pressed="false">수치/증거</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="experimental" aria-pressed="false">실험적</button>
+                <button type="button" class="promo-segment-btn" data-promo-variation="content-focus" aria-pressed="false">콘텐츠 집중</button>
               </div>
             </div>
           </section>
@@ -533,40 +568,7 @@
                 <div id="promotionVisualStyleAiPlaceholder" class="promo-ai-placeholder" style="display:none">AI가 자동으로 생성합니다</div>
               </section>
 
-              <section class="gen-config-group">
-                <div class="gen-config-label-row">
-                  <label class="gen-config-label" for="promotionLayoutComposition">레이아웃 구도 배치 <span class="promo-warning-icon-wrapper" data-warning-field="layoutComposition"></span></label>
-                  <div class="promo-ai-toggle-header">
-                    <label class="promo-ai-toggle-switch" title="사용 여부">
-                      <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="layoutComposition" checked />
-                      <span class="promo-ai-toggle-track"></span>
-                    </label>
-                    <div class="promo-ai-mode-btns" id="promotionLayoutCompositionModeBtns">
-                      <button type="button" class="promo-ai-mode-btn" data-toggle-mode="layoutComposition" data-mode="ai">AI 자동</button>
-                      <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="layoutComposition" data-mode="manual">직접 입력</button>
-                    </div>
-                  </div>
-                </div>
-                <p class="gen-config-guide">AI가 텍스트와 비주얼 요소들을 화면상에 배치할 물리적 비율을 결정합니다.</p>
-                <div id="promotionLayoutCompositionInput">
-                  <select id="promotionLayoutComposition" class="gen-select" data-promo-field="layoutComposition">
-                    <option value="centered">중앙 대칭형 (안정적인 카드 뉴스)</option>
-                    <option value="left-heavy">비대칭 좌측 집중 (좌측 정보 / 우측 크롭 비주얼)</option>
-                    <option value="typo-first">거대 타이포 분할 (상단 거대 타이포 / 하단 미니멀 오브젝트)</option>
-                    <option value="clean-split">사선 공간 분할 (색상 대비를 통한 영역 분리)</option>
-                    <option value="visual-first">패턴 A: 비주얼 중심</option>
-                    <option value="information-first">패턴 B: 정보 중심</option>
-                    <option value="typography-first">패턴 C: 타이포그래피 중심</option>
-                    <option value="proof-first">패턴 D: 증거/수치 중심</option>
-                    <option value="asym-axis">비대칭축 구성</option>
-                    <option value="split-screen">분할 화면 구성</option>
-                    <option value="typo-minimal">타이포그래피 중심 미니멀 구성</option>
-                    <option value="radial-center">중심 방사형 구성</option>
-                    <option value="diagonal-progression">대각선 진행형 구성</option>
-                  </select>
-                </div>
-                <div id="promotionLayoutCompositionAiPlaceholder" class="promo-ai-placeholder" style="display:none">AI가 자동으로 생성합니다</div>
-              </section>
+
 
               <!-- 키비주얼 배치 -->
               <section class="gen-config-group">

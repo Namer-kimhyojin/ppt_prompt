@@ -7,6 +7,7 @@
     { id: '3d',           label: '🧊 3D' },
     { id: 'craft',        label: '🎨 수공예' },
     { id: 'illustration', label: '✏️ 일러스트' },
+    { id: 'anime',        label: '🎬 만화/애니' },
     { id: 'modern',       label: '◼ 모던' },
     { id: 'photo',        label: '📷 사진' },
     { id: 'fashion',      label: '👗 패션' },
@@ -33,6 +34,7 @@
     '3d':         '3D',
     craft:        '수공예',
     illustration: '일러스트',
+    anime:        '만화/애니',
     modern:       '모던',
     photo:        '사진',
     fashion:      '패션',
@@ -59,6 +61,7 @@
     '3d':         '3D / technical',
     craft:        'Craft / analog',
     illustration: 'Illustration / drawing',
+    anime:        'Comic / Anime / Cartoon',
     modern:       'Modern / graphic',
     photo:        'Photography',
     fashion:      'Fashion / beauty',
@@ -272,22 +275,96 @@
       .slice(0, 3);
   }
 
+  function pickDarkAccents(palette) {
+    return (palette || [])
+      .map(normalizeHex)
+      .filter(Boolean)
+      .filter(hex => getLuminance(hex) > 0.05 && getLuminance(hex) < 0.90)
+      .sort((a, b) => Math.abs(getLuminance(b) - 0.55) - Math.abs(getLuminance(a) - 0.55))
+      .slice(0, 3);
+  }
+
+  function isLightPalette(palette) {
+    if (!Array.isArray(palette) || palette.length === 0) return false;
+    const firstHex = normalizeHex(palette[0]);
+    if (!firstHex) return false;
+    return getLuminance(firstHex) > 0.80;
+  }
+
   function getModePalette(style, mode) {
     const source = Array.isArray(style.palette) ? style.palette : [];
-    if (mode !== 'light') return source;
-    const accents = pickLightAccents(source);
-    const fallbackAccents = ['#1f4f99', '#4f6f52', '#d87922'];
-    return ['#ffffff', '#f5f7fb', ...accents, ...fallbackAccents].slice(0, 5);
+    const naturallyLight = isLightPalette(source);
+
+    if (mode === 'light') {
+      if (naturallyLight) return source;
+      const accents = pickLightAccents(source);
+      const fallbackAccents = ['#1f4f99', '#4f6f52', '#d87922'];
+      return ['#ffffff', '#f5f7fb', ...accents, ...fallbackAccents].slice(0, 5);
+    } else {
+      // mode === 'dark'
+      if (!naturallyLight) return source;
+      const accents = pickDarkAccents(source);
+      const fallbackDarkAccents = ['#3b82f6', '#10b981', '#f59e0b'];
+      return ['#0f172a', '#1e293b', ...accents, ...fallbackDarkOverwrites(accents, fallbackDarkAccents)].slice(0, 5);
+    }
+  }
+
+  function fallbackDarkOverwrites(accents, fallbacks) {
+    return fallbacks.filter(f => !accents.includes(f));
   }
 
   function getModePrompt(style, mode, palette) {
     const prompt = String(style.prompt || '').trim();
-    if (mode !== 'light') return prompt;
+    const source = Array.isArray(style.palette) ? style.palette : [];
+    const naturallyLight = isLightPalette(source);
     const paletteText = palette.join(' ');
-    return [
-      prompt,
-      `Light background adaptation for public institution and official communication use: white or very-light neutral canvas background, clean administrative design tone, bright readable information area, restrained accent colors from palette ${paletteText}, generous whitespace, high text contrast, trustworthy civic visual mood, avoid black full-canvas background, avoid nightclub/neon darkness, avoid heavy gloomy shadows.`
-    ].filter(Boolean).join(', ');
+
+    if (mode === 'light') {
+      if (naturallyLight) return prompt;
+      let adaptedPrompt = prompt
+        .replace(/dark background/gi, 'light background')
+        .replace(/near-black/gi, 'off-white')
+        .replace(/midnight navy/gi, 'light royal blue')
+        .replace(/deep midnight navy/gi, 'light blue')
+        .replace(/dark charcoal/gi, 'light gray')
+        .replace(/dark slate/gi, 'light slate-gray')
+        .replace(/black outlines/gi, 'refined gray outlines');
+      return [
+        adaptedPrompt,
+        `Light background adaptation for public institution and official communication use: white or very-light neutral canvas background, clean administrative design tone, bright readable information area, restrained accent colors from palette ${paletteText}, generous whitespace, high text contrast, trustworthy civic visual mood, avoid black full-canvas background, avoid nightclub/neon darkness, avoid heavy gloomy shadows.`
+      ].filter(Boolean).join(', ');
+    } else {
+      // mode === 'dark'
+      if (!naturallyLight) return prompt;
+      let adaptedPrompt = prompt
+        .replace(/white background/gi, 'dark slate background')
+        .replace(/pure white canvas/gi, 'dark charcoal canvas')
+        .replace(/light cool-gray/gi, 'dark slate-gray')
+        .replace(/clean white background/gi, 'clean dark slate background')
+        .replace(/white dashboard-style background/gi, 'dark dashboard-style background')
+        .replace(/warm white background/gi, 'dark charcoal background')
+        .replace(/clinical white background/gi, 'dark clinical slate background')
+        .replace(/pure white as dominant full background/gi, 'dark slate as dominant full background')
+        .replace(/pure white dominant canvas/gi, 'dark charcoal dominant canvas')
+        .replace(/pure white canvas/gi, 'dark charcoal canvas')
+        .replace(/white clean canvas/gi, 'dark clean canvas')
+        .replace(/white canvas/gi, 'dark canvas')
+        .replace(/pale blue-gray for rounded/gi, 'semi-transparent dark gray for rounded')
+        .replace(/pale blue step containers/gi, 'semi-transparent dark blue step containers')
+        .replace(/pale sky-blue/gi, 'dark slate-blue')
+        .replace(/pale green/gi, 'dark forest-green')
+        .replace(/pale warm tan/gi, 'dark warm brown')
+        .replace(/very pale blue/gi, 'dark indigo-blue')
+        .replace(/charcoal for readable body text/gi, 'light gray for readable body text')
+        .replace(/near-black for body copy/gi, 'light gray for body copy')
+        .replace(/dark charcoal for body text/gi, 'light gray for body text')
+        .replace(/no dark full background/gi, 'dark full background')
+        .replace(/no hospital horror mood no dark background/gi, 'clean dark mode healthcare layout');
+      return [
+        adaptedPrompt,
+        `Dark background adaptation: replace any white/light backgrounds with a dark slate or charcoal canvas (#0f172a or #1e293b), adapt all text to high-contrast white or light gray, convert information boxes to semi-transparent dark containers, and use the bright accent colors (${paletteText}) for key highlights, lines, and active elements only to maintain official authority with high dark-mode readability.`
+      ].filter(Boolean).join(', ');
+    }
   }
 
   function resolveStyleForMode(style, mode = activeColorMode) {
@@ -347,6 +424,17 @@
       objectAdaptation: 'convert the promoted item into a drawn hero motif or supporting prop',
       avoid: 'avoid generic clip-art, inconsistent line styles, and overcrowded decoration',
       qualityRules: 'keep line treatment consistent, focal subject clear, and decorative elements intentional'
+    },
+    anime: {
+      textureRendering: 'anime cel-shaded or manga-style finish with clean line work',
+      lightingMood: 'stylized anime-inspired lighting, dramatic screen tones, or soft backlights',
+      shapeLanguage: 'clean outlines, expressive silhouettes, and dynamic graphic compositions',
+      layoutBehavior: 'character-led or graphic novel pane layout with spacious copy zones',
+      typographyGuidance: 'dynamic graphic novel style typography or clean sub-tab title placement',
+      campaignAdaptation: 'adapt as comic banner, key art, character promotion, or web ad',
+      objectAdaptation: 'convert the promoted item into a stylized manga prop or comic-style element',
+      avoid: 'avoid messy lines, realistic rendering, and overlapping dialog bubbles unless intended',
+      qualityRules: 'maintain clean lines, flat colors or screen tones, and stylized anatomy'
     },
     modern: {
       textureRendering: 'clean graphic finish with controlled flat, print, or vector treatment',
@@ -578,6 +666,7 @@
     '3d': "A polished 3D CGI render",
     craft: "A tactile handmade craft artwork",
     illustration: "A clean digital vector illustration",
+    anime: "A dynamic anime or comic style illustration",
     modern: "A sleek minimalist graphic design",
     official: "A clean corporate campaign graphic design",
     nature: "An organic stylized graphic illustration",

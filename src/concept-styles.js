@@ -19,7 +19,7 @@ window.CONCEPT_STYLES = [
       palette: ['#f9d4ff','#b8d4ff','#ffe8b8','#c8ffb8','#ffd6f9'],
       prompt: `whimsical fairy tale illustration, magical sparkles and glowing stars, enchanted forest background, dreamy storybook style, color palette: #f9d4ff #b8d4ff #ffe8b8 #c8ffb8 #ffd6f9, soft lavender and sky-blue pastels, warm cream highlights, mint green foliage, luminous gentle atmosphere`,
       tags: ['동화','귀여움','파스텔'] },
-    { id: 'chibi', category: 'game', nameKo: '치비/카와이', nameEn: 'Chibi Kawaii', emoji: '🌸',
+    { id: 'chibi', category: 'anime', nameKo: '치비/카와이', nameEn: 'Chibi Kawaii', emoji: '🌸',
       desc: '일본 애니메이션 치비 스타일. 크고 빛나는 눈, 동그란 귀여운 비율.',
       palette: ['#ff9de2','#ffb3c6','#ffd6ff','#caffbf','#fdffb6'],
       prompt: `chibi anime character illustration, kawaii cute style, oversized sparkly eyes, round chubby proportions, color palette: #ff9de2 #ffb3c6 #ffd6ff #caffbf #fdffb6, hot pink and blush rose tones, soft lavender, mint green and lemon accents, clean cell shading, joyful expression`,
@@ -90,7 +90,7 @@ window.CONCEPT_STYLES = [
       palette: ['#000000','#ffffff','#ffd700','#ff6b6b','#87ceeb'],
       prompt: `doodle illustration style, hand-drawn black pen sketch on white, whimsical cartoon elements, playful spontaneous line work, color palette: #000000 #ffffff #ffd700 #ff6b6b #87ceeb, black ink outlines on white background, bright yellow fill accents, coral-red spot colors, sky blue detail highlights`,
       tags: ['손그림','귀여움','스케치'] },
-    { id: 'comic', category: 'illustration', nameKo: '만화/코믹', nameEn: 'Comic Book', emoji: '💥',
+    { id: 'comic', category: 'anime', nameKo: '만화/코믹', nameEn: 'Comic Book', emoji: '💥',
       desc: '두꺼운 윤곽선과 망점 패턴. 빈티지 코믹북의 다이나믹한 에너지.',
       palette: ['#ffff00','#ff0000','#0000ff','#000000','#ffffff'],
       prompt: `comic book illustration style, bold thick black ink outlines, Ben-Day halftone dot pattern, dynamic action composition, color palette: #ffff00 #ff0000 #0000ff #000000 #ffffff, pure yellow fills, vivid red action elements, royal blue hero tones, solid black outlines, white highlights, vintage superhero aesthetic`,
@@ -691,6 +691,42 @@ window.CONCEPT_STYLES = [
       palette: ['#f5e6d8','#c84b31','#2d6a4f','#c8a000','#6b3a5a'],
       prompt: `embroidery cross-stitch textile art close-up, intricate floral motif stitched on linen fabric, individual thread and stitch texture visible, color palette: #f5e6d8 #c84b31 #2d6a4f #c8a000 #6b3a5a, warm linen cream for base fabric background texture, rich red-orange for primary floral and stem stitch, deep forest green for leaf and vine fill stitch, warm golden yellow for accent blossom center french knots, deep mauve-purple for complementary petal satin stitch, craft and hobby aesthetic, macro photography detail`,
       tags: ['자수','크로스스티치','섬유'] },
+
+    { id: 'craft-claymation', category: 'craft', nameKo: '클레이아트 (지점토)', nameEn: 'Claymation / Plasticine', emoji: '🧸',
+      desc: '손으로 빚어낸 따스한 점토 공예. 지문 흔적과 부드러운 클레이 질감, 스톱모션 애니메이션 감성.',
+      palette: ['#ff6b6b', '#feca57', '#1dd1a1', '#54a0ff', '#ffffff'],
+      prompt: `tactile stop-motion claymation style, handmade plasticine clay model, soft subtle fingerprints on clay surface, round chunky shapes, cozy studio lighting with soft shadows, color palette: #ff6b6b #feca57 #1dd1a1 #54a0ff #ffffff, vibrant red accents, warm yellow base, pastel green elements, soft sky blue highlights, clean white studio background`,
+      tags: ['점토', '클레이', '피규어', '스톱모션', '귀여운'] },
+
+    { id: 'craft-leather', category: 'craft', nameKo: '가죽 공예', nameEn: 'Leather Craft', emoji: '💼',
+      desc: '두꺼운 천연 가죽 위에 새겨진 정교한 엠보싱과 스티치. 빈티지하고 클래식한 질감.',
+      palette: ['#4e3629', '#8b5a2b', '#cd853f', '#d2b48c', '#1a1310'],
+      prompt: `artisanal hand-stitched leather craft style, heavy embossed patterns on genuine brown leather, thick yellow saddle stitching, metallic brass rivets, warm aged patina, soft studio side lighting, color palette: #4e3629 #8b5a2b #cd853f #d2b48c #1a1310, dark espresso brown shadows, warm chestnut brown, golden tan highlights, light beige stitch lines, dark charcoal background`,
+      tags: ['가죽', '스티치', '빈티지', '수공예', '클래식'] },
+
+    { id: 'craft-needle-felt', category: 'craft', nameKo: '양모 펠트 공예', nameEn: 'Needle Felted Wool', emoji: '🐑',
+      desc: '바늘로 다져 만든 보송보송한 양모 인형 스타일. 포근하고 따뜻한 섬유의 질감.',
+      palette: ['#f4e9cd', '#e2b4bd', '#9b5de5', '#f15bb5', '#fee440'],
+      prompt: `cozy needle felted wool craft style, fuzzy fiber texture, handmade cute miniature felted doll aesthetic, soft studio backlighting, color palette: #f4e9cd #e2b4bd #9b5de5 #f15bb5 #fee440, warm cream wool base, dusty rose details, soft violet shadows, playful magenta accents, bright sunny yellow highlights`,
+      tags: ['펠트', '양모', '인형', '포근한', '귀여운'] },
+
+    { id: 'craft-woodcarving', category: 'craft', nameKo: '우드카빙 (목공예)', nameEn: 'Hand-Carved Wood', emoji: '🪵',
+      desc: '조각칼 자국이 살아있는 목공예 스타일. 나이테와 나무 옹이의 자연스러운 결 표현.',
+      palette: ['#2b1810', '#5c3a21', '#a0522d', '#cd853f', '#f5deb3'],
+      prompt: `rustic hand-carved wood art style, visible chisel marks and knife cuts, organic natural wood grain texture, warm semi-matte finish, soft overhead studio lighting, color palette: #2b1810 #5c3a21 #a0522d #cd853f #f5deb3, dark wenge shadows, warm walnut brown, sienna midtones, golden oak highlights, light pine background`,
+      tags: ['목공예', '나무', '조각', '내추럴', '목판화'] },
+
+    { id: 'craft-glassblowing', category: 'craft', nameKo: '유리 공예', nameEn: 'Glassblowing Art', emoji: '🏺',
+      desc: '입으로 불어 만든 투명한 유리 공예품. 빛에 반사되는 화사한 반사광과 유기적인 색유리 그라데이션.',
+      palette: ['#00b4d8', '#ffb703', '#fb8500', '#219ebc', '#ffffff'],
+      prompt: `delicate hand-blown glassblowing art style, translucent glass with organic colored swirls, glossy light reflections and refractions, caustic lighting effects, minimalist white museum pedestal, color palette: #00b4d8 #ffb703 #fb8500 #219ebc #ffffff, turquoise blue swirls, warm amber highlights, glowing orange accents, ocean blue depths, brilliant white refractions`,
+      tags: ['유리', '글라스', '투명', '그라데이션', '영롱한'] },
+
+    { id: 'craft-metal-repousse', category: 'craft', nameKo: '금속 공예 (엠보싱)', nameEn: 'Metal Repoussé', emoji: '🪙',
+      desc: '망치로 두드려 입체감을 낸 동판/황동판 공예. 앤티크한 변색 효과와 은은하게 빛나는 금속 질감.',
+      palette: ['#3e2723', '#bcaaa4', '#d7ccc8', '#b8860b', '#ffd700'],
+      prompt: `antique hand-hammered metal repoussé art style, brass or copper sheet metal relief, detailed embossing work, tarnished dark patina shadows, soft metallic sheen, color palette: #3e2723 #bcaaa4 #d7ccc8 #b8860b #ffd700, deep bronze crevices, soft copper-gray sheen, light silver-rose highlights, antique gold midtones, bright brass reflections`,
+      tags: ['금속', '구리', '황동', '앤티크', '조각'] },
 
     // ── 일러스트·드로잉 추가 ─────────────────────────────────
     { id: 'illust-editorial', category: 'illustration', nameKo: '에디토리얼 일러스트', nameEn: 'Editorial Illustration', emoji: '📰',
@@ -1318,7 +1354,7 @@ window.CONCEPT_STYLES = [
       tags: ['사이키델릭','레이브','90s'] },
 
     // illustration
-    { id: 'illust-anime-cel', category: 'illustration', nameKo: '애니메이션 셀 쉐이딩', nameEn: 'Anime Cel Shading', emoji: '🎌',
+    { id: 'illust-anime-cel', category: 'anime', nameKo: '애니메이션 셀 쉐이딩', nameEn: 'Anime Cel Shading', emoji: '🎌',
       desc: '일본 애니메이션 특유의 셀 쉐이딩 스타일. 굵은 윤곽선과 평면적 채색.',
       palette: ['#ffffff','#ffd6e0','#a8d8ea','#f6f6f6','#2d2d2d'],
       prompt: `anime cel shading illustration style, clean bold black outline strokes, flat color fills with hard shadow division line, manga highlight sparkle on eyes, color palette: #ffffff #ffd6e0 #a8d8ea #f6f6f6 #2d2d2d, pure white for primary highlight and background, soft pink blush for skin tone and cheek flush, powder blue for hair highlight and cloth shadow, near-white gray for secondary flat surface, near-black for clean outline and pupil, Japanese animation style, KyoAni A-1 Pictures production quality`,
@@ -1875,5 +1911,90 @@ window.CONCEPT_STYLES = [
       palette: ['#0A1628','#1B4F8A','#4FC3F7','#E8EEFF','#C8A028'],
       prompt: `A sleek modern airport terminal interior with massive glass facade walls, aircraft visible on tarmac through floor-to-ceiling windows, clean white departure hall with elegant wayfinding signage. Blue hour twilight sky outside, aircraft landing lights streaking across the runway, well-dressed passengers in motion blur. Architectural editorial photography, color palette: #0A1628 #1B4F8A #4FC3F7 #E8EEFF #C8A028, sophisticated and efficient modern aviation mood.`,
       tags: ['항공사','공항','비행기','항공여행','글로벌여행'] },
+
+    // ── 만화/애니메이션 ──────────────────────────────────────
+    { id: 'anime-retro-90s', category: 'anime', nameKo: '레트로 90년대 애니', nameEn: 'Retro 90s Anime', emoji: '📼',
+      desc: '90년대 셀 애니메이션 감성. 부드러운 아날로그 필름 노이즈, 물빠진 색감, 따뜻한 백라이트 효과.',
+      palette: ['#e08ba6', '#ebd6b8', '#99aab5', '#ffd1dc', '#1a1a24'],
+      prompt: `retro 90s anime style screenshot, hand-drawn cel animation aesthetic, soft film grain, vintage color palette: #e08ba6 #ebd6b8 #99aab5 #ffd1dc #1a1a24, muted pastel pink, warm cream background, slate gray shadows, pale rose blush, dark outline. Warm glowing backlight, nostalgic classic cartoon atmosphere.`,
+      tags: ['만화', '애니', '레트로', '아날로그'] },
+
+    { id: 'anime-webtoon', category: 'anime', nameKo: '웹툰 채색 스타일', nameEn: 'Modern Webtoon', emoji: '📱',
+      desc: '한국 현대 웹툰 채색 스타일. 깔끔한 디지털 선화, 부드러운 그라데이션 명암, 화사한 컬러 팝 하이라이트.',
+      palette: ['#ff7b90', '#ffd8cc', '#a8e6cf', '#ffebb3', '#2b2b2b'],
+      prompt: `modern webtoon manhwa illustration style, clean digital line art, soft gradient shading, bright trendy highlights, color palette: #ff7b90 #ffd8cc #a8e6cf #ffebb3 #2b2b2b, vibrant peach pink, soft coral blush, mint green accents, pale honey highlights, charcoal outlines. Clear high-contrast web comic aesthetic.`,
+      tags: ['웹툰', '만화', '디지털', '현대'] },
+
+    { id: 'anime-graphic-novel', category: 'anime', nameKo: '미국 그래픽 노블', nameEn: 'American Graphic Novel', emoji: '🇺🇸',
+      desc: '미국 코믹북/그래픽 노블 스타일. 빈티지 잉크 드로잉과 복고풍 하프톤 도트 명암 패턴.',
+      palette: ['#e63946', '#f1faee', '#a8dadc', '#457b9d', '#1d3557'],
+      prompt: `classic american comic book style illustration, vintage halftone dot texture, bold graphic ink shadows, retro color palette: #e63946 #f1faee #a8dadc #457b9d #1d3557, vibrant red comic accent, off-white paper texture, soft blue-gray wash, navy shadows, deep dark ink lines. Pulp magazine aesthetic.`,
+      tags: ['만화', '그래픽노블', '빈티지', '하프톤'] },
+
+    { id: 'anime-cyberpunk', category: 'anime', nameKo: '네온 사이버펑크 애니', nameEn: 'Neon Cyberpunk Anime', emoji: '🌌',
+      desc: '미래지향적 사이버펑크 애니메이션 감성. 어두운 배경 속에서 빛나는 네온 조명과 하이라이트.',
+      palette: ['#050515', '#ff007f', '#00f0ff', '#7000ff', '#ffffff'],
+      prompt: `cyberpunk anime style illustration, neon glow lighting effects, futuristic cityscape backdrop, rain reflections, color palette: #050515 #ff007f #00f0ff #7000ff #ffffff, deep cybernetic midnight-blue, hot magenta pink highlights, bright cyan energy glow, electric violet shadows, pure white reflections.`,
+      tags: ['애니', '사이버펑크', '네온', 'SF'] },
+
+    { id: 'anime-watercolor-ghibli', category: 'anime', nameKo: '감성 수채화 애니 (지브리풍)', nameEn: 'Nostalgic Watercolor Anime', emoji: '🌳',
+      desc: '지브리 스튜디오 감성의 따스한 손그림체. 불투명 수채화(과슈) 텍스처와 평화롭고 서정적인 자연광.',
+      palette: ['#4a7c59', '#eed7a1', '#85b3d1', '#fcfaf2', '#342a21'],
+      prompt: `nostalgic Ghibli-inspired hand-painted watercolor anime style, soft gouache texture, warm peaceful natural lighting, lush green meadows, soft fluffy summer clouds in a bright blue sky, cozy rural atmosphere, color palette: #4a7c59 #eed7a1 #85b3d1 #fcfaf2 #342a21, moss green hills, warm gold highlight, soft sky blue, warm white paper texture, rustic brown outlines, cinematic anime frame`,
+      tags: ['애니', '지브리', '수채화', '손그림', '서정적'] },
+
+    { id: 'anime-manga-screentone', category: 'anime', nameKo: '흑백 만화 & 스크린톤', nameEn: 'B&W Manga Screentone', emoji: '✒️',
+      desc: '출판 만화 감성의 정교한 흑백 잉크 펜화. 섬세한 해칭 기법과 만화용 스크린톤(망점) 텍스처.',
+      palette: ['#000000', '#4a4a4a', '#9e9e9e', '#e0e0e0', '#ffffff'],
+      prompt: `classic Japanese black and white manga page style, detailed black ink pen drawing, extensive cross-hatching, halftone screentone patterns, high contrast monochrome, speed lines, color palette: #000000 #4a4a4a #9e9e9e #e0e0e0 #ffffff, solid black shadows, dark gray tones, medium screentone fill, light gray highlights, pure white paper background, serialized manga print quality`,
+      tags: ['만화', '흑백', '스크린톤', '잉크', '펜화'] },
+
+    { id: 'anime-shonen-battle', category: 'anime', nameKo: '판타지 소년만화 (이펙트)', nameEn: 'Epic Shonen Action Anime', emoji: '⚡',
+      desc: '화려한 이펙트가 강조된 현대 소년만화 풍. 다이나믹한 구도, 에너지 아우라, 극적인 명암대비.',
+      palette: ['#ff4500', '#ffd700', '#0a0d1a', '#4b0082', '#ffffff'],
+      prompt: `epic shonen action anime style, dynamic dramatic pose, glowing energy aura, electric sparks, speed lines, intense lighting, color palette: #ff4500 #ffd700 #0a0d1a #4b0082 #ffffff, fiery orange sparks, brilliant gold lightning, midnight blue background, deep violet shadows, pure white energy cores. High-octane fantasy action animation key art, Ufotable style`,
+      tags: ['애니', '소년만화', '화려한', '이펙트', '판타지'] },
+
+    { id: 'anime-shoujo-romance', category: 'anime', nameKo: '샤방한 순정만화', nameEn: 'Sparkly Shoujo Romance', emoji: '✨',
+      desc: '소녀 감성의 로맨틱 순정만화 풍. 부드러운 파스텔 톤, 반짝이는 빛방울과 꽃잎 흩날리는 배경.',
+      palette: ['#ffccd5', '#ffb3c6', '#e8cbf5', '#fff5eb', '#4a3b40'],
+      prompt: `classic shoujo manga romance style, soft sparkly dreamlike atmosphere, floating flower petals, sparkling light bubbles, gentle pastel tones, color palette: #ffccd5 #ffb3c6 #e8cbf5 #fff5eb #4a3b40, cherry blossom pink, rose gold details, soft lavender shadows, warm cream light, dark cocoa outlines. Emotive character expressions, romantic and ethereal mood`,
+      tags: ['만화', '순정만화', '파스텔', '반짝이', '로맨틱'] },
+
+    { id: 'anime-retro-80s-mech', category: 'anime', nameKo: '80년대 레트로 메카/SF', nameEn: 'Classic 80s Sci-Fi Anime', emoji: '🤖',
+      desc: '80년대 우주 오페라 SF 애니메이션 스타일. 아날로그 그라데이션, 빛바랜 셀화 광택과 금속 반사광.',
+      palette: ['#001f3f', '#ff851b', '#39cccccc', '#aaaaaa', '#ffffff'],
+      prompt: `classic 1980s retro sci-fi anime screenshot, space opera aesthetic, glowing CRT terminal lights, painted airbrush metallic gradients, cel-shaded metal reflections, color palette: #001f3f #ff851b #39cccccc #aaaaaa #ffffff, deep space navy, bright hazard orange, retro cyan computer screen glow, metallic gray panels, brilliant star highlights. Hand-painted sci-fi background, vintage Gundam or Macross mood`,
+      tags: ['애니', '80년대', '레트로', '메카닉', 'SF'] },
+
+    { id: 'anime-stick-figure', category: 'anime', nameKo: '심플 졸라맨 (스틱맨)', nameEn: 'Stick Figure / Stickman', emoji: '🏃',
+      desc: '선과 동그라미로 이루어진 초간단 졸라맨 낙서 스타일. 미니멀하고 유머러스한 드로잉.',
+      palette: ['#000000', '#ffffff', '#ff3366', '#33ccff', '#ffcc00'],
+      prompt: `ultra-simple stick figure drawing style, minimalist stickman doodles made of simple black marker lines and circles, white paper background, playful and humorous chalkboard or sketchbook aesthetic, color palette: #000000 #ffffff #ff3366 #33ccff #ffcc00, bold black ink lines, clean white background, vibrant pink action lines, bright cyan indicators, sunny yellow speech bubbles`,
+      tags: ['졸라맨', '낙서', '미니멀', '스케치', '유머러스'] },
+
+    { id: 'anime-disney-3d', category: 'anime', nameKo: '3D 애니메이션 (디즈니풍)', nameEn: 'Disney / Pixar 3D Style', emoji: '🏰',
+      desc: '디즈니/픽사 풍의 고품질 3D 애니메이션 스타일. 따뜻하고 큰 눈망울, 입체적이고 화사한 캐릭터 질감.',
+      palette: ['#ff9a00', '#00a8ff', '#ff007f', '#ffffff', '#2c3e50'],
+      prompt: `high-quality Disney Pixar style 3D render, vibrant colorful cartoon characters, large expressive emotive eyes, soft clay-like skin shader, cinematic lighting with warm rim light, rich subsurface scattering, color palette: #ff9a00 #00a8ff #ff007f #ffffff #2c3e50, bright gold highlights, vivid sky blue tones, playful magenta accents, clean white highlights, dark navy shadows`,
+      tags: ['디즈니', '픽사', '3D애니', '입체', '화사한'] },
+
+    { id: 'anime-disney-classic-2d', category: 'anime', nameKo: '고전 2D 애니 (디즈니풍)', nameEn: 'Classic 2D Disney Style', emoji: '🪄',
+      desc: '1940-50년대 디즈니 고전 명작 감성의 셀화 스타일. 부드러운 유기적 선, 파스텔 톤 수채화 배경과 판타지 조명.',
+      palette: ['#b38b6d', '#6f5643', '#85b3d1', '#fcfaf2', '#dfb2f4'],
+      prompt: `classic 1950s Disney style 2D animation cel, hand-painted gouache background, organic soft ink outlines, magical dreamlike illumination, color palette: #b38b6d #6f5643 #85b3d1 #fcfaf2 #dfb2f4, warm beige highlights, soft brown contours, nostalgic dusty blue, warm ivory light, pastel lavender magical sparkles, vintage theatrical cartoon key art`,
+      tags: ['디즈니', '2D애니', '고전', '셀화', '몽환적'] },
+
+    { id: 'anime-chibi-pixel-game', category: 'anime', nameKo: '레트로 도트 (픽셀아트)', nameEn: 'Retro Pixel Art Anime', emoji: '👾',
+      desc: '고전 게임 감성의 8비트/16비트 레트로 픽셀 아트 스타일. 아기자기한 도트 묘사.',
+      palette: ['#000000', '#00ff00', '#ff00ff', '#00ffff', '#ffffff'],
+      prompt: `retro 16-bit pixel art style, detailed pixelated cartoon illustration, vibrant limited color palette, clean grid alignment, arcade video game aesthetic, color palette: #000000 #00ff00 #ff00ff #00ffff #ffffff, solid black outline pixels, neon green grass tones, magenta magic energy, cyan water reflections, white highlights`,
+      tags: ['도트', '픽셀아트', '레트로게임', '고전게임', '아기자기'] },
+
+    { id: 'anime-studio-ghibli', category: 'anime', nameKo: '지브리 스튜디오 화풍', nameEn: 'Studio Ghibli Style', emoji: '🌱',
+      desc: '특유의 서정적이고 포근한 지브리 스타일 2D 셀 애니메이션. 맑고 청명한 자연 경관과 감성적인 아날로그 텍스처.',
+      palette: ['#387a5c', '#7cb1db', '#f7d070', '#fff9e6', '#4a3319'],
+      prompt: `hand-drawn Studio Ghibli 2D anime style screenshot, beautiful lush green landscapes, clear bright blue sky with fluffy white cumulus clouds, nostalgic analog film texture, soft hand-painted gouache backgrounds, color palette: #387a5c #7cb1db #f7d070 #fff9e6 #4a3319, deep forest green, summer sky blue, soft golden sunset light, warm cream highlight, natural earth brown contours, cinematic animation frame, peaceful whimsical atmosphere`,
+      tags: ['지브리', '애니', '감성', '자연', '손그림'] }
 
 ];
