@@ -2294,7 +2294,7 @@
     const raw = state.promptMode === "optimized"
       ? renderOptimizedPrompt(validation, latestLint)
       : renderReviewPrompt(validation, latestLint);
-    return sanitizePromptForAI(raw);
+    return sanitizePromptForAI(raw, state.targetEngine);
   }
 
   // ── 섹션 뷰어: 변경된 섹션 글자색 하이라이트 ──────────────────

@@ -558,9 +558,8 @@
       return acc;
     }, {});
 
-    const descSummary = style.desc ? ` — ${style.desc}` : '';
     return {
-      visualDNA: `${styleDNA}${descSummary}`,
+      visualDNA: styleDNA,
       paletteStrategy: `Use the selected concept palette as campaign color roles: ${paletteRoles.join(', ')}.${style.paletteMode === 'light' ? ' Keep the canvas white or very light, suitable for public institution communication, with accents restrained to hierarchy and CTA use.' : ''}`,
       textureRendering: addSignals(defaults.textureRendering, signalGroups.textureRendering),
       lightingMood: addSignals(defaults.lightingMood, signalGroups.lightingMood),

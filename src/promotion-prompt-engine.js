@@ -549,10 +549,11 @@ function conceptPromptPartsFromStyle(style) {
   };
 
   const text = sourceText.toLowerCase();
+  const styleDNAEn = [style?.nameEn, category].filter(Boolean).join(" / ");
   const derived = {
     visualDNA: _s.outputLanguage === "ko"
-      ? [styleDNA, desc].filter(Boolean).join(". ")
-      : [desc, prompt].filter(Boolean).join("\n"),
+      ? styleDNAEn
+      : [styleDNAEn, prompt].filter(Boolean).join("\n"),
     paletteStrategy: palette ? `컨셉 팔레트 전체를 유지하되, 강조색은 CTA와 핵심 정보에 제한적으로 사용한다.\n${palette}` : "",
     textureRendering: /watercolor|paper|collage|grain|texture|clay|glass|metal|oil|pencil|수채|종이|질감|클레이|유리|메탈|색연필/.test(text)
       ? "컨셉 원문에 포함된 재질감과 렌더링 방식을 배경, 키비주얼, 정보 묶음의 표면 처리에 반영한다."
@@ -1988,10 +1989,69 @@ function renderOptimizedPrompt(validation, lint) {
   return _s.targetEngine === "imagen" ? sanitizePromptForImagen(rawPrompt) : rawPrompt;
 }
 
-function sanitizePromptForAI(text) {
-  // "CTA"를 그대로 두면 이미지 생성 AI가 해당 문자열을 이미지에 직접 렌더링하는 오류 발생.
-  // 단어 경계 기준으로 치환해 AI가 개념으로 이해하도록 유도.
-  return text.replace(/\bCTA\b/g, "action button");
+function sanitizePromptForAI(text, targetEngine = "") {
+  if (!text) return "";
+  
+  // 1. CTA 단어 치환
+  let processed = text.replace(/\bCTA\b/g, "action button");
+  
+  // 2. targetEngine이 'imagen'이거나 혹은 텍스트 내에 이미지에 그려지면 안 되는 한글 찌꺼기가 남아있는 경우 정밀 필터링 적용
+  const isImagen = targetEngine === "imagen" || (typeof _s !== "undefined" && _s.targetEngine === "imagen");
+  
+  if (isImagen) {
+    // 따옴표 내의 한글 텍스트(사용자가 실제 렌더링하고 싶어하는 한글 정보)를 임시 플레이스홀더로 보호
+    const quotes = [];
+    let placeholderText = processed.replace(/"([^"]*)"/g, (match, p1) => {
+      quotes.push(p1);
+      return `__AI_QUOTE_PLACEHOLDER_${quotes.length - 1}__`;
+    });
+    
+    // 라인별로 보면서 한글이 있으면 정제 처리
+    const lines = placeholderText.split(/\r?\n/);
+    const cleanedLines = [];
+    
+    for (let line of lines) {
+      let trimmed = line.trim();
+      if (!trimmed) {
+        cleanedLines.push("");
+        continue;
+      }
+      
+      if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed)) {
+        // 한글이 있는 라인이면, split 기호로 쪼개어 영문만 남김
+        const parts = trimmed.split(/\s*[\/|·|—|-]\s*/);
+        const englishParts = parts.filter(p => !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p));
+        if (englishParts.length > 0) {
+          trimmed = englishParts.join(" ").trim();
+        } else {
+          // 순수 한글로만 된 라인(예: 가이드 설명)은 스킵
+          continue;
+        }
+      }
+      
+      // 앞뒤 마크다운 불릿이나 불필요한 기호 정리
+      cleanedLines.push(line.replace(line.trim(), trimmed));
+    }
+    
+    // 플레이스홀더 복원
+    processed = cleanedLines.join("\n").replace(/__AI_QUOTE_PLACEHOLDER_(\d+)__/g, (match, p1) => {
+      return `"${quotes[parseInt(p1, 10)]}"`;
+    });
+
+    // 3. 한글 렌더링 및 가독성 최적화를 위한 마지막 연출 가이드 강제 조항 이식
+    const fontDirective = [
+      "",
+      "## [Required] On-Image Text Quality & Layout Decoupling rules:",
+      "- Render all on-image Korean text in a bold, clean, modern Sans-serif font with a high-contrast thick outline border.",
+      "- Strictly avoid thin script, decorative fantasy handwriting, or calligraphy fonts that cause spelling distortion.",
+      "- The backdrop immediately behind the overlay text must be rendering-flat, with zero volumetric fog, zero heavy texture, and zero glowing light overlays to ensure maximum legibility.",
+      "- Consolidate all text lines into a single, structured layout block inside the designated banner zone. Do not scatter or paint text fragments onto background objects."
+    ].join("\n");
+
+    processed = processed + "\n" + fontDirective;
+  }
+  
+  return processed;
 }
   return {
     init: _init,
