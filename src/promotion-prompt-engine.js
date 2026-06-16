@@ -1083,9 +1083,10 @@ function createPromptSections(validation, lint) {
     _s.targetEngine === "imagen"
       ? textEntries.map((entry) => {
           const cleanLabel = _h.localizeValue(entry.label);
+          const cleanValue = _h.localizeValue(entry.value);
           return _h.localizeSentence(
-            `텍스트 배치 영역 확보 - [${cleanLabel}]: 텍스트가 삽입될 수 있는 단색의 깨끗하고 노이즈 없는 백드롭/플레이스홀더/여백(Negative Space) 영역을 남겨두시오.`,
-            `Backdrop for [${cleanLabel}]: Reserve a clean, flat, noise-free solid backdrop plate or negative space ready for the text overlay.`
+            `텍스트 [${cleanLabel}]: "${cleanValue}" (텍스트가 삽입될 수 있는 단색의 깨끗하고 노이즈 없는 백드롭/플레이스홀더/여백 영역을 배경으로 남겨두고 텍스트를 또렷하게 렌더링하시오.)`,
+            `Text [${cleanLabel}]: "${cleanValue}" (Render this text clearly, reserving a clean, flat, noise-free solid backdrop plate or negative space ready for the text overlay.)`
           );
         })
       : textEntries.map((entry) => `${_h.localizeValue(entry.label)}: ${_h.localizeValue(entry.value)}`)
