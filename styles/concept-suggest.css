@@ -115,9 +115,6 @@
 
 /* ── 카드 고유번호 배지 ── */
 .concept-card-num {
-  position: absolute;
-  top: 6px;
-  right: 6px;
   font-size: 10px;
   font-variant-numeric: tabular-nums;
   color: rgba(255,255,255,0.55);
@@ -195,12 +192,11 @@
 /* ── 카드 헤더 (그래디언트) ── */
 .concept-card-header {
   position: relative;
-  padding: 18px 16px 14px;
+  padding: 18px 128px 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 5px;
   min-height: 86px;
-  position: relative;
 }
 
 .concept-card-emoji {
@@ -223,10 +219,18 @@
   /* color: JS 인라인 스타일로 동적 적용 */
 }
 
-.concept-card-cat-badge {
+.concept-card-meta-badges {
   position: absolute;
   top: 12px;
   right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 116px;
+}
+
+.concept-card-cat-badge {
+  max-width: 72px;
   padding: 3px 10px;
   border-radius: 999px;
   /* background/color: JS 인라인 스타일로 동적 적용 */
@@ -234,6 +238,9 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   backdrop-filter: blur(6px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ── 카드 바디 ── */

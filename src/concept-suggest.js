@@ -591,7 +591,12 @@
 
   function buildPromotionConceptStyle(style) {
     const promptParts = buildPromotionPromptParts(style);
-    const styleKeywords = (style.prompt || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 8).join(', ');
+    // "avoid ..." 토큰을 styleKeywords에서 제거 (light mode 파생 텍스트 오염 방지)
+    const styleKeywords = (style.prompt || '').split(',')
+      .map(s => s.trim())
+      .filter(s => Boolean(s) && !/^avoid\b/i.test(s))
+      .slice(0, 8)
+      .join(', ');
 
     const targetEngine = document.getElementById("promotionTargetEngine")?.value;
     let promotionPrompt = '';
@@ -600,15 +605,18 @@
       const positiveAvoid = convertAvoidToPositive(promptParts.avoid);
       const prefix = IMAGEN_MEDIUM_PREFIXES[style.category] || "A premium promotional campaign graphic design";
       const cleanVisualDNA = promptParts.visualDNA.split(' — ')[0];
+      const styleCharacter = styleKeywords
+        ? `This image should carry the visual character of ${style.nameEn} — expressed through ${styleKeywords}.`
+        : `Maintain the full stylistic identity of ${style.nameEn} throughout the composition.`;
       const fluidPrompt = [
         `${prefix} in the style of ${style.nameEn} (${CAT_EN[style.category] || style.category}).`,
         `The visual DNA is characterized by ${cleanVisualDNA}.`,
         `The composition features a shape language of ${promptParts.shapeLanguage}, rendered with ${promptParts.textureRendering}, and illuminated by ${promptParts.lightingMood}.`,
         `The color palette system employs the following strategy: ${promptParts.paletteStrategy}. Reserve the strongest color contrast for key elements like the headline, action button, and essential campaign details.`,
         `For the promotional campaign, the scene is adapted for a ${promptParts.campaignAdaptation}, representing the primary product or offer as a ${promptParts.objectAdaptation}.`,
-        `The spatial layout behaves as a ${promptParts.layoutBehavior}, incorporating typography according to the following guidance: ${promptParts.typographyGuidance}.`,
-        `For optimal layout structure and aesthetics, ${positiveAvoid} and ${promptParts.qualityRules}.`,
-        `Ensure the overall design remains clean, balanced, and highly readable, carrying key style keywords: ${styleKeywords}.`
+        `The spatial layout behaves as a ${promptParts.layoutBehavior}, incorporating typography according to the following guidance: ${promptParts.typographyGuidance}. The backdrop immediately behind any text block must be visually flat and uncluttered to ensure maximum legibility.`,
+        `For optimal layout structure and aesthetics at 2K quality, ${positiveAvoid} and ${promptParts.qualityRules}.`,
+        styleCharacter,
       ].join(' ');
 
       promotionPrompt = replaceHexCodesWithNames(fluidPrompt);
@@ -660,7 +668,7 @@
     const header = document.createElement('div');
     header.className = 'concept-card-header';
     header.style.background = buildGradient(modeStyle.palette);
-    header.innerHTML = `<div class="concept-card-emoji">${style.emoji}</div><div class="concept-card-name-en" style="color:${theme.primary}">${style.nameEn}</div><div class="concept-card-name-ko" style="color:${theme.secondary}">${style.nameKo}</div><span class="concept-card-cat-badge" style="background:${theme.badge};color:${theme.badgeText}">${CAT_KO[style.category] || ''}</span><span class="concept-card-num">#${style._num}</span>`;
+    header.innerHTML = `<div class="concept-card-emoji">${style.emoji}</div><div class="concept-card-name-en" style="color:${theme.primary}">${style.nameEn}</div><div class="concept-card-name-ko" style="color:${theme.secondary}">${style.nameKo}</div><div class="concept-card-meta-badges"><span class="concept-card-cat-badge" style="background:${theme.badge};color:${theme.badgeText}">${CAT_KO[style.category] || ''}</span><span class="concept-card-num">#${style._num}</span></div>`;
     const body = document.createElement('div');
     body.className = 'concept-card-body';
     const desc = document.createElement('p');
@@ -914,5 +922,9 @@
 
     renderCards();
   }
+
+  window.resolveStyleForMode = resolveStyleForMode;
+  window.buildPromotionConceptStyle = buildPromotionConceptStyle;
+
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();

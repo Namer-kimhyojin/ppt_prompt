@@ -194,6 +194,11 @@ async function writePollinationsImage({ slideId, title, prompt }) {
 async function writeOpenAIImage({ slideId, title, prompt, apiKey }) {
   assertOpenAIConfig(apiKey);
 
+  const promptText = String(prompt || "").trim();
+  const imageSize = resolveOpenAIImageSize(promptText);
+  const model = config.openaiImageModel || "gpt-image-2";
+  const quality = config.openaiImageQuality || "medium";
+
   const response = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
     headers: {
@@ -201,11 +206,11 @@ async function writeOpenAIImage({ slideId, title, prompt, apiKey }) {
       "authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "dall-e-3",
-      prompt: String(prompt).trim().slice(0, 4000),
+      model,
+      prompt: promptText,
       n: 1,
-      size: "1792x1024",
-      response_format: "b64_json",
+      size: imageSize,
+      quality,
     }),
   });
 
@@ -230,8 +235,44 @@ async function writeOpenAIImage({ slideId, title, prompt, apiKey }) {
     filename,
     filePath,
     mimeType: "image/png",
-    model: "dall-e-3",
+    model,
+    size: imageSize,
   };
+}
+
+function resolveOpenAIImageSize(promptText) {
+  const parsed = parsePromptCanvasRatio(promptText);
+  if (!parsed) return "1024x1024";
+
+  const ratio = parsed.width / parsed.height;
+  if (ratio >= 1.12) return "1536x1024";
+  if (ratio <= 0.88) return "1024x1536";
+  return "1024x1024";
+}
+
+function parsePromptCanvasRatio(promptText) {
+  const text = String(promptText || "");
+  const directSizeMatch = text.match(/(?:직접 입력 크기|Exact size|Canvas size|캔버스 크기)[^\n:：]*[:：]?\s*(\d{3,5})\s*[x×]\s*(\d{3,5})/i)
+    || text.match(/\b(\d{3,5})\s*[x×]\s*(\d{3,5})\s*(?:px|픽셀)\b/i);
+  if (directSizeMatch) {
+    return {
+      width: Number(directSizeMatch[1]),
+      height: Number(directSizeMatch[2]),
+    };
+  }
+
+  const ratioMatch = text.match(/(?:비율\/방향|Aspect ratio \/ orientation|Aspect ratio|비율)[^\n:：]*[:：]?\s*(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)/i);
+  if (ratioMatch) {
+    return {
+      width: Number(ratioMatch[1]),
+      height: Number(ratioMatch[2]),
+    };
+  }
+
+  if (/세로형|portrait|vertical/i.test(text)) return { width: 4, height: 5 };
+  if (/가로형|landscape|horizontal/i.test(text)) return { width: 16, height: 9 };
+  if (/정사각|square|1\s*:\s*1/i.test(text)) return { width: 1, height: 1 };
+  return null;
 }
 
 export async function generateImage({ slideId, title, prompt, options = {}, runtimeConfig = {} }) {

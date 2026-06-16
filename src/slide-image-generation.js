@@ -206,7 +206,7 @@
     mock: "목업 모드",
     pollinations: "Pollinations",
     google: "Google Gemini",
-    openai: "OpenAI DALL·E 3",
+    openai: "OpenAI GPT Image",
   };
 
   async function checkServer() {

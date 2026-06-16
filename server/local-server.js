@@ -16,7 +16,7 @@ const PROVIDERS = {
   mock:         { label: "목업 (테스트용)",         needsKey: false },
   pollinations: { label: "Pollinations (무료)",      needsKey: false },
   google:       { label: "Google Gemini",            needsKey: true  },
-  openai:       { label: "OpenAI DALL·E 3",          needsKey: true  },
+  openai:       { label: "OpenAI GPT Image",         needsKey: true  },
 };
 
 const MIME_TYPES = new Map([

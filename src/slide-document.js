@@ -150,10 +150,51 @@
     qrPosition: "bottom_right"
   };
 
+  const SIGNBOARD_STATE = {
+    documentType: "a4",
+    orientation: "landscape",
+    headline: "",
+    schedule: "",
+    contactInfo: "",
+    contactPhone: "",
+    includeContact: true,
+    directionArrow: "right",
+    locationText: "",
+    brandTone: "",
+    layoutMetaphor: "geometric",
+    layoutMetaphorCustom: "",
+    visualStrategy: "minimal_shape",
+    visualStrategyCustom: "",
+    layerComplexity: "single",
+    layerComplexityCustom: "",
+    primaryColor: "#0F3D8A",
+    secondaryColor: "#DDE7F8",
+    backgroundColor: "#F5F7FB",
+    accentColor: "#FF6B2C",
+    outputLang: "ko",
+    artStyle: "none",
+    artStyleCustom: "",
+    bgBrightness: "none",
+    gradTransEffect: "none",
+    gradTransEffectCustom: "",
+    headerText: "",
+    headerPosition: "none",
+    footerText: "",
+    footerPosition: "none",
+    subjectImageDesc: "",
+    useColorSystem: true,
+    logos: [{ name: "그림1", mode: "placeholder", path: "", position: "top_left" }],  // [{ name, mode, path, position }]
+    qrMode: "none",
+    qrUrl: "",
+    qrCaption: "",
+    qrPosition: "bottom_right"
+  };
+
   function getActiveState() {
     if (activeSubTab === "cover") return COVER_STATE;
     if (activeSubTab === "divider") return DIVIDER_STATE;
-    return BACKGROUND_STATE;
+    if (activeSubTab === "background") return BACKGROUND_STATE;
+    return SIGNBOARD_STATE;
   }
 
   function getMergedPresets() {
@@ -174,14 +215,17 @@
     setupColorPresets("slideCoverColorPresetGrid", "cover");
     setupColorPresets("slideDividerColorPresetGrid", "divider");
     setupColorPresets("slideBackgroundColorPresetGrid", "background");
+    setupColorPresets("slideSignboardColorPresetGrid", "signboard");
 
     bindSubPaneEvents("Cover", COVER_STATE);
     bindSubPaneEvents("Divider", DIVIDER_STATE);
     bindSubPaneEvents("Background", BACKGROUND_STATE);
+    bindSubPaneEvents("Signboard", SIGNBOARD_STATE);
 
     setupCustomColorReg("Cover");
     setupCustomColorReg("Divider");
     setupCustomColorReg("Background");
+    setupCustomColorReg("Signboard");
 
     // Bind proxy buttons
     $("slideDocSampleBtn").addEventListener("click", () => triggerActiveAction("sample"));
@@ -192,10 +236,12 @@
     syncUIFromState("Cover", COVER_STATE);
     syncUIFromState("Divider", DIVIDER_STATE);
     syncUIFromState("Background", BACKGROUND_STATE);
+    syncUIFromState("Signboard", SIGNBOARD_STATE);
 
     updatePromptPreview("Cover", COVER_STATE);
     updatePromptPreview("Divider", DIVIDER_STATE);
     updatePromptPreview("Background", BACKGROUND_STATE);
+    updatePromptPreview("Signboard", SIGNBOARD_STATE);
   }
 
   function setupSubTabs() {
@@ -214,7 +260,8 @@
         // Update active sub tab key
         if (targetId === "paneSlideCover") activeSubTab = "cover";
         else if (targetId === "paneSlideDivider") activeSubTab = "divider";
-        else activeSubTab = "background";
+        else if (targetId === "paneSlideBackground") activeSubTab = "background";
+        else activeSubTab = "signboard";
 
         if (window.PromptDeckTabs?.syncHeaderActionStates) {
           window.PromptDeckTabs.syncHeaderActionStates();
@@ -229,7 +276,7 @@
     grid.innerHTML = "";
 
     const merged = getMergedPresets();
-    const state = paneKey === "cover" ? COVER_STATE : paneKey === "divider" ? DIVIDER_STATE : BACKGROUND_STATE;
+    const state = paneKey === "cover" ? COVER_STATE : paneKey === "divider" ? DIVIDER_STATE : paneKey === "background" ? BACKGROUND_STATE : SIGNBOARD_STATE;
 
     merged.forEach((preset, index) => {
       const chip = document.createElement("button");
@@ -256,7 +303,7 @@
         grid.querySelectorAll(".promo-color-preset-chip").forEach(c => c.classList.remove("active"));
         chip.classList.add("active");
 
-        const prefix = paneKey === "cover" ? "Cover" : paneKey === "divider" ? "Divider" : "Background";
+        const prefix = paneKey === "cover" ? "Cover" : paneKey === "divider" ? "Divider" : paneKey === "background" ? "Background" : "Signboard";
 
         state.primaryColor = preset.primary;
         state.secondaryColor = preset.secondary;
@@ -299,7 +346,7 @@
       nameInput.value = "";
 
       const paneKey = prefix.toLowerCase();
-      const state = paneKey === "cover" ? COVER_STATE : paneKey === "divider" ? DIVIDER_STATE : BACKGROUND_STATE;
+      const state = paneKey === "cover" ? COVER_STATE : paneKey === "divider" ? DIVIDER_STATE : paneKey === "background" ? BACKGROUND_STATE : SIGNBOARD_STATE;
       state.primaryColor = primary;
       state.secondaryColor = secondary;
       state.backgroundColor = bg;
@@ -308,6 +355,7 @@
       setupColorPresets("slideCoverColorPresetGrid", "cover");
       setupColorPresets("slideDividerColorPresetGrid", "divider");
       setupColorPresets("slideBackgroundColorPresetGrid", "background");
+      setupColorPresets("slideSignboardColorPresetGrid", "signboard");
 
       syncUIFromState(prefix, state);
       updatePromptPreview(prefix, state);
@@ -1094,6 +1142,9 @@
 
       const resolvedMargin = getOptionVal(state.marginArea, state.marginAreaCustom, marginAreaMapKo, marginAreaMapEn);
       addLine(resolvedMargin, "여백 및 배치 방식", "Page Layout Grid");
+    } else if (prefix === "Signboard") {
+      const resolvedComplexity = getOptionVal(state.layerComplexity, state.layerComplexityCustom, layerComplexityMapKo, layerComplexityMapEn);
+      addLine(resolvedComplexity, "깊이 레이어 구조", "Depth & Layer Structure");
     } else { // Background
       const resolvedHeaderStyle = getOptionVal(state.headerStyle, state.headerStyleCustom, headerStyleMapKo, headerStyleMapEn);
       const resolvedFooterStyle = getOptionVal(state.footerStyle, state.footerStyleCustom, footerStyleMapKo, footerStyleMapEn);
@@ -1130,7 +1181,7 @@
     let colorSystemKo = "";
     let colorSystemEn = "";
     if (state.useColorSystem) {
-      const docLabel = prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : "배경";
+      const docLabel = prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : prefix === "Background" ? "배경" : "안내판";
       colorSystemKo = `- 주조색 (Primary ${state.primaryColor}): 헤더 배경 블록, 주요 장식 도형 fill, 핵심 구조선에 사용
 - 보조색 (Secondary ${state.secondaryColor}): 서브 도형, 카드 배경, 구분 패널 fill에 사용
 - 배경색 (Background ${state.backgroundColor}): ${docLabel} 전체 슬라이드 캔버스 배경에 사용 — 다른 요소가 이 색 위를 덮어도 됨
@@ -1155,7 +1206,63 @@
 
     let placeholderKo = "";
     let placeholderEn = "";
-    if (prefix !== "Background") {
+    if (prefix === "Signboard") {
+      const textLinesKo = [];
+      const textLinesEn = [];
+      if (textHeadline) {
+        textLinesKo.push(`- 행사 제목 (가장 크고 선명하게 렌더링): "${textHeadline}"`);
+        textLinesEn.push(`- Event Title (render largest and most prominent): "${textHeadline}"`);
+      }
+      const textSchedule = state.schedule ? state.schedule.trim() : "";
+      if (textSchedule) {
+        textLinesKo.push(`- 행사 일정 (일자 및 시간): "${textSchedule}"`);
+        textLinesEn.push(`- Event Schedule (date and time): "${textSchedule}"`);
+      }
+      const textContact = state.contactInfo ? state.contactInfo.trim() : "";
+      if (textContact) {
+        if (state.includeContact) {
+          textLinesKo.push(`- 담당자 정보 및 연락처: "${textContact}"`);
+          textLinesEn.push(`- Contact Information and Phone Number: "${textContact}"`);
+        } else {
+          textLinesKo.push(`- 담당자 정보 (※전화번호나 연락처 숫자 표기 절대 제외): "${textContact}"`);
+          textLinesEn.push(`- Contact Information (※DO NOT include any telephone numbers or digit patterns): "${textContact}"`);
+        }
+      }
+      const textLocText = state.locationText ? state.locationText.trim() : "";
+      if (textLocText) {
+        textLinesKo.push(`- 안내 위치 및 장소: "${textLocText}"`);
+        textLinesEn.push(`- Location and Venue Text: "${textLocText}"`);
+      }
+
+      // 화살표 처리
+      const arrowMapKo = {
+        left: "왼쪽 방향을 가리키는 큰 좌측 화살표 심볼 (←)",
+        right: "오른쪽 방향을 가리키는 큰 우측 화살표 심볼 (→)",
+        up: "위쪽 방향을 가리키는 큰 상향 화살표 심볼 (↑)",
+        down: "아래쪽 방향을 가리키는 큰 하향 화살표 심볼 (↓)"
+      };
+      const arrowMapEn = {
+        left: "large directional left arrow symbol (←) pointing left",
+        right: "large directional right arrow symbol (→) pointing right",
+        up: "large directional up arrow symbol (↑) pointing up",
+        down: "large directional down arrow symbol (↓) pointing down"
+      };
+
+      if (state.directionArrow && state.directionArrow !== "none") {
+        const arrowKo = arrowMapKo[state.directionArrow];
+        const arrowEn = arrowMapEn[state.directionArrow];
+        textLinesKo.push(`- 위치 지시 화살표: "${arrowKo}"를 위치 정보 바로 옆에 매우 크고 선명하며 심플한 미니멀 기하학 심볼로 표시할 것`);
+        textLinesEn.push(`- Directional Arrow: render a "${arrowEn}" clearly next to the location text as a prominent, simple, minimal geometric icon`);
+      }
+
+      if (textLinesKo.length > 0) {
+        placeholderKo = `⚠️ [안내판 정보 출력 절대 준수 규칙] 아래 지정된 텍스트는 반드시 입력된 원문 그대로 이미지에 렌더링해야 합니다. 번역, 의역, 요약, 수정, 생략, 보완 등 어떠한 변형도 절대 허용되지 않습니다. 큰따옴표 안의 문자열을 한 글자도 바꾸지 말고 그대로 출력하십시오.\n${textLinesKo.join("\n")}`;
+        placeholderEn = `⚠️ [STRICT TEXT VERBATIM RULE] ALL text strings below MUST be rendered exactly as provided — character by character, with zero modification. Do NOT translate, paraphrase, summarize, alter, omit, or rewrite any part of the quoted text. Reproduce each string literally as-is in the image.\n${textLinesEn.join("\n")}`;
+      } else {
+        placeholderKo = `- 안내판 정보 입력이 없으므로, 레이아웃에 텍스트를 임의로 채우지 마십시오.`;
+        placeholderEn = `- No signboard text information specified. Do NOT generate arbitrary text.`;
+      }
+    } else if (prefix !== "Background") {
       // 입력된 텍스트 항목만 수집
       const textLinesKo = [];
       const textLinesEn = [];
@@ -1206,25 +1313,39 @@
     }
 
     // ── 타이포그래피 계층 지시 빌드 ──
-    const typoHierarchyKo = prefix !== "Background"
-      ? `[타이포그래피 계층 & 크기 비율]
+    const typoHierarchyKo = prefix === "Signboard"
+      ? `[타이포그래피 계층 & 시인성 비율]
+- 행사 제목: 가장 큰 텍스트 (시인성 100%, 기준 비율 1.0×)
+- 행사 일정 / 장소: 제목의 약 50% 크기 (기준 비율 0.5×), 깔끔하고 두꺼운 고딕계열 폰트로 렌더링하여 판독성 확보
+- 위치 화살표: 장소 텍스트의 약 1.2배 크기로 굵고 뚜렷하게 렌더링
+- 담당자 정보: 하단 구석에 작게 배치 (제목의 약 25% 크기, 기준 비율 0.25×)
+- 폰트 패밀리: Sans-serif 계열만 사용 (고딕, Noto Sans, Helvetica Neue, Inter 계열). Serif·손글씨체 사용 금지.`
+      : prefix !== "Background"
+        ? `[타이포그래피 계층 & 크기 비율]
 - 메인 헤드라인: 전체 슬라이드 높이 대비 가장 큰 텍스트 (기준 비율 1.0×)
 - 서브 타이틀: 헤드라인의 약 45~55% 크기 (기준 비율 0.5×)
 - 메타 정보 / 소속: 헤드라인의 약 22~28% 크기 (기준 비율 0.25×), 보조 컬러 처리
 - 머릿말·꼬릿말: 메타 정보와 유사하거나 더 작은 크기 (기준 비율 0.2× 이하), 상단/하단 여백 안쪽에 배치
 - 폰트 패밀리: Sans-serif 계열만 사용 (고딕, Noto Sans, Helvetica Neue, Inter 계열). Serif·손글씨체 사용 금지.`
-      : `[타이포그래피 규칙]
+        : `[타이포그래피 규칙]
 - 배경 슬라이드 전체에 텍스트를 임의로 추가하지 마십시오. 텍스트 영역은 완전한 빈 여백으로 남길 것.
 - 폰트 패밀리: 만약 장식용 레이블이 필요한 경우 Sans-serif 계열만 허용.`;
 
-    const typoHierarchyEn = prefix !== "Background"
-      ? `[Typography Hierarchy & Size Ratio]
+    const typoHierarchyEn = prefix === "Signboard"
+      ? `[Typography Hierarchy & Visibility Ratio]
+- Event Title: largest text element (100% prominence, ratio 1.0×)
+- Schedule & Location: approximately 50% the size of the title (ratio 0.5×), using clean bold Sans-serif font for maximum legibility
+- Directional Arrow: rendered prominently, roughly 1.2× the height of the location text
+- Contact Info: placed discretely at the bottom area (approximately 25% the size of the title, ratio 0.25×)
+- Font family: Sans-serif ONLY (Gothic, Noto Sans, Helvetica, Inter family). NO Serif or handwriting fonts.`
+      : prefix !== "Background"
+        ? `[Typography Hierarchy & Size Ratio]
 - Main Headline: largest text element relative to slide height (ratio 1.0×)
 - Subtitle: approximately 45–55% the size of the headline (ratio 0.5×)
 - Meta Info / Affiliation: approximately 22–28% the size of the headline (ratio 0.25×), rendered in secondary color
 - Header / Footer text: similar to or smaller than meta info (ratio ≤0.2×), placed within top/bottom margin bands
 - Font family: Sans-serif ONLY (Gothic, Noto Sans, Helvetica Neue, Inter family). NO Serif or handwriting fonts.`
-      : `[Typography Rules]
+        : `[Typography Rules]
 - Do NOT add any arbitrary text on the background slide. All text zones must remain as clean empty whitespace.
 - If a decorative label is required, use Sans-serif fonts only.`;
 
@@ -1261,6 +1382,31 @@
       zoneSeparationEn = `[Text / Graphic Zone Separation]
 - Place chapter number and title text within the central 60% of the slide; treat remaining areas as graphic frame
 - Ensure sufficient contrast between text and background decorations to guarantee legibility`;
+    } else if (prefix === "Signboard") {
+      const arrow = state.directionArrow;
+      if (arrow === "left") {
+        zoneSeparationKo = `[텍스트/화살표 배치 구조]
+- 레이아웃 구성: 좌측 30% 영역에 대형 방향 화살표(←)를 배치하고, 우측 70% 영역에 행사 제목, 일정, 장소 정보를 우측 정렬 또는 좌측 정렬로 구조화하여 균형감 있게 배치할 것.`;
+        zoneSeparationEn = `[Layout & Arrow Structure]
+- Layout configuration: Place the large leftward arrow (←) in the left 30% area. Arrange the event title, schedule, and location details in the right 70% area with a balanced grid.`;
+      } else if (arrow === "right") {
+        zoneSeparationKo = `[텍스트/화살표 배치 구조]
+- 레이아웃 구성: 우측 30% 영역에 대형 방향 화살표(→)를 배치하고, 좌측 70% 영역에 행사 제목, 일정, 장소 정보를 배치할 것.`;
+        zoneSeparationEn = `[Layout & Arrow Structure]
+- Layout configuration: Place the large rightward arrow (→) in the right 30% area. Arrange the event title, schedule, and location details in the left 70% area with a balanced grid.`;
+      } else if (arrow === "up" || arrow === "down") {
+        const arrowSym = arrow === "up" ? "↑" : "↓";
+        const arrowPos = arrow === "up" ? "상단" : "하단";
+        zoneSeparationKo = `[텍스트/화살표 배치 구조]
+- 레이아웃 구성: 슬라이드 중앙의 ${arrowPos} 영역에 대형 화살표(${arrowSym})를 배치하고, 나머지 수직 축에 행사 제목, 일정, 장소 정보를 균형 잡힌 중앙 정렬 레이아웃으로 조화롭게 배치할 것.`;
+        zoneSeparationEn = `[Layout & Arrow Structure]
+- Layout configuration: Place the large arrow (${arrowSym}) in the center ${arrow === "up" ? "top" : "bottom"} area, and align the event title, schedule, and location vertically along the center axis.`;
+      } else {
+        zoneSeparationKo = `[레이아웃 배치 구조]
+- 슬라이드 중앙 정렬 혹은 비대칭 정렬을 선택하여, 전체 행사 정보(제목, 일정, 장소)가 한눈에 판독되도록 최상의 시인성을 제공하는 균형 잡힌 구조로 배치할 것.`;
+        zoneSeparationEn = `[Layout Structure]
+- Use a clean centered or asymmetric layout designed for maximum glanceable readability of the event title, schedule, and venue details.`;
+      }
     }
 
     const docIntentKo = prefix === "Cover"
@@ -1273,10 +1419,15 @@
 - 간지는 다음 섹션이 시작됨을 분명히 알리는 전환 슬라이드입니다. 장 번호 또는 섹션 제목을 시각적 앵커로 삼아 즉시 인식되게 하십시오.
 - 본문 슬라이드보다 정보 밀도를 낮추고, 표지보다 절제된 리듬으로 구역 전환감과 정돈감을 만드십시오.
 - 장식 요소는 번호·타이틀·구분선의 방향성을 강화해야 하며, 임의의 포스터형 배경으로 흐르지 않게 하십시오.`
-        : `[문서 배경 품질 강화 지시]
+        : prefix === "Background"
+          ? `[문서 배경 품질 강화 지시]
 - 배경은 이후 텍스트, 표, 차트, 아이콘이 올라갈 작업용 템플릿입니다. 중앙 콘텐츠 안전 영역의 가독성을 최우선으로 보장하십시오.
 - 장식 밀도는 가장자리, 프레임, 코너, 헤더/푸터 주변에 집중하고 중앙 본문 영역에는 저대비 패턴·복잡한 질감·강한 광원을 넣지 마십시오.
-- 완성 이미지는 단독 포스터가 아니라 반복 사용 가능한 본문 슬라이드 배경이어야 하며, 후속 편집 요소가 올라와도 시각적으로 깨끗해야 합니다.`;
+- 완성 이미지는 단독 포스터가 아니라 반복 사용 가능한 본문 슬라이드 배경이어야 하며, 후속 편집 요소가 올라와도 시각적으로 깨끗해야 합니다.`
+          : `[행사 안내판 품질 강화 지시]
+- 안내판은 멀리서도 정보가 즉시 판독되어야 하는 시인성 최우선 디자인입니다. 행사 제목, 일정, 장소, 화살표 등 텍스트와 위치 정보의 선명한 전달에 집중하십시오.
+- 배경은 저채도로 절제하고, 텍스트와 화살표(있을 경우)는 주조색 및 강조색을 조화롭게 적용하여 고대비 시각적 앵커로 만드십시오.
+- 시각 장식이 정보를 가리지 않도록 디자인 밀도와 여백 비율을 신중히 안배하십시오.`;
 
     const docIntentEn = prefix === "Cover"
       ? `[Document Cover Quality Reinforcement]
@@ -1288,10 +1439,15 @@
 - The divider must clearly signal the beginning of the next section. Use the chapter number or section title as the visual anchor for immediate recognition.
 - Keep information density lower than body slides and use a more restrained rhythm than the cover to create a polished transition.
 - Decorative elements must reinforce the direction of the number, title, and divider line, not drift into a generic poster background.`
-        : `[Document Background Quality Reinforcement]
+        : prefix === "Background"
+          ? `[Document Background Quality Reinforcement]
 - The background is a reusable working template for later text, tables, charts, and icons. Prioritize readability in the central content-safe area.
 - Concentrate decorative density around edges, frames, corners, headers, and footers; avoid low-contrast patterns, complex textures, or strong light sources in the central body area.
-- The result must be a reusable body-slide background rather than a standalone poster, and it must stay visually clean after later editing elements are placed on top.`;
+- The result must be a reusable body-slide background rather than a standalone poster, and it must stay visually clean after later editing elements are placed on top.`
+          : `[Information Signboard Quality Reinforcement]
+- The signboard is a visibility-first design where information must be readable instantly from a distance. Focus on crystal-clear delivery of the event title, schedule, location, and directional arrow.
+- Keep the background low-saturation and understated. Treat the text and arrow as high-contrast visual anchors using primary and accent colors.
+- Wisely distribute the visual elements and whitespace so that decorative details never obscure the core information.`;
 
     // Logo & QR prompt blocks
     const logoPositionMapKo = { top_left: "좌측 상단", top_right: "우측 상단", bottom_left: "좌측 하단", bottom_right: "우측 하단", top_center: "상단 중앙" };
@@ -1433,7 +1589,7 @@ ${logoBlockEn}${qrBlockEn}
     state.visualStrategyCustom = "";
     state.layerComplexity = "composite";
     state.layerComplexityCustom = "";
-    state.brandTone = prefix === "Cover" ? "미래지향적이며 정교하고 신뢰감 있는 분위기" : prefix === "Divider" ? "절제되고 심플하며 고대비적인 정돈감" : "가독성이 최우선이며 미래 지향적인 분위기";
+    state.brandTone = prefix === "Cover" ? "미래지향적이며 정교하고 신뢰감 있는 분위기" : prefix === "Divider" ? "절제되고 심플하며 고대비적인 정돈감" : prefix === "Background" ? "가독성이 최우선이며 미래 지향적인 분위기" : "시인성이 뛰어나며 정돈되고 깔끔한 분위기";
     state.artStyle = "abstract_glass";
     state.artStyleCustom = "";
     state.bgBrightness = "light";
@@ -1475,6 +1631,15 @@ ${logoBlockEn}${qrBlockEn}
       state.borderStyleCustom = "";
       state.marginArea = "center_80";
       state.marginAreaCustom = "";
+    } else if (prefix === "Signboard") {
+      state.headline = "2026 차세대 AI 반도체 산업 전략 발표회";
+      state.schedule = "2026. 06. 17 (수) 14:00 ~ 17:00";
+      state.contactInfo = "산업통상자원부 반도체정책과 (02-123-4567)";
+      state.includeContact = true;
+      state.directionArrow = "right";
+      state.locationText = "3층 대회의실";
+      state.layoutMetaphor = "geometric";
+      state.layoutMetaphorCustom = "";
     } else { // Background
       state.layoutMetaphor = "geometric";
       state.layoutMetaphorCustom = "";
@@ -1494,11 +1659,12 @@ ${logoBlockEn}${qrBlockEn}
     state.backgroundColor = preset.bg;
     state.accentColor = preset.accent;
 
-    setupColorPresets(`${prefix === "Cover" ? "slideCoverColorPresetGrid" : prefix === "Divider" ? "slideDividerColorPresetGrid" : "slideBackgroundColorPresetGrid"}`, prefix.toLowerCase());
+    const gridKey = prefix === "Cover" ? "slideCoverColorPresetGrid" : prefix === "Divider" ? "slideDividerColorPresetGrid" : prefix === "Background" ? "slideBackgroundColorPresetGrid" : "slideSignboardColorPresetGrid";
+    setupColorPresets(gridKey, prefix.toLowerCase());
 
     syncUIFromState(prefix, state);
     updatePromptPreview(prefix, state);
-    showToast(`[${prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : "배경"}] 샘플 데이터를 채웠습니다.`);
+    showToast(`[${prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : prefix === "Background" ? "배경" : "안내판"}] 샘플 데이터를 채웠습니다.`);
   }
 
   function resetData(prefix, state) {
@@ -1549,6 +1715,15 @@ ${logoBlockEn}${qrBlockEn}
       state.borderStyleCustom = "";
       state.marginArea = "";
       state.marginAreaCustom = "";
+    } else if (prefix === "Signboard") {
+      state.headline = "";
+      state.schedule = "";
+      state.contactInfo = "";
+      state.includeContact = true;
+      state.directionArrow = "right";
+      state.locationText = "";
+      state.layoutMetaphor = "geometric";
+      state.layoutMetaphorCustom = "";
     } else { // Background
       state.layoutMetaphor = "";
       state.layoutMetaphorCustom = "";
@@ -1570,7 +1745,7 @@ ${logoBlockEn}${qrBlockEn}
 
     syncUIFromState(prefix, state);
     updatePromptPreview(prefix, state);
-    showToast(`[${prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : "배경"}] 설정을 초기화했습니다.`);
+    showToast(`[${prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : prefix === "Background" ? "배경" : "안내판"}] 설정을 초기화했습니다.`);
   }
 
   function copyPrompt(prefix, state) {
@@ -1581,7 +1756,7 @@ ${logoBlockEn}${qrBlockEn}
   }
 
   function triggerActiveAction(actionType) {
-    const prefix = activeSubTab === "cover" ? "Cover" : activeSubTab === "divider" ? "Divider" : "Background";
+    const prefix = activeSubTab === "cover" ? "Cover" : activeSubTab === "divider" ? "Divider" : activeSubTab === "background" ? "Background" : "Signboard";
     const state = getActiveState();
     if (actionType === "sample") fillSampleData(prefix, state);
     else if (actionType === "reset") resetData(prefix, state);

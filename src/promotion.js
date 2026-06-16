@@ -373,6 +373,17 @@
     });
   }
 
+  function normalizeTargetEngine(value) {
+    const engine = String(value || "").trim().toLowerCase();
+    if (engine === "imagen" || engine === "google" || engine === "gemini") return "imagen";
+    if (/^(dalle|dall-e|dall-e-3|openai|gpt-image|gpt-image-1|gpt-image-2|openai-gpt-image)$/.test(engine)) return "dalle";
+    return DEFAULT_STATE.targetEngine;
+  }
+
+  function isOpenAITargetEngine(value) {
+    return normalizeTargetEngine(value) === "dalle";
+  }
+
   function normalizePromotionState(rawState) {
     const next = deepClone(DEFAULT_STATE);
     const incoming = rawState && typeof rawState === "object" ? deepClone(rawState) : {};
@@ -411,6 +422,7 @@
     next.contentType = CONTENT_TYPE_VALUES.includes(next.contentType) ? next.contentType : DEFAULT_STATE.contentType;
     next.outputLanguage = normalizeOutputLanguage(incoming.outputLanguage || next.outputLanguage);
     next.promptMode = incoming.promptMode === "optimized" ? "optimized" : DEFAULT_STATE.promptMode;
+    next.targetEngine = normalizeTargetEngine(incoming.targetEngine || next.targetEngine);
     next.visualPlanningMode = incoming.visualPlanningMode === "detail" ? "detail" : DEFAULT_STATE.visualPlanningMode;
     next.omitEmptyFields = normalizeBooleanSetting(incoming.omitEmptyFields, DEFAULT_STATE.omitEmptyFields);
     next.dedupePromptLines = normalizeBooleanSetting(incoming.dedupePromptLines, DEFAULT_STATE.dedupePromptLines);
@@ -2290,6 +2302,7 @@
   function updateStatsBar(text) {
     const sections = (text.match(/^#{1,3}\s/gm) || []).length;
     const lines = text.split("\n").filter((l) => l.trim()).length;
+    const chars = text.length;
     const ko = (text.match(/[가-힣ㄱ-ㅎㅏ-ㅣ]/g) || []).length;
     const digits = (text.match(/\d/g) || []).length;
     const other = text.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ\d\s]/g, "").length;
@@ -2299,30 +2312,67 @@
     const TOKEN_WARN = 1500;
     const TOKEN_OVER = 2500;
     const TOKEN_MAX = 3000;
-    const pct = Math.min((tokens / TOKEN_MAX) * 100, 100);
-    const isWarn = tokens >= TOKEN_WARN && tokens < TOKEN_OVER;
-    const isOver = tokens >= TOKEN_OVER;
+    const OPENAI_CHAR_WARN = 3200;
+    const OPENAI_CHAR_MAX = 3600;
+    const isOpenAIOptimized = isOpenAITargetEngine(state.targetEngine) && state.promptMode === "optimized";
+    const isWarn = isOpenAIOptimized
+      ? chars >= OPENAI_CHAR_WARN && chars <= OPENAI_CHAR_MAX
+      : tokens >= TOKEN_WARN && tokens < TOKEN_OVER;
+    const isOver = isOpenAIOptimized
+      ? chars > OPENAI_CHAR_MAX
+      : tokens >= TOKEN_OVER;
+    const pct = Math.min(((isOpenAIOptimized ? chars : tokens) / (isOpenAIOptimized ? OPENAI_CHAR_MAX : TOKEN_MAX)) * 100, 100);
 
     const s = $("promotionStatSections");
     const l = $("promotionStatLines");
+    const c = $("promotionStatChars");
     const t = $("promotionStatTokens");
+    const transfer = $("promotionStatTransfer");
     const gaugeFill = $("promotionTokenGaugeFill");
 
     if (s) s.textContent = `섹션 ${sections}`;
     if (l) l.textContent = `${lines} 줄`;
+    if (c) {
+      c.textContent = isOpenAIOptimized
+        ? `${chars.toLocaleString()} / ${OPENAI_CHAR_MAX.toLocaleString()}자`
+        : `${chars.toLocaleString()}자`;
+      c.classList.toggle("is-warn", isWarn);
+      c.classList.toggle("is-over", isOver);
+      c.title = isOpenAIOptimized
+        ? "OpenAI GPT Image 최적화 프롬프트 기준 글자 수"
+        : "현재 프롬프트 글자 수";
+    }
     if (t) {
       t.textContent = `≈ ${tokens.toLocaleString()} 토큰`;
       t.classList.toggle("is-warn", isWarn);
       t.classList.toggle("is-over", isOver);
     }
+    if (transfer) {
+      if (isOpenAIOptimized) {
+        transfer.textContent = "OpenAI 3,600 적용";
+        transfer.title = "현재 프롬프트가 OpenAI GPT Image 전송용으로 3,600자 이하 압축 기준을 적용받고 있습니다.";
+      } else if (state.promptMode === "optimized") {
+        transfer.textContent = "전체 프롬프트";
+        transfer.title = "현재 대상 생성 엔진이 OpenAI GPT Image가 아니어서 3,600자 압축 기준을 적용하지 않습니다.";
+      } else {
+        transfer.textContent = "검토용 전체";
+        transfer.title = "Review 모드는 검토용 상세 프롬프트 전체를 표시합니다.";
+      }
+      transfer.classList.toggle("is-ok", isOpenAIOptimized && !isOver);
+      transfer.classList.toggle("is-over", isOpenAIOptimized && isOver);
+    }
     if (gaugeFill) {
       gaugeFill.style.width = `${pct.toFixed(1)}%`;
+      gaugeFill.title = isOpenAIOptimized
+        ? `OpenAI GPT Image 기준 ${chars.toLocaleString()} / ${OPENAI_CHAR_MAX.toLocaleString()}자`
+        : `예상 토큰 ${tokens.toLocaleString()} / ${TOKEN_MAX.toLocaleString()}`;
       gaugeFill.classList.toggle("is-warn", isWarn);
       gaugeFill.classList.toggle("is-over", isOver);
     }
   }
 
   function buildPromptPreview(validation = latestValidation) {
+    state.targetEngine = normalizeTargetEngine(state.targetEngine);
     latestLint = detectPromptLint(validation, visibleTextEntries(), instructionEntries());
     const raw = state.promptMode === "optimized"
       ? renderOptimizedPrompt(validation, latestLint)
@@ -2427,8 +2477,8 @@
       }
     }
     if (targetEngineBadge) {
-      const isImagen = state.targetEngine === "imagen";
-      targetEngineBadge.textContent = isImagen ? "Google (Imagen 3) 최적화" : "ChatGPT (DALL-E 3) 최적화";
+      const isImagen = !isOpenAITargetEngine(state.targetEngine);
+      targetEngineBadge.textContent = isImagen ? "Google" : "OpenAI";
       targetEngineBadge.style.display = "";
       if (isImagen) {
         targetEngineBadge.style.backgroundColor = "#e8f0fe";
@@ -2459,6 +2509,9 @@
     }
 
     syncQuickButtonStates(root);
+
+    const shuffleBtn = $("promotionShuffleLayoutBtn");
+    if (shuffleBtn) shuffleBtn.style.display = promptDirty ? "none" : "";
 
     if (preview) {
       if (!promptDirty) {
@@ -2986,6 +3039,9 @@
 
   function getCurrentPromptText() {
     const preview = $("promotionPromptPreview");
+    if (!promptDirty && state.promptMode === "optimized" && isOpenAITargetEngine(state.targetEngine)) {
+      return buildPromptPreview(validateState());
+    }
     if (preview && typeof preview.value === "string") {
       return preview.value;
     }
@@ -3262,12 +3318,18 @@
   }
 
   function bindStep3IdeaPresets() {
+    const AI_MODE_KEYS = new Set(["tone", "bigIdea", "visualMetaphor", "visualStyle"]);
     root.querySelectorAll("[data-visual-idea-preset]").forEach((button) => {
       button.addEventListener("click", () => {
         const preset = STEP3_IDEA_PRESETS.find((item) => item.id === button.dataset.visualIdeaPreset);
         if (!preset) return;
         Object.entries(preset.fields).forEach(([key, value]) => {
           state[key] = value;
+          if (AI_MODE_KEYS.has(key)) state[`${key}Mode`] = "manual";
+        });
+        root.querySelectorAll("[data-visual-idea-preset]").forEach((b) => {
+          b.classList.toggle("is-active", b === button);
+          b.setAttribute("aria-pressed", b === button ? "true" : "false");
         });
         promptDirty = false;
         syncStaticFields();
@@ -3333,6 +3395,19 @@
     $("promotionPaletteDeleteBtn")?.addEventListener("click", deleteSelectedPalettePreset);
     $("promotionResetBtn")?.addEventListener("click", resetAll);
     $("promotionCopyPromptBtn")?.addEventListener("click", copyPrompt);
+    $("promotionShuffleLayoutBtn")?.addEventListener("click", () => {
+      const keys = Object.keys(LAYOUT_COMPOSITION_PROFILES);
+      const currentKey = state.layoutComposition || "centered";
+      const candidates = keys.filter((k) => k !== currentKey);
+      const newKey = candidates[Math.floor(Math.random() * candidates.length)];
+      state.layoutComposition = newKey;
+      state.layoutCompositionMode = "manual";
+      promptDirty = false;
+      syncToggleFieldUI("layoutComposition");
+      renderPreview();
+      const label = LAYOUT_COMPOSITION_PROFILES[newKey]?.labelKo || newKey;
+      status(`레이아웃이 재설정되었습니다: ${label}`, "success");
+    });
     $("promotionResetPromptBtn")?.addEventListener("click", () => {
       resetPromptDraft();
       setViewerMode(false);

@@ -1891,38 +1891,96 @@ function buildRoleStatement() {
   );
 }
 
+const _pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 function getRecommendedCompositionDirective() {
   const bodyCount = normalizeLines(_s.bodyCopy).length;
+
   if (_s.contentType === "survey-request") {
-    return _h.localizeSentence(
-      isEnabled(_s.qrEnabled)
-        ? "이번 입력의 추천 구도는 타이포그래피 중심 정보형이다. 큰 헤드라인과 짧은 참여 동기를 먼저 읽히게 하고, 기간·대상·소요시간·QR 참여는 작은 배지나 사이드 레일로 정리한다."
-        : "이번 입력의 추천 구도는 타이포그래피 중심 정보형이다. 큰 헤드라인과 짧은 참여 동기를 먼저 읽히게 하고, 기간·대상·소요시간·참여 방법은 작은 배지나 사이드 레일로 정리한다.",
-      isEnabled(_s.qrEnabled)
-        ? "For this input, use a typography-led information composition. Make the large headline and short participation motive read first, then organize period, audience, duration, and QR participation as small badges or a side rail."
-        : "For this input, use a typography-led information composition. Make the large headline and short participation motive read first, then organize period, audience, duration, and participation method as small badges or a side rail."
-    );
+    return _pick([
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 타이포그래피 중심 정보형이다. 큰 헤드라인과 짧은 참여 동기를 먼저 읽히게 하고, 기간·대상·소요시간 정보는 작은 배지나 사이드 레일로 정리한다.",
+        "Use a typography-led information composition. Make the large headline and short participation motive read first, then organize period, audience, and duration as small badges or a side rail."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 전면 타이포그래피 포스터형이다. 헤드라인 문구가 화면 대부분을 차지하게 두고, 참여 정보는 하단 좁은 밴드 안에 집약한다.",
+        "Use a full-bleed typography poster composition. Let the headline dominate most of the frame, and condense participation details into a narrow band at the bottom."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 카드 레이어형이다. 배경 비주얼 위에 반투명 카드를 띄워 참여 정보를 담고, 헤드라인은 카드 외부 상단에 크게 배치한다.",
+        "Use a card-overlay composition. Float a semi-transparent card on the background visual to contain participation details, with the headline displayed large above the card."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 좌우 여백 대비형이다. 한쪽에 넓은 여백을 두고 반대쪽에 헤드라인과 정보 블록을 수직 정렬해 시선을 집중시킨다.",
+        "Use an asymmetric whitespace composition. Reserve a wide empty margin on one side, and align the headline and information block vertically on the other to concentrate attention."
+      ),
+    ]);
   }
+
   if (_s.contentType === "event-info") {
-    return _h.localizeSentence(
-      isEnabled(_s.qrEnabled)
-        ? "이번 입력의 추천 구도는 분할 화면 정보형이다. 행사명·일시·장소를 가장 먼저 읽히게 하고, 신청/QR/부가 혜택은 보조 정보 레일로 분리한다."
-        : "이번 입력의 추천 구도는 분할 화면 정보형이다. 행사명·일시·장소를 가장 먼저 읽히게 하고, 신청 방법과 부가 혜택은 보조 정보 레일로 분리한다.",
-      isEnabled(_s.qrEnabled)
-        ? "For this input, use a split-screen information composition. Make event title, date, and venue read first, then separate application, QR, and supporting benefits into a secondary information rail."
-        : "For this input, use a split-screen information composition. Make event title, date, and venue read first, then separate application method and supporting benefits into a secondary information rail."
-    );
+    return _pick([
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 상하 분할형이다. 상단 2/3는 비주얼과 행사명 헤드라인, 하단 1/3은 일시·장소·신청 정보를 촘촘히 담은 정보 밴드로 구성한다.",
+        "Use a top-bottom split composition. Allocate the upper two-thirds to the visual and event headline, and the lower third to a tightly packed information band with date, venue, and registration."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 전면 임팩트 타이포형이다. 행사명을 화면 중앙에 초대형으로 배치하고, 일시·장소·신청 정보는 작은 배지 형태로 주변에 배치한다.",
+        "Use a full-impact typography composition. Place the event name in oversized type at the center, and arrange date, venue, and registration info as compact badge elements around it."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 분할 화면 정보형이다. 행사명·일시·장소를 가장 먼저 읽히게 하고, 신청 방법과 부가 혜택은 보조 정보 레일로 분리한다.",
+        "Use a split-screen information composition. Make event title, date, and venue read first, then separate application method and supporting benefits into a secondary information rail."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 사선 공간 분할형이다. 사선 경계선으로 비주얼 영역과 정보 텍스트 영역을 나누고, 대비되는 배경색으로 각 영역을 강조한다.",
+        "Use a diagonal space-split composition. Divide the visual zone and text zone with a diagonal boundary, and use contrasting background tones to emphasize each area."
+      ),
+    ]);
   }
+
   if (bodyCount >= 4) {
-    return _h.localizeSentence(
-      "이번 입력의 추천 구도는 헤드라인 분리형 사이드 정보 레일이다. 본문 정보가 많으므로 세부 항목은 한쪽 레일에 촘촘히 묶고, 헤드라인과 메인 비주얼 영역은 크게 분리한다.",
-      "For this input, use a headline-separated side information rail. Because there are many body details, group details densely in one side rail while reserving a large separate headline and main-visual zone."
-    );
+    return _pick([
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 카드 그리드형이다. 본문 항목을 카드 3-4개로 나눠 균등 배치하고, 상단에 헤드라인을 독립된 영역으로 강조한다.",
+        "Use a card grid composition. Distribute body items into 3–4 equal cards, with the headline occupying a distinct emphasized zone above."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 헤드라인 분리형 사이드 정보 레일이다. 본문 정보가 많으므로 세부 항목은 한쪽 레일에 촘촘히 묶고, 헤드라인과 메인 비주얼 영역은 크게 분리한다.",
+        "Use a headline-separated side information rail. Because there are many body details, group details densely in one side rail while reserving a large separate headline and main-visual zone."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 상하 밴드 분리형이다. 상단에 헤드라인과 키비주얼을 배치하고, 하단에 정보 항목들을 수평으로 배열된 밴드 안에 집약한다.",
+        "Use a top-bottom band split composition. Place the headline and key visual in the upper zone, and pack body items horizontally into an information band at the bottom."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 세로 흐름형이다. 정보 항목들을 위에서 아래로 흐르는 세로 축에 배치하고, 항목 사이 구분선이나 아이콘으로 시선 흐름을 안내한다.",
+        "Use a vertical flow composition. Arrange body items along a top-to-bottom axis, using divider lines or icons between items to guide the eye through the content."
+      ),
+      _h.localizeSentence(
+        "이번 입력의 추천 구도는 비주얼 배경 오버레이형이다. 배경 전면을 비주얼로 채우고, 그 위에 반투명 패널이나 색상 블록을 올려 텍스트 정보를 레이어드한다.",
+        "Use a full-background visual overlay composition. Fill the frame with the visual, then layer translucent panels or colored blocks on top to display the text information."
+      ),
+    ]);
   }
-  return _h.localizeSentence(
-    "이번 입력의 추천 구도는 타이포그래피 중심 키비주얼이다. 헤드라인과 행동 유도 요소를 가장 큰 시선축으로 두고, 컨셉 오브젝트는 메시지를 보조하는 한 개의 상징으로 제한한다.",
-    "For this input, use a typography-led key visual. Treat the headline and action prompt as the largest eye-flow axis, and limit concept objects to one symbol that supports the message."
-  );
+
+  return _pick([
+    _h.localizeSentence(
+      "이번 입력의 추천 구도는 타이포그래피 중심 키비주얼이다. 헤드라인과 행동 유도 요소를 가장 큰 시선축으로 두고, 컨셉 오브젝트는 메시지를 보조하는 한 개의 상징으로 제한한다.",
+      "Use a typography-led key visual. Treat the headline and action prompt as the largest eye-flow axis, and limit concept objects to one symbol that supports the message."
+    ),
+    _h.localizeSentence(
+      "이번 입력의 추천 구도는 오브젝트 중심형이다. 상징 오브젝트를 화면 중앙에 크게 배치하고, 헤드라인과 부가 정보는 오브젝트 주변 여백 안에서 읽히게 한다.",
+      "Use an object-led composition. Place the symbolic object large at the center, and let the headline and supporting information read within the surrounding negative space."
+    ),
+    _h.localizeSentence(
+      "이번 입력의 추천 구도는 사선 대비 분할형이다. 화면을 사선으로 나눠 한쪽은 컨셉 비주얼, 반대쪽은 텍스트 중심 레이아웃으로 두드러지게 대비한다.",
+      "Use a diagonal-contrast split composition. Divide the frame diagonally: one side leads with the concept visual, the other with a text-forward layout for a bold contrast."
+    ),
+    _h.localizeSentence(
+      "이번 입력의 추천 구도는 공간 여백 강조형이다. 화면의 절반 이상을 의도적인 여백으로 두고, 헤드라인과 핵심 오브젝트만으로 강렬한 존재감을 만든다.",
+      "Use a generous negative-space composition. Reserve more than half the frame as deliberate whitespace, and let the headline and one key object create maximum visual impact through restraint."
+    ),
+  ]);
 }
 
 function shouldSkipOptimizedLine(line) {
@@ -1977,7 +2035,160 @@ function renderReviewPrompt(validation, lint) {
   return _s.targetEngine === "imagen" ? sanitizePromptForImagen(rawPrompt) : rawPrompt;
 }
 
+const OPENAI_OPTIMIZED_PROMPT_CHAR_LIMIT = 3600;
+
+function isOpenAIImageEngine() {
+  const engine = String(_s.targetEngine || "").toLowerCase();
+  return /^(openai|dalle|dall-e|dall-e-3|gpt-image|gpt-image-1|gpt-image-2|openai-gpt-image)$/.test(engine);
+}
+
+function normalizeOpenAIPromptLine(line) {
+  return String(line || "")
+    .replace(/^#{1,6}\s*/, "")
+    .replace(/^[-•]\s*/, "")
+    .replace(/^\[(우선순위\s*\d+|Priority\s*\d+)[^\]]*\]\s*/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function collectOpenAISectionLines(sections, patterns, limit = 6) {
+  const matched = sections
+    .filter((section) => patterns.some((pattern) => pattern.test(section.title)))
+    .flatMap((section) => finalizePromptLines(section.lines))
+    .flatMap((line) => String(line || "").split(/\r?\n/))
+    .map(normalizeOpenAIPromptLine)
+    .filter(Boolean)
+    .filter((line) => !shouldSkipOptimizedLine(line));
+
+  const kept = [];
+  const seen = new Set();
+  for (const line of matched) {
+    const key = normalizeFinalPromptLine(line);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    kept.push(line);
+    if (kept.length >= limit) break;
+  }
+  return kept;
+}
+
+function compactOpenAIText(lines, maxChars) {
+  const joined = lines
+    .map(normalizeOpenAIPromptLine)
+    .filter(Boolean)
+    .join("; ");
+  if (joined.length <= maxChars) return joined;
+  return `${joined.slice(0, Math.max(0, maxChars - 1)).trim()}…`;
+}
+
+function trimOpenAIPromptToLimit(blocks) {
+  const required = blocks.filter((block) => block.required).map((block) => block.text);
+  const optional = blocks.filter((block) => !block.required).map((block) => block.text);
+  const result = [];
+  let length = 0;
+
+  [...required, ...optional].forEach((text) => {
+    const clean = String(text || "").trim();
+    if (!clean) return;
+    const extra = result.length ? 2 : 0;
+    if (length + extra + clean.length <= OPENAI_OPTIMIZED_PROMPT_CHAR_LIMIT) {
+      result.push(clean);
+      length += extra + clean.length;
+    }
+  });
+
+  return result.join("\n\n");
+}
+
+function enforceOpenAICharLimit(promptText) {
+  const text = String(promptText || "").trim();
+  if (text.length <= OPENAI_OPTIMIZED_PROMPT_CHAR_LIMIT) return text;
+
+  const paragraphs = text.split(/\n{2,}/);
+  const kept = [];
+  let length = 0;
+  paragraphs.forEach((paragraph) => {
+    const clean = paragraph.trim();
+    if (!clean) return;
+    const extra = kept.length ? 2 : 0;
+    if (length + extra + clean.length <= OPENAI_OPTIMIZED_PROMPT_CHAR_LIMIT) {
+      kept.push(clean);
+      length += extra + clean.length;
+    }
+  });
+  return kept.join("\n\n");
+}
+
+function renderOpenAIOptimizedPrompt(validation, lint) {
+  const sections = createPromptSections(validation, lint);
+  const assetLabel = _h.localizeValue(ASSET_LABELS[_s.assetType] || "홍보 이미지");
+  const outputTarget = collectOpenAISectionLines(sections, [/출력 대상|Output target/i], 5);
+  const strategy = collectOpenAISectionLines(sections, [/광고 전략|Promotion strategy/i], 5);
+  const concept = collectOpenAISectionLines(sections, [/비주얼 컨셉|Visual concept|캠페인 적응|Campaign adaptation/i], 8);
+  const copy = collectOpenAISectionLines(sections, [/이미지 원문 텍스트|On-image copy|AI 생성 지시|AI generation tasks/i], 12);
+  const layout = collectOpenAISectionLines(sections, [/시선 흐름|Attention flow|레이아웃 구성|Layout|비주얼 구성 방향|Visual composition|키비주얼 배치|Key visual/i], 8);
+  const visualDirection = collectOpenAISectionLines(sections, [/비주얼 방향성|Visual direction/i], 6);
+  const color = collectOpenAISectionLines(sections, [/색상 시스템|Color system/i], 7);
+  const quality = collectOpenAISectionLines(sections, [/상업 품질 기준|Commercial baseline|이미지 품질 기준|Image quality/i], 6);
+  const constraints = collectOpenAISectionLines(sections, [/금지 조건|Prohibited elements|제외할 표현|Negative prompt/i], 5);
+
+  const textLanguageRule = _s.outputLanguage === "en"
+    ? "Use English for generated on-image copy unless the provided source copy uses another language; preserve any provided text verbatim."
+    : _s.outputLanguage === "bilingual"
+      ? "Keep bilingual copy only where the source fields explicitly provide it; do not invent extra translations."
+      : "Preserve the source language of each provided text field. Korean text stays Korean, English text stays English, and no arbitrary translation or language switching is allowed.";
+
+  const blocks = [
+    {
+      required: true,
+      text: `Create a polished ${assetLabel} as a production-ready campaign image with clear audience fit, strong visual hierarchy, readable typography, and a complete advertising layout.`,
+    },
+    {
+      required: true,
+      text: `Canvas and output: ${compactOpenAIText(outputTarget, 360)}. Match the requested aspect ratio in the composition, with safe margins for every edge and no cropped text.`,
+    },
+    {
+      required: true,
+      text: `On-image text rule: ${textLanguageRule} Render only the provided or explicitly AI-generated campaign copy, exactly once where applicable, with crisp lettering, strong contrast, and consistent spacing.`,
+    },
+    {
+      required: true,
+      text: `Copy to render and information hierarchy: ${compactOpenAIText(copy, 400)}`,
+    },
+    {
+      required: true,
+      text: `Audience, goal, and campaign intent: ${compactOpenAIText(strategy, 360)}`,
+    },
+    {
+      required: false,
+      text: `Visual concept and style direction: ${compactOpenAIText(concept, 560)}`,
+    },
+    {
+      required: true,
+      text: `Creative direction and campaign quality: ${compactOpenAIText([...visualDirection, ...quality], 480)}`,
+    },
+    {
+      required: false,
+      text: `Composition: ${compactOpenAIText(layout, 420)}`,
+    },
+    {
+      required: true,
+      text: `Color and background: ${compactOpenAIText(color, 360)}`,
+    },
+    {
+      required: true,
+      text: `Case-specific constraints: ${compactOpenAIText(constraints, 260)}`,
+    },
+  ];
+
+  return enforceOpenAICharLimit(sanitizePromptForUniversal(trimOpenAIPromptToLimit(blocks)));
+}
+
 function renderOptimizedPrompt(validation, lint) {
+  if (isOpenAIImageEngine()) {
+    return renderOpenAIOptimizedPrompt(validation, lint);
+  }
+
   const sections = createPromptSections(validation, lint);
   const assetLabelEn = ASSET_PROMPT_TARGET_EN[_s.assetType] || ASSET_LABELS[_s.assetType];
   const contentNameEn = _s.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES_EN[_s.contentType]?.name || "") : "";
@@ -2038,14 +2249,14 @@ function renderOptimizedPrompt(validation, lint) {
 
 function sanitizePromptForAI(text, targetEngine = "") {
   if (!text) return "";
-  
-  // 1. CTA 단어 치환
-  let processed = text.replace(/\bCTA\b/g, "action button");
-  
-  // 2. targetEngine이 'imagen'이거나 혹은 텍스트 내에 이미지에 그려지면 안 되는 한글 찌꺼기가 남아있는 경우 정밀 필터링 적용
+
+  // targetEngine이 'imagen'이거나 혹은 텍스트 내에 이미지에 그려지면 안 되는 한글 찌꺼기가 남아있는 경우 정밀 필터링 적용
   const isImagen = targetEngine === "imagen" || (typeof _s !== "undefined" && _s.targetEngine === "imagen");
   const isEnglishOnly = (typeof _s !== "undefined" && _s.outputLanguage === "en") || targetEngine === "en";
-  
+
+  // Imagen은 약어를 잘 처리하지 못하므로 CTA를 풀어씀. OpenAI/DALL-E는 한국어 CTA 그대로 유지.
+  let processed = isImagen ? text.replace(/\bCTA\b/g, "action button") : text;
+
   if (isImagen) {
     // 따옴표 내의 한글 텍스트(사용자가 실제 렌더링하고 싶어하는 한글 정보)를 임시 플레이스홀더로 보호
     const quotes = [];
@@ -2095,22 +2306,29 @@ function sanitizePromptForAI(text, targetEngine = "") {
     // 3. 한글 렌더링 및 가독성 최적화를 위한 마지막 연출 가이드 강제 조항 이식
     const fontDirective = [
       "",
-      "## [Required] On-Image Text Quality & Layout Decoupling rules:",
-      "- Render all on-image Korean text in a bold, clean, modern Sans-serif font with a high-contrast thick outline border.",
-      "- Strictly avoid thin script, decorative fantasy handwriting, or calligraphy fonts that cause spelling distortion.",
-      "- The backdrop immediately behind the overlay text must be rendering-flat, with zero volumetric fog, zero heavy texture, and zero glowing light overlays to ensure maximum legibility.",
-      "- Consolidate all text lines into a single, structured layout block inside the designated banner zone. Do not scatter or paint text fragments onto background objects."
+      "On-image text must use bold, clean, modern sans-serif typography with strong color contrast against the background — never decorative scripts, calligraphy, or thin fantasy fonts that cause spelling distortion.",
+      "The backdrop immediately behind any text block must be visually flat and uncluttered: zero volumetric fog, zero heavy texture, zero glowing light overlays to ensure maximum legibility.",
+      "Maintain clear typographic hierarchy: headline text at large scale, subheadline at medium scale, and supporting copy or CTA at body size — each occupying its own clearly defined zone. Do not scatter or paint text fragments onto background objects.",
     ].join("\n");
+
+    const isNonPhotoStyle = (
+      /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art|vector|minimal/i.test(_s.appliedConceptCategory || "") ||
+      /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art|vector|minimal/i.test(_s.appliedConceptStyle || "") ||
+      /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art|vector|minimal/i.test(_s.visualStyle || "")
+    );
+
+    const depthAndLightLine = isNonPhotoStyle
+      ? "- Achieve clean stylized depth through layered graphic planes (foreground, midground, background) without relying on photographic lens effects. Use ambient occlusion and stylized shading to define form."
+      : "- Establish high visual depth with sharp focus, 85mm portrait lens rendering, and a controlled shallow depth of field. Apply professional studio lighting with soft directional key lights and ambient occlusion to accentuate shapes and curves.";
 
     const qualityDirective = [
       "",
-      "## [Required] Visual Fidelity & Commercial Advertisement Design rules for Gemini (Imagen 3):",
-      "- Structure the entire composition as a premium commercial print advertisement poster with distinct visual layers (foreground, midground, background).",
-      "- Establish high visual depth with sharp focus, 85mm lens rendering, and shallow depth of field.",
-      "- Implement professional studio lighting with soft directional key lights and ambient occlusion to accentuate 3D shapes and curves.",
-      "- Ensure concrete surface textures (e.g., matte clay, fine-grained photography film, organic paper textures) are vividly defined without flat vector-like oversimplification.",
-      "- Integrate a soft lighting gradient transition between the detailed graphic foreground and the empty text-overlay zones to ensure both high artistic quality and text legibility.",
-      "- Strongly anchor the composition around the primary promotional campaign object (e.g., reusable cup, tumbler, bottle, or campaign package) in a realistic scale, avoiding abstract fantasy or sports metaphors that divert from the marketing goal."
+      "Visual fidelity and commercial design requirements:",
+      "- Generate at 2K quality. Structure the entire composition as a premium commercial print advertisement poster with distinct visual layers (foreground, midground, background).",
+      depthAndLightLine,
+      "- Ensure surface textures are vividly defined and material-specific — avoid flat vector-like oversimplification unless a graphic design style is explicitly requested.",
+      "- Integrate a soft lighting gradient between the detailed graphic foreground and the empty text-overlay zones to ensure both artistic quality and text legibility.",
+      "- Anchor the composition clearly around the primary promotional subject at a realistic scale. Avoid unrelated abstract imagery or sports metaphors that divert from the marketing message.",
     ].join("\n");
 
     const category = typeof _s !== "undefined" ? (_s.category || "") : "";
@@ -2118,16 +2336,12 @@ function sanitizePromptForAI(text, targetEngine = "") {
     if (category === "game" || category === "fantasy") {
       categoryDirective = [
         "",
-        "## [Category Spec] Game & Fantasy Illustration Detail rules:",
-        "- Render with intricate cel-shading details and glowing edge highlights.",
-        "- Avoid childlike or cartoonish oversimplification; maintain a rich, cinematic scale and depth of field."
+        "For this game or fantasy illustration: apply intricate cel-shading with glowing edge highlights and rich cinematic depth. Avoid childlike or cartoonish oversimplification.",
       ].join("\n");
     } else if (category === "3d" || category === "industry") {
       categoryDirective = [
         "",
-        "## [Category Spec] 3D & Technical Rendering Detail rules:",
-        "- Render with subtle subsurface scattering, realistic matte or metallic textures, and soft ray-traced shadows.",
-        "- Ensure all geometric surfaces have ambient occlusion shadows at crevices to achieve maximum tangible depth."
+        "For this 3D or industrial visualization: apply subtle subsurface scattering, realistic matte or metallic textures, and soft ray-traced shadows with ambient occlusion at surface crevices.",
       ].join("\n");
     }
 

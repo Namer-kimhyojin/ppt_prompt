@@ -88,7 +88,7 @@
               <label class="gen-config-label" for="promotionTargetEngine">대상 생성 엔진</label>
               <p class="gen-config-guide">최종 프롬프트를 전송할 이미지 생성 AI 엔진을 지정하면 최적화 형태로 프롬프트를 빌드합니다.</p>
               <select id="promotionTargetEngine" class="gen-select" data-promo-field="targetEngine">
-                <option value="dalle">DALL-E (OpenAI)</option>
+                <option value="dalle">OpenAI GPT Image</option>
                 <option value="imagen">Imagen (Google)</option>
               </select>
             </section>
@@ -875,7 +875,9 @@
           <div class="promo-stats-row">
             <span class="promo-stat-chip" id="promotionStatSections">섹션 –</span>
             <span class="promo-stat-chip" id="promotionStatLines">– 줄</span>
+            <span class="promo-stat-chip promo-stat-chars" id="promotionStatChars">– 자</span>
             <span class="promo-stat-chip promo-stat-tokens" id="promotionStatTokens">≈ – 토큰</span>
+            <span class="promo-stat-chip promo-stat-transfer" id="promotionStatTransfer">전송 기준 –</span>
             <button type="button" class="promo-viewer-edit-btn" id="promotionViewerToggleBtn" title="직접 편집 모드로 전환">✎ 편집</button>
           </div>
           <div class="promo-token-gauge" id="promotionTokenGauge">

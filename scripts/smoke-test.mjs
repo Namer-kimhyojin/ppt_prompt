@@ -414,12 +414,13 @@ async function runSmokeTest() {
     await page.locator("[data-promo-prompt-mode='optimized']").click();
     await page.waitForTimeout(200);
     const optimizedPreview = await page.locator("#promotionPromptPreview").inputValue();
-    record(optimizedPreview.includes("Generate a premium"), "Optimized English prompt did not render", failures);
-    record(optimizedPreview.includes("advertising-grade quality"), "Optimized English prompt did not include the default English quality tags", failures);
+    record(optimizedPreview.includes("Create a polished"), "Optimized English prompt did not render", failures);
+    record(optimizedPreview.length <= 3600, "Optimized English prompt exceeded the OpenAI compact prompt budget", failures);
+    record(optimizedPreview.includes("production-ready campaign image"), "Optimized English prompt did not include the OpenAI natural-language image brief", failures);
     record(optimizedPreview.includes("Asset type:"), "Optimized English prompt did not include the English asset-type label", failures);
     record(optimizedPreview.includes("Content template:"), "Optimized English prompt did not include the English content-template label", failures);
     record(optimizedPreview.includes("Sizing mode:"), "Optimized English prompt did not include the English sizing label", failures);
-    record(optimizedPreview.toLowerCase().includes("avoid:"), "Optimized English prompt did not include the English hard-constraint label", failures);
+    record(optimizedPreview.includes("Case-specific constraints:"), "Optimized English prompt did not include case-specific constraint guidance", failures);
     record(optimizedPreview.includes("promotion goal:"), "Optimized English prompt did not include the English promotion-goal label", failures);
     record(optimizedPreview.includes("target audience:"), "Optimized English prompt did not include the English target-audience label", failures);
     record(optimizedPreview.includes("Background treatment:"), "Optimized English prompt did not include the English background label", failures);
@@ -434,9 +435,8 @@ async function runSmokeTest() {
       "Optimized English prompt did not include the selected visual metaphor",
       failures
     );
-    record(optimizedPreview.includes("Priority 1: Critical"), "Optimized English prompt did not include Priority 1 tier", failures);
-    record(optimizedPreview.includes("Priority 2: High"), "Optimized English prompt did not include Priority 2 tier", failures);
-    record(optimizedPreview.includes("Priority 3: Medium"), "Optimized English prompt did not include Priority 3 tier", failures);
+    record(optimizedPreview.includes("On-image text rule:"), "Optimized English prompt did not include the OpenAI text rendering rule", failures);
+    record(optimizedPreview.includes("preserve any provided text verbatim"), "Optimized English prompt did not preserve source-language text behavior", failures);
     record(
       !/[\u3131-\u318E\uAC00-\uD7A3]/.test(optimizedPreview),
       "Optimized English prompt still included Korean text",

@@ -30,6 +30,8 @@ export const config = {
   googleProjectId: process.env.GOOGLE_PROJECT_ID || localConfig.googleProjectId || "",
   googleLocation: process.env.GOOGLE_LOCATION || localConfig.googleLocation || "us-central1",
   imageModel: process.env.GEMINI_IMAGE_MODEL || localConfig.imageModel || "gemini-2.0-flash-preview-image-generation",
+  openaiImageModel: process.env.OPENAI_IMAGE_MODEL || localConfig.openaiImageModel || "gpt-image-2",
+  openaiImageQuality: process.env.OPENAI_IMAGE_QUALITY || localConfig.openaiImageQuality || "medium",
 };
 
 config.useMockImageGeneration = config.imageProvider === "mock";
