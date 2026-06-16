@@ -234,6 +234,32 @@ window.PROMO_PROMPT = (function () {
       let trimmed = line.trim();
       if (!trimmed) continue;
       
+      // Sizing mode, Exact size, Aspect ratio 등 구체적인 수치 해상도 필터링 및 방향 단어 치환
+      if (/Sizing mode|Exact size|Aspect ratio \/ orientation|직접 입력 크기|비율\/방향/i.test(trimmed)) {
+        const lower = trimmed.toLowerCase();
+        const matchDirect = lower.match(/(\d+)\s*x\s*(\d+)/);
+        if (matchDirect) {
+          const w = parseInt(matchDirect[1], 10);
+          const h = parseInt(matchDirect[2], 10);
+          if (w === h) {
+            keptLines.push("• Frame Layout: Square aspect ratio design canvas.");
+          } else if (w < h) {
+            keptLines.push("• Frame Layout: Portrait aspect ratio design canvas.");
+          } else {
+            keptLines.push("• Frame Layout: Landscape aspect ratio design canvas.");
+          }
+        } else if (lower.includes("vertical") || lower.includes("세로형") || lower.includes("4:5") || lower.includes("9:16")) {
+          keptLines.push("• Frame Layout: Portrait aspect ratio design canvas.");
+        } else if (lower.includes("horizontal") || lower.includes("가로형") || lower.includes("16:9")) {
+          keptLines.push("• Frame Layout: Landscape aspect ratio design canvas.");
+        } else if (lower.includes("1:1") || lower.includes("정방형") || lower.includes("square")) {
+          keptLines.push("• Frame Layout: Square aspect ratio design canvas.");
+        } else {
+          keptLines.push("• Frame Layout: Standard aspect ratio design canvas.");
+        }
+        continue;
+      }
+      
       // 대괄호 섹션 헤더 처리 (대괄호를 제거하거나 서술형 문장 성분으로 가공)
       if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
         const header = trimmed.slice(1, -1);
