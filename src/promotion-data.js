@@ -58,6 +58,7 @@ window.PROMO_DATA = (function () {
     antiAiStyle: "general",
     qualityNotes: "",
     colorStrategy: "ai",
+    colorMode: "light",
     primaryColor: "",
     secondaryColor: "",
     accentColor: "",

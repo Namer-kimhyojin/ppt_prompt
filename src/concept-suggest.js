@@ -86,6 +86,7 @@
 
   let activeCategory = 'all';
   let searchQuery = '';
+  let activeColorMode = 'light';
 
   // STYLES에 전역 순번 미리 부여
   STYLES.forEach((s, i) => { s._num = i + 1; });
@@ -120,6 +121,54 @@
   }
 
   function buildGradient(p) { return `linear-gradient(135deg, ${p[0]} 0%, ${p[1]} 100%)`; }
+
+  function normalizeHex(hex) {
+    const value = String(hex || '').trim();
+    return /^#[0-9a-fA-F]{6}$/.test(value) ? value.toLowerCase() : '';
+  }
+
+  function pickLightAccents(palette) {
+    return (palette || [])
+      .map(normalizeHex)
+      .filter(Boolean)
+      .filter(hex => getLuminance(hex) < 0.82)
+      .sort((a, b) => Math.abs(getLuminance(a) - 0.35) - Math.abs(getLuminance(b) - 0.35))
+      .slice(0, 3);
+  }
+
+  function getModePalette(style, mode) {
+    const source = Array.isArray(style.palette) ? style.palette : [];
+    if (mode !== 'light') return source;
+    const accents = pickLightAccents(source);
+    const fallbackAccents = ['#1f4f99', '#4f6f52', '#d87922'];
+    return ['#ffffff', '#f5f7fb', ...accents, ...fallbackAccents].slice(0, 5);
+  }
+
+  function getModePrompt(style, mode, palette) {
+    const prompt = String(style.prompt || '').trim();
+    if (mode !== 'light') return prompt;
+    const paletteText = palette.join(' ');
+    return [
+      prompt,
+      `Light background adaptation for public institution and official communication use: white or very-light neutral canvas background, clean administrative design tone, bright readable information area, restrained accent colors from palette ${paletteText}, generous whitespace, high text contrast, trustworthy civic visual mood, avoid black full-canvas background, avoid nightclub/neon darkness, avoid heavy gloomy shadows.`
+    ].filter(Boolean).join(', ');
+  }
+
+  function resolveStyleForMode(style, mode = activeColorMode) {
+    const palette = getModePalette(style, mode);
+    const prompt = getModePrompt(style, mode, palette);
+    const descSuffix = mode === 'light'
+      ? ' 라이트 모드는 공공기관 홍보물에 맞게 흰색 배경과 높은 가독성을 우선합니다.'
+      : '';
+    return Object.assign({}, style, {
+      palette,
+      prompt,
+      paletteMode: mode,
+      sourcePrompt: style.prompt,
+      sourcePalette: style.palette,
+      desc: `${style.desc || ''}${descSuffix}`,
+    });
+  }
 
   const PROMOTION_PROMPT_DEFAULTS = {
     game: {
@@ -379,7 +428,7 @@
     const descSummary = style.desc ? ` — ${style.desc}` : '';
     return {
       visualDNA: `${styleDNA}${descSummary}`,
-      paletteStrategy: `Use the selected concept palette as campaign color roles: ${paletteRoles.join(', ')}.`,
+      paletteStrategy: `Use the selected concept palette as campaign color roles: ${paletteRoles.join(', ')}.${style.paletteMode === 'light' ? ' Keep the canvas white or very light, suitable for public institution communication, with accents restrained to hierarchy and CTA use.' : ''}`,
       textureRendering: addSignals(defaults.textureRendering, signalGroups.textureRendering),
       lightingMood: addSignals(defaults.lightingMood, signalGroups.lightingMood),
       shapeLanguage: addSignals(defaults.shapeLanguage, signalGroups.shapeLanguage),
@@ -431,24 +480,27 @@
 
 
   function createCard(style) {
-    const promotionStyle = buildPromotionConceptStyle(style);
-    const displayPrompt = promotionStyle.promotionPrompt || style.prompt;
+    const modeStyle = resolveStyleForMode(style);
+    const promotionStyle = buildPromotionConceptStyle(modeStyle);
+    const displayPrompt = promotionStyle.promotionPrompt || modeStyle.prompt;
     const card = document.createElement('div');
-    card.className = 'concept-card';
+    card.className = `concept-card concept-card-${activeColorMode}`;
     card.dataset.category = style.category;
-    const theme = getHeaderTheme(style.palette);
+    const theme = getHeaderTheme(modeStyle.palette);
     const header = document.createElement('div');
     header.className = 'concept-card-header';
-    header.style.background = buildGradient(style.palette);
+    header.style.background = buildGradient(modeStyle.palette);
     header.innerHTML = `<div class="concept-card-emoji">${style.emoji}</div><div class="concept-card-name-en" style="color:${theme.primary}">${style.nameEn}</div><div class="concept-card-name-ko" style="color:${theme.secondary}">${style.nameKo}</div><span class="concept-card-cat-badge" style="background:${theme.badge};color:${theme.badgeText}">${CAT_KO[style.category] || ''}</span><span class="concept-card-num">#${style._num}</span>`;
     const body = document.createElement('div');
     body.className = 'concept-card-body';
     const desc = document.createElement('p');
     desc.className = 'concept-card-desc';
-    desc.textContent = style.desc;
+    desc.textContent = modeStyle.desc;
+    const paletteRow = document.createElement('div');
+    paletteRow.className = 'concept-palette-row';
     const palette = document.createElement('div');
     palette.className = 'concept-palette';
-    style.palette.forEach(hex => {
+    modeStyle.palette.forEach(hex => {
       const dot = document.createElement('div');
       dot.className = 'concept-palette-dot';
       dot.style.backgroundColor = hex;
@@ -456,6 +508,22 @@
       dot.innerHTML = `<span class="concept-palette-hex">${hex}</span>`;
       palette.appendChild(dot);
     });
+    const modeToggle = document.createElement('div');
+    modeToggle.className = 'concept-card-mode';
+    modeToggle.setAttribute('role', 'group');
+    modeToggle.setAttribute('aria-label', `${style.nameKo} 색상 모드`);
+    ['light', 'dark'].forEach(mode => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'concept-card-mode-btn' + (activeColorMode === mode ? ' active' : '');
+      btn.dataset.conceptColorMode = mode;
+      btn.setAttribute('aria-pressed', activeColorMode === mode ? 'true' : 'false');
+      btn.textContent = mode === 'light' ? '라이트' : '다크';
+      btn.addEventListener('click', () => setColorMode(mode));
+      modeToggle.appendChild(btn);
+    });
+    paletteRow.appendChild(palette);
+    paletteRow.appendChild(modeToggle);
     const tags = document.createElement('div');
     tags.className = 'concept-tags';
     style.tags.forEach(t => { const tag = document.createElement('span'); tag.className = 'concept-tag'; tag.textContent = `# ${t}`; tags.appendChild(tag); });
@@ -505,9 +573,24 @@
     copyRow.appendChild(applyBtn);
     copyRow.appendChild(feedback);
     promptArea.appendChild(promptText); promptArea.appendChild(copyRow);
-    body.appendChild(desc); body.appendChild(palette); body.appendChild(tags); body.appendChild(promptArea);
+    body.appendChild(desc); body.appendChild(paletteRow); body.appendChild(tags); body.appendChild(promptArea);
     card.appendChild(header); card.appendChild(body);
     return card;
+  }
+
+  function syncColorModeControls() {
+    document.querySelectorAll('[data-concept-color-mode]').forEach(btn => {
+      const isActive = btn.dataset.conceptColorMode === activeColorMode;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function setColorMode(mode) {
+    activeColorMode = mode === 'dark' ? 'dark' : 'light';
+    try { localStorage.setItem('promptdeck_concept_color_mode', activeColorMode); } catch (_) {}
+    syncColorModeControls();
+    renderCards();
   }
 
   function renderCards() {
@@ -568,6 +651,17 @@
     }
   }
 
-  function init() { buildFilterBar(); bindSearch(); renderCards(); }
+  function bindColorMode() {
+    try {
+      const saved = localStorage.getItem('promptdeck_concept_color_mode');
+      if (saved === 'dark' || saved === 'light') activeColorMode = saved;
+    } catch (_) {}
+    document.querySelectorAll('#conceptColorMode [data-concept-color-mode]').forEach(btn => {
+      btn.addEventListener('click', () => setColorMode(btn.dataset.conceptColorMode));
+    });
+    syncColorModeControls();
+  }
+
+  function init() { buildFilterBar(); bindSearch(); bindColorMode(); renderCards(); }
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();

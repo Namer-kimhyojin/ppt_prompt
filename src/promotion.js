@@ -78,6 +78,24 @@
 
   // ── 클로저 변수 (IIFE 내 공유 상태) ──────────────────────────
   const state = deepClone(DEFAULT_STATE);
+  const COLOR_MODE_PALETTES = {
+    light: {
+      primaryColor: "#1f4f99",
+      secondaryColor: "#e8eef7",
+      accentColor: "#d87922",
+      backgroundColor: "#ffffff",
+      backgroundMode: "solid",
+      backgroundDetails: "흰색 또는 아주 밝은 쿨 그레이 배경, 공공기관 홍보물에 어울리는 넓은 여백과 높은 텍스트 대비",
+    },
+    dark: {
+      primaryColor: "#102a56",
+      secondaryColor: "#1e293b",
+      accentColor: "#f59e0b",
+      backgroundColor: "#0f172a",
+      backgroundMode: "solid",
+      backgroundDetails: "딥 네이비 배경, 제한적인 포인트 조명, 핵심 정보와 CTA가 선명하게 보이는 고대비 구성",
+    },
+  };
   let visitedAssetTypes = new Set([DEFAULT_STATE.assetType]);
   let latestValidation = null; // validateState() 초기값 — init() 호출 시 갱신
   let latestLint = { conflicts: [], duplicates: [], notes: [], summary: [] };
@@ -406,6 +424,7 @@
     next.colorStrategy = COLOR_STRATEGY_VALUES.includes(incoming.colorStrategy)
       ? incoming.colorStrategy
       : DEFAULT_STATE.colorStrategy;
+    next.colorMode = incoming.colorMode === "dark" ? "dark" : DEFAULT_STATE.colorMode;
     next.variationMode = ["none", "typo", "visual", "color-graphic", "cinematic", "proof", "experimental", "content-focus"].includes(incoming.variationMode)
       ? incoming.variationMode
       : DEFAULT_STATE.variationMode;
@@ -679,6 +698,13 @@
       if (swatch) {
         swatch.style.background = normalizedHex || "";
       }
+    });
+
+    root.querySelectorAll("[data-promo-color-mode]").forEach((button) => {
+      const mode = button.dataset.promoColorMode === "dark" ? "dark" : "light";
+      const active = mode === state.colorMode;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
     });
   }
 
@@ -1535,6 +1561,23 @@
         syncColorFieldUI();
         renderPreview();
       });
+    });
+  }
+
+  function applyColorMode(mode) {
+    const normalizedMode = mode === "dark" ? "dark" : "light";
+    const palette = COLOR_MODE_PALETTES[normalizedMode];
+    state.colorMode = normalizedMode;
+    Object.assign(state, palette);
+    promptDirty = false;
+    syncStaticFields();
+    syncColorFieldUI();
+    renderPreview();
+  }
+
+  function bindColorModeControls() {
+    root.querySelectorAll("[data-promo-color-mode]").forEach((button) => {
+      button.addEventListener("click", () => applyColorMode(button.dataset.promoColorMode));
     });
   }
 
@@ -3195,6 +3238,7 @@
     bindStaticInputs();
     bindOptimizationControls();
     bindColorPickers();
+    bindColorModeControls();
     bindColorClearButtons();
     bindStep3IdeaPresets();
     bindLoadInput();
