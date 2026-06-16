@@ -627,6 +627,20 @@ function getContentConceptBridgeOverrides(parts) {
 function getAppliedConceptLines() {
   if (!_h.hasBasicConceptPromptInput()) return [];
 
+  const toneCoordinationLine = (() => {
+    if (!_s.appliedConceptStyle) return "";
+    const hasLuxury = _s.commercialBaseline === "luxury" || _s.commercialBaseline === "premium";
+    const isCasualConcept = /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|casual|art/i.test(_s.appliedConceptCategory || "") ||
+                           /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|casual|art/i.test(_s.appliedConceptStyle || "");
+    if (hasLuxury && isCasualConcept) {
+      return _h.localizeSentence(
+        "톤앤매너 완충 규칙: 상업 품질 기준의 명품 고급 지시어와 선택된 컨셉 스타일 자체의 고유 질감이 충돌할 경우, 컨셉 스타일 질감을 최우선 적용하고 상업 기준은 정갈하고 세련된 마감 완성도로만 해석하여 묘사한다.",
+        "Tone Coordination: The Luxury or Premium commercial baseline directives must not inject unfitting textures that clash with the selected visual concept. Instead, express high-end luxury as an extremely polished visual finish and pristine layout order within the selected style's native texture. If a clash occurs, prioritize the concept's texture."
+      );
+    }
+    return "";
+  })();
+
   const name = trimValue(_s.appliedConceptName);
   const influenceLabel = _s.conceptInfluenceMode === "style-only"
     ? _h.localizeSentence("스타일만 적용", "style-only")
@@ -659,6 +673,7 @@ function getAppliedConceptLines() {
   if (richPrompt) {
     return prunePromptLines([
       styleContractLine,
+      toneCoordinationLine,
       richPrompt,
     ]);
   }
@@ -679,6 +694,7 @@ function getAppliedConceptLines() {
   return prunePromptLines([
     label ? `${_h.localizeSentence("적용된 컨셉", "Applied concept")}: ${label}` : "",
     `${_h.localizeSentence("컨셉 적용 강도", "Concept influence")}: ${influenceLabel}`,
+    toneCoordinationLine,
     prompt ? `${_h.localizeSentence("소스 스타일 프롬프트", "Source style prompt")}: ${prompt}` : "",
     visualDNA ? `${_h.localizeSentence("컨셉 요약", "Concept summary")}: ${visualDNA}` : "",
     [textureRendering, lightingMood, shapeLanguage].filter(Boolean).length
@@ -877,14 +893,35 @@ function createPromptSections(validation, lint) {
     "creativityLevel",
   ]);
 
+  const isBgPlacement = _s.keyVisualPlacement === "background";
+  const bodyCount = normalizeLines(_s.bodyCopy).length;
+  const isAsymmetricLayout = 
+    (_s.layoutCompositionEnabled && _s.layoutCompositionMode === "manual" && _s.layoutComposition === "left-heavy") ||
+    (_s.attentionFlowEnabled && _s.attentionFlowMode === "manual" && _s.attentionFlow === "side-rail") ||
+    (_s.layoutCompositionMode === "ai" || _s.attentionFlowMode === "ai") ||
+    (bodyCount >= 4) ||
+    (_s.contentType === "event-info") ||
+    (_s.contentType === "survey-request");
+
+  const posterVisualKo = isBgPlacement 
+    ? "화면 중앙 또는 배경에 텍스트를 방해하지 않도록 차분하게 블렌딩된 저대비 배경 그래픽 비주얼"
+    : (isAsymmetricLayout
+        ? "레이아웃 구도에 맞춰 한쪽 측면 또는 비대칭 축에 조화롭게 정렬된 메인 비주얼"
+        : "화면 중앙에 선명하게 포커싱된 메인 비주얼");
+  const posterVisualEn = isBgPlacement
+    ? "a subtle, low-contrast background graphic visual blended softly behind the text areas"
+    : (isAsymmetricLayout
+        ? "a strong visual balanced harmoniously off-center or on one side according to the layout composition"
+        : "a strong center-focused key visual");
+
   const assetLayoutTemplates = {
     "card-news": _h.localizeSentence(
       "구도 프레임워크 (카드뉴스): SNS 카드뉴스 포스트에 최적화된 정돈된 사각형 레이아웃 구조. 정보 묶음을 감싸는 라운드 테두리 패널과 헤드라인용 단색 오버레이 배너 영역을 명확히 디자인하여 텍스트 배치가 쉬운 템플릿 캔버스를 만든다.",
       "Composition Framework (Card News): A structured square layout optimized for social media card news. Designed with clean background panels featuring rounded borders and a dedicated flat color zone, creating a perfect canvas ready for graphic and text overlays."
     ),
     "poster": _h.localizeSentence(
-      "구도 프레임워크 (포스터): 여백이 강조된 강렬한 세로형 포스터 레이아웃 구조. 화면 중앙에 선명하게 포커싱된 메인 비주얼, 테두리 사방에 보호 여백을 충분히 두고, 상단에는 큰 제목, 하단에는 날짜/장소/참여방법 정보가 오목조목 묶일 수 있는 별도 정보 프레임 밴드를 설계한다.",
-      "Composition Framework (Poster): A vertical graphic poster design. Features a clear visual hierarchy with a strong center-focused key visual, wide protective margins on all edges, and distinct empty header and footer bands designed to hold titles and event information without clutter."
+      `구도 프레임워크 (포스터): 여백이 강조된 강렬한 세로형 포스터 레이아웃 구조. ${posterVisualKo}, 테두리 사방에 보호 여백을 충분히 두고, 상단에는 큰 제목, 하단에는 날짜/장소/참여방법 정보가 오목조목 묶일 수 있는 별도 정보 프레임 밴드를 설계한다.`,
+      `Composition Framework (Poster): A vertical graphic poster design. Features a clear visual hierarchy with ${posterVisualEn}, wide protective margins on all edges, and distinct empty header and footer bands designed to hold titles and event information without clutter.`
     ),
     "notice": _h.localizeSentence(
       "구도 프레임워크 (안내문): 단정한 모던 안내판 및 공고문 보드 레이아웃 구조. 차분한 미니멀리즘 배경 위에 정보가 구조적으로 정렬되도록 격자형(그리드) 라인 디바이더와 모듈형 블록 카드들을 질서 정연하게 배치한다.",
@@ -1030,6 +1067,15 @@ function createPromptSections(validation, lint) {
       "flat isolated layout", "no depth",
     ];
 
+    const isNonPhoto = /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art/i.test(_s.appliedConceptCategory || "") ||
+                       /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art/i.test(_s.appliedConceptStyle || "") ||
+                       /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art/i.test(_s.visualStyle || "");
+
+    if (isNonPhoto && _s.targetEngine === "imagen") {
+      BASE_KO.push("실사 사진", "실제 카메라 촬영 느낌", "실사 인물 사진", "3D 렌더링 오버글로스");
+      BASE_EN.push("real photography", "realistic camera shot", "photorealistic human photo", "over-glossy 3D plastic render");
+    }
+
     const is3dActive = 
       /3d|game|isometric|입체|토이/i.test(_s.appliedConceptCategory || "") ||
       /3d|game|isometric|입체|토이/i.test(_s.appliedConceptStyle || "") ||
@@ -1092,6 +1138,14 @@ function createPromptSections(validation, lint) {
       : textEntries.map((entry) => `${_h.localizeValue(entry.label)}: ${_h.localizeValue(entry.value)}`)
   );
 
+  const infoGroupCount = bodyCount;
+  const infoQuantityDirectKo = infoGroupCount > 3
+    ? `제공된 ${infoGroupCount}개의 본문 정보 그룹을 누락 없이 조화롭고 깔끔하게 표현하되, 시각적 과밀을 방지하도록 단정하게 정렬하라.`
+    : "사용자가 입력한 문구, 날짜, 숫자는 원문 그대로 유지하되, 화면에는 2~3개 정보 묶음만 남긴다.";
+  const infoQuantityDirectEn = infoGroupCount > 3
+    ? `Express all the provided ${infoGroupCount} information groups clearly and without omission, organizing them neatly in clean blocks to prevent visual clutter.`
+    : "Keep user wording, dates, and numbers exact, but leave only 2 to 3 information groups on the image.";
+
   const informationItemLayoutLines = prunePromptLines(
     _h.shouldUseCompactPromptGuidance()
       ? [
@@ -1100,8 +1154,8 @@ function createPromptSections(validation, lint) {
             "Compress information items into one concept-native format such as badges, labels, a side rail, or embedded visual text instead of fixed cards."
           ),
           _h.localizeSentence(
-            "사용자가 입력한 문구, 날짜, 숫자는 원문 그대로 유지하되, 화면에는 2~3개 정보 묶음만 남긴다.",
-            "Keep user wording, dates, and numbers exact, but leave only 2 to 3 information groups on the image."
+            infoQuantityDirectKo,
+            infoQuantityDirectEn
           ),
         ]
       : [
@@ -1135,6 +1189,10 @@ function createPromptSections(validation, lint) {
           "Mandatory element placement: do not cluster required elements such as brand name, logo slot, organizer, required phrase, source, or application method into the same bottom box."
         ),
         _h.localizeSentence(
+          "푸터 밴드가 활용되는 세로형 포스터 구도인 경우, 일시/장소 등 상세 캠페인 정보는 하단 푸터 밴드 안에 오목조목 묶어 배치할 수 있지만, 주최기관 브랜드명이나 로고 자리는 푸터에 몰아넣지 말고 상단 헤더 라벨이나 코너 태그로 분산시켜야 여백과 위계가 유지된다.",
+          "If a footer band is used in a vertical poster layout, event details like date and venue can be structured within the footer, but the brand name or logo slot must not be clustered inside it. Place them separately as a header label or corner tag to maintain proper spacing."
+        ),
+        _h.localizeSentence(
           "각 요소는 시각 위계에 맞는 위치에 분산 배치한다. 코너 태그, 헤더 라벨, 사이드 레일, CTA 인접 배치, 통합 캡션 중 레이아웃 구도에 맞는 방식을 선택한다.",
           "Distribute each required element to the position matching its visual weight. Choose from corner tag, header micro-label, side rail, CTA-adjacent label, or integrated caption — whichever fits the chosen composition."
         ),
@@ -1144,6 +1202,42 @@ function createPromptSections(validation, lint) {
         ),
       ])
     : [];
+
+  const getContextualMetaphors = () => {
+    const conceptText = (
+      (_s.appliedConceptCategory || "") + " " +
+      (_s.appliedConceptStyle || "") + " " +
+      (_s.appliedConceptName || "") + " " +
+      (_s.visualStyle || "")
+    ).toLowerCase();
+
+    if (/airport|aviation|flight|plane|공항|항공|비행/i.test(conceptText)) {
+      return {
+        ko: ["활주로", "비행 경로", "유선형 날개", "터미널 아치", "지평선", "나침반 바늘"],
+        en: ["flight paths", "runways", "streamlined wings", "terminal arches", "horizon lines", "compass needles"]
+      };
+    }
+    if (/traditional|korean|oriental|동양|전통|한옥|붓/i.test(conceptText)) {
+      return {
+        ko: ["전통 기와 곡선", "묵직한 붓터치", "전통 병풍 격자", "은은한 한지 전등갓", "정적인 여백"],
+        en: ["traditional tile curves", "heavy brush strokes", "folding screen lattices", "soft paper lanterns", "static negative spaces"]
+      };
+    }
+    if (/network|node|technology|tech|digital|cyber|it|기술|네트워크|디지털/i.test(conceptText)) {
+      return {
+        ko: ["연결된 네트워크 노드", "발광하는 광섬유 경로", "홀로그램 게이트", "디지털 데이터 스트림"],
+        en: ["connected network nodes", "glowing pathway fibers", "holographic portals", "digital data streams"]
+      };
+    }
+    return {
+      ko: ["상승 그래프", "대각선 계단", "곧게 뻗은 경로", "열린 문", "연결 노드", "상승하는 로켓", "견고한 다리"],
+      en: ["rising graphs", "diagonal stairs", "straight paths", "open doors", "connected nodes", "rising rockets", "solid bridges"]
+    };
+  };
+
+  const contextMetaphors = getContextualMetaphors();
+  const metaphorKoStr = contextMetaphors.ko.join(", ");
+  const metaphorEnStr = contextMetaphors.en.join(", ");
 
   const AI_AUTO_FIELD_DEFS = [
     {
@@ -1192,8 +1286,8 @@ function createPromptSections(validation, lint) {
       field: "visualMetaphor",
       labelKo: "비주얼 은유",
       labelEn: "visual metaphor",
-      directiveKo: "핵심 개념을 암시하는 메타포를 고정형 카드/화살표로 수렴시키지 말고, 계단, 상승 그래프, 경로, 열린 문, 연결 노드, 로켓, 다리, 포털처럼 다양한 전문적 은유 중 하나로 생성하라",
-      directiveEn: "Generate one diverse professional metaphor for the core concept, such as stairs, rising graphs, paths, open doors, connected nodes, rockets, bridges, or portals; do not converge on generic cards or arrows"
+      directiveKo: `핵심 개념을 암시하는 메타포를 고정형 카드/화살표로 수렴시키지 말고, ${metaphorKoStr}처럼 컨셉에 어울리는 다양한 전문적 은유 중 하나로 생성하라`,
+      directiveEn: `Generate one diverse professional metaphor for the core concept suited to the concept style, such as ${metaphorEnStr}; do not converge on generic cards or arrows`
     },
     {
       field: "visualStyle",
@@ -1255,6 +1349,13 @@ function createPromptSections(validation, lint) {
     ),
   ]);
 
+  const textBlockLimitKo = infoGroupCount > 3
+    ? `제공된 ${infoGroupCount}개의 정보 블록을 정밀하게 배치하되, 하단 카드 배열이 콘텐츠에 맞으면 그대로 사용하고, 오버랩 단계·원형 노드·비주얼 내부 통합 텍스트 블록도 선택지로 고려한다.`
+    : "텍스트 블록은 가능하면 3개 이하로 묶되, 하단 카드 배열이 콘텐츠에 맞으면 그대로 사용하고, 오버랩 단계·원형 노드·비주얼 내부 통합 텍스트 블록도 선택지로 고려한다.";
+  const textBlockLimitEn = infoGroupCount > 3
+    ? `Neatly organize the ${infoGroupCount} text blocks; if bottom card rows suit the content use them, but also consider overlapping steps, circular nodes, or integrated text blocks inside the main visual.`
+    : "Keep text blocks to 3 or fewer when possible; if bottom card rows suit the content use them, but also consider overlapping steps, circular nodes, or integrated text blocks inside the main visual.";
+
   const attentionFlowLines = prunePromptLines(
     _h.shouldUseCompactPromptGuidance()
       ? [
@@ -1277,8 +1378,8 @@ function createPromptSections(validation, lint) {
             return `${_h.localizeSentence(variant.labelKo, variant.labelEn)} — ${lines.join(" → ")}`;
           }),
           _h.localizeSentence(
-            "텍스트 블록은 가능하면 3개 이하로 묶되, 하단 카드 배열이 콘텐츠에 맞으면 그대로 사용하고, 오버랩 단계·원형 노드·비주얼 내부 통합 텍스트 블록도 선택지로 고려한다.",
-            "Keep text blocks to 3 or fewer when possible; if bottom card rows suit the content use them, but also consider overlapping steps, circular nodes, or integrated text blocks inside the main visual."
+            textBlockLimitKo,
+            textBlockLimitEn
           ),
         ]
   );
@@ -1354,8 +1455,8 @@ function createPromptSections(validation, lint) {
 
     return [
       _h.localizeSentence(
-        `비주얼 은유: AI 위임 — 고정된 단일 은유를 반복하지 말고, ${AI_VISUAL_METAPHOR_EXAMPLES.join(", ")} 같은 긍정적이고 전문적인 메타포 중 하나를 슬라이드 메시지에 맞게 선택한다.`,
-        `Visual metaphor: AI-directed — do not repeat one fixed metaphor; choose a positive professional metaphor suited to the message, such as ${AI_VISUAL_METAPHOR_EXAMPLES.join(", ")}.`
+        `비주얼 은유: AI 위임 — 고정된 단일 은유를 반복하지 말고, ${metaphorKoStr} 같은 긍정적이고 전문적인 메타포 중 하나를 슬라이드 메시지에 맞게 선택한다.`,
+        `Visual metaphor: AI-directed — do not repeat one fixed metaphor; choose a positive professional metaphor suited to the message, such as ${metaphorEnStr}.`
       ),
       _h.localizeSentence(
         "선택한 은유의 형태가 실제 구도에 영향을 주게 한다. 예를 들어 계단은 대각선 진행형, 열린 문은 깊이감 있는 원근형, 네트워크 노드는 방사형/연결형, 상승 그래프는 축 기반 상승 구도를 유도한다.",
@@ -1510,13 +1611,34 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
     ),
   ];
 
+  const relaxQualityLinesForNonPhoto = (lines) => {
+    if (_s.targetEngine !== "imagen") return lines;
+    const isNonPhoto = /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art/i.test(_s.appliedConceptCategory || "") ||
+                       /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art/i.test(_s.appliedConceptStyle || "") ||
+                       /game|craft|illustration|pixel|doodle|comic|retro|clay|pop|flat|art/i.test(_s.visualStyle || "");
+    if (!isNonPhoto) return lines;
+    return lines.map((line) => {
+      let l = line;
+      l = l.replace(/\bphotorealistic\b/gi, "high-fidelity graphic");
+      l = l.replace(/\bphotograph(y)?\b/gi, "stylized graphic design");
+      l = l.replace(/\brealistic photo(s)?\b/gi, "stylized digital representation");
+      l = l.replace(/\brealistic depth\b/gi, "harmonious stylized depth");
+      l = l.replace(/\brealistic lighting\b/gi, "stylized lighting");
+      l = l.replace(/\bcamera lens(es)?\b/gi, "clean digital composition");
+      l = l.replace(/\bdslr\b/gi, "digital rendering tool");
+      l = l.replace(/\bsubsurface scattering\b/gi, "stylized material texture");
+      l = l.replace(/\brealistic material\b/gi, "concept-native texture");
+      return l;
+    });
+  };
+
   const qualityNoteLines = _h.getNonConceptPromptLines(_s.qualityNotes);
-  const qualityLines = prunePromptLines([
+  const qualityLines = relaxQualityLinesForNonPhoto(prunePromptLines([
     ..._h.getDefaultQualityTagLines(),
     ...compositeQualityLines,
     ...getConceptQualityLines(),
     ...splitQualityNoteLines(qualityNoteLines.join("\n")).map((item) => _h.localizeValue(item)),
-  ]);
+  ]));
 
   const variationLines = (() => {
     const seed = VARIATION_SEEDS.find((s) => s.id === _s.variationMode);

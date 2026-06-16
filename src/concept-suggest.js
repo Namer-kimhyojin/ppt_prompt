@@ -293,16 +293,13 @@
   function resolveStyleForMode(style, mode = activeColorMode) {
     const palette = getModePalette(style, mode);
     const prompt = getModePrompt(style, mode, palette);
-    const descSuffix = mode === 'light'
-      ? ' 라이트 모드는 공공기관 홍보물에 맞게 흰색 배경과 높은 가독성을 우선합니다.'
-      : '';
     return Object.assign({}, style, {
       palette,
       prompt,
       paletteMode: mode,
       sourcePrompt: style.prompt,
       sourcePalette: style.palette,
-      desc: `${style.desc || ''}${descSuffix}`,
+      desc: style.desc || '',
     });
   }
 
@@ -577,6 +574,22 @@
     };
   }
 
+  const IMAGEN_MEDIUM_PREFIXES = {
+    game: "A pixel-art style game illustration",
+    '3d': "A polished 3D CGI render",
+    craft: "A tactile handmade craft artwork",
+    illustration: "A clean digital vector illustration",
+    modern: "A sleek minimalist graphic design",
+    official: "A clean corporate campaign graphic design",
+    nature: "An organic stylized graphic illustration",
+    food: "A vibrant fresh advertising graphic",
+    culture: "A traditional graphic art illustration",
+    medical: "A clean high-fidelity technical illustration",
+    energy: "A dynamic tech graphic illustration",
+    it: "A modern digital UI web graphic design",
+    industry: "A robust technical industrial rendering"
+  };
+
   function buildPromotionConceptStyle(style) {
     const promptParts = buildPromotionPromptParts(style);
     const styleKeywords = (style.prompt || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 8).join(', ');
@@ -586,8 +599,9 @@
 
     if (targetEngine === 'imagen') {
       const positiveAvoid = convertAvoidToPositive(promptParts.avoid);
+      const prefix = IMAGEN_MEDIUM_PREFIXES[style.category] || "A premium promotional campaign graphic design";
       const fluidPrompt = [
-        `A promotional image in the style of ${style.nameEn} (${CAT_EN[style.category] || style.category}).`,
+        `${prefix} in the style of ${style.nameEn} (${CAT_EN[style.category] || style.category}).`,
         `The visual DNA is characterized by ${promptParts.visualDNA}.`,
         `The composition features a shape language of ${promptParts.shapeLanguage}, rendered with ${promptParts.textureRendering}, and illuminated by ${promptParts.lightingMood}.`,
         `The color palette system employs the following strategy: ${promptParts.paletteStrategy}. Reserve the strongest color contrast for key elements like the headline, action button, and essential campaign details.`,
@@ -675,7 +689,7 @@
       btn.dataset.conceptColorMode = mode;
       btn.setAttribute('aria-pressed', activeColorMode === mode ? 'true' : 'false');
       btn.textContent = mode === 'light' ? '라이트' : '다크';
-      btn.addEventListener('click', () => setColorMode(mode));
+      btn.addEventListener('click', () => setColorMode(mode, style._num));
       modeToggle.appendChild(btn);
     });
     paletteRow.appendChild(palette);
@@ -742,11 +756,51 @@
     });
   }
 
-  function setColorMode(mode) {
+  function setColorMode(mode, targetNum = null) {
     activeColorMode = mode === 'dark' ? 'dark' : 'light';
     try { localStorage.setItem('promptdeck_concept_color_mode', activeColorMode); } catch (_) {}
     syncColorModeControls();
+
+    let offsetTop = 0;
+    if (targetNum) {
+      const cardList = document.querySelectorAll('.concept-card');
+      for (const card of cardList) {
+        const numEl = card.querySelector('.concept-card-num');
+        if (numEl && numEl.textContent === `#${targetNum}`) {
+          offsetTop = card.getBoundingClientRect().top;
+          break;
+        }
+      }
+    }
+
+    const scrollPos = window.scrollY;
     renderCards();
+
+    if (targetNum) {
+      const cardList = document.querySelectorAll('.concept-card');
+      let targetCard = null;
+      for (const card of cardList) {
+        const numEl = card.querySelector('.concept-card-num');
+        if (numEl && numEl.textContent === `#${targetNum}`) {
+          targetCard = card;
+          break;
+        }
+      }
+      if (targetCard) {
+        const newTop = targetCard.getBoundingClientRect().top;
+        const diff = newTop - offsetTop;
+        window.scrollBy(0, diff);
+
+        const activeBtn = targetCard.querySelector(`.concept-card-mode-btn[data-concept-color-mode="${activeColorMode}"]`);
+        if (activeBtn) {
+          activeBtn.focus({ preventScroll: true });
+        }
+      } else {
+        window.scrollTo(0, scrollPos);
+      }
+    } else {
+      window.scrollTo(0, scrollPos);
+    }
   }
 
   function renderCards() {

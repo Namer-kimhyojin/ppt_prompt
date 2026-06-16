@@ -1827,7 +1827,7 @@ window.PROMO_DATA = (function () {
         promotionVisualStyle: ["하이엔드 제품광고형", "에디토리얼 광고형", "대담한 타이포그래피"],
         promotionQualityNotes: ["광고 이미지급 디테일", "텍스트와 배경 대비 선명", "타이포 가장자리 또렷하게"],
         promotionBackgroundDetails: ["딥 네이비 그라데이션 배경", "추상 광원 오버레이", "텍스트 영역만 어둡게 오버레이"],
-        promotionMandatoryElements: ["브랜드명", "CTA 버튼", "로고"],
+        promotionMandatoryElements: [],
         promotionForbiddenElements: ["이모지 사용 금지", "장문 문단", "저해상도 스톡 느낌"],
         promotionPosterKeyVisual: ["중앙 히어로 제품", "대형 헤드라인과 단일 오브젝트"],
         promotionPosterInfoLayout: ["상단 헤드라인 고정", "정보 카드 1개로 묶기"],
