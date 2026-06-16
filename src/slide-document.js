@@ -51,7 +51,7 @@
     subjectImageDesc: "",
     useColorSystem: true,
     // Logo & QR
-    logos: [],  // [{ name, mode, path, position }]
+    logos: [{ name: "그림1", mode: "placeholder", path: "", position: "top_left" }],  // [{ name, mode, path, position }]
     qrMode: "none",
     qrUrl: "",
     qrCaption: "",
@@ -100,7 +100,7 @@
     subjectImageDesc: "",
     useColorSystem: true,
     // Logo & QR
-    logos: [],  // [{ name, mode, path, position }]
+    logos: [{ name: "그림1", mode: "placeholder", path: "", position: "top_left" }],  // [{ name, mode, path, position }]
     qrMode: "none",
     qrUrl: "",
     qrCaption: "",
@@ -143,7 +143,7 @@
     subjectImageDesc: "",
     useColorSystem: true,
     // Logo & QR
-    logos: [],  // [{ name, mode, path, position }]
+    logos: [{ name: "그림1", mode: "placeholder", path: "", position: "top_left" }],  // [{ name, mode, path, position }]
     qrMode: "none",
     qrUrl: "",
     qrCaption: "",
@@ -462,6 +462,13 @@
     } else if (prefix === "Divider") {
       setVal("slideDividerStyle", state.dividerStyle);
       setVal("slideDividerStyleCustom", state.dividerStyleCustom);
+    } else if (prefix === "Signboard") {
+      setVal("slideSignboardContactInfo", state.contactInfo);
+      setVal("slideSignboardContactPhone", state.contactPhone);
+      setChecked("slideSignboardIncludeContact", state.includeContact);
+      setVal("slideSignboardDirectionArrow", state.directionArrow);
+      setVal("slideSignboardLocationText", state.locationText);
+      setVal("slideSignboardSchedule", state.schedule);
     }
 
     // Frame fields (Divider and Background)
@@ -611,6 +618,15 @@
       { id: `slide${prefix}MarginAreaCustom`, key: "marginAreaCustom" }
     ];
 
+    if (prefix === "Signboard") {
+      textInputs.push(
+        { id: "slideSignboardContactInfo", key: "contactInfo" },
+        { id: "slideSignboardContactPhone", key: "contactPhone" },
+        { id: "slideSignboardLocationText", key: "locationText" },
+        { id: "slideSignboardSchedule", key: "schedule" }
+      );
+    }
+
     textInputs.forEach(item => {
       const el = $(item.id);
       if (el) {
@@ -643,6 +659,12 @@
       { id: `slide${prefix}MarginArea`, key: "marginArea" }
     ];
 
+    if (prefix === "Signboard") {
+      selectFields.push(
+        { id: "slideSignboardDirectionArrow", key: "directionArrow" }
+      );
+    }
+
     selectFields.forEach(item => {
       const el = $(item.id);
       if (el) {
@@ -655,6 +677,14 @@
     });
 
     // 3. Use Color System checkbox
+    const includeContactEl = $(`slide${prefix}IncludeContact`);
+    if (includeContactEl) {
+      includeContactEl.addEventListener("change", (e) => {
+        state.includeContact = e.target.checked;
+        updatePromptPreview(prefix, state);
+      });
+    }
+
     const useColorSys = $(`slide${prefix}UseColorSystem`);
     if (useColorSys) {
       useColorSys.addEventListener("change", (e) => {
@@ -776,8 +806,14 @@
   }
 
   function compilePrompt(prefix, state) {
-    const isPpt = state.documentType === "ppt";
-    const layoutRatio = isPpt ? "16:9 widescreen layout" : "A4 standard page layout";
+    let layoutRatio = "16:9 widescreen layout";
+    if (state.documentType === "a4") {
+      layoutRatio = "A4 standard page layout";
+    } else if (state.documentType === "a3") {
+      layoutRatio = "A3 standard page layout";
+    } else if (state.documentType === "report") {
+      layoutRatio = "A4 standard report layout";
+    }
     const orientationTextKo = state.orientation === "landscape" ? "가로형 (Landscape)" : "세로형 (Portrait)";
     const orientationTextEn = state.orientation === "landscape" ? "Landscape orientation" : "Portrait orientation";
 
@@ -1218,13 +1254,22 @@
         textLinesKo.push(`- 행사 일정 (일자 및 시간): "${textSchedule}"`);
         textLinesEn.push(`- Event Schedule (date and time): "${textSchedule}"`);
       }
-      const textContact = state.contactInfo ? state.contactInfo.trim() : "";
+      const deptVal = state.contactInfo ? state.contactInfo.trim() : "";
+      const phoneVal = state.contactPhone ? state.contactPhone.trim() : "";
+      let textContact = deptVal;
+      if (state.includeContact && phoneVal) {
+        if (textContact) {
+          textContact += ` (${phoneVal})`;
+        } else {
+          textContact = phoneVal;
+        }
+      }
       if (textContact) {
         if (state.includeContact) {
-          textLinesKo.push(`- 담당자 정보 및 연락처: "${textContact}"`);
+          textLinesKo.push(`- 담당 정보 및 연락처: "${textContact}"`);
           textLinesEn.push(`- Contact Information and Phone Number: "${textContact}"`);
         } else {
-          textLinesKo.push(`- 담당자 정보 (※전화번호나 연락처 숫자 표기 절대 제외): "${textContact}"`);
+          textLinesKo.push(`- 담당 정보 (※전화번호나 연락처 숫자 표기 절대 제외): "${textContact}"`);
           textLinesEn.push(`- Contact Information (※DO NOT include any telephone numbers or digit patterns): "${textContact}"`);
         }
       }
@@ -1543,7 +1588,7 @@ ${logoBlockKo}${qrBlockKo}
 - 여백(Whitespace) 비율을 정확히 확보하여 가독성이 높고 답답함이 없는 캠페인급 완성도 구현.
 - ${balanceNote}
 - ⛔ 이미지 내 포함 금지: 실제 사람 얼굴, ${prohibitLogoKo}국기·국가 상징, 워터마크, ${prohibitQrKo}. 이러한 요소가 필요한 자리는 중립적인 placeholder(회색 블록 등)로 처리할 것.
-- ⛔ 텍스트 절대 금지 사항: 지정된 텍스트를 영어로 번역하거나, 의역하거나, 요약하거나, 임의로 수정하는 행위는 절대 허용되지 않습니다. 입력된 원문 텍스트를 한 글자도 바꾸지 말고 그대로 렌더링하십시오.`;
+- ⛔ 텍스트 절대 금지 사항: 지정된 텍스트를 영어로 번역하거나, 의역하거나, 요약하거나, 임의로 수정하는 행위는 절대 허용되지 않습니다. 입력된 원문 텍스트를 한 글자도 바꾸지 말고 그대로 렌더링하십시오. 또한, 명시적으로 지정된 텍스트 외에 임의의 더미 텍스트, 가짜 단어, 라벨, 가짜 글자, 알파벳, 숫자, 기호를 이미지 내에 생성하거나 그려 넣지 마십시오. 지정되지 않은 공간은 완전한 빈 여백으로 유지해야 합니다.`;
     } else {
       const balanceNoteEn = useAsymmetricLayout
         ? "Finish with a visually balanced composition; maintain consistent alignment throughout."
@@ -1578,7 +1623,7 @@ ${logoBlockEn}${qrBlockEn}
 - Maximize whitespace distribution for professional premium design balance.
 - ${balanceNoteEn}
 - ⛔ PROHIBITED image content: real human faces, ${prohibitLogoEn}national flags/symbols, watermarks, ${prohibitQrEn}. Replace any such required area with a neutral placeholder (e.g., solid gray block).
-- ⛔ ABSOLUTE TEXT RULE: You are strictly prohibited from translating, paraphrasing, summarizing, or altering any of the specified text strings in any way. Render every quoted text string exactly as-is — do not change even a single character.`;
+- ⛔ ABSOLUTE TEXT RULE: You are strictly prohibited from translating, paraphrasing, summarizing, or altering any of the specified text strings in any way. Render every quoted text string exactly as-is — do not change even a single character. Additionally, you are strictly prohibited from generating, adding, or overlaying any arbitrary text, dummy words, gibberish characters, fake labels, placeholder symbols, or brand names on the image. Leave all other regions completely clean and blank as empty whitespace.`;
     }
   }
 
@@ -1597,11 +1642,11 @@ ${logoBlockEn}${qrBlockEn}
     state.gradTransEffectCustom = "";
     state.headerText = "국정기획보고서";
     state.headerPosition = "left";
-    state.footerText = "CONFIDENTIAL";
+    state.footerText = "";
     state.footerPosition = "right";
     state.subjectImageDesc = "";
     state.useColorSystem = true;
-    state.logos = [];
+    state.logos = [{ name: "그림1", mode: "placeholder", path: "", position: "top_left" }];
     state.qrMode = "none";
     state.qrUrl = "";
     state.qrCaption = "";
@@ -1634,7 +1679,8 @@ ${logoBlockEn}${qrBlockEn}
     } else if (prefix === "Signboard") {
       state.headline = "2026 차세대 AI 반도체 산업 전략 발표회";
       state.schedule = "2026. 06. 17 (수) 14:00 ~ 17:00";
-      state.contactInfo = "산업통상자원부 반도체정책과 (02-123-4567)";
+      state.contactInfo = "산업통상자원부 반도체정책과";
+      state.contactPhone = "02-123-4567";
       state.includeContact = true;
       state.directionArrow = "right";
       state.locationText = "3층 대회의실";
@@ -1685,7 +1731,7 @@ ${logoBlockEn}${qrBlockEn}
     state.footerPosition = "none";
     state.subjectImageDesc = "";
     state.useColorSystem = false;
-    state.logos = [];
+    state.logos = [{ name: "그림1", mode: "placeholder", path: "", position: "top_left" }];
     state.qrMode = "none";
     state.qrUrl = "";
     state.qrCaption = "";
@@ -1719,6 +1765,7 @@ ${logoBlockEn}${qrBlockEn}
       state.headline = "";
       state.schedule = "";
       state.contactInfo = "";
+      state.contactPhone = "";
       state.includeContact = true;
       state.directionArrow = "right";
       state.locationText = "";

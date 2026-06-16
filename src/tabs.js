@@ -49,6 +49,7 @@
       { label: "초기화", targetId: "genClearBtn", className: "btn ghost" },
     ],
     promotion: [
+      { label: "레이아웃 변경", targetId: "promotionShuffleLayoutBtn", className: "btn secondary" },
       { label: "복사", targetId: "promotionCopyPromptBtn", className: "btn primary" },
     ],
     promotionPlanner: [

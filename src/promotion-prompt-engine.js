@@ -1091,8 +1091,8 @@ function createPromptSections(validation, lint) {
 
   const defaultHardConstraintLines = [
     _h.localizeSentence(
-      "이미지 안 텍스트는 임의 문장·가짜 한글·중복 문구·의미 없는 장식 텍스트 없이 제공된 문구만 사용한다.",
-      "Use only the provided copy on the image; do not add arbitrary text, fake characters, or duplicate copy."
+      "이미지 안 텍스트는 임의 문장·가짜 한글·중복 문구·의미 없는 장식 텍스트 없이 제공된 문구만 사용한다. 지정되지 않은 텍스트 영역에는 어떤 가짜 글자나 더미 텍스트도 절대 생성하거나 기입하지 않는다. 제공되지 않은 텍스트가 기입될 수 있는 모든 영역은 글자 없이 깨끗하게 비워둔다.",
+      "Use only the provided copy on the image; do not add arbitrary text, fake characters, or duplicate copy. Absolutely do NOT generate or overlay any extra placeholder text, dummy labels, or fake characters in empty zones. Leave all unspecified areas completely clean and free of text."
     ),
     _h.localizeSentence(
       "모든 텍스트는 철자 오류 없이 정확하고 선명한 아웃라인으로 렌더링한다.",
@@ -1480,33 +1480,20 @@ function createPromptSections(validation, lint) {
     }
 
     if (_s.layoutCompositionMode === "ai") {
-      return prunePromptLines(
-        _h.shouldUseCompactPromptGuidance()
-          ? [
-              _h.localizeSentence(
-                "Layout composition strategy: 후보를 나열하지 말고 이번 입력에 가장 적합한 단일 구도를 선택해 전체 화면 분할, 정보 묶음, 키비주얼 위치에 일관되게 적용한다.",
-                "Layout composition strategy: do not list candidates; choose one layout best suited to this input and apply it consistently to screen division, information grouping, and key-visual placement."
-              ),
-              _h.localizeSentence(
-                "중앙 정렬 + 하단 카드 2~3개 조합을 기본값으로 반복하지 않는다.",
-                "Do not repeat the default centered layout with 2 to 3 bottom cards."
-              ),
-            ]
-          : [
-              _h.localizeSentence(
-                "Layout composition strategy: 생성할 때마다 아래 전략 중 정확히 하나를 무작위로 선택하고, 선택한 전략명을 내부 기준으로 삼아 전체 구도를 설계한다.",
-                "Layout composition strategy: for each generation, randomly choose exactly one of the strategies below and use the chosen strategy as the internal basis for the whole composition."
-              ),
-              ...AI_LAYOUT_STRATEGY_OPTIONS.map((option) => _h.localizeSentence(
-                `${option.labelKo} — ${option.descKo}`,
-                `${option.labelEn} — ${option.descEn}`
-              )),
-              _h.localizeSentence(
-                "중앙 정렬 + 하단 카드 2~3개 조합을 기본값으로 반복하지 말고, 선택한 구도 전략이 화면 분할, 시선 흐름, 정보 묶음 형태에 실제로 드러나게 한다.",
-                "Do not repeat the default centered layout with 2 to 3 bottom cards; make the chosen strategy visibly affect screen division, eye flow, and the way information is grouped."
-              ),
-            ]
-      );
+      return prunePromptLines([
+        _h.localizeSentence(
+          "레이아웃 기본 원칙: 콘텐츠의 정보량과 목적에 맞춰 가장 읽기 쉬운 배치를 선택한다.",
+          "Layout default principle: choose the most readable arrangement for the content volume and campaign goal."
+        ),
+        _h.localizeSentence(
+          "헤드라인, 핵심 정보, 행동버튼(CTA) 순서의 시선 흐름을 유지한다.",
+          "Maintain a clear eye flow from headline to key information to action button (CTA)."
+        ),
+        _h.localizeSentence(
+          "텍스트가 복잡한 배경 위에 올라가지 않게 하고, 텍스트 영역과 비주얼 영역을 명확히 분리한다.",
+          "Do not place text over a busy background; clearly separate text zones from visual zones."
+        ),
+      ]);
     }
 
     if (_s.layoutCompositionMode !== "manual") {
@@ -1550,13 +1537,13 @@ function createPromptSections(validation, lint) {
   })();
 
   const designLines = prunePromptLines([
-    ...(_h.isDetailVisualPlanningMode() ? layoutCompLines : []),
+    ...layoutCompLines,
     ...instructionItems
       .filter((entry) => {
         const visualFields = ["tone", "bigIdea", "visualMetaphor", "visualStyle", "layoutComposition"];
         if (visualFields.includes(entry.key)) {
-          const enabled = isEnabled(state[`${entry.key}Enabled`]);
-          const isManual = state[`${entry.key}Mode`] === "manual";
+          const enabled = isEnabled(_s[`${entry.key}Enabled`]);
+          const isManual = _s[`${entry.key}Mode`] === "manual";
           if (!enabled || !isManual) {
             return false;
           }
@@ -2137,6 +2124,14 @@ function renderOpenAIOptimizedPrompt(validation, lint) {
     : _s.outputLanguage === "bilingual"
       ? "Keep bilingual copy only where the source fields explicitly provide it; do not invent extra translations."
       : "Preserve the source language of each provided text field. Korean text stays Korean, English text stays English, and no arbitrary translation or language switching is allowed.";
+  const selectedCreativeInputs = prunePromptLines([
+    isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea
+      ? `${_h.localizeSentence("Core idea", "Core idea")}: ${_h.localizeValue(_s.bigIdea)}`
+      : "",
+    isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor
+      ? `${_h.localizeSentence("Visual metaphor", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}`
+      : "",
+  ]);
 
   const blocks = [
     {
@@ -2153,27 +2148,31 @@ function renderOpenAIOptimizedPrompt(validation, lint) {
     },
     {
       required: true,
-      text: `Copy to render and information hierarchy: ${compactOpenAIText(copy, 400)}`,
+      text: `Copy to render and information hierarchy: ${compactOpenAIText(copy, 340)}`,
     },
     {
       required: true,
-      text: `Audience, goal, and campaign intent: ${compactOpenAIText(strategy, 360)}`,
-    },
-    {
-      required: false,
-      text: `Visual concept and style direction: ${compactOpenAIText(concept, 560)}`,
+      text: `Audience, goal, and campaign intent: ${compactOpenAIText(strategy, 300)}`,
     },
     {
       required: true,
-      text: `Creative direction and campaign quality: ${compactOpenAIText([...visualDirection, ...quality], 480)}`,
-    },
-    {
-      required: false,
-      text: `Composition: ${compactOpenAIText(layout, 420)}`,
+      text: `Visual concept and style direction: ${compactOpenAIText(concept, 420)}`,
     },
     {
       required: true,
-      text: `Color and background: ${compactOpenAIText(color, 360)}`,
+      text: selectedCreativeInputs.length ? `Selected creative inputs: ${compactOpenAIText(selectedCreativeInputs, 260)}` : "",
+    },
+    {
+      required: true,
+      text: `Composition: ${compactOpenAIText(layout, 340)}`,
+    },
+    {
+      required: true,
+      text: `Creative direction and campaign quality: ${compactOpenAIText([...visualDirection, ...quality], 300)}`,
+    },
+    {
+      required: true,
+      text: `Color and background: ${compactOpenAIText(color, 320)}`,
     },
     {
       required: true,

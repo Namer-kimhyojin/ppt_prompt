@@ -869,6 +869,132 @@ window.PROMO_DATA = (function () {
         "Isolate the text background layer as a pure solid dark surface with zero visual noise behind the letters to guarantee 100% readability.",
         "Position the abstract geometric object in a contrasting bright color field on the opposite side, physically separating the text zone from the purely artistic visual zone."
       ]
+    },
+    "visual-first": {
+      labelKo: "패턴 A: 비주얼 중심",
+      labelEn: "Pattern A: visual-first",
+      linesKo: [
+        "메인 비주얼 오브젝트 또는 상징 장면을 첫 번째 시선 지점으로 배치한다.",
+        "헤드라인은 비주얼을 해치지 않는 주변 영역에 두되 두 번째로 명확히 읽히게 한다.",
+        "혜택, 일정, 장소, 핵심 조건은 보조 정보로 낮추고 행동버튼과 QR/링크 안내는 마지막 행동 유도 지점에 배치한다."
+      ],
+      linesEn: [
+        "Make the main visual object or symbolic scene the first focal point.",
+        "Place the headline around the visual without weakening it, while keeping it clearly readable as the second focal point.",
+        "Demote benefits, schedule, location, and key conditions to supporting information; place action button, QR, or link guidance as the final conversion point."
+      ]
+    },
+    "information-first": {
+      labelKo: "패턴 B: 정보 중심",
+      labelEn: "Pattern B: information-first",
+      linesKo: [
+        "헤드라인 또는 핵심 제안이 가장 먼저 읽히도록 정보 영역을 화면의 주 시선축에 배치한다.",
+        "혜택, 일정, 장소, 핵심 조건을 구조화된 정보 묶음으로 정리한다.",
+        "메인 비주얼은 정보 이해를 보조하는 크기와 위치로 낮추고 행동버튼은 정보 묶음 뒤에 명확히 배치한다."
+      ],
+      linesEn: [
+        "Place the headline or core offer on the main eye-flow axis so it reads first.",
+        "Organize benefits, schedule, location, and key conditions into structured information groups.",
+        "Reduce the main visual to a supporting role and place the action button clearly after the information group."
+      ]
+    },
+    "typography-first": {
+      labelKo: "패턴 C: 타이포그래피 중심",
+      labelEn: "Pattern C: typography-first",
+      linesKo: [
+        "거대한 헤드라인 타이포그래피를 화면의 첫 번째 시각 요소로 둔다.",
+        "짧은 서브카피 또는 한 줄 오퍼를 헤드라인 아래 보조 계층으로 정리한다.",
+        "메인 비주얼은 축소하거나 배경 은유로 처리하고 행동버튼은 마지막에 작지만 선명하게 배치한다."
+      ],
+      linesEn: [
+        "Make oversized headline typography the first visual element.",
+        "Place short sub-copy or a single-line offer beneath the headline as a secondary tier.",
+        "Reduce the main visual or treat it as a background metaphor, then place the action button last but clearly."
+      ]
+    },
+    "proof-first": {
+      labelKo: "패턴 D: 증거/수치 중심",
+      labelEn: "Pattern D: proof-first",
+      linesKo: [
+        "핵심 수치, 혜택, 마감일, 장소처럼 행동 판단에 필요한 증거를 가장 먼저 보이게 한다.",
+        "헤드라인 또는 캠페인 메시지는 증거를 해석하는 두 번째 계층으로 배치한다.",
+        "보조 비주얼 은유나 브랜드 분위기는 배경으로 낮추고 행동버튼·QR·링크 안내는 명확한 전환 지점에 배치한다."
+      ],
+      linesEn: [
+        "Make proof needed for action, such as key metric, benefit, deadline, or location, visible first.",
+        "Place the headline or campaign message as the second tier that interprets the proof.",
+        "Push supporting visual metaphor or brand mood into the background, and place action button, QR, or link guidance as a clear conversion point."
+      ]
+    },
+    "asym-axis": {
+      labelKo: "비대칭축 구성",
+      labelEn: "Asymmetrical axis composition",
+      linesKo: [
+        "정보를 한쪽 축에 집중시키고 반대편에 비주얼을 과감하게 배치한다.",
+        "좌우 또는 상하의 무게중심을 의도적으로 다르게 만들어 긴장감과 시선 이동을 만든다.",
+        "비대칭이어도 헤드라인, 핵심 정보, CTA의 읽기 순서는 흔들리지 않게 유지한다."
+      ],
+      linesEn: [
+        "Concentrate information on one axis and place the visual boldly on the opposite side.",
+        "Create tension and eye movement by intentionally shifting the visual weight left/right or top/bottom.",
+        "Keep the reading order of headline, key information, and CTA stable even in the asymmetric layout."
+      ]
+    },
+    "split-screen": {
+      labelKo: "분할 화면 구성",
+      labelEn: "Split-screen composition",
+      linesKo: [
+        "화면을 좌우 또는 상하로 명확히 나누어 정보 영역과 비주얼 영역을 분리한다.",
+        "텍스트 영역은 단색 또는 저노이즈 배경 위에 두어 가독성을 우선한다.",
+        "비주얼 영역은 색상, 이미지, 오브젝트로 분위기를 만들되 텍스트 영역을 침범하지 않는다."
+      ],
+      linesEn: [
+        "Divide the canvas vertically or horizontally to separate the information zone and the visual zone.",
+        "Place text on a solid or low-noise background to prioritize readability.",
+        "Use color, imagery, or objects in the visual zone without invading the text zone."
+      ]
+    },
+    "typo-minimal": {
+      labelKo: "타이포그래피 중심 미니멀 구성",
+      labelEn: "Typography-led minimalist composition",
+      linesKo: [
+        "비주얼 오브젝트를 줄이고 글자 크기, 굵기, 여백의 대비로 화면을 구성한다.",
+        "헤드라인과 짧은 핵심 문구만 크게 남기고 보조 정보는 작고 단정하게 정리한다.",
+        "장식보다 정렬, 행간, 여백, 대비를 통해 고급스럽고 읽기 쉬운 이미지를 만든다."
+      ],
+      linesEn: [
+        "Reduce visual objects and build the image through type scale, weight, and whitespace contrast.",
+        "Keep only the headline and short core copy large; arrange supporting information small and cleanly.",
+        "Use alignment, line spacing, whitespace, and contrast rather than decoration to create a premium readable image."
+      ]
+    },
+    "radial-center": {
+      labelKo: "중심 방사형 구성",
+      labelEn: "Radial composition from center",
+      linesKo: [
+        "중앙 핵심 비주얼 또는 핵심 메시지에서 주변 정보가 방사형으로 퍼지는 구조를 만든다.",
+        "중앙 요소가 가장 먼저 보이고, 주변 노드나 정보 조각은 거리와 크기로 위계를 만든다.",
+        "방사형 배치가 복잡해지지 않도록 정보 수를 제한하고 충분한 여백을 둔다."
+      ],
+      linesEn: [
+        "Create a structure where surrounding information radiates from a central key visual or core message.",
+        "Make the center element read first, then use distance and size to establish hierarchy among surrounding nodes.",
+        "Limit information count and preserve whitespace so the radial layout does not become cluttered."
+      ]
+    },
+    "diagonal-progression": {
+      labelKo: "대각선 진행형 구성",
+      labelEn: "Diagonal progression composition",
+      linesKo: [
+        "계단, 성장, 이동, 전환 메시지를 대각선 진행 축으로 표현한다.",
+        "시선이 한쪽 하단에서 반대쪽 상단으로 이동하도록 핵심 정보와 비주얼을 단계적으로 배치한다.",
+        "진행감은 살리되 텍스트 각도와 크기는 읽기 쉬운 범위 안에서 유지한다."
+      ],
+      linesEn: [
+        "Express steps, growth, movement, or transition along a diagonal progression axis.",
+        "Arrange key information and visuals step by step so the eye moves from one lower corner to the opposite upper corner.",
+        "Keep the sense of progression while preserving readable text angles and sizes."
+      ]
     }
   };
 

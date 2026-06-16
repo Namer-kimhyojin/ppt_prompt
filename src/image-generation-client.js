@@ -60,9 +60,15 @@
   }
 
   async function generateSlideImage(payload) {
+    const body = {
+      slideId: payload.slideId,
+      title: payload.title,
+      prompt: payload.prompt,
+    };
+    if (payload.ratio) body.ratio = payload.ratio;
     const result = await fetchJson("/api/generate-image", {
       method: "POST",
-      body: JSON.stringify(payload),
+      body: JSON.stringify(body),
     });
     return normalizeImageResult(result);
   }

@@ -41,6 +41,102 @@ function escapeXml(value) {
     .replace(/"/g, "&quot;");
 }
 
+// ── 비율 유틸리티 ─────────────────────────────────────────────────────────
+
+/**
+ * 클라이언트가 보낸 ratio 문자열("16:9", "4:5") 또는 프롬프트 텍스트에서
+ * {w, h} 숫자 객체로 파싱. 픽셀 입력(1080x1920)도 비율로 변환.
+ */
+function parseRatioValue(ratio) {
+  if (!ratio) return null;
+  const s = String(ratio).trim();
+  const m = s.match(/^(\d+(?:\.\d+)?)\s*[:x×]\s*(\d+(?:\.\d+)?)$/i);
+  if (!m) return null;
+  const w = Number(m[1]), h = Number(m[2]);
+  return w > 0 && h > 0 ? { w, h } : null;
+}
+
+/**
+ * 프롬프트 텍스트에서 비율 또는 픽셀 크기를 추출해 {w, h} 반환.
+ * 픽셀 입력은 그대로 비율로 사용 (절대 크기 정보는 엔진이 결정).
+ */
+function extractRatioFromPrompt(promptText) {
+  const text = String(promptText || "");
+
+  // 1. 직접 입력 크기: "1080x1920 px" 또는 "직접 입력 크기: 1080x1920"
+  const sizeMatch =
+    text.match(/(?:직접 입력 크기|Exact size|Canvas size|캔버스 크기)[^\n:：]*[:：]?\s*(\d{3,5})\s*[x×]\s*(\d{3,5})/i) ||
+    text.match(/\b(\d{3,5})\s*[x×]\s*(\d{3,5})\s*(?:px|픽셀)\b/i);
+  if (sizeMatch) return { w: Number(sizeMatch[1]), h: Number(sizeMatch[2]) };
+
+  // 2. 비율 표기: "비율/방향: 4:5" 또는 "Aspect ratio: 16:9"
+  const ratioMatch = text.match(
+    /(?:비율\/방향|Aspect ratio[^:]*|비율)[^\n:：]*[:：]\s*(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)/i
+  );
+  if (ratioMatch) return { w: Number(ratioMatch[1]), h: Number(ratioMatch[2]) };
+
+  // 3. 키워드 폴백
+  if (/9\s*:\s*16|세로 와이드/i.test(text)) return { w: 9, h: 16 };
+  if (/16\s*:\s*9|가로 와이드/i.test(text)) return { w: 16, h: 9 };
+  if (/4\s*:\s*5|SNS 세로/i.test(text)) return { w: 4, h: 5 };
+  if (/5\s*:\s*4|SNS 가로/i.test(text)) return { w: 5, h: 4 };
+  if (/세로형|portrait|vertical/i.test(text)) return { w: 3, h: 4 };
+  if (/가로형|landscape|horizontal/i.test(text)) return { w: 4, h: 3 };
+  if (/정사각|square/i.test(text)) return { w: 1, h: 1 };
+
+  return null;
+}
+
+/** 클라이언트 ratio 우선, 없으면 프롬프트에서 추출, 최후 기본값 1:1 */
+function resolveRatio(payload) {
+  const fromClient = parseRatioValue(payload.ratio);
+  if (fromClient) return fromClient;
+  return extractRatioFromPrompt(payload.prompt) || { w: 1, h: 1 };
+}
+
+// ── OpenAI 크기 해석 ──────────────────────────────────────────────────────
+
+/** gpt-image-1 / gpt-image-2 지원 크기: 1024x1024, 1536x1024, 1024x1536 */
+function resolveOpenAISize(ratio) {
+  const r = ratio.w / ratio.h;
+  if (r > 1.12) return "1536x1024";
+  if (r < 0.88) return "1024x1536";
+  return "1024x1024";
+}
+
+// ── Imagen 3 비율 해석 ───────────────────────────────────────────────────
+
+const IMAGEN3_RATIOS = [
+  { key: "1:1",  v: 1 / 1  },
+  { key: "4:3",  v: 4 / 3  },
+  { key: "3:4",  v: 3 / 4  },
+  { key: "16:9", v: 16 / 9 },
+  { key: "9:16", v: 9 / 16 },
+];
+
+function resolveImagen3Ratio(ratio) {
+  const target = ratio.w / ratio.h;
+  return IMAGEN3_RATIOS.reduce((best, c) =>
+    Math.abs(Math.log(target / c.v)) < Math.abs(Math.log(target / best.v)) ? c : best
+  ).key;
+}
+
+function isImagen3Model(modelName) {
+  return /imagen/i.test(String(modelName || ""));
+}
+
+// ── Pollinations 픽셀 크기 계산 ───────────────────────────────────────────
+
+function pollinationsDimensions(ratio) {
+  const MAX = 1440;
+  const r = ratio.w / ratio.h;
+  return r >= 1
+    ? { width: MAX, height: Math.round(MAX / r) }
+    : { width: Math.round(MAX * r), height: MAX };
+}
+
+// ── Mock ─────────────────────────────────────────────────────────────────
+
 function buildMockSvg({ slideId, title, prompt }) {
   const shortPrompt = String(prompt || "").replace(/\s+/g, " ").slice(0, 260);
   const label = title || slideId || "Slide image";
@@ -75,6 +171,8 @@ async function writeMockImage({ slideId, title, prompt }) {
     model: "mock",
   };
 }
+
+// ── Gemini (generateContent) ──────────────────────────────────────────────
 
 function extractGeminiInlineImage(response) {
   const candidates = Array.isArray(response?.candidates) ? response.candidates : [];
@@ -112,11 +210,7 @@ async function writeGeminiImage({ slideId, title, prompt, options, apiKey }) {
       "x-goog-api-key": apiKey,
     },
     body: JSON.stringify({
-      contents: [
-        {
-          parts: [{ text: prompt }],
-        },
-      ],
+      contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
         responseModalities: ["TEXT", "IMAGE"],
         ...(options?.generationConfig || {}),
@@ -149,9 +243,58 @@ async function writeGeminiImage({ slideId, title, prompt, options, apiKey }) {
   };
 }
 
-async function writePollinationsImage({ slideId, title, prompt }) {
+// ── Imagen 3 (/predict 엔드포인트, aspectRatio 지원) ─────────────────────
+
+async function writeImagen3Image({ slideId, title, prompt }, ratio, apiKey) {
+  assertGeminiConfig(apiKey);
+  const aspectRatio = resolveImagen3Ratio(ratio);
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(config.imageModel)}:predict?key=${apiKey}`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json; charset=utf-8" },
+    body: JSON.stringify({
+      instances: [{ prompt }],
+      parameters: { sampleCount: 1, aspectRatio },
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data?.error?.message || `Imagen 3 API request failed: ${response.status}`;
+    throw new Error(message);
+  }
+
+  const prediction = data?.predictions?.[0];
+  const b64 = prediction?.bytesBase64Encoded;
+  const mimeType = prediction?.mimeType || "image/png";
+  if (!b64) throw new Error("Imagen 3 응답에 이미지 데이터가 없습니다.");
+
+  const imageBuffer = Buffer.from(b64, "base64");
+  await fs.mkdir(config.outputDir, { recursive: true });
+
+  const safeId = slugify(slideId || title);
+  const suffix = crypto.randomUUID().slice(0, 8);
+  const ext = getImageExtension(mimeType);
+  const filename = `${safeId}-${suffix}${ext}`;
+  const filePath = path.join(config.outputDir, filename);
+  await fs.writeFile(filePath, imageBuffer);
+
+  return {
+    filename,
+    filePath,
+    mimeType,
+    model: config.imageModel,
+    aspectRatio,
+  };
+}
+
+// ── Pollinations ──────────────────────────────────────────────────────────
+
+async function writePollinationsImage({ slideId, title, prompt }, ratio) {
+  const { width, height } = pollinationsDimensions(ratio);
   const encoded = encodeURIComponent(String(prompt).trim().slice(0, 1800));
-  const url = `https://image.pollinations.ai/prompt/${encoded}?width=1280&height=720&nologo=true`;
+  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${width}&height=${height}&nologo=true`;
 
   let response;
   for (let attempt = 1; attempt <= 3; attempt++) {
@@ -188,16 +331,18 @@ async function writePollinationsImage({ slideId, title, prompt }) {
     filePath,
     mimeType: contentType,
     model: "pollinations/default",
+    size: `${width}x${height}`,
   };
 }
 
-async function writeOpenAIImage({ slideId, title, prompt, apiKey }) {
+// ── OpenAI (gpt-image-1 / gpt-image-2) ────────────────────────────────────
+
+async function writeOpenAIImage({ slideId, title, prompt, apiKey }, ratio) {
   assertOpenAIConfig(apiKey);
 
-  const promptText = String(prompt || "").trim();
-  const imageSize = resolveOpenAIImageSize(promptText);
-  const model = config.openaiImageModel || "gpt-image-2";
+  const model = config.openaiImageModel || "gpt-image-1";
   const quality = config.openaiImageQuality || "medium";
+  const size = resolveOpenAISize(ratio);
 
   const response = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
@@ -207,9 +352,9 @@ async function writeOpenAIImage({ slideId, title, prompt, apiKey }) {
     },
     body: JSON.stringify({
       model,
-      prompt: promptText,
+      prompt: String(prompt || "").trim(),
       n: 1,
-      size: imageSize,
+      size,
       quality,
     }),
   });
@@ -236,61 +381,32 @@ async function writeOpenAIImage({ slideId, title, prompt, apiKey }) {
     filePath,
     mimeType: "image/png",
     model,
-    size: imageSize,
+    size,
   };
 }
 
-function resolveOpenAIImageSize(promptText) {
-  const parsed = parsePromptCanvasRatio(promptText);
-  if (!parsed) return "1024x1024";
+// ── 진입점 ───────────────────────────────────────────────────────────────
 
-  const ratio = parsed.width / parsed.height;
-  if (ratio >= 1.12) return "1536x1024";
-  if (ratio <= 0.88) return "1024x1536";
-  return "1024x1024";
-}
-
-function parsePromptCanvasRatio(promptText) {
-  const text = String(promptText || "");
-  const directSizeMatch = text.match(/(?:직접 입력 크기|Exact size|Canvas size|캔버스 크기)[^\n:：]*[:：]?\s*(\d{3,5})\s*[x×]\s*(\d{3,5})/i)
-    || text.match(/\b(\d{3,5})\s*[x×]\s*(\d{3,5})\s*(?:px|픽셀)\b/i);
-  if (directSizeMatch) {
-    return {
-      width: Number(directSizeMatch[1]),
-      height: Number(directSizeMatch[2]),
-    };
-  }
-
-  const ratioMatch = text.match(/(?:비율\/방향|Aspect ratio \/ orientation|Aspect ratio|비율)[^\n:：]*[:：]?\s*(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)/i);
-  if (ratioMatch) {
-    return {
-      width: Number(ratioMatch[1]),
-      height: Number(ratioMatch[2]),
-    };
-  }
-
-  if (/세로형|portrait|vertical/i.test(text)) return { width: 4, height: 5 };
-  if (/가로형|landscape|horizontal/i.test(text)) return { width: 16, height: 9 };
-  if (/정사각|square|1\s*:\s*1/i.test(text)) return { width: 1, height: 1 };
-  return null;
-}
-
-export async function generateImage({ slideId, title, prompt, options = {}, runtimeConfig = {} }) {
+export async function generateImage({ slideId, title, prompt, ratio: rawRatio, options = {}, runtimeConfig = {} }) {
   if (!prompt || !String(prompt).trim()) {
     throw new Error("Prompt is required.");
   }
 
   const provider = runtimeConfig.provider || config.imageProvider;
+  const ratio = resolveRatio({ ratio: rawRatio, prompt });
 
   if (provider === "mock") {
-    return writeMockImage({ slideId, title, prompt, options });
+    return writeMockImage({ slideId, title, prompt });
   }
   if (provider === "pollinations") {
-    return writePollinationsImage({ slideId, title, prompt });
+    return writePollinationsImage({ slideId, title, prompt }, ratio);
   }
   if (provider === "openai") {
-    return writeOpenAIImage({ slideId, title, prompt, apiKey: runtimeConfig.openaiApiKey });
+    return writeOpenAIImage({ slideId, title, prompt, apiKey: runtimeConfig.openaiApiKey }, ratio);
   }
-  // google (default)
+  // google: Imagen 3 vs Gemini 자동 분기
+  if (isImagen3Model(config.imageModel)) {
+    return writeImagen3Image({ slideId, title, prompt }, ratio, runtimeConfig.googleApiKey);
+  }
   return writeGeminiImage({ slideId, title, prompt, options, apiKey: runtimeConfig.googleApiKey });
 }

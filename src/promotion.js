@@ -3401,8 +3401,10 @@
       const candidates = keys.filter((k) => k !== currentKey);
       const newKey = candidates[Math.floor(Math.random() * candidates.length)];
       state.layoutComposition = newKey;
+      state.layoutCompositionEnabled = "true";
       state.layoutCompositionMode = "manual";
       promptDirty = false;
+      syncStaticFields();
       syncToggleFieldUI("layoutComposition");
       renderPreview();
       const label = LAYOUT_COMPOSITION_PROFILES[newKey]?.labelKo || newKey;

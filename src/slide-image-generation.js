@@ -41,6 +41,8 @@
     els.galleryCounter = document.getElementById("slideImageGalleryCounter");
     els.openFolderBtn = document.getElementById("slideImageOpenFolderBtn");
     els.clearGalleryBtn = document.getElementById("slideImageClearGalleryBtn");
+    els.ratioSelect = document.getElementById("slideImageAspectRatio");
+    els.ratioHint = document.getElementById("slideImageRatioHint");
   }
 
   function ensureUsabilityControls() {
@@ -272,7 +274,10 @@
       return;
     }
     els.prompt.value = prompt;
-    setStatus("현재 프롬프트를 가져왔습니다.", "ok");
+    const detected = detectRatioFromText(prompt);
+    updateRatioHint(detected);
+    const detectedLabel = detected ? ` (비율 감지: ${detected})` : "";
+    setStatus(`현재 프롬프트를 가져왔습니다.${detectedLabel}`, "ok");
   }
 
   function loadDeckPrompts() {
@@ -293,11 +298,37 @@
     setStatus(`${jobs.length}개 슬라이드 프롬프트를 큐에 추가했습니다.`, "ok");
   }
 
+  function getSelectedRatio() {
+    const val = els.ratioSelect?.value || "auto";
+    return val === "auto" ? null : val;
+  }
+
+  function detectRatioFromText(text) {
+    const t = String(text || "");
+    const sizeMatch =
+      t.match(/(?:직접 입력 크기|Exact size|Canvas size)[^\n:：]*[:：]?\s*(\d{3,5})\s*[x×]\s*(\d{3,5})/i) ||
+      t.match(/\b(\d{3,5})\s*[x×]\s*(\d{3,5})\s*(?:px|픽셀)\b/i);
+    if (sizeMatch) return `${sizeMatch[1]}:${sizeMatch[2]}`;
+    const ratioMatch = t.match(/(?:비율\/방향|Aspect ratio[^:]*|비율)[^\n:：]*[:：]\s*(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)/i);
+    if (ratioMatch) return `${ratioMatch[1]}:${ratioMatch[2]}`;
+    return null;
+  }
+
+  function updateRatioHint(detectedRatio) {
+    if (!els.ratioHint) return;
+    const detected = detectedRatio ? `프롬프트 감지: ${detectedRatio} →` : "비율 감지 안 됨 →";
+    els.ratioHint.textContent =
+      `${detected} OpenAI: 1:1 / 3:2 / 2:3 중 최근사 · Imagen 3: 1:1, 4:3, 3:4, 16:9, 9:16 중 최근사 · Pollinations: 비율 그대로`;
+  }
+
   async function generateImageForPayload(payload) {
+    const manualRatio = getSelectedRatio();
+    const ratio = manualRatio || detectRatioFromText(payload.prompt) || null;
     return client.generateSlideImage({
       slideId: payload.slideId,
       title: payload.title,
       prompt: payload.prompt,
+      ratio,
     });
   }
 
