@@ -204,6 +204,11 @@ async function runSmokeTest() {
       record(posterQuickValueAfterThirdClick.split(posterQuickText).length - 1 === 1, "Promotion asset-specific quick button re-added the preset with duplicates", failures);
     }
 
+    if (await hasLocator(page, "#promotionColorStrategy")) {
+      await page.locator("#promotionColorStrategy").selectOption("manual");
+      await page.waitForTimeout(150);
+    }
+
     await page.locator("#promotionPrimaryColor").fill("#112233");
     await page.locator("#promotionSecondaryColorPicker").fill("#ddeeff");
     await page.locator("#promotionAccentColor").fill("#ff6600");
@@ -419,6 +424,9 @@ async function runSmokeTest() {
     record(optimizedPreview.includes("target audience:"), "Optimized English prompt did not include the English target-audience label", failures);
     record(optimizedPreview.includes("Background treatment:"), "Optimized English prompt did not include the English background label", failures);
     record(/luxury/i.test(optimizedPreview), "Optimized English prompt did not reflect the selected commercial baseline", failures);
+    if (!/experimental/i.test(optimizedPreview)) {
+      console.log("=== DEBUG OPTIMIZED PREVIEW ===\n" + optimizedPreview + "\n===============================");
+    }
     record(/experimental/i.test(optimizedPreview), "Optimized English prompt did not reflect the selected creativity direction", failures);
     record(optimizedPreview.includes("kinetic future bridge"), "Optimized English prompt did not include the selected big idea", failures);
     record(
@@ -426,13 +434,31 @@ async function runSmokeTest() {
       "Optimized English prompt did not include the selected visual metaphor",
       failures
     );
+    record(optimizedPreview.includes("Priority 1: Critical"), "Optimized English prompt did not include Priority 1 tier", failures);
+    record(optimizedPreview.includes("Priority 2: High"), "Optimized English prompt did not include Priority 2 tier", failures);
+    record(optimizedPreview.includes("Priority 3: Medium"), "Optimized English prompt did not include Priority 3 tier", failures);
     record(
       !/[\u3131-\u318E\uAC00-\uD7A3]/.test(optimizedPreview),
       "Optimized English prompt still included Korean text",
       failures
     );
+
+    // Target Engine Gemini (Imagen 3) Mode Verification
+    if (await hasLocator(page, "#promotionTargetEngine")) {
+      await page.locator("#promotionTargetEngine").selectOption("imagen");
+      await page.waitForTimeout(200);
+      const imagenPreview = await page.locator("#promotionPromptPreview").inputValue();
+      record(imagenPreview.includes("Backdrop for"), "Gemini (Imagen 3) mode did not convert text rendering to backdrop placeholders", failures);
+      record(!/#([0-9a-fA-F]{3,6})/i.test(imagenPreview), "Gemini (Imagen 3) mode did not drop hex codes from the prompt", failures);
+      
+      // Restore back to DALL-E mode for remaining steps
+      await page.locator("#promotionTargetEngine").selectOption("dalle");
+      await page.waitForTimeout(100);
+    }
     // lint panel removed — no longer checked
 
+    await page.click("#promotionViewerToggleBtn");
+    await page.waitForTimeout(150);
     await page.locator("#promotionPromptPreview").fill(`${optimizedPreview}\n\n## 메모\n직접 편집 테스트`);
     await page.click("#promotionCopyPromptBtn");
     await page.waitForTimeout(250);

@@ -58,6 +58,220 @@ window.PROMO_PROMPT = (function () {
     _h = helpers;
   }
 
+  // ── CROSS PLATFORM & UNIVERSAL PORTABILITY HELPERS ──
+  const COLOR_NAME_MAP = {
+    "#ffffff": "pure white",
+    "#000000": "true black",
+    "#0d0d0d": "near-black charcoal",
+    "#1a1a2e": "deep midnight navy",
+    "#16213e": "dark indigo navy",
+    "#7c4dff": "electric violet",
+    "#e94560": "crimson red",
+    "#ffd700": "bright gold yellow",
+    "#f9d4ff": "soft lavender pastel",
+    "#b8d4ff": "sky-blue pastel",
+    "#ffe8b8": "warm cream highlights",
+    "#c8ffb8": "mint green pastel",
+    "#ffd6f9": "blush pink pastel",
+    "#ff9de2": "hot pink",
+    "#ffb3c6": "rose pink",
+    "#ffd6ff": "soft lavender",
+    "#caffbf": "pale mint green",
+    "#fdffb6": "lemon yellow",
+    "#6c63ff": "indigo violet",
+    "#3f3d56": "dark charcoal",
+    "#f2f2f2": "light gray",
+    "#ff6584": "coral pink",
+    "#43d9ad": "teal green",
+    "#2193b0": "deep cyan blue",
+    "#6dd5ed": "sky blue",
+    "#ee0979": "vivid magenta",
+    "#ff6a00": "vivid orange",
+    "#44f7c2": "turquoise",
+    "#ff9a9e": "salmon pink",
+    "#fad0c4": "peach pink",
+    "#a18cd1": "soft purple",
+    "#fbc2eb": "blush pink",
+    "#ffecd2": "cream white",
+    "#11998e": "deep teal",
+    "#38ef7d": "lime green",
+    "#fc4a1a": "fiery orange-red",
+    "#f7b733": "amber yellow",
+    "#0099f7": "electric blue",
+    "#ff00ff": "electric magenta",
+    "#00ffff": "luminous cyan",
+    "#ff6600": "warning orange",
+    "#ff0055": "crimson alert",
+    "#a8e6cf": "pale mint",
+    "#dcedc1": "sage green",
+    "#ffd3b6": "warm peach",
+    "#ffaaa5": "coral orange",
+    "#d4a5e5": "soft lilac",
+    "#ff6b6b": "coral red",
+    "#ffd93d": "bright yellow",
+    "#6bcb77": "fresh green",
+    "#4d96ff": "sky blue",
+    "#ff922b": "warm orange",
+    "#2d4a22": "deep forest green",
+    "#8b4513": "saddle brown",
+    "#daa520": "golden amber",
+    "#1a1a5e": "dark navy",
+    "#8b0000": "deep crimson",
+    "#ff595e": "vivid red",
+    "#ffca3a": "amber yellow",
+    "#6a4c93": "deep purple",
+    "#1982c4": "royal blue",
+    "#8ac926": "lime green",
+    "#e63946": "vibrant tomato red",
+    "#457b9d": "steel blue",
+    "#f1faee": "off-white",
+    "#a8dadc": "powder blue",
+    "#ffd6a5": "warm peach",
+    "#264653": "dark slate blue",
+    "#2a9d8f": "emerald teal",
+    "#e9c46a": "golden yellow",
+    "#f4a261": "sandy orange",
+    "#e76f51": "burnt terracotta",
+    "#c9a84c": "metallic gold",
+    "#f5f0e8": "warm ivory",
+    "#7d7d7d": "medium gray",
+  };
+
+  function formatColorForUniversal(hexColor) {
+    const hex = String(hexColor || "").trim().toLowerCase();
+    if (!hex) return "";
+    const cleanHex = hex.startsWith("#") ? hex : `#${hex}`;
+    const mapped = COLOR_NAME_MAP[cleanHex];
+    if (_s.targetEngine === "imagen") {
+      return mapped ? mapped : "custom color tone";
+    }
+    if (mapped) return `${cleanHex} (${mapped})`;
+    if (/^#[0-9a-f]{3,6}$/i.test(cleanHex)) {
+      return `${cleanHex} (custom color tone)`;
+    }
+    return hex;
+  }
+
+  function sanitizePromptForUniversal(promptText) {
+    let cleaned = promptText;
+
+    // 1. HEX 코드를 찾아서 괄호 병기 형태로 일괄 정규식 치환 (단, 이미 병기되어 있지 않은 경우에만)
+    cleaned = cleaned.replace(/#([0-9a-fA-F]{3,6})(?!\s*\()/gi, (match) => {
+      return formatColorForUniversal(match);
+    });
+
+    // 2. 무의미한 품질 키워드 제거
+    cleaned = cleaned.replace(/(,\s*)?(4[kK]|ultra-detailed|hyper-detailed|hyperrealistic|photorealistic|high quality|extremely detailed)/g, "");
+    cleaned = cleaned.replace(/^,\s*/, "");
+
+    // 3. 부정문 지시어 우회 보정
+    cleaned = cleaned.replace(/\bno\s+(blurry|blur|low-quality|cluttered|distorted|noisy)\b/gi, "clean and crystal clear focused");
+    cleaned = cleaned.replace(/\bavoid\s+(text|texts|font|fonts|typography|letters)\b/gi, "maintain visual composition with zero text clutter");
+    cleaned = cleaned.replace(/\bno\s+(text|texts|font|fonts|typography|letters)\b/gi, "zero text clutter");
+    cleaned = cleaned.replace(/\b(without|exclude)\s+(text|texts|font|fonts|typography|letters)\b/gi, "clean zero text layout");
+
+    return cleaned.trim();
+  }
+
+  function replaceHexCodesWithNames(text) {
+    if (!text) return "";
+    return text.replace(/#[0-9a-fA-F]{6}/g, (hex) => {
+      const h = hex.toLowerCase();
+      return COLOR_NAME_MAP[h] || h || "custom color";
+    });
+  }
+
+  function convertAvoidToPositive(avoidText) {
+    if (!avoidText) return "";
+    const clean = avoidText.toLowerCase().trim();
+    const mappings = [
+      { bad: "avoid cluttered HUD overload, unreadable tiny details, and mismatched fantasy props", good: "Keep the interface layout simple and clear, with highly legible key details, ensuring all design props align naturally with the campaign theme" },
+      { bad: "avoid plastic-looking overgloss, distorted perspective, and fake terrain unless requested", good: "Use matte or realistically satin surfaces, keep the perspective standard and geometrically balanced, and ensure natural realistic environments" },
+      { bad: "avoid sterile digital finish, excessive symmetry, and glossy stock-photo polish", good: "Incorporate organic hand-made textures, slight natural asymmetry, and warm soft-toned material feels" },
+      { bad: "avoid generic clip-art, inconsistent line styles, and overcrowded decoration", good: "Focus on bespoke uniform drawing styles, consistent line weights, and clean balanced compositions" },
+      { bad: "avoid random decoration, weak alignment, and low-contrast palette mixing", good: "Adhere to grid discipline, crisp structural alignments, and clean high-contrast color pairings" },
+      { bad: "avoid fake-looking composites, warped products, and unreadable busy backgrounds", good: "Stage product structures with believable scale and perspective, leaving background layers clean and low-noise" },
+      { bad: "avoid awkward anatomy, cheap styling, and fabric texture mismatch", good: "Depict realistic proportions, elegant premium styling, and authentic material fabrics" },
+      { bad: "avoid impossible construction, broken perspective, and scale confusion", good: "Render stable realistic architecture, natural spatial perspective, and plausible proportional scales" },
+      { bad: "avoid weak motion, impossible poses, and confusing team/color hierarchy", good: "Capture dynamic readable action moments, natural anatomy, and distinct team color coding" },
+      { bad: "avoid fake logos, cluttered claims, and off-brand decorative noise", good: "Leave clean space for real logos, keep claims minimal and readable, and focus on brand-aligned visual hierarchy" },
+      { bad: "avoid fake ecology, over-saturated greens, and inaccurate natural textures", good: "Depict authentic ecological scenes, natural balanced green tones, and realistic botanical textures" },
+      { bad: "avoid unappetizing colors, warped food anatomy, and messy plating", good: "Use warm appetizing color tones, accurate food structures, and clean elegant plating" },
+      { bad: "avoid costume clichés, inaccurate symbols, and disrespectful cultural mixing", good: "Respect cultural heritage details, use accurate traditional symbols, and maintain authentic cultural representation" },
+      { bad: "avoid fake scientific labels, impossible instruments, and visual misinformation", good: "Use clear factual visual references, mathematically plausible scientific instruments, and clean layout labels" },
+      { bad: "avoid misleading medical certainty, grotesque anatomy, and inaccurate scale cues", good: "Depict clean anatomical structures, clear biological scale cues, and professional scientific representation" },
+      { bad: "avoid unsafe equipment depictions, fake meters, and chaotic glow effects", good: "Ensure safe and realistic industrial equipment styling, clean metrics, and controlled ambient glows" },
+      { bad: "avoid unreadable fake ui, excessive neon, and meaningless data clutter", good: "Design highly legible functional UI panels, balanced clean glows, and scannable structured data layouts" },
+      { bad: "avoid unsafe workplace setups, impossible machinery, and dirty visual clutter", good: "Keep scale believable, surfaces specific, and operational context clear" },
+      { bad: "avoid black full-canvas background, avoid nightclub/neon darkness, avoid heavy gloomy shadows", good: "Maintain a clean bright layout with high text contrast, generous whitespace, and light neutral backgrounds" }
+    ];
+
+    for (const m of mappings) {
+      if (clean.includes(m.bad.toLowerCase())) {
+        return m.good;
+      }
+    }
+
+    let processed = avoidText;
+    processed = processed.replace(/avoid\s+losing\s+the\s+original\s+style\s+identity\s+from\s+the\s+source\s+concept\.?/gi, "Maintain the original style identity of the source concept.");
+    processed = processed.replace(/avoid\s+([^,.;]+)/gi, (match, p1) => {
+      return `maintain a clean design by ensuring there is no ${p1.trim()}`;
+    });
+    return processed;
+  }
+
+  function sanitizePromptForImagen(text) {
+    if (!text) return "";
+    
+    // 1. HEX 코드 및 괄호 병기 등 일괄 정제
+    let processedText = replaceHexCodesWithNames(text);
+
+    // 2. 라인별 전처리 진행
+    let lines = processedText.split(/\r?\n/);
+    let keptLines = [];
+    
+    for (let line of lines) {
+      let trimmed = line.trim();
+      if (!trimmed) continue;
+      
+      // 대괄호 섹션 헤더 처리 (대괄호를 제거하거나 서술형 문장 성분으로 가공)
+      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+        const header = trimmed.slice(1, -1);
+        keptLines.push(`Regarding ${header}:`);
+        continue;
+      }
+
+      // '절대 금지', 'Strictly avoid'와 같은 부정 룰들 치환
+      if (trimmed.startsWith("- 절대 금지:") || trimmed.startsWith("- Strictly avoid:")) {
+        const token = trimmed.replace(/^-\s*(절대 금지|Strictly avoid):\s*/i, "");
+        keptLines.push(`• Maintain a clean design without: ${convertAvoidToPositive(token)}`);
+        continue;
+      }
+      
+      // 'avoid ' 문장이 들어간 라인 치환
+      if (trimmed.toLowerCase().includes("avoid ")) {
+        keptLines.push(`• ${convertAvoidToPositive(trimmed.replace(/^-\s*/, ""))}`);
+        continue;
+      }
+
+      // "이미지 내 모든 텍스트..." 같은 복잡한 기술 지시 제거
+      if (/벡터급 선명도로|vector-quality sharpness|안티에일리어싱|anti-aliasing/i.test(trimmed)) {
+        keptLines.push("• Ensure clean visual backdrop spaces for overlay text.");
+        continue;
+      }
+      if (/실제 존재하는 기업|Do not invent or imitate real company/i.test(trimmed)) {
+        keptLines.push("• Leave logo zones as empty neutral placeholders.");
+        continue;
+      }
+      keptLines.push(trimmed);
+    }
+    
+    let joined = keptLines.join("\n");
+    // 리스트 기호(-)를 불릿(•)으로 변경하여 마크다운 대시가 텍스트 렌더링에 노출될 위험 감소
+    joined = joined.replace(/^-\s+/gm, "• ");
+    return joined;
+  }
+
   // ── EXTRACTED ENGINE FUNCTIONS (all state.X -> _s.X, helpers -> _h.fn()) ──
 
 function prunePromptLines(lines) {
@@ -597,16 +811,8 @@ function getConceptQualityLines() {
       ? `${_h.localizeSentence("컨셉 항목별 품질 규칙", "Concept item-level quality rules")}: ${_s.appliedConceptQualityRules}`
       : "",
     _h.localizeSentence(
-      "컨셉 결합 품질 검사: 최종 이미지를 보고 선택한 컨셉명을 몰라도 해당 컨셉의 팔레트·형태·질감·조명 방향이 느껴져야 한다.",
-      "Concept integration quality check: even without knowing the selected concept name, the final image must visibly communicate that concept's palette, form, texture, and lighting direction."
-    ),
-    _h.localizeSentence(
-      "컨셉 과잉 방지: 컨셉 요소가 텍스트 정확성, 헤드라인 판독성, CTA 집중도, 필수 정보 위계를 가리면 안 된다.",
-      "Prevent concept overreach: concept elements must not obscure text accuracy, headline readability, action-button focus, or required information hierarchy."
-    ),
-    _h.localizeSentence(
-      "컨셉 누락 방지: 단순히 색상만 바꾸는 수준으로 끝내지 말고, 키비주얼 오브젝트, 정보 묶음, 배경 패턴, 조명 또는 형태 비율 중 최소 두 영역에 컨셉을 구조적으로 반영한다.",
-      "Prevent concept underuse: do not stop at changing colors only; structurally apply the concept to at least two areas among key visual object, information grouping, background pattern, lighting, or form proportions."
+      "선택한 컨셉의 색감, 형태, 질감을 배경과 오브젝트에 과하지 않게 자연스럽게 녹여내고, 글자의 가독성을 최우선으로 확보하시오.",
+      "Blend the concept colors, forms, and textures naturally into the background and objects while ensuring text readability is the absolute priority."
     ),
   ]);
 }
@@ -671,6 +877,37 @@ function createPromptSections(validation, lint) {
     "creativityLevel",
   ]);
 
+  const assetLayoutTemplates = {
+    "card-news": _h.localizeSentence(
+      "구도 프레임워크 (카드뉴스): SNS 카드뉴스 포스트에 최적화된 정돈된 사각형 레이아웃 구조. 정보 묶음을 감싸는 라운드 테두리 패널과 헤드라인용 단색 오버레이 배너 영역을 명확히 디자인하여 텍스트 배치가 쉬운 템플릿 캔버스를 만든다.",
+      "Composition Framework (Card News): A structured square layout optimized for social media card news. Designed with clean background panels featuring rounded borders and a dedicated flat color zone, creating a perfect canvas ready for graphic and text overlays."
+    ),
+    "poster": _h.localizeSentence(
+      "구도 프레임워크 (포스터): 여백이 강조된 강렬한 세로형 포스터 레이아웃 구조. 화면 중앙에 선명하게 포커싱된 메인 비주얼, 테두리 사방에 보호 여백을 충분히 두고, 상단에는 큰 제목, 하단에는 날짜/장소/참여방법 정보가 오목조목 묶일 수 있는 별도 정보 프레임 밴드를 설계한다.",
+      "Composition Framework (Poster): A vertical graphic poster design. Features a clear visual hierarchy with a strong center-focused key visual, wide protective margins on all edges, and distinct empty header and footer bands designed to hold titles and event information without clutter."
+    ),
+    "notice": _h.localizeSentence(
+      "구도 프레임워크 (안내문): 단정한 모던 안내판 및 공고문 보드 레이아웃 구조. 차분한 미니멀리즘 배경 위에 정보가 구조적으로 정렬되도록 격자형(그리드) 라인 디바이더와 모듈형 블록 카드들을 질서 정연하게 배치한다.",
+      "Composition Framework (Notice): A corporate announcement bulletin board layout. Features clean grid dividers and modular block shapes on a warm minimal background, designed to present structured information in a clean, highly readable executive format."
+    )
+  };
+
+  let resolvedLayoutKey = "notice";
+  const effectiveRatio = String(_s.ratio || "").trim();
+  const effectiveOrientation = typeof _h.getEffectiveOrientation === "function" 
+    ? _h.getEffectiveOrientation() 
+    : (_s.orientation || "vertical");
+
+  if (effectiveRatio === "1:1") {
+    resolvedLayoutKey = "card-news";
+  } else if (effectiveOrientation === "vertical") {
+    resolvedLayoutKey = "poster";
+  } else {
+    resolvedLayoutKey = "notice";
+  }
+
+  const currentAssetLayout = assetLayoutTemplates[resolvedLayoutKey] || "";
+
   const targetLines = prunePromptLines([
     `${_h.localizeSentence("산출물 유형", "Asset type")}: ${_h.localizeValue(ASSET_LABELS[_s.assetType])}`,
     `${_h.localizeSentence("컨텐츠 유형", "Content template")}: ${_h.localizeValue(CONTENT_TYPE_TEMPLATES[_s.contentType]?.name || "직접 입력")}`,
@@ -678,6 +915,7 @@ function createPromptSections(validation, lint) {
     _s.sizeMode === "direct"
       ? `${_h.localizeSentence("직접 입력 크기", "Exact size")}: ${_h.getPromptSpecificationSummary()}`
       : `${_h.localizeSentence("비율/방향", "Aspect ratio / orientation")}: ${_h.getPromptSpecificationSummary()} / ${_h.localizeValue(_h.getEffectiveOrientation() === "vertical" ? "세로형" : "가로형")}`,
+    currentAssetLayout,
   ]);
 
   const visualPlanningModeLines = prunePromptLines([
@@ -702,10 +940,15 @@ function createPromptSections(validation, lint) {
   const koreanTextConstraint =
     _s.outputLanguage !== "en" && _s.outputLanguage !== "bilingual"
       ? [
-          _h.localizeSentence(
-            "이미지에 렌더링되는 텍스트(헤드라인·서브카피·CTA·오퍼·훅 등)는 사용자가 입력한 원문 언어 그대로 표기한다. 한국어 입력은 한국어로, 영어 입력은 영어로 렌더링하며, AI가 임의로 번역하거나 언어를 전환하지 않는다.",
-            "Render all on-image text (headline, sub-copy, CTA, offer, hook, etc.) in exactly the language the user provided — Korean stays Korean, English stays English. Do not translate or switch languages arbitrarily."
-          ),
+          _s.targetEngine === "imagen"
+            ? _h.localizeSentence(
+                "이미지 내부에는 글자를 직접 렌더링하지 말고, 추후 텍스트가 삽입될 여백(Negative Space)과 정돈된 레이아웃 구도만 완성하시오.",
+                "Do not render text characters directly on the image; complete only the clean layouts and empty negative spaces for future text overlays."
+              )
+            : _h.localizeSentence(
+                "이미지에 렌더링되는 텍스트(헤드라인·서브카피·CTA·오퍼·훅 등)는 사용자가 입력한 원문 언어 그대로 표기한다. 한국어 입력은 한국어로, 영어 입력은 영어로 렌더링하며, AI가 임의로 번역하거나 언어를 전환하지 않는다.",
+                "Render all on-image text (headline, sub-copy, CTA, offer, hook, etc.) in exactly the language the user provided — Korean stays Korean, English stays English. Do not translate or switch languages arbitrarily."
+              ),
         ]
       : [];
 
@@ -727,24 +970,24 @@ function createPromptSections(validation, lint) {
 
   const defaultHardConstraintLines = [
     _h.localizeSentence(
-      "이미지 안 텍스트는 사용자가 제공한 문구와 AI 자동 생성 요청 항목만 사용하고, 임의 문장·가짜 한글·중복 문구·의미 없는 장식 텍스트를 추가하지 않는다.",
-      "Use only the user-provided copy and explicitly requested AI-generated copy on the image; do not add arbitrary sentences, fake Korean, duplicated copy, or meaningless decorative text."
+      "이미지 안 텍스트는 임의 문장·가짜 한글·중복 문구·의미 없는 장식 텍스트 없이 제공된 문구만 사용한다.",
+      "Use only the provided copy on the image; do not add arbitrary text, fake characters, or duplicate copy."
     ),
     _h.localizeSentence(
-      "이미지 내 모든 텍스트(헤드라인·서브카피·CTA·숫자·날짜)는 벡터급 선명도로 렌더링한다: 배경 색상에 맞는 정교한 안티에일리어싱, 정확한 글리프 형태·자간·철자 유지. 사용자가 제공하지 않은 임의의 문자, 기호, 단어를 추가하지 않는다.",
-      "Render all on-image text (headlines, sub-copy, CTA, numbers, dates) with vector-quality sharpness: precise anti-aliasing against the background color, exact glyph shapes, correct letter-spacing, zero spelling errors. Do not add any characters, symbols, or words not present in the user input."
+      "모든 텍스트는 철자 오류 없이 정확하고 선명한 아웃라인으로 렌더링한다.",
+      "Render all text clearly with correct spelling and zero distortion."
     ),
     _h.localizeSentence(
-      "실제 존재하는 기업·기관·정부 로고, 상표, 엠블럼, 워터마크를 임의로 생성하거나 모사하지 않는다. 필요한 경우 깨끗한 빈 자리 또는 중립 플레이스홀더로 남긴다.",
-      "Do not invent or imitate real company, institution, government logos, trademarks, emblems, or watermarks. Leave a clean blank area or neutral placeholder if needed."
+      "실제 로고/상표는 직접 생성하지 말고, 필요한 경우 빈 자리나 중립 플레이스홀더로 남긴다.",
+      "Do not invent real logos or trademarks; leave a clean empty slot or neutral placeholder instead."
     ),
     _h.localizeSentence(
-      `주요 헤드라인, 핵심 수치, ${actionElementLabelKo()}는 캔버스 가장자리에서 충분히 떨어진 안전영역 안에 배치한다.`,
-      `Place key information such as the headline, key numbers, and ${actionElementLabelEn()} inside a safe area with enough margin from the canvas edges.`
+      `주요 헤드라인과 ${actionElementLabelKo()}는 외곽 경계선에 너무 가깝지 않은 안전한 영역 내에 정렬해 둔다.`,
+      `Align key headline and ${actionElementLabelEn()} safely away from the canvas edges.`
     ),
     _h.localizeSentence(
-      "결과물은 목업 화면, 포스터를 든 장면, 프레임 안 미리보기, 흰 외부 여백이 아니라 바로 배포 가능한 단일 홍보 이미지여야 한다.",
-      "The result must be a single ready-to-use promotion image, not a mockup screen, poster-in-hand scene, framed preview, or image with external white margins."
+      "결과물은 목업 프레임, 외부 흰 여백, 포스터를 손에 든 연출 장면이 없는 깨끗한 단일 그래픽 디자인 자체여야 한다.",
+      "Ensure a single flat graphic design without mockups, outer white borders, or hand-held poster scenes."
     ),
   ];
 
@@ -786,6 +1029,33 @@ function createPromptSections(validation, lint) {
       "arbitrary decorative text", "random text overlay",
       "flat isolated layout", "no depth",
     ];
+
+    const is3dActive = 
+      /3d|game|isometric|입체|토이/i.test(_s.appliedConceptCategory || "") ||
+      /3d|game|isometric|입체|토이/i.test(_s.appliedConceptStyle || "") ||
+      /3d|game|isometric|입체|토이/i.test(_s.visualStyle || "");
+
+    const isFlatActive = 
+      /flat|minimal|vector|graphic|modern|illustration|일러스트|플랫/i.test(_s.appliedConceptCategory || "") ||
+      /flat|minimal|vector|graphic|modern|illustration|일러스트|플랫/i.test(_s.appliedConceptStyle || "") ||
+      /flat|minimal|vector|graphic|modern|illustration|일러스트|플랫/i.test(_s.visualStyle || "") ||
+      /centered|split-screen/i.test(_s.layoutComposition || "");
+
+    const excludedKo = [];
+    const excludedEn = [];
+
+    if (is3dActive) {
+      excludedKo.push("장난감 같은 3D", "플라스틱 렌더링", "가짜 홀로그램");
+      excludedEn.push("toy-like 3D", "plastic render", "fake hologram");
+    }
+    if (isFlatActive) {
+      excludedKo.push("평면 격리 레이아웃", "공간감 없는 배치");
+      excludedEn.push("flat isolated layout", "no depth");
+    }
+
+    const filteredKo = BASE_KO.filter((item) => !excludedKo.includes(item));
+    const filteredEn = BASE_EN.filter((item) => !excludedEn.includes(item));
+
     const userExtra = mergedForbiddenTokens
       .map(normalizeForbiddenPromptToken)
       .filter(Boolean)
@@ -798,19 +1068,27 @@ function createPromptSections(validation, lint) {
     const extraAll = [...userExtra, ...antiExtra].filter(Boolean);
 
     if (_s.outputLanguage === "en") {
-      return prunePromptLines([[...BASE_EN, ...extraAll].join(", ")]);
+      return prunePromptLines([[...filteredEn, ...extraAll].join(", ")]);
     }
     if (_s.outputLanguage === "bilingual") {
       return prunePromptLines([
-        `KO: ${[...BASE_KO, ...extraAll].join(", ")}`,
-        `EN: ${[...BASE_EN, ...extraAll].join(", ")}`,
+        `KO: ${[...filteredKo, ...extraAll].join(", ")}`,
+        `EN: ${[...filteredEn, ...extraAll].join(", ")}`,
       ]);
     }
-    return prunePromptLines([[...BASE_KO, ...extraAll].join(", ")]);
+    return prunePromptLines([[...filteredKo, ...extraAll].join(", ")]);
   })();
 
   const directTextLines = prunePromptLines(
-    textEntries.map((entry) => `${_h.localizeValue(entry.label)}: ${_h.localizeValue(entry.value)}`)
+    _s.targetEngine === "imagen"
+      ? textEntries.map((entry) => {
+          const cleanLabel = _h.localizeValue(entry.label);
+          return _h.localizeSentence(
+            `텍스트 배치 영역 확보 - [${cleanLabel}]: 텍스트가 삽입될 수 있는 단색의 깨끗하고 노이즈 없는 백드롭/플레이스홀더/여백(Negative Space) 영역을 남겨두시오.`,
+            `Backdrop for [${cleanLabel}]: Reserve a clean, flat, noise-free solid backdrop plate or negative space ready for the text overlay.`
+          );
+        })
+      : textEntries.map((entry) => `${_h.localizeValue(entry.label)}: ${_h.localizeValue(entry.value)}`)
   );
 
   const informationItemLayoutLines = prunePromptLines(
@@ -1107,16 +1385,18 @@ function createPromptSections(validation, lint) {
     ...qrCodePromptLines(),
   ]);
 
-  // 비주얼 방향성: bigIdea, visualMetaphor 수동 입력값 + AI 은유 다양성 지시
-  // (구성 실험 강도·위험도 프로파일은 제거됨 — 변형 시드가 방향성을 담당)
+  // 비주얼 방향성: bigIdea, visualMetaphor 수동 입력값 + AI 은유 다양성 지시 + 구성 실험 강도/창의성 프로파일 반영
+const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREATIVITY_LEVEL_PROFILES.balanced;
+  const creativityLevelLines = getLocalizedProfileLines(creativityProfile);
+
   const creativityLines = prunePromptLines([
     (_h.isDetailVisualPlanningMode() && isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea) ? `${_h.localizeSentence("핵심 개념", "Core concept")}: ${_h.localizeValue(_s.bigIdea)}` : "",
     (_h.isDetailVisualPlanningMode() && isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor) ? `${_h.localizeSentence("비주얼 은유", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}` : "",
     ...visualMetaphorDiversityLines,
+    ...creativityLevelLines,
   ]);
 
   const backgroundDetailLines = _h.getNonConceptPromptLines(_s.backgroundDetails);
-  // 기본 모드에서는 배경 상세 지시가 컨셉 비주얼 DNA와 충돌하므로 완전히 제외한다.
   const backgroundDetailsForPrompt = _h.isBasicVisualPlanningMode()
     ? ""
     : backgroundDetailLines.join("\n");
@@ -1124,7 +1404,7 @@ function createPromptSections(validation, lint) {
     _h.isBasicVisualPlanningMode() && _h.hasBasicConceptPromptInput()
       ? (() => {
           const hasRich = !!trimValue(_s.appliedConceptPromotionPrompt);
-          if (hasRich) return []; // richPrompt의 [Color System]이 완전히 커버
+          if (hasRich) return [];
           return [
             _h.localizeSentence(
               "색상 출처: 컨셉 제안의 Color System을 기본 모드의 색상 기준으로 사용한다.",
@@ -1186,8 +1466,6 @@ function createPromptSections(validation, lint) {
         ]
   );
 
-  // 변형 모드가 활성일 때만 레이아웃 반복 방지 압박을 추가한다.
-  // 기본 모드("none")에서는 상업적으로 검증된 표준 구성도 허용해야 하므로 제외한다.
   const hasVariationMode = _s.variationMode && _s.variationMode !== "none";
 
   const compositeQualityLines = [
@@ -1338,11 +1616,37 @@ function createPromptSections(validation, lint) {
 }
 
 function buildTextLanguageDirective() {
+  if (_s.targetEngine === "imagen") {
+    return _h.localizeSentence(
+      " 텍스트 가독성을 최우선하여, 글자가 배치될 영역에는 시각 노이즈나 복잡한 패턴을 전면 배제하고 완전한 여백으로 처리하라.",
+      " Prioritize text readability: ensure areas reserved for text overlays are completely free of visual noise, cluttered patterns, or high-contrast background elements."
+    );
+  }
   // 영문 전용 또는 한영 병기 모드에서는 언어 강제 규칙을 삽입하지 않는다
   if (_s.outputLanguage === "en" || _s.outputLanguage === "bilingual") return "";
   return _h.localizeSentence(
     "이미지 안에 렌더링되는 텍스트(헤드라인, 서브카피, CTA, 본문 포인트 등)는 사용자가 입력한 원문 언어 그대로 표기한다. 입력값이 한국어이면 한국어로, 영어이면 영어로 렌더링하고, AI가 임의로 번역하거나 다른 언어로 전환하지 않는다. 해시태그는 입력된 언어와 표기 방식을 유지한다.",
     "Render all on-image text (headline, sub-copy, CTA, body points, etc.) exactly in the language the user provided — Korean stays Korean, English stays English. Do not translate or switch languages arbitrarily. Hashtags follow the same rule and retain their original language and format."
+  );
+}
+
+function getPriorityTierName(priority) {
+  const p = Number(priority || 0);
+  if (p < 30) return { ko: "우선순위 1: Critical", en: "Priority 1: Critical" };
+  if (p < 60) return { ko: "우선순위 2: High", en: "Priority 2: High" };
+  return { ko: "우선순위 3: Medium", en: "Priority 3: Medium" };
+}
+
+function buildPriorityTierDirective() {
+  if (_s.targetEngine === "imagen") {
+    return _h.localizeSentence(
+      " 이미지는 복잡한 지시문 조건보다 시각적 아름다움, 질감, 그리고 텍스트가 배치될 영역의 완전한 평면성과 여백 확보를 최우선으로 하여 생성하라.",
+      " Focus on visual elegance, texture rendering, and reserving clean negative spaces for text overlays over strict constraint checklist matching."
+    );
+  }
+  return _h.localizeSentence(
+    " 정의된 우선순위 등급(Critical > High > Medium)을 엄격히 준수하여 이미지를 생성하라. 만약 비주얼 스타일이나 배경이 글자 배치 및 정보 보드 구조와 충돌할 경우, 최우선순위(Critical) 지시가 다른 모든 지시보다 최우선으로 적용되어 가독성을 침해해선 안 된다.",
+    " Follow the directives in strict order of the defined Priority Tiers (Critical > High > Medium). If visual style or background elements conflict with text placement or board structures, Priority 1 (Critical) directives MUST override all other instructions to ensure readability."
   );
 }
 
@@ -1355,6 +1659,7 @@ function buildRoleStatement() {
     : "";
   const assetLabel = _h.localizeSentence(ASSET_LABELS[_s.assetType], ASSET_PROMPT_TARGET_EN[_s.assetType] || ASSET_LABELS[_s.assetType]);
   const langDirective = buildTextLanguageDirective();
+  const priorityDirective = buildPriorityTierDirective();
   const goalValue = trimValue(_s.goal || CONTENT_TYPE_TEMPLATES[_s.contentType]?.goal || "");
   const audienceValue = trimValue(_s.audience || CONTENT_TYPE_TEMPLATES[_s.contentType]?.audience || "");
   const missionBits = [
@@ -1369,13 +1674,13 @@ function buildRoleStatement() {
     : "";
   if (contentName) {
     return _h.localizeSentence(
-      `아래 지시에 따라 [${contentName}] 목적의 ${assetLabel}를 생성하라. 상업 광고 수준의 완성도, 텍스트 정확성, 레이아웃 위계, 브랜드 일관성을 동시에 충족해야 한다.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}`,
-      `Generate a ${assetLabel} for [${contentName}] following the instructions below. It must achieve campaign-grade commercial polish, exact text fidelity, strong layout hierarchy, and brand consistency at the same time.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}`
+      `아래 지시에 따라 [${contentName}] 목적의 ${assetLabel}를 생성하라. 상업 광고 수준의 완성도, 텍스트 정확성, 레이아웃 위계, 브랜드 일관성을 동시에 충족해야 한다.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}${priorityDirective}`,
+      `Generate a ${assetLabel} for [${contentName}] following the instructions below. It must achieve campaign-grade commercial polish, exact text fidelity, strong layout hierarchy, and brand consistency at the same time.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}${priorityDirective}`
     );
   }
   return _h.localizeSentence(
-    `아래 지시에 따라 ${assetLabel}를 생성하라. 상업 광고 수준의 완성도, 텍스트 정확성, 레이아웃 위계, 브랜드 일관성을 동시에 충족해야 한다.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}`,
-    `Generate a ${assetLabel} following the instructions below. It must achieve campaign-grade commercial polish, exact text fidelity, strong layout hierarchy, and brand consistency at the same time.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}`
+    `아래 지시에 따라 ${assetLabel}를 생성하라. 상업 광고 수준의 완성도, 텍스트 정확성, 레이아웃 위계, 브랜드 일관성을 동시에 충족해야 한다.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}${priorityDirective}`,
+    `Generate a ${assetLabel} following the instructions below. It must achieve campaign-grade commercial polish, exact text fidelity, strong layout hierarchy, and brand consistency at the same time.${conceptDirective}${langDirective ? ` ${langDirective}` : ""}${priorityDirective}`
   );
 }
 
@@ -1432,16 +1737,20 @@ function renderReviewPrompt(validation, lint) {
     buildRoleStatement(),
   ];
 
-  const sectionLines = sections.flatMap((section) => [
-    "",
-    `## ${section.title}`,
-    ...finalizePromptLines(section.lines.flatMap((line) => line.split(/\r?\n/)))
-      .map((line) => {
-        const t = line.trim();
-        if (/^\[.+\]$/.test(t)) return `### ${t.slice(1, -1)}`;
-        return `- ${t.replace(/^-\s*/, "")}`;
-      }),
-  ]);
+  const sectionLines = sections.flatMap((section) => {
+    const tier = getPriorityTierName(section.priority);
+    const tierPrefix = _s.outputLanguage === "en" ? `[${tier.en}] ` : `[${tier.ko}] `;
+    return [
+      "",
+      `## ${tierPrefix}${section.title}`,
+      ...finalizePromptLines(section.lines.flatMap((line) => line.split(/\r?\n/)))
+        .map((line) => {
+          const t = line.trim();
+          if (/^\[.+\]$/.test(t)) return `### ${t.slice(1, -1)}`;
+          return `- ${t.replace(/^-\s*/, "")}`;
+        }),
+    ];
+  });
 
   const footer = [
     "",
@@ -1457,32 +1766,29 @@ function renderReviewPrompt(validation, lint) {
     _h.localizeSentence("- 색상 시스템 일관성 및 이미지 품질 기준 반영", "- Color system consistency and image quality standards"),
   ];
 
-  return [...intro, ...sectionLines, ...footer].join("\n");
+  const rawPrompt = sanitizePromptForUniversal([...intro, ...sectionLines, ...footer].join("\n"));
+  return _s.targetEngine === "imagen" ? sanitizePromptForImagen(rawPrompt) : rawPrompt;
 }
 
 function renderOptimizedPrompt(validation, lint) {
   const sections = createPromptSections(validation, lint);
-  const compressed = sections.flatMap((section) =>
-    finalizePromptLines(section.lines)
-      .flatMap((line) => line.split(/\r?\n/))
-      .filter((line) => !shouldSkipOptimizedLine(line.trim()))
-      .map((line) => `- ${line.replace(/^\d+\.\s*/, "").trim().replace(/^-\s*/, "")}`)
-  );
   const assetLabelEn = ASSET_PROMPT_TARGET_EN[_s.assetType] || ASSET_LABELS[_s.assetType];
   const contentNameEn = _s.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES_EN[_s.contentType]?.name || "") : "";
   const contentNameKo = _s.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES[_s.contentType]?.name || "") : "";
+  const priorityTierDirective = buildPriorityTierDirective();
+  
   const optimizedIntro = [
     _h.localizeSentence(
       contentNameKo
-        ? `[${contentNameKo}] 목적의 고품질 홍보 이미지를 생성하라.`
-        : `고품질 홍보 이미지를 생성하라.`,
+        ? `[${contentNameKo}] 목적의 고품질 홍보 이미지를 생성하라. 상업 광고 수준의 완성도, 텍스트 정확성, 레이아웃 위계, 브랜드 일관성을 동시에 충족해야 한다.${priorityTierDirective}`
+        : `고품질 홍보 이미지를 생성하라. 상업 광고 수준의 완성도, 텍스트 정확성, 레이아웃 위계, 브랜드 일관성을 동시에 충족해야 한다.${priorityTierDirective}`,
       contentNameEn
-        ? `Generate a premium ${assetLabelEn} for [${contentNameEn}].`
-        : `Generate a premium ${assetLabelEn}.`
+        ? `Generate a premium ${assetLabelEn} for [${contentNameEn}] following the instructions below. It must achieve campaign-grade commercial polish, exact text fidelity, strong layout hierarchy, and brand consistency at the same time.${priorityTierDirective}`
+        : `Generate a premium ${assetLabelEn} following the instructions below. It must achieve campaign-grade commercial polish, exact text fidelity, strong layout hierarchy, and brand consistency at the same time.${priorityTierDirective}`
     ),
     _h.localizeSentence(
-      "텍스트 정확성, 타이포그래피 위계, 레이아웃 명확성, CTA 집중도와 상업 광고 수준의 완성도를 최우선으로 처리하라.",
-      "Prioritize exact text fidelity, typography hierarchy, layout clarity, strong CTA focus, and campaign-grade commercial finish."
+      "텍스트 정확성, 타이포그래피 위계, 레이아웃 명확성, CTA 집중도를 최우선으로 처리하라.",
+      "Prioritize exact text fidelity, typography hierarchy, layout clarity, and strong CTA focus."
     ),
     _h.localizeSentence(
       "평범한 템플릿형 안내 이미지로 만들지 말고, 타이포그래피 중심·상징 오브젝트 중심·공간 분할 중심 중 하나의 광고 콘셉트를 과감하게 선택해 차별화된 결과를 만든다.",
@@ -1501,7 +1807,26 @@ function renderOptimizedPrompt(validation, lint) {
       : []),
   ];
 
-  return prunePromptLines([...optimizedIntro, ...resolveConflictLines(compressed, lint)]).join("\n");
+  const sectionLines = sections.flatMap((section) => {
+    const lines = finalizePromptLines(section.lines)
+      .flatMap((line) => line.split(/\r?\n/))
+      .filter((line) => !shouldSkipOptimizedLine(line.trim()))
+      .map((line) => `- ${line.replace(/^\d+\.\s*/, "").trim().replace(/^-\s*/, "")}`);
+    
+    if (lines.length === 0) return [];
+    
+    const tier = getPriorityTierName(section.priority);
+    const tierPrefix = _s.outputLanguage === "en" ? `[${tier.en}] ` : `[${tier.ko}] `;
+    
+    return [
+      "",
+      `## ${tierPrefix}${section.title}`,
+      ...lines
+    ];
+  });
+
+  const rawPrompt = sanitizePromptForUniversal(prunePromptLines([...optimizedIntro, ...sectionLines]).join("\n"));
+  return _s.targetEngine === "imagen" ? sanitizePromptForImagen(rawPrompt) : rawPrompt;
 }
 
 function sanitizePromptForAI(text) {

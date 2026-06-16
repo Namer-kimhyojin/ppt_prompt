@@ -49,7 +49,7 @@ window.CONCEPT_STYLES = [
     { id: 'cyberpunk', category: '3d', nameKo: '사이버펑크', nameEn: 'Neon Cyberpunk', emoji: '🌆',
       desc: '어두운 미래 도시와 강렬한 네온빛. 홀로그래픽 디스플레이와 디스토피아 감성.',
       palette: ['#0d0d0d','#ff00ff','#00ffff','#ff6600','#ff0055'],
-      prompt: `cyberpunk neon city night scene, glowing neon signs, rain-slicked reflections, holographic HUD displays, color palette: #0d0d0d #ff00ff #00ffff #ff6600 #ff0055, near-black background, electric magenta and cyan neon lights, orange warnings, crimson alerts, 4K ultra-detailed`,
+      prompt: `cyberpunk neon city night scene, glowing neon signs, rain-slicked reflections, holographic HUD displays, color palette: #0d0d0d #ff00ff #00ffff #ff6600 #ff0055, near-black background, electric magenta and cyan neon lights, orange warnings, crimson alerts`,
       tags: ['SF','네온','미래'] },
 
     // ── 수공예·아날로그 ─────────────────────────────────────
@@ -642,7 +642,7 @@ window.CONCEPT_STYLES = [
     { id: '3d-game-environment', category: '3d', nameKo: '3D 게임 환경', nameEn: '3D Game Environment', emoji: '🏙️',
       desc: 'UE5·Unity 스타일의 포토리얼 3D 게임 환경 렌더링.',
       palette: ['#2c3e50','#3498db','#ecf0f1','#e74c3c','#f39c12'],
-      prompt: `photorealistic 3D game environment Unreal Engine 5 aesthetic, detailed urban street scene with volumetric lighting, PBR material surfaces wet concrete glass metal, color palette: #2c3e50 #3498db #ecf0f1 #e74c3c #f39c12, dark blue-gray for concrete buildings and deep shadow, bright cerulean blue for sky and neon reflections, near-white for architectural highlights and glass, vivid red for emergency signage and focal accent, amber orange for warm street lighting and metal, lumen global illumination quality, AAA game art direction`,
+      prompt: `realistic 3D game environment Unreal Engine 5 aesthetic, structured urban street scene with volumetric lighting, PBR material surfaces wet concrete glass metal, color palette: #2c3e50 #3498db #ecf0f1 #e74c3c #f39c12, dark blue-gray for concrete buildings and deep shadow, bright cerulean blue for sky and neon reflections, near-white for architectural highlights and glass, vivid red for emergency signage and focal accent, amber orange for warm street lighting and metal, lumen global illumination quality, AAA game art direction`,
       tags: ['3D환경','게임환경','UE5'] },
     { id: '3d-nft-generative', category: '3d', nameKo: '제너러티브 아트', nameEn: 'Generative 3D Art', emoji: '🎲',
       desc: '알고리즘으로 생성된 추상 3D 아트. NFT·디지털 아트 감성.',
@@ -652,7 +652,7 @@ window.CONCEPT_STYLES = [
     { id: '3d-architecture-viz', category: '3d', nameKo: '건축 시각화', nameEn: 'Architectural Visualization', emoji: '🏗️',
       desc: '현대 건축의 고품질 3D 시각화. 레이트레이싱 품질의 건축 렌더링.',
       palette: ['#f5f0eb','#c8b89a','#4a4a4a','#87ceeb','#2d6a4f'],
-      prompt: `architectural visualization render, modern residential building with large glass facade and wooden deck, lush landscape surroundings at dusk, ray-traced lighting with warm interior glow, color palette: #f5f0eb #c8b89a #4a4a4a #87ceeb #2d6a4f, warm off-white for light concrete and plaster facade, warm tan for wooden cladding and deck surface, dark charcoal for window frames and metal details, soft sky blue for dusk sky and glass reflection, forest green for surrounding landscape trees, photorealistic architectural rendering quality`,
+      prompt: `architectural visualization render, modern residential building with large glass facade and wooden deck, lush landscape surroundings at dusk, ray-traced lighting with warm interior glow, color palette: #f5f0eb #c8b89a #4a4a4a #87ceeb #2d6a4f, warm off-white for light concrete and plaster facade, warm tan for wooden cladding and deck surface, dark charcoal for window frames and metal details, soft sky blue for dusk sky and glass reflection, forest green for surrounding landscape trees, high-fidelity architectural rendering quality`,
       tags: ['건축시각화','렌더링','레이트레이싱'] },
     { id: '3d-fluid-simulation', category: '3d', nameKo: '유체 시뮬레이션', nameEn: 'Fluid Simulation 3D', emoji: '💧',
       desc: '물·용암·액체의 유체 시뮬레이션 3D 렌더링. 찰나의 스플래시.',
@@ -807,7 +807,7 @@ window.CONCEPT_STYLES = [
       emoji: '🔬',
       desc: '나노 입자와 세포 조직의 전자 현미경 뷰를 시각화한 미시적이고 첨단적인 스타일.',
       palette: ['#0A192F', '#00B4D8', '#90E0EF', '#0077B6', '#FFFFFF'],
-      prompt: 'A highly detailed scientific visualization of nanoscale cellular structures and molecular bonds under an advanced electron microscope. Glowing spherical nanoparticles interacting with biological cells, volumetric lighting, deep depth of field, ultra-detailed textures, color palette: #0A192F #00B4D8 #90E0EF #0077B6 #FFFFFF.',
+      prompt: 'A clear scientific visualization of nanoscale cellular structures and molecular bonds under an advanced electron microscope. Glowing spherical nanoparticles interacting with biological cells, volumetric lighting, deep depth of field, sharp textures, color palette: #0A192F #00B4D8 #90E0EF #0077B6 #FFFFFF.',
       tags: ['Microscopic', 'Nanotech', 'Cellular']
     },
     {
@@ -1346,7 +1346,7 @@ window.CONCEPT_STYLES = [
     { id: 'photo-hyperrealistic-portrait', category: 'photo', nameKo: '극사실주의 초상화', nameEn: 'Hyperrealistic Portrait', emoji: '👤',
       desc: '모공까지 보이는 극사실주의 초상화. 뷰티·패션 광고의 표준 스타일.',
       palette: ['#f5e6d8','#d4a574','#8b6347','#c4956a','#ffffff'],
-      prompt: `hyperrealistic portrait photography, photorealistic skin texture with visible pores and fine hair, professional beauty retouching, sharp focus catchlight in eyes, soft gradient studio background, color palette: #f5e6d8 #d4a574 #8b6347 #c4956a #ffffff, warm ivory for skin highlight and base tone, golden tan for midtone skin warmth, rich medium brown for shadow and eye definition, amber caramel for hair and warm rim light, pure white for background gradient, Hasselblad medium format aesthetic, Annie Leibovitz lighting style`,
+      prompt: `natural portrait photography, realistic skin texture with visible pores and fine hair, professional beauty retouching, sharp focus catchlight in eyes, soft gradient studio background, color palette: #f5e6d8 #d4a574 #8b6347 #c4956a #ffffff, warm ivory for skin highlight and base tone, golden tan for midtone skin warmth, rich medium brown for shadow and eye definition, amber caramel for hair and warm rim light, pure white for background gradient, Hasselblad medium format aesthetic, Annie Leibovitz lighting style`,
       tags: ['극사실주의','인물','뷰티'] },
 
     { id: 'photo-dark-moody', category: 'photo', nameKo: '다크 무드 시네마틱', nameEn: 'Dark Moody Cinematic', emoji: '🎬',
@@ -1608,6 +1608,78 @@ window.CONCEPT_STYLES = [
       prompt: `smart city digital government promotional design, civic tech innovation visual language, data-driven public administration aesthetic, connected urban infrastructure visual metaphor, color palette: #0f3460 #533483 #e94560 #00d9c4 #f0f0f0, deep midnight navy as stable government tech foundation, violet-purple for digital innovation and transformation identity, vivid rose-red for interactive highlights and citizen engagement touchpoints, bright teal-cyan for data flows smart systems and connectivity, near-white for interface clarity and information accessibility, circuit-board and network grid as subtle background texture, data visualization elements integrated into layout, clean futuristic typography with official weight`,
       tags: ['스마트시티','디지털정부','혁신','공공'] },
 
+    { id: 'public-white-notice-board', category: 'public', nameKo: '화이트 공식 공고판', nameEn: 'White Official Notice Board', emoji: '📋',
+      desc: '지원사업, 모집공고, 행정 안내문에 가장 범용적으로 쓰기 좋은 흰 배경 공식 공고 스타일.',
+      palette: ['#ffffff','#f3f6fb','#1f4f99','#d87922','#1f2937'],
+      prompt: `public institution official notice board design, white clean canvas background, light cool-gray information board panels, formal recruitment announcement layout, color palette: #ffffff #f3f6fb #1f4f99 #d87922 #1f2937, pure white as dominant full background, pale blue-gray for rounded information panels and section blocks, institutional blue for title bars headings and official labels, restrained amber-orange for deadline badges and call-to-action highlights, charcoal for readable body text, structured rows for eligibility schedule application method and contact, clean logo band at bottom, high legibility civic document aesthetic, no dark full background`,
+      tags: ['화이트','공고','모집','공식'] },
+
+    { id: 'public-grant-program', category: 'public', nameKo: '지원사업 모집 안내', nameEn: 'Grant Program Recruitment', emoji: '💼',
+      desc: '소상공인·청년·기업 지원사업 모집 카드와 포스터에 어울리는 신뢰형 화이트 레이아웃.',
+      palette: ['#ffffff','#eef4ff','#174ea6','#34a853','#fbbc04'],
+      prompt: `government grant program recruitment poster, clean white background with blue-tinted information cards, business support announcement visual, color palette: #ffffff #eef4ff #174ea6 #34a853 #fbbc04, pure white canvas for trust and readability, very pale blue for application information boxes, strong government blue for main title and section headers, green for support benefit and approval cues, small golden yellow for deadline or important notice badges, neat icon set for target audience benefit amount schedule and application process, professional public sector typography, balanced whitespace, official but approachable tone`,
+      tags: ['지원사업','모집','기업지원','화이트'] },
+
+    { id: 'public-resident-service', category: 'public', nameKo: '주민 서비스 안내', nameEn: 'Resident Service Guide', emoji: '🏘',
+      desc: '주민센터·구청·시청 서비스 안내에 적합한 부드러운 흰 배경 생활 행정 스타일.',
+      palette: ['#ffffff','#f4f9f7','#256c5b','#7fb3a6','#ffb703'],
+      prompt: `local government resident service guide design, warm white background, friendly civic service information layout, color palette: #ffffff #f4f9f7 #256c5b #7fb3a6 #ffb703, pure white dominant canvas, soft green-white section backgrounds, deep civic teal for official headings and service labels, muted mint for secondary panels and icons, small warm yellow accent for notices and highlights, rounded service cards showing location hours documents and contact, approachable municipal office tone, clean pictogram icons, generous margins, readable for elderly citizens`,
+      tags: ['주민센터','민원','생활행정','안내'] },
+
+    { id: 'public-health-white-card', category: 'public', nameKo: '보건 안내 화이트 카드', nameEn: 'Public Health White Card', emoji: '🩺',
+      desc: '건강검진, 예방접종, 보건소 안내에 적합한 깨끗한 의료 정보 카드 스타일.',
+      palette: ['#ffffff','#edf9ff','#0077b6','#00a6a6','#ef476f'],
+      prompt: `public health information card design, clinical white background, calm healthcare announcement layout, color palette: #ffffff #edf9ff #0077b6 #00a6a6 #ef476f, pure white full canvas for medical cleanliness, pale sky-blue information blocks, deep medical blue for trust-building headlines, teal for health service icons and checklist marks, restrained rose-red only for urgent dates warnings or required action, clean medical cross and calendar icon system, clear hierarchy for 대상 일정 장소 준비물 문의, soft rounded cards, accessible high-contrast typography, no hospital horror mood no dark background`,
+      tags: ['보건','검진','예방접종','화이트'] },
+
+    { id: 'public-data-report', category: 'public', nameKo: '공공 데이터 리포트', nameEn: 'Public Data Report', emoji: '📊',
+      desc: '통계 발표, 성과 보고, 정책 근거 자료를 신뢰감 있게 보여주는 화이트 데이터 대시보드 스타일.',
+      palette: ['#ffffff','#f5f7fb','#0b3d91','#2f80ed','#95a3b3'],
+      prompt: `public data report infographic, white dashboard-style background, official statistics presentation visual, color palette: #ffffff #f5f7fb #0b3d91 #2f80ed #95a3b3, pure white as full report canvas, pale cool gray for chart panels and table backgrounds, deep navy blue for policy authority and section titles, clear medium blue for graphs bars and key metrics, muted slate gray for axes labels and secondary text, modular grid with charts KPI cards map inset and source note area, accurate restrained data visualization, no decorative clutter, government annual report aesthetic`,
+      tags: ['데이터','통계','성과보고','대시보드'] },
+
+    { id: 'public-application-flow', category: 'public', nameKo: '신청 절차 안내', nameEn: 'Application Process Guide', emoji: '🧾',
+      desc: '온라인 신청, 서류 제출, 심사 흐름을 한눈에 보여주는 단계형 화이트 인포그래픽.',
+      palette: ['#ffffff','#f1f5ff','#2454a6','#6b8fd6','#ff8a00'],
+      prompt: `public service application process guide infographic, white background, step-by-step administrative procedure layout, color palette: #ffffff #f1f5ff #2454a6 #6b8fd6 #ff8a00, pure white canvas, pale blue step containers, official blue for numbered steps and arrows, soft periwinkle for secondary process nodes, small orange accent for deadline and required documents, horizontal or vertical flow diagram with 1 신청 2 접수 3 심사 4 선정 5 결과안내, document and checkmark icons, minimal lines, high readability for public application guidance`,
+      tags: ['신청절차','프로세스','민원','인포그래픽'] },
+
+    { id: 'public-civic-participation', category: 'public', nameKo: '시민 참여·설문 안내', nameEn: 'Civic Participation Survey', emoji: '🗳',
+      desc: '시민 의견수렴, 설문조사, 공청회, 주민참여예산 안내에 맞는 밝은 참여형 스타일.',
+      palette: ['#ffffff','#fff7ed','#1d4ed8','#f97316','#10b981'],
+      prompt: `civic participation survey announcement design, bright white background with friendly participation cards, public consultation visual, color palette: #ffffff #fff7ed #1d4ed8 #f97316 #10b981, white clean canvas for official trust, warm ivory panels for community friendliness, strong blue for institutional headline and link areas, vivid orange for participation call-to-action button and deadline tag, green for completed check and positive citizen voice cues, ballot speech bubble and QR placeholder icons, welcoming but formal municipal communication style, clear survey period target and method sections`,
+      tags: ['시민참여','설문','공청회','주민참여'] },
+
+    { id: 'public-youth-program', category: 'public', nameKo: '청년 프로그램 안내', nameEn: 'Youth Program Notice', emoji: '🌱',
+      desc: '청년 일자리, 교육, 창업, 멘토링 프로그램을 밝고 신뢰감 있게 알리는 화이트 컨셉.',
+      palette: ['#ffffff','#f0f9ff','#2563eb','#22c55e','#f59e0b'],
+      prompt: `youth public program announcement poster, clean white background with optimistic growth visual, color palette: #ffffff #f0f9ff #2563eb #22c55e #f59e0b, white canvas for clarity and trust, pale sky-blue blocks for program information, vivid blue for title and official application labels, fresh green for growth mentorship and opportunity cues, small amber accent for benefit or deadline highlights, simple upward arrow sprout notebook laptop and mentor icon motifs, modern but not flashy public institution design, generous whitespace and clear eligibility benefit schedule sections`,
+      tags: ['청년','교육','일자리','창업'] },
+
+    { id: 'public-senior-care', category: 'public', nameKo: '어르신 돌봄 안내', nameEn: 'Senior Care Service Guide', emoji: '🌼',
+      desc: '노인복지, 돌봄서비스, 건강지원 안내에 적합한 따뜻하고 큰 글씨의 흰 배경 스타일.',
+      palette: ['#ffffff','#fff8e7','#2f6f6d','#f2b84b','#5f6368'],
+      prompt: `senior care public service guide design, warm white background, elderly-friendly large type layout, color palette: #ffffff #fff8e7 #2f6f6d #f2b84b #5f6368, pure white dominant canvas, warm cream service panels, deep teal for stable official headings, soft golden yellow for warmth and key benefit badges, readable gray for body text, large high-contrast typography, simple icons for phone home care meal health and visit service, calm rounded shapes, clear contact area, accessible municipal welfare communication for older adults`,
+      tags: ['어르신','돌봄','복지','큰글씨'] },
+
+    { id: 'public-digital-service', category: 'public', nameKo: '디지털 민원 서비스', nameEn: 'Digital Civil Service', emoji: '💻',
+      desc: '정부24, 앱, 키오스크, 온라인 민원 서비스 안내에 맞는 밝은 디지털 행정 스타일.',
+      palette: ['#ffffff','#eef6ff','#0f62fe','#00a3a3','#334155'],
+      prompt: `digital civil service promotion design, white background with clean interface mockup, e-government service guide visual, color palette: #ffffff #eef6ff #0f62fe #00a3a3 #334155, pure white canvas, pale blue interface cards, strong service blue for app screens buttons and headings, teal for secure digital connection and confirmation icons, slate for readable text and device outlines, smartphone kiosk and web portal UI panels arranged with official clarity, no cyberpunk dark mood, accessible digital government typography, clear QR code placeholder and step labels`,
+      tags: ['디지털정부','민원','앱','키오스크'] },
+
+    { id: 'public-facility-reservation', category: 'public', nameKo: '공공시설 예약 안내', nameEn: 'Public Facility Reservation', emoji: '🏟',
+      desc: '체육관, 도서관, 문화센터, 회의실 등 공공시설 예약 안내에 적합한 실용형 화이트 스타일.',
+      palette: ['#ffffff','#f6f8fb','#184e77','#52b788','#ffb703'],
+      prompt: `public facility reservation guide design, practical white background, municipal facility booking announcement layout, color palette: #ffffff #f6f8fb #184e77 #52b788 #ffb703, white clean canvas, pale neutral gray booking cards, deep blue for facility name and official headers, green for available reservation status and confirmation cues, small amber for deadline fee or notice highlights, calendar time location capacity and fee icons, tidy table-like rows, clear reservation method section, civic information design suitable for library gym culture center and community hall`,
+      tags: ['공공시설','예약','도서관','체육관'] },
+
+    { id: 'public-clean-energy-white', category: 'public', nameKo: '탄소중립 화이트 캠페인', nameEn: 'Carbon Neutral White Campaign', emoji: '☀️',
+      desc: '탄소중립, 에너지 절약, 재생에너지 정책 홍보에 어울리는 깨끗한 흰 배경 친환경 스타일.',
+      palette: ['#ffffff','#f0fdf4','#166534','#38bdf8','#facc15'],
+      prompt: `carbon neutral public campaign design, white background with clean eco energy motif, government climate action communication, color palette: #ffffff #f0fdf4 #166534 #38bdf8 #facc15, pure white canvas for clean future message, pale green panels for eco information, deep green for sustainability authority and main headline, sky blue for clean air water and technology cues, restrained solar yellow for sun energy and key callout badges, leaf solar panel wind line icons, simple carbon reduction checklist, optimistic official campaign style, bright not dark, no overgrown forest clutter`,
+      tags: ['탄소중립','에너지','환경','화이트'] },
+
     // ── 음악 ──────────────────────────────────────────────────
     { id: 'music-kpop-idol', category: 'music', nameKo: 'K-POP 아이돌 글로우', nameEn: 'K-Pop Idol Glow', emoji: '✨',
       desc: '화려한 스테이지 조명과 파스텔 네온이 어우러진 K-POP 아이돌 컨셉. 팬덤 굿즈, 앨범 아트, 컴백 티저에 최적.',
@@ -1624,7 +1696,7 @@ window.CONCEPT_STYLES = [
     { id: 'music-edm-festival', category: 'music', nameKo: 'EDM 페스티벌 폭발', nameEn: 'EDM Festival Burst', emoji: '🎆',
       desc: '야외 대형 페스티벌의 레이저와 불꽃이 터지는 에너지. EDM, 일렉트로닉 DJ 홍보 및 페스티벌 포스터 제작용.',
       palette: ['#00FFAA','#FF007A','#7B00FF','#000000','#FFFFFF'],
-      prompt: `EDM music festival explosion scene, massive outdoor crowd silhouette, laser light show beams cutting through smoke, color palette: #00FFAA #FF007A #7B00FF #000000 #FFFFFF, pyrotechnic fireworks bursts, glowing LED stage rig, neon green and magenta contrast, electric energy atmosphere, motion blur crowd movement, intense strobe effect aesthetic, ultra-wide angle aerial perspective, euphoric rave energy, photorealistic concert photography style`,
+      prompt: `EDM music festival explosion scene, massive outdoor crowd silhouette, laser light show beams cutting through smoke, color palette: #00FFAA #FF007A #7B00FF #000000 #FFFFFF, pyrotechnic fireworks bursts, glowing LED stage rig, neon green and magenta contrast, electric energy atmosphere, motion blur crowd movement, intense strobe effect aesthetic, ultra-wide angle aerial perspective, euphoric rave energy, sharp concert photography style`,
       tags: ['EDM','페스티벌','레이저','DJ','일렉트로닉'] },
 
     { id: 'music-indie-band', category: 'music', nameKo: '인디밴드 필름 그레인', nameEn: 'Indie Band Film Grain', emoji: '🎸',
@@ -1654,7 +1726,7 @@ window.CONCEPT_STYLES = [
     { id: 'music-concert-energy', category: 'music', nameKo: '콘서트 라이브 에너지', nameEn: 'Concert Live Energy', emoji: '🎶',
       desc: '대형 아레나 콘서트의 무대 에너지와 군중의 열기를 담은 스타일. 투어 포스터, 티켓 홍보, 공연 홍보물에 범용 활용.',
       palette: ['#FF5500','#FFAA00','#220033','#FFFFFF','#FF0066'],
-      prompt: `Live concert arena energy panoramic shot, massive stage production with towering LED screen backdrop, crowd hands raised in unison, color palette: #FF5500 #FFAA00 #220033 #FFFFFF #FF0066, fiery orange and red stage lighting, deep purple dark atmosphere, confetti explosion mid-air, dramatic wide angle stage perspective, electric excitement energy, sharp performer silhouette against bright screen, dynamic motion blur crowd, high-contrast concert photography, euphoric live music atmosphere, photorealistic professional concert documentation`,
+      prompt: `Live concert arena energy panoramic shot, massive stage production with towering LED screen backdrop, crowd hands raised in unison, color palette: #FF5500 #FFAA00 #220033 #FFFFFF #FF0066, fiery orange and red stage lighting, deep purple dark atmosphere, confetti explosion mid-air, dramatic wide angle stage perspective, electric excitement energy, sharp performer silhouette against bright screen, dynamic motion blur crowd, high-contrast concert photography, euphoric live music atmosphere, sharp professional concert documentation`,
       tags: ['콘서트','라이브','아레나','투어','공연포스터'] },
 
     // ── 금융 ──────────────────────────────────────────────────

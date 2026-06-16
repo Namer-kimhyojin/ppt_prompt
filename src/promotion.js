@@ -425,7 +425,7 @@
       ? incoming.colorStrategy
       : DEFAULT_STATE.colorStrategy;
     next.colorMode = incoming.colorMode === "dark" ? "dark" : DEFAULT_STATE.colorMode;
-    next.variationMode = ["none", "typo", "visual", "color-graphic", "cinematic", "proof", "experimental", "content-focus"].includes(incoming.variationMode)
+    next.variationMode = ["none", "typo", "visual", "color-graphic", "cinematic", "proof", "experimental", "content-focus", "official-notice"].includes(incoming.variationMode)
       ? incoming.variationMode
       : DEFAULT_STATE.variationMode;
     next.keyVisualPlacement = ["auto", "background", "foreground"].includes(incoming.keyVisualPlacement)
@@ -1629,6 +1629,7 @@
       { id: "promotionOutputLanguage", stateKey: "outputLanguage", normalize: normalizeOutputLanguage },
       { id: "promotionPromptMode", stateKey: "promptMode", normalize: (value) => value === "optimized" ? "optimized" : "review" },
       { id: "promotionCommercialBaseline", stateKey: "commercialBaseline", normalize: (value) => ["off", "standard", "premium", "luxury"].includes(value) ? value : DEFAULT_STATE.commercialBaseline },
+      { id: "promotionCreativityLevel", stateKey: "creativityLevel", normalize: (value) => ["stable", "balanced", "experimental"].includes(value) ? value : DEFAULT_STATE.creativityLevel },
     ];
 
     selectBindings.forEach(({ id, stateKey, normalize }) => {
@@ -1686,6 +1687,17 @@
         state.commercialBaseline = ["off", "standard", "premium", "luxury"].includes(button.dataset.promoCommercialBaseline)
           ? button.dataset.promoCommercialBaseline
           : DEFAULT_STATE.commercialBaseline;
+        syncStaticFields();
+        renderPreview();
+      });
+    });
+
+    root.querySelectorAll("[data-promo-creativity-level]").forEach((button) => {
+      if (button.tagName !== "BUTTON") return;
+      button.addEventListener("click", () => {
+        state.creativityLevel = ["stable", "balanced", "experimental"].includes(button.dataset.promoCreativityLevel)
+          ? button.dataset.promoCreativityLevel
+          : DEFAULT_STATE.creativityLevel;
         syncStaticFields();
         renderPreview();
       });
@@ -2623,6 +2635,11 @@
       outputLanguageSelect.value = state.outputLanguage;
     }
 
+    const targetEngineSelect = $("promotionTargetEngine");
+    if (targetEngineSelect && targetEngineSelect.value !== state.targetEngine) {
+      targetEngineSelect.value = state.targetEngine;
+    }
+
     const promptModeSelect = $("promotionPromptMode");
     if (promptModeSelect && promptModeSelect.value !== state.promptMode) {
       promptModeSelect.value = state.promptMode;
@@ -2631,6 +2648,11 @@
     const commercialBaselineSelect = $("promotionCommercialBaseline");
     if (commercialBaselineSelect && commercialBaselineSelect.value !== state.commercialBaseline) {
       commercialBaselineSelect.value = state.commercialBaseline;
+    }
+
+    const creativityLevelSelect = $("promotionCreativityLevel");
+    if (creativityLevelSelect && creativityLevelSelect.value !== state.creativityLevel) {
+      creativityLevelSelect.value = state.creativityLevel;
     }
 
 
@@ -2718,6 +2740,13 @@
     root.querySelectorAll("[data-promo-commercial-baseline]").forEach((button) => {
       if (button.tagName !== "BUTTON") return;
       const active = button.dataset.promoCommercialBaseline === state.commercialBaseline;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
+    root.querySelectorAll("[data-promo-creativity-level]").forEach((button) => {
+      if (button.tagName !== "BUTTON") return;
+      const active = button.dataset.promoCreativityLevel === state.creativityLevel;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });

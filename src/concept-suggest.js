@@ -82,6 +82,142 @@
 
   const STYLES = window.CONCEPT_STYLES;
 
+  // ── COLOR NAME MAP & HELPERS FOR IMAGEN ────────────────────
+  const COLOR_NAME_MAP = {
+    "#ffffff": "pure white",
+    "#000000": "true black",
+    "#0d0d0d": "near-black charcoal",
+    "#1a1a2e": "deep midnight navy",
+    "#16213e": "dark indigo navy",
+    "#7c4dff": "electric violet",
+    "#e94560": "crimson red",
+    "#ffd700": "bright gold yellow",
+    "#f9d4ff": "soft lavender pastel",
+    "#b8d4ff": "sky-blue pastel",
+    "#ffe8b8": "warm cream highlights",
+    "#c8ffb8": "mint green pastel",
+    "#ffd6f9": "blush pink pastel",
+    "#ff9de2": "hot pink",
+    "#ffb3c6": "rose pink",
+    "#ffd6ff": "soft lavender",
+    "#caffbf": "pale mint green",
+    "#fdffb6": "lemon yellow",
+    "#6c63ff": "indigo violet",
+    "#3f3d56": "dark charcoal",
+    "#f2f2f2": "light gray",
+    "#ff6584": "coral pink",
+    "#43d9ad": "teal green",
+    "#2193b0": "deep cyan blue",
+    "#6dd5ed": "sky blue",
+    "#ee0979": "vivid magenta",
+    "#ff6a00": "vivid orange",
+    "#44f7c2": "turquoise",
+    "#ff9a9e": "salmon pink",
+    "#fad0c4": "peach pink",
+    "#a18cd1": "soft purple",
+    "#fbc2eb": "blush pink",
+    "#ffecd2": "cream white",
+    "#11998e": "deep teal",
+    "#38ef7d": "lime green",
+    "#fc4a1a": "fiery orange-red",
+    "#f7b733": "amber yellow",
+    "#0099f7": "electric blue",
+    "#ff00ff": "electric magenta",
+    "#00ffff": "luminous cyan",
+    "#ff6600": "warning orange",
+    "#ff0055": "crimson alert",
+    "#a8e6cf": "pale mint",
+    "#dcedc1": "sage green",
+    "#ffd3b6": "warm peach",
+    "#ffaaa5": "coral orange",
+    "#d4a5e5": "soft lilac",
+    "#ff6b6b": "coral red",
+    "#ffd93d": "bright yellow",
+    "#6bcb77": "fresh green",
+    "#4d96ff": "sky blue",
+    "#ff922b": "warm orange",
+    "#2d4a22": "deep forest green",
+    "#8b4513": "saddle brown",
+    "#daa520": "golden amber",
+    "#1a1a5e": "dark navy",
+    "#8b0000": "deep crimson",
+    "#ff595e": "vivid red",
+    "#ffca3a": "amber yellow",
+    "#6a4c93": "deep purple",
+    "#1982c4": "royal blue",
+    "#8ac926": "lime green",
+    "#e63946": "vibrant tomato red",
+    "#457b9d": "steel blue",
+    "#f1faee": "off-white",
+    "#a8dadc": "powder blue",
+    "#ffd6a5": "warm peach",
+    "#264653": "dark slate blue",
+    "#2a9d8f": "emerald teal",
+    "#e9c46a": "golden yellow",
+    "#f4a261": "sandy orange",
+    "#e76f51": "burnt terracotta",
+    "#c9a84c": "metallic gold",
+    "#f5f0e8": "warm ivory",
+    "#7d7d7d": "medium gray"
+  };
+
+  function translateHexToColorName(hex) {
+    const cleanHex = String(hex || "").trim().toLowerCase();
+    if (!cleanHex) return "";
+    const key = cleanHex.startsWith("#") ? cleanHex : `#${cleanHex}`;
+    return COLOR_NAME_MAP[key] || "custom color";
+  }
+
+  function replaceHexCodesWithNames(text) {
+    if (!text) return "";
+    return text.replace(/#([0-9a-fA-F]{3,6})/gi, (match) => {
+      return translateHexToColorName(match);
+    });
+  }
+
+  function convertAvoidToPositive(avoidText) {
+    if (!avoidText) return "";
+    let clean = avoidText.toLowerCase();
+    
+    clean = clean.replace("avoid losing the original style identity from the source concept", "maintain the original style identity of the source concept");
+    clean = clean.replace("avoid losing the original style identity from the source concept.", "maintain the original style identity of the source concept.");
+
+    const mappings = [
+      { bad: "avoid cluttered hud overload, unreadable tiny details, and mismatched fantasy props", good: "Keep the interface clean and spacious without HUD overload, focus on highly readable details, and ensure fantasy props are harmoniously matched" },
+      { bad: "avoid plastic-looking overgloss, distorted perspective, and fake terrain unless requested", good: "Ensure natural matte or semi-gloss material finishes, keep the perspective accurate and grounded, and maintain realistic terrain rendering" },
+      { bad: "avoid sterile digital finish, excessive symmetry, and glossy stock-photo polish", good: "Emphasize hand-made organic textures, introduce subtle natural asymmetry, and use a soft tactile matte finish" },
+      { bad: "avoid generic clip-art, inconsistent line styles, and overcrowded decoration", good: "Create a unique hand-drawn feel, maintain consistent line styles throughout, and keep the composition uncluttered with elegant negative space" },
+      { bad: "avoid random decoration, weak alignment, and low-contrast palette mixing", good: "Ensure purposeful layout alignment, maintain structured grid discipline, and use high-contrast color combinations" },
+      { bad: "avoid fake-looking composites, warped products, and unreadable busy backgrounds", good: "Maintain authentic photographic integration, preserve accurate product proportions, and keep the background clean and readable" },
+      { bad: "avoid awkward anatomy, cheap styling, and fabric texture mismatch", good: "Ensure elegant body proportions, high-end professional styling, and cohesive premium fabric textures" },
+      { bad: "avoid impossible construction, broken perspective, and scale confusion", good: "Ensure mathematically possible architectural structures, stable linear perspective, and clear human-scale references" },
+      { bad: "avoid weak motion, impossible poses, and confusing team/color hierarchy", good: "Capture dynamic athletic motion, anatomical plausible poses, and clear cohesive team/color branding" },
+      { bad: "avoid fake logos, cluttered claims, and off-brand decorative noise", good: "Leave clean space for real logos, keep claims minimal and readable, and focus on brand-aligned visual hierarchy" },
+      { bad: "avoid fake ecology, over-saturated greens, and inaccurate natural textures", good: "Depict authentic ecological scenes, natural balanced green tones, and realistic botanical textures" },
+      { bad: "avoid unappetizing colors, warped food anatomy, and messy plating", good: "Use warm appetizing color tones, accurate food structures, and clean elegant plating" },
+      { bad: "avoid costume clichés, inaccurate symbols, and disrespectful cultural mixing", good: "Respect cultural heritage details, use accurate traditional symbols, and maintain authentic cultural representation" },
+      { bad: "avoid fake scientific labels, impossible instruments, and visual misinformation", good: "Use clear factual visual references, mathematically plausible scientific instruments, and clean layout labels" },
+      { bad: "avoid misleading medical certainty, grotesque anatomy, and inaccurate scale cues", good: "Depict clean anatomical structures, clear biological scale cues, and professional scientific representation" },
+      { bad: "avoid unsafe equipment depictions, fake meters, and chaotic glow effects", good: "Ensure safe and realistic industrial equipment styling, clean metrics, and controlled ambient glows" },
+      { bad: "avoid unreadable fake ui, excessive neon, and meaningless data clutter", good: "Design highly legible functional UI panels, balanced clean glows, and scannable structured data layouts" },
+      { bad: "avoid unsafe workplace setups, impossible machinery, and dirty visual clutter", good: "Keep scale believable, surfaces specific, and operational context clear" },
+      { bad: "avoid black full-canvas background, avoid nightclub/neon darkness, avoid heavy gloomy shadows", good: "Maintain a clean bright layout with high text contrast, generous whitespace, and light neutral backgrounds" }
+    ];
+
+    for (const m of mappings) {
+      if (clean.includes(m.bad.toLowerCase())) {
+        return m.good;
+      }
+    }
+
+    let processed = avoidText;
+    processed = processed.replace(/avoid\s+losing\s+the\s+original\s+style\s+identity\s+from\s+the\s+source\s+concept\.?/gi, "Maintain the original style identity of the source concept.");
+    processed = processed.replace(/avoid\s+([^,.;]+)/gi, (match, p1) => {
+      return `maintain a clean design by ensuring there is no ${p1.trim()}`;
+    });
+    return processed;
+  }
+
   // ── 렌더링 엔진 ─────────────────────────────────────────────
 
   let activeCategory = 'all';
@@ -444,32 +580,52 @@
   function buildPromotionConceptStyle(style) {
     const promptParts = buildPromotionPromptParts(style);
     const styleKeywords = (style.prompt || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 8).join(', ');
-    const promotionPrompt = [
-      `[Style Fidelity]`,
-      `- Keep this concept visibly traceable through at least 3 of: palette, shape language, texture, lighting, object proportion, or layout structure.`,
-      `- Campaign copy (headline, CTA, target audience) is the message source of truth. If the concept's object metaphor conflicts with the campaign, preserve the style language and replace only the object meaning.`,
-      ``,
-      `[Visual Anatomy]`,
-      `- Concept name: ${style.nameEn}`,
-      `- Category: ${CAT_EN[style.category] || style.category}`,
-      `- Visual DNA: ${promptParts.visualDNA}`,
-      `- Shape language: ${promptParts.shapeLanguage}`,
-      `- Texture / rendering: ${promptParts.textureRendering}`,
-      `- Lighting / mood: ${promptParts.lightingMood}`,
-      ``,
-      `[Color System]`,
-      `- Palette roles: ${promptParts.paletteStrategy}`,
-      `- Reserve the strongest palette contrast for headline, action button, and required information.`,
-      ``,
-      `[Promotion Image Adaptation]`,
-      `- Campaign adaptation: ${promptParts.campaignAdaptation}`,
-      `- Object / metaphor adaptation: ${promptParts.objectAdaptation}`,
-      `- Layout behavior: ${promptParts.layoutBehavior}`,
-      `- Typography guidance: ${promptParts.typographyGuidance}`,
-      ``,
-      `[Style Keywords]`,
-      styleKeywords
-    ].join('\n');
+
+    const targetEngine = document.getElementById("promotionTargetEngine")?.value;
+    let promotionPrompt = '';
+
+    if (targetEngine === 'imagen') {
+      const positiveAvoid = convertAvoidToPositive(promptParts.avoid);
+      const fluidPrompt = [
+        `A promotional image in the style of ${style.nameEn} (${CAT_EN[style.category] || style.category}).`,
+        `The visual DNA is characterized by ${promptParts.visualDNA}.`,
+        `The composition features a shape language of ${promptParts.shapeLanguage}, rendered with ${promptParts.textureRendering}, and illuminated by ${promptParts.lightingMood}.`,
+        `The color palette system employs the following strategy: ${promptParts.paletteStrategy}. Reserve the strongest color contrast for key elements like the headline, action button, and essential campaign details.`,
+        `For the promotional campaign, the scene is adapted for a ${promptParts.campaignAdaptation}, representing the primary product or offer as a ${promptParts.objectAdaptation}.`,
+        `The spatial layout behaves as a ${promptParts.layoutBehavior}, incorporating typography according to the following guidance: ${promptParts.typographyGuidance}.`,
+        `For optimal layout structure and aesthetics, ${positiveAvoid} and ${promptParts.qualityRules}.`,
+        `Ensure the overall design remains clean, balanced, and highly readable, carrying key style keywords: ${styleKeywords}.`
+      ].join(' ');
+
+      promotionPrompt = replaceHexCodesWithNames(fluidPrompt);
+    } else {
+      promotionPrompt = [
+        `[Style Fidelity]`,
+        `- Keep this concept visibly traceable through at least 3 of: palette, shape language, texture, lighting, object proportion, or layout structure.`,
+        `- Campaign copy (headline, CTA, target audience) is the message source of truth. If the concept's object metaphor conflicts with the campaign, preserve the style language and replace only the object meaning.`,
+        ``,
+        `[Visual Anatomy]`,
+        `- Concept name: ${style.nameEn}`,
+        `- Category: ${CAT_EN[style.category] || style.category}`,
+        `- Visual DNA: ${promptParts.visualDNA}`,
+        `- Shape language: ${promptParts.shapeLanguage}`,
+        `- Texture / rendering: ${promptParts.textureRendering}`,
+        `- Lighting / mood: ${promptParts.lightingMood}`,
+        ``,
+        `[Color System]`,
+        `- Palette roles: ${promptParts.paletteStrategy}`,
+        `- Reserve the strongest palette contrast for headline, action button, and required information.`,
+        ``,
+        `[Promotion Image Adaptation]`,
+        `- Campaign adaptation: ${promptParts.campaignAdaptation}`,
+        `- Object / metaphor adaptation: ${promptParts.objectAdaptation}`,
+        `- Layout behavior: ${promptParts.layoutBehavior}`,
+        `- Typography guidance: ${promptParts.typographyGuidance}`,
+        ``,
+        `[Style Keywords]`,
+        styleKeywords
+      ].join('\n');
+    }
 
     return Object.assign({}, style, {
       promptParts,
@@ -662,6 +818,19 @@
     syncColorModeControls();
   }
 
-  function init() { buildFilterBar(); bindSearch(); bindColorMode(); renderCards(); }
+  function init() {
+    buildFilterBar();
+    bindSearch();
+    bindColorMode();
+
+    const targetEngineSelect = document.getElementById("promotionTargetEngine");
+    if (targetEngineSelect) {
+      targetEngineSelect.addEventListener('change', () => {
+        renderCards();
+      });
+    }
+
+    renderCards();
+  }
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();

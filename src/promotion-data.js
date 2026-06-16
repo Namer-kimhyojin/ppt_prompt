@@ -30,6 +30,7 @@ window.PROMO_DATA = (function () {
     outputLanguage: "ko",
     promptMode: "review",
     visualPlanningMode: "basic",
+    targetEngine: "dalle",
     omitEmptyFields: "true",
     dedupePromptLines: "true",
     autoResolveConflicts: "true",
@@ -512,7 +513,7 @@ window.PROMO_DATA = (function () {
       ],
       linesEn: [
         "Prioritize clarity and readability over aggressive compositional experimentation",
-        "Stay within familiar advertising grammar while raising precision and finish",
+        "Stay within familiar advertising grammar to ensure a stable layout while raising precision and finish",
       ],
     },
     balanced: {
@@ -535,7 +536,7 @@ window.PROMO_DATA = (function () {
         "단, 헤드라인과 CTA 가독성은 유지한 채 예측 가능한 레이아웃을 피한다",
       ],
       linesEn: [
-        "Allow assertive experiments such as asymmetry, overlap, frame-breaking, and color-field splits",
+        "Allow assertive experimental layouts such as asymmetry, overlap, frame-breaking, and color-field splits",
         "Preserve headline and CTA readability while avoiding predictable layouts",
       ],
     },
@@ -671,6 +672,25 @@ window.PROMO_DATA = (function () {
         "Layout priority order: information hierarchy first, action guidance second, background atmosphere third",
       ],
     },
+    {
+      id: "official-notice",
+      labelKo: "공식 공고/안내판",
+      labelEn: "Official Announcement",
+      linesKo: [
+        "상업용 광고 포스터 대신 공공기관·기업의 공식 지원사업 모집 공고 및 안내문 레이아웃을 사용한다",
+        "상단에는 크고 명확한 고대비 타이틀을 배치하고, 우측 상단 또는 배경에 단정한 테마 일러스트(3D 그래픽, 심플 아이콘)를 작게 배치한다",
+        "중하단 전체를 가득 채우는 둥근 모서리의 흰색 또는 미색 정보 보드판(Information Board)을 명확하게 렌더링한다",
+        "정보 보드 내부에는 '지원대상, 지원규모, 신청방법, 문의처' 등의 정보가 깔끔하게 구분된 행(Row)과 배지(Badge) 라벨 형태로 정돈되게 묘사한다",
+        "이미지 최하단에는 주최 및 파트너 기관들의 로고가 가로 일렬로 평평하게 들어설 수 있는 깔끔한 흰색/푸른색 로고 밴드 영역을 확보한다"
+      ],
+      linesEn: [
+        "Use a formal public announcement and business notice layout instead of a commercial ad poster",
+        "Place a large, high-contrast title at the top, and position a clean, small thematic visual (3D blocks, simple icons) in the top-right or background",
+        "Render a prominent light-colored or white information board with rounded corners filling the middle and bottom sections",
+        "Inside the board, arrange details like eligibility, budget, and contact info in neat rows with badge labels",
+        "Ensure a clean horizontal band at the very bottom of the image to serve as a placeholder for hosting/partner organization logos"
+      ],
+    }
   ];
 
   const CONTENT_PROMOTION_STRATEGIES = {
@@ -1296,7 +1316,7 @@ window.PROMO_DATA = (function () {
         "구성 실험보다 정보 전달 안정성과 오독 방지를 우선한다",
       ],
       linesEn: [
-        "Use a proven informational composition with a predictable eye path",
+        "Use a proven stable informational composition with a predictable eye path",
         "Prioritize communication stability and misread prevention over layout experimentation",
       ],
     },
@@ -1320,7 +1340,7 @@ window.PROMO_DATA = (function () {
         "단, 핵심 문구와 주요 정보의 판독성은 반드시 유지한다",
       ],
       linesEn: [
-        "Allow composition experiments such as asymmetry, overlap, frame cuts, and bold scale contrast",
+        "Allow experimental composition layouts such as asymmetry, overlap, frame cuts, and bold scale contrast",
         "Keep the main copy and key information readable at all times",
       ],
     },

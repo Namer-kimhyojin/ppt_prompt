@@ -85,6 +85,15 @@
           <div class="gen-config-fields promo-start-fields">
 
             <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionTargetEngine">대상 생성 엔진</label>
+              <p class="gen-config-guide">최종 프롬프트를 전송할 이미지 생성 AI 엔진을 지정하면 최적화 형태로 프롬프트를 빌드합니다.</p>
+              <select id="promotionTargetEngine" class="gen-select" data-promo-field="targetEngine">
+                <option value="dalle">ChatGPT (DALL-E 3)</option>
+                <option value="imagen">Gemini (Imagen 3)</option>
+              </select>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
               <div class="promo-size-mode-row">
                 <div class="promo-size-mode-left">
                   <label class="gen-config-label" for="promotionSizeMode">규격 입력 방식</label>
@@ -771,6 +780,20 @@
                 <button type="button" class="promo-segment-btn" data-promo-commercial-baseline="standard" aria-pressed="false">standard</button>
                 <button type="button" class="promo-segment-btn active" data-promo-commercial-baseline="premium" aria-pressed="true">premium</button>
                 <button type="button" class="promo-segment-btn" data-promo-commercial-baseline="luxury" aria-pressed="false">luxury</button>
+              </div>
+            </section>
+            <section class="promo-control-block promo-control-block-secondary">
+              <label class="promo-control-label" for="promotionCreativityLevel">창의성 강도 <span class="promo-field-badge instruction">구성 조건</span></label>
+              <p class="promo-control-hint">레이아웃 실험 폭. <code>balanced</code>가 정보와 창의의 균형점입니다.</p>
+              <select id="promotionCreativityLevel" class="gen-select" data-promo-creativity-level>
+                <option value="stable">stable</option>
+                <option value="balanced" selected>balanced</option>
+                <option value="experimental">experimental</option>
+              </select>
+              <div class="promo-segmented" id="promotionCreativityLevelToggle" role="group" aria-label="창의성 강도 빠른 토글">
+                <button type="button" class="promo-segment-btn" data-promo-creativity-level="stable" aria-pressed="false">stable</button>
+                <button type="button" class="promo-segment-btn active" data-promo-creativity-level="balanced" aria-pressed="true">balanced</button>
+                <button type="button" class="promo-segment-btn" data-promo-creativity-level="experimental" aria-pressed="false">experimental</button>
               </div>
             </section>
           </div>
