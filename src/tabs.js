@@ -49,11 +49,7 @@
       { label: "초기화", targetId: "genClearBtn", className: "btn ghost" },
     ],
     promotion: [
-      { label: "프롬프트 복사", targetId: "promotionCopyPromptBtn", className: "btn primary" },
-      { label: "최적화 실행", targetId: "promotionOptimizePromptBtn", className: "btn secondary" },
-      { label: "샘플 채우기", targetId: "promotionSampleBtn", className: "btn secondary" },
-      { label: "텍스트 리셋", targetId: "promotionResetTextBtn", className: "btn ghost" },
-      { label: "전체 초기화", targetId: "promotionResetBtn", className: "btn ghost" },
+      { label: "복사", targetId: "promotionCopyPromptBtn", className: "btn primary" },
     ],
     promotionPlanner: [
       // 컨셉 제안 탭: 카드별 복사 버튼으로 동작 — 헤더 액션 없음

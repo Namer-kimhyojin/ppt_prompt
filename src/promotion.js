@@ -2290,11 +2290,11 @@
   function updateStatsBar(text) {
     const sections = (text.match(/^#{1,3}\s/gm) || []).length;
     const lines = text.split("\n").filter((l) => l.trim()).length;
-    const ko = (text.match(/[가-힣]/g) || []).length;
+    const ko = (text.match(/[가-힣ㄱ-ㅎㅏ-ㅣ]/g) || []).length;
     const digits = (text.match(/\d/g) || []).length;
-    const other = text.replace(/[가-힣\d\s]/g, "").length;
-    // 한글 1자 ≈ 1.5 토큰, 숫자 2자 ≈ 1 토큰, 영문/특수 4자 ≈ 1 토큰
-    const tokens = Math.ceil(ko * 1.5 + digits * 0.5 + other / 4);
+    const other = text.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ\d\s]/g, "").length;
+    // 한글 1자 ≈ 1.0 토큰, 숫자 2자 ≈ 1 토큰, 영문/특수 4자 ≈ 1 토큰
+    const tokens = Math.ceil(ko * 1.0 + digits * 0.5 + other / 4);
 
     const TOKEN_WARN = 1500;
     const TOKEN_OVER = 2500;
@@ -2409,6 +2409,7 @@
 
     const badge = $("promotionAssetBadge");
     const previewBadge = $("promotionPreviewBadge");
+    const targetEngineBadge = $("promotionTargetEngineBadge");
     const summary = $("promotionSummary");
     const guidance = $("promotionGuidance");
     const preview = $("promotionPromptPreview");
@@ -2423,6 +2424,20 @@
         previewBadge.textContent = "검토 가능";
       } else {
         previewBadge.textContent = state.promptMode === "optimized" ? "최적화 완료" : `${ASSET_LABELS[state.assetType]} 생성용`;
+      }
+    }
+    if (targetEngineBadge) {
+      const isImagen = state.targetEngine === "imagen";
+      targetEngineBadge.textContent = isImagen ? "Google (Imagen 3) 최적화" : "ChatGPT (DALL-E 3) 최적화";
+      targetEngineBadge.style.display = "";
+      if (isImagen) {
+        targetEngineBadge.style.backgroundColor = "#e8f0fe";
+        targetEngineBadge.style.color = "#1a73e8";
+        targetEngineBadge.style.border = "1px solid #d2e3fc";
+      } else {
+        targetEngineBadge.style.backgroundColor = "#e6fcf5";
+        targetEngineBadge.style.color = "#0ca678";
+        targetEngineBadge.style.border = "1px solid #c3fae8";
       }
     }
 
@@ -2801,6 +2816,7 @@
   }
 
   function resetAll() {
+    if (!confirm("모든 입력값을 초기화합니다. 되돌릴 수 없습니다. 계속할까요?")) return;
     assignState(DEFAULT_STATE);
     visitedAssetTypes = new Set([DEFAULT_STATE.assetType]);
     promptDraft = "";
@@ -2980,7 +2996,7 @@
     promptDirty = false;
     promptDraft = buildPromptPreview(validateState());
     renderPreview();
-    status("자동 생성된 프롬프트 초안을 다시 반영했습니다.", "info");
+    status("수동 편집을 취소하고 자동 생성 초안으로 되돌렸습니다.", "info");
   }
 
   async function copyPrompt() {
@@ -3309,8 +3325,6 @@
     const goConceptTab = () => { document.getElementById("tabBtnPromotionPlanner")?.click(); };
     $("promotionConceptSelectBtn")?.addEventListener("click", goConceptTab);
     $("promotionConceptChangeBtn")?.addEventListener("click", goConceptTab);
-    $("promotionSampleBtn")?.addEventListener("click", applySample);
-    $("promotionRandomPresetBtn")?.addEventListener("click", applyRandomPresets);
     $("promotionSaveBtn")?.addEventListener("click", saveSettings);
     $("promotionLoadBtn")?.addEventListener("click", loadSettings);
     $("promotionPaletteSaveBtn")?.addEventListener("click", saveCurrentPalettePreset);
@@ -3318,18 +3332,11 @@
     $("promotionPalettePresetSelect")?.addEventListener("change", () => applySelectedPalettePreset({ silent: true }));
     $("promotionPaletteDeleteBtn")?.addEventListener("click", deleteSelectedPalettePreset);
     $("promotionResetBtn")?.addEventListener("click", resetAll);
-    $("promotionPruneEmptyBtn")?.addEventListener("click", pruneEmptyFields);
-    $("promotionResetTextBtn")?.addEventListener("click", resetTextFields);
-    $("promotionResetStyleBtn")?.addEventListener("click", resetStyleFields);
-    $("promotionResetColorsBtn")?.addEventListener("click", resetColorFields);
-    $("promotionReapplyTemplateBtn")?.addEventListener("click", reapplyCurrentTemplate);
-    $("promotionOptimizePromptBtn")?.addEventListener("click", rerunOptimization);
     $("promotionCopyPromptBtn")?.addEventListener("click", copyPrompt);
     $("promotionResetPromptBtn")?.addEventListener("click", () => {
       resetPromptDraft();
-      // 초안 반영 → 뷰어 모드로 복귀
       setViewerMode(false);
-      _prevSectionHashes = null; // 전체 섹션 리셋 후 첫 렌더처럼 처리
+      _prevSectionHashes = null;
     });
 
     // 섹션 뷰어 편집 모드 토글

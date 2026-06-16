@@ -1159,13 +1159,9 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
           <!-- 하단 액션 바 -->
           <div class="promo-action-bar">
-            <div class="promo-action-bar-primary">
-              <button type="button" class="gen-btn secondary" id="promotionSampleBtn">샘플 채우기</button>
-              <button type="button" class="gen-btn secondary" id="promotionRandomPresetBtn">랜덤 프리셋</button>
-            </div>
             <div class="promo-action-bar-secondary">
-              <button type="button" class="gen-btn ghost" id="promotionSaveBtn">저장</button>
-              <button type="button" class="gen-btn ghost" id="promotionLoadBtn">불러오기</button>
+              <button type="button" class="gen-btn ghost" id="promotionSaveBtn">내보내기</button>
+              <button type="button" class="gen-btn ghost" id="promotionLoadBtn">가져오기</button>
               <button type="button" class="gen-btn ghost" id="promotionResetBtn">초기화</button>
             </div>
             <input id="promotionLoadInput" type="file" accept="application/json,.json" hidden />
@@ -1189,8 +1185,9 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </div>
           </div>
           <div class="promo-preview-topbar-actions">
+            <span class="gen-badge" id="promotionTargetEngineBadge" style="display:none"></span>
             <span class="gen-badge" id="promotionPreviewBadge">초안</span>
-            <button type="button" class="gen-btn secondary" id="promotionResetPromptBtn">초안 반영</button>
+            <button type="button" class="gen-btn secondary" id="promotionResetPromptBtn">편집 취소</button>
             <button type="button" class="gen-btn promo-copy-btn" id="promotionCopyPromptBtn">복사</button>
           </div>
           <!-- hidden selects (JS 연동용) -->

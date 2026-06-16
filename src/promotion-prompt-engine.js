@@ -222,6 +222,7 @@ window.PROMO_PROMPT = (function () {
 
   function sanitizePromptForImagen(text) {
     if (!text) return "";
+    const isEnglishOnly = _s.outputLanguage === "en";
     
     // 1. HEX 코드 및 괄호 병기 등 일괄 정제
     let processedText = replaceHexCodesWithNames(text);
@@ -233,6 +234,14 @@ window.PROMO_PROMPT = (function () {
     for (let line of lines) {
       let trimmed = line.trim();
       if (!trimmed) continue;
+      
+      // 마크다운 헤더 라인(#으로 시작) 판별
+      let headerPrefix = "";
+      const headerMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+      if (headerMatch) {
+        headerPrefix = headerMatch[1] + " ";
+        trimmed = headerMatch[2].trim();
+      }
       
       // Sizing mode, Exact size, Aspect ratio 등 구체적인 수치 해상도 필터링 및 방향 단어 치환
       if (/Sizing mode|Exact size|Aspect ratio \/ orientation|직접 입력 크기|비율\/방향/i.test(trimmed)) {
@@ -265,35 +274,43 @@ window.PROMO_PROMPT = (function () {
         const header = trimmed.slice(1, -1);
         const parts = header.split(/\s*[\/|·]\s*/);
         const englishHeader = parts.find(p => !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p)) || header;
-        keptLines.push(`Regarding ${englishHeader.trim()}:`);
+        keptLines.push(`${headerPrefix}Regarding ${englishHeader.trim()}:`);
         continue;
       }
 
       // '절대 금지', 'Strictly avoid'와 같은 부정 룰들 치환
-      if (trimmed.startsWith("- 절대 금지:") || trimmed.startsWith("- Strictly avoid:")) {
-        const token = trimmed.replace(/^-\s*(절대 금지|Strictly avoid):\s*/i, "");
-        keptLines.push(`• Maintain a clean design without: ${convertAvoidToPositive(token)}`);
+      if (trimmed.startsWith("- 절대 금지:") || trimmed.startsWith("- Strictly avoid:") || trimmed.startsWith("절대 금지:") || trimmed.startsWith("Strictly avoid:")) {
+        const token = trimmed.replace(/^[-•]?\s*(절대 금지|Strictly avoid):\s*/i, "");
+        keptLines.push(`${headerPrefix}• Maintain a clean design without: ${convertAvoidToPositive(token)}`);
         continue;
       }
       
       // 'avoid ' 문장이 들어간 라인 치환
       if (trimmed.toLowerCase().includes("avoid ")) {
-        keptLines.push(`• ${convertAvoidToPositive(trimmed.replace(/^-\s*/, ""))}`);
+        keptLines.push(`${headerPrefix}• ${convertAvoidToPositive(trimmed.replace(/^[-•]\s*/, ""))}`);
         continue;
       }
 
       // "이미지 내 모든 텍스트..." 같은 복잡한 기술 지시 제거
       if (/벡터급 선명도로|vector-quality sharpness|안티에일리어싱|anti-aliasing/i.test(trimmed)) {
-        keptLines.push("• Ensure clean visual backdrop spaces for overlay text.");
+        keptLines.push(`${headerPrefix}• Ensure clean visual backdrop spaces for overlay text.`);
         continue;
       }
       if (/실제 존재하는 기업|Do not invent or imitate real company/i.test(trimmed)) {
-        keptLines.push("• Leave logo zones as empty neutral placeholders.");
+        keptLines.push(`${headerPrefix}• Leave logo zones as empty neutral placeholders.`);
         continue;
       }
 
       // 한글과 영어가 혼용된 라인인 경우, 한글 문구나 단어를 제거하는 일반 정제 규칙 적용 (따옴표 내 텍스트 보호)
       if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed)) {
+        if (!isEnglishOnly) {
+          // 한국어 또는 Bilingual 모드일 때는 한글을 지우지 않고 그대로 보존!
+          trimmed = trimmed.replace(/^[-•]\s*/, "").trim();
+          if (trimmed) {
+            keptLines.push(headerPrefix ? `${headerPrefix}${trimmed}` : `• ${trimmed}`);
+          }
+          continue;
+        }
         const quotes = [];
         let placeholderText = trimmed.replace(/"([^"]*)"/g, (match, p1) => {
           quotes.push(p1);
@@ -303,7 +320,7 @@ window.PROMO_PROMPT = (function () {
         if (/ko:\s*(.*?)\s*[\/|·]?\s*en:\s*(.*)/i.test(placeholderText)) {
           const match = placeholderText.match(/en:\s*(.*)/i);
           if (match) {
-            placeholderText = "• " + match[1].trim();
+            placeholderText = match[1].trim();
           }
         } else {
           const parts = placeholderText.split(/\s*[\/|·|—|-]\s*/);
@@ -321,13 +338,17 @@ window.PROMO_PROMPT = (function () {
         });
       }
 
-      // 정제된 결과물이 비었거나 순수 한글 잔여물이 있다면 스킵
+      // 정제된 결과물이 비었거나 순수 한글 잔여물이 있다면 스킵 (영어 전용 모드일 때만 적용)
       trimmed = trimmed.replace(/^[-•]\s*/, "").trim();
-      if (!trimmed || (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed) && !/"[^"]*[ㄱ-ㅎ|ㅏ-ㅣ|가-힣][^"]*"/.test(trimmed))) {
+      if (!trimmed || (isEnglishOnly && /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed) && !/"[^"]*[ㄱ-ㅎ|ㅏ-ㅣ|가-힣][^"]*"/.test(trimmed))) {
         continue;
       }
 
-      keptLines.push("• " + trimmed);
+      if (headerPrefix) {
+        keptLines.push(headerPrefix + trimmed);
+      } else {
+        keptLines.push("• " + trimmed);
+      }
     }
     
     let joined = keptLines.join("\n");
@@ -2023,6 +2044,7 @@ function sanitizePromptForAI(text, targetEngine = "") {
   
   // 2. targetEngine이 'imagen'이거나 혹은 텍스트 내에 이미지에 그려지면 안 되는 한글 찌꺼기가 남아있는 경우 정밀 필터링 적용
   const isImagen = targetEngine === "imagen" || (typeof _s !== "undefined" && _s.targetEngine === "imagen");
+  const isEnglishOnly = (typeof _s !== "undefined" && _s.outputLanguage === "en") || targetEngine === "en";
   
   if (isImagen) {
     // 따옴표 내의 한글 텍스트(사용자가 실제 렌더링하고 싶어하는 한글 정보)를 임시 플레이스홀더로 보호
@@ -2044,13 +2066,19 @@ function sanitizePromptForAI(text, targetEngine = "") {
       }
       
       if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(trimmed)) {
-        // 한글이 있는 라인이면, split 기호로 쪼개어 영문만 남김
-        const parts = trimmed.split(/\s*[\/|·|—|-]\s*/);
-        const englishParts = parts.filter(p => !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p));
-        if (englishParts.length > 0) {
-          trimmed = englishParts.join(" ").trim();
+        if (isEnglishOnly) {
+          // 한글이 있는 라인이면, split 기호로 쪼개어 영문만 남김
+          const parts = trimmed.split(/\s*[\/|·|—|-]\s*/);
+          const englishParts = parts.filter(p => !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p));
+          if (englishParts.length > 0) {
+            trimmed = englishParts.join(" ").trim();
+          } else {
+            // 순수 한글로만 된 라인(예: 가이드 설명)은 스킵
+            continue;
+          }
         } else {
-          // 순수 한글로만 된 라인(예: 가이드 설명)은 스킵
+          // 한국어 또는 Bilingual 모드일 때는 한글을 제거하지 않고 그대로 유지!
+          cleanedLines.push(line);
           continue;
         }
       }
@@ -2074,7 +2102,16 @@ function sanitizePromptForAI(text, targetEngine = "") {
       "- Consolidate all text lines into a single, structured layout block inside the designated banner zone. Do not scatter or paint text fragments onto background objects."
     ].join("\n");
 
-    processed = processed + "\n" + fontDirective;
+    const qualityDirective = [
+      "",
+      "## [Required] Visual Fidelity & Detail Enhancement rules for Gemini (Imagen 3):",
+      "- Establish high visual depth with sharp focus, 85mm lens rendering, and shallow depth of field.",
+      "- Implement professional studio lighting with soft directional key lights and ambient occlusion to accentuate 3D shapes and curves.",
+      "- Ensure concrete surface textures (e.g., matte clay, fine-grained photography film, organic paper textures) are vividly defined without flat vector-like oversimplification.",
+      "- Maintain clean, high-contrast separation between the detailed foreground objects and the flat, non-cluttered typography background areas."
+    ].join("\n");
+
+    processed = processed + "\n" + fontDirective + "\n" + qualityDirective;
   }
   
   return processed;
