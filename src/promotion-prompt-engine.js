@@ -2104,14 +2104,34 @@ function sanitizePromptForAI(text, targetEngine = "") {
 
     const qualityDirective = [
       "",
-      "## [Required] Visual Fidelity & Detail Enhancement rules for Gemini (Imagen 3):",
+      "## [Required] Visual Fidelity & Commercial Advertisement Design rules for Gemini (Imagen 3):",
+      "- Structure the entire composition as a premium commercial print advertisement poster with distinct visual layers (foreground, midground, background).",
       "- Establish high visual depth with sharp focus, 85mm lens rendering, and shallow depth of field.",
       "- Implement professional studio lighting with soft directional key lights and ambient occlusion to accentuate 3D shapes and curves.",
       "- Ensure concrete surface textures (e.g., matte clay, fine-grained photography film, organic paper textures) are vividly defined without flat vector-like oversimplification.",
-      "- Maintain clean, high-contrast separation between the detailed foreground objects and the flat, non-cluttered typography background areas."
+      "- Integrate a soft lighting gradient transition between the detailed graphic foreground and the empty text-overlay zones to ensure both high artistic quality and text legibility.",
+      "- Strongly anchor the composition around the primary promotional campaign object (e.g., reusable cup, tumbler, bottle, or campaign package) in a realistic scale, avoiding abstract fantasy or sports metaphors that divert from the marketing goal."
     ].join("\n");
 
-    processed = processed + "\n" + fontDirective + "\n" + qualityDirective;
+    const category = typeof _s !== "undefined" ? (_s.category || "") : "";
+    let categoryDirective = "";
+    if (category === "game" || category === "fantasy") {
+      categoryDirective = [
+        "",
+        "## [Category Spec] Game & Fantasy Illustration Detail rules:",
+        "- Render with intricate cel-shading details and glowing edge highlights.",
+        "- Avoid childlike or cartoonish oversimplification; maintain a rich, cinematic scale and depth of field."
+      ].join("\n");
+    } else if (category === "3d" || category === "industry") {
+      categoryDirective = [
+        "",
+        "## [Category Spec] 3D & Technical Rendering Detail rules:",
+        "- Render with subtle subsurface scattering, realistic matte or metallic textures, and soft ray-traced shadows.",
+        "- Ensure all geometric surfaces have ambient occlusion shadows at crevices to achieve maximum tangible depth."
+      ].join("\n");
+    }
+
+    processed = processed + "\n" + fontDirective + "\n" + qualityDirective + (categoryDirective ? "\n" + categoryDirective : "");
   }
   
   return processed;
