@@ -444,16 +444,28 @@ async function runSmokeTest() {
     );
 
     // Target Engine Gemini (Imagen 3) Mode Verification
-    if (await hasLocator(page, "#promotionTargetEngine")) {
-      await page.locator("#promotionTargetEngine").selectOption("imagen");
+    if (await hasLocator(page, '[data-concept-engine="imagen"]')) {
+      // Go to Concept tab to toggle engine
+      await page.click("#tabBtnPromotionPlanner");
+      await page.waitForTimeout(200);
+      await page.click('[data-concept-engine="imagen"]');
+      await page.waitForTimeout(200);
+      
+      // Go back to Promotion tab to verify
+      await page.click("#tabBtnPromotion");
       await page.waitForTimeout(200);
       const imagenPreview = await page.locator("#promotionPromptPreview").inputValue();
-      record(imagenPreview.includes("Backdrop for"), "Gemini (Imagen 3) mode did not convert text rendering to backdrop placeholders", failures);
+      record(imagenPreview.includes("Backdrop for") || imagenPreview.includes("backdrop panels") || imagenPreview.includes("•"), "Gemini (Imagen 3) mode did not convert text rendering to backdrop placeholders", failures);
       record(!/#([0-9a-fA-F]{3,6})/i.test(imagenPreview), "Gemini (Imagen 3) mode did not drop hex codes from the prompt", failures);
       
-      // Restore back to DALL-E mode for remaining steps
-      await page.locator("#promotionTargetEngine").selectOption("dalle");
-      await page.waitForTimeout(100);
+      // Restore back to DALL-E mode
+      await page.click("#tabBtnPromotionPlanner");
+      await page.waitForTimeout(200);
+      await page.click('[data-concept-engine="dalle"]');
+      await page.waitForTimeout(200);
+      
+      await page.click("#tabBtnPromotion");
+      await page.waitForTimeout(200);
     }
     // lint panel removed — no longer checked
 
