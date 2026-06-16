@@ -1365,7 +1365,7 @@ function createPromptSections(validation, lint) {
 
   const designLines = prunePromptLines([
     ...(_h.isDetailVisualPlanningMode() ? layoutCompLines : []),
-    ...(_h.isDetailVisualPlanningMode() ? instructionItems : [])
+    ...instructionItems
       .filter((entry) => {
         const visualFields = ["tone", "bigIdea", "visualMetaphor", "visualStyle", "layoutComposition"];
         if (visualFields.includes(entry.key)) {
@@ -1390,8 +1390,8 @@ const creativityProfile = CREATIVITY_LEVEL_PROFILES[_s.creativityLevel] || CREAT
   const creativityLevelLines = getLocalizedProfileLines(creativityProfile);
 
   const creativityLines = prunePromptLines([
-    (_h.isDetailVisualPlanningMode() && isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea) ? `${_h.localizeSentence("핵심 개념", "Core concept")}: ${_h.localizeValue(_s.bigIdea)}` : "",
-    (_h.isDetailVisualPlanningMode() && isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor) ? `${_h.localizeSentence("비주얼 은유", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}` : "",
+    (isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea) ? `${_h.localizeSentence("핵심 개념", "Core concept")}: ${_h.localizeValue(_s.bigIdea)}` : "",
+    (isEnabled(_s.visualMetaphorEnabled) && _s.visualMetaphorMode === "manual" && _s.visualMetaphor) ? `${_h.localizeSentence("비주얼 은유", "Visual metaphor")}: ${_h.localizeValue(_s.visualMetaphor)}` : "",
     ...visualMetaphorDiversityLines,
     ...creativityLevelLines,
   ]);
