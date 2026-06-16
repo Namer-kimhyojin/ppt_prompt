@@ -1930,6 +1930,39 @@
     status("선택한 색상 팔레트를 삭제했습니다.", "info");
   }
 
+  const META_PLACEHOLDERS = new Set([
+    "브랜드명", "로고", "로고 자리", "참여 태그", "행사명", "일정", "장소", 
+    "신청 링크", "CTA 버튼", "QR코드 영역", "출처", "주최기관", "주최/주관 로고", 
+    "주관 기관 로고", "교육 과정명", "교육 기간", "신청 자격", "접수 마감일", 
+    "교육 혜택(수강료 등)", "사업명", "지원 내용", "접수 기간", "신청 자격 및 방법", 
+    "성과 타이틀", "주요 수치 데이터", "캠페인 슬로건", "신청 방법(QR/링크)", "참여 링크(QR)",
+    "소요 시간", "경품 혜택", "설문 주제", "신청 방법", "주최/주관", "주관 기관", "주최 기관",
+    
+    "brand name", "logo", "logo slot", "participation hashtags", "event title", 
+    "date and time", "location", "application method", "organizer logo", "survey topic", 
+    "estimated duration", "reward details", "participation link", "course title", 
+    "training period", "eligibility", "application deadline", "program benefits", 
+    "program title", "support details", "application period", "host agency logo", 
+    "performance title", "key numeric data", "data source", "campaign slogan",
+    "participation link (qr)", "application method (qr/link)"
+  ]);
+
+  function filterMetaPlaceholders(text) {
+    if (!text) return "";
+    const tokens = text.split(/[,/;·\n]+/);
+    const filtered = tokens
+      .map(t => t.trim())
+      .filter(token => {
+        if (!token) return false;
+        const lower = token.toLowerCase();
+        if (META_PLACEHOLDERS.has(lower)) return false;
+        const cleanToken = lower.replace(/\s*\([^)]*\)/g, "").trim();
+        if (META_PLACEHOLDERS.has(cleanToken)) return false;
+        return true;
+      });
+    return filtered.join(", ");
+  }
+
   function bindQuickButtons(scope) {
     scope.querySelectorAll(".promo-quick-btns").forEach((container) => {
       const targetId = container.dataset.quickFor;
@@ -2116,7 +2149,7 @@
       ["headline", state.headline],
       ["subheadline", state.subheadline],
       ["bodyCopy", state.bodyCopy],
-      ["mandatoryElements", state.mandatoryElements],
+      ["mandatoryElements", filterMetaPlaceholders(state.mandatoryElements)],
     ];
 
     if (isFieldManualActive("cta")) entries.push(["cta", state.cta]);
