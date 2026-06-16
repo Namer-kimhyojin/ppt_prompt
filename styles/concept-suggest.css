@@ -69,6 +69,7 @@
 }
 
 .concept-color-mode,
+.concept-engine-mode,
 .concept-card-mode {
   display: inline-flex;
   align-items: center;
@@ -80,7 +81,8 @@
   flex-shrink: 0;
 }
 
-.concept-color-mode-label {
+.concept-color-mode-label,
+.concept-engine-label {
   padding: 0 6px 0 8px;
   font-size: 11px;
   font-weight: 700;
@@ -89,6 +91,7 @@
 }
 
 .concept-color-mode-btn,
+.concept-engine-btn,
 .concept-card-mode-btn {
   border: 0;
   border-radius: 999px;
@@ -104,6 +107,7 @@
 }
 
 .concept-color-mode-btn.active,
+.concept-engine-btn.active,
 .concept-card-mode-btn.active {
   background: var(--accent, #6c63ff);
   color: #ffffff;

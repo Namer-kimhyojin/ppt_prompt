@@ -818,14 +818,42 @@
     syncColorModeControls();
   }
 
+  function syncEngineModeControls(engine) {
+    document.querySelectorAll('[data-concept-engine]').forEach(btn => {
+      const isActive = btn.dataset.conceptEngine === engine;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  }
+
+  function bindEngineMode() {
+    const targetEngineSelect = document.getElementById("promotionTargetEngine");
+    if (targetEngineSelect) {
+      syncEngineModeControls(targetEngineSelect.value);
+    }
+    document.querySelectorAll('#conceptEngineMode [data-concept-engine]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const engine = btn.dataset.conceptEngine;
+        if (targetEngineSelect) {
+          targetEngineSelect.value = engine;
+          targetEngineSelect.dispatchEvent(new Event('change'));
+        }
+        syncEngineModeControls(engine);
+        renderCards();
+      });
+    });
+  }
+
   function init() {
     buildFilterBar();
     bindSearch();
     bindColorMode();
+    bindEngineMode();
 
     const targetEngineSelect = document.getElementById("promotionTargetEngine");
     if (targetEngineSelect) {
       targetEngineSelect.addEventListener('change', () => {
+        syncEngineModeControls(targetEngineSelect.value);
         renderCards();
       });
     }
