@@ -2357,9 +2357,162 @@ function renderOpenAIOptimizedPrompt(validation, lint) {
   return enforceOpenAICharLimit(sanitizePromptForUniversal(trimOpenAIPromptToLimit(blocks)));
 }
 
+function renderImagenOptimizedPrompt(validation, lint) {
+  // 1. [스타일 및 전체 배경]
+  const styleVal = _s.visualStyle || _s.appliedConceptStyle || "현대적이고 감각적인 그래픽 디자인 스타일";
+  
+  let bgVal = _s.backgroundDetails || "";
+  if (!bgVal.trim()) {
+    const bgModeText = _s.backgroundMode === "solid" ? "단색" : (_s.backgroundMode === "gradient" ? "그라데이션" : "커스텀");
+    const bgCol = _s.backgroundColor || "차분한 톤";
+    bgVal = `${bgCol}의 깔끔하고 정돈된 ${bgModeText} 배경. 여백을 충분히 두어 텍스트와 그래픽 요소들이 잘 드러나도록 깊이감을 부여합니다.`;
+  }
+  
+  let charVal = _s.keyVisualConcept || _s.visualMetaphor || "";
+  if (!charVal.trim()) {
+    charVal = "홍보 주제를 상징하는 현대적인 그래픽 오브젝트 또는 메인 비주얼 요소. 전체 구도의 균형을 맞추며 텍스트를 방해하지 않는 크기와 투명도로 배치됩니다.";
+  }
+  
+  const hasVariationMode = !_h.isBasicVisualPlanningMode() && _s.variationMode && _s.variationMode !== "none";
+  if (hasVariationMode) {
+    const seed = VARIATION_SEEDS.find((s) => s.id === _s.variationMode);
+    if (seed) {
+      const varLinesKo = seed.linesKo.join(" ");
+      charVal += ` (비주얼 구성 변형 가이드: ${varLinesKo})`;
+    }
+  }
+
+  // 2. [상단 텍스트 레이아웃]
+  let yearVal = "2026";
+  const yearMatch = (_s.headline + " " + _s.bodyCopy + " " + _s.mandatoryElements).match(/\b(202\d)\b/);
+  if (yearMatch) {
+    yearVal = yearMatch[1];
+  } else {
+    const contentNameKo = _s.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES[_s.contentType]?.name || "") : "";
+    if (contentNameKo) {
+      yearVal = contentNameKo;
+    }
+  }
+  
+  const headlineLines = normalizeLines(_s.headline);
+  const mainTitleStr = headlineLines.map(line => `'${line}'`).join("\n");
+  
+  const subheadlineLines = normalizeLines(_s.subheadline);
+  const subTitleStr = subheadlineLines.map(line => `'${line}'`).join("\n");
+
+  // 3. [중앙 정보 섹션 (아이콘 레이아웃)]
+  const centerStructure = "왼쪽에는 원형 아이콘 패널들이 세로로 나열되고, 오른쪽에는 해당 내용이 텍스트로 배치되는 정돈된 레이아웃 구조.";
+  
+  const rawInfoLines = [];
+  if (_s.mandatoryElements) {
+    rawInfoLines.push(...normalizeLines(_s.mandatoryElements));
+  }
+  if (_s.bodyCopy) {
+    rawInfoLines.push(...normalizeLines(_s.bodyCopy));
+  }
+  
+  const infoLines = [...new Set(rawInfoLines)].filter(Boolean).slice(0, 5);
+  
+  let panelsStr = "";
+  const colorRoles = [_s.primaryColor, _s.secondaryColor, _s.accentColor, "#8b4513", "#daa520"];
+  
+  infoLines.forEach((line, index) => {
+    const parts = line.split(/[:：\-—]/);
+    let label = `정보 ${index + 1}`;
+    let textVal = line;
+    if (parts.length > 1) {
+      label = parts[0].trim();
+      textVal = parts.slice(1).join(":").trim();
+    }
+    
+    let iconDesc = "원형 테두리 안의 체크표시 아이콘";
+    const labelLower = label.toLowerCase();
+    if (/일정|기간|날짜|시간|date|schedule|time/i.test(labelLower)) {
+      iconDesc = "원형 테두리 안에 달력과 시계 아이콘";
+    } else if (/자격|대상|인원|사람|who|target|eligible/i.test(labelLower)) {
+      iconDesc = "원형 테두리 안에 사람 실루엣 아이콘";
+    } else if (/혜택|비용|장학|지원|금액|금화|돈|benefit|cost|price|fee|scholarship/i.test(labelLower)) {
+      iconDesc = "원형 테두리 안에 '₩' 기호가 있는 금화 아이콘";
+    } else if (/기한|마감|접수|deadline|apply/i.test(labelLower)) {
+      iconDesc = "원형 테두리 안에 모래시계 아이콘";
+    } else if (/장소|위치|주소|place|location/i.test(labelLower)) {
+      iconDesc = "원형 테두리 안에 지도 핀 아이콘";
+    } else if (/문의|전화|이메일|연락|contact|email|phone/i.test(labelLower)) {
+      iconDesc = "원형 테두리 안에 편지 봉투 또는 전화기 아이콘";
+    }
+    
+    const hexColor = colorRoles[index % colorRoles.length] || "#7d7d7d";
+    const colorName = COLOR_NAME_MAP[hexColor.toLowerCase()] || "선명한 포인트 색상";
+    
+    panelsStr += `${index + 1}번 패널 (${label}):\n`;
+    panelsStr += `아이콘: ${colorName} 원형 테두리 안에 ${iconDesc}.\n`;
+    panelsStr += `텍스트: ${colorName} 굵은 서체로 '- ${label}:', 그 아래로 '${textVal}'\n\n`;
+  });
+
+  if (!panelsStr) {
+    panelsStr = "1번 패널 (홍보 상세):\n아이콘: 원형 테두리 안의 체크표시 아이콘.\n텍스트: 굵은 서체로 홍보용 문구 렌더링.\n\n";
+  }
+
+  // 4. [하단 텍스트 및 버튼 레이아웃]
+  const sloganVal = _s.snsHook || _s.posterOffer || "더 나은 미래를 위해, 지금 바로 함께하세요!";
+  
+  let ctaStr = "";
+  if (isEnabled(_s.ctaEnabled) && _s.ctaMode === "manual" && _s.cta) {
+    const primaryColorName = COLOR_NAME_MAP[(_s.primaryColor || "#1f4f99").toLowerCase()] || "짙은 색상";
+    const accentColorName = COLOR_NAME_MAP[(_s.accentColor || "#d87922").toLowerCase()] || "포인트 색상";
+    ctaStr = `지원하기 버튼 (최하단):
+형태: 직사각형 모양의 ${primaryColorName} 버튼, ${accentColorName} 외곽선 테두리.
+아이콘: 버튼 왼쪽 안에 상승 그래프와 사람 실루엣 아이콘.
+텍스트: 버튼 중앙에 굵고 큰 흰색 서체로 '${_s.cta}'`;
+  } else {
+    ctaStr = `안내 버튼 (최하단):
+형태: 직사각형 모양의 짙은 네이비 버튼.
+텍스트: 버튼 중앙에 굵고 큰 흰색 서체로 '자세히 보기'`;
+  }
+
+  const promptText = `
+[스타일 및 전체 배경]
+
+스타일: ${styleVal}
+
+배경: ${bgVal}
+
+캐릭터: ${charVal}
+
+[상단 텍스트 레이아웃]
+
+연도: 최상단 중앙에 짙은 녹색 또는 조화로운 포인트 서체로 '${yearVal}' 텍스트. 양옆에 작은 나뭇잎 모양의 금색 장식 아이콘이 배치됩니다.
+
+메인 타이틀 (대형): 연도 아래에 굵고 큰 폰트로 세 줄 또는 두 줄로 나누어 배치:
+${mainTitleStr}
+
+서브 타이틀: 메인 타이틀 아래에 작은 폰트로 배치:
+${subTitleStr}
+
+[중앙 정보 섹션 (아이콘 레이아웃)]
+
+전체 구조: ${centerStructure}
+
+${panelsStr.trim()}
+
+[하단 텍스트 및 버튼 레이아웃]
+
+슬로건: 정보 섹션 아래 중앙에 얇고 정돈된 서체로:
+'${sloganVal}'
+
+${ctaStr}
+`;
+
+  return sanitizePromptForImagen(promptText.trim());
+}
+
 function renderOptimizedPrompt(validation, lint) {
   if (isOpenAIImageEngine()) {
     return renderOpenAIOptimizedPrompt(validation, lint);
+  }
+
+  if (_s.targetEngine === "imagen") {
+    return renderImagenOptimizedPrompt(validation, lint);
   }
 
   const sections = createPromptSections(validation, lint);
