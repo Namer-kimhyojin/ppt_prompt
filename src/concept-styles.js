@@ -992,6 +992,50 @@ window.CONCEPT_STYLES = [
       tags: ['Hydrogen', 'H2', 'EcoClean']
     },
     {
+      id: 'energy-hydrogen-electrolysis',
+      category: 'energy',
+      nameKo: '그린수소 수전해 생산',
+      nameEn: 'Green Hydrogen Electrolysis',
+      emoji: '🧪',
+      desc: '태양광/풍력 등의 신재생 전기에너지를 활용해 물(H2O)을 수소와 산소로 분해하는 청정 수소 생산 비주얼.',
+      palette: ['#E0F7FA', '#4DD0E1', '#00ACC1', '#00E676', '#006064'],
+      prompt: 'A bright, futuristic 3D visual of water electrolysis for green hydrogen production. Water molecules splitting into glowing cyan hydrogen bubbles and emerald green oxygen bubbles on a high-tech catalytic mesh anode and cathode surface, bright solar/wind clean power source motif, color palette: #E0F7FA #4DD0E1 #00ACC1 #00E676 #006064.',
+      tags: ['GreenHydrogen', 'Electrolysis', 'Renewable']
+    },
+    {
+      id: 'energy-fuelcell-stack',
+      category: 'energy',
+      nameKo: '수소 연료전지 스택',
+      nameEn: 'Hydrogen Fuel Cell Stack',
+      emoji: '⚙️',
+      desc: '막전극접합체(MEA) 적층 구조에서 수소와 산소가 반응하여 전기와 물을 생성하는 연료전지 발전 핵심 구조.',
+      palette: ['#0B1A30', '#1F3C6D', '#00D2FF', '#FFFFFF', '#E3F2FD'],
+      prompt: 'A futuristic 3D cutaway of a hydrogen fuel cell stack. Layered membrane electrode assembly (MEA) plates reacting hydrogen and oxygen molecules, glowing electric blue energy channels and pure water droplets emerging from the reaction, sleek modern green energy technology, color palette: #0B1A30 #1F3C6D #00D2FF #FFFFFF #E3F2FD.',
+      tags: ['FuelCell', 'Stack', 'MEA', 'Electricity']
+    },
+    {
+      id: 'energy-hydrogen-storage',
+      category: 'energy',
+      nameKo: '액체수소 저장 시스템',
+      nameEn: 'Liquid Hydrogen Storage',
+      emoji: '❄️',
+      desc: '극저온 상태로 액화된 수소를 안전하게 보관하는 탄소섬유 고압 저장 용기와 냉각 배관 구조.',
+      palette: ['#1C2331', '#2E4057', '#00D2FF', '#D5F3FE', '#FFFFFF'],
+      prompt: 'A high-tech industrial rendering of a liquid hydrogen cryogenic storage system. Sleek matte-white spherical carbon fiber tanks wrapped with metallic silver bands, emitting light-blue cooling gas vapor streams, clean minimalist clean-room facility interior, color palette: #1C2331 #2E4057 #00D2FF #D5F3FE #FFFFFF.',
+      tags: ['Cryogenic', 'HydrogenStorage', 'HighPressure']
+    },
+    {
+      id: 'energy-hydrogen-mobility',
+      category: 'energy',
+      nameKo: '수소 모빌리티 운송',
+      nameEn: 'Hydrogen Mobility Transport',
+      emoji: '🚚',
+      desc: '물(수증기)만 배출하는 청정 수소 트럭, 충전소 인프라 및 친환경 수소 물류 이송 체계.',
+      palette: ['#0A1128', '#1C2541', '#3A506B', '#5BC0BE', '#FFFFFF'],
+      prompt: 'A modern concept design of hydrogen mobility and logistics. A sleek, white semi-truck refueling at a futuristic hydrogen refueling station, glowing blue nozzles and clean water vapor emitting from the exhaust, clean sky backdrop, color palette: #0A1128 #1C2541 #3A506B #5BC0BE #FFFFFF.',
+      tags: ['HydrogenTruck', 'Mobility', 'EcoTransport']
+    },
+    {
       id: 'energy-smart-grid-neon',
       category: 'energy',
       nameKo: '스마트 에너지 그리드',
@@ -1023,6 +1067,72 @@ window.CONCEPT_STYLES = [
       palette: ['#0D1F10', '#1E4620', '#3B8B46', '#8AE9A8', '#EFFFF3'],
       prompt: 'A detailed 3D rendering of the inner structure of a lithium-ion battery. Multiple cylindrical or prismatic cells aligned, showing glowing green electrical ions moving between cathode and anode layers, technical engineering cutaway, color palette: #0D1F10 #1E4620 #3B8B46 #8AE9A8 #EFFFF3.',
       tags: ['Battery', 'ESS', 'LithiumIon']
+    },
+    {
+      id: 'energy-battery-solidstate',
+      category: 'energy',
+      nameKo: '차세대 전고체 배터리',
+      nameEn: 'Solid-State Battery',
+      emoji: '⚡',
+      desc: '고체 전해질을 사용하여 덴드라이트 발생이 차단된 고안전·고밀도 미래형 배터리 내부 비주얼.',
+      palette: ['#1A2238', '#2B3A67', '#FFD700', '#FF9100', '#E2E8F0'],
+      prompt: 'A futuristic 3D structural cutaway of a solid-state battery. Glowing gold lithium ions moving smoothly through a dense, structured crystalline solid-state electrolyte layer, metallic silver and gold electrodes, technical engineering design, color palette: #1A2238 #2B3A67 #FFD700 #FF9100 #E2E8F0.',
+      tags: ['SolidState', 'Safety', 'NextGen']
+    },
+    {
+      id: 'energy-battery-lithiumsulfur',
+      category: 'energy',
+      nameKo: '고용량 리튬 황 배터리',
+      nameEn: 'Lithium-Sulfur Battery',
+      emoji: '🔋',
+      desc: '황 음극 복합체와 리튬 금속 양극 사이의 이온 이동을 담은 초경량 고용량 에너지 셀.',
+      palette: ['#1B1B1B', '#2A2D34', '#EAE013', '#32E0C4', '#EEEEEE'],
+      prompt: 'An artistic technical rendering of a Lithium-Sulfur battery cell. Vibrant neon-yellow sulfur composite cathode structures interacting with blue-glowing lithium ions, chemistry laboratory illustration style, color palette: #1B1B1B #2A2D34 #EAE013 #32E0C4 #EEEEEE.',
+      tags: ['LithiumSulfur', 'Lightweight', 'Chemistry']
+    },
+    {
+      id: 'energy-battery-silicon',
+      category: 'energy',
+      nameKo: '고속충전 실리콘 음극재',
+      nameEn: 'Silicon Anode Battery',
+      emoji: '🔥',
+      desc: '실리콘 나노입자가 팽창과 수축을 제어하며 리튬 이온을 대량 수용하는 초고속 충전 구조.',
+      palette: ['#121212', '#2D2D2D', '#FF5722', '#FF8A65', '#CFD8DC'],
+      prompt: 'A close-up 3D technical illustration of a silicon anode battery structure. Nano-sized silicon particles expanding and glowing with copper-orange energy paths, showing high-speed electric current flow, modern nanotechnology design, color palette: #121212 #2D2D2D #FF5722 #FF8A65 #CFD8DC.',
+      tags: ['SiliconAnode', 'FastCharge', 'NanoTech']
+    },
+    {
+      id: 'energy-battery-sodium',
+      category: 'energy',
+      nameKo: '친환경 나트륨 이온 배터리',
+      nameEn: 'Sodium-Ion Battery',
+      emoji: '🌊',
+      desc: '리튬 대신 지각에 풍부한 소금(나트륨) 성분을 활용하여 자원 수급 문제를 극복한 지속 가능한 배터리.',
+      palette: ['#0F2027', '#203A43', '#2C5364', '#00E5FF', '#FFB300'],
+      prompt: 'An infographic-style 3D representation of a Sodium-Ion battery cell. Teal and cyan sodium ions flowing through sustainable porous carbon layers, representation of environment-friendly energy storage, color palette: #0F2027 #203A43 #2C5364 #00E5FF #FFB300.',
+      tags: ['SodiumIon', 'EcoFriendly', 'SaltBattery']
+    },
+    {
+      id: 'energy-battery-recycle',
+      category: 'energy',
+      nameKo: '배터리 리사이클링 순환',
+      nameEn: 'Battery Recycling Loop',
+      emoji: '♻️',
+      desc: '폐배터리(블랙매스)로부터 니켈, 코발트, 리튬 광물을 추출하여 신품 배터리로 제조하는 자원 선순환 구조.',
+      palette: ['#0B1E19', '#1D3B32', '#4A8C6F', '#98DFB6', '#3E8BFF'],
+      prompt: 'A sleek conceptual rendering of battery recycling and circular economy. A used battery cell decomposing into glowing particles of cobalt and nickel minerals, transforming into a glowing green circular arrow loop that constructs a brand-new battery, color palette: #0B1E19 #1D3B32 #4A8C6F #98DFB6 #3E8BFF.',
+      tags: ['Recycling', 'CircularEconomy', 'BlackMass']
+    },
+    {
+      id: 'energy-battery-flexible',
+      category: 'energy',
+      nameKo: '플렉시블 웨어러블 배터리',
+      nameEn: 'Flexible Wearable Battery',
+      emoji: '📱',
+      desc: '웨어러블 기기나 스마트 의류에 적용되는 얇고 유연하게 구부러지는 박막 형태의 배터리 셀.',
+      palette: ['#150030', '#3B0066', '#00E5FF', '#FF007F', '#FFFFFF'],
+      prompt: 'A futuristic wearable product rendering of a flexible micro-battery array. A thin, bendable polymer sheet with hexagonal battery cells glowing with cyan energy, integrated with organic wearable electronic circuits, color palette: #150030 #3B0066 #00E5FF #FF007F #FFFFFF.',
+      tags: ['FlexibleBattery', 'Wearable', 'ThinFilm']
     },
     {
       id: 'energy-nuclear-fusion',
@@ -1201,6 +1311,105 @@ window.CONCEPT_STYLES = [
       palette: ['#1A1D20', '#343A40', '#007BFF', '#DC3545', '#E9ECEF'],
       prompt: 'A detailed 3D architectural render of a data center server aisle. Showing cold air flow lines colored in neon blue entering the server racks and warm exhaust air in red exiting the back, high efficiency cooling simulation, color palette: #1A1D20 #343A40 #007BFF #DC3545 #E9ECEF.',
       tags: ['DataCenter', 'CoolingSystem', 'ServerRack']
+    },
+    {
+      id: 'software-ai-llm-transformer',
+      category: 'software',
+      nameKo: 'LLM 트랜스포머 어텐션',
+      nameEn: 'Transformer LLM Attention',
+      emoji: '🧠',
+      desc: '문장 생성과 번역을 수행하는 대형언어모델(LLM)의 멀티헤드 어텐션 가중치 연결망 시각화.',
+      palette: ['#020C1B', '#1D3557', '#457B9D', '#A8DADC', '#E63946'],
+      prompt: 'An abstract 3D visualization of a transformer neural network attention mechanism. Glowing node-to-node connecting lines with varying weights, representing token embedding vectors in multidimensional space, deep indigo cyberspace backdrop, color palette: #020C1B #1D3557 #457B9D #A8DADC #E63946.',
+      tags: ['LLM', 'AI', 'Transformer', 'NLP']
+    },
+    {
+      id: 'software-ai-computervision',
+      category: 'software',
+      nameKo: '컴퓨터 비전 객체 인식',
+      nameEn: 'Computer Vision AI',
+      emoji: '👁️',
+      desc: '카메라 영상 속 차량, 사람, 도로 표지판을 AI가 실시간으로 감지하고 바운딩 박스로 표시하는 비주얼.',
+      palette: ['#0D0D11', '#1A1A24', '#00E676', '#FF9100', '#00E5FF'],
+      prompt: 'A futuristic driverless vehicle perspective overlayed with real-time AI object detection. Neon-green bounding boxes, orange target vectors, and cyan segmented overlay masks on surrounding environment objects, color palette: #0D0D11 #1A1A24 #00E676 #FF9100 #00E5FF.',
+      tags: ['ComputerVision', 'ObjectDetection', 'Autonomous']
+    },
+    {
+      id: 'software-ai-agent-orchestrator',
+      category: 'software',
+      nameKo: 'AI 에이전트 협업 오케스트레이터',
+      nameEn: 'AI Agent Orchestrator',
+      emoji: '🤖',
+      desc: '다양한 전문 업무를 분담하는 여러 개의 자율형 AI 에이전트가 정보를 공유하며 작업을 완료하는 비주얼.',
+      palette: ['#1E1B4B', '#311B92', '#00E5FF', '#F50057', '#FFFFFF'],
+      prompt: 'A high-fidelity layout representing collaborative AI agents. Floating translucent windows with codes, terminal logs, and chat messages between glowing geometric agent avatars, vibrant neon cyber atmosphere, color palette: #1E1B4B #311B92 #00E5FF #F50057 #FFFFFF.',
+      tags: ['AIAgents', 'Orchestration', 'MultiAgent']
+    },
+    {
+      id: 'software-datacenter-hyperscale',
+      category: 'software',
+      nameKo: '하이퍼스케일 클라우드 센터',
+      nameEn: 'Hyperscale Cloud Data Center',
+      emoji: '🏢',
+      desc: '수만 대의 물리 서버가 장착된 하이퍼스케일 데이터센터 내부의 끝없는 서버 랙과 LED 플래시 비주얼.',
+      palette: ['#0A0B10', '#161A23', '#3B82F6', '#10B981', '#F3F4F6'],
+      prompt: 'A wide-angle 3D rendering of an endless hyperscale data center hallway. Rows of sleek server cabinets with flashing blue and green LED status lights, optical fiber cable trays suspended from high ceiling, pristine clean-room tech facility, color palette: #0A0B10 #161A23 #3B82F6 #10B981 #F3F4F6.',
+      tags: ['DataCenter', 'CloudInfrastructure', 'Servers']
+    },
+    {
+      id: 'software-datacenter-liquidcooling',
+      category: 'software',
+      nameKo: '친환경 수랭식 데이터센터',
+      nameEn: 'Liquid Cooled Datacenter',
+      emoji: '💧',
+      desc: '공기 대신 물을 사용해 마이크로프로세서의 열을 직접 냉각하는 고효율·친환경 친수성 쿨링 인프라.',
+      palette: ['#040D1A', '#0E2954', '#1F6E8C', '#2E8B57', '#8AE9C1'],
+      prompt: 'A close-up cutaway of a liquid cooled microchip processor in a server. Cool blue liquid flowing through glowing copper block channels directly attached to silicon CPU, glowing green thermal indicators, environment-friendly server cooling, color palette: #040D1A #0E2954 #1F6E8C #2E8B57 #8AE9C1.',
+      tags: ['LiquidCooling', 'ThermalControl', 'GreenIT']
+    },
+    {
+      id: 'software-datacenter-edge',
+      category: 'software',
+      nameKo: '엣지 컴퓨팅 노드 네트워크',
+      nameEn: 'Edge Computing Node Network',
+      emoji: '📡',
+      desc: '사용자 장치 근처에 분산 배치되어 초저지연 데이터 처리를 수행하는 엣지 서버와 무선 데이터 흐름.',
+      palette: ['#03001C', '#301E67', '#5B8FB9', '#B6EADA', '#FFFFFF'],
+      prompt: 'An isometric representation of edge computing nodes. Small glowing hardware server nodes placed on a stylized geographic terrain, projecting neon-blue signal ripples connecting to nearby IoT devices, color palette: #03001C #301E67 #5B8FB9 #B6EADA #FFFFFF.',
+      tags: ['EdgeComputing', 'IoT', 'LowLatency']
+    },
+    {
+      id: 'software-mobility-sdv',
+      category: 'software',
+      nameKo: '소프트웨어 정의 자동차 (SDV)',
+      nameEn: 'Software Defined Vehicle (SDV)',
+      emoji: '🚗',
+      desc: '하드웨어보다 내부 제어 소프트웨어 아키텍처가 중심이 되는 전기차의 무선 업데이트(OTA) 시스템 비주얼.',
+      palette: ['#070A13', '#121829', '#00FFCC', '#8A2BE2', '#FFFFFF'],
+      prompt: 'A glowing 3D wireframe outline of a luxury electric car showcasing its inner software architecture blocks. Light-beam ripples of cloud data descending onto the car center computer unit representing OTA update, cyber tech concept, color palette: #070A13 #121829 #00FFCC #8A2BE2 #FFFFFF.',
+      tags: ['SDV', 'OTAUpdate', 'ConnectedCar']
+    },
+    {
+      id: 'software-mobility-autonomous',
+      category: 'software',
+      nameKo: '자율주행 스마트 모빌리티',
+      nameEn: 'Autonomous Driving AI Core',
+      emoji: '🤖',
+      desc: 'LiDAR와 카메라가 측정한 3D 포인트 클라우드 맵 위를 미끄러지듯 주행하는 완전자율주행차.',
+      palette: ['#0B0C10', '#1F2833', '#C5C6C7', '#66FCF1', '#45A29E'],
+      prompt: 'An isometric 3D view of a self-driving car navigating an abstract city grid. Showing glowing LiDAR laser wave rings scanning the street, obstacle bounding boxes, point cloud geometry map background, color palette: #0B0C10 #1F2833 #C5C6C7 #66FCF1 #45A29E.',
+      tags: ['AutonomousDriving', 'LiDAR', 'AIPathfinding']
+    },
+    {
+      id: 'software-mobility-uam',
+      category: 'software',
+      nameKo: '도심 항공 교통 (UAM) 관제',
+      nameEn: 'Urban Air Mobility Dispatch',
+      emoji: '🛸',
+      desc: '도시 상공의 3D 디지털 항로를 따라 비행하는 eVTOL 기체와 이를 제어하는 통합 관제 시스템.',
+      palette: ['#0D1B2A', '#1B263B', '#415A77', '#778DA9', '#E0E1DD'],
+      prompt: 'A futuristic city skyline with glowing 3D air corridors in the sky. Sleek eVTOL passenger drones flying along the glowing flight paths, overlayed with semi-transparent flight navigation dispatch interface, color palette: #0D1B2A #1B263B #415A77 #778DA9 #E0E1DD.',
+      tags: ['UAM', 'eVTOL', 'AirTrafficControl']
     },
 
     // --- HEAVY INDUSTRIES (11 concepts) ---
@@ -1995,6 +2204,55 @@ window.CONCEPT_STYLES = [
       desc: '특유의 서정적이고 포근한 지브리 스타일 2D 셀 애니메이션. 맑고 청명한 자연 경관과 감성적인 아날로그 텍스처.',
       palette: ['#387a5c', '#7cb1db', '#f7d070', '#fff9e6', '#4a3319'],
       prompt: `hand-drawn Studio Ghibli 2D anime style screenshot, beautiful lush green landscapes, clear bright blue sky with fluffy white cumulus clouds, nostalgic analog film texture, soft hand-painted gouache backgrounds, color palette: #387a5c #7cb1db #f7d070 #fff9e6 #4a3319, deep forest green, summer sky blue, soft golden sunset light, warm cream highlight, natural earth brown contours, cinematic animation frame, peaceful whimsical atmosphere`,
-      tags: ['지브리', '애니', '감성', '자연', '손그림'] }
+      tags: ['지브리', '애니', '감성', '자연', '손그림'] },
+
+    // ── 철강 (8 concepts) ──────────────────────────────────────
+    { id: 'steel-hot-rolling', category: 'steel', nameKo: '용광로 쇳물 압연', nameEn: 'Hot Rolling Mill', emoji: '🔥',
+      desc: '붉게 달아오른 쇳물 블록이 거대한 압연 롤러를 통과하며 얇게 펴지는 뜨겁고 역동적인 제철 현장.',
+      palette: ['#0E0807', '#2E140F', '#7B2A1E', '#F05A28', '#FFD07B'],
+      prompt: 'Intense glowing-orange molten steel slab passing through heavy industrial roller cylinders in a hot rolling mill. Showers of sparks, heat haze warping the air, deep dark industrial warehouse shadows, cinematic steelworks photography, color palette: #0E0807 #2E140F #7B2A1E #F05A28 #FFD07B.',
+      tags: ['압연', '용광로', '제철소', '쇳물'] },
+
+    { id: 'steel-continuous-casting', category: 'steel', nameKo: '연속 주조 슬래브', nameEn: 'Continuous Casting Slab', emoji: '🏗️',
+      desc: '액체 상태의 강철이 서서히 굳어지며 긴 슬래브(Slab) 형태로 연속 주조되는 열역학적 과정.',
+      palette: ['#1D1E22', '#3E3E42', '#B22222', '#FF4500', '#E5E5E5'],
+      prompt: 'A continuous casting machine solidifying molten steel into rectangular slabs. Glowing red-hot core visible beneath cooling dark gray crust, vapor steam rising from automated water spray nozzles, engineering structure view, color palette: #1D1E22 #3E3E42 #B22222 #FF4500 #E5E5E5.',
+      tags: ['연속주조', '슬래브', '제철', '강철'] },
+
+    { id: 'steel-cold-rolled-coil', category: 'steel', nameKo: '고장력 냉연 강판 코일', nameEn: 'Cold Rolled Steel Coil', emoji: '🔩',
+      desc: '상온에서 정밀 압연을 거쳐 단단하게 말려 있는 은빛 강판 코일의 정밀한 금속 광택과 동심원 비주얼.',
+      palette: ['#1E2022', '#3F4448', '#8B949E', '#D5DCE2', '#F0F4F8'],
+      prompt: 'Rows of large, neatly rolled metallic silver cold-rolled steel coils in a modern clean warehouse storage. Sharp reflections on the polished steel surfaces, perfect concentric circular textures, cool ambient factory lighting, color palette: #1E2022 #3F4448 #8B949E #D5DCE2 #F0F4F8.',
+      tags: ['냉연강판', '철강코일', '금속광택', '철강제품'] },
+
+    { id: 'steel-hydrogen-reduction', category: 'steel', nameKo: '친환경 수소환원제철', nameEn: 'Hydrogen Reduction Steelmaking', emoji: '🌿',
+      desc: '석탄 대신 수소를 사용하여 이산화탄소 대신 깨끗한 물을 배출하는 미래 친환경 탄소중립 제철 프로세스.',
+      palette: ['#091F2D', '#1B4965', '#62B6CB', '#8AE9C1', '#FFFFFF'],
+      prompt: 'A futuristic carbon-free hydrogen reduction steel plant (HyREX). Clean modern white and blue reactors surrounded by green plants, emitting harmless steam vapor clouds (H2O) into clear blue sky, eco-friendly industrial technology, color palette: #091F2D #1B4965 #62B6CB #8AE9C1 #FFFFFF.',
+      tags: ['수소환원제철', '탄소중립', '친환경', '수소에너지'] },
+
+    { id: 'steel-gigasteel-automotive', category: 'steel', nameKo: '초고강도 기가스틸', nameEn: 'Ultra-High GigaSteel', emoji: '🚗',
+      desc: '1기가파스칼 이상의 하중을 견뎌내며 차량 경량화에 기여하는 얇지만 견고한 자동차 프레임 소재.',
+      palette: ['#0D1117', '#161B22', '#3066BE', '#58A6FF', '#E1E7F0'],
+      prompt: 'A futuristic automotive chassis structure made of ultra-high-strength GigaSteel. Visualizing microscopic metallic crystal lattice grain structure overlaid on light-weight car body frame, blue force stress vectors, engineering science aesthetic, color palette: #0D1117 #161B22 #3066BE #58A6FF #E1E7F0.',
+      tags: ['기가스틸', '자동차프레임', '신소재', '고강도'] },
+
+    { id: 'steel-stainless-corrosion', category: 'steel', nameKo: '내식성 특수 스테인리스강', nameEn: 'Stainless Steel Sheet', emoji: '💧',
+      desc: '크롬 함량이 높아 부식과 녹에 견디며 깨끗한 물방울이 미끄러지는 미려한 거울면의 특수 스테인리스강.',
+      palette: ['#23272A', '#4F545C', '#B9BBBE', '#E3E5E8', '#FFFFFF'],
+      prompt: 'A close-up shot of a pristine corrosion-resistant stainless steel sheet surface. Pure clean water droplets sliding off the highly reflective metal surface, bright studio lighting casting mirror-like soft gradients, color palette: #23272A #4F545C #B9BBBE #E3E5E8 #FFFFFF.',
+      tags: ['스테인리스강', '내식성', '특수강', '금속표면'] },
+
+    { id: 'steel-smart-factory', category: 'steel', nameKo: '스마트 제철소 AI 관제', nameEn: 'Smart Steelworks Control', emoji: '🖥️',
+      desc: '디지털 트윈 기술로 조업 과정을 가상화하고 온도와 공정을 모니터링하는 미래 스마트 팩토리 관제실.',
+      palette: ['#06080F', '#1A1F2C', '#FF8800', '#00FFCC', '#EAEAEA'],
+      prompt: 'A futuristic steel mill control room displaying a digital twin of the furnace. Holographic UI overlays showing temperature heat maps, conveyor belt speeds, and flow diagnostics in glowing orange and cyan, dark technical control room interior, color palette: #06080F #1A1F2C #FF8800 #00FFCC #EAEAEA.',
+      tags: ['스마트제철소', '디지털트윈', '공정관제', 'AI공장'] },
+
+    { id: 'steel-heavy-plate', category: 'steel', nameKo: '선박용 후판 조선 기자재', nameEn: 'Heavy Plate Shipbuilding', emoji: '🚢',
+      desc: '컨테이너선이나 유조선에 사용되는 두껍고 견고한 두께 6mm 이상의 중량 후판 철강 가공 현장.',
+      palette: ['#11161B', '#253342', '#B85A1C', '#FF8D3F', '#D1D8E0'],
+      prompt: 'Massive heavy plate steel sheets being welded and cut at a shipyard dock. Brilliant orange welding sparks arching near a giant ship hull under construction, dramatic shadows, industrial maritime scale, color palette: #11161B #253342 #B85A1C #FF8D3F #D1D8E0.',
+      tags: ['후판', '조선기자재', '선박철강', '중공업'] }
 
 ];

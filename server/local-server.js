@@ -105,6 +105,59 @@ async function handleGenerateImage(req, res) {
   }
 }
 
+async function handleSaveMixerSample(req, res) {
+  try {
+    const { medId, idx, image } = await readJsonBody(req);
+    if (!medId || typeof idx !== "number" || !image) {
+      return sendJson(res, 400, { ok: false, error: "Invalid parameters." });
+    }
+
+    const dir = path.join(config.outputDir, "mixer_samples");
+    await fs.mkdir(dir, { recursive: true });
+
+    let buffer;
+    let ext = "jpg";
+
+    if (image.startsWith("data:")) {
+      const match = image.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+      if (!match) {
+        return sendJson(res, 400, { ok: false, error: "Invalid data URL format." });
+      }
+      ext = match[1] === "jpeg" ? "jpg" : match[1];
+      buffer = Buffer.from(match[2], "base64");
+    } else if (image.startsWith("http://") || image.startsWith("https://")) {
+      const response = await fetch(image);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch external image: ${response.statusText}`);
+      }
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.startsWith("image/")) {
+        const type = contentType.split("/")[1];
+        ext = type === "jpeg" ? "jpg" : type;
+      } else {
+        const urlMatch = image.match(/\.([a-zA-Z0-9]+)(?:$|\?)/);
+        if (urlMatch) ext = urlMatch[1];
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+    } else {
+      return sendJson(res, 400, { ok: false, error: "Unsupported image source." });
+    }
+
+    const filename = `${medId}_${idx}.${ext}`;
+    const filePath = path.join(dir, filename);
+    await fs.writeFile(filePath, buffer);
+
+    sendJson(res, 200, {
+      ok: true,
+      url: `/outputs/mixer_samples/${filename}`
+    });
+  } catch (error) {
+    console.error(error);
+    sendJson(res, 500, { ok: false, error: error?.message || "Failed to save sample on server." });
+  }
+}
+
 function handleGetConfig(res) {
   sendJson(res, 200, {
     ok: true,
@@ -164,6 +217,10 @@ async function handleRequest(req, res) {
 
   if (req.method === "POST" && url.pathname === "/api/generate-image") {
     return handleGenerateImage(req, res);
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/save-mixer-sample") {
+    return handleSaveMixerSample(req, res);
   }
 
   if (req.method === "POST" && url.pathname === "/api/open-folder") {

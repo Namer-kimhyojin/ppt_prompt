@@ -71,6 +71,9 @@
       <button type="button" class="app-tab-btn" id="tabBtnPromotionPlanner" role="tab" aria-selected="false" aria-controls="panePromotionPlanner">
         컨셉 제안
       </button>
+      <button type="button" class="app-tab-btn" id="tabBtnConceptMixer" role="tab" aria-selected="false" aria-controls="paneConceptMixer">
+        화풍 믹서
+      </button>
       <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
         홍보용 이미지
       </button>
@@ -359,6 +362,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
     </div>
     <div class="concept-filter-bar" id="conceptFilterBar"></div>
     <div class="concept-grid" id="conceptGrid"></div>
+  </div>
+
+  <div class="tab-pane concept-mixer-page" id="paneConceptMixer" role="tabpanel">
+    <div class="concept-mixer-container" id="conceptMixerContainer" style="display: flex; padding: 16px; flex-direction: column; gap: 20px; flex: 1; overflow-y: auto;"></div>
   </div>
 
   <div class="tab-pane gen-wrap slide-image-wrap" id="paneSlideImage" role="tabpanel">
@@ -712,6 +719,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/promotion.js"></script>
   <script src="src/concept-styles.js"></script>
   <script src="src/concept-suggest.js"></script>
+  <script src="src/concept-mixer.js"></script>
   <script src="src/image-generation-client.js"></script>
   <script src="src/generation-queue.js"></script>
   <script src="src/slide-image-generation.js"></script>

@@ -137,11 +137,22 @@ window.PROMO_PROMPT = (function () {
     "#7d7d7d": "medium gray",
   };
 
+  function expandHexCode(hexColor) {
+    const hex = String(hexColor || "").trim();
+    if (!hex.startsWith("#")) return hex;
+    const clean = hex.slice(1);
+    if (clean.length === 3) {
+      return "#" + clean[0] + clean[0] + clean[1] + clean[1] + clean[2] + clean[2];
+    }
+    return hex;
+  }
+
   function formatColorForUniversal(hexColor) {
     const hex = String(hexColor || "").trim().toLowerCase();
     if (!hex) return "";
     const cleanHex = hex.startsWith("#") ? hex : `#${hex}`;
-    const mapped = COLOR_NAME_MAP[cleanHex];
+    const expandedHex = expandHexCode(cleanHex).toLowerCase();
+    const mapped = COLOR_NAME_MAP[expandedHex];
     if (_s.targetEngine === "imagen") {
       return mapped ? mapped : "custom color tone";
     }
@@ -175,9 +186,9 @@ window.PROMO_PROMPT = (function () {
 
   function replaceHexCodesWithNames(text) {
     if (!text) return "";
-    return text.replace(/#[0-9a-fA-F]{6}/g, (hex) => {
-      const h = hex.toLowerCase();
-      return COLOR_NAME_MAP[h] || h || "custom color";
+    return text.replace(/#[0-9a-fA-F]{3,6}/g, (hex) => {
+      const expanded = expandHexCode(hex).toLowerCase();
+      return COLOR_NAME_MAP[expanded] || hex || "custom color";
     });
   }
 
@@ -220,7 +231,7 @@ window.PROMO_PROMPT = (function () {
     return processed;
   }
 
-  function sanitizePromptForImagen(text) {
+  function sanitizePromptForGemini(text) {
     if (!text) return "";
     const isEnglishOnly = _s.outputLanguage === "en";
     
@@ -1214,8 +1225,8 @@ function createPromptSections(validation, lint) {
       ? [
           _s.targetEngine === "imagen"
             ? _h.localizeSentence(
-                "이미지 내부에는 글자를 직접 렌더링하지 말고, 추후 텍스트가 삽입될 여백(Negative Space)과 정돈된 레이아웃 구도만 완성하시오.",
-                "Do not render text characters directly on the image; complete only the clean layouts and empty negative spaces for future text overlays."
+                "이미지에 렌더링되는 한국어 텍스트(헤드라인·서브카피·CTA·오퍼 등)는 지정된 문구 그대로 왜곡 없이 또렷하게 직접 렌더링하며, 텍스트가 위치할 영역은 단색(solid backdrop)으로 정돈하여 가독성을 극대화하시오.",
+                "Render all on-image Korean text (headline, sub-copy, CTA, offer, etc.) directly and accurately as provided, keeping the backdrop behind the text flat and clean to maximize readability."
               )
             : _h.localizeSentence(
                 "이미지에 렌더링되는 텍스트(헤드라인·서브카피·CTA·오퍼·훅 등)는 사용자가 입력한 원문 언어 그대로 표기한다. 한국어 입력은 한국어로, 영어 입력은 영어로 렌더링하며, AI가 임의로 번역하거나 언어를 전환하지 않는다.",
@@ -1366,8 +1377,8 @@ function createPromptSections(validation, lint) {
           const cleanLabel = _h.localizeValue(entry.label);
           const cleanValue = _h.localizeValue(entry.value);
           return _h.localizeSentence(
-            `텍스트 [${cleanLabel}]: "${cleanValue}" (텍스트가 삽입될 수 있는 단색의 깨끗하고 노이즈 없는 백드롭/플레이스홀더/여백 영역을 배경으로 남겨두고 텍스트를 또렷하게 렌더링하시오.)`,
-            `Text [${cleanLabel}]: "${cleanValue}" (Render this text clearly, reserving a clean, flat, noise-free solid backdrop plate or negative space ready for the text overlay.)`
+            `텍스트 [${cleanLabel}]: "${cleanValue}" (해당 문구를 이미지 내에 오탈자나 왜곡 없이 깨끗한 서체로 직접 렌더링하고, 글자 배경은 단색으로 정돈하시오.)`,
+            `Text [${cleanLabel}]: "${cleanValue}" (Render this text directly and clearly on the image with no typos or distortions, keeping the background behind it flat and clean.)`
           );
         })
       : textEntries.map((entry) => `${_h.localizeValue(entry.label)}: ${_h.localizeValue(entry.value)}`)
@@ -2193,7 +2204,7 @@ function renderReviewPrompt(validation, lint) {
   ];
 
   const rawPrompt = sanitizePromptForUniversal([...intro, ...sectionLines, ...footer].join("\n"));
-  return _s.targetEngine === "imagen" ? sanitizePromptForImagen(rawPrompt) : rawPrompt;
+  return _s.targetEngine === "imagen" ? sanitizePromptForGemini(rawPrompt) : rawPrompt;
 }
 
 const OPENAI_OPTIMIZED_PROMPT_CHAR_LIMIT = 3600;
@@ -2282,22 +2293,20 @@ function enforceOpenAICharLimit(promptText) {
 
 function renderOpenAIOptimizedPrompt(validation, lint) {
   const sections = createPromptSections(validation, lint);
-  const assetLabel = _h.localizeValue(ASSET_LABELS[_s.assetType] || "홍보 이미지");
-  const outputTarget = collectOpenAISectionLines(sections, [/출력 대상|Output target/i], 5);
-  const strategy = collectOpenAISectionLines(sections, [/광고 전략|Promotion strategy/i], 5);
-  const concept = collectOpenAISectionLines(sections, [/비주얼 컨셉|Visual concept|캠페인 적응|Campaign adaptation/i], 8);
-  const copy = collectOpenAISectionLines(sections, [/이미지 원문 텍스트|On-image copy|AI 생성 지시|AI generation tasks/i], 12);
-  const layout = collectOpenAISectionLines(sections, [/시선 흐름|Attention flow|레이아웃 구성|Layout|비주얼 구성 방향|Visual composition|키비주얼 배치|Key visual/i], 8);
-  const visualDirection = collectOpenAISectionLines(sections, [/비주얼 방향성|Visual direction/i], 6);
-  const color = collectOpenAISectionLines(sections, [/색상 시스템|Color system/i], 7);
-  const quality = collectOpenAISectionLines(sections, [/상업 품질 기준|Commercial baseline|이미지 품질 기준|Image quality/i], 6);
-  const constraints = collectOpenAISectionLines(sections, [/금지 조건|Prohibited elements|제외할 표현|Negative prompt/i], 5);
+  const assetLabelEn = _h.localizeValue(ASSET_LABELS[_s.assetType]) || "promotion poster";
+  const orientation = _h.getEffectiveOrientation() === "vertical" ? "vertical" : "horizontal";
+  const sizeDesc = _h.getPromptSpecificationSummary() || "standard size";
+  const langLabel = _s.outputLanguage === "en" ? "English" : (_s.outputLanguage === "bilingual" ? "bilingual (Korean/English)" : "Korean");
 
-  const textLanguageRule = _s.outputLanguage === "en"
-    ? "Use English for generated on-image copy unless the provided source copy uses another language; preserve any provided text verbatim."
-    : _s.outputLanguage === "bilingual"
-      ? "Keep bilingual copy only where the source fields explicitly provide it; do not invent extra translations."
-      : "Preserve the source language of each provided text field. Korean text stays Korean, English text stays English, and no arbitrary translation or language switching is allowed.";
+  const outputTarget = collectOpenAISectionLines(sections, [/출력 대상|Output target/i], 3);
+  const strategy = collectOpenAISectionLines(sections, [/광고 전략|Promotion strategy/i], 3);
+  const concept = collectOpenAISectionLines(sections, [/비주얼 컨셉|Visual concept|캠페인 적응|Campaign adaptation/i], 4);
+  const layout = collectOpenAISectionLines(sections, [/시선 흐름|Attention flow|레이아웃 구성|Layout|비주얼 구성 방향|Visual composition|키비주얼 배치|Key visual/i], 4);
+  const visualDirection = collectOpenAISectionLines(sections, [/비주얼 방향성|Visual direction/i], 3);
+  const color = collectOpenAISectionLines(sections, [/색상 시스템|Color system/i], 4);
+  const quality = collectOpenAISectionLines(sections, [/상업 품질 기준|Commercial baseline|이미지 품질 기준|Image quality/i], 3);
+  const constraints = collectOpenAISectionLines(sections, [/금지 조건|Prohibited elements|제외할 표현|Negative prompt/i], 4);
+
   const selectedCreativeInputs = prunePromptLines([
     isEnabled(_s.bigIdeaEnabled) && _s.bigIdeaMode === "manual" && _s.bigIdea
       ? `${_h.localizeSentence("Core idea", "Core idea")}: ${_h.localizeValue(_s.bigIdea)}`
@@ -2307,70 +2316,98 @@ function renderOpenAIOptimizedPrompt(validation, lint) {
       : "",
   ]);
 
-  const blocks = [
-    {
-      required: true,
-      text: `Create a polished ${assetLabel} as a production-ready campaign image with clear audience fit, strong visual hierarchy, readable typography, and a complete advertising layout.`,
-    },
-    {
-      required: true,
-      text: `Canvas and output: ${compactOpenAIText(outputTarget, 360)}. Match the requested aspect ratio in the composition, with safe margins for every edge and no cropped text.`,
-    },
-    {
-      required: true,
-      text: `On-image text rule: ${textLanguageRule} Render only the provided or explicitly AI-generated campaign copy, exactly once where applicable, with crisp lettering, strong contrast, and consistent spacing.`,
-    },
-    {
-      required: true,
-      text: `Copy to render and information hierarchy: ${compactOpenAIText(copy, 340)}`,
-    },
-    {
-      required: true,
-      text: `Audience, goal, and campaign intent: ${compactOpenAIText(strategy, 300)}`,
-    },
-    {
-      required: true,
-      text: `Visual concept and style direction: ${compactOpenAIText(concept, 420)}`,
-    },
-    {
-      required: true,
-      text: selectedCreativeInputs.length ? `Selected creative inputs: ${compactOpenAIText(selectedCreativeInputs, 260)}` : "",
-    },
-    {
-      required: true,
-      text: `Composition: ${compactOpenAIText(layout, 340)}`,
-    },
-    {
-      required: true,
-      text: `Creative direction and campaign quality: ${compactOpenAIText([...visualDirection, ...quality], 300)}`,
-    },
-    {
-      required: true,
-      text: `Color and background: ${compactOpenAIText(color, 320)}`,
-    },
-    {
-      required: true,
-      text: `Case-specific constraints: ${compactOpenAIText(constraints, 260)}`,
-    },
-  ];
+  // Locked text extraction
+  const textLines = [];
+  if (_s.headline) {
+    normalizeLines(_s.headline).forEach(l => textLines.push(`- Headline: "${_h.localizeValue(l)}"`));
+  }
+  if (_s.subheadline) {
+    normalizeLines(_s.subheadline).forEach(l => textLines.push(`- Sub copy: "${_h.localizeValue(l)}"`));
+  }
+  if (_s.mandatoryElements) {
+    normalizeLines(_s.mandatoryElements).forEach((l, i) => textLines.push(`- Essential info ${i+1}: "${_h.localizeValue(l)}"`));
+  }
+  if (_s.bodyCopy) {
+    normalizeLines(_s.bodyCopy).forEach((l, i) => textLines.push(`- Body point ${i+1}: "${_h.localizeValue(l)}"`));
+  }
+  if (_s.posterOffer || _s.snsHook) {
+    textLines.push(`- Offer/Hook: "${_h.localizeValue(_s.posterOffer || _s.snsHook)}"`);
+  }
+  if (isEnabled(_s.ctaEnabled) && _s.cta) {
+    textLines.push(`- CTA Button: "${_h.localizeValue(_s.cta)}"`);
+  }
 
-  return enforceOpenAICharLimit(sanitizePromptForUniversal(trimOpenAIPromptToLimit(blocks)));
+  const textSection = textLines.length > 0 
+    ? `[Locked ${langLabel} Text (Critical)]\nRender only the following text, exactly once, with crisp lettering:\n${textLines.join("\n")}`
+    : "No text rendering required.";
+
+  const outputSpec = `[Canvas & Output Specifications]\n- Create a single finished flat ${orientation} ${langLabel} ${assetLabelEn}.\n- Dimension: ${sizeDesc}\n- No outer frames, borders, or mockups.`;
+
+  const visualConceptSection = `[Visual Concept & Theme]\n- Style & Theme: ${concept.join("; ") || "Modern commercial graphic design style"}\n- Campaign Strategy: ${strategy.join("; ") || "Direct brand promotion"}\n- Colors: ${color.join("; ") || "AI-directed harmonious palette"}\n- Quality & Finish: ${[...visualDirection, ...quality].join("; ") || "Premium advertising grade finish"}${selectedCreativeInputs.length ? `\n- Creative Inputs: ${selectedCreativeInputs.join("; ")}` : ""}`;
+
+  const layoutSection = `[Layout & Grid Design]\n- Composition & Layout: ${layout.join("; ") || "Standard commercial grid layout"}\n- Formatting elements: ${outputTarget.join("; ") || "Flat promotion layout"}`;
+
+  const typographySection = `[Typography & Contrast]\n- Use clean, modern, legible typography with strong color contrast against the backdrop.\n- Keep the background immediately behind any text flat, clean, and plain, with zero visual noise.\n- Maintain clear typographic hierarchy (Headline > Sub copy > Body/CTA).`;
+
+  const prohibitedSection = `[Prohibited Constraints]\n- ${constraints.length ? constraints.join("\n- ") : "No extra text, no fake logos, no watermarks, no distorted text."}`;
+
+  const finalPrompt = [
+    outputSpec,
+    "",
+    textSection,
+    "",
+    visualConceptSection,
+    "",
+    layoutSection,
+    "",
+    typographySection,
+    "",
+    prohibitedSection
+  ].join("\n");
+
+  return enforceOpenAICharLimit(sanitizePromptForUniversal(finalPrompt));
 }
 
-function renderImagenOptimizedPrompt(validation, lint) {
-  // 1. [스타일 및 전체 배경]
-  const styleVal = _s.visualStyle || _s.appliedConceptStyle || "현대적이고 감각적인 그래픽 디자인 스타일";
+function renderGeminiOptimizedPrompt(validation, lint) {
+  // 1. [Output Specifications]
+  const assetLabelEn = _h.localizeValue(ASSET_LABELS[_s.assetType]) || "promotion poster";
+  const orientation = _h.getEffectiveOrientation() === "vertical" ? "vertical" : "horizontal";
+  const sizeDesc = _h.getPromptSpecificationSummary() || "standard size";
+  const langLabel = _s.outputLanguage === "en" ? "English" : (_s.outputLanguage === "bilingual" ? "bilingual (Korean/English)" : "Korean");
+
+  const outputSpec = `[Output Specifications]\n- Create a single finished flat ${orientation} ${langLabel} ${assetLabelEn}.\n- Dimension: ${sizeDesc}\n- No outer frames, borders, or mockups.`;
+
+  // 2. [Visual Concept]
+  let styleVal = "";
+  if (_s.visualStyle && _s.visualStyle !== "auto" && _s.visualStyle !== "자동") {
+    styleVal = _s.visualStyle;
+  } else {
+    const parts = [];
+    if (_s.appliedConceptName) parts.push(_s.appliedConceptName);
+    if (_s.appliedConceptDesc) parts.push(_s.appliedConceptDesc);
+    if (_s.appliedConceptStyle) parts.push(_s.appliedConceptStyle);
+    styleVal = parts.filter(Boolean).join(", ");
+  }
+  if (!styleVal.trim()) {
+    styleVal = _h.localizeSentence("현대적이고 감각적인 그래픽 디자인 스타일", "modern and sophisticated graphic design style");
+  }
   
   let bgVal = _s.backgroundDetails || "";
   if (!bgVal.trim()) {
-    const bgModeText = _s.backgroundMode === "solid" ? "단색" : (_s.backgroundMode === "gradient" ? "그라데이션" : "커스텀");
-    const bgCol = _s.backgroundColor || "차분한 톤";
-    bgVal = `${bgCol}의 깔끔하고 정돈된 ${bgModeText} 배경. 여백을 충분히 두어 텍스트와 그래픽 요소들이 잘 드러나도록 깊이감을 부여합니다.`;
+    const bgModeText = _s.backgroundMode === "solid" ? _h.localizeSentence("단색", "solid") : (_s.backgroundMode === "gradient" ? _h.localizeSentence("그라데이션", "gradient") : _h.localizeSentence("커스텀", "custom"));
+    const bgCol = _s.backgroundColor || _h.localizeSentence("차분한 톤", "muted tone");
+    bgVal = _h.localizeSentence(
+      `${bgCol}의 깔끔하고 정돈된 ${bgModeText} 배경. 여백을 충분히 두어 텍스트와 그래픽 요소들이 잘 드러나도록 깊이감을 부여합니다.`,
+      `A clean and organized ${bgModeText} background in ${bgCol}. Generous negative space is maintained to provide depth and allow text and graphic elements to stand out.`
+    );
   }
   
   let charVal = _s.keyVisualConcept || _s.visualMetaphor || "";
   if (!charVal.trim()) {
-    charVal = "홍보 주제를 상징하는 현대적인 그래픽 오브젝트 또는 메인 비주얼 요소. 전체 구도의 균형을 맞추며 텍스트를 방해하지 않는 크기와 투명도로 배치됩니다.";
+    charVal = _h.localizeSentence(
+      "홍보 주제를 상징하는 현대적인 그래픽 오브젝트 또는 메인 비주얼 요소. 전체 구도의 균형을 맞추며 텍스트를 방해하지 않는 크기와 투명도로 배치됩니다.",
+      "A modern graphic object or main visual element symbolizing the campaign theme. It is positioned to balance the composition at a size and transparency that do not obstruct the text."
+    );
   }
   
   const hasVariationMode = !_h.isBasicVisualPlanningMode() && _s.variationMode && _s.variationMode !== "none";
@@ -2382,128 +2419,76 @@ function renderImagenOptimizedPrompt(validation, lint) {
     }
   }
 
-  // 2. [상단 텍스트 레이아웃]
-  let yearVal = "2026";
-  const yearMatch = (_s.headline + " " + _s.bodyCopy + " " + _s.mandatoryElements).match(/\b(202\d)\b/);
-  if (yearMatch) {
-    yearVal = yearMatch[1];
-  } else {
-    const contentNameKo = _s.contentType !== "none" ? (CONTENT_TYPE_TEMPLATES[_s.contentType]?.name || "") : "";
-    if (contentNameKo) {
-      yearVal = contentNameKo;
-    }
-  }
-  
-  const headlineLines = normalizeLines(_s.headline);
-  const mainTitleStr = headlineLines.map(line => `'${line}'`).join("\n");
-  
-  const subheadlineLines = normalizeLines(_s.subheadline);
-  const subTitleStr = subheadlineLines.map(line => `'${line}'`).join("\n");
+  const primaryColorName = COLOR_NAME_MAP[(_s.primaryColor || "#1f4f99").toLowerCase()] || _h.localizeSentence("짙은 색상", "dark color");
+  const secondaryColorName = COLOR_NAME_MAP[(_s.secondaryColor || "#7d7d7d").toLowerCase()] || _h.localizeSentence("보조 색상", "secondary color");
+  const accentColorName = COLOR_NAME_MAP[(_s.accentColor || "#d87922").toLowerCase()] || _h.localizeSentence("포인트 색상", "accent color");
 
-  // 3. [중앙 정보 섹션 (아이콘 레이아웃)]
-  const centerStructure = "왼쪽에는 원형 아이콘 패널들이 세로로 나열되고, 오른쪽에는 해당 내용이 텍스트로 배치되는 정돈된 레이아웃 구조.";
-  
-  const rawInfoLines = [];
+  const visualConceptSection = `[Visual Concept]\n- Style: ${styleVal}\n- Background: ${bgVal}\n- Core Visual Object: ${charVal}\n- Color Palette: Main (${primaryColorName}), Secondary (${secondaryColorName}), Accent (${accentColorName})`;
+
+  // 3. [Locked Korean Text (Precision Rendering)]
+  const textLines = [];
+  if (_s.headline) {
+    normalizeLines(_s.headline).forEach(l => textLines.push(`- Headline: "${_h.localizeValue(l)}"`));
+  }
+  if (_s.subheadline) {
+    normalizeLines(_s.subheadline).forEach(l => textLines.push(`- Sub copy: "${_h.localizeValue(l)}"`));
+  }
   if (_s.mandatoryElements) {
-    rawInfoLines.push(...normalizeLines(_s.mandatoryElements));
+    normalizeLines(_s.mandatoryElements).forEach((l, i) => textLines.push(`- Essential info ${i+1}: "${_h.localizeValue(l)}"`));
   }
   if (_s.bodyCopy) {
-    rawInfoLines.push(...normalizeLines(_s.bodyCopy));
+    normalizeLines(_s.bodyCopy).forEach((l, i) => textLines.push(`- Body point ${i+1}: "${_h.localizeValue(l)}"`));
   }
-  
-  const infoLines = [...new Set(rawInfoLines)].filter(Boolean).slice(0, 5);
-  
-  let panelsStr = "";
-  const colorRoles = [_s.primaryColor, _s.secondaryColor, _s.accentColor, "#8b4513", "#daa520"];
-  
-  infoLines.forEach((line, index) => {
-    const parts = line.split(/[:：\-—]/);
-    let label = `정보 ${index + 1}`;
-    let textVal = line;
-    if (parts.length > 1) {
-      label = parts[0].trim();
-      textVal = parts.slice(1).join(":").trim();
-    }
-    
-    let iconDesc = "원형 테두리 안의 체크표시 아이콘";
-    const labelLower = label.toLowerCase();
-    if (/일정|기간|날짜|시간|date|schedule|time/i.test(labelLower)) {
-      iconDesc = "원형 테두리 안에 달력과 시계 아이콘";
-    } else if (/자격|대상|인원|사람|who|target|eligible/i.test(labelLower)) {
-      iconDesc = "원형 테두리 안에 사람 실루엣 아이콘";
-    } else if (/혜택|비용|장학|지원|금액|금화|돈|benefit|cost|price|fee|scholarship/i.test(labelLower)) {
-      iconDesc = "원형 테두리 안에 '₩' 기호가 있는 금화 아이콘";
-    } else if (/기한|마감|접수|deadline|apply/i.test(labelLower)) {
-      iconDesc = "원형 테두리 안에 모래시계 아이콘";
-    } else if (/장소|위치|주소|place|location/i.test(labelLower)) {
-      iconDesc = "원형 테두리 안에 지도 핀 아이콘";
-    } else if (/문의|전화|이메일|연락|contact|email|phone/i.test(labelLower)) {
-      iconDesc = "원형 테두리 안에 편지 봉투 또는 전화기 아이콘";
-    }
-    
-    const hexColor = colorRoles[index % colorRoles.length] || "#7d7d7d";
-    const colorName = COLOR_NAME_MAP[hexColor.toLowerCase()] || "선명한 포인트 색상";
-    
-    panelsStr += `${index + 1}번 패널 (${label}):\n`;
-    panelsStr += `아이콘: ${colorName} 원형 테두리 안에 ${iconDesc}.\n`;
-    panelsStr += `텍스트: ${colorName} 굵은 서체로 '- ${label}:', 그 아래로 '${textVal}'\n\n`;
-  });
-
-  if (!panelsStr) {
-    panelsStr = "1번 패널 (홍보 상세):\n아이콘: 원형 테두리 안의 체크표시 아이콘.\n텍스트: 굵은 서체로 홍보용 문구 렌더링.\n\n";
+  if (_s.posterOffer || _s.snsHook) {
+    textLines.push(`- Offer/Hook: "${_h.localizeValue(_s.posterOffer || _s.snsHook)}"`);
+  }
+  if (isEnabled(_s.ctaEnabled) && _s.cta) {
+    textLines.push(`- CTA Button: "${_h.localizeValue(_s.cta)}"`);
   }
 
-  // 4. [하단 텍스트 및 버튼 레이아웃]
-  const sloganVal = _s.snsHook || _s.posterOffer || "더 나은 미래를 위해, 지금 바로 함께하세요!";
+  const textSection = textLines.length > 0 
+    ? `[Locked ${langLabel} Text (Precision Rendering)]\nRender the following text EXACTLY as provided, without any typos, letter distortion, or omissions. Keep each string enclosed in quotes to ensure high fidelity:\n${textLines.join("\n")}`
+    : "No text rendering required.";
+
+  // 4. [Layout Directives]
+  const layoutDirectives = [];
+  const recommendedComposition = getRecommendedCompositionDirective();
+  if (recommendedComposition) {
+    layoutDirectives.push(`- Recommended Composition: ${recommendedComposition}`);
+  }
   
-  let ctaStr = "";
-  if (isEnabled(_s.ctaEnabled) && _s.ctaMode === "manual" && _s.cta) {
-    const primaryColorName = COLOR_NAME_MAP[(_s.primaryColor || "#1f4f99").toLowerCase()] || "짙은 색상";
-    const accentColorName = COLOR_NAME_MAP[(_s.accentColor || "#d87922").toLowerCase()] || "포인트 색상";
-    ctaStr = `지원하기 버튼 (최하단):
-형태: 직사각형 모양의 ${primaryColorName} 버튼, ${accentColorName} 외곽선 테두리.
-아이콘: 버튼 왼쪽 안에 상승 그래프와 사람 실루엣 아이콘.
-텍스트: 버튼 중앙에 굵고 큰 흰색 서체로 '${_s.cta}'`;
-  } else {
-    ctaStr = `안내 버튼 (최하단):
-형태: 직사각형 모양의 짙은 네이비 버튼.
-텍스트: 버튼 중앙에 굵고 큰 흰색 서체로 '자세히 보기'`;
+  if (_s.keyVisualPlacement && _s.keyVisualPlacement !== "auto") {
+    const placementText = _s.keyVisualPlacement === "background"
+      ? _h.localizeSentence("배경 처리 (텍스트 가독성을 위해 배경에 녹여냄)", "Background placement (blended into the background for text readability)")
+      : _h.localizeSentence("전면 배치 (비주얼을 강조하고 시선 흐름 유도)", "Foreground placement (highlighting the visual to guide the eye flow)");
+    layoutDirectives.push(`- Key Visual Placement: ${placementText}`);
   }
 
-  const promptText = `
-[스타일 및 전체 배경]
+  const sectionsObj = createPromptSections(validation, lint);
+  const layoutLines = collectOpenAISectionLines(sectionsObj, [/시선 흐름|Attention flow|레이아웃 구성|Layout/i], 5);
+  if (layoutLines.length > 0) {
+    layoutDirectives.push(`- Layout constraints: ${layoutLines.join("; ")}`);
+  }
 
-스타일: ${styleVal}
+  const layoutSection = `[Layout Directives]\n${layoutDirectives.length ? layoutDirectives.join("\n") : "- Structure the entire composition as a premium commercial advertisement poster with distinct visual layers (foreground, midground, background).\n- Keep the backdrop behind text flat and clean."}`;
 
-배경: ${bgVal}
+  // 5. [Prohibited Constraints]
+  const constraints = collectOpenAISectionLines(sectionsObj, [/금지 조건|Prohibited elements|제외할 표현|Negative prompt/i], 5);
+  const prohibitedSection = `[Prohibited Constraints]\n- ${constraints.length ? constraints.join("\n- ") : "No extra text, no fake logos, no watermarks, no distorted text."}`;
 
-캐릭터: ${charVal}
+  const promptText = [
+    outputSpec,
+    "",
+    visualConceptSection,
+    "",
+    textSection,
+    "",
+    layoutSection,
+    "",
+    prohibitedSection
+  ].join("\n");
 
-[상단 텍스트 레이아웃]
-
-연도: 최상단 중앙에 짙은 녹색 또는 조화로운 포인트 서체로 '${yearVal}' 텍스트. 양옆에 작은 나뭇잎 모양의 금색 장식 아이콘이 배치됩니다.
-
-메인 타이틀 (대형): 연도 아래에 굵고 큰 폰트로 세 줄 또는 두 줄로 나누어 배치:
-${mainTitleStr}
-
-서브 타이틀: 메인 타이틀 아래에 작은 폰트로 배치:
-${subTitleStr}
-
-[중앙 정보 섹션 (아이콘 레이아웃)]
-
-전체 구조: ${centerStructure}
-
-${panelsStr.trim()}
-
-[하단 텍스트 및 버튼 레이아웃]
-
-슬로건: 정보 섹션 아래 중앙에 얇고 정돈된 서체로:
-'${sloganVal}'
-
-${ctaStr}
-`;
-
-  return sanitizePromptForImagen(promptText.trim());
+  return sanitizePromptForGemini(replaceHexCodesWithNames(promptText.trim()));
 }
 
 function renderOptimizedPrompt(validation, lint) {
@@ -2512,7 +2497,7 @@ function renderOptimizedPrompt(validation, lint) {
   }
 
   if (_s.targetEngine === "imagen") {
-    return renderImagenOptimizedPrompt(validation, lint);
+    return renderGeminiOptimizedPrompt(validation, lint);
   }
 
   const sections = createPromptSections(validation, lint);
@@ -2570,7 +2555,7 @@ function renderOptimizedPrompt(validation, lint) {
   });
 
   const rawPrompt = sanitizePromptForUniversal(prunePromptLines([...optimizedIntro, ...sectionLines]).join("\n"));
-  return _s.targetEngine === "imagen" ? sanitizePromptForImagen(rawPrompt) : rawPrompt;
+  return _s.targetEngine === "imagen" ? sanitizePromptForGemini(rawPrompt) : rawPrompt;
 }
 
 function sanitizePromptForAI(text, targetEngine = "") {

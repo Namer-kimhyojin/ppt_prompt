@@ -2502,3 +2502,16 @@ select option {
   margin-bottom: 4px;
   color: #d35400;
 }
+
+/* ── 배지 클릭형 토글 버튼 스타일 고도화 ── */
+#promotionTargetEngineBadge {
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+#promotionTargetEngineBadge:hover {
+  opacity: 0.82;
+}
+#promotionTargetEngineBadge:active {
+  transform: scale(0.95);
+}

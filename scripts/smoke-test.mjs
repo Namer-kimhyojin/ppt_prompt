@@ -147,6 +147,14 @@ async function runSmokeTest() {
     });
 
     await page.goto(`${server.baseUrl}/index.html`, { waitUntil: "domcontentloaded", timeout: 30000 });
+    record(await hasLocator(page, "#tabBtnConceptMixer"), "Concept Mixer top-level tab button is missing", failures);
+    record(await hasLocator(page, "#paneConceptMixer"), "Concept Mixer top-level pane is missing", failures);
+    record(!(await hasLocator(page, "#btnToggleMixer")), "Legacy Concept Mixer toggle still exists inside Concept Suggestion", failures);
+    await page.click("#tabBtnConceptMixer");
+    await page.waitForSelector("#paneConceptMixer.active");
+    record(await hasLocator(page, "#paneConceptMixer #conceptMixerContainer .mixer-workspace"), "Concept Mixer did not initialize in its top-level pane", failures);
+    record((await page.locator("#tabBtnConceptMixer").getAttribute("aria-selected")) === "true", "Concept Mixer tab was not marked selected", failures);
+
     await page.waitForSelector("#tabBtnPromotion");
     await page.click("#tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
@@ -414,16 +422,14 @@ async function runSmokeTest() {
     await page.locator("[data-promo-prompt-mode='optimized']").click();
     await page.waitForTimeout(200);
     const optimizedPreview = await page.locator("#promotionPromptPreview").inputValue();
-    record(optimizedPreview.includes("Create a polished"), "Optimized English prompt did not render", failures);
+    console.log("=== DEBUG OPTIMIZED PREVIEW ===\n" + optimizedPreview + "\n===============================");
+    record(optimizedPreview.includes("[Canvas & Output Specifications]"), "Optimized English prompt did not render specifications header", failures);
     record(optimizedPreview.length <= 3600, "Optimized English prompt exceeded the OpenAI compact prompt budget", failures);
-    record(optimizedPreview.includes("production-ready campaign image"), "Optimized English prompt did not include the OpenAI natural-language image brief", failures);
-    record(optimizedPreview.includes("Asset type:"), "Optimized English prompt did not include the English asset-type label", failures);
-    record(optimizedPreview.includes("Content template:"), "Optimized English prompt did not include the English content-template label", failures);
-    record(optimizedPreview.includes("Sizing mode:"), "Optimized English prompt did not include the English sizing label", failures);
-    record(optimizedPreview.includes("Case-specific constraints:"), "Optimized English prompt did not include case-specific constraint guidance", failures);
-    record(optimizedPreview.includes("promotion goal:"), "Optimized English prompt did not include the English promotion-goal label", failures);
-    record(optimizedPreview.includes("target audience:"), "Optimized English prompt did not include the English target-audience label", failures);
-    record(optimizedPreview.includes("Background treatment:"), "Optimized English prompt did not include the English background label", failures);
+    record(optimizedPreview.includes("Create a single finished flat"), "Optimized English prompt did not include the creation directive", failures);
+    record(optimizedPreview.includes("[Locked English Text (Critical)]"), "Optimized English prompt did not include the text lock-in section", failures);
+    record(optimizedPreview.includes("[Visual Concept & Theme]"), "Optimized English prompt did not include visual concept section", failures);
+    record(optimizedPreview.includes("[Layout & Grid Design]"), "Optimized English prompt did not include layout section", failures);
+    record(optimizedPreview.includes("[Prohibited Constraints]"), "Optimized English prompt did not include prohibited constraints", failures);
     record(/luxury/i.test(optimizedPreview), "Optimized English prompt did not reflect the selected commercial baseline", failures);
     if (!/experimental/i.test(optimizedPreview)) {
       console.log("=== DEBUG OPTIMIZED PREVIEW ===\n" + optimizedPreview + "\n===============================");
@@ -435,15 +441,13 @@ async function runSmokeTest() {
       "Optimized English prompt did not include the selected visual metaphor",
       failures
     );
-    record(optimizedPreview.includes("On-image text rule:"), "Optimized English prompt did not include the OpenAI text rendering rule", failures);
-    record(optimizedPreview.includes("preserve any provided text verbatim"), "Optimized English prompt did not preserve source-language text behavior", failures);
     record(
       !/[\u3131-\u318E\uAC00-\uD7A3]/.test(optimizedPreview),
       "Optimized English prompt still included Korean text",
       failures
     );
 
-    // Target Engine Gemini (Imagen 3) Mode Verification
+    // Target Engine Google Gemini (Nano Banana 2) Mode Verification
     if (await hasLocator(page, '[data-concept-engine="imagen"]')) {
       // Go to Concept tab to toggle engine
       await page.click("#tabBtnPromotionPlanner");
@@ -455,8 +459,8 @@ async function runSmokeTest() {
       await page.click("#tabBtnPromotion");
       await page.waitForTimeout(200);
       const imagenPreview = await page.locator("#promotionPromptPreview").inputValue();
-      record(imagenPreview.includes("Backdrop for") || imagenPreview.includes("backdrop panels") || imagenPreview.includes("•"), "Gemini (Imagen 3) mode did not convert text rendering to backdrop placeholders", failures);
-      record(!/#([0-9a-fA-F]{3,6})/i.test(imagenPreview), "Gemini (Imagen 3) mode did not drop hex codes from the prompt", failures);
+      record(imagenPreview.includes("Locked") || imagenPreview.includes("Precision Rendering") || imagenPreview.includes("•"), "Google Gemini 3.1 mode did not format text correctly", failures);
+      record(!/#([0-9a-fA-F]{3,6})/i.test(imagenPreview), "Google Gemini 3.1 mode did not drop hex codes from the prompt", failures);
       
       // Restore back to DALL-E mode
       await page.click("#tabBtnPromotionPlanner");

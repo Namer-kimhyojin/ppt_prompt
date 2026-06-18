@@ -68,6 +68,9 @@
       <button type="button" class="app-tab-btn" id="tabBtnPromotionPlanner" role="tab" aria-selected="false" aria-controls="panePromotionPlanner">
         컨셉 제안
       </button>
+      <button type="button" class="app-tab-btn" id="tabBtnConceptMixer" role="tab" aria-selected="false" aria-controls="paneConceptMixer">
+        화풍 믹서
+      </button>
       <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
         홍보용 이미지
       </button>
@@ -420,12 +423,12 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
           <div class="gen-config-fields promo-start-fields">
 
-            <section class="gen-config-group gen-config-group-wide" style="display: none;">
+            <section class="gen-config-group gen-config-group-wide">
               <label class="gen-config-label" for="promotionTargetEngine">대상 생성 엔진</label>
               <p class="gen-config-guide">최종 프롬프트를 전송할 이미지 생성 AI 엔진을 지정하면 최적화 형태로 프롬프트를 빌드합니다.</p>
               <select id="promotionTargetEngine" class="gen-select" data-promo-field="targetEngine">
-                <option value="dalle">OpenAI GPT Image</option>
-                <option value="imagen">Imagen (Google)</option>
+                <option value="dalle">OpenAI GPT Image 2 (gpt-image-2 / DALL-E 3)</option>
+                <option value="imagen">Google Gemini 3.1 (Nano Banana 2 / Pro / Flash)</option>
               </select>
             </section>
 
@@ -1266,6 +1269,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
     </div>
     <div class="concept-filter-bar" id="conceptFilterBar"></div>
     <div class="concept-grid" id="conceptGrid"></div>
+  </div>
+
+  <div class="tab-pane concept-mixer-page" id="paneConceptMixer" role="tabpanel">
+    <div class="concept-mixer-container" id="conceptMixerContainer" style="display: flex; padding: 16px; flex-direction: column; gap: 20px; flex: 1; overflow-y: auto;"></div>
   </div>
 
   <div class="tab-pane gen-wrap slide-image-wrap" id="paneSlideImage" role="tabpanel">
@@ -3443,6 +3450,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/promotion.js"></script>
   <script src="src/concept-styles.js"></script>
   <script src="src/concept-suggest.js"></script>
+  <script src="src/concept-mixer.js"></script>
   <script src="src/image-generation-client.js"></script>
   <script src="src/generation-queue.js"></script>
   <script src="src/slide-image-generation.js"></script>

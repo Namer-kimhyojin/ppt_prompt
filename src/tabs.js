@@ -36,6 +36,11 @@
       pane: document.getElementById("panePromotionPlanner"),
       actions: "promotionPlanner",
     },
+    conceptMixer: {
+      button: document.getElementById("tabBtnConceptMixer"),
+      pane: document.getElementById("paneConceptMixer"),
+      actions: "conceptMixer",
+    },
   };
 
   const tabActions = document.getElementById("tabActions");
@@ -54,6 +59,11 @@
     ],
     promotionPlanner: [
       // 컨셉 제안 탭: 카드별 복사 버튼으로 동작 — 헤더 액션 없음
+    ],
+    conceptMixer: [
+      { label: "랜덤 조합", targetId: "btnMixerRandom", className: "btn primary" },
+      { label: "초기화", targetId: "btnMixerReset", className: "btn secondary" },
+      { label: "샘플 설정", targetId: "btnMixerSettings", className: "btn ghost" },
     ],
     slideImage: [
       { label: "상태 확인", targetId: "slideImageHealthBtn", className: "btn ghost" },

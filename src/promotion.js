@@ -2300,14 +2300,14 @@
 
 
   function updateStatsBar(text) {
-    const sections = (text.match(/^#{1,3}\s/gm) || []).length;
-    const lines = text.split("\n").filter((l) => l.trim()).length;
+    const sections = (text.match(/^(?:#{1,6}\s|\[[^\]]+\]\s*$)/gm) || []).length;
+    const lines = text.trim().split(/\r?\n/).length;
     const chars = text.length;
     const ko = (text.match(/[가-힣ㄱ-ㅎㅏ-ㅣ]/g) || []).length;
     const digits = (text.match(/\d/g) || []).length;
-    const other = text.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ\d\s]/g, "").length;
-    // 한글 1자 ≈ 1.0 토큰, 숫자 2자 ≈ 1 토큰, 영문/특수 4자 ≈ 1 토큰
-    const tokens = Math.ceil(ko * 1.0 + digits * 0.5 + other / 4);
+    const other = text.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ\d]/g, "").length;
+    // 한글 1자 ≈ 2.5 토큰 (LLM 표준 보정), 숫자 1자 ≈ 1.0 토큰, 영문/특수(공백 포함) 4자 ≈ 1 토큰
+    const tokens = Math.ceil(ko * 2.5 + digits * 1.0 + other / 4);
 
     const TOKEN_WARN = 1500;
     const TOKEN_OVER = 2500;
@@ -2339,7 +2339,7 @@
       c.classList.toggle("is-warn", isWarn);
       c.classList.toggle("is-over", isOver);
       c.title = isOpenAIOptimized
-        ? "OpenAI GPT Image 최적화 프롬프트 기준 글자 수"
+        ? "GPT Image 2 품질 최적화 권장 글자 수"
         : "현재 프롬프트 글자 수";
     }
     if (t) {
@@ -2349,11 +2349,11 @@
     }
     if (transfer) {
       if (isOpenAIOptimized) {
-        transfer.textContent = "OpenAI 3,600 적용";
-        transfer.title = "현재 프롬프트가 OpenAI GPT Image 전송용으로 3,600자 이하 압축 기준을 적용받고 있습니다.";
+        transfer.textContent = "품질 권장 3,600";
+        transfer.title = "글자 왜곡 방지와 지시어 정확도 유지를 위해 3,600자 내외의 최적화 압축을 권장합니다.";
       } else if (state.promptMode === "optimized") {
-        transfer.textContent = "전체 프롬프트";
-        transfer.title = "현재 대상 생성 엔진이 OpenAI GPT Image가 아니어서 3,600자 압축 기준을 적용하지 않습니다.";
+        transfer.textContent = "전체 최적화";
+        transfer.title = "현재 대상 엔진은 OpenAI GPT Image가 아니며, 최적화 프롬프트가 빌드되었습니다.";
       } else {
         transfer.textContent = "검토용 전체";
         transfer.title = "Review 모드는 검토용 상세 프롬프트 전체를 표시합니다.";
@@ -2364,7 +2364,7 @@
     if (gaugeFill) {
       gaugeFill.style.width = `${pct.toFixed(1)}%`;
       gaugeFill.title = isOpenAIOptimized
-        ? `OpenAI GPT Image 기준 ${chars.toLocaleString()} / ${OPENAI_CHAR_MAX.toLocaleString()}자`
+        ? `품질 최적화 권장 기준 ${chars.toLocaleString()} / ${OPENAI_CHAR_MAX.toLocaleString()}자`
         : `예상 토큰 ${tokens.toLocaleString()} / ${TOKEN_MAX.toLocaleString()}`;
       gaugeFill.classList.toggle("is-warn", isWarn);
       gaugeFill.classList.toggle("is-over", isOver);
@@ -2739,6 +2739,7 @@
     const targetEngineSelect = $("promotionTargetEngine");
     if (targetEngineSelect && targetEngineSelect.value !== state.targetEngine) {
       targetEngineSelect.value = state.targetEngine;
+      targetEngineSelect.dispatchEvent(new Event('change'));
     }
 
     const promptModeSelect = $("promotionPromptMode");
@@ -3387,6 +3388,17 @@
     const goConceptTab = () => { document.getElementById("tabBtnPromotionPlanner")?.click(); };
     $("promotionConceptSelectBtn")?.addEventListener("click", goConceptTab);
     $("promotionConceptChangeBtn")?.addEventListener("click", goConceptTab);
+
+    // 배지 클릭 시 생성엔진 토글 및 동기화 이벤트
+    $("promotionTargetEngineBadge")?.addEventListener("click", () => {
+      const nextEngine = state.targetEngine === "dalle" ? "imagen" : "dalle";
+      const targetEngineSelect = $("promotionTargetEngine");
+      if (targetEngineSelect) {
+        targetEngineSelect.value = nextEngine;
+        targetEngineSelect.dispatchEvent(new Event('change'));
+      }
+    });
+
     $("promotionSaveBtn")?.addEventListener("click", saveSettings);
     $("promotionLoadBtn")?.addEventListener("click", loadSettings);
     $("promotionPaletteSaveBtn")?.addEventListener("click", saveCurrentPalettePreset);
