@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev:server": "node server/local-server.js",
+    "start": "node server/local-server.js",
     "dev:mock": "node server/start-mock.js",
     "dev:pollinations": "node server/start-pollinations.js",
     "dev:gemini": "node server/start-gemini.js",

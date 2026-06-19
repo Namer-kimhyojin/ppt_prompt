@@ -545,3 +545,15 @@
   color: #050505;
   opacity: 1;
 }
+
+:root[data-theme="dark"] .concept-mixer-btn {
+  background: #151b25;
+  border-color: #3a4658;
+  color: #dce6f4;
+}
+
+:root[data-theme="dark"] .concept-mixer-btn:hover {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}

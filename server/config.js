@@ -19,10 +19,15 @@ async function loadLocalConfig() {
 const localConfig = await loadLocalConfig();
 
 export const config = {
-  host: "127.0.0.1",
+  // 기본은 로컬 전용(127.0.0.1). NAS/도커처럼 외부 접속이 필요하면
+  // PROMPTDECK_HOST=0.0.0.0 환경변수로 모든 인터페이스에 바인딩한다.
+  host: process.env.PROMPTDECK_HOST || "127.0.0.1",
   port: Number(process.env.PROMPTDECK_PORT || 4173),
   repoRoot,
-  outputDir: path.join(repoRoot, "outputs"),
+  // 저장 폴더도 환경변수로 분리 가능(예: NAS 볼륨 마운트 경로).
+  outputDir: process.env.PROMPTDECK_OUTPUT_DIR
+    ? path.resolve(process.env.PROMPTDECK_OUTPUT_DIR)
+    : path.join(repoRoot, "outputs"),
 
   // Local MVP only. Move these values to environment variables before service deployment.
   imageProvider: process.env.IMAGE_PROVIDER || localConfig.imageProvider || "mock",

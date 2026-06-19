@@ -74,6 +74,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* 스크롤바 등장/사라짐으로 뷰포트 폭이 바뀌어 그리드 컬럼 수가
+     갑자기 변하는 현상(리플로우)을 막기 위해 스크롤바 거터를 항상 예약한다. */
+  scrollbar-gutter: stable;
 }
 
 body {

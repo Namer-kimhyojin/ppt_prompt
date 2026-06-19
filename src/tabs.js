@@ -63,7 +63,7 @@
     conceptMixer: [
       { label: "랜덤 조합", targetId: "btnMixerRandom", className: "btn primary" },
       { label: "초기화", targetId: "btnMixerReset", className: "btn secondary" },
-      { label: "샘플 설정", targetId: "btnMixerSettings", className: "btn ghost" },
+      { label: "unsplash API", targetId: "btnMixerSettings", className: "btn ghost" },
     ],
     slideImage: [
       { label: "상태 확인", targetId: "slideImageHealthBtn", className: "btn ghost" },

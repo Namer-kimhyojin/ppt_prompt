@@ -431,6 +431,32 @@
   transform: scale(0.96);
 }
 
+/* ── 믹서에 사용 버튼 (secondary blue/sky) ── */
+.concept-mixer-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border, #d1d9e6);
+  background: transparent;
+  color: var(--text-secondary, #475569);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.concept-mixer-btn:hover {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  color: #0284c7;
+}
+
+.concept-mixer-btn:active {
+  transform: scale(0.96);
+}
+
 .concept-copy-feedback {
   display: none;
 }

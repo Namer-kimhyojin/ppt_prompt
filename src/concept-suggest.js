@@ -839,8 +839,21 @@
       }
     });
 
+    const mixerBtn = document.createElement('button');
+    mixerBtn.type = 'button';
+    mixerBtn.className = 'concept-mixer-btn';
+    mixerBtn.textContent = '믹서에 사용';
+    mixerBtn.addEventListener('click', () => {
+      if (typeof window.applyMixerPaletteForStyle === 'function') {
+        window.applyMixerPaletteForStyle(style.id || style);
+      } else {
+        alert('화풍 믹서가 준비되지 않았습니다.');
+      }
+    });
+
     copyRow.appendChild(copyBtn);
     copyRow.appendChild(applyBtn);
+    copyRow.appendChild(mixerBtn);
     copyRow.appendChild(feedback);
     promptArea.appendChild(promptText); promptArea.appendChild(copyRow);
     body.appendChild(desc); body.appendChild(paletteRow); body.appendChild(tags); body.appendChild(promptArea);

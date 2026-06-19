@@ -56,6 +56,24 @@ async function readJsonBody(req) {
 
 function resolveStaticPath(urlPath) {
   const decoded = decodeURIComponent(urlPath);
+
+  // 저장 폴더(outputDir)는 repoRoot 밖일 수 있으므로(NAS 볼륨 등)
+  // "/outputs/..." 요청은 항상 config.outputDir 기준으로 해석한다.
+  if (decoded === "/outputs" || decoded.startsWith("/outputs/")) {
+    const rel = decoded.slice("/outputs".length).replace(/^\/+/, "");
+    const absolute = path.resolve(config.outputDir, rel);
+    if (absolute !== config.outputDir && !absolute.startsWith(config.outputDir + path.sep)) {
+      return null;
+    }
+    return absolute;
+  }
+
+  // 서버 코드/설정(예: config.local.js의 API 키)이 정적으로 노출되지 않도록 차단한다.
+  // 클라이언트(브라우저)는 server 디렉터리 파일을 요청하지 않는다.
+  if (decoded === "/server" || decoded.startsWith("/server/")) {
+    return null;
+  }
+
   const relative = decoded === "/" ? "index.html" : decoded.replace(/^\/+/, "");
   const absolute = path.resolve(config.repoRoot, relative);
   if (!absolute.startsWith(config.repoRoot)) return null;
