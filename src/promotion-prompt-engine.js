@@ -38,6 +38,8 @@ window.PROMO_PROMPT = (function () {
     splitKeywordValues,
     splitForbiddenValues,
     normalizeLines,
+    normalizeImageTextLines,
+    formatImageTextHierarchy,
     normalizeForbiddenPromptToken,
     isConceptInjectedLine,
     stripConceptInjectedLines,
@@ -809,7 +811,7 @@ function getConceptBridgeLines() {
   const goal = trimValue(_s.goal || CONTENT_TYPE_TEMPLATES[_s.contentType]?.goal || "");
   const audience = trimValue(_s.audience || CONTENT_TYPE_TEMPLATES[_s.contentType]?.audience || "");
   const headline = trimValue(_s.headline);
-  const bodyPoints = normalizeLines(_s.bodyCopy).slice(0, 3).join(" / ");
+  const bodyPoints = normalizeImageTextLines(_s.bodyCopy).slice(0, 3).join(" / ");
   const hasRich = !!trimValue(_s.appliedConceptPromotionPrompt);
 
   if (hasRich) {
@@ -1140,7 +1142,7 @@ function createPromptSections(validation, lint) {
   ]);
 
   const isBgPlacement = _s.keyVisualPlacement === "background";
-  const bodyCount = normalizeLines(_s.bodyCopy).length;
+  const bodyCount = normalizeImageTextLines(_s.bodyCopy).length;
   const isAsymmetricLayout = 
     (_s.layoutCompositionEnabled && _s.layoutCompositionMode === "manual" && _s.layoutComposition === "left-heavy") ||
     (_s.attentionFlowEnabled && _s.attentionFlowMode === "manual" && _s.attentionFlow === "side-rail") ||
@@ -1371,18 +1373,35 @@ function createPromptSections(validation, lint) {
     return prunePromptLines([[...filteredKo, ...extraAll].join(", ")]);
   })();
 
-  const directTextLines = prunePromptLines(
-    _s.targetEngine === "imagen"
-      ? textEntries.map((entry) => {
+  const bodyHierarchyTextLines = formatImageTextHierarchy(_s.bodyCopy).map(({ text, level }) => {
+    const hierarchyLabel = level === 0
+      ? _h.localizeSentence("본문 상위 문구", "Body top-level copy")
+      : level === 1
+        ? _h.localizeSentence("본문 하위 문구", "Body child copy")
+        : _h.localizeSentence("본문 세부 하위 문구", "Body nested child copy");
+    return `${hierarchyLabel}: "${_h.localizeValue(text)}"`;
+  });
+  const nonBodyTextEntries = textEntries.filter((entry) => entry.key !== "bodyCopy");
+  const directTextLines = prunePromptLines([
+    _h.localizeSentence(
+      "텍스트 렌더링 공통 규칙: 아래 각 줄의 따옴표 안 문자열만 이미지에 표시한다. 항목 라벨, 위계 설명, 번호, 블릿은 구조 메타데이터이므로 이미지에 절대 표시하지 않는다. 모든 문자열은 한 번씩만 정확히 렌더링하고 글자 배경은 단순하고 깨끗하게 유지한다.",
+      "Shared text-rendering rule: render only the strings inside quotation marks. Field labels, hierarchy descriptions, numbering, and bullets are structural metadata and must never appear on the image. Render each quoted string exactly once and keep its backdrop simple and clean."
+    ),
+    ...(_s.targetEngine === "imagen"
+      ? nonBodyTextEntries.flatMap((entry) => {
           const cleanLabel = _h.localizeValue(entry.label);
-          const cleanValue = _h.localizeValue(entry.value);
-          return _h.localizeSentence(
-            `텍스트 [${cleanLabel}]: "${cleanValue}" (해당 문구를 이미지 내에 오탈자나 왜곡 없이 깨끗한 서체로 직접 렌더링하고, 글자 배경은 단색으로 정돈하시오.)`,
-            `Text [${cleanLabel}]: "${cleanValue}" (Render this text directly and clearly on the image with no typos or distortions, keeping the background behind it flat and clean.)`
-          );
+          return normalizeLines(entry.value).map((valueLine) => {
+            const cleanValue = _h.localizeValue(valueLine);
+            return `${_h.localizeSentence("텍스트", "Text")} [${cleanLabel}]: "${cleanValue}"`;
+          });
         })
-      : textEntries.map((entry) => `${_h.localizeValue(entry.label)}: ${_h.localizeValue(entry.value)}`)
-  );
+      : nonBodyTextEntries.flatMap((entry) =>
+          normalizeLines(entry.value).map(
+            (valueLine) => `${_h.localizeValue(entry.label)}: "${_h.localizeValue(valueLine)}"`
+          )
+        )),
+    ...bodyHierarchyTextLines,
+  ]);
 
   const infoGroupCount = bodyCount;
   const infoQuantityDirectKo = infoGroupCount > 3
@@ -2066,7 +2085,7 @@ function getRecommendedCompositionDirective() {
   if (typeof _s !== "undefined" && _s.layoutCompositionMode === "manual") {
     return "";
   }
-  const bodyCount = normalizeLines(_s.bodyCopy).length;
+  const bodyCount = normalizeImageTextLines(_s.bodyCopy).length;
 
   if (_s.contentType === "survey-request") {
     return _pick([
@@ -2325,10 +2344,13 @@ function renderOpenAIOptimizedPrompt(validation, lint) {
     normalizeLines(_s.subheadline).forEach(l => textLines.push(`- Sub copy: "${_h.localizeValue(l)}"`));
   }
   if (_s.mandatoryElements) {
-    normalizeLines(_s.mandatoryElements).forEach((l, i) => textLines.push(`- Essential info ${i+1}: "${_h.localizeValue(l)}"`));
+    normalizeLines(_s.mandatoryElements).forEach((l) => textLines.push(`- Essential information: "${_h.localizeValue(l)}"`));
   }
   if (_s.bodyCopy) {
-    normalizeLines(_s.bodyCopy).forEach((l, i) => textLines.push(`- Body point ${i+1}: "${_h.localizeValue(l)}"`));
+    formatImageTextHierarchy(_s.bodyCopy).forEach(({ text, level }) => {
+      const label = level === 0 ? "Body top-level copy" : (level === 1 ? "Body child copy" : "Body nested child copy");
+      textLines.push(`- ${label}: "${_h.localizeValue(text)}"`);
+    });
   }
   if (_s.posterOffer || _s.snsHook) {
     textLines.push(`- Offer/Hook: "${_h.localizeValue(_s.posterOffer || _s.snsHook)}"`);
@@ -2338,7 +2360,7 @@ function renderOpenAIOptimizedPrompt(validation, lint) {
   }
 
   const textSection = textLines.length > 0 
-    ? `[Locked ${langLabel} Text (Critical)]\nRender only the following text, exactly once, with crisp lettering:\n${textLines.join("\n")}`
+    ? `[Locked ${langLabel} Text (Critical)]\nRender only the strings inside quotation marks, exactly once, with crisp lettering. Labels, hierarchy descriptions, numbering, and bullets are metadata and must not appear on the image:\n${textLines.join("\n")}`
     : "No text rendering required.";
 
   const outputSpec = `[Canvas & Output Specifications]\n- Create a single finished flat ${orientation} ${langLabel} ${assetLabelEn}.\n- Dimension: ${sizeDesc}\n- No outer frames, borders, or mockups.`;
@@ -2434,10 +2456,13 @@ function renderGeminiOptimizedPrompt(validation, lint) {
     normalizeLines(_s.subheadline).forEach(l => textLines.push(`- Sub copy: "${_h.localizeValue(l)}"`));
   }
   if (_s.mandatoryElements) {
-    normalizeLines(_s.mandatoryElements).forEach((l, i) => textLines.push(`- Essential info ${i+1}: "${_h.localizeValue(l)}"`));
+    normalizeLines(_s.mandatoryElements).forEach((l) => textLines.push(`- Essential information: "${_h.localizeValue(l)}"`));
   }
   if (_s.bodyCopy) {
-    normalizeLines(_s.bodyCopy).forEach((l, i) => textLines.push(`- Body point ${i+1}: "${_h.localizeValue(l)}"`));
+    formatImageTextHierarchy(_s.bodyCopy).forEach(({ text, level }) => {
+      const label = level === 0 ? "Body top-level copy" : (level === 1 ? "Body child copy" : "Body nested child copy");
+      textLines.push(`- ${label}: "${_h.localizeValue(text)}"`);
+    });
   }
   if (_s.posterOffer || _s.snsHook) {
     textLines.push(`- Offer/Hook: "${_h.localizeValue(_s.posterOffer || _s.snsHook)}"`);
@@ -2447,7 +2472,7 @@ function renderGeminiOptimizedPrompt(validation, lint) {
   }
 
   const textSection = textLines.length > 0 
-    ? `[Locked ${langLabel} Text (Precision Rendering)]\nRender the following text EXACTLY as provided, without any typos, letter distortion, or omissions. Keep each string enclosed in quotes to ensure high fidelity:\n${textLines.join("\n")}`
+    ? `[Locked ${langLabel} Text (Precision Rendering)]\nRender only the strings inside quotation marks EXACTLY as provided. Labels, hierarchy descriptions, numbering, and bullets are metadata and must not appear on the image. Render each quoted string once, without typos, distortion, or omissions:\n${textLines.join("\n")}`
     : "No text rendering required.";
 
   // 4. [Layout Directives]

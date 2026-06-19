@@ -230,6 +230,85 @@ window.PROMO_UTILS = (function () {
       .filter(Boolean);
   }
 
+  function normalizeImageTextLines(text) {
+    return parseImageTextHierarchy(text).map((item) => item.text);
+  }
+
+  function parseImageTextHierarchy(text) {
+    const rawLines = String(text || "").split(/\r?\n/);
+    const parsed = rawLines
+      .map((rawLine) => {
+        if (!rawLine.trim()) return null;
+        const leading = rawLine.match(/^[\t ]*/)?.[0] || "";
+        const indentWidth = [...leading].reduce(
+          (total, char) => total + (char === "\t" ? 2 : 1),
+          0
+        );
+        const content = rawLine.slice(leading.length);
+        const bulletMatch = content.match(/^[-‐‑‒–—*•·▪▫◦‣▸▶✓✔]+\s*/);
+        const orderedMatch = content.match(/^\(?(\d+(?:[.-]\d+)*)\)?[.)]?\s+/);
+        const markerType = orderedMatch ? "ordered" : (bulletMatch ? "bullet" : "none");
+        const marker = orderedMatch?.[0] || bulletMatch?.[0] || "";
+        const textValue = content.slice(marker.length).trim();
+        if (!textValue) return null;
+        const orderedDepth = orderedMatch
+          ? orderedMatch[1].split(/[.-]/).filter(Boolean).length - 1
+          : 0;
+        return { indentWidth, markerType, orderedDepth, text: textValue };
+      })
+      .filter(Boolean);
+
+    if (!parsed.length) return [];
+
+    const indentLevels = [...new Set(parsed.map((item) => item.indentWidth))]
+      .sort((a, b) => a - b);
+    let previous = null;
+    const inferredLevelByIndent = new Map();
+    return parsed.map((item) => {
+      const indentLevel = indentLevels.indexOf(item.indentWidth);
+      let level = indentLevel;
+
+      if (item.markerType === "ordered") {
+        level = Math.max(indentLevel, item.orderedDepth);
+      } else if (item.markerType === "bullet") {
+        if (inferredLevelByIndent.has(item.indentWidth)) {
+          level = inferredLevelByIndent.get(item.indentWidth);
+        } else if (previous?.markerType === "none" && item.indentWidth === previous.indentWidth) {
+          level = previous.level + 1;
+        } else if (previous && item.indentWidth > previous.indentWidth) {
+          level = previous.level + 1;
+        } else if (previous?.markerType === "bullet" && item.indentWidth === previous.indentWidth) {
+          level = previous.level;
+        }
+        inferredLevelByIndent.set(item.indentWidth, level);
+      } else if (item.indentWidth === 0) {
+        inferredLevelByIndent.clear();
+      }
+
+      const result = {
+        text: item.text,
+        level,
+        markerType: item.markerType,
+        indentWidth: item.indentWidth,
+      };
+      previous = result;
+      return result;
+    });
+  }
+
+  function formatImageTextHierarchy(text) {
+    const counters = [];
+    return parseImageTextHierarchy(text).map(({ text: lineText, level }) => {
+      counters[level] = (counters[level] || 0) + 1;
+      counters.length = level + 1;
+      return {
+        text: lineText,
+        level,
+        number: counters.join("."),
+      };
+    });
+  }
+
   function mergeUniqueLines(...values) {
     const seen = new Set();
     return values
@@ -276,7 +355,8 @@ window.PROMO_UTILS = (function () {
     pickRandomSubset, randomFieldSelectionCount,
     normalizeBooleanSetting, normalizeColorStrategy,
     normalizeOutputLanguage, normalizeHexColor,
-    escapeHtml, normalizeLines, mergeUniqueLines,
+    escapeHtml, normalizeLines, normalizeImageTextLines,
+    parseImageTextHierarchy, formatImageTextHierarchy, mergeUniqueLines,
     summarizeDisplayTextPoint, normalizeForbiddenPromptToken,
   };
 })();

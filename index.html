@@ -390,7 +390,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             <div class="promo-panel-head">
               <div>
                 <label class="gen-config-label">템플릿</label>
-                <p class="gen-config-guide">선택하면 목적·타깃·톤·스타일이 자동 세팅됩니다. 이후 세부값을 덮어써도 됩니다.</p>
+              <p class="gen-config-guide">선택하면 기본모드의 목적·타깃과 예시 문구만 채워집니다. 상세모드 설정은 변경하지 않습니다.</p>
               </div>
             </div>
             <div class="promo-template-grid" id="promotionTemplateGrid">
@@ -425,11 +425,15 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
 
             <section class="gen-config-group gen-config-group-wide">
               <label class="gen-config-label" for="promotionTargetEngine">대상 생성 엔진</label>
-              <p class="gen-config-guide">최종 프롬프트를 전송할 이미지 생성 AI 엔진을 지정하면 최적화 형태로 프롬프트를 빌드합니다.</p>
+              <p class="gen-config-guide" id="promotionTargetEngineGuide">최종 프롬프트를 전송할 이미지 생성 AI 엔진을 지정하면 최적화 형태로 프롬프트를 빌드합니다.</p>
               <select id="promotionTargetEngine" class="gen-select" data-promo-field="targetEngine">
                 <option value="dalle">OpenAI GPT Image 2 (gpt-image-2 / DALL-E 3)</option>
                 <option value="imagen">Google Gemini 3.1 (Nano Banana 2 / Pro / Flash)</option>
               </select>
+              <div class="promo-engine-notice" id="promotionGeminiTextNotice" role="status" hidden>
+                <strong>Gemini 텍스트 정확성 보호</strong>
+                <span>글자 깨짐을 줄이기 위해 CTA, 한 줄 오퍼, 첫 줄 훅, 해시태그는 자동으로 <b>직접 입력</b> 모드로 전환됩니다. 사용할 문구를 입력창에서 확인해 주세요.</span>
+              </div>
             </section>
 
             <section class="gen-config-group gen-config-group-wide">

@@ -1303,6 +1303,33 @@
   margin-top: 8px;
 }
 
+.promo-engine-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 11px 13px;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1e3a5f;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.promo-engine-notice[hidden] {
+  display: none;
+}
+
+.promo-engine-notice strong {
+  color: #1d4ed8;
+  font-size: 12px;
+}
+
+.promo-engine-notice b {
+  color: #1d4ed8;
+}
+
 .promo-validation {
   display: grid;
   gap: 10px;

@@ -64,7 +64,7 @@
     pickRandomSubset, randomFieldSelectionCount,
     normalizeBooleanSetting, normalizeColorStrategy,
     normalizeOutputLanguage, normalizeHexColor,
-    escapeHtml, normalizeLines, mergeUniqueLines,
+    escapeHtml, normalizeLines, formatImageTextHierarchy, mergeUniqueLines,
     summarizeDisplayTextPoint, normalizeForbiddenPromptToken,
   } = window.PROMO_UTILS;
 
@@ -301,6 +301,61 @@
     return !isBasicVisualPlanningMode();
   }
 
+  const BASIC_MODE_DETAIL_FIELD_OVERRIDES = {
+    tone: "",
+    toneEnabled: "false",
+    toneMode: "ai",
+    visualStyle: "",
+    visualStyleEnabled: "false",
+    visualStyleMode: "ai",
+    bigIdea: "",
+    bigIdeaEnabled: "false",
+    bigIdeaMode: "ai",
+    visualMetaphor: "",
+    visualMetaphorEnabled: "false",
+    visualMetaphorMode: "ai",
+    keyVisualPlacement: "auto",
+    qualityNotes: "",
+    colorStrategy: "ai",
+    primaryColor: "",
+    secondaryColor: "",
+    accentColor: "",
+    backgroundMode: "solid",
+    backgroundColor: "",
+    backgroundDetails: "",
+    mandatoryElements: "",
+    forbiddenElements: "",
+    commercialBaseline: "off",
+    creativityLevel: "balanced",
+    antiAiStyle: "general",
+    posterKeyVisual: "",
+    posterKeyVisualEnabled: "false",
+    posterInfoLayout: "",
+    posterInfoLayoutEnabled: "false",
+    snsVisualFocus: "",
+    snsVisualFocusEnabled: "false",
+    snsPlacementNotes: "",
+    snsPlacementNotesEnabled: "false",
+  };
+
+  function withBasicModeDetailFieldsExcluded(callback) {
+    if (!isBasicVisualPlanningMode()) return callback();
+
+    const snapshot = {};
+    Object.keys(BASIC_MODE_DETAIL_FIELD_OVERRIDES).forEach((key) => {
+      snapshot[key] = state[key];
+      state[key] = BASIC_MODE_DETAIL_FIELD_OVERRIDES[key];
+    });
+
+    try {
+      return callback();
+    } finally {
+      Object.keys(snapshot).forEach((key) => {
+        state[key] = snapshot[key];
+      });
+    }
+  }
+
   function hasBasicConceptPromptInput() {
     return [
       state.appliedConceptStyle,
@@ -384,6 +439,24 @@
     return normalizeTargetEngine(value) === "dalle";
   }
 
+  function isGeminiTargetEngine(value = state.targetEngine) {
+    return normalizeTargetEngine(value) === "imagen";
+  }
+
+  function forceGeminiManualTextModes(targetState = state) {
+    if (!isGeminiTargetEngine(targetState.targetEngine)) return false;
+
+    let changed = false;
+    AI_TOGGLE_FIELDS.forEach((field) => {
+      const modeKey = `${field}Mode`;
+      if (targetState[modeKey] !== "manual") {
+        targetState[modeKey] = "manual";
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
   function normalizePromotionState(rawState) {
     const next = deepClone(DEFAULT_STATE);
     const incoming = rawState && typeof rawState === "object" ? deepClone(rawState) : {};
@@ -453,6 +526,7 @@
       next[enabledKey] = normalizeBooleanSetting(incoming[enabledKey], DEFAULT_STATE[enabledKey]);
       next[modeKey] = incoming[modeKey] === "manual" ? "manual" : DEFAULT_STATE[modeKey];
     });
+    forceGeminiManualTextModes(next);
 
     const validAntiAiIds = ANTI_AI_PRESETS.map((p) => p.id);
     next.antiAiStyle = validAntiAiIds.includes(incoming.antiAiStyle) ? incoming.antiAiStyle : "";
@@ -1498,6 +1572,10 @@
     scope.querySelectorAll("[data-toggle-mode]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const field = btn.dataset.toggleMode;
+        if (isGeminiTargetEngine() && AI_TOGGLE_FIELDS.has(field) && btn.dataset.mode === "ai") {
+          status("Gemini에서는 글자 깨짐을 줄이기 위해 이미지 텍스트를 직접 입력으로 사용합니다.", "info");
+          return;
+        }
         state[`${field}Mode`] = btn.dataset.mode;
         promptDirty = false;
         if (STATIC_TOGGLE_SYNC[field]) {
@@ -1527,6 +1605,14 @@
       const handler = () => {
         state[input.dataset.promoField] = input.type === "checkbox" ? String(input.checked) : input.value;
         promptDirty = false;
+        if (input.id === "promotionTargetEngine") {
+          state.targetEngine = normalizeTargetEngine(input.value);
+          const changed = forceGeminiManualTextModes();
+          syncGeminiTextModePolicyUI();
+          if (changed) {
+            status("Gemini 선택: CTA·한 줄 오퍼·첫 줄 훅·해시태그를 직접 입력으로 전환했습니다.", "info");
+          }
+        }
         if (input.id === "promotionContentType") {
           applyContentTypeTemplate(input.value);
         }
@@ -2157,10 +2243,13 @@
   }
 
   function visibleTextEntries() {
+    const bodyCopyForPrompt = formatImageTextHierarchy(state.bodyCopy)
+      .map(({ number, text }) => `${number}. ${text}`)
+      .join("\n");
     const entries = [
       ["headline", state.headline],
       ["subheadline", state.subheadline],
-      ["bodyCopy", state.bodyCopy],
+      ["bodyCopy", bodyCopyForPrompt],
       ["mandatoryElements", filterMetaPlaceholders(state.mandatoryElements)],
     ];
 
@@ -2173,7 +2262,9 @@
       .map(([key, value]) => ({
         key,
         label: FIELD_LABELS[key],
-        value: normalizeLines(value).join(" / ") || String(value || "").trim(),
+        value: key === "bodyCopy"
+          ? normalizeLines(value).join("\n")
+          : normalizeLines(value).join(" / ") || String(value || "").trim(),
       }))
       .filter((entry) => entry.value);
   }
@@ -2299,13 +2390,34 @@
   }
 
 
+  function analyzePromptStats(text) {
+    const normalized = String(text || "").replace(/\r\n?/g, "\n");
+    const contentLines = normalized
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+    const sectionPatterns = [
+      /^#{1,6}\s+\S/,
+      /^\[[^\]]+\]\s*$/,
+      /^Regarding\s+.+:\s*$/i,
+    ];
+    const sections = contentLines.filter((line) =>
+      sectionPatterns.some((pattern) => pattern.test(line))
+    ).length;
+    return {
+      normalized,
+      sections,
+      lines: contentLines.length,
+      chars: Array.from(normalized).length,
+    };
+  }
+
   function updateStatsBar(text) {
-    const sections = (text.match(/^(?:#{1,6}\s|\[[^\]]+\]\s*$)/gm) || []).length;
-    const lines = text.trim().split(/\r?\n/).length;
-    const chars = text.length;
-    const ko = (text.match(/[가-힣ㄱ-ㅎㅏ-ㅣ]/g) || []).length;
-    const digits = (text.match(/\d/g) || []).length;
-    const other = text.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ\d]/g, "").length;
+    const stats = analyzePromptStats(text);
+    const { normalized, sections, lines, chars } = stats;
+    const ko = (normalized.match(/[가-힣ㄱ-ㅎㅏ-ㅣ]/g) || []).length;
+    const digits = (normalized.match(/\d/g) || []).length;
+    const other = normalized.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ\d]/g, "").length;
     // 한글 1자 ≈ 2.5 토큰 (LLM 표준 보정), 숫자 1자 ≈ 1.0 토큰, 영문/특수(공백 포함) 4자 ≈ 1 토큰
     const tokens = Math.ceil(ko * 2.5 + digits * 1.0 + other / 4);
 
@@ -2330,8 +2442,14 @@
     const transfer = $("promotionStatTransfer");
     const gaugeFill = $("promotionTokenGaugeFill");
 
-    if (s) s.textContent = `섹션 ${sections}`;
-    if (l) l.textContent = `${lines} 줄`;
+    if (s) {
+      s.textContent = `섹션 ${sections}`;
+      s.title = "최종 프롬프트에서 인식된 실제 제목 블록 수";
+    }
+    if (l) {
+      l.textContent = `${lines} 줄`;
+      l.title = "빈 줄을 제외한 실제 내용 줄 수";
+    }
     if (c) {
       c.textContent = isOpenAIOptimized
         ? `${chars.toLocaleString()} / ${OPENAI_CHAR_MAX.toLocaleString()}자`
@@ -2339,8 +2457,8 @@
       c.classList.toggle("is-warn", isWarn);
       c.classList.toggle("is-over", isOver);
       c.title = isOpenAIOptimized
-        ? "GPT Image 2 품질 최적화 권장 글자 수"
-        : "현재 프롬프트 글자 수";
+        ? "최종 복사 문자열의 유니코드 문자 수(공백·줄바꿈 포함). GPT Image 2 권장 기준 3,600자"
+        : "최종 복사 문자열의 유니코드 문자 수(공백·줄바꿈 포함)";
     }
     if (t) {
       t.textContent = `≈ ${tokens.toLocaleString()} 토큰`;
@@ -2372,12 +2490,14 @@
   }
 
   function buildPromptPreview(validation = latestValidation) {
-    state.targetEngine = normalizeTargetEngine(state.targetEngine);
-    latestLint = detectPromptLint(validation, visibleTextEntries(), instructionEntries());
-    const raw = state.promptMode === "optimized"
-      ? renderOptimizedPrompt(validation, latestLint)
-      : renderReviewPrompt(validation, latestLint);
-    return sanitizePromptForAI(raw, state.targetEngine);
+    return withBasicModeDetailFieldsExcluded(() => {
+      state.targetEngine = normalizeTargetEngine(state.targetEngine);
+      latestLint = detectPromptLint(validation, visibleTextEntries(), instructionEntries());
+      const raw = state.promptMode === "optimized"
+        ? renderOptimizedPrompt(validation, latestLint)
+        : renderReviewPrompt(validation, latestLint);
+      return sanitizePromptForAI(raw, state.targetEngine);
+    });
   }
 
   // ── 섹션 뷰어: 변경된 섹션 글자색 하이라이트 ──────────────────
@@ -2399,7 +2519,9 @@
     const viewer = $("promotionPromptViewer");
     if (!viewer) return;
 
-    const sections = createPromptSections(validation, latestLint);
+    const sections = withBasicModeDetailFieldsExcluded(
+      () => createPromptSections(validation, latestLint)
+    );
     const isFirstRender = _prevSectionHashes === null;
     const canHighlight = !_viewerEditMode && !isFirstRender;
     const newHashes = new Map(sections.map((s) => [s.title, s.lines.join("\n")]));
@@ -2450,10 +2572,18 @@
   // ─────────────────────────────────────────────────────────────
 
   function renderPreview() {
-    const textEntries = visibleTextEntries();
-    const instructionItems = instructionEntries();
-    const validation = validateState();
-    const autoPrompt = buildPromptPreview(validation);
+    const previewState = withBasicModeDetailFieldsExcluded(() => {
+      const textEntries = visibleTextEntries();
+      const instructionItems = instructionEntries();
+      const validation = validateState();
+      return {
+        textEntries,
+        instructionItems,
+        validation,
+        autoPrompt: buildPromptPreview(validation),
+      };
+    });
+    const { textEntries, instructionItems, validation, autoPrompt } = previewState;
 
     latestValidation = validation;
 
@@ -2542,7 +2672,9 @@
     if (modeBtns) {
       modeBtns.classList.toggle("disabled", !enabled);
       modeBtns.querySelectorAll("[data-toggle-mode='cta']").forEach((btn) => {
-        btn.disabled = !enabled;
+        const geminiAiLocked = isGeminiTargetEngine() && btn.dataset.mode === "ai";
+        btn.disabled = !enabled || geminiAiLocked;
+        btn.title = geminiAiLocked ? "Gemini에서는 글자 정확성을 위해 직접 입력만 사용합니다." : "";
         btn.classList.toggle("active", btn.dataset.mode === (isAi ? "ai" : "manual"));
       });
     }
@@ -2584,7 +2716,9 @@
     if (modeBtns) {
       modeBtns.classList.toggle("disabled", !enabled);
       modeBtns.querySelectorAll("[data-toggle-mode='posterOffer']").forEach((btn) => {
-        btn.disabled = !enabled;
+        const geminiAiLocked = isGeminiTargetEngine() && btn.dataset.mode === "ai";
+        btn.disabled = !enabled || geminiAiLocked;
+        btn.title = geminiAiLocked ? "Gemini에서는 글자 정확성을 위해 직접 입력만 사용합니다." : "";
         btn.classList.toggle("active", btn.dataset.mode === (isAi ? "ai" : "manual"));
       });
     }
@@ -2612,7 +2746,9 @@
     if (modeBtns) {
       modeBtns.classList.toggle("disabled", !enabled);
       modeBtns.querySelectorAll("[data-toggle-mode='snsHook']").forEach((btn) => {
-        btn.disabled = !enabled;
+        const geminiAiLocked = isGeminiTargetEngine() && btn.dataset.mode === "ai";
+        btn.disabled = !enabled || geminiAiLocked;
+        btn.title = geminiAiLocked ? "Gemini에서는 글자 정확성을 위해 직접 입력만 사용합니다." : "";
         btn.classList.toggle("active", btn.dataset.mode === (isAi ? "ai" : "manual"));
       });
     }
@@ -2640,7 +2776,9 @@
     if (modeBtns) {
       modeBtns.classList.toggle("disabled", !enabled);
       modeBtns.querySelectorAll("[data-toggle-mode='snsHashtags']").forEach((btn) => {
-        btn.disabled = !enabled;
+        const geminiAiLocked = isGeminiTargetEngine() && btn.dataset.mode === "ai";
+        btn.disabled = !enabled || geminiAiLocked;
+        btn.title = geminiAiLocked ? "Gemini에서는 글자 정확성을 위해 직접 입력만 사용합니다." : "";
         btn.classList.toggle("active", btn.dataset.mode === (isAi ? "ai" : "manual"));
       });
     }
@@ -2687,6 +2825,22 @@
       const section = inputNode.closest(".gen-config-group");
       if (section) section.classList.toggle("promo-field-disabled", !enabled);
     }
+  }
+
+  function syncGeminiTextModePolicyUI() {
+    const isGemini = isGeminiTargetEngine();
+    const guide = $("promotionTargetEngineGuide");
+    if (guide) {
+      guide.textContent = isGemini
+        ? "Gemini는 이미지 속 글자 정확성을 위해 CTA·한 줄 오퍼·첫 줄 훅·해시태그를 직접 입력으로 고정합니다."
+        : "최종 프롬프트를 전송할 이미지 생성 AI 엔진을 지정하면 최적화 형태로 프롬프트를 빌드합니다.";
+    }
+    const notice = $("promotionGeminiTextNotice");
+    if (notice) notice.hidden = !isGemini;
+    syncCtaToggleUI();
+    syncPosterOfferToggleUI();
+    syncSnsHookToggleUI();
+    syncSnsHashtagsToggleUI();
   }
 
   function syncConceptBadgeUI() {
@@ -2861,6 +3015,7 @@
     syncPosterOfferToggleUI();
     syncSnsHookToggleUI();
     syncSnsHashtagsToggleUI();
+    syncGeminiTextModePolicyUI();
     syncAntiAiPresetUI();
     syncToggleFieldUI("tone");
     syncToggleFieldUI("bigIdea");
