@@ -23,7 +23,10 @@
       document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
     })();
   </script>
+  <script src="src/auth.js"></script>
+  <script src="src/admin-settings.js"></script>
   <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/admin.css" />
   <link rel="stylesheet" href="styles/designer.css" />
   <link rel="stylesheet" href="styles/generator.css" />
   <link rel="stylesheet" href="styles/promotion.css" />
@@ -42,11 +45,19 @@
         <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스</p>
       </div>
     </div>
-    <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="다크 모드로 전환" aria-pressed="false">
-      <span class="theme-toggle-icon" aria-hidden="true">☾</span>
-      <span class="theme-toggle-text">다크</span>
-    </button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="user-bar" id="userBar" style="display:none">
+        <span class="user-bar-name" id="userBarName"></span>
+        <button type="button" class="user-bar-logout" id="userBarLogout">로그아웃</button>
+      </div>
+      <a href="admin.html" class="admin-icon-link" title="관리자 설정" aria-label="관리자 설정">⚙</a>
+      <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="다크 모드로 전환" aria-pressed="false">
+        <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+        <span class="theme-toggle-text">다크</span>
+      </button>
+    </div>
   </header>
+  <div id="adminAdBannerTop" style="display:none"></div>
 
   <div class="app-tabs-bar">
     <nav class="app-tabs" role="tablist">
@@ -3078,6 +3089,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
     </div>
   </div>
 
+  <div id="adminAdBannerBottom" style="display:none"></div>
   <div class="toast" id="toast" aria-live="polite"></div>
 
   <script>

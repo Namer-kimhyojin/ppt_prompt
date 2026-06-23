@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptDeck 관리자</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="icon" href="data:," />
+  <script>
+    (() => {
+      const saved = localStorage.getItem('promptdeck_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    })();
+  </script>
+  <!-- 서버 세션 검증 전까지 콘텐츠 숨김 -->
+  <style id="admin-auth-guard">body{visibility:hidden!important}</style>
+  <script>
+    (async () => {
+      function getToken() {
+        try { var s = JSON.parse(localStorage.getItem('promptdeck_session') || 'null'); return (s && s.token) || ''; }
+        catch (e) { return ''; }
+      }
+      function deny() { window.location.href = 'login.html?return=admin.html'; }
+      try {
+        var r = await fetch('/api/auth/me', { headers: { 'x-session-token': getToken() } });
+        if (!r.ok) { deny(); return; }
+        var d = await r.json();
+        if (!d.ok || d.role !== 'admin') { deny(); return; }
+        // 인증 OK → 콘텐츠 노출
+        var g = document.getElementById('admin-auth-guard');
+        if (g) g.remove();
+      } catch (_) {
+        // 서버 없음(정적 환경) → 표시 허용
+        var g = document.getElementById('admin-auth-guard');
+        if (g) g.remove();
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles/admin.css" />
+</head>
+<body>
+
+<div class="admin-wrap">
+
+  <!-- 헤더 -->
+  <header class="admin-header">
+    <div class="admin-header-info">
+      <h1>관리자 설정</h1>
+      <p>앱 설정을 변경합니다. 저장 후 메인 앱 새로고침 시 반영됩니다.</p>
+    </div>
+    <div class="admin-header-actions">
+      <span class="admin-session-name" id="adminSessionName"></span>
+      <button type="button" class="admin-theme-btn" id="adminThemeBtn">☾ 다크</button>
+      <a href="index.html" class="admin-back">← 앱으로</a>
+    </div>
+  </header>
+
+  <!-- 프로그램 정보 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">프로그램 정보</h2>
+    <div class="admin-field">
+      <label class="admin-label" for="adminProgramName">프로그램명</label>
+      <input type="text" id="adminProgramName" class="admin-input" placeholder="PromptDeck" maxlength="40" />
+      <span class="admin-hint">앱 헤더 타이틀과 브라우저 탭 제목에 표시됩니다.</span>
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="adminProgramSubtitle">부제목 / 설명</label>
+      <input type="text" id="adminProgramSubtitle" class="admin-input" placeholder="이미지 프롬프트를 구조적으로 설계하는 워크스페이스" maxlength="80" />
+      <span class="admin-hint">헤더 아래에 작게 표시되는 설명 문구입니다.</span>
+    </div>
+  </section>
+
+  <!-- API 연동 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">API 연동</h2>
+    <div class="admin-field">
+      <label class="admin-label" for="adminUnsplashKey">Unsplash Access Key</label>
+      <div class="admin-input-row">
+        <input type="password" id="adminUnsplashKey" class="admin-input" placeholder="Unsplash API Access Key" autocomplete="off" spellcheck="false" />
+        <button type="button" class="admin-pw-btn" id="adminUnsplashKeyToggle">표시</button>
+      </div>
+      <span class="admin-hint">비주얼 믹서 이미지 검색 기능에 사용됩니다.</span>
+    </div>
+  </section>
+
+  <!-- 탭 관리 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">
+      탭 관리
+      <span class="admin-section-hint">드래그로 순서 변경 · 이름 입력으로 탭명 변경</span>
+    </h2>
+    <div class="admin-tab-manager" id="adminTabManager">
+      <!-- JS 렌더링 -->
+    </div>
+  </section>
+
+  <!-- 사용자 관리 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">사용자 관리</h2>
+
+    <!-- 사용자 추가 -->
+    <details class="admin-create-user" id="adminCreateUserDetails">
+      <summary class="admin-create-user-summary">+ 사용자 추가</summary>
+      <div class="admin-create-user-body">
+        <div class="admin-field-row">
+          <div class="admin-field">
+            <label class="admin-label" for="newUsername">아이디</label>
+            <input type="text" id="newUsername" class="admin-input" placeholder="영문/숫자" autocomplete="off" />
+          </div>
+          <div class="admin-field">
+            <label class="admin-label" for="newPassword">비밀번호</label>
+            <input type="password" id="newPassword" class="admin-input" placeholder="4자 이상" autocomplete="new-password" />
+          </div>
+          <div class="admin-field">
+            <label class="admin-label" for="newUserRole">역할</label>
+            <select id="newUserRole" class="admin-input">
+              <option value="user">일반 사용자</option>
+              <option value="admin">관리자</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-create-user-error" id="newUserError"></div>
+        <button type="button" class="admin-btn admin-btn-save" id="createUserBtn">사용자 생성</button>
+      </div>
+    </details>
+
+    <!-- 사용자 목록 -->
+    <div id="adminUserList" class="admin-user-list"></div>
+
+    <!-- 접근 요청 대기 목록 -->
+    <div id="adminPendingSection" class="admin-pending-section" style="display:none">
+      <h3 class="admin-pending-title">탭 접근 요청 대기</h3>
+      <div id="adminPendingList" class="admin-pending-list"></div>
+    </div>
+  </section>
+
+  <!-- Google AdSense -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">Google AdSense</h2>
+    <div class="admin-field">
+      <div class="admin-tab-row" style="padding:0;border:none;">
+        <div class="admin-tab-info"><span class="admin-tab-name">광고 배너 표시</span></div>
+        <label class="admin-switch" aria-label="광고 배너 표시">
+          <input type="checkbox" id="adminAdsEnabled" />
+          <span class="admin-switch-track"></span>
+        </label>
+      </div>
+      <span class="admin-hint">활성화하면 앱 상단·하단에 AdSense 배너가 표시됩니다.</span>
+    </div>
+    <div id="adminAdsSub" class="admin-ads-sub" style="display:none">
+      <div class="admin-field">
+        <label class="admin-label" for="adminAdClient">Ad Client ID</label>
+        <input type="text" id="adminAdClient" class="admin-input" placeholder="ca-pub-XXXXXXXXXXXXXXXX" spellcheck="false" />
+      </div>
+      <div class="admin-field">
+        <label class="admin-label" for="adminAdSlotTop">상단 배너 슬롯 ID</label>
+        <input type="text" id="adminAdSlotTop" class="admin-input" placeholder="XXXXXXXXXX" spellcheck="false" />
+      </div>
+      <div class="admin-field">
+        <label class="admin-label" for="adminAdSlotBottom">하단 배너 슬롯 ID</label>
+        <input type="text" id="adminAdSlotBottom" class="admin-input" placeholder="XXXXXXXXXX" spellcheck="false" />
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 하단 고정 바 -->
+<div class="admin-footer">
+  <div class="admin-footer-inner">
+    <button type="button" class="admin-btn admin-btn-save" id="adminSaveBtn">설정 저장</button>
+    <button type="button" class="admin-btn admin-btn-reset" id="adminResetBtn">전체 초기화</button>
+    <span class="admin-save-status" id="adminSaveStatus"></span>
+  </div>
+</div>
+
+<!-- 비밀번호 변경 모달 -->
+<div class="admin-modal-overlay" id="pwModal" style="display:none" aria-modal="true" role="dialog">
+  <div class="admin-modal">
+    <h3 class="admin-modal-title">비밀번호 변경</h3>
+    <div class="admin-field">
+      <label class="admin-label" for="pwModalInput">새 비밀번호</label>
+      <input type="password" id="pwModalInput" class="admin-input" placeholder="4자 이상" autocomplete="new-password" />
+    </div>
+    <div class="admin-modal-error" id="pwModalError"></div>
+    <div class="admin-modal-actions">
+      <button type="button" class="admin-btn admin-btn-save" id="pwModalSaveBtn">변경</button>
+      <button type="button" class="admin-btn admin-btn-reset" id="pwModalCancelBtn">취소</button>
+    </div>
+  </div>
+</div>
+
+<script src="src/admin.js"></script>
+</body>
+</html>

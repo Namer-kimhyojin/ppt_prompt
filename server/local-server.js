@@ -2,6 +2,7 @@ import http from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { exec } from "node:child_process";
+import { createHash, randomBytes } from "node:crypto";
 import { config } from "./config.js";
 import { generateImage } from "./google-image-api.js";
 
@@ -123,6 +124,43 @@ async function handleGenerateImage(req, res) {
   }
 }
 
+// ── mixer manifest helpers ────────────────────────────────────────────────────
+async function getMixerManifest() {
+  const p = path.join(config.outputDir, "mixer_samples", "manifest.json");
+  try { return JSON.parse(await fs.readFile(p, "utf8")); } catch { return {}; }
+}
+async function saveMixerManifest(manifest) {
+  const p = path.join(config.outputDir, "mixer_samples", "manifest.json");
+  await fs.writeFile(p, JSON.stringify(manifest, null, 2));
+}
+
+async function handleGetMixerImages(res) {
+  const manifest = await getMixerManifest();
+  sendJson(res, 200, { ok: true, images: manifest });
+}
+
+async function handleResetMixerSample(req, res) {
+  try {
+    const { medId, idx } = await readJsonBody(req);
+    if (!medId) return sendJson(res, 400, { ok: false, error: "medId required." });
+    const manifest = await getMixerManifest();
+    if (manifest[medId]) {
+      if (typeof idx === "number") {
+        if (!Array.isArray(manifest[medId])) manifest[medId] = [];
+        manifest[medId][idx] = null;
+        if (manifest[medId].every(v => !v)) delete manifest[medId];
+      } else {
+        delete manifest[medId];
+      }
+      await saveMixerManifest(manifest);
+    }
+    sendJson(res, 200, { ok: true });
+  } catch (err) {
+    sendJson(res, 500, { ok: false, error: err?.message || "Reset failed." });
+  }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function handleSaveMixerSample(req, res) {
   try {
     const { medId, idx, image } = await readJsonBody(req);
@@ -166,15 +204,144 @@ async function handleSaveMixerSample(req, res) {
     const filePath = path.join(dir, filename);
     await fs.writeFile(filePath, buffer);
 
-    sendJson(res, 200, {
-      ok: true,
-      url: `/outputs/mixer_samples/${filename}`
-    });
+    // manifest.json 갱신 — 브라우저/기기에 관계없이 커스텀 이미지 공유
+    const serverUrl = `/outputs/mixer_samples/${filename}`;
+    const manifest = await getMixerManifest();
+    if (!Array.isArray(manifest[medId])) manifest[medId] = [null, null, null];
+    while (manifest[medId].length <= idx) manifest[medId].push(null);
+    manifest[medId][idx] = serverUrl;
+    await saveMixerManifest(manifest);
+
+    sendJson(res, 200, { ok: true, url: serverUrl });
   } catch (error) {
     console.error(error);
     sendJson(res, 500, { ok: false, error: error?.message || "Failed to save sample on server." });
   }
 }
+
+// ── 서버사이드 사용자 인증 ────────────────────────────────────────────────────
+const AUTH_FILE = path.join(config.outputDir, "auth.json");
+const SESSION_MS = 24 * 60 * 60 * 1000;
+
+async function loadAuth() {
+  try { return JSON.parse(await fs.readFile(AUTH_FILE, "utf8")); }
+  catch { return { users: [], sessions: [] }; }
+}
+async function saveAuth(data) {
+  await fs.mkdir(path.dirname(AUTH_FILE), { recursive: true });
+  await fs.writeFile(AUTH_FILE, JSON.stringify(data, null, 2));
+}
+function hashPw(pw) { return createHash("sha256").update(pw).digest("hex"); }
+function newToken() { return randomBytes(32).toString("hex"); }
+function newId()    { return randomBytes(8).toString("hex"); }
+
+async function resolveSession(req) {
+  const token = req.headers["x-session-token"];
+  if (!token) return null;
+  const auth = await loadAuth();
+  const sess = (auth.sessions || []).find(s => s.token === token && s.expiresAt > Date.now());
+  if (!sess) return null;
+  return (auth.users || []).find(u => u.id === sess.userId) || null;
+}
+
+async function handleAuthHasUsers(res) {
+  const { users } = await loadAuth();
+  sendJson(res, 200, { ok: true, hasUsers: (users || []).length > 0 });
+}
+
+async function handleAuthLogin(req, res) {
+  const { username, password } = await readJsonBody(req);
+  const auth = await loadAuth();
+  const user = (auth.users || []).find(u => u.username.toLowerCase() === (username || "").trim().toLowerCase());
+  if (!user || user.passwordHash !== hashPw(password || ""))
+    return sendJson(res, 401, { ok: false, error: "아이디 또는 비밀번호가 올바르지 않습니다." });
+  const token = newToken();
+  if (!auth.sessions) auth.sessions = [];
+  auth.sessions = auth.sessions.filter(s => s.expiresAt > Date.now()); // 만료 세션 정리
+  auth.sessions.push({ token, userId: user.id, expiresAt: Date.now() + SESSION_MS });
+  await saveAuth(auth);
+  sendJson(res, 200, { ok: true, token, userId: user.id, username: user.username, role: user.role,
+    tabPermissions: user.tabPermissions, requestedTabs: user.requestedTabs || [], expiresAt: Date.now() + SESSION_MS });
+}
+
+async function handleAuthMe(req, res) {
+  const user = await resolveSession(req);
+  if (!user) return sendJson(res, 401, { ok: false, error: "Unauthorized" });
+  sendJson(res, 200, { ok: true, userId: user.id, username: user.username, role: user.role,
+    tabPermissions: user.tabPermissions, requestedTabs: user.requestedTabs || [] });
+}
+
+async function handleAuthLogout(req, res) {
+  const token = req.headers["x-session-token"];
+  if (token) {
+    const auth = await loadAuth();
+    auth.sessions = (auth.sessions || []).filter(s => s.token !== token);
+    await saveAuth(auth);
+  }
+  sendJson(res, 200, { ok: true });
+}
+
+async function handleAuthGetUsers(req, res) {
+  const me = await resolveSession(req);
+  if (!me || me.role !== "admin") return sendJson(res, 403, { ok: false, error: "Admin only." });
+  const { users } = await loadAuth();
+  sendJson(res, 200, { ok: true, users: (users || []).map(({ passwordHash: _, ...u }) => u) });
+}
+
+async function handleAuthCreateUser(req, res) {
+  const me = await resolveSession(req);
+  if (!me || me.role !== "admin") return sendJson(res, 403, { ok: false, error: "Admin only." });
+  const { username, password, role } = await readJsonBody(req);
+  if (!username?.trim() || !password || password.length < 4)
+    return sendJson(res, 400, { ok: false, error: "아이디와 비밀번호(4자 이상)를 입력하세요." });
+  const auth = await loadAuth();
+  if ((auth.users || []).find(u => u.username.toLowerCase() === username.trim().toLowerCase()))
+    return sendJson(res, 400, { ok: false, error: "이미 사용 중인 아이디입니다." });
+  const user = { id: newId(), username: username.trim(), passwordHash: hashPw(password),
+    role: role === "admin" ? "admin" : "user", tabPermissions: null, requestedTabs: [], createdAt: Date.now() };
+  auth.users.push(user);
+  await saveAuth(auth);
+  const { passwordHash: _, ...safe } = user;
+  sendJson(res, 200, { ok: true, user: safe });
+}
+
+async function handleAuthUpdateUser(req, res, userId) {
+  const me = await resolveSession(req);
+  if (!me || me.role !== "admin") return sendJson(res, 403, { ok: false, error: "Admin only." });
+  const body = await readJsonBody(req);
+  const auth = await loadAuth();
+  const user = (auth.users || []).find(u => u.id === userId);
+  if (!user) return sendJson(res, 404, { ok: false, error: "User not found." });
+  if (body.password && body.password.length >= 4) user.passwordHash = hashPw(body.password);
+  if (body.tabPermissions !== undefined) user.tabPermissions = body.tabPermissions;
+  if (body.requestedTabs !== undefined) user.requestedTabs = body.requestedTabs;
+  await saveAuth(auth);
+  sendJson(res, 200, { ok: true });
+}
+
+async function handleAuthDeleteUser(req, res, userId) {
+  const me = await resolveSession(req);
+  if (!me || me.role !== "admin") return sendJson(res, 403, { ok: false, error: "Admin only." });
+  const auth = await loadAuth();
+  auth.users    = (auth.users    || []).filter(u => u.id !== userId);
+  auth.sessions = (auth.sessions || []).filter(s => s.userId !== userId);
+  await saveAuth(auth);
+  sendJson(res, 200, { ok: true });
+}
+
+async function handleAuthRequestAccess(req, res) {
+  const me = await resolveSession(req);
+  if (!me) return sendJson(res, 401, { ok: false, error: "Unauthorized" });
+  const { tabId } = await readJsonBody(req);
+  const auth = await loadAuth();
+  const user = (auth.users || []).find(u => u.id === me.id);
+  if (!user) return sendJson(res, 404, { ok: false, error: "User not found." });
+  if (!user.requestedTabs) user.requestedTabs = [];
+  if (!user.requestedTabs.includes(tabId)) user.requestedTabs.push(tabId);
+  await saveAuth(auth);
+  sendJson(res, 200, { ok: true });
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 function handleGetConfig(res) {
   sendJson(res, 200, {
@@ -241,6 +408,28 @@ async function handleRequest(req, res) {
     return handleSaveMixerSample(req, res);
   }
 
+  if (req.method === "GET" && url.pathname === "/api/mixer-images") {
+    return handleGetMixerImages(res);
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/reset-mixer-sample") {
+    return handleResetMixerSample(req, res);
+  }
+
+  // ── 인증 API ───────────────────────────────────────────────────────────────
+  if (req.method === "GET"  && url.pathname === "/api/auth/has-users") return handleAuthHasUsers(res);
+  if (req.method === "POST" && url.pathname === "/api/auth/login")     return handleAuthLogin(req, res);
+  if (req.method === "GET"  && url.pathname === "/api/auth/me")        return handleAuthMe(req, res);
+  if (req.method === "POST" && url.pathname === "/api/auth/logout")    return handleAuthLogout(req, res);
+  if (req.method === "GET"  && url.pathname === "/api/auth/users")     return handleAuthGetUsers(req, res);
+  if (req.method === "POST" && url.pathname === "/api/auth/users")     return handleAuthCreateUser(req, res);
+  if (req.method === "POST" && url.pathname === "/api/auth/request-access") return handleAuthRequestAccess(req, res);
+  const updateMatch = url.pathname.match(/^\/api\/auth\/users\/([^/]+)\/update$/);
+  if (req.method === "POST" && updateMatch)  return handleAuthUpdateUser(req, res, updateMatch[1]);
+  const deleteMatch = url.pathname.match(/^\/api\/auth\/users\/([^/]+)\/delete$/);
+  if (req.method === "POST" && deleteMatch)  return handleAuthDeleteUser(req, res, deleteMatch[1]);
+  // ───────────────────────────────────────────────────────────────────────────
+
   if (req.method === "POST" && url.pathname === "/api/open-folder") {
     const folderPath = config.outputDir.replace(/\//g, "\\");
     exec(`explorer "${folderPath}"`);
@@ -255,6 +444,25 @@ async function handleRequest(req, res) {
 }
 
 await fs.mkdir(config.outputDir, { recursive: true });
+
+// 최초 실행 시 기본 admin 계정 생성
+(async () => {
+  const auth = await loadAuth();
+  if (!auth.users || auth.users.length === 0) {
+    auth.users = [{
+      id: newId(),
+      username: "admin",
+      passwordHash: hashPw("promptdeck1234"),
+      role: "admin",
+      tabPermissions: null,
+      requestedTabs: [],
+      createdAt: Date.now()
+    }];
+    auth.sessions = [];
+    await saveAuth(auth);
+    console.log("[auth] 기본 admin 계정 생성: admin / promptdeck1234");
+  }
+})();
 
 const server = http.createServer((req, res) => {
   handleRequest(req, res).catch((error) => {

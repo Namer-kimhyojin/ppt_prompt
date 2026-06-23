@@ -2697,6 +2697,10 @@
   const UNSPLASH_KEY_STORAGE = 'mixer_unsplash_key';
   const UNSPLASH_CACHE = {};
 
+  // 서버 manifest 캐시 (GET /api/mixer-images 로 로드)
+  // localStorage 보다 우선 적용 → 브라우저·기기 무관 공유
+  let MIXER_SERVER_MANIFEST = {};
+
   function getUnsplashKey() {
     return localStorage.getItem(UNSPLASH_KEY_STORAGE) || '';
   }
@@ -2730,27 +2734,62 @@
     return imgUrl;
   }
 
-  // 화풍 샘플 커스텀 이미지 localStorage 헬퍼
+  // 커스텀 이미지 — 서버 manifest 우선, localStorage 폴백
   const MIXER_CUSTOM_KEY = 'mixer_custom_samples_v1';
   function _getCustomAll() {
     try { return JSON.parse(localStorage.getItem(MIXER_CUSTOM_KEY) || '{}'); } catch { return {}; }
   }
+
+  async function loadMixerManifest() {
+    try {
+      const res = await fetch('/api/mixer-images');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.ok && data.images && typeof data.images === 'object') {
+        MIXER_SERVER_MANIFEST = data.images;
+      }
+    } catch (_) { /* 정적 서빙 환경 또는 오프라인 — localStorage 폴백 사용 */ }
+  }
+
   function getCustomSamplesForMed(medId) {
+    // 서버 manifest 우선
+    const srv = MIXER_SERVER_MANIFEST[medId];
+    if (Array.isArray(srv) && srv.some(Boolean)) return srv.slice(0, 3);
+    // localStorage 폴백
     return (_getCustomAll()[medId] || [null, null, null]).slice(0, 3);
   }
-  function setCustomSample(medId, idx, dataUrl) {
+
+  function setCustomSample(medId, idx, url) {
+    // localStorage 빠른 캐시
     const all = _getCustomAll();
     if (!all[medId]) all[medId] = [null, null, null];
-    all[medId][idx] = dataUrl;
+    all[medId][idx] = url;
     localStorage.setItem(MIXER_CUSTOM_KEY, JSON.stringify(all));
+    // 인메모리 manifest 동기 반영
+    if (!Array.isArray(MIXER_SERVER_MANIFEST[medId])) MIXER_SERVER_MANIFEST[medId] = [null, null, null];
+    while (MIXER_SERVER_MANIFEST[medId].length <= idx) MIXER_SERVER_MANIFEST[medId].push(null);
+    MIXER_SERVER_MANIFEST[medId][idx] = url;
   }
+
   function clearCustomSample(medId, idx) {
+    // localStorage
     const all = _getCustomAll();
     if (all[medId]) {
       all[medId][idx] = null;
       if (all[medId].every(v => !v)) delete all[medId];
       localStorage.setItem(MIXER_CUSTOM_KEY, JSON.stringify(all));
     }
+    // 인메모리 manifest
+    if (Array.isArray(MIXER_SERVER_MANIFEST[medId])) {
+      MIXER_SERVER_MANIFEST[medId][idx] = null;
+      if (MIXER_SERVER_MANIFEST[medId].every(v => !v)) delete MIXER_SERVER_MANIFEST[medId];
+    }
+    // 서버 manifest 비동기 삭제
+    fetch('/api/reset-mixer-sample', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ medId, idx })
+    }).catch(() => {});
   }
 
   // 클립보드에서 이미지를 읽어 dataURL로 반환한다. 이미지가 없으면 예외를 던진다.
@@ -3860,7 +3899,7 @@
     'comp-double-exposure':        'photo-1508739773434-c26b3d09e071',
     'comp-underwater':             'photo-1503803548695-c2a7b4a5b875',
     'comp-reflection-mirror':      'photo-1501630834273-4b5604d2ee31',
-    'comp-zoom-burst':             'photo-1519419166318-4f1b8e53ca4e',
+    'comp-zoom-burst':             'photo-1533073526757-2c8ca1df9f1d',
     'comp-split-diopter':          'photo-1559827260-dc66d52bef19',
     'comp-motion-freeze':          'photo-1504701954957-2010ec3bcec1',
     'comp-detail-cutaway':         'photo-1533749047139-189de3cf06d3',
@@ -3871,19 +3910,19 @@
     'comp-three-quarter-low':      'photo-1486406146926-c627a92ad1ab',
     'comp-environmental-portrait': 'photo-1556157382-97eda2d62296',
     'comp-steep-oblique':          'photo-1473442240418-452f03b7ae40',
-    'comp-under-surface':          'photo-1484253773083-fbc06a6c1b29',
-    'comp-telephoto-flat':         'photo-1448141207823-c6dff86a4178',
-    'comp-corner-peek':            'photo-1519057154005-00a53f07b0c3',
+    'comp-under-surface':          'photo-1527482937786-6608f6e14c15',
+    'comp-telephoto-flat':         'photo-1551135049-8a33b5883817',
+    'comp-corner-peek':            'photo-1499678329028-101435549a4e',
 
     // layout 추가 8종
     'comp-z-pattern':              'photo-1486312338219-ce68d2c6f44d',
     'comp-negative-space':         'photo-1559494007-9f5847c49d94',
-    'comp-s-curve-flow':           'photo-1492553596209-cdf83ffe3ce8',
+    'comp-s-curve-flow':           'photo-1441974231531-c6227db76b6e',
     'comp-cross-grid':             'photo-1448630360428-65456885c650',
     'comp-triptych':               'photo-1509198397868-475647b2a1e5',
     'comp-horizontal-band':        'photo-1464822759023-fed622ff2c3b',
     'comp-staggered-grid':         'photo-1518005020951-eccb494ad742',
-    'comp-cluster-scatter':        'photo-1618005182384-a83a8bd57fbe'
+    'comp-cluster-scatter':        'photo-1535380210974-fba9d0462c27'
   };
 
   const MIXER_TYPOGRAPHY_SAMPLES = {
@@ -9515,7 +9554,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const mixerContainer = document.getElementById('conceptMixerContainer');
     if (!mixerContainer) return;
-    initConceptMixer();
+    // 서버 manifest 로드 후 초기화 — 커스텀 이미지가 즉시 반영됨
+    loadMixerManifest().finally(() => initConceptMixer());
   });
 
 })();
