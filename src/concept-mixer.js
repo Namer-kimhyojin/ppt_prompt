@@ -3853,7 +3853,37 @@
     'comp-layered-framing': 'photo-1449034446853-66c86144b0ad',
     'comp-radial': 'photo-1507525428034-b723cf961d3e',
     'comp-floating-suspension': 'photo-1618005182384-a83a8bd57fbe',
-    'comp-split': 'photo-1513829092301-a72c4eb04300'
+    'comp-split': 'photo-1513829092301-a72c4eb04300',
+
+    // shot 추가 8종
+    'comp-tilt-shift':             'photo-1477959858617-67f85cf4f1df',
+    'comp-double-exposure':        'photo-1508739773434-c26b3d09e071',
+    'comp-underwater':             'photo-1503803548695-c2a7b4a5b875',
+    'comp-reflection-mirror':      'photo-1501630834273-4b5604d2ee31',
+    'comp-zoom-burst':             'photo-1519419166318-4f1b8e53ca4e',
+    'comp-split-diopter':          'photo-1559827260-dc66d52bef19',
+    'comp-motion-freeze':          'photo-1504701954957-2010ec3bcec1',
+    'comp-detail-cutaway':         'photo-1533749047139-189de3cf06d3',
+
+    // angle 추가 8종
+    'comp-rear-view':              'photo-1507003211169-0a1dd7228f2d',
+    'comp-orbit-wrap':             'photo-1534430480872-3498386e7856',
+    'comp-three-quarter-low':      'photo-1486406146926-c627a92ad1ab',
+    'comp-environmental-portrait': 'photo-1556157382-97eda2d62296',
+    'comp-steep-oblique':          'photo-1473442240418-452f03b7ae40',
+    'comp-under-surface':          'photo-1484253773083-fbc06a6c1b29',
+    'comp-telephoto-flat':         'photo-1448141207823-c6dff86a4178',
+    'comp-corner-peek':            'photo-1519057154005-00a53f07b0c3',
+
+    // layout 추가 8종
+    'comp-z-pattern':              'photo-1486312338219-ce68d2c6f44d',
+    'comp-negative-space':         'photo-1559494007-9f5847c49d94',
+    'comp-s-curve-flow':           'photo-1492553596209-cdf83ffe3ce8',
+    'comp-cross-grid':             'photo-1448630360428-65456885c650',
+    'comp-triptych':               'photo-1509198397868-475647b2a1e5',
+    'comp-horizontal-band':        'photo-1464822759023-fed622ff2c3b',
+    'comp-staggered-grid':         'photo-1518005020951-eccb494ad742',
+    'comp-cluster-scatter':        'photo-1618005182384-a83a8bd57fbe'
   };
 
   const MIXER_TYPOGRAPHY_SAMPLES = {
@@ -3881,7 +3911,42 @@
     'typo-neon-sign':         'photo-1493976040374-85c8e12f0c0e',
     'typo-futuristic-hud':    'photo-1535223289827-42f1e9919769',
     'typo-kinetic':           'photo-1557672172-298e090bd0f1',
-    'typo-layered-overlap':   'photo-1561070791-2526d30994b5'
+    'typo-layered-overlap':   'photo-1561070791-2526d30994b5',
+
+    // sans 추가 5종
+    'typo-extended-wide':       'photo-1614107151491-6876eecbff89',
+    'typo-compressed-narrow':   'photo-1504711434969-e33886168f5c',
+    'typo-variable-display':    'photo-1561070791-2526d30994b5',
+    'typo-display-grotesque':   'photo-1618556450994-a6a128ef0d9d',
+    'typo-mono-technical':      'photo-1526374965328-7f61d4dc18c5',
+
+    // serif 추가 3종
+    'typo-wedge-serif':         'photo-1558618666-fcd25c85cd64',
+    'typo-hairline-thin':       'photo-1543002588-bfa74002ed7e',
+    'typo-clarendon-expanded':  'photo-1450101499163-c8848c66ca85',
+
+    // display 추가 5종
+    'typo-art-nouveau':         'photo-1503614472-8c93d56e92ce',
+    'typo-bauhaus-block':       'photo-1541701494587-cb58502866ab',
+    'typo-retro-diner':         'photo-1499781350541-7783f6c6a0c8',
+    'typo-psychedelic-warp':    'photo-1557672172-298e090bd0f1',
+    'typo-swiss-international': 'photo-1455390582262-044cdead277a',
+
+    // script 추가 4종
+    'typo-formal-italic':       'photo-1543002588-bfa74002ed7e',
+    'typo-rough-marker':        'photo-1471666875520-c75081f42081',
+    'typo-chalk-casual':        'photo-1457369804613-52c61a468e7d',
+    'typo-flourish-script':     'photo-1503614472-8c93d56e92ce',
+
+    // experimental 추가 8종
+    'typo-fragmented':          'photo-1526374965328-7f61d4dc18c5',
+    'typo-gradient-blend':      'photo-1557672172-298e090bd0f1',
+    'typo-chrome-metallic':     'photo-1580196969807-cc6de06c05be',
+    'typo-ice-crystal':         'photo-1516912481808-3406841bd33c',
+    'typo-vintage-distressed':  'photo-1457369804613-52c61a468e7d',
+    'typo-typewriter':          'photo-1519791883288-dc8bd696e667',
+    'typo-shadow-stack':        'photo-1504711434969-e33886168f5c',
+    'typo-fire-smoke':          'photo-1467810563316-b5476525c0f9'
   };
 
   // 로컬 상태
