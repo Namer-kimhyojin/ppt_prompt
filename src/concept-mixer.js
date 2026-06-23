@@ -5007,29 +5007,27 @@
       transform: scale(1.15);
     }
 
-    /* 필터 바 묶음 — 세로 스택 */
+    /* 필터 바 묶음 — 2열 그리드 (레이블 | 컨테이너) */
     .mixer-pal-filters-row {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 10px;
+      align-items: center;
       margin-bottom: 14px;
     }
 
-    /* 각 필터 행: 레이블 + 컨테이너 */
+    /* 그룹 래퍼는 레이아웃에서 투명하게 — 자식이 직접 그리드 셀이 됨 */
     .mixer-pal-filter-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: contents;
     }
 
-    /* 필터 레이블 (좌측 고정폭) */
+    /* 필터 레이블 */
     .mixer-pal-filter-label {
       font-size: 11px;
       font-weight: 700;
       color: var(--ink-soft, #64748b);
-      min-width: 34px;
       text-align: right;
-      flex-shrink: 0;
+      white-space: nowrap;
       letter-spacing: 0.01em;
     }
 
