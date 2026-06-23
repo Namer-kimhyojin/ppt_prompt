@@ -3455,7 +3455,7 @@
     bindLoadInput();
     bindPromptEditor();
     bindWarningModalEvents();
-    const goConceptTab = () => { document.getElementById("tabBtnPromotionPlanner")?.click(); };
+    const goConceptTab = () => { document.getElementById("tabBtnConceptMixer")?.click(); };
     $("promotionConceptSelectBtn")?.addEventListener("click", goConceptTab);
     $("promotionConceptChangeBtn")?.addEventListener("click", goConceptTab);
 
