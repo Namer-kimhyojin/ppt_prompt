@@ -14,6 +14,7 @@
       document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
     })();
   </script>
+  <script src="src/auth.js"></script>
   <!-- 서버 세션 검증 전까지 콘텐츠 숨김 -->
   <style id="admin-auth-guard">body{visibility:hidden!important}</style>
   <script>
