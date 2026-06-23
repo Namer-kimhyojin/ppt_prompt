@@ -1,0 +1,11 @@
+.git
+.github
+node_modules
+.claude
+.codex-remote-attachments
+.playwright-mcp
+scratch
+backup
+backups
+outputs
+*.log

@@ -1,0 +1,21 @@
+# 시놀로지 Container Manager(구 Docker)용 구성
+# 사용법은 docs/nas-deployment.md 참고.
+services:
+  promptdeck:
+    build: .
+    container_name: promptdeck
+    restart: always
+    ports:
+      # 호스트 4173 -> 컨테이너 4173. 필요시 왼쪽 포트만 바꾼다.
+      - "4173:4173"
+    environment:
+      PROMPTDECK_HOST: "0.0.0.0"
+      PROMPTDECK_PORT: "4173"
+      PROMPTDECK_OUTPUT_DIR: "/data/outputs"
+      # 이미지 생성까지 쓰려면 아래 주석 해제 후 키 입력
+      # IMAGE_PROVIDER: "gemini"
+      # GEMINI_API_KEY: "..."
+    volumes:
+      # NAS 실제 폴더에 저장 데이터를 영구 보존한다.
+      # 왼쪽 경로를 NAS의 원하는 위치로 바꾼다. (예: /volume1/docker/promptdeck/outputs)
+      - ./outputs:/data/outputs

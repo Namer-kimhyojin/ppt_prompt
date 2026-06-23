@@ -4038,6 +4038,9 @@
   let activePaletteFilter = 'all';
   let activePaletteColorFilter = 'all';
   let activePaletteTagFilter = 'all';
+  let customSubjectKo = '';
+  let customSubjectEn = '';
+  let customSubjectMode = 'ko'; // 'ko' = 한글번역, 'en' = 영어직접입력
   let activeMediumCategory = MIXER_MEDIUMS.find(medium => medium.id === selectedMediumId)?.category || 'tech3d';
   let activePaletteCategory = 'all';
   let isPaletteOverriddenByUser = false;
@@ -5475,6 +5478,97 @@
       border: 1px solid rgba(245, 158, 11, 0.12);
     }
 
+    .mixer-custom-subject-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-2, #f8fafc);
+      border: 1px solid var(--line, #e2e8f0);
+      border-radius: 8px;
+      padding: 7px 10px;
+    }
+    .mixer-custom-subject-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft, #64748b);
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    .mixer-custom-mode-toggle {
+      display: flex;
+      border: 1px solid var(--line, #e2e8f0);
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .mixer-custom-mode-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink-soft, #64748b);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mixer-custom-mode-btn + .mixer-custom-mode-btn {
+      border-left: 1px solid var(--line, #e2e8f0);
+    }
+    .mixer-custom-mode-btn.active {
+      background: var(--accent, #4361ee);
+      color: #fff;
+    }
+    .mixer-custom-mode-btn:not(.active):hover {
+      background: var(--surface-3, #e2e8f0);
+    }
+    .mixer-custom-subject-input {
+      flex: 1;
+      border: 1px solid var(--line, #e2e8f0);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 13px;
+      background: var(--surface, #fff);
+      color: var(--ink, #1a1f2b);
+      outline: none;
+      min-width: 0;
+    }
+    .mixer-custom-subject-input:focus {
+      border-color: var(--accent, #4361ee);
+      box-shadow: 0 0 0 2px rgba(67,97,238,0.12);
+    }
+    .mixer-custom-subject-apply,
+    .mixer-custom-subject-clear {
+      border: 1px solid var(--line, #e2e8f0);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mixer-custom-subject-apply {
+      background: var(--accent, #4361ee);
+      color: #fff;
+      border-color: var(--accent, #4361ee);
+    }
+    .mixer-custom-subject-apply:hover { opacity: 0.88; }
+    .mixer-custom-subject-clear {
+      background: transparent;
+      color: var(--ink-soft, #64748b);
+    }
+    .mixer-custom-subject-clear:hover:not(:disabled) { background: var(--surface-3, #e2e8f0); }
+    .mixer-custom-subject-clear:disabled { opacity: 0.38; cursor: default; }
+    .mixer-custom-subject-preview {
+      font-size: 12px;
+      color: #10b981;
+      padding: 0 4px;
+    }
+    .mixer-custom-subject-preview em {
+      font-style: normal;
+      font-weight: 600;
+    }
+
     .mixer-preview-actions {
       display: flex;
       gap: 8px;
@@ -6596,6 +6690,80 @@
     return MIXER_TYPOGRAPHIES.find(r => r.id === selectedTypographyId) || null;
   }
 
+  // 한글 주제어 → 영어 변환 사전
+  const KO_EN_SUBJECT_MAP = {
+    // 사람/직업
+    '의사': 'doctor', '간호사': 'nurse', '교사': 'teacher', '선생님': 'teacher',
+    '학생': 'student', '어린이': 'children', '아이': 'child', '아기': 'baby',
+    '노인': 'elderly person', '여성': 'woman', '남성': 'man', '부부': 'couple',
+    '가족': 'family', '친구': 'friends', '직장인': 'office worker', '요리사': 'chef',
+    '운동선수': 'athlete', '음악가': 'musician', '예술가': 'artist', '과학자': 'scientist',
+    '엔지니어': 'engineer', '건축가': 'architect', '디자이너': 'designer',
+    // 동물
+    '고양이': 'cat', '강아지': 'dog', '개': 'dog', '말': 'horse', '새': 'bird',
+    '독수리': 'eagle', '나비': 'butterfly', '물고기': 'fish', '고래': 'whale',
+    '호랑이': 'tiger', '사자': 'lion', '여우': 'fox', '늑대': 'wolf', '곰': 'bear',
+    '토끼': 'rabbit', '판다': 'panda', '코끼리': 'elephant', '기린': 'giraffe',
+    '용': 'dragon', '봉황': 'phoenix',
+    // 음식/음료
+    '커피': 'coffee', '차': 'tea', '케이크': 'cake', '빵': 'bread', '라면': 'ramen',
+    '스시': 'sushi', '피자': 'pizza', '버거': 'burger', '과일': 'fruit', '채소': 'vegetables',
+    '와인': 'wine', '맥주': 'beer', '칵테일': 'cocktail',
+    // 자연/풍경
+    '산': 'mountain', '바다': 'ocean', '강': 'river', '숲': 'forest', '꽃': 'flowers',
+    '나무': 'tree', '하늘': 'sky', '구름': 'clouds', '별': 'stars', '달': 'moon',
+    '태양': 'sun', '일출': 'sunrise', '일몰': 'sunset', '폭포': 'waterfall',
+    '사막': 'desert', '눈': 'snow', '비': 'rain', '벚꽃': 'cherry blossoms',
+    '단풍': 'autumn leaves',
+    // 도시/건물
+    '도시': 'city', '빌딩': 'building', '집': 'house', '성': 'castle', '탑': 'tower',
+    '다리': 'bridge', '거리': 'street', '시장': 'market', '카페': 'cafe',
+    '도서관': 'library', '병원': 'hospital', '학교': 'school', '공장': 'factory',
+    '항구': 'harbor', '공항': 'airport',
+    // 기술/제품
+    '로봇': 'robot', '자동차': 'car', '자전거': 'bicycle', '오토바이': 'motorcycle',
+    '비행기': 'airplane', '배': 'ship', '기차': 'train', '스마트폰': 'smartphone',
+    '컴퓨터': 'computer', '카메라': 'camera', '드론': 'drone',
+    // 스포츠/활동
+    '축구': 'soccer', '농구': 'basketball', '야구': 'baseball', '수영': 'swimming',
+    '등산': 'hiking', '달리기': 'running', '댄스': 'dance', '요가': 'yoga',
+    '게임': 'gaming',
+    // 비즈니스/추상
+    '협업': 'teamwork', '성장': 'growth', '혁신': 'innovation', '데이터': 'data',
+    '네트워크': 'network', '글로벌': 'global', '비즈니스': 'business',
+    '창의성': 'creativity', '미래': 'future', '에너지': 'energy',
+    '환경': 'environment', '지속가능성': 'sustainability', '교육': 'education',
+    '건강': 'health', '의료': 'healthcare', '금융': 'finance', '부동산': 'real estate',
+    // 오브젝트
+    '책': 'book', '꽃다발': 'bouquet', '보석': 'jewel', '시계': 'clock', '열쇠': 'key',
+    '편지': 'letter', '지도': 'map', '달력': 'calendar', '안경': 'glasses',
+    '가방': 'bag', '의자': 'chair', '테이블': 'table', '램프': 'lamp',
+  };
+
+  async function translateWithMyMemory(text) {
+    try {
+      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=ko|en`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data.responseStatus === 200 && data.responseData?.translatedText) {
+        return data.responseData.translatedText;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function resolveCustomSubjectEn(koText) {
+    if (!koText) return '';
+    const trimmed = koText.trim();
+    if (!trimmed) return '';
+    // 사전 직접 매핑
+    if (KO_EN_SUBJECT_MAP[trimmed]) return KO_EN_SUBJECT_MAP[trimmed];
+    // 단어 분리 후 부분 매핑 시도
+    const parts = trimmed.split(/[\s,]+/);
+    const mapped = parts.map(p => KO_EN_SUBJECT_MAP[p] || p);
+    return mapped.join(' ');
+  }
+
   // 현재 조합 상태에 따라 하이라이트 HTML로 구성된 프롬프트 반환
   function buildMixedHighlightPromptHTML() {
     const subject = resolveMixerSubject();
@@ -6609,9 +6777,10 @@
     const colorText = getPaletteColorNames(palette.colors);
     const colorPart = [colorText, palette.colorMapping].filter(Boolean).join(', ');
 
+    const subjectPromptText = customSubjectEn || subject.prompt;
     const part1 = `<span class="hl-medium">${escapeMixerHTML(`A ${medium.prefix}`)}</span>` +
                   (composition ? ` <span class="hl-composition">${escapeMixerHTML(composition.prefix)}</span>` : '') +
-                  ` <span class="hl-subj">${escapeMixerHTML(subject.prompt)}</span>`;
+                  ` <span class="hl-subj">${escapeMixerHTML(subjectPromptText)}</span>`;
 
     let part2 = `<span class="hl-medium">${escapeMixerHTML(medium.suffix)}</span>` +
                   (composition ? `, <span class="hl-composition">${escapeMixerHTML(composition.suffix)}</span>` : '');
@@ -6648,7 +6817,8 @@
       colorPartStr = `, color palette: ${colorPart}`;
     }
 
-    return `A ${medium.prefix} ${compPrefix}${subject.prompt}. ${medium.suffix}${compSuffix}${colorPartStr}${typoStr}`;
+    const subjectPromptText = customSubjectEn || subject.prompt;
+    return `A ${medium.prefix} ${compPrefix}${subjectPromptText}. ${medium.suffix}${compSuffix}${colorPartStr}${typoStr}`;
   }
 
   // 48종 화풍에 맞춘 무의존성 동적 인라인 SVG 생성기
@@ -7516,6 +7686,9 @@
       `;
       card.addEventListener('click', () => {
         selectedSubjId = subj.id;
+        customSubjectKo = '';
+        customSubjectEn = '';
+        customSubjectMode = 'ko';
         grid.querySelectorAll('.mixer-item-card').forEach(c => {
           c.classList.remove('active');
           c.setAttribute('aria-pressed', 'false');
@@ -9108,6 +9281,19 @@
         </div>
       </div>
       <div class="mixer-preview-body">
+        <div class="mixer-custom-subject-row">
+          <label class="mixer-custom-subject-label">주제 커스텀</label>
+          <div class="mixer-custom-mode-toggle">
+            <button type="button" class="mixer-custom-mode-btn${customSubjectMode === 'ko' ? ' active' : ''}" id="btnMixerModeKo">🇰🇷 한글번역</button>
+            <button type="button" class="mixer-custom-mode-btn${customSubjectMode === 'en' ? ' active' : ''}" id="btnMixerModeEn">🔤 영어직접</button>
+          </div>
+          <input type="text" id="mixerCustomSubjectInput" class="mixer-custom-subject-input"
+            placeholder="${customSubjectMode === 'ko' ? '한글 주제어 (예: 이차전지)' : 'English keyword (e.g. battery)'}"
+            value="${escapeMixerHTML(customSubjectMode === 'ko' ? customSubjectKo : customSubjectEn)}" />
+          <button type="button" class="mixer-custom-subject-apply" id="btnMixerCustomSubjectApply">적용</button>
+          <button type="button" class="mixer-custom-subject-clear" id="btnMixerCustomSubjectClear" ${(customSubjectKo || customSubjectEn) ? '' : 'disabled'}>초기화</button>
+        </div>
+        ${customSubjectMode === 'ko' && customSubjectEn ? `<div class="mixer-custom-subject-preview">→ <em>${escapeMixerHTML(customSubjectEn)}</em></div>` : ''}
         <details class="mixer-prompt-details" open>
           <summary>완성 프롬프트</summary>
           <pre class="mixer-preview-prompt-box" id="mixerCombinedPromptText">${highlightHTML}</pre>
@@ -9120,6 +9306,73 @@
         </div>
       </div>
     `;
+
+    // -------------------------------------------------------------
+    // 커스텀 주제어 이벤트 바인딩
+    // -------------------------------------------------------------
+    const customInput = cardWrap.querySelector('#mixerCustomSubjectInput');
+    const customApplyBtn = cardWrap.querySelector('#btnMixerCustomSubjectApply');
+    const customClearBtn = cardWrap.querySelector('#btnMixerCustomSubjectClear');
+    const btnModeKo = cardWrap.querySelector('#btnMixerModeKo');
+    const btnModeEn = cardWrap.querySelector('#btnMixerModeEn');
+
+    async function applyCustomSubject() {
+      const val = (customInput.value || '').trim();
+      if (!val) {
+        customSubjectKo = '';
+        customSubjectEn = '';
+        renderPreviewCard();
+        return;
+      }
+
+      if (customSubjectMode === 'en') {
+        customSubjectKo = '';
+        customSubjectEn = val;
+        renderPreviewCard();
+        return;
+      }
+
+      // 한글번역 모드 — 사전 우선, 없으면 MyMemory API
+      const exactMatch = KO_EN_SUBJECT_MAP[val];
+      if (exactMatch) {
+        customSubjectKo = val;
+        customSubjectEn = exactMatch;
+        renderPreviewCard();
+        return;
+      }
+
+      // 사전 미등록 → MyMemory 호출
+      customApplyBtn.textContent = '번역 중...';
+      customApplyBtn.disabled = true;
+      const translated = await translateWithMyMemory(val);
+      customSubjectKo = val;
+      customSubjectEn = translated || resolveCustomSubjectEn(val);
+      renderPreviewCard();
+    }
+
+    customApplyBtn.addEventListener('click', applyCustomSubject);
+    customInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') applyCustomSubject();
+    });
+    customClearBtn.addEventListener('click', () => {
+      customSubjectKo = '';
+      customSubjectEn = '';
+      renderPreviewCard();
+    });
+    btnModeKo.addEventListener('click', () => {
+      if (customSubjectMode === 'ko') return;
+      customSubjectMode = 'ko';
+      customSubjectKo = '';
+      customSubjectEn = '';
+      renderPreviewCard();
+    });
+    btnModeEn.addEventListener('click', () => {
+      if (customSubjectMode === 'en') return;
+      customSubjectMode = 'en';
+      customSubjectKo = '';
+      customSubjectEn = '';
+      renderPreviewCard();
+    });
 
     // -------------------------------------------------------------
     // 패널 열기/닫기 이벤트 바인딩
