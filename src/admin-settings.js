@@ -31,9 +31,30 @@
   })();
 
   // 전역 노출
-  if (s.unsplashKey) window.PROMPTDECK_UNSPLASH_KEY = s.unsplashKey;
+  if (s.unsplashKey) {
+    window.PROMPTDECK_UNSPLASH_KEY = s.unsplashKey;
+    localStorage.setItem('mixer_unsplash_key', s.unsplashKey);
+  }
   if (s.programName) window.PROMPTDECK_PROGRAM_NAME = s.programName;
   window.PROMPTDECK_SESSION = session;
+
+  // 서버에서 최신 설정 로드 (다른 기기에서도 동기화)
+  fetch('/api/admin-settings').then(function (r) {
+    return r.ok ? r.json() : null;
+  }).then(function (d) {
+    if (!d || !d.ok) return;
+    // unsplash key 동기화
+    if (d.unsplashKey) {
+      window.PROMPTDECK_UNSPLASH_KEY = d.unsplashKey;
+      localStorage.setItem('mixer_unsplash_key', d.unsplashKey);
+    }
+    // localStorage 설정 갱신 (서버 설정 우선)
+    var current = loadJSON(SK, {});
+    var merged = Object.assign({}, current);
+    var serverKeys = ['programName', 'programSubtitle', 'tabOrder', 'tabLabels', 'tabs', 'unsplashKey', 'adsEnabled', 'adClient', 'adSlotTop', 'adSlotBottom'];
+    serverKeys.forEach(function (k) { if (d[k] !== undefined) merged[k] = d[k]; });
+    localStorage.setItem(SK, JSON.stringify(merged));
+  }).catch(function () {});
 
   // ─── 인증 리다이렉트 ────────────────────────────────────────────────────────
   // has-users 캐시로 즉시 판단, 서버 확인은 비동기로 추가 수행

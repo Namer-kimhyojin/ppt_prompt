@@ -436,10 +436,29 @@
 
     var data = Object.assign({}, collectProgramInfo(), tm, collectAds());
     var unsplashInput = $('adminUnsplashKey');
-    if (unsplashInput) data.unsplashKey = unsplashInput.value;
+    if (unsplashInput) data.unsplashKey = unsplashInput.value.trim();
 
-    if (saveSettings(data)) setStatus('저장되었습니다. 메인 앱 새로고침 시 반영됩니다.', 'ok');
-    else                    setStatus('저장 실패. localStorage를 확인하세요.', 'err');
+    if (!saveSettings(data)) { setStatus('저장 실패. localStorage를 확인하세요.', 'err'); return; }
+
+    // mixer_unsplash_key 동기화 (concept-mixer.js가 읽는 키)
+    if (data.unsplashKey) {
+      localStorage.setItem('mixer_unsplash_key', data.unsplashKey);
+    } else {
+      localStorage.removeItem('mixer_unsplash_key');
+    }
+
+    setStatus('저장 중...', '');
+    // 서버에도 저장
+    var session = PromptDeckAuth.loadSession();
+    fetch('/api/admin-settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-session-token': (session && session.token) || '' },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      setStatus(d.ok ? '저장되었습니다. 메인 앱 새로고침 시 반영됩니다.' : '로컬 저장됨 (서버 저장 실패)', d.ok ? 'ok' : '');
+    }).catch(function () {
+      setStatus('로컬 저장됨 (서버 없음)', '');
+    });
   }
 
   function handleReset() {

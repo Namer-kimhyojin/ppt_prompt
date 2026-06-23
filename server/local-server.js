@@ -139,6 +139,32 @@ async function handleGetMixerImages(res) {
   sendJson(res, 200, { ok: true, images: manifest });
 }
 
+// ── 관리자 설정 저장/로드 ─────────────────────────────────────────────────────
+const ADMIN_SETTINGS_FILE = path.join(config.outputDir, "admin-settings.json");
+
+async function loadAdminSettings() {
+  try { return JSON.parse(await fs.readFile(ADMIN_SETTINGS_FILE, "utf8")); }
+  catch { return {}; }
+}
+async function saveAdminSettingsFile(data) {
+  await fs.mkdir(path.dirname(ADMIN_SETTINGS_FILE), { recursive: true });
+  await fs.writeFile(ADMIN_SETTINGS_FILE, JSON.stringify(data, null, 2));
+}
+
+async function handleGetAdminSettings(res) {
+  const data = await loadAdminSettings();
+  sendJson(res, 200, { ok: true, ...data });
+}
+
+async function handleSaveAdminSettings(req, res) {
+  const me = await resolveSession(req);
+  if (!me || me.role !== "admin") return sendJson(res, 403, { ok: false, error: "Admin only." });
+  const body = await readJsonBody(req);
+  await saveAdminSettingsFile(body);
+  sendJson(res, 200, { ok: true });
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function handleResetMixerSample(req, res) {
   try {
     const { medId, idx } = await readJsonBody(req);
@@ -415,6 +441,10 @@ async function handleRequest(req, res) {
   if (req.method === "POST" && url.pathname === "/api/reset-mixer-sample") {
     return handleResetMixerSample(req, res);
   }
+
+  // ── 관리자 설정 API ────────────────────────────────────────────────────────
+  if (req.method === "GET"  && url.pathname === "/api/admin-settings") return handleGetAdminSettings(res);
+  if (req.method === "POST" && url.pathname === "/api/admin-settings") return handleSaveAdminSettings(req, res);
 
   // ── 인증 API ───────────────────────────────────────────────────────────────
   if (req.method === "GET"  && url.pathname === "/api/auth/has-users") return handleAuthHasUsers(res);
