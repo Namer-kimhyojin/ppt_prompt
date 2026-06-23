@@ -3234,6 +3234,10 @@
     setWidth("promotionLayoutWeightVisualGauge", nvw);
     setWidth("promotionLayoutWeightInfoGauge", niw);
     setWidth("promotionLayoutWeightBackgroundGauge", nbw);
+
+    // Move background slider thumb to reflect auto-derived allocation
+    const bgSlider = $("promotionLayoutWeightBackground");
+    if (bgSlider) bgSlider.value = nbw;
   }
 
   function syncCustomWeightPanel() {
