@@ -3197,21 +3197,43 @@
     const tw = Math.max(0, parseInt(state.layoutWeightTitle) || 0);
     const vw = Math.max(0, parseInt(state.layoutWeightVisual) || 0);
     const iw = Math.max(0, parseInt(state.layoutWeightInfo) || 0);
-    const bw = Math.max(0, 100 - tw - vw - iw);
-    state.layoutWeightBackground = String(bw);
 
-    const setVal = (id, val) => { const el = $(id); if (el) el.textContent = val + "%"; };
+    // Normalize for gauge display and prompt (same logic as buildCustomLayoutLines)
+    const total = tw + vw + iw;
+    let ntw, nvw, niw, nbw;
+    if (total === 0) {
+      ntw = nvw = niw = 0; nbw = 100;
+    } else if (total <= 100) {
+      ntw = tw; nvw = vw; niw = iw;
+      nbw = 100 - total;
+    } else {
+      ntw = Math.round(tw / total * 100);
+      nvw = Math.round(vw / total * 100);
+      niw = Math.round(iw / total * 100);
+      nbw = Math.max(0, 100 - ntw - nvw - niw);
+    }
+    state.layoutWeightBackground = String(nbw);
+
+    const setRaw   = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+    const setAlloc = (id, val) => { const el = $(id); if (el) el.textContent = val + "%"; };
     const setWidth = (id, val) => { const el = $(id); if (el) el.style.width = val + "%"; };
 
-    setVal("promotionLayoutWeightTitleVal", tw);
-    setVal("promotionLayoutWeightVisualVal", vw);
-    setVal("promotionLayoutWeightInfoVal", iw);
-    setVal("promotionLayoutWeightBackgroundVal", bw);
+    // Raw input values (user's emphasis weight, no % sign)
+    setRaw("promotionLayoutWeightTitleVal", tw);
+    setRaw("promotionLayoutWeightVisualVal", vw);
+    setRaw("promotionLayoutWeightInfoVal", iw);
 
-    setWidth("promotionLayoutWeightTitleGauge", tw);
-    setWidth("promotionLayoutWeightVisualGauge", vw);
-    setWidth("promotionLayoutWeightInfoGauge", iw);
-    setWidth("promotionLayoutWeightBackgroundGauge", bw);
+    // Normalized canvas allocation (%)
+    setAlloc("promotionLayoutWeightTitleAlloc", ntw);
+    setAlloc("promotionLayoutWeightVisualAlloc", nvw);
+    setAlloc("promotionLayoutWeightInfoAlloc", niw);
+    setAlloc("promotionLayoutWeightBackgroundVal", nbw);
+
+    // Gauge bars show normalized proportions (always sum to 100%)
+    setWidth("promotionLayoutWeightTitleGauge", ntw);
+    setWidth("promotionLayoutWeightVisualGauge", nvw);
+    setWidth("promotionLayoutWeightInfoGauge", niw);
+    setWidth("promotionLayoutWeightBackgroundGauge", nbw);
   }
 
   function syncCustomWeightPanel() {

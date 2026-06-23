@@ -3036,9 +3036,47 @@ select option {
 }
 
 .promo-weight-slider-val {
-  font-weight: 700;
-  color: var(--accent, #1f5eff);
+  display: flex;
+  align-items: center;
+  gap: 3px;
   margin-left: 6px;
+  white-space: nowrap;
+}
+
+.promo-weight-raw {
+  font-size: 0.82em;
+  font-weight: 500;
+  color: var(--ink-light, #94a3b8);
+  min-width: 20px;
+  text-align: right;
+}
+
+.promo-weight-arrow {
+  font-size: 0.75em;
+  color: var(--ink-light, #94a3b8);
+  margin: 0 1px;
+}
+
+.promo-weight-alloc {
+  font-weight: 700;
+  font-size: 0.95em;
+  color: var(--accent, #1f5eff);
+  min-width: 32px;
+  text-align: right;
+}
+
+.promo-weight-bg-alloc {
+  color: var(--ink-light, #94a3b8);
+  font-weight: 500;
+}
+
+.promo-weight-bg-auto {
+  font-size: 0.72em;
+  color: var(--ink-light, #94a3b8);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 1.4;
 }
 
 .promo-weight-slider {

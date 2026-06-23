@@ -556,22 +556,36 @@ function adaptLayoutLinesForCta(lines, isCtaActive) {
 }
 
 function buildCustomLayoutLines(tw, vw, iw) {
-  const bw = Math.max(0, 100 - tw - vw - iw);
+  // Sliders are independent 0-100 emphasis weights; normalize to actual canvas proportions.
+  const total = tw + vw + iw;
+  let ntw, nvw, niw, nbw;
+  if (total === 0) {
+    ntw = nvw = niw = 33; nbw = 1;
+  } else if (total <= 100) {
+    ntw = tw; nvw = vw; niw = iw;
+    nbw = 100 - total;
+  } else {
+    ntw = Math.round(tw / total * 100);
+    nvw = Math.round(vw / total * 100);
+    niw = Math.round(iw / total * 100);
+    nbw = Math.max(0, 100 - ntw - nvw - niw);
+  }
+
   const slots = [
-    { key: "title",   w: tw, label: "headline/title area" },
-    { key: "visual",  w: vw, label: "key visual" },
-    { key: "info",    w: iw, label: "information cards" },
-    { key: "bg",      w: bw, label: "background space" },
+    { key: "title",   w: ntw, label: "headline/title area" },
+    { key: "visual",  w: nvw, label: "key visual" },
+    { key: "info",    w: niw, label: "information cards" },
+    { key: "bg",      w: nbw, label: "background space" },
   ].sort((a, b) => b.w - a.w);
 
   const [first, second] = slots;
   const alloc = slots.map((s, i) => `${i + 1}. ${s.label} (${s.w}% of canvas)`).join(", ");
 
   const zoneInstructions = {
-    title: `The headline/title must occupy approximately ${tw}% of the canvas area. Use bold, high-contrast typography scaled to fill this allocation. The headline zone must have a clean, flat background with zero complex visual elements behind it.`,
-    visual: `The key visual must occupy approximately ${vw}% of the canvas area. Render the selected concept with full intensity in its dedicated zone. No text may float over the key visual without a solid, high-contrast backing panel.`,
-    info:   `The information section must occupy approximately ${iw}% of the canvas area. Use structured cards, panels, or icon-label rows sized to fill this allocation. Every data item needs its own clearly separated block with flat background and high contrast.`,
-    bg:     `Background space accounts for approximately ${bw}% of the canvas — use it to create breathing room and depth. Keep all background zones free of text. Use the selected visual concept's atmosphere, textures, and color palette in background areas.`,
+    title: `The headline/title must occupy approximately ${ntw}% of the canvas area. Use bold, high-contrast typography scaled to fill this allocation. The headline zone must have a clean, flat background with zero complex visual elements behind it.`,
+    visual: `The key visual must occupy approximately ${nvw}% of the canvas area. Render the selected concept with full intensity in its dedicated zone. No text may float over the key visual without a solid, high-contrast backing panel.`,
+    info:   `The information section must occupy approximately ${niw}% of the canvas area. Use structured cards, panels, or icon-label rows sized to fill this allocation. Every data item needs its own clearly separated block with flat background and high contrast.`,
+    bg:     `Background space accounts for approximately ${nbw}% of the canvas — use it to create breathing room and depth. Keep all background zones free of text. Use the selected visual concept's atmosphere, textures, and color palette in background areas.`,
   };
 
   const lines = [
