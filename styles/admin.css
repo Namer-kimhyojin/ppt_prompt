@@ -290,7 +290,7 @@ body {
 .admin-tab-manager { display: flex; flex-direction: column; }
 .admin-tm-row {
   display: grid;
-  grid-template-columns: 24px 1fr auto auto;
+  grid-template-columns: 24px 1fr auto auto auto;
   align-items: center;
   gap: 10px;
   padding: 9px 0;
@@ -329,6 +329,19 @@ body {
 }
 .admin-tm-label:focus { border-color: var(--accent); background: var(--surface-alt); }
 .admin-tm-default { font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+.admin-tm-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.admin-tm-toggle-label {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+/* 접근제한 스위치 — 주황색 */
+.admin-switch-auth input:checked + .admin-switch-track { background: #e07c00; }
+:root[data-theme="dark"] .admin-switch-auth input:checked + .admin-switch-track { background: #f59e0b; }
 
 /* ─── 사용자 관리 ─── */
 .admin-create-user { margin-bottom: 16px; }

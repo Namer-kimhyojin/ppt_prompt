@@ -97,9 +97,21 @@
   var currentUserId     = session ? session.userId          : null;
   var requestedTabs     = session ? (session.requestedTabs || []) : [];
 
+  function getTabCfg(tabId) {
+    var cfg = s.tabs && s.tabs[tabId];
+    if (cfg === undefined || cfg === null) return { visible: true, requireAuth: false };
+    if (typeof cfg === 'boolean') return { visible: cfg, requireAuth: false };
+    return { visible: cfg.visible !== false, requireAuth: !!cfg.requireAuth };
+  }
+
   function isTabVisible(tabId) {
-    if (s.tabs && s.tabs[tabId] === false) return false;
+    var cfg = getTabCfg(tabId);
+    if (!cfg.visible) return false;
+    // 접근제한 탭: 미로그인이면 숨김
+    if (cfg.requireAuth && !session) return false;
+    // 관리자는 모두 접근
     if (!session || currentUserRole === 'admin') return true;
+    // 개별 권한이 false이면 숨김
     if (currentUserPerms !== null && currentUserPerms !== undefined) {
       return currentUserPerms[tabId] !== false;
     }
@@ -107,11 +119,16 @@
   }
 
   function isTabLocked(tabId) {
-    if (s.tabs && s.tabs[tabId] === false) return false;
-    if (!session || currentUserRole === 'admin') return false;
+    var cfg = getTabCfg(tabId);
+    if (!cfg.visible) return false;  // 숨김 탭은 locked 아님
+    if (!session) return false;      // 미로그인은 숨김으로 처리됨
+    if (currentUserRole === 'admin') return false;
+    // 개별 권한이 명시적으로 false → 잠금
     if (currentUserPerms !== null && currentUserPerms !== undefined) {
       return currentUserPerms[tabId] === false;
     }
+    // 접근제한 탭인데 개별 권한 미설정 → 잠금 (관리자 승인 대기)
+    if (cfg.requireAuth) return true;
     return false;
   }
 

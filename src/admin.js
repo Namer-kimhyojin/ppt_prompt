@@ -43,13 +43,19 @@
 
   // ─── 탭 관리자 ──────────────────────────────────────────────────────────────
   function getTabList(settings) {
-    var order     = settings.tabOrder || DEFAULT_TABS.map(function (t) { return t.id; });
-    var labels    = settings.tabLabels || {};
-    var enabled   = settings.tabs || {};
+    var order      = settings.tabOrder || DEFAULT_TABS.map(function (t) { return t.id; });
+    var labels     = settings.tabLabels || {};
+    var tabCfg     = settings.tabs || {};
     return order.map(function (id) {
       var def = DEFAULT_TABS.find(function (t) { return t.id === id; });
       if (!def) return null;
-      return { id: id, defaultName: def.name, label: labels[id] || '', enabled: enabled[id] !== false };
+      var cfg = tabCfg[id];
+      var visible = true, requireAuth = false;
+      if (cfg !== undefined) {
+        if (typeof cfg === 'boolean') { visible = cfg; }
+        else { visible = cfg.visible !== false; requireAuth = !!cfg.requireAuth; }
+      }
+      return { id: id, defaultName: def.name, label: labels[id] || '', visible: visible, requireAuth: requireAuth };
     }).filter(Boolean);
   }
 
@@ -85,21 +91,51 @@
     def.className = 'admin-tm-default';
     def.textContent = t.defaultName;
 
-    var sw = document.createElement('label');
-    sw.className = 'admin-switch';
-    sw.setAttribute('aria-label', t.defaultName + ' 활성화');
-    var chk = document.createElement('input');
-    chk.type = 'checkbox';
-    chk.checked = t.enabled;
-    var track = document.createElement('span');
-    track.className = 'admin-switch-track';
-    sw.appendChild(chk);
-    sw.appendChild(track);
+    // 접근 제한 토글 (로그인/권한 필요)
+    var authGroup = document.createElement('span');
+    authGroup.className = 'admin-tm-toggle-group';
+    var authLbl = document.createElement('span');
+    authLbl.className = 'admin-tm-toggle-label';
+    authLbl.textContent = '접근 제한';
+    var authSw = document.createElement('label');
+    authSw.className = 'admin-switch admin-switch-auth';
+    authSw.setAttribute('aria-label', t.defaultName + ' 접근 제한');
+    var authChk = document.createElement('input');
+    authChk.type = 'checkbox';
+    authChk.className = 'admin-tm-auth-chk';
+    authChk.checked = t.requireAuth;
+    var authTrack = document.createElement('span');
+    authTrack.className = 'admin-switch-track';
+    authSw.appendChild(authChk);
+    authSw.appendChild(authTrack);
+    authGroup.appendChild(authLbl);
+    authGroup.appendChild(authSw);
+
+    // 보이기 토글
+    var visGroup = document.createElement('span');
+    visGroup.className = 'admin-tm-toggle-group';
+    var visLbl = document.createElement('span');
+    visLbl.className = 'admin-tm-toggle-label';
+    visLbl.textContent = '보이기';
+    var visSw = document.createElement('label');
+    visSw.className = 'admin-switch';
+    visSw.setAttribute('aria-label', t.defaultName + ' 보이기');
+    var visChk = document.createElement('input');
+    visChk.type = 'checkbox';
+    visChk.className = 'admin-tm-visible-chk';
+    visChk.checked = t.visible;
+    var visTrack = document.createElement('span');
+    visTrack.className = 'admin-switch-track';
+    visSw.appendChild(visChk);
+    visSw.appendChild(visTrack);
+    visGroup.appendChild(visLbl);
+    visGroup.appendChild(visSw);
 
     row.appendChild(handle);
     row.appendChild(label);
     row.appendChild(def);
-    row.appendChild(sw);
+    row.appendChild(authGroup);
+    row.appendChild(visGroup);
     return row;
   }
 
@@ -148,8 +184,12 @@
       var labelInput = row.querySelector('.admin-tm-label');
       var val = labelInput ? labelInput.value.trim() : '';
       if (val) tabLabels[id] = val;
-      var chk = row.querySelector('input[type="checkbox"]');
-      tabs[id] = chk ? chk.checked : true;
+      var visChk  = row.querySelector('.admin-tm-visible-chk');
+      var authChk = row.querySelector('.admin-tm-auth-chk');
+      tabs[id] = {
+        visible:     visChk  ? visChk.checked  : true,
+        requireAuth: authChk ? authChk.checked : false
+      };
     });
     return { tabOrder: tabOrder, tabLabels: tabLabels, tabs: tabs };
   }
@@ -431,7 +471,9 @@
   // ─── 저장 / 초기화 ──────────────────────────────────────────────────────────
   function handleSave() {
     var tm = collectTabManager();
-    var hasEnabled = Object.values(tm.tabs).some(Boolean);
+    var hasEnabled = Object.values(tm.tabs).some(function (t) {
+      return typeof t === 'boolean' ? t : t.visible;
+    });
     if (!hasEnabled) { setStatus('최소 하나의 탭은 활성화해야 합니다.', 'err'); return; }
 
     var data = Object.assign({}, collectProgramInfo(), tm, collectAds());
