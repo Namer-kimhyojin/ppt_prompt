@@ -198,9 +198,7 @@ window.PROMO_UTILS = (function () {
     return value === "ai" ? "ai" : "manual";
   }
   function normalizeOutputLanguage(value) {
-    if (value === "en") return "en";
-    if (value === "bi" || value === "bilingual") return "bilingual";
-    return "ko";
+    return "en";
   }
 
   function normalizeHexColor(value) {

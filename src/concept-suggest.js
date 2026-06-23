@@ -229,6 +229,7 @@
   let activeCategory = 'all';
   let searchQuery = '';
   let activeColorMode = 'light';
+  let selectedConceptEngine = 'dalle';
 
   // STYLES에 전역 순번 미리 부여
   STYLES.forEach((s, i) => { s._num = i + 1; });
@@ -682,7 +683,9 @@
   };
 
   function buildPromotionConceptStyle(style) {
-    const promptParts = buildPromotionPromptParts(style);
+    const promptParts = (style.promptParts && typeof style.promptParts === 'object' && style.promptParts.visualDNA)
+      ? style.promptParts
+      : buildPromotionPromptParts(style);
     // "avoid ..." 토큰을 styleKeywords에서 제거 (light mode 파생 텍스트 오염 방지)
     const styleKeywords = (style.prompt || '').split(',')
       .map(s => s.trim())
@@ -690,7 +693,7 @@
       .slice(0, 8)
       .join(', ');
 
-    const targetEngine = document.getElementById("promotionTargetEngine")?.value;
+    const targetEngine = selectedConceptEngine;
     let promotionPrompt = '';
 
     if (targetEngine === 'imagen') {
@@ -711,7 +714,7 @@
         styleCharacter,
       ].join(' ');
 
-      promotionPrompt = replaceHexCodesWithNames(fluidPrompt);
+      promotionPrompt = fluidPrompt;
     } else {
       promotionPrompt = [
         `[Style Fidelity]`,
@@ -1001,9 +1004,9 @@
     document.querySelectorAll('#conceptEngineMode [data-concept-engine]').forEach(btn => {
       btn.addEventListener('click', () => {
         const engine = btn.dataset.conceptEngine;
+        selectedConceptEngine = engine;
         if (targetEngineSelect) {
           targetEngineSelect.value = engine;
-          targetEngineSelect.dispatchEvent(new Event('change'));
         }
         syncEngineModeControls(engine);
         renderCards();
@@ -1020,6 +1023,7 @@
     const targetEngineSelect = document.getElementById("promotionTargetEngine");
     if (targetEngineSelect) {
       targetEngineSelect.addEventListener('change', () => {
+        selectedConceptEngine = targetEngineSelect.value;
         syncEngineModeControls(targetEngineSelect.value);
         renderCards();
       });

@@ -140,6 +140,7 @@
 :root[data-theme="dark"] .promo-segment-btn,
 :root[data-theme="dark"] .btn-quick,
 :root[data-theme="dark"] .promo-quick-action-btn,
+:root[data-theme="dark"] .promo-reset-field-btn,
 :root[data-theme="dark"] .promo-size-preset-save-btn {
   background: var(--surface-alt);
   border-color: var(--line-strong);

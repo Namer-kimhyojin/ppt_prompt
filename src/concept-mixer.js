@@ -2838,6 +2838,14 @@
   ];
 
   const MIXER_PALETTES = [
+    {
+      id: 'none',
+      category: 'all',
+      name: '선택안함',
+      mode: 'light',
+      colors: [],
+      colorMapping: '본연의 색'
+    },
     // ==========================================
     // 1. 테크 & 미래지향 (tech) - 8 items
     // ==========================================
@@ -3629,7 +3637,7 @@
             name: style.nameKo || style.nameEn || (`Style ${style.id}`),
             mode: 'light',
             colors: style.palette.slice(0,5),
-            colorMapping: `컨셉 제안 프리셋: ${style.nameEn || style.nameKo}`
+            colorMapping: ''
           });
         } catch (e) { /* fail silently per style */ }
       });
@@ -3638,18 +3646,198 @@
     // noop
   }
 
+  // 구도 및 리터칭 카테고리/프리셋 상수 정의
+  const COMPOSITION_CATEGORIES = [
+    { id: 'shot', label: '📸 숏 & 크기' },
+    { id: 'angle', label: '📐 카메라 앵글' },
+    { id: 'layout', label: '⚖️ 배치 & 기하학' }
+  ];
+
+  const TYPOGRAPHY_CATEGORIES = [
+    { id: 'sans',         label: '🔤 산세리프' },
+    { id: 'serif',        label: '📖 세리프' },
+    { id: 'display',      label: '🖼️ 디스플레이' },
+    { id: 'script',       label: '✍️ 캘리그라피' },
+    { id: 'experimental', label: '🧪 실험적' }
+  ];
+
+  const MIXER_COMPOSITIONS = [
+    { id: 'none', category: 'all', nameKo: '선택 안 함', emoji: '❌', desc: '특정한 구도를 지정하지 않고 자연스러운 배치를 사용합니다.', prefix: '', suffix: '' },
+    { id: 'comp-extreme-close-up', category: 'shot', nameKo: '익스트림 클로즈업', emoji: '🔍', desc: '핵심적인 부분이나 텍스처를 화면 전체에 꽉 차게 강조하는 극접사 구도.', prefix: 'extreme close-up macro shot of', suffix: 'focusing on micro details and textures' },
+    { id: 'comp-medium-shot', category: 'shot', nameKo: '미디엄 숏', emoji: '🧍', desc: '주체와 주변 배경을 조화롭게 분할하여 안정감을 주는 표준적인 구도.', prefix: 'medium shot of', suffix: 'balanced composition showing subject and environment' },
+    { id: 'comp-wide-angle', category: 'shot', nameKo: '와이드 앵글 뷰', emoji: '🏞️', desc: '광활하고 웅장한 공간감을 연출하여 전체적인 스케일을 강조하는 구도.', prefix: 'wide-angle scenic shot of', suffix: 'showcasing expansive surrounding environment and grand scale' },
+    { id: 'comp-knolling', category: 'shot', nameKo: '놀링 (Knolling) 배치', emoji: '🍱', desc: '모든 구성 요소를 90도 직각으로 정밀하게 정돈하여 배치하는 탑다운 뷰.', prefix: 'flat lay knolling layout of', suffix: 'neatly organized items arranged at 90-degree angles on clean background' },
+    { id: 'comp-extreme-wide', category: 'shot', nameKo: '익스트림 와이드 앵글', emoji: '🌌', desc: '아주 넓은 시야각으로 거대한 주변 경관과 극적 스케일을 한눈에 보여주는 구도.', prefix: 'extreme wide-angle landscape view of', suffix: 'presenting vast scenery and tiny scale contrast' },
+    { id: 'comp-macro-bokeh', category: 'shot', nameKo: '매크로 아웃포커스', emoji: '💧', desc: '미세한 질감을 접사하고 뒷배경을 환상적인 보케로 극단적으로 뭉개는 아웃포커싱 구도.', prefix: 'macro photography of', suffix: 'extreme close-up, creamy soft bokeh background, shallow depth of field' },
+    { id: 'comp-panoramic', category: 'shot', nameKo: '파노라믹 가로 와이드', emoji: '🎞️', desc: '시네마스코프처럼 좌우로 길게 확장된 화면 비율을 보여주는 웅장한 가로형 시야.', prefix: 'panoramic wide aspect ratio view of', suffix: 'cinematic horizontal stretch and grand scale' },
+    { id: 'comp-telescopic', category: 'shot', nameKo: '망원 압축 뷰', emoji: '🔭', desc: '망원 렌즈로 멀리 있는 피사체들을 한데 압축하여 밀도 있게 표현하는 구도.', prefix: 'telephoto lens compression view of', suffix: 'compressed background layers, distant subject detail' },
+    { id: 'comp-three-quarter', category: 'shot', nameKo: '3/4 쿼터 숏', emoji: '📐', desc: '정면과 측면의 입체감이 가장 잘 드러나는 비스듬한 45도 초상/제품 촬영 구도.', prefix: 'three-quarter profile shot of', suffix: 'angled perspective, volumetric depth' },
+    { id: 'comp-full-shot', category: 'shot', nameKo: '풀 뷰 숏', emoji: '🕴️', desc: '머리끝부터 발끝(혹은 사물의 전경)까지 전체를 안정적으로 다 드러내는 전신/전체 샷.', prefix: 'full shot view of', suffix: 'showing entire subject body and footprint, grounded composition' },
+    { id: 'comp-head-on', category: 'shot', nameKo: '헤드 온 정면', emoji: '👁️', desc: '비스듬한 기교 없이 피사체의 정면을 똑바로 직시하여 강한 전달력을 주는 구도.', prefix: 'straightforward head-on portrait view of', suffix: 'front-facing composition, symmetrical focus' },
+    { id: 'comp-pov', category: 'shot', nameKo: '1인칭 POV 시점', emoji: '👓', desc: '카메라가 시청자의 실제 눈높이가 되어 현실감을 극대화하는 1인칭 구도.', prefix: 'first-person point-of-view shot of', suffix: 'subjective camera perspective, immersive view' },
+    { id: 'comp-candid', category: 'shot', nameKo: '캔디드 다큐멘터리', emoji: '📸', desc: '의식하지 않은 인위성 없는 순간을 자연스럽게 포착한 다큐멘터리 풍 숏.', prefix: 'candid capture of', suffix: 'raw documentary photojournalism style, unposed natural movement' },
+    { id: 'comp-super-telephoto', category: 'shot', nameKo: '초망원 세부 크로즈업', emoji: '🧿', desc: '아주 멀리 있는 오브젝트의 핵심 영역만 도려내듯 정밀 묘사한 클로즈업.', prefix: 'super telephoto close-up of', suffix: 'sharp crisp detail from afar, flattened background' },
+    { id: 'comp-low-angle', category: 'angle', nameKo: '웅장한 로우 앵글', emoji: '↗️', desc: '아래에서 올려다보는 각도로 주체를 거대하고 역동적으로 표현하는 구도.', prefix: 'low-angle heroic shot of', suffix: 'looking up to emphasize power and monumental scale' },
+    { id: 'comp-high-angle', category: 'angle', nameKo: '하이 앵글', emoji: '↘️', desc: '위에서 아래로 내려다보며 전체적인 분포와 상황을 객관적으로 보여주는 구도.', prefix: 'high-angle shot of', suffix: 'looking down to reveal spatial layout and clean organization' },
+    { id: 'comp-aerial', category: 'angle', nameKo: '드론 항공 뷰', emoji: '🚁', desc: '하늘 높이 솟구친 공중 시점으로 압도적인 지형지물과 스펙터클을 담는 구도.', prefix: 'aerial drone photography of', suffix: 'birdseye view presenting massive infrastructure and geographic details' },
+    { id: 'comp-isometric', category: 'angle', nameKo: '아이소메트릭 뷰', emoji: '📐', desc: '30도 기울어진 각도의 등각 투영법으로 설계 도면 같은 세련미를 주는 구도.', prefix: 'isometric 3D visualization of', suffix: 'technical orthographic clean rendering style' },
+    { id: 'comp-worms-eye', category: 'angle', nameKo: '웜즈 아이 로우 앵글', emoji: '🐛', desc: '바닥에 완전히 밀착하여 하늘을 우러러보듯 극적으로 왜곡된 강력한 로우 앵글.', prefix: 'worms-eye view looking straight up at', suffix: 'dramatic ground angle, monumental scale distortion' },
+    { id: 'comp-birds-eye', category: 'angle', nameKo: '버즈 아이 직부감', emoji: '🦅', desc: '수직 90도 아래를 똑바로 내려다보는 완전한 탑다운 평면적 부감 구도.', prefix: "bird's-eye view looking directly down at", suffix: '90-degree vertical top-down perspective, blueprint flat layout' },
+    { id: 'comp-dutch-angle', category: 'angle', nameKo: '더치 앵글 사선 투시', emoji: '🔀', desc: '지평선을 사선으로 비틀어 긴장감과 속도감, 불안정성을 연출하는 연출용 앵글.', prefix: 'dutch angle shot of', suffix: 'canted horizon tilt, dynamic unstable diagonal perspective' },
+    { id: 'comp-eye-level', category: 'angle', nameKo: '아이 레벨 수평 구도', emoji: '↔️', desc: '기교 없이 수평 눈높이에서 보여주어 편안함과 정서적 교감을 유도하는 구도.', prefix: 'eye-level horizontal shot of', suffix: 'straight camera setup, natural human viewpoint' },
+    { id: 'comp-ground-level', category: 'angle', nameKo: '그라운드 레벨 로우', emoji: '🛹', desc: '카메라를 지면에 스치듯이 수평으로 눕혀 속도감과 특별한 시각적 재미를 주는 앵글.', prefix: 'ground-level camera placement of', suffix: 'flat surface view, low horizon line' },
+    { id: 'comp-side-profile', category: 'angle', nameKo: '측면 프로필', emoji: '👤', desc: '피사체의 정면을 배제하고 한쪽 옆모습이나 단면을 세밀하게 묘사하는 정형 구도.', prefix: 'clean side profile view of', suffix: 'lateral flat perspective, sharp silhouette lines' },
+    { id: 'comp-over-shoulder', category: 'angle', nameKo: '어깨너머 오버더숄더', emoji: '👥', desc: '인물이나 오브젝트의 바로 뒷라인 어깨 너머로 대상을 관찰하듯 바라보는 시네마틱 앵글.', prefix: 'over-the-shoulder shot of', suffix: 'foreground framing element, contextual depth layer' },
+    { id: 'comp-three-quarter-top', category: 'angle', nameKo: '3쿼터 탑다운', emoji: '📈', desc: '사선 위쪽에서 내려다보며 사물의 두 옆면과 윗면을 입체적으로 모두 포착하는 구도.', prefix: 'three-quarter high-angle shot of', suffix: 'technical product preview angle' },
+    { id: 'comp-fisheye', category: 'angle', nameKo: '어안 렌즈 볼록 굴절', emoji: '🌀', desc: '180도 광각 돔 렌즈 효과로 중심은 볼록하고 주변은 둥글게 휘는 왜곡 앵글.', prefix: 'fisheye lens distortion of', suffix: 'ultra-wide circular 180-degree wrap around view' },
+    { id: 'comp-low-angle-silhouette', category: 'angle', nameKo: '로우 앵글 실루엣', emoji: '👥', desc: '역광 상태에서 로우 앵글로 촬영하여 주체의 드라마틱한 윤곽 실루엣을 부각하는 구도.', prefix: 'backlit low-angle silhouette of', suffix: 'stark shadow outline, dramatic sky background' },
+    { id: 'comp-rule-of-thirds', category: 'layout', nameKo: '3분할 구도', emoji: '🕸️', desc: '화면을 가로/세로 3등분한 교차점에 주요 요소를 매끄럽게 결합하는 구도.', prefix: 'rule of thirds composition of', suffix: 'asymmetric focal points creating dynamic visual balance' },
+    { id: 'comp-symmetry', category: 'layout', nameKo: '데칼코마니 대칭', emoji: '⚖️', desc: '좌우 혹은 상하가 완벽하게 일치하여 시각적 절대 안정과 몰입을 주는 구도.', prefix: 'perfectly symmetrical reflection of', suffix: 'centered composition, high graphical stability and reflection mapping' },
+    { id: 'comp-spiral', category: 'layout', nameKo: '피보나치 나선', emoji: '🌀', desc: '황금 비율 나선 궤적을 따라 시선이 안쪽으로 빨려 들어가는 몰입형 구도.', prefix: 'golden ratio fibonacci spiral composition of', suffix: 'curved leading lines pulling the eye to the central focus' },
+    { id: 'comp-framing', category: 'layout', nameKo: '프레임 인 프레임', emoji: '🖼️', desc: '창문, 틈새, 문틀 등 내부 프레임을 통해 피사체를 한 번 더 감싸는 구조.', prefix: 'framed view of', suffix: 'looking through a clean architectural frame, depth of field layers' },
+    { id: 'comp-copy-left', category: 'layout', nameKo: '좌측 텍스트 여백', emoji: '⬅️', desc: '슬라이드 타이틀을 얹기 좋게 좌측 절반의 배경을 완전한 빈 여백으로 유도하는 배치.', prefix: 'asymmetric composition with', suffix: 'optimized with large clean copy-space on the left third of the image' },
+    { id: 'comp-copy-right', category: 'layout', nameKo: '우측 텍스트 여백', emoji: '➡️', desc: '텍스트 본문이나 로고를 얹기 좋게 우측 영역을 심플하게 비워두는 배치.', prefix: 'asymmetric composition with', suffix: 'optimized with large clean copy-space on the right third of the image' },
+    { id: 'comp-centered-focus', category: 'layout', nameKo: '중앙 집중형 프레임', emoji: '🎯', desc: '불필요한 분산 요소 없이 가장 중요한 대상을 정중앙에 배치해 시선을 고정하는 레이아웃.', prefix: 'dead-center composition of', suffix: 'focused singular focal point, high impact symmetry, clean background' },
+    { id: 'comp-diagonals', category: 'layout', nameKo: '대각선 소실점', emoji: '↗️', desc: '대각선 방향으로 뻗어 나가는 강한 가이드라인을 배치해 역동적 속도감을 주는 구도.', prefix: 'strong diagonal composition of', suffix: 'dynamic leading lines stretching across the canvas, forced perspective' },
+    { id: 'comp-triangular', category: 'layout', nameKo: '삼각형 피라미드', emoji: '🔺', desc: '하단을 넓게 하고 위로 모아주는 피라미드식 기하학 배치로 압도적인 안정감을 주는 구도.', prefix: 'triangular composition layout of', suffix: 'stable pyramid structures, broad base visual anchor' },
+    { id: 'comp-thirds-offset', category: 'layout', nameKo: '황금 삼분할 교차', emoji: '🏁', desc: '황금 분할 교차점 중 하나로 대상을 강하게 오프셋하여 시각적 세련미를 높이는 비대칭 구도.', prefix: 'strongly offset rule of thirds composition of', suffix: 'asymmetric balanced spacing, artistic off-center focus' },
+    { id: 'comp-layered-framing', category: 'layout', nameKo: '다중 액자식 구성', emoji: '🔳', desc: '전경의 아웃포커스된 틈새를 거쳐 중경, 배경까지 다층 프레임으로 엮은 구조적 구도.', prefix: 'layered multi-frame perspective of', suffix: 'peek-through foreground, volumetric framing, deep depth of field' },
+    { id: 'comp-radial', category: 'layout', nameKo: '방사형 확산', emoji: '🔆', desc: '중앙의 핵심 소실점으로부터 사방으로 선이나 오브젝트가 방사형으로 뿜어 나오는 구도.', prefix: 'radial layout of', suffix: 'explosion lines radiating outward from the visual core, centered focal burst' },
+    { id: 'comp-floating-suspension', category: 'layout', nameKo: '플로팅 공중 부양', emoji: '🎈', desc: '오브젝트가 중력을 무시하고 가볍게 둥둥 떠 있는 트렌디한 제품 레이아웃.', prefix: 'gravity-defying floating mockup layout of', suffix: 'suspended objects in mid-air with soft cast shadows, minimalist backdrop' },
+    { id: 'comp-split', category: 'layout', nameKo: '수직 이분할 (50:50)', emoji: '🌓', desc: '화면을 수직 또는 수평으로 칼같이 50:50으로 나누는 극단적인 그래픽 구도.', prefix: '50-50 split screen composition of', suffix: 'perfect visual dichotomy, color block division, high symmetry' }
+  ];
+
+  const MIXER_TYPOGRAPHIES = [
+    { id: 'none', category: 'all', nameKo: '선택 안 함', emoji: '❌', desc: '별도의 타이포그래피 스타일을 지정하지 않고 기본 화풍의 텍스트 처리를 따릅니다.', prompt: '' },
+
+    // 산세리프 (Sans-serif) - 5종
+    { id: 'typo-geometric-sans', category: 'sans', nameKo: '기하학 그로테스크', emoji: '🔷', desc: 'Bauhaus 영향을 받은 완벽한 원형 O와 정교한 비율의 기하학적 산세리프. 타이트한 자간과 현대적 미니멀 감각.', prompt: 'geometric sans-serif headline typography, Bauhaus-influenced letterforms, perfect circular O, tight letter spacing, clean modern minimal type treatment' },
+    { id: 'typo-humanist-sans', category: 'sans', nameKo: '인본주의적 산세리프', emoji: '🤝', desc: '따뜻한 시각적 보정이 가해진 인본주의적 산세리프. 약간 변화하는 획 두께로 읽기 편하고 접근감이 높다.', prompt: 'humanist sans-serif type treatment, warm optical corrections, subtly varied stroke widths, highly readable approachable letterforms, editorial warmth' },
+    { id: 'typo-neo-grotesque', category: 'sans', nameKo: '네오 그로테스크', emoji: '🏢', desc: '획 굵기가 균일한 중립적 네오 그로테스크. 닫힌 개구부와 기계적 정밀감으로 기업·관공서 인쇄물에 적합.', prompt: 'neutral neo-grotesque sans-serif typography, uniform stroke weight, closed apertures, neutral corporate precision, Helvetica-style systematic letterforms' },
+    { id: 'typo-condensed-impact', category: 'sans', nameKo: '초압축 임팩트 산세리프', emoji: '📌', desc: '세로 공간을 꽉 채우는 극단적 압축 헤비 산세리프. 최대 무게감으로 포스터 헤드라인을 지배한다.', prompt: 'ultra-condensed heavy sans-serif headline, extreme vertical compression, massive type weight, letters filling vertical space, powerful poster impact typography' },
+    { id: 'typo-rounded-soft', category: 'sans', nameKo: '둥근 산세리프', emoji: '🫧', desc: '끝마감이 부드럽게 처리된 둥근 산세리프. 친근하고 유연한 곡선으로 소비재·라이프스타일 브랜드에 자주 쓰인다.', prompt: 'rounded sans-serif letterforms, soft rounded terminal endings, friendly approachable curves, gentle playful type treatment, warm consumer-brand typography' },
+
+    // 세리프 (Serif) - 4종
+    { id: 'typo-modern-serif', category: 'serif', nameKo: '모던 하이콘트라스트 세리프', emoji: '🎩', desc: '극도로 얇은 가로획과 굵은 세로획의 극단적 대비. Bodoni·Didot 스타일의 드라마틱한 럭셔리 세리프.', prompt: 'high-contrast modern serif typography, razor-thin horizontal hairlines and thick vertical stems, dramatic Bodoni or Didot style letterforms, luxury editorial headline' },
+    { id: 'typo-old-style', category: 'serif', nameKo: '올드스타일 세리프', emoji: '📜', desc: '사선 축과 낮은 획 대비의 인본주의적 올드스타일 세리프. Garamond·Caslon 계열의 따뜻한 고전적 질감.', prompt: 'old-style humanist serif typography, oblique stress axis, low stroke contrast, bracketed serifs, warm classical Garamond or Caslon-inspired type texture' },
+    { id: 'typo-slab-serif', category: 'serif', nameKo: '슬랩 세리프', emoji: '🧱', desc: '두꺼운 직사각형 세리프와 강한 가로 리듬. Rockwell·Clarendon 계열의 산업적·에디토리얼 무게감.', prompt: 'bold slab serif typography, heavy rectangular serifs, strong horizontal rhythm, industrial editorial weight, Clarendon or Rockwell-inspired letterforms' },
+    { id: 'typo-transitional', category: 'serif', nameKo: '과도기 세리프', emoji: '⚖️', desc: '수직 축과 중간 획 대비의 균형잡힌 과도기 세리프. Times·Baskerville 계열의 클래식하고 신뢰감 있는 인상.', prompt: 'transitional serif typography, moderate stroke contrast, vertical stress axis, balanced classical proportions, Times or Baskerville-style trustworthy letterforms' },
+
+    // 디스플레이 (Display) - 5종
+    { id: 'typo-ultra-black', category: 'display', nameKo: '울트라 블랙 포스터', emoji: '💪', desc: '글자들이 맞닿을 정도로 최대 무게의 디스플레이 타입. 헤드라인 존을 완전히 점령하는 포스터 파워.', prompt: 'ultra-black display poster typography, maximum font weight, nearly touching letterforms, fills the entire headline zone, raw overwhelming poster type power, tight tracking' },
+    { id: 'typo-inline-vintage', category: 'display', nameKo: '빈티지 인라인 장식체', emoji: '🎪', desc: '두꺼운 글자 안에 가는 흰 선이 달리는 아르데코 인라인 세리프. 1920~40년대 쇼포스터의 화려함.', prompt: 'Art Deco inline serif display typography, fine white highlight line running through thick letterforms, 1920s-1940s glamour show poster style, decorative vintage inline type' },
+    { id: 'typo-wood-type', category: 'display', nameKo: '우드 타입 레터프레스', emoji: '🪵', desc: '인쇄 압력으로 종이에 스며든 잉크 질감의 레터프레스 우드 타입. 장인적 수공예 포스터 감성.', prompt: 'letterpress wood type printed typography, ink impression texture, slight paper deboss, rustic craft poster quality, handmade artisan print aesthetic' },
+    { id: 'typo-stencil', category: 'display', nameKo: '스텐실 군용체', emoji: '🪖', desc: '스텐실 브릿지 틈새가 획에 남아있는 군용·산업 스텐실 레터링. 유틸리테리안적 거칠고 단단한 인상.', prompt: 'military-style stencil lettering typography, bridge gaps in strokes where stencil bridges are, industrial utilitarian roughness, cargo crate or military equipment lettering feel' },
+    { id: 'typo-outlined-hollow', category: 'display', nameKo: '아웃라인 중공 타입', emoji: '⬡', desc: '획만 남기고 속을 비운 홀로우 아웃라인 레터폼. 배경이 보이는 깨끗한 그래픽 네거티브 스페이스.', prompt: 'hollow outlined letterforms, stroke-only characters with no fill, clean graphic negative space visible through letters, modern editorial outline type treatment' },
+
+    // 캘리그라피/필기 (Script) - 4종
+    { id: 'typo-brush-script', category: 'script', nameKo: '브러시 캘리그라피', emoji: '🖌️', desc: '붓털 자국이 살아있는 표현적 브러시 캘리그라피. 잉크 농담 변화와 역동적인 움직임 에너지가 넘친다.', prompt: 'expressive brush calligraphy lettering, visible bristle marks, ink variation and pooling, dynamic movement and gestural energy, hand-painted calligraphic type' },
+    { id: 'typo-ink-brush', category: 'script', nameKo: '먹 붓글씨', emoji: '🎋', desc: '필압과 수분량이 느껴지는 동아시아 먹 붓글씨. 굵고 과감한 붓놀림과 여백의 철학적 미니멀리즘.', prompt: 'East Asian ink brush calligraphy, bold gestural brushwork, varying pressure and moisture effects, philosophical minimalism, sumi-e ink wash painting typography style' },
+    { id: 'typo-handwritten', category: 'script', nameKo: '캐주얼 손글씨', emoji: '✏️', desc: '베이스라인이 자연스럽게 흔들리는 캐주얼 손글씨. 유기적이고 불완전한 글자 모양이 개인적인 따뜻함을 전한다.', prompt: 'casual handwritten lettering, natural baseline variation, organic imperfect character shapes, personal warmth and informality, hand-lettered greeting card style' },
+    { id: 'typo-copperplate', category: 'script', nameKo: '카퍼플레이트 정자체', emoji: '🏅', desc: '올라가는 획은 극세 헤어라인, 내려가는 획은 팽창하는 공식 카퍼플레이트 스크립트. 조각된 인그레이빙의 품격.', prompt: 'formal copperplate script typography, hairline upstrokes and swelling downstrokes, elegant engraved quality, meticulous precision, wedding invitation or luxury certificate script' },
+
+    // 실험적 (Experimental) - 7종
+    { id: 'typo-3d-extrude', category: 'experimental', nameKo: '3D 돌출 입체 타이포', emoji: '🧊', desc: '측면 면과 깊이감이 드러나는 3D 돌출 레터폼. 극적인 캐스트 그림자와 입체감이 화면에서 튀어나오는 볼류메트릭 타입.', prompt: 'three-dimensional extruded letterforms with visible depth and side faces, dramatic cast shadows, volumetric type treatment, 3D type design, letters with strong physical presence' },
+    { id: 'typo-glitch-text', category: 'experimental', nameKo: '글리치 텍스트', emoji: '📺', desc: 'RGB 채널 오프셋, 픽셀 변위, 스캔라인 아티팩트가 뒤섞인 디지털 글리치 타이포그라피. 손상된 데이터 미학.', prompt: 'digital glitch typography, RGB color channel offset and shift, pixel displacement artifacts, scan line distortion, corrupted data aesthetic, digital error lettering style' },
+    { id: 'typo-graffiti', category: 'experimental', nameKo: '그래피티 스트리트', emoji: '🎨', desc: '와일드 스타일 레터링에 멀티 레이어 아웃라인과 스프레이 페인트 질감이 더해진 도시 그래피티 레터링.', prompt: 'urban graffiti lettering with wild style fills, multiple outline layers, spray paint texture and drips, street art energy, bold colorful street lettering' },
+    { id: 'typo-neon-sign', category: 'experimental', nameKo: '네온 사인 타입', emoji: '💡', desc: '유리 튜브가 글자 형태로 구부러진 발광 네온 사인 레터폼. 부드러운 후광 글로와 빛 번짐이 살아있다.', prompt: 'glowing neon tube letterforms, neon sign typography, soft halo glow and light bloom, glass tube bending to form letters, warm or cold neon color illumination, retro diner signage aesthetic' },
+    { id: 'typo-futuristic-hud', category: 'experimental', nameKo: 'HUD 미래형 인터페이스', emoji: '🎯', desc: 'SF 헤즈업 디스플레이의 얇은 모노스페이스 기술체, 타겟팅 브래킷, 디지털 리드아웃 미학.', prompt: 'futuristic heads-up display typography, thin monospaced technical font, targeting brackets and reticle elements, digital readout numbers, sci-fi HUD interface text treatment' },
+    { id: 'typo-kinetic', category: 'experimental', nameKo: '키네틱 모션 타이포', emoji: '💨', desc: '모션 블러 트레일과 속도선을 동반한 키네틱 타이포그라피. 글자들이 화면을 가로질러 이동하는 역동적 에너지.', prompt: 'kinetic typography with motion blur trails, dynamic velocity lines and speed streaks, letters in visible movement, motion design frozen frame, energetic typographic motion' },
+    { id: 'typo-layered-overlap', category: 'experimental', nameKo: '레이어드 오버랩', emoji: '🔀', desc: '서로 다른 불투명도의 레이어로 겹쳐진 반투명 타이포그라피. 투명도를 통한 깊이감과 다중 타입 면 구성.', prompt: 'layered overlapping translucent letterforms, multiple type planes at different opacities, depth through transparency, semi-transparent letter stacking, deconstructed typographic composition' }
+  ];
+
+  const MIXER_COMPOSITION_SAMPLES = {
+    'comp-extreme-close-up': 'photo-1502082553048-f009c37129b9',
+    'comp-medium-shot': 'photo-1534528741775-53994a69daeb',
+    'comp-wide-angle': 'photo-1470071459604-3b5ec3a7fe05',
+    'comp-knolling': 'photo-1506784983877-45594efa4cbe',
+    'comp-low-angle': 'photo-1486406146926-c627a92ad1ab',
+    'comp-high-angle': 'photo-1522071820081-009f0129c71c',
+    'comp-aerial': 'photo-1473442240418-452f03b7ae40',
+    'comp-isometric': 'photo-1541701494587-cb58502866ab',
+    'comp-rule-of-thirds': 'photo-1500485035595-cbe6f645feb1',
+    'comp-symmetry': 'photo-1439853949127-fa647821eba0',
+    'comp-spiral': 'photo-1513002749550-c59d786b8e6c',
+    'comp-framing': 'photo-1469854523086-cc02fe5d8800',
+    'comp-extreme-wide': 'photo-1472214222541-d510753a49df',
+    'comp-macro-bokeh': 'photo-1555597673-b21d5c935865',
+    'comp-panoramic': 'photo-1464822759023-fed622ff2c3b',
+    'comp-telescopic': 'photo-1516426122078-c23e76319801',
+    'comp-three-quarter': 'photo-1506794778202-cad84cf45f1d',
+    'comp-full-shot': 'photo-1509631179647-0177331693ae',
+    'comp-head-on': 'photo-1544005313-94ddf0286df2',
+    'comp-pov': 'photo-1517245386807-bb43f82c33c4',
+    'comp-candid': 'photo-1511671782779-c97d3d27a1d4',
+    'comp-super-telephoto': 'photo-1447752875215-b2761acb3c5d',
+    'comp-worms-eye': 'photo-1509198397868-475647b2a1e5',
+    'comp-birds-eye': 'photo-1504608524841-42fe6f032b4b',
+    'comp-dutch-angle': 'photo-1536440136628-849c177e76a1',
+    'comp-eye-level': 'photo-1500648767791-00dcc994a43e',
+    'comp-ground-level': 'photo-1551698618-1ffd5f97d728',
+    'comp-side-profile': 'photo-1500648767791-00dcc994a43e',
+    'comp-over-shoulder': 'photo-1522075469751-3a6694fb2f61',
+    'comp-three-quarter-top': 'photo-1505740420928-5e560c06d30e',
+    'comp-fisheye': 'photo-1516035069371-29a1b244cc32',
+    'comp-low-angle-silhouette': 'photo-1502082553048-f009c37129b9',
+    'comp-copy-left': 'photo-1486312338219-ce68d2c6f44d',
+    'comp-copy-right': 'photo-1513542789411-b6a5d4f31634',
+    'comp-centered-focus': 'photo-1518709268805-4e9042af9f23',
+    'comp-diagonals': 'photo-1519074069444-1ba4ae167512',
+    'comp-triangular': 'photo-1513694203232-719a280e022f',
+    'comp-thirds-offset': 'photo-1518005020951-eccb494ad742',
+    'comp-layered-framing': 'photo-1449034446853-66c86144b0ad',
+    'comp-radial': 'photo-1507525428034-b723cf961d3e',
+    'comp-floating-suspension': 'photo-1618005182384-a83a8bd57fbe',
+    'comp-split': 'photo-1513829092301-a72c4eb04300'
+  };
+
+  const MIXER_TYPOGRAPHY_SAMPLES = {
+    'typo-geometric-sans':    'photo-1561070791-2526d30994b5',
+    'typo-humanist-sans':     'photo-1455390582262-044cdead277a',
+    'typo-neo-grotesque':     'photo-1618556450994-a6a128ef0d9d',
+    'typo-condensed-impact':  'photo-1504711434969-e33886168f5c',
+    'typo-rounded-soft':      'photo-1516259762381-22954d7d3ad2',
+    'typo-modern-serif':      'photo-1543002588-bfa74002ed7e',
+    'typo-old-style':         'photo-1553729459-efe14ef6055d',
+    'typo-slab-serif':        'photo-1450101499163-c8848c66ca85',
+    'typo-transitional':      'photo-1519791883288-dc8bd696e667',
+    'typo-ultra-black':       'photo-1504711434969-e33886168f5c',
+    'typo-inline-vintage':    'photo-1558618666-fcd25c85cd64',
+    'typo-wood-type':         'photo-1457369804613-52c61a468e7d',
+    'typo-stencil':           'photo-1580196969807-cc6de06c05be',
+    'typo-outlined-hollow':   'photo-1618556450994-a6a128ef0d9d',
+    'typo-brush-script':      'photo-1503614472-8c93d56e92ce',
+    'typo-ink-brush':         'photo-1471666875520-c75081f42081',
+    'typo-handwritten':       'photo-1455390582262-044cdead277a',
+    'typo-copperplate':       'photo-1543002588-bfa74002ed7e',
+    'typo-3d-extrude':        'photo-1618556450994-a6a128ef0d9d',
+    'typo-glitch-text':       'photo-1526374965328-7f61d4dc18c5',
+    'typo-graffiti':          'photo-1499781350541-7783f6c6a0c8',
+    'typo-neon-sign':         'photo-1493976040374-85c8e12f0c0e',
+    'typo-futuristic-hud':    'photo-1535223289827-42f1e9919769',
+    'typo-kinetic':           'photo-1557672172-298e090bd0f1',
+    'typo-layered-overlap':   'photo-1561070791-2526d30994b5'
+  };
+
   // 로컬 상태
-  let activeStep = 1; // Wizard 단계: 1, 2, 3
+  let activeStep = 1; // Wizard 단계: 1, 2, 3, 4, 5
   let activeCategory = 'steel';
+  let selectedCompositionId = 'none';
+  let selectedTypographyId = 'none';
+  let activeCompositionCategory = 'all';
+  let activeTypographyCategory = 'all';
   let selectedSubjId = 'mix-steel-hot-rolling';
   let selectedMediumId = 'med-3d';
-  let selectedPaletteIdx = 16; // 기본: 용광로 볼케이노 (0-indexed 16th item)
+  let selectedPaletteIdx = 0; // 기본: 선택 안 함 (None)
   let activePaletteFilter = 'all';
   let activePaletteColorFilter = 'all';
   let activeMediumCategory = MIXER_MEDIUMS.find(medium => medium.id === selectedMediumId)?.category || 'tech3d';
-  let activePaletteCategory = MIXER_PALETTES[selectedPaletteIdx]?.category || 'tech';
+  let activePaletteCategory = 'all';
+  let isPaletteOverriddenByUser = false;
   let lastGeneratedImageUrl = null;
   let lastGeneratedPrompt = null;
+  let isSubjectOverlayOpen = false;
+  let isMediumOverlayOpen = false;
 
   // 스타일 주입 (화풍 믹서 위저드 스텝퍼 및 실시간 하이라이팅 포함)
   const styleTag = document.createElement('style');
@@ -3697,7 +3885,7 @@
     /* 위저드 스텝퍼 */
     .mixer-stepper {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       align-items: center;
       position: relative;
       background: var(--surface-2, #f8fafc);
@@ -3779,6 +3967,132 @@
     .mixer-step-current.empty {
       color: var(--text-secondary, #94a3b8);
       font-weight: 600;
+    }
+    .hl-composition {
+      color: #e65100;
+      font-weight: 700;
+    }
+    .hl-lighting {
+      color: #7b2cbf;
+      font-weight: 700;
+    }
+
+    /* 미니 썸네일 카드 디자인 */
+    .mixer-item-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      background: var(--surface-2, #f1f5f9);
+    }
+    .mixer-item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .mixer-item-thumb-settings-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      z-index: 5;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      color: white;
+      width: 24px;
+      height: 24px;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: all 0.2s;
+    }
+    .mixer-item-thumb-settings-btn:hover {
+      background: var(--accent, #4361ee);
+      transform: scale(1.1);
+    }
+    .mixer-item-thumb-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      box-sizing: border-box;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .mixer-item-thumb-overlay[hidden] {
+      display: none !important;
+    }
+    [data-theme="dark"] .mixer-item-thumb-overlay {
+      background: rgba(15, 23, 42, 0.98);
+      color: #f1f5f9;
+    }
+    .overlay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line, #e2e8f0);
+      padding-bottom: 3px;
+      margin-bottom: 4px;
+    }
+    .overlay-header span {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-primary, #0f172a);
+    }
+    .overlay-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary, #64748b);
+      font-size: 14px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+    }
+    .overlay-close-btn:hover {
+      color: var(--text-primary, #0f172a);
+    }
+    .overlay-btn {
+      border: 1px solid var(--line, #cbd5e1);
+      background: var(--surface-1, #fff);
+      color: var(--text-primary, #334155);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .overlay-btn:hover:not([disabled]) {
+      background: var(--line, #f1f5f9);
+      border-color: #94a3b8;
+    }
+    .overlay-btn[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .overlay-btn.btn-apply {
+      background: #10b981;
+      color: white;
+      border-color: #10b981;
+    }
+    .overlay-btn.btn-apply:hover {
+      background: #059669;
+    }
+    [data-theme="dark"] .overlay-btn {
+      border-color: #475569;
+      background: #1e293b;
+      color: #cbd5e1;
+    }
+    [data-theme="dark"] .overlay-btn:hover:not([disabled]) {
+      background: #334155;
     }
 
     /* 실시간 선택 요약 바 */
@@ -3895,7 +4209,7 @@
       height: 1px;
       background: var(--line, #e5e7eb);
     }
-    
+
     /* 주제 분류 탭 */
     .mixer-cat-tabs {
       display: flex;
@@ -3944,7 +4258,7 @@
       margin-bottom: 12px;
       align-items: stretch;
     }
-    
+
     /* 아이템 카드 고도화 */
     .mixer-item-card {
       border: 1.5px solid var(--line, #e5e7eb);
@@ -3973,7 +4287,7 @@
       background: var(--accent-faint-alpha, #f0f4ff);
       box-shadow: 0 8px 16px rgba(67, 97, 238, 0.06);
     }
-    
+
     /* 선택 체크마크 뱃지 */
     .mixer-item-card::after {
       content: '';
@@ -4114,7 +4428,7 @@
       font-size: 24px;
       opacity: 0.6;
     }
-    
+
     /* 로딩 스켈레톤 애니메이션 */
     .mixer-preview-image-box.loading {
       background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
@@ -4128,7 +4442,7 @@
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
-    
+
     .mixer-preview-image-box.loading::after {
       content: '⚡ 이미지 생성 중...';
       position: absolute;
@@ -4153,7 +4467,7 @@
       background: linear-gradient(135deg, #3a54d6, #322baf);
       box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
     }
-    
+
     /* 모달 라이트박스(Lightbox) */
     .mixer-lightbox {
       position: fixed;
@@ -4229,7 +4543,7 @@
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
-    
+
     .mixer-preview-image-box.loading::after {
       content: '⚡ 이미지 생성 중...';
       position: absolute;
@@ -4254,7 +4568,7 @@
       background: linear-gradient(135deg, #3a54d6, #322baf);
       box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
     }
-    
+
     /* 모달 라이트박스(Lightbox) */
     .mixer-lightbox {
       position: fixed;
@@ -4342,7 +4656,7 @@
       height: 1px;
       background: var(--line, #e5e7eb);
     }
-    
+
     /* 주제 분류 탭 */
     .mixer-cat-tabs {
       display: flex;
@@ -4390,7 +4704,7 @@
       gap: 12px;
       margin-bottom: 12px;
     }
-    
+
     /* 아이템 카드 고도화 */
     .mixer-item-card {
       border: 1.5px solid var(--line, #e5e7eb);
@@ -4416,7 +4730,7 @@
       background: var(--accent-faint-alpha, #f0f4ff);
       box-shadow: 0 8px 16px rgba(67, 97, 238, 0.06);
     }
-    
+
     /* 선택 체크마크 뱃지 */
     .mixer-item-card::after {
       content: '✓';
@@ -4661,7 +4975,7 @@
       border-radius: 4px;
       word-break: break-all;
     }
-    
+
     /* 모바일 아코디언 미리보기 영역 */
     .mixer-med-mobile-preview {
       display: none;
@@ -4687,7 +5001,7 @@
       justify-content: center;
       border: 1px solid var(--line, #e2e8f0);
     }
-    
+
     @keyframes mixerFadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -4735,6 +5049,37 @@
       box-shadow: 0 4px 8px rgba(67, 97, 238, 0.25);
     }
 
+
+    /* 구도 & 리터칭 전용 가변 높이 및 설명글 전체 노출 스타일 */
+    #mixerCompositionGrid,
+    #mixerTypographyGrid {
+      grid-auto-rows: minmax(146px, auto);
+    }
+    #mixerCompositionGrid .mixer-item,
+    #mixerTypographyGrid .mixer-item {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface-1, #ffffff);
+      border: 1px solid var(--line, #e2e8f0);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+    #mixerCompositionGrid .mixer-item.active,
+    #mixerTypographyGrid .mixer-item.active {
+      border-color: var(--accent, #4361ee);
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.12);
+    }
+    #mixerCompositionGrid .mixer-item .mixer-item-desc,
+    #mixerTypographyGrid .mixer-item .mixer-item-desc {
+      display: block;
+      overflow: visible;
+      -webkit-line-clamp: unset;
+      font-size: 11.5px;
+      line-height: 1.45;
+    }
     /* 미리보기 카드 */
     .mixer-preview-card {
       width: 100%;
@@ -4788,7 +5133,7 @@
       margin-top: 4px;
       padding: 0 4px;
     }
-    
+
     /* 흐르는 그래디언트 애니메이션 */
     .mixer-preview-header {
       padding: 14px 16px;
@@ -4883,7 +5228,7 @@
       overflow-y: auto;
       margin: 0;
     }
-    
+
     /* 프롬프트 조립 하이라이트 */
     .hl-medium {
       background: rgba(67, 97, 238, 0.06);
@@ -4942,6 +5287,16 @@
       background: #304fd0;
       transform: translateY(-1px);
       box-shadow: 0 4px 8px rgba(67, 97, 238, 0.25);
+    }
+    .mixer-action-btn.slidedoc {
+      background: #0f766e;
+      color: white;
+      box-shadow: 0 2px 4px rgba(15, 118, 110, 0.15);
+    }
+    .mixer-action-btn.slidedoc:hover {
+      background: #0d6660;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(15, 118, 110, 0.25);
     }
     .mixer-feedback {
       text-align: center;
@@ -5136,22 +5491,26 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: auto;
-      background: rgba(255, 255, 255, 0.97);
+      max-height: 72%;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: #1a1f2b;
       z-index: 15;
       display: none;
       flex-direction: column;
-      padding: 7px 10px;
+      padding: 6px 8px;
       box-sizing: border-box;
-      font-size: 12px;
-      border-top: 1px solid rgba(0,0,0,0.08);
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
-      gap: 5px;
+      font-size: 11px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+      gap: 4px;
+      overflow-y: auto;
     }
     [data-theme="dark"] .mixer-image-overlay-panel {
-      background: rgba(15, 23, 42, 0.98);
+      background: rgba(15, 23, 42, 0.90);
       color: #eaeaea;
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
     .mixer-image-overlay-panel.active {
       display: flex;
@@ -5161,15 +5520,15 @@
       justify-content: space-between;
       align-items: center;
       font-weight: 700;
-      font-size: 11.5px;
+      font-size: 11px;
       border-bottom: 1px solid var(--line, #e2e8f0);
-      padding-bottom: 4px;
-      margin-bottom: 0;
+      padding-bottom: 3px;
+      margin-bottom: 2px;
     }
     .mixer-image-overlay-panel .panel-close-btn {
       background: transparent;
       border: 0;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       color: var(--text-secondary, #64748b);
       line-height: 1;
@@ -5184,24 +5543,24 @@
     .mixer-image-overlay-panel .panel-body {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
     /* 키워드 행: input + ✓ + ↺ 한 줄 */
     .mixer-image-overlay-panel .panel-keyword-row {
       display: flex;
       flex-direction: row;
-      gap: 4px;
+      gap: 3px;
       align-items: center;
     }
     .mixer-image-overlay-panel .panel-keyword-row input {
       flex: 1;
       min-width: 0;
-      padding: 5px 7px;
+      padding: 4px 6px;
       border: 1px solid var(--line, #dbe2ea);
-      border-radius: 5px;
+      border-radius: 4px;
       background: var(--surface-1, #fff);
       color: var(--ink, #1a1f2b);
-      font-size: 11px;
+      font-size: 10px;
       outline: none;
       box-sizing: border-box;
     }
@@ -5212,12 +5571,12 @@
     }
     /* 아이콘 버튼 (✓ / ↺) */
     .mixer-image-overlay-panel .panel-icon-btn {
-      flex: 0 0 26px;
-      height: 26px;
+      flex: 0 0 24px;
+      height: 24px;
       padding: 0;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      border-radius: 5px;
+      border-radius: 4px;
       border: 1px solid var(--line, #dbe2ea);
       background: var(--surface-2, #f8fafc);
       color: var(--ink, #1a1f2b);
@@ -5243,13 +5602,13 @@
     .mixer-image-overlay-panel .panel-actions-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
+      gap: 3px;
     }
     .mixer-image-overlay-panel .panel-action-btn {
-      padding: 4px 2px;
-      font-size: 10px;
+      padding: 3px 1px;
+      font-size: 9.5px;
       font-weight: 600;
-      border-radius: 5px;
+      border-radius: 4px;
       border: 1px solid var(--line, #dbe2ea);
       background: var(--surface-2, #f8fafc);
       color: var(--ink, #1a1f2b);
@@ -5264,8 +5623,8 @@
     }
     .mixer-image-overlay-panel .panel-action-btn-wide {
       width: 100%;
-      font-size: 10.5px;
-      padding: 5px 4px;
+      font-size: 10px;
+      padding: 4px 3px;
     }
     .mixer-image-overlay-panel .panel-action-btn:hover:not(:disabled) {
       border-color: var(--accent, #4361ee);
@@ -5980,46 +6339,102 @@
         if (clean.length === 4) {
           clean = "#" + clean[1] + clean[1] + clean[2] + clean[2] + clean[3] + clean[3];
         }
-        return tempMap[clean] || "custom color";
+        return tempMap[clean] || clean;
       }
       return clean;
-    }).join(", ");
+    }).filter(Boolean).join(", ");
+  }
+
+  function escapeMixerHTML(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function resolveMixerSubject() {
+    const categoryList = activeCategory === 'all'
+      ? Object.values(MIXER_SUBJECTS).flat()
+      : (MIXER_SUBJECTS[activeCategory] || []);
+    return categoryList.find(s => s.id === selectedSubjId) || categoryList[0] || null;
+  }
+
+  function resolveMixerMedium() {
+    return MIXER_MEDIUMS.find(m => m.id === selectedMediumId) || MIXER_MEDIUMS[0] || null;
+  }
+
+  function resolveMixerComposition() {
+    if (!selectedCompositionId || selectedCompositionId === 'none') return null;
+    return MIXER_COMPOSITIONS.find(c => c.id === selectedCompositionId) || null;
+  }
+
+  function resolveMixerTypography() {
+    if (!selectedTypographyId || selectedTypographyId === 'none') return null;
+    return MIXER_TYPOGRAPHIES.find(r => r.id === selectedTypographyId) || null;
   }
 
   // 현재 조합 상태에 따라 하이라이트 HTML로 구성된 프롬프트 반환
   function buildMixedHighlightPromptHTML() {
-    const categoryList = activeCategory === 'all'
-      ? Object.values(MIXER_SUBJECTS).flat()
-      : (MIXER_SUBJECTS[activeCategory] || []);
-    const subject = categoryList.find(s => s.id === selectedSubjId) || categoryList[0];
-    const medium = MIXER_MEDIUMS.find(m => m.id === selectedMediumId) || MIXER_MEDIUMS[0];
+    const subject = resolveMixerSubject();
+    const medium = resolveMixerMedium();
     const palette = MIXER_PALETTES[selectedPaletteIdx];
+    const composition = resolveMixerComposition();
+    const typography = resolveMixerTypography();
 
     if (!subject || !medium || !palette) return '';
 
     const colorText = getPaletteColorNames(palette.colors);
-    return `<span class="hl-medium">A ${medium.prefix}</span> <span class="hl-subj">${subject.prompt}</span>. <span class="hl-medium">${medium.suffix}</span>, <span class="hl-palette">color palette: ${colorText}, ${palette.colorMapping}</span>`;
+    const colorPart = [colorText, palette.colorMapping].filter(Boolean).join(', ');
+
+    const part1 = `<span class="hl-medium">${escapeMixerHTML(`A ${medium.prefix}`)}</span>` +
+                  (composition ? ` <span class="hl-composition">${escapeMixerHTML(composition.prefix)}</span>` : '') +
+                  ` <span class="hl-subj">${escapeMixerHTML(subject.prompt)}</span>`;
+
+    let part2 = `<span class="hl-medium">${escapeMixerHTML(medium.suffix)}</span>` +
+                  (composition ? `, <span class="hl-composition">${escapeMixerHTML(composition.suffix)}</span>` : '');
+
+    if (palette.id !== 'none' && colorPart) {
+      part2 += `, <span class="hl-palette">color palette: ${escapeMixerHTML(colorPart)}</span>`;
+    }
+
+    if (typography) {
+      part2 += `, <span class="hl-lighting">${escapeMixerHTML(typography.prompt)}</span>`;
+    }
+
+    return `${part1}. ${part2}`;
   }
 
   // 결합된 플레인 텍스트 프롬프트 반환 (복사용)
   function buildMixedPrompt() {
-    const categoryList = activeCategory === 'all'
-      ? Object.values(MIXER_SUBJECTS).flat()
-      : (MIXER_SUBJECTS[activeCategory] || []);
-    const subject = categoryList.find(s => s.id === selectedSubjId) || categoryList[0];
-    const medium = MIXER_MEDIUMS.find(m => m.id === selectedMediumId) || MIXER_MEDIUMS[0];
+    const subject = resolveMixerSubject();
+    const medium = resolveMixerMedium();
     const palette = MIXER_PALETTES[selectedPaletteIdx];
+    const composition = resolveMixerComposition();
+    const typography = resolveMixerTypography();
 
     if (!subject || !medium || !palette) return '';
 
     const colorText = getPaletteColorNames(palette.colors);
-    return `A ${medium.prefix} ${subject.prompt}. ${medium.suffix}, color palette: ${colorText}, ${palette.colorMapping}`;
+    const colorPart = [colorText, palette.colorMapping].filter(Boolean).join(', ');
+    const compPrefix = composition ? `${composition.prefix} ` : '';
+    const compSuffix = composition ? `, ${composition.suffix}` : '';
+    const typoStr = typography ? `, ${typography.prompt}` : '';
+
+    let colorPartStr = '';
+    if (palette.id !== 'none' && colorPart) {
+      colorPartStr = `, color palette: ${colorPart}`;
+    }
+
+    return `A ${medium.prefix} ${compPrefix}${subject.prompt}. ${medium.suffix}${compSuffix}${colorPartStr}${typoStr}`;
   }
 
   // 48종 화풍에 맞춘 무의존성 동적 인라인 SVG 생성기
   function getMediumPreviewSVG(medId) {
     let svgContent = '';
-    
+
     // defs 그라데이션 및 공통 필터 정의
     const defs = `
       <defs>
@@ -6232,14 +6647,21 @@
     const subject = categoryList.find(s => s.id === selectedSubjId);
     const medium = MIXER_MEDIUMS.find(m => m.id === selectedMediumId);
     const palette = MIXER_PALETTES[selectedPaletteIdx];
+    const composition = resolveMixerComposition();
+    const typography = resolveMixerTypography();
 
     const subjText = subject ? `${subject.emoji} ${subject.nameKo}` : '선택 대기중';
     const medText = medium ? `${medium.emoji} ${medium.nameKo}` : '선택 대기중';
     const palText = palette ? `🎨 ${palette.name}` : '선택 대기중';
+    const compText = composition ? `${composition.emoji} ${composition.nameKo}` : '선택 안 함';
+    const typoText = typography ? `${typography.emoji} ${typography.nameKo}` : '선택 안 함';
+
     const values = [
       { step: 1, text: subjText, hasValue: Boolean(subject) },
       { step: 2, text: medText, hasValue: Boolean(medium) },
-      { step: 3, text: palText, hasValue: Boolean(palette), palette: palette }
+      { step: 3, text: palText, hasValue: Boolean(palette), palette: palette },
+      { step: 4, text: compText, hasValue: selectedCompositionId !== 'none' },
+      { step: 5, text: typoText, hasValue: selectedTypographyId !== 'none' }
     ];
 
     values.forEach(({ step, text, hasValue, palette }) => {
@@ -6256,7 +6678,7 @@
         valueEl.textContent = text;
       }
 
-      valueEl.classList.toggle('empty', !hasValue);
+      valueEl.classList.toggle('empty', !hasValue && step <= 3);
       tab.title = text;
     });
   }
@@ -6289,7 +6711,7 @@
       </div>
       <div class="mixer-workspace">
         <div class="mixer-left">
-          
+
           <!-- 위저드 스텝퍼 -->
           <div class="mixer-stepper">
             <button type="button" class="mixer-step-tab active" data-step="1">
@@ -6311,6 +6733,20 @@
               <span class="mixer-step-copy">
                 <span class="mixer-step-label">색상 테마 선택</span>
                 <strong class="mixer-step-current">선택 대기중</strong>
+              </span>
+            </button>
+            <button type="button" class="mixer-step-tab" data-step="4">
+              <span class="step-num">4</span>
+              <span class="mixer-step-copy">
+                <span class="mixer-step-label">구도 선택</span>
+                <strong class="mixer-step-current">선택 안 함</strong>
+              </span>
+            </button>
+            <button type="button" class="mixer-step-tab" data-step="5">
+              <span class="step-num">5</span>
+              <span class="mixer-step-copy">
+                <span class="mixer-step-label">타이포그래피</span>
+                <strong class="mixer-step-current">선택 안 함</strong>
               </span>
             </button>
           </div>
@@ -6396,6 +6832,32 @@
             <div class="mixer-search-empty" id="mixerPaletteEmpty">선택한 조건에 맞는 색상 테마가 없습니다.</div>
           </div>
 
+          <!-- Step 4. 구도 (Composition) Pane -->
+          <div class="mixer-step-pane" id="paneStep4">
+            <div class="mixer-cat-tabs" id="mixerCompositionCategoryTabs" role="tablist" aria-label="구도 카테고리">
+              <button type="button" class="mixer-cat-btn active" data-composition-cat="all" role="tab" aria-selected="true">🌐 전체</button>
+              ${COMPOSITION_CATEGORIES.map(cat => `
+                <button type="button" class="mixer-cat-btn"
+                  data-composition-cat="${cat.id}" role="tab" aria-selected="false">${cat.label}</button>
+              `).join('')}
+            </div>
+            <div class="mixer-palettes-group-grid" id="mixerCompositionGrid"></div>
+            <div class="mixer-search-empty" id="mixerCompositionEmpty">선택한 조건에 맞는 구도가 없습니다.</div>
+          </div>
+
+          <!-- Step 5. 타이포그래피 (Typography) Pane -->
+          <div class="mixer-step-pane" id="paneStep5">
+            <div class="mixer-cat-tabs" id="mixerTypographyCategoryTabs" role="tablist" aria-label="타이포그래피 카테고리">
+              <button type="button" class="mixer-cat-btn active" data-typography-cat="all" role="tab" aria-selected="true">🌐 전체</button>
+              ${TYPOGRAPHY_CATEGORIES.map(cat => `
+                <button type="button" class="mixer-cat-btn"
+                  data-typography-cat="${cat.id}" role="tab" aria-selected="false">${cat.label}</button>
+              `).join('')}
+            </div>
+            <div class="mixer-palettes-group-grid" id="mixerTypographyGrid"></div>
+            <div class="mixer-search-empty" id="mixerTypographyEmpty">선택한 조건에 맞는 타이포그래피가 없습니다.</div>
+          </div>
+
         </div>
 
         <!-- 우측 결과 프리뷰 -->
@@ -6415,7 +6877,7 @@
           ? Object.values(MIXER_SUBJECTS).flat()[0]
           : MIXER_SUBJECTS[cat]?.[0];
         selectedSubjId = firstSubj ? firstSubj.id : '';
-        
+
         updateCategoryTabs();
         renderSubjects();
         updateMixerSummaryBar();
@@ -6428,6 +6890,43 @@
       tab.addEventListener('click', () => {
         const step = parseInt(tab.dataset.step, 10);
         switchStep(step);
+        if (step === 2) {
+          renderMediums();
+        } else if (step === 3) {
+          renderPalettes();
+        } else if (step === 4) {
+          renderCompositions();
+        } else if (step === 5) {
+          renderTypographies();
+        }
+      });
+    });
+
+    // 구도 카테고리 필터 클릭 바인딩
+    container.querySelectorAll('[data-composition-cat]').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const cat = e.currentTarget.dataset.compositionCat;
+        activeCompositionCategory = cat;
+        container.querySelectorAll('[data-composition-cat]').forEach(btn => {
+          const isActive = btn.dataset.compositionCat === cat;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', String(isActive));
+        });
+        renderCompositions();
+      });
+    });
+
+    // 조명 카테고리 필터 클릭 바인딩
+    container.querySelectorAll('[data-typography-cat]').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const catValue = e.currentTarget.dataset.typographyCat;
+        activeTypographyCategory = catValue;
+        container.querySelectorAll('[data-typography-cat]').forEach(btn => {
+          const isActive = btn.dataset.typographyCat === catValue;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', String(isActive));
+        });
+        renderTypographies();
       });
     });
 
@@ -6585,6 +7084,25 @@
       activePaletteCategory = MIXER_PALETTES[selectedPaletteIdx]?.category || 'tech';
       activePaletteFilter = 'all';
 
+      // 구도 무작위 선택 (50% 확률로 none 또는 랜덤 프리셋 선택)
+      if (Math.random() > 0.5) {
+        const comps = MIXER_COMPOSITIONS.filter(c => c.id !== 'none');
+        selectedCompositionId = comps[Math.floor(Math.random() * comps.length)].id;
+      } else {
+        selectedCompositionId = 'none';
+      }
+
+      // 타이포그래피 무작위 선택 (50% 확률로 none 또는 랜덤 프리셋 선택)
+      if (Math.random() > 0.5) {
+        const typographies = MIXER_TYPOGRAPHIES.filter(r => r.id !== 'none');
+        selectedTypographyId = typographies[Math.floor(Math.random() * typographies.length)].id;
+      } else {
+        selectedTypographyId = 'none';
+      }
+
+      activeCompositionCategory = 'all';
+      activeTypographyCategory = 'all';
+
       container.querySelectorAll('[data-med-cat]').forEach(tab => {
         const isActive = tab.dataset.medCat === activeMediumCategory;
         tab.classList.toggle('active', isActive);
@@ -6602,6 +7120,8 @@
       renderSubjects();
       renderMediums();
       renderPalettes();
+      renderCompositions();
+      renderTypographies();
       updateMixerSummaryBar();
       renderPreviewCard();
     });
@@ -6610,10 +7130,15 @@
       activeCategory = 'steel';
       selectedSubjId = 'mix-steel-hot-rolling';
       selectedMediumId = 'med-3d';
-      selectedPaletteIdx = 16;
+      selectedPaletteIdx = 0;
+      selectedCompositionId = 'none';
+      selectedTypographyId = 'none';
       activeMediumCategory = 'tech3d';
-      activePaletteCategory = MIXER_PALETTES[selectedPaletteIdx]?.category || 'tech';
+      activePaletteCategory = 'all';
+      activeCompositionCategory = 'all';
+      activeTypographyCategory = 'all';
       activePaletteFilter = 'all';
+      isPaletteOverriddenByUser = false;
       container.querySelectorAll('.mixer-pal-filter-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.palFilter === 'all');
       });
@@ -6631,6 +7156,8 @@
       renderSubjects();
       renderMediums();
       renderPalettes();
+      renderCompositions();
+      renderTypographies();
       updateMixerSummaryBar();
       renderPreviewCard();
       switchStep(1);
@@ -6640,6 +7167,8 @@
     renderSubjects();
     renderMediums();
     renderPalettes();
+    renderCompositions();
+    renderTypographies();
     updateMixerSummaryBar();
     renderPreviewCard();
     switchStep(1); // 1단계부터 시작
@@ -6651,13 +7180,30 @@
     const container = document.getElementById('conceptMixerContainer');
     if (!container) return;
 
-    // 스텝퍼 탭 상태 업데이트
+    if (step === 3) {
+      const selectedPalette = MIXER_PALETTES[selectedPaletteIdx];
+      if (selectedPalette) {
+        activePaletteCategory = selectedPalette.category || 'all';
+        activePaletteFilter = 'all';
+        activePaletteColorFilter = 'all';
+      }
+    } else if (step === 4) {
+      const selectedComp = resolveMixerComposition();
+      if (selectedComp) {
+        activeCompositionCategory = selectedComp.category || 'all';
+      }
+    } else if (step === 5) {
+      const selectedTypo = resolveMixerTypography();
+      if (selectedTypo) {
+        activeTypographyCategory = selectedTypo.category || 'all';
+      }
+    }
+
     container.querySelectorAll('.mixer-step-tab').forEach(tab => {
       const tabStep = parseInt(tab.dataset.step, 10);
       tab.classList.toggle('active', tabStep === step);
       tab.classList.toggle('completed', tabStep < step);
 
-      // 완료된 단계는 숫자를 ✓로 변경
       const numSpan = tab.querySelector('.step-num');
       if (numSpan) {
         if (tabStep < step) {
@@ -6668,12 +7214,10 @@
       }
     });
 
-    // 스텝 Pane 표시 제어
     container.querySelectorAll('.mixer-step-pane').forEach(pane => {
       const paneId = pane.id;
       pane.classList.toggle('active', paneId === `paneStep${step}`);
     });
-
 
     updateMixerSummaryBar();
   }
@@ -6729,7 +7273,7 @@
     wrap.innerHTML = '';
     const grid = document.createElement('div');
     grid.className = 'mixer-med-grid';
-    
+
     const filtered = (activeMediumCategory === 'all')
       ? MIXER_MEDIUMS.slice()
       : MIXER_MEDIUMS.filter(m => m.category === activeMediumCategory);
@@ -6739,7 +7283,7 @@
         card.tabIndex = 0;
         card.className = 'mixer-item-card' + (selectedMediumId === med.id ? ' active' : '');
         card.setAttribute('aria-pressed', String(selectedMediumId === med.id));
-        
+
         card.innerHTML = `
           <div class="mixer-item-head">${med.emoji} ${med.nameKo}</div>
           <div class="mixer-item-desc">${med.desc}</div>
@@ -6753,8 +7297,6 @@
           });
           card.classList.add('active');
           card.setAttribute('aria-pressed', 'true');
-          // 자동 팔레트 매핑 시도
-          try { autoMapPaletteForMedium(med); } catch (e) { /* noop */ }
           updateMixerSummaryBar();
           renderPreviewCard();
         });
@@ -7390,6 +7932,7 @@
 
   function autoMapPaletteForMedium(med) {
     if (!med || !med.id) return;
+    if (isPaletteOverriddenByUser) return;
 
     // 1) 명시적 매핑
     const explicit = STYLE_TO_PALETTE_MAP[med.id] || STYLE_TO_PALETTE_MAP[med.nameEn] || STYLE_TO_PALETTE_MAP[med.nameKo] || (window && window.STYLE_TO_PALETTE_MAP && (window.STYLE_TO_PALETTE_MAP[med.id] || window.STYLE_TO_PALETTE_MAP[med.nameEn] || window.STYLE_TO_PALETTE_MAP[med.nameKo]));
@@ -7490,9 +8033,10 @@
     try {
       const groupGrid = document.getElementById('mixerPalettesGroupGrid');
       if (groupGrid) {
-        groupGrid.querySelectorAll('.mixer-item-card').forEach((el, i) => {
-          el.classList.toggle('active', i === selectedPaletteIdx);
-          el.setAttribute('aria-pressed', String(i === selectedPaletteIdx));
+        groupGrid.querySelectorAll('.mixer-item-card').forEach((el) => {
+          const idx = parseInt(el.dataset.index, 10);
+          el.classList.toggle('active', idx === selectedPaletteIdx);
+          el.setAttribute('aria-pressed', String(idx === selectedPaletteIdx));
         });
       }
     } catch (e) {}
@@ -7567,6 +8111,39 @@
       } catch (err) { console.error(err); }
       return false;
     };
+
+    // 샘플 채우기 등 외부 소스의 임의 팔레트를 믹서에 동기화
+    window.applyMixerSamplePalette = function(colors, nameKo) {
+      try {
+        if (!Array.isArray(colors) || !colors.length) return false;
+        const SAMPLE_PAL_ID = 'pal-sample-custom';
+        const existing = MIXER_PALETTES.findIndex(p => p.id === SAMPLE_PAL_ID);
+        const entry = {
+          id: SAMPLE_PAL_ID,
+          category: 'concept',
+          name: nameKo || '샘플 팔레트',
+          mode: 'light',
+          colors: colors.slice(0, 5),
+          colorMapping: '',
+        };
+        if (existing >= 0) {
+          MIXER_PALETTES[existing] = entry;
+          selectedPaletteIdx = existing;
+        } else {
+          MIXER_PALETTES.push(entry);
+          selectedPaletteIdx = MIXER_PALETTES.length - 1;
+        }
+        activePaletteCategory = 'all';
+        activePaletteFilter = 'all';
+        activePaletteColorFilter = 'all';
+        try { syncPaletteSelection(); } catch(e) {}
+        try { renderPalettes(); } catch(e) {}
+        try { renderPreviewCard(); } catch(e) {}
+        return true;
+      } catch(err) { console.error(err); }
+      return false;
+    };
+
       // 공개 API: 외부에서 쓰기 편하도록 몇 가지 헬퍼 노출
       try {
         if (typeof window !== 'undefined') {
@@ -7577,28 +8154,523 @@
       } catch (e) {}
 
     // 분류형 색상 테마(Palette) 렌더링
+  function renderCompositions() {
+    const grid = document.getElementById('conceptCompositionGrid');
+    const container = document.getElementById('conceptMixerContainer');
+    const targetGrid = grid || (container && container.querySelector('#mixerCompositionGrid'));
+    if (!targetGrid) return;
+    targetGrid.innerHTML = '';
+
+    const list = MIXER_COMPOSITIONS.filter(c => {
+      if (c.id === 'none') return false;
+      if (activeCompositionCategory === 'all') return true;
+      return c.category === activeCompositionCategory;
+    });
+
+    const displayList = [MIXER_COMPOSITIONS.find(c => c.id === 'none'), ...list].filter(Boolean);
+
+    displayList.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'mixer-item';
+      if (item.id === selectedCompositionId) card.classList.add('active');
+      card.setAttribute('aria-pressed', String(item.id === selectedCompositionId));
+
+      let thumbHtml = '';
+      let hasCustom = false;
+      let imageUrl = '';
+      let keyword = '';
+
+      if (item.id !== 'none') {
+        const customSamples = getCustomSamplesForMed(item.id);
+        hasCustom = Boolean(customSamples[0]);
+        const sampleId = MIXER_COMPOSITION_SAMPLES[item.id] || 'photo-1618005182384-a83a8bd57fbe';
+        imageUrl = customSamples[0] || UNSPLASH_CACHE[item.id] || ('https://images.unsplash.com/' + sampleId + '?w=320&auto=format&fit=crop&q=75');
+        keyword = resolveSearchKeyword(item.id, item.suffix);
+
+        thumbHtml = [
+          '<div class="mixer-item-thumb">',
+          '  <img src="' + imageUrl + '" alt="' + item.nameKo + ' 예시" />',
+          '  <button type="button" class="mixer-item-thumb-settings-btn" title="이미지 설정">⚙️</button>',
+          '  <div class="mixer-item-thumb-overlay" hidden>',
+          '    <div class="overlay-header">',
+          '      <span>이미지 설정</span>',
+          '      <button type="button" class="overlay-close-btn">&times;</button>',
+          '    </div>',
+          '    <div class="overlay-body">',
+          '      <input type="text" class="overlay-kw-input" value="' + keyword + '" placeholder="검색어 (영문)" style="width:100%; height:26px; border:1px solid #ccc; border-radius:4px; padding:0 4px; box-sizing:border-box; font-size:11px;" />',
+          '      <div class="overlay-buttons" style="display:grid; grid-template-columns:1fr 1.5fr 1fr 1fr; gap:4px; margin-top:5px;">',
+          '        <button type="button" class="overlay-btn btn-apply" style="height:24px; font-size:10px; cursor:pointer;" title="적용">✓</button>',
+          '        <button type="button" class="overlay-btn btn-refresh" style="height:24px; font-size:10px; cursor:pointer;">🔄다음</button>',
+          '        <button type="button" class="overlay-btn btn-replace" style="height:24px; font-size:10px; cursor:pointer;">📁파일</button>',
+          '        <button type="button" class="overlay-btn btn-save" style="height:24px; font-size:10px; cursor:pointer;">💾저장</button>',
+          '      </div>',
+          '      <button type="button" class="overlay-btn btn-reset" ' + (hasCustom ? '' : 'disabled') + ' style="width:100%; height:24px; margin-top:4px; font-size:10px; cursor:pointer;">↩ 원본 복원</button>',
+          '      <div class="overlay-status-msg" style="font-size:9px; color:#555; margin-top:3px; height:12px; overflow:hidden;"></div>',
+          '    </div>',
+          '  </div>',
+          '  <input type="file" class="overlay-file-input" accept="image/*" hidden />',
+          '</div>'
+        ].join('\n');
+      } else {
+        thumbHtml = [
+          '<div class="mixer-item-thumb" style="display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:var(--text-secondary,#64748b);">',
+          '  <span style="font-size: 24px;">❌</span>',
+          '</div>'
+        ].join('\n');
+      }
+
+      card.innerHTML = [
+        thumbHtml,
+        '<div class="mixer-item-text-wrap" style="padding: 10px;">',
+        '  <div class="mixer-item-head">' + item.emoji + ' ' + item.nameKo + '</div>',
+        '  <div class="mixer-item-desc" style="margin-top: 4.5px;">' + item.desc + '</div>',
+        '</div>'
+      ].join('\n');
+
+      // 인라인 오버레이 바인딩 로직
+      if (item.id !== 'none') {
+        const settingsBtn = card.querySelector('.mixer-item-thumb-settings-btn');
+        const overlay = card.querySelector('.mixer-item-thumb-overlay');
+        const closeBtn = card.querySelector('.overlay-close-btn');
+        const kwInput = card.querySelector('.overlay-kw-input');
+        const applyBtn = card.querySelector('.btn-apply');
+        const refreshBtn = card.querySelector('.btn-refresh');
+        const replaceBtn = card.querySelector('.btn-replace');
+        const fileInput = card.querySelector('.overlay-file-input');
+        const saveBtn = card.querySelector('.btn-save');
+        const resetBtn = card.querySelector('.btn-reset');
+        const statusMsg = card.querySelector('.overlay-status-msg');
+        const imgEl = card.querySelector('.mixer-item-thumb img');
+
+        const setMsg = (txt, isErr = false) => {
+          if (statusMsg) {
+            statusMsg.textContent = txt;
+            statusMsg.style.color = isErr ? '#dc2626' : '';
+          }
+        };
+
+        settingsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          overlay.hidden = false;
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          overlay.hidden = true;
+        });
+
+        card.addEventListener('click', (e) => {
+          if (overlay && !overlay.hidden) return; // 오버레이 켜져있을 땐 카드 선택 방지
+          selectedCompositionId = item.id;
+          container.querySelectorAll('#mixerCompositionGrid .mixer-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.id === item.id);
+          });
+          updateMixerSummaryBar();
+          renderPreviewCard();
+        });
+
+        // 1) 검색어 적용
+        applyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const val = kwInput.value.trim();
+          if (!val) return;
+          setCustomKeyword(item.id, val);
+          setMsg('검색 키워드가 적용되었습니다.');
+        });
+
+        // 2) Unsplash 다음 사진
+        refreshBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!getUnsplashKey()) {
+            setMsg('unsplash API Key가 필요합니다.', true);
+            return;
+          }
+          refreshBtn.disabled = true;
+          refreshBtn.textContent = '...';
+          setMsg('새 사진 불러오는 중...');
+          delete UNSPLASH_CACHE[item.id];
+          try {
+            const query = kwInput.value.trim() || item.suffix.split(',')[0].trim();
+            const url = await fetchUnsplashImage(item.id, query, true);
+            if (url && imgEl) imgEl.src = url;
+            setMsg('완료! 저장 버튼을 눌러 확정하세요.');
+          } catch (err) {
+            setMsg('사진 변경 실패', true);
+          } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '🔄다음';
+          }
+        });
+
+        // 3) 파일 교체 업로드
+        replaceBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+          const file = fileInput.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async ev => {
+            const dataUrl = ev.target.result;
+            setMsg('서버 저장 중...');
+            try {
+              const res = await fetch('/api/save-mixer-sample', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ medId: item.id, idx: 0, image: dataUrl })
+              });
+              const ret = await res.json();
+              if (ret.ok && ret.url) {
+                setCustomSample(item.id, 0, ret.url);
+                if (imgEl) imgEl.src = ret.url;
+                setMsg('서버 저장 완료!');
+                resetBtn.disabled = false;
+              } else {
+                throw new Error();
+              }
+            } catch (err) {
+              setCustomSample(item.id, 0, dataUrl);
+              if (imgEl) imgEl.src = dataUrl;
+              setMsg('로컬 저장 완료 (임시)');
+              resetBtn.disabled = false;
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // 4) 저장
+        saveBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!imgEl || !imgEl.src) return;
+          saveBtn.disabled = true;
+          setMsg('서버 저장 중...');
+          try {
+            const res = await fetch('/api/save-mixer-sample', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ medId: item.id, idx: 0, image: imgEl.src })
+            });
+            const ret = await res.json();
+            if (ret.ok && ret.url) {
+              setCustomSample(item.id, 0, ret.url);
+              setMsg('저장 성공!');
+              resetBtn.disabled = false;
+            } else {
+              throw new Error();
+            }
+          } catch (err) {
+            setCustomSample(item.id, 0, imgEl.src);
+            setMsg('로컬 캐시 완료');
+            resetBtn.disabled = false;
+          } finally {
+            saveBtn.disabled = false;
+          }
+        });
+
+        // 5) 복원
+        resetBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearCustomSample(item.id, 0);
+          clearCustomKeyword(item.id);
+          delete UNSPLASH_CACHE[item.id];
+          const sampleId = MIXER_COMPOSITION_SAMPLES[item.id] || 'photo-1618005182384-a83a8bd57fbe';
+          if (imgEl) imgEl.src = 'https://images.unsplash.com/' + sampleId + '?w=320&auto=format&fit=crop&q=75';
+          kwInput.value = item.suffix.split(',')[0].trim();
+          setMsg('기본 사진으로 복원되었습니다.');
+          resetBtn.disabled = true;
+        });
+      } else {
+        card.addEventListener('click', () => {
+          selectedCompositionId = 'none';
+          container.querySelectorAll('#mixerCompositionGrid .mixer-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.id === 'none');
+          });
+          updateMixerSummaryBar();
+          renderPreviewCard();
+        });
+      }
+
+      card.setAttribute('data-id', item.id);
+      targetGrid.appendChild(card);
+    });
+  }
+
+  function renderTypographies() {
+    const grid = document.getElementById('conceptTypographyGrid');
+    const container = document.getElementById('conceptMixerContainer');
+    const targetGrid = grid || (container && container.querySelector('#mixerTypographyGrid'));
+    if (!targetGrid) return;
+    targetGrid.innerHTML = '';
+
+    const list = MIXER_TYPOGRAPHIES.filter(r => {
+      if (r.id === 'none') return false;
+      if (activeTypographyCategory === 'all') return true;
+      return r.category === activeTypographyCategory;
+    });
+
+    const displayList = [MIXER_TYPOGRAPHIES.find(r => r.id === 'none'), ...list].filter(Boolean);
+
+    displayList.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'mixer-item';
+      if (item.id === selectedTypographyId) card.classList.add('active');
+      card.setAttribute('aria-pressed', String(item.id === selectedTypographyId));
+
+      let thumbHtml = '';
+      let hasCustom = false;
+      let imageUrl = '';
+      let keyword = '';
+
+      if (item.id !== 'none') {
+        const customSamples = getCustomSamplesForMed(item.id);
+        hasCustom = Boolean(customSamples[0]);
+        const sampleId = MIXER_TYPOGRAPHY_SAMPLES[item.id] || 'photo-1618005182384-a83a8bd57fbe';
+        imageUrl = customSamples[0] || UNSPLASH_CACHE[item.id] || ('https://images.unsplash.com/' + sampleId + '?w=320&auto=format&fit=crop&q=75');
+        keyword = resolveSearchKeyword(item.id, item.prompt);
+
+        thumbHtml = [
+          '<div class="mixer-item-thumb">',
+          '  <img src="' + imageUrl + '" alt="' + item.nameKo + ' 예시" />',
+          '  <button type="button" class="mixer-item-thumb-settings-btn" title="이미지 설정">⚙️</button>',
+          '  <div class="mixer-item-thumb-overlay" hidden>',
+          '    <div class="overlay-header">',
+          '      <span>이미지 설정</span>',
+          '      <button type="button" class="overlay-close-btn">&times;</button>',
+          '    </div>',
+          '    <div class="overlay-body">',
+          '      <input type="text" class="overlay-kw-input" value="' + keyword + '" placeholder="검색어 (영문)" style="width:100%; height:26px; border:1px solid #ccc; border-radius:4px; padding:0 4px; box-sizing:border-box; font-size:11px;" />',
+          '      <div class="overlay-buttons" style="display:grid; grid-template-columns:1fr 1.5fr 1fr 1fr; gap:4px; margin-top:5px;">',
+          '        <button type="button" class="overlay-btn btn-apply" style="height:24px; font-size:10px; cursor:pointer;" title="적용">✓</button>',
+          '        <button type="button" class="overlay-btn btn-refresh" style="height:24px; font-size:10px; cursor:pointer;">🔄다음</button>',
+          '        <button type="button" class="overlay-btn btn-replace" style="height:24px; font-size:10px; cursor:pointer;">📁파일</button>',
+          '        <button type="button" class="overlay-btn btn-save" style="height:24px; font-size:10px; cursor:pointer;">💾저장</button>',
+          '      </div>',
+          '      <button type="button" class="overlay-btn btn-reset" ' + (hasCustom ? '' : 'disabled') + ' style="width:100%; height:24px; margin-top:4px; font-size:10px; cursor:pointer;">↩ 원본 복원</button>',
+          '      <div class="overlay-status-msg" style="font-size:9px; color:#555; margin-top:3px; height:12px; overflow:hidden;"></div>',
+          '    </div>',
+          '  </div>',
+          '  <input type="file" class="overlay-file-input" accept="image/*" hidden />',
+          '</div>'
+        ].join('\n');
+      } else {
+        thumbHtml = [
+          '<div class="mixer-item-thumb" style="display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:var(--text-secondary,#64748b);">',
+          '  <span style="font-size: 24px;">❌</span>',
+          '</div>'
+        ].join('\n');
+      }
+
+      card.innerHTML = [
+        thumbHtml,
+        '<div class="mixer-item-text-wrap" style="padding: 10px;">',
+        '  <div class="mixer-item-head">' + item.emoji + ' ' + item.nameKo + '</div>',
+        '  <div class="mixer-item-desc" style="margin-top: 4.5px;">' + item.desc + '</div>',
+        '</div>'
+      ].join('\n');
+
+      // 인라인 오버레이 바인딩 로직
+      if (item.id !== 'none') {
+        const settingsBtn = card.querySelector('.mixer-item-thumb-settings-btn');
+        const overlay = card.querySelector('.mixer-item-thumb-overlay');
+        const closeBtn = card.querySelector('.overlay-close-btn');
+        const kwInput = card.querySelector('.overlay-kw-input');
+        const applyBtn = card.querySelector('.btn-apply');
+        const refreshBtn = card.querySelector('.btn-refresh');
+        const replaceBtn = card.querySelector('.btn-replace');
+        const fileInput = card.querySelector('.overlay-file-input');
+        const saveBtn = card.querySelector('.btn-save');
+        const resetBtn = card.querySelector('.btn-reset');
+        const statusMsg = card.querySelector('.overlay-status-msg');
+        const imgEl = card.querySelector('.mixer-item-thumb img');
+
+        const setMsg = (txt, isErr = false) => {
+          if (statusMsg) {
+            statusMsg.textContent = txt;
+            statusMsg.style.color = isErr ? '#dc2626' : '';
+          }
+        };
+
+        settingsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          overlay.hidden = false;
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          overlay.hidden = true;
+        });
+
+        card.addEventListener('click', (e) => {
+          if (overlay && !overlay.hidden) return;
+          selectedTypographyId = item.id;
+          container.querySelectorAll('#mixerTypographyGrid .mixer-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.id === item.id);
+          });
+          updateMixerSummaryBar();
+          renderPreviewCard();
+        });
+
+        // 1) 검색어 적용
+        applyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const val = kwInput.value.trim();
+          if (!val) return;
+          setCustomKeyword(item.id, val);
+          setMsg('검색 키워드가 적용되었습니다.');
+        });
+
+        // 2) Unsplash 다음 사진
+        refreshBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!getUnsplashKey()) {
+            setMsg('unsplash API Key가 필요합니다.', true);
+            return;
+          }
+          refreshBtn.disabled = true;
+          refreshBtn.textContent = '...';
+          setMsg('새 사진 불러오는 중...');
+          delete UNSPLASH_CACHE[item.id];
+          try {
+            const query = kwInput.value.trim() || item.prompt.split(',')[0].trim();
+            const url = await fetchUnsplashImage(item.id, query, true);
+            if (url && imgEl) imgEl.src = url;
+            setMsg('완료! 저장 버튼을 눌러 확정하세요.');
+          } catch (err) {
+            setMsg('사진 변경 실패', true);
+          } finally {
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = '🔄다음';
+          }
+        });
+
+        // 3) 파일 교체 업로드
+        replaceBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+          const file = fileInput.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async ev => {
+            const dataUrl = ev.target.result;
+            setMsg('서버 저장 중...');
+            try {
+              const res = await fetch('/api/save-mixer-sample', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ medId: item.id, idx: 0, image: dataUrl })
+              });
+              const ret = await res.json();
+              if (ret.ok && ret.url) {
+                setCustomSample(item.id, 0, ret.url);
+                if (imgEl) imgEl.src = ret.url;
+                setMsg('서버 저장 완료!');
+                resetBtn.disabled = false;
+              } else {
+                throw new Error();
+              }
+            } catch (err) {
+              setCustomSample(item.id, 0, dataUrl);
+              if (imgEl) imgEl.src = dataUrl;
+              setMsg('로컬 저장 완료 (임시)');
+              resetBtn.disabled = false;
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // 4) 저장
+        saveBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!imgEl || !imgEl.src) return;
+          saveBtn.disabled = true;
+          setMsg('서버 저장 중...');
+          try {
+            const res = await fetch('/api/save-mixer-sample', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ medId: item.id, idx: 0, image: imgEl.src })
+            });
+            const ret = await res.json();
+            if (ret.ok && ret.url) {
+              setCustomSample(item.id, 0, ret.url);
+              setMsg('저장 성공!');
+              resetBtn.disabled = false;
+            } else {
+              throw new Error();
+            }
+          } catch (err) {
+            setCustomSample(item.id, 0, imgEl.src);
+            setMsg('로컬 캐시 완료');
+            resetBtn.disabled = false;
+          } finally {
+            saveBtn.disabled = false;
+          }
+        });
+
+        // 5) 복원
+        resetBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearCustomSample(item.id, 0);
+          clearCustomKeyword(item.id);
+          delete UNSPLASH_CACHE[item.id];
+          const sampleId = MIXER_TYPOGRAPHY_SAMPLES[item.id] || 'photo-1618005182384-a83a8bd57fbe';
+          if (imgEl) imgEl.src = 'https://images.unsplash.com/' + sampleId + '?w=320&auto=format&fit=crop&q=75';
+          kwInput.value = item.prompt.split(',')[0].trim();
+          setMsg('기본 사진으로 복원되었습니다.');
+          resetBtn.disabled = true;
+        });
+      } else {
+        card.addEventListener('click', () => {
+          selectedTypographyId = 'none';
+          container.querySelectorAll('#mixerTypographyGrid .mixer-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.id === 'none');
+          });
+          updateMixerSummaryBar();
+          renderPreviewCard();
+        });
+      }
+
+      card.setAttribute('data-id', item.id);
+      targetGrid.appendChild(card);
+    });
+  }
+
   function renderPalettes() {
     const groupGrid = document.getElementById('mixerPalettesGroupGrid');
     if (!groupGrid) return;
 
     groupGrid.innerHTML = '';
-    const filtered = MIXER_PALETTES.filter(p =>
-      (activePaletteCategory === 'all' || p.category === activePaletteCategory) &&
-      (activePaletteFilter === 'all' || p.mode === activePaletteFilter) &&
-      paletteMatchesColorFilter(p, activePaletteColorFilter)
-    );
-    const empty = document.getElementById('mixerPaletteEmpty');
-    if (empty) empty.style.display = filtered.length ? 'none' : 'block';
+    const list = MIXER_PALETTES.filter(p => {
+      if (p.id === 'none') return false;
+      return (activePaletteCategory === 'all' || p.category === activePaletteCategory) &&
+             (activePaletteFilter === 'all' || p.mode === activePaletteFilter) &&
+             paletteMatchesColorFilter(p, activePaletteColorFilter);
+    });
 
-    filtered.forEach(pal => {
+    const displayList = [MIXER_PALETTES.find(p => p.id === 'none'), ...list].filter(Boolean);
+    const empty = document.getElementById('mixerPaletteEmpty');
+    if (empty) empty.style.display = displayList.length ? 'none' : 'block';
+
+    displayList.forEach(pal => {
         const palIdx = MIXER_PALETTES.indexOf(pal);
         const item = document.createElement('button');
         item.type = 'button';
         item.className = 'mixer-item-card' + (selectedPaletteIdx === palIdx ? ' active' : '');
         item.setAttribute('aria-pressed', String(selectedPaletteIdx === palIdx));
-        
+        item.setAttribute('data-index', palIdx);
+
         const weights = pal.colors.length >= 3 ? [55, 30, 15] : (pal.colors.length === 2 ? [65, 35] : [100]);
-        const weightBarStr = `
+        const weightBarStr = pal.id === 'none' ? `
+          <div class="mixer-palette-weight-bar" style="background: linear-gradient(135deg, #e2e8f0 25%, #f1f5f9 25%, #f1f5f9 50%, #e2e8f0 50%, #e2e8f0 75%, #f1f5f9 75%, #f1f5f9 100%); background-size: 20px 20px;"></div>
+          <div class="mixer-palette-weight-labels">
+            <span>자연 색상</span>
+          </div>
+        ` : `
           <div class="mixer-palette-weight-bar">
             ${pal.colors.map((c, idx) => `
               <div class="mixer-palette-weight-segment" style="background:${c}; width:${weights[idx] || 10}%;"></div>
@@ -7610,8 +8682,8 @@
             ${weights[2] ? `<span>강조 (${weights[2]}%)</span>` : ''}
           </div>
         `;
-        const badgeText = pal.mode === 'dark' ? '🌙 다크' : '☀️ 라이트';
-        const badgeClass = pal.mode;
+        const badgeText = pal.id === 'none' ? '🎨 자연' : (pal.mode === 'dark' ? '🌙 다크' : '☀️ 라이트');
+        const badgeClass = pal.id === 'none' ? 'light' : pal.mode;
 
         item.innerHTML = `
           <div class="mixer-palette-badge ${badgeClass}">${badgeText}</div>
@@ -7622,6 +8694,7 @@
 
         item.addEventListener('click', () => {
           selectedPaletteIdx = palIdx;
+          isPaletteOverriddenByUser = true;
           groupGrid.querySelectorAll('.mixer-item-card').forEach(p => {
             p.classList.remove('active');
             p.setAttribute('aria-pressed', 'false');
@@ -7653,7 +8726,7 @@
 
     const highlightHTML = buildMixedHighlightPromptHTML();
     const plainPrompt = buildMixedPrompt();
-    
+
     // 1. 주제(Subject) 참고 이미지 관련 처리
     const customSubjectSamples = getCustomSamplesForMed(subject.id);
     const hasCustomSubjectSample = Boolean(customSubjectSamples[0]);
@@ -7678,7 +8751,7 @@
           <button type="button" class="mixer-half-settings-trigger" id="btnSubjectSampleSettings" title="주제 참고 이미지 설정">⚙️</button>
 
           <!-- 주제 설정 오버레이 패널 -->
-          <div class="mixer-image-overlay-panel" id="panelSubjectSettings">
+          <div class="mixer-image-overlay-panel ${isSubjectOverlayOpen ? 'active' : ''}" id="panelSubjectSettings">
             <div class="panel-header">
               <span>주제 이미지 설정</span>
               <button type="button" class="panel-close-btn" id="btnSubjectSettingsClose">&times;</button>
@@ -7709,7 +8782,7 @@
           <button type="button" class="mixer-half-settings-trigger" id="btnMediumSampleSettings" title="화풍 참고 이미지 설정">⚙️</button>
 
           <!-- 화풍 설정 오버레이 패널 -->
-          <div class="mixer-image-overlay-panel" id="panelMediumSettings">
+          <div class="mixer-image-overlay-panel ${isMediumOverlayOpen ? 'active' : ''}" id="panelMediumSettings">
             <div class="panel-header">
               <span>화풍 이미지 설정</span>
               <button type="button" class="panel-close-btn" id="btnMediumSettingsClose">&times;</button>
@@ -7758,6 +8831,7 @@
         <div class="mixer-preview-actions">
           <button type="button" class="mixer-action-btn copy" id="btnMixerCopy">프롬프트 복사</button>
           <button type="button" class="mixer-action-btn apply" id="btnMixerApply">홍보 이미지에 적용</button>
+          <button type="button" class="mixer-action-btn slidedoc" id="btnMixerSlideDoc">부속 양식에 적용</button>
         </div>
       </div>
     `;
@@ -7770,9 +8844,11 @@
     const subjectCloseBtn = cardWrap.querySelector('#btnSubjectSettingsClose');
 
     subjectSettingsBtn.addEventListener('click', () => {
+      isSubjectOverlayOpen = true;
       subjectPanel.classList.add('active');
     });
     subjectCloseBtn.addEventListener('click', () => {
+      isSubjectOverlayOpen = false;
       subjectPanel.classList.remove('active');
     });
 
@@ -7781,9 +8857,11 @@
     const mediumCloseBtn = cardWrap.querySelector('#btnMediumSettingsClose');
 
     mediumSettingsBtn.addEventListener('click', () => {
+      isMediumOverlayOpen = true;
       mediumPanel.classList.add('active');
     });
     mediumCloseBtn.addEventListener('click', () => {
+      isMediumOverlayOpen = false;
       mediumPanel.classList.remove('active');
     });
 
@@ -7831,6 +8909,7 @@
           setCustomSample(subject.id, 0, dataUrl);
           setSubjectStatus('서버 저장 실패: 로컬 브라우저에 임시 저장했습니다.', true);
         }
+        isSubjectOverlayOpen = false; // 완료 시 오버레이 닫기
         renderPreviewCard();
       };
       reader.readAsDataURL(file);
@@ -7851,6 +8930,7 @@
         if (!url) throw new Error('검색 결과 없음');
         if (subjectImg) subjectImg.src = url;
         setSubjectStatus('새 사진을 불러왔습니다. 마음에 들면 저장하세요.');
+        renderPreviewCard(); // 즉시 미리보기 갱신 (오버레이는 열려있음)
       } catch (error) {
         setSubjectStatus(error.message.includes('403') ? 'Unsplash 요청 한도를 확인해 주세요.' : '사진을 불러오지 못했습니다.', true);
       } finally {
@@ -7879,6 +8959,7 @@
           setCustomSample(subject.id, 0, result.url);
           setSubjectStatus('현재 사진을 이 주제의 대표 샘플로 서버에 저장했습니다.');
           button.textContent = '저장됨';
+          isSubjectOverlayOpen = false; // 완료 시 오버레이 닫기
         } else {
           throw new Error(result.error || '업로드 실패');
         }
@@ -7887,6 +8968,7 @@
         setCustomSample(subject.id, 0, subjectImg.src);
         setSubjectStatus('서버 저장 실패: 로컬 브라우저에 임시 저장했습니다.', true);
         button.textContent = '저장됨';
+        isSubjectOverlayOpen = false; // 완료 시 오버레이 닫기
       } finally {
         button.disabled = false;
         setTimeout(() => renderPreviewCard(), 700);
@@ -7905,6 +8987,7 @@
         setSubjectStatus(where === 'server'
           ? '클립보드 이미지를 이 주제의 대표 샘플로 서버에 저장했습니다.'
           : '서버 저장 실패: 로컬 브라우저에 임시 저장했습니다.', where !== 'server');
+        isSubjectOverlayOpen = false; // 완료 시 오버레이 닫기
         renderPreviewCard();
       } catch (err) {
         setSubjectStatus(err.message, true);
@@ -7985,6 +9068,7 @@
           setCustomSample(medium.id, 0, dataUrl);
           setMediumStatus('서버 저장 실패: 로컬 브라우저에 임시 저장했습니다.', true);
         }
+        isMediumOverlayOpen = false; // 완료 시 오버레이 닫기
         renderPreviewCard();
       };
       reader.readAsDataURL(file);
@@ -8005,6 +9089,7 @@
         if (!url) throw new Error('검색 결과 없음');
         if (mediumImg) mediumImg.src = url;
         setMediumStatus('새 사진을 불러왔습니다. 마음에 들면 저장하세요.');
+        renderPreviewCard(); // 즉시 미리보기 갱신 (오버레이는 열려있음)
       } catch (error) {
         setMediumStatus(error.message.includes('403') ? 'Unsplash 요청 한도를 확인해 주세요.' : '사진을 불러오지 못했습니다.', true);
       } finally {
@@ -8033,6 +9118,7 @@
           setCustomSample(medium.id, 0, result.url);
           setMediumStatus('현재 사진을 이 화풍의 대표 샘플로 서버에 저장했습니다.');
           button.textContent = '저장됨';
+          isMediumOverlayOpen = false; // 완료 시 오버레이 닫기
         } else {
           throw new Error(result.error || '업로드 실패');
         }
@@ -8041,6 +9127,7 @@
         setCustomSample(medium.id, 0, mediumImg.src);
         setMediumStatus('서버 저장 실패: 로컬 브라우저에 임시 저장했습니다.', true);
         button.textContent = '저장됨';
+        isMediumOverlayOpen = false; // 완료 시 오버레이 닫기
       } finally {
         button.disabled = false;
         setTimeout(() => renderPreviewCard(), 700);
@@ -8059,6 +9146,7 @@
         setMediumStatus(where === 'server'
           ? '클립보드 이미지를 이 화풍의 대표 샘플로 서버에 저장했습니다.'
           : '서버 저장 실패: 로컬 브라우저에 임시 저장했습니다.', where !== 'server');
+        isMediumOverlayOpen = false; // 완료 시 오버레이 닫기
         renderPreviewCard();
       } catch (err) {
         setMediumStatus(err.message, true);
@@ -8126,24 +9214,131 @@
         .join(' ');
     }
 
+    // mixer medium.category → PROMOTION_PROMPT_DEFAULTS 키 매핑
+    const MIXER_TO_PROMO_CATEGORY = {
+      tech3d: '3d', analog: 'illustration', graphic: 'modern',
+      anime: 'anime', photo: 'photo', craft: 'craft',
+      game: 'game', nature_photo: 'nature', editorial: 'photo',
+      abstract: 'modern', arch: 'arch', trad: 'culture',
+      digital_paint: 'illustration', ui_ux: 'software',
+      pixel_adv: 'game', official: 'modern', youtube_anim: 'illustration',
+    };
+
+    // mixer 선택 데이터 → 11개 구조화 promptParts 생성
+    function buildMixerPromptParts(subj, med, pal, comp, typo) {
+      const paletteColors = (pal && pal.colors) ? pal.colors : [];
+      const paletteMapping = (pal && pal.colorMapping) ? pal.colorMapping : '';
+      const paletteRoles = paletteColors.map((hex, i) => {
+        const role = ['primary', 'secondary', 'accent', 'highlight', 'support'][i] || `color ${i + 1}`;
+        return `${role} ${hex}`;
+      });
+      const paletteStr = paletteRoles.length > 0
+        ? `Use the mixer palette as campaign color roles: ${paletteRoles.join(', ')}.${paletteMapping ? ' ' + paletteMapping : ''}`
+        : (paletteMapping || 'Derive palette from the selected visual style');
+
+      const medName = capitalizeId(med.id, 'med-');
+      const subjName = capitalizeId(subj.id, 'mix-');
+      const visualDNA = [medName, subjName].filter(Boolean).join(' — ');
+      const shapeLanguage = subj.prompt
+        ? subj.prompt.split('.')[0].trim()
+        : `${subjName} subject in ${medName} style`;
+      const textureRendering = med.suffix
+        ? med.suffix.split(',').slice(0, 3).join(',').trim()
+        : `${med.prefix} style rendering`;
+      const lightingMood = typo && typo.prompt
+        ? typo.prompt
+        : `Typography style matched to the ${medName} visual language`;
+      const layoutBehavior = comp
+        ? `${comp.prefix}${comp.suffix ? ', ' + comp.suffix : ''}`
+        : 'Hero subject centered with clear zones for headline, subtext, and CTA';
+
+      const typoMap = {
+        tech3d: 'Clean modern sans-serif placed on minimal planes; do not let typography compete with 3D depth',
+        analog: 'Warm readable typography; handmade feel belongs in decoration, not legibility-critical copy',
+        graphic: 'Confident graphic typography integrated into the design system',
+        anime: 'Dynamic graphic lettering or clean placement complementing the illustration style',
+        photo: 'Restrained editorial typography placed on flat or blurred zones away from subject detail',
+        craft: 'Warm readable sans-serif; handcrafted feel in decoration only, not headline text',
+        game: 'Bold display type or game UI label treatment; keep copy short and legible',
+        nature_photo: 'Clean nature-complementary typography with strong legibility over organic backgrounds',
+        editorial: 'Restrained editorial typography on uncluttered background zones',
+        abstract: 'Bold geometric typography that complements abstract forms without visual competition',
+        arch: 'Restrained modern sans-serif with strong alignment and generous white space',
+        trad: 'Traditional or cultural typography matched to the aesthetic; maintain legibility',
+        digital_paint: 'Match type mood to the painting style; headline stays sharp and legible',
+        ui_ux: 'System UI or modern screen typography with strong readability hierarchy',
+        pixel_adv: 'Bold pixel-friendly or chunky sans-serif matching the pixel art energy',
+        official: 'Professional sans-serif with clear hierarchy for institutional communication',
+        youtube_anim: 'Energetic animation-friendly typography with bold scale contrast',
+      };
+      const typographyGuidance = typoMap[med.category] ||
+        'Bold, clean sans-serif typography with strong contrast against the background';
+
+      return {
+        visualDNA,
+        paletteStrategy: paletteStr,
+        textureRendering,
+        lightingMood,
+        shapeLanguage,
+        layoutBehavior,
+        typographyGuidance,
+        campaignAdaptation: `Present the promotional message through the ${medName} visual language — keep the style recognizable while centering the campaign goal`,
+        objectAdaptation: `Render the promoted item or service as the primary subject within a ${medName} composition featuring ${subjName}`,
+        avoid: `avoid style inconsistency, unrelated decorative elements outside the ${medName} aesthetic, and mismatched rendering qualities`,
+        qualityRules: `maintain ${medName} fidelity, clear subject readability, and campaign message legibility at all text overlay zones`,
+      };
+    }
+
     // 적용 이벤트
     cardWrap.querySelector('#btnMixerApply').addEventListener('click', () => {
       if (typeof window.applyPromotionConceptStyle === 'function') {
+        const composition = resolveMixerComposition();
+        const typography = resolveMixerTypography();
+
+        let styleId = `mix-${subject.id}-${medium.id}`;
+        let styleNameKo = `${subject.nameKo} (${medium.nameKo})`;
+        let styleNameEn = `${capitalizeId(subject.id, 'mix-')} (${capitalizeId(medium.id, 'med-')})`;
+        let styleDesc = `${subject.nameKo}에 ${medium.nameKo} 기법을 다차원으로 믹싱한 스타일입니다.`;
+        let styleDescEn = `A style that multi-dimensionally mixes ${capitalizeId(subject.id, 'mix-')} with ${capitalizeId(medium.id, 'med-')} technique.`;
+        const styleTags = [activeCategory, 'mixer', subject.nameKo, medium.nameKo];
+
+        if (composition) {
+          styleId += `-${composition.id}`;
+          styleNameKo += ` [${composition.nameKo}]`;
+          styleNameEn += ` [${capitalizeId(composition.id, 'comp-')}]`;
+          styleDesc += ` 구도는 ${composition.nameKo}을(를) 취합니다.`;
+          styleDescEn += ` The composition takes ${capitalizeId(composition.id, 'comp-')}.`;
+          styleTags.push(composition.nameKo);
+        }
+        if (typography) {
+          styleId += `-${typography.id}`;
+          styleNameKo += ` + ${typography.nameKo}`;
+          styleNameEn += ` + ${capitalizeId(typography.id, 'typo-')}`;
+          styleDesc += ` 타이포그래피 스타일로 ${typography.nameKo}을(를) 적용합니다.`;
+          styleDescEn += ` The typography style applies ${capitalizeId(typography.id, 'typo-')}.`;
+          styleTags.push(typography.nameKo);
+        }
+
+        const mixerPromptParts = buildMixerPromptParts(subject, medium, palette, composition, typography);
+        const mappedCategory = MIXER_TO_PROMO_CATEGORY[medium.category] || 'modern';
+
         let dummyStyle = {
-          id: `mix-${subject.id}-${medium.id}`,
-          category: activeCategory,
-          nameKo: `${subject.nameKo} (${medium.nameKo})`,
-          nameEn: `${capitalizeId(subject.id, 'mix-')} (${capitalizeId(medium.id, 'med-')})`,
+          id: styleId,
+          category: mappedCategory,
+          mixerCategory: activeCategory,
+          nameKo: styleNameKo,
+          nameEn: styleNameEn,
           emoji: subject.emoji,
-          desc: `${subject.nameKo}에 ${medium.nameKo} 기법을 다차원으로 믹싱한 스타일입니다.`,
-          descEn: `A style that multi-dimensionally mixes ${capitalizeId(subject.id, 'mix-')} with ${capitalizeId(medium.id, 'med-')} technique.`,
+          desc: styleDesc,
+          descEn: styleDescEn,
           palette: palette.colors,
           prompt: plainPrompt,
           promotionPrompt: plainPrompt,
-          tags: [activeCategory, 'mixer', subject.nameKo, medium.nameKo]
+          promptParts: mixerPromptParts,
+          tags: styleTags
         };
 
-        // 홍보 탭의 고도화된 프롬프트 파서가 로드되어 있으면 연동
+        // 홍보 탭의 고도화된 프롬프트 파서가 로드되어 있으면 연동 (기존 promptParts 유지)
         if (typeof window.buildPromotionConceptStyle === 'function') {
           dummyStyle = window.buildPromotionConceptStyle(dummyStyle);
         }
@@ -8153,6 +9348,34 @@
         if (tabBtn) tabBtn.click();
       } else {
         alert('홍보용 이미지 탭을 찾을 수 없습니다.');
+      }
+    });
+
+    cardWrap.querySelector('#btnMixerSlideDoc').addEventListener('click', () => {
+      if (typeof window.applyMixerToSlideDocument === 'function') {
+        const composition = resolveMixerComposition();
+        const typography = resolveMixerTypography();
+        const plainPrompt = buildMixedPrompt();
+        const promptParts = buildMixerPromptParts(subject, medium, palette, composition, typography);
+        let nameKo = `${subject.nameKo} (${medium.nameKo})`;
+        let nameEn = `${capitalizeId(subject.id, 'mix-')} (${capitalizeId(medium.id, 'med-')})`;
+        if (composition) { nameKo += ` [${composition.nameKo}]`; nameEn += ` [${capitalizeId(composition.id, 'comp-')}]`; }
+        if (typography) { nameKo += ` + ${typography.nameKo}`; nameEn += ` + ${capitalizeId(typography.id, 'typo-')}`; }
+        window.applyMixerToSlideDocument({
+          nameKo, nameEn,
+          prompt: plainPrompt,
+          promptParts,
+          palette,
+          mediumKo: medium.nameKo,
+          mediumEn: capitalizeId(medium.id, 'med-'),
+          mediumRendering: medium.suffix || '',
+          colorRoles: promptParts.paletteStrategy || '',
+          textureInfo: promptParts.textureRendering || '',
+          layoutFeel: promptParts.layoutBehavior || '',
+          typographyGuidance: promptParts.typographyGuidance || '',
+        });
+      } else {
+        alert('부속 양식 탭을 찾을 수 없습니다.');
       }
     });
   }

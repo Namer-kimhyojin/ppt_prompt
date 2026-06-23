@@ -55,7 +55,8 @@
     ],
     promotion: [
       { label: "레이아웃 변경", targetId: "promotionShuffleLayoutBtn", className: "btn secondary" },
-      { label: "복사", targetId: "promotionCopyPromptBtn", className: "btn primary" },
+      { label: "랜덤 프리셋", targetId: "promotionRandomPresetBtn", className: "btn secondary" },
+      { label: "프롬프트 복사", targetId: "promotionCopyPromptBtn", className: "btn primary" },
     ],
     promotionPlanner: [
       // 컨셉 제안 탭: 카드별 복사 버튼으로 동작 — 헤더 액션 없음
@@ -123,7 +124,14 @@
     syncHeaderActionStates();
   }
 
+  let activeTabKey = "designer";
+  window.lastActiveTabId = "tabBtnDesigner";
+
   function switchTab(nextTab) {
+    if (activeTabKey !== nextTab) {
+      window.lastActiveTabId = tabs[activeTabKey]?.button?.id || "tabBtnDesigner";
+      activeTabKey = nextTab;
+    }
     Object.entries(tabs).forEach(([key, entry]) => {
       if (!entry.button || !entry.pane) return;
       const isActive = key === nextTab;

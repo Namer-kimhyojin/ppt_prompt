@@ -312,6 +312,9 @@
 
         syncUIFromState(prefix, state);
         updatePromptPreview(prefix, state);
+        if (typeof window.clearPromotionConceptStyle === "function") {
+          window.clearPromotionConceptStyle();
+        }
       });
 
       grid.appendChild(chip);
@@ -359,6 +362,10 @@
 
       syncUIFromState(prefix, state);
       updatePromptPreview(prefix, state);
+
+      if (typeof window.clearPromotionConceptStyle === "function") {
+        window.clearPromotionConceptStyle();
+      }
 
       showToast(`새 컬러 시스템 [${name}]을 추가 및 적용했습니다.`);
     });
@@ -593,6 +600,12 @@
   }
 
   function bindSubPaneEvents(prefix, state) {
+    const notifyVisualChange = () => {
+      if (typeof window.clearPromotionConceptStyle === "function") {
+        window.clearPromotionConceptStyle();
+      }
+    };
+
     // 1. Text Inputs (input events)
     const textInputs = [
       { id: `slide${prefix}Headline`, key: "headline" },
@@ -633,6 +646,9 @@
         el.addEventListener("input", (e) => {
           state[item.key] = e.target.value;
           updatePromptPreview(prefix, state);
+          if (item.key.endsWith("Custom")) {
+            notifyVisualChange();
+          }
         });
       }
     });
@@ -672,6 +688,7 @@
           state[item.key] = e.target.value;
           toggleCustomInputs(prefix, state);
           updatePromptPreview(prefix, state);
+          notifyVisualChange();
         });
       }
     });
@@ -691,6 +708,7 @@
         state.useColorSystem = e.target.checked;
         toggleCustomInputs(prefix, state);
         updatePromptPreview(prefix, state);
+        notifyVisualChange();
       });
     }
 
@@ -711,6 +729,7 @@
             state[c.key] = val;
             pck.value = val;
             updatePromptPreview(prefix, state);
+            notifyVisualChange();
           }
         });
         pck.addEventListener("input", (e) => {
@@ -718,6 +737,7 @@
           state[c.key] = val;
           txt.value = val;
           updatePromptPreview(prefix, state);
+          notifyVisualChange();
         });
       }
     });
@@ -1553,6 +1573,61 @@
     const prohibitLogoEn = hasLogo ? "" : "company logos/trademarks, ";
     const prohibitQrEn = state.qrMode === "none" ? "QR codes, barcodes" : "barcodes";
 
+    const mixerBlockKo = (() => {
+      const ov = state.mixerStyleOverride;
+      if (!ov) return "";
+      const hasStructured = ov.mediumRendering || ov.colorRoles || ov.textureInfo;
+      if (!hasStructured) {
+        return `\n[화풍 믹서 연동 — 비주얼 스타일 지시]\n- 연동 스타일명: ${ov.nameKo}\n- 비주얼 렌더링 지시문: ${ov.prompt}\n`;
+      }
+      if (prefix === "Cover") {
+        return `\n[화풍 믹서 연동 — 비주얼 스타일 지시 (표지 전체 적용)]\n` +
+          `- 연동 스타일: ${ov.nameKo}\n` +
+          (ov.mediumRendering ? `- 렌더링 방식: ${ov.mediumRendering}\n` : "") +
+          (ov.colorRoles ? `- 팔레트 역할 분배: ${ov.colorRoles}\n` : "") +
+          (ov.layoutFeel ? `- 구도 & 배치감: ${ov.layoutFeel}\n` : "") +
+          (ov.typographyGuidance ? `- 타이포그래피 처리: ${ov.typographyGuidance}\n` : "");
+      } else if (prefix === "Divider") {
+        return `\n[화풍 믹서 연동 — 비주얼 스타일 지시 (간지 중간 강도)]\n` +
+          `- 연동 스타일: ${ov.nameKo}\n` +
+          (ov.textureInfo ? `- 텍스처 & 질감: ${ov.textureInfo}\n` : "") +
+          (ov.colorRoles ? `- 팔레트 역할 분배: ${ov.colorRoles}\n` : "") +
+          (ov.typographyGuidance ? `- 타이포그래피 처리: ${ov.typographyGuidance}\n` : "");
+      } else {
+        return `\n[화풍 믹서 연동 — 배경 스타일 힌트 (절제 적용)]\n` +
+          `- 스타일 힌트: ${ov.nameKo}\n` +
+          (ov.textureInfo ? `- 질감 요소 (낮은 대비, 배경 전용): ${ov.textureInfo}\n` : "") +
+          (ov.colorRoles ? `- 팔레트 역할 분배: ${ov.colorRoles}\n` : "");
+      }
+    })();
+    const mixerBlockEn = (() => {
+      const ov = state.mixerStyleOverride;
+      if (!ov) return "";
+      const hasStructured = ov.mediumRendering || ov.colorRoles || ov.textureInfo;
+      if (!hasStructured) {
+        return `\n[Concept Mixer — Visual Style Directive]\n- Linked style: ${ov.nameEn}\n- Visual rendering directive: ${ov.prompt}\n`;
+      }
+      if (prefix === "Cover") {
+        return `\n[Concept Mixer — Visual Style Directive (full cover application)]\n` +
+          `- Linked style: ${ov.nameEn}\n` +
+          (ov.mediumRendering ? `- Rendering method: ${ov.mediumRendering}\n` : "") +
+          (ov.colorRoles ? `- Palette role distribution: ${ov.colorRoles}\n` : "") +
+          (ov.layoutFeel ? `- Composition & layout feel: ${ov.layoutFeel}\n` : "") +
+          (ov.typographyGuidance ? `- Typography treatment: ${ov.typographyGuidance}\n` : "");
+      } else if (prefix === "Divider") {
+        return `\n[Concept Mixer — Visual Style Directive (divider — medium intensity)]\n` +
+          `- Linked style: ${ov.nameEn}\n` +
+          (ov.textureInfo ? `- Texture & surface: ${ov.textureInfo}\n` : "") +
+          (ov.colorRoles ? `- Palette role distribution: ${ov.colorRoles}\n` : "") +
+          (ov.typographyGuidance ? `- Typography treatment: ${ov.typographyGuidance}\n` : "");
+      } else {
+        return `\n[Concept Mixer — Background Style Hint (apply with restraint)]\n` +
+          `- Style hint: ${ov.nameEn}\n` +
+          (ov.textureInfo ? `- Texture only (low contrast, background only): ${ov.textureInfo}\n` : "") +
+          (ov.colorRoles ? `- Palette role distribution: ${ov.colorRoles}\n` : "");
+      }
+    })();
+
     if (state.outputLang === "ko") {
       const docTypeLabel = prefix === "Cover" ? "표지" : prefix === "Divider" ? "간지" : "배경";
       const balanceNote = useAsymmetricLayout
@@ -1571,7 +1646,7 @@ ${conflictBlock}
 ${layoutLinesKo.join("\n")}
 
 ${docIntentKo}
-
+${mixerBlockKo}
 [컬러 시스템 — 용도별 적용 기준]
 ${colorSystemKo}
 
@@ -1606,7 +1681,7 @@ ${conflictBlockEn}
 ${layoutLinesEn.join("\n")}
 
 ${docIntentEn}
-
+${mixerBlockEn}
 [Color System & Palette — Role-Based Application]
 ${colorSystemEn}
 
@@ -1830,6 +1905,105 @@ ${logoBlockEn}${qrBlockEn}
     clearTimeout(toast._timer);
     toast._timer = setTimeout(() => { toast.style.opacity = "0"; }, 2500);
   }
+
+  window.getCurrentSlideDocumentPrompt = function() {
+    const state = getActiveState();
+    const prefix = activeSubTab === "cover" ? "Cover" : activeSubTab === "divider" ? "Divider" : activeSubTab === "background" ? "Background" : "Signboard";
+    return compilePrompt(prefix, state);
+  };
+
+  window.clearSlideDocumentVisualStyles = function() {
+    [COVER_STATE, DIVIDER_STATE, BACKGROUND_STATE, SIGNBOARD_STATE].forEach(st => {
+      st.mixerStyleOverride = null;
+      st.useColorSystem = false;
+      st.layoutMetaphor = "none";
+      st.visualStrategy = "none";
+      st.layerComplexity = "single";
+      st.artStyle = "none";
+      st.bgBrightness = "none";
+      st.gradTransEffect = "none";
+      
+      st.layoutMetaphorCustom = "";
+      st.visualStrategyCustom = "";
+      st.layerComplexityCustom = "";
+      st.artStyleCustom = "";
+      st.gradTransEffectCustom = "";
+    });
+
+    const prefix = activeSubTab === "cover" ? "Cover" : activeSubTab === "divider" ? "Divider" : activeSubTab === "background" ? "Background" : "Signboard";
+    const state = getActiveState();
+    
+    // 컬러 프리셋 그리드도 초기화 반영
+    setupColorPresets("slideCoverColorPresetGrid", "cover");
+    setupColorPresets("slideDividerColorPresetGrid", "divider");
+    setupColorPresets("slideBackgroundColorPresetGrid", "background");
+    setupColorPresets("slideSignboardColorPresetGrid", "signboard");
+
+    syncUIFromState(prefix, state);
+    updatePromptPreview(prefix, state);
+  };
+
+  function _showSlideDocMixerBadge(nameKo) {
+    let badge = document.getElementById('slideDocMixerBadge');
+    if (!badge) {
+      const pane = document.getElementById('paneSlideDocument');
+      if (!pane) return;
+      badge = document.createElement('div');
+      badge.id = 'slideDocMixerBadge';
+      badge.className = 'slide-doc-mixer-badge';
+      pane.insertBefore(badge, pane.firstChild);
+    }
+    badge.innerHTML = `<span class="slide-doc-mixer-badge-icon">🎨</span> 화풍 믹서 연동 중: <strong>${nameKo}</strong> <button type="button" class="slide-doc-mixer-badge-clear" id="btnSlideDocMixerClear">연동 해제</button>`;
+    badge.style.display = 'flex';
+    const clearBtn = document.getElementById('btnSlideDocMixerClear');
+    if (clearBtn) clearBtn.addEventListener('click', () => { if (typeof window.clearMixerFromSlideDocument === 'function') window.clearMixerFromSlideDocument(); });
+  }
+
+  function _hideSlideDocMixerBadge() {
+    const badge = document.getElementById('slideDocMixerBadge');
+    if (badge) badge.style.display = 'none';
+  }
+
+  window.applyMixerToSlideDocument = function(mixerData) {
+    const colors = (mixerData.palette && Array.isArray(mixerData.palette.colors)) ? mixerData.palette.colors : [];
+    const override = {
+      nameKo: mixerData.nameKo || '',
+      nameEn: mixerData.nameEn || '',
+      prompt: mixerData.prompt || '',
+      mediumKo: mixerData.mediumKo || '',
+      mediumEn: mixerData.mediumEn || '',
+      mediumRendering: mixerData.mediumRendering || '',
+      colorRoles: mixerData.colorRoles || '',
+      textureInfo: mixerData.textureInfo || '',
+      layoutFeel: mixerData.layoutFeel || '',
+      typographyGuidance: mixerData.typographyGuidance || '',
+    };
+    [COVER_STATE, DIVIDER_STATE, BACKGROUND_STATE, SIGNBOARD_STATE].forEach(st => {
+      st.mixerStyleOverride = override;
+      if (colors[0]) st.primaryColor = colors[0];
+      if (colors[1]) st.secondaryColor = colors[1];
+      if (colors[2]) st.backgroundColor = colors[2];
+      if (colors[3]) st.accentColor = colors[3];
+      st.useColorSystem = true;
+    });
+    [['Cover', COVER_STATE], ['Divider', DIVIDER_STATE], ['Background', BACKGROUND_STATE], ['Signboard', SIGNBOARD_STATE]].forEach(([p, st]) => {
+      syncUIFromState(p, st);
+      updatePromptPreview(p, st);
+    });
+    setupColorPresets('slideCoverColorPresetGrid', 'cover');
+    setupColorPresets('slideDividerColorPresetGrid', 'divider');
+    setupColorPresets('slideBackgroundColorPresetGrid', 'background');
+    setupColorPresets('slideSignboardColorPresetGrid', 'signboard');
+    _showSlideDocMixerBadge(mixerData.nameKo || '화풍 믹서');
+    const tabBtn = document.getElementById('tabBtnSlideDocument');
+    if (tabBtn) tabBtn.click();
+  };
+
+  window.clearMixerFromSlideDocument = function() {
+    [COVER_STATE, DIVIDER_STATE, BACKGROUND_STATE, SIGNBOARD_STATE].forEach(st => { st.mixerStyleOverride = null; });
+    [['Cover', COVER_STATE], ['Divider', DIVIDER_STATE], ['Background', BACKGROUND_STATE], ['Signboard', SIGNBOARD_STATE]].forEach(([p, st]) => updatePromptPreview(p, st));
+    _hideSlideDocMixerBadge();
+  };
 
   init();
 })();

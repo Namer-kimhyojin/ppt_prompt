@@ -121,8 +121,20 @@
   }
 
   function getCurrentDesignerPrompt() {
+    const lastTab = window.lastActiveTabId;
+    if (lastTab === "tabBtnPromotion" || lastTab === "tabBtnConceptMixer" || lastTab === "tabBtnPromotionPlanner") {
+      return getPromotionPrompt();
+    }
+    if (lastTab === "tabBtnSlideDocument" && typeof window.getCurrentSlideDocumentPrompt === "function") {
+      return window.getCurrentSlideDocumentPrompt();
+    }
+
+    // fallback
     if (activePaneId() === "panePromotion") {
       return getPromotionPrompt();
+    }
+    if (activePaneId() === "paneSlideDocument" && typeof window.getCurrentSlideDocumentPrompt === "function") {
+      return window.getCurrentSlideDocumentPrompt();
     }
     if (typeof window.buildPromptParts === "function") {
       const lang = window.state?.lang || "ko";

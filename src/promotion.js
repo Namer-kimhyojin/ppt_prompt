@@ -26,7 +26,6 @@
     COMMERCIAL_BASELINE_PROFILES,
     CREATIVITY_LEVEL_PROFILES,
     VARIATION_SEEDS,
-    CONTENT_PROMOTION_STRATEGIES,
     CREATIVE_DIVERSITY_PROFILES,
     LAYOUT_COMPOSITION_PROFILES,
     ATTENTION_FLOW_VARIANTS,
@@ -38,14 +37,11 @@
     AI_TOGGLE_FIELDS,
     FIELD_ENABLE_TOGGLE_FIELDS,
     STEP5_QUALITY_OPTIONS,
-    STEP3_VISUAL_OPTION_GROUPS,
-    STEP3_IDEA_PRESETS,
     ANTI_AI_PRESETS,
     DEFAULT_COLOR_PRESETS,
     TYPE_FIELD_DEFS,
-    CONTENT_TYPE_TEMPLATES,
-    CONTENT_TYPE_TEMPLATES_EN,
-    CONTENT_TYPE_SAMPLE_PROFILES,
+    SAMPLE_PROFILES,
+    DEFAULT_SAMPLE_PROFILE,
     UNIFIED_RANDOMIZABLE_PRESET_FIELDS,
     COLOR_FIELD_IDS,
   } = window.PROMO_DATA;
@@ -111,8 +107,8 @@
 
   // ── 프롬프트 엔진 연결 ──────────────────────────────────
   const {
-    createPromptSections, renderReviewPrompt, renderOptimizedPrompt, sanitizePromptForAI,
-    conceptPromptPartsFromStyle, applyConceptPartsToState, getContentConceptBridgeOverrides,
+    createPromptSections, renderBasicPrompt, renderReviewPrompt, renderOptimizedPrompt, sanitizePromptForAI,
+    conceptPromptPartsFromStyle, applyConceptPartsToState,
     prunePromptLines, finalizePromptLines, resolveConflictLines,
     getAppliedConceptLines, getConceptBridgeLines, getPaletteRoleSplitLines,
     getConceptQualityLines, qrCodePromptLines, buildRoleStatement,
@@ -290,70 +286,11 @@
 
 
   function shouldUseCompactPromptGuidance() {
-    return isBasicVisualPlanningMode() && hasBasicConceptPromptInput() && shouldRestrictAiAutoForCurrentInput();
+    return true;
   }
 
   function isBasicVisualPlanningMode() {
-    return state.visualPlanningMode !== "detail";
-  }
-
-  function isDetailVisualPlanningMode() {
-    return !isBasicVisualPlanningMode();
-  }
-
-  const BASIC_MODE_DETAIL_FIELD_OVERRIDES = {
-    tone: "",
-    toneEnabled: "false",
-    toneMode: "ai",
-    visualStyle: "",
-    visualStyleEnabled: "false",
-    visualStyleMode: "ai",
-    bigIdea: "",
-    bigIdeaEnabled: "false",
-    bigIdeaMode: "ai",
-    visualMetaphor: "",
-    visualMetaphorEnabled: "false",
-    visualMetaphorMode: "ai",
-    keyVisualPlacement: "auto",
-    qualityNotes: "",
-    colorStrategy: "ai",
-    primaryColor: "",
-    secondaryColor: "",
-    accentColor: "",
-    backgroundMode: "solid",
-    backgroundColor: "",
-    backgroundDetails: "",
-    mandatoryElements: "",
-    forbiddenElements: "",
-    commercialBaseline: "off",
-    creativityLevel: "balanced",
-    antiAiStyle: "general",
-    posterKeyVisual: "",
-    posterKeyVisualEnabled: "false",
-    posterInfoLayout: "",
-    posterInfoLayoutEnabled: "false",
-    snsVisualFocus: "",
-    snsVisualFocusEnabled: "false",
-    snsPlacementNotes: "",
-    snsPlacementNotesEnabled: "false",
-  };
-
-  function withBasicModeDetailFieldsExcluded(callback) {
-    if (!isBasicVisualPlanningMode()) return callback();
-
-    const snapshot = {};
-    Object.keys(BASIC_MODE_DETAIL_FIELD_OVERRIDES).forEach((key) => {
-      snapshot[key] = state[key];
-      state[key] = BASIC_MODE_DETAIL_FIELD_OVERRIDES[key];
-    });
-
-    try {
-      return callback();
-    } finally {
-      Object.keys(snapshot).forEach((key) => {
-        state[key] = snapshot[key];
-      });
-    }
+    return true;
   }
 
   function hasBasicConceptPromptInput() {
@@ -391,12 +328,6 @@
     });
   }
 
-  function visualPlanningModeLabel() {
-    return isBasicVisualPlanningMode()
-      ? localizeSentence("기본 모드(컨셉 제안 중심)", "Basic mode (concept-suggestion led)")
-      : localizeSentence("상세 모드(직접 비주얼 기획)", "Detail mode (manual visual planning)");
-  }
-
   function compactConceptSummary(value) {
     return String(value || "")
       .replace(/color palette\s*:\s*#[0-9a-fA-F]{3,6}(?:[\s,]+#[0-9a-fA-F]{3,6})*/gi, "")
@@ -429,10 +360,7 @@
   }
 
   function normalizeTargetEngine(value) {
-    const engine = String(value || "").trim().toLowerCase();
-    if (engine === "imagen" || engine === "google" || engine === "gemini") return "imagen";
-    if (/^(dalle|dall-e|dall-e-3|openai|gpt-image|gpt-image-1|gpt-image-2|openai-gpt-image)$/.test(engine)) return "dalle";
-    return DEFAULT_STATE.targetEngine;
+    return "dalle";
   }
 
   function isOpenAITargetEngine(value) {
@@ -472,6 +400,10 @@
       }
     });
 
+    if (!next.qualityNotes || next.qualityNotes.trim() === "") {
+      next.qualityNotes = DEFAULT_STATE.qualityNotes;
+    }
+
     const legacyPxSizeProvided = String(incoming.sizePxW || "").trim() || String(incoming.sizePxH || "").trim();
     const legacyCmSizeProvided = String(incoming.sizeCmW || "").trim() || String(incoming.sizeCmH || "").trim();
     if (legacyPxSizeProvided || legacyCmSizeProvided) {
@@ -494,12 +426,13 @@
     next.assetType = ASSET_TYPES.includes(incoming.assetType) ? incoming.assetType : DEFAULT_STATE.assetType;
     next.contentType = CONTENT_TYPE_VALUES.includes(next.contentType) ? next.contentType : DEFAULT_STATE.contentType;
     next.outputLanguage = normalizeOutputLanguage(incoming.outputLanguage || next.outputLanguage);
-    next.promptMode = incoming.promptMode === "optimized" ? "optimized" : DEFAULT_STATE.promptMode;
+    next.promptMode = "basic";
     next.targetEngine = normalizeTargetEngine(incoming.targetEngine || next.targetEngine);
     next.visualPlanningMode = incoming.visualPlanningMode === "detail" ? "detail" : DEFAULT_STATE.visualPlanningMode;
     next.omitEmptyFields = normalizeBooleanSetting(incoming.omitEmptyFields, DEFAULT_STATE.omitEmptyFields);
     next.dedupePromptLines = normalizeBooleanSetting(incoming.dedupePromptLines, DEFAULT_STATE.dedupePromptLines);
     next.autoResolveConflicts = normalizeBooleanSetting(incoming.autoResolveConflicts, DEFAULT_STATE.autoResolveConflicts);
+    next.qualityNotesEnabled = normalizeBooleanSetting(incoming.qualityNotesEnabled, DEFAULT_STATE.qualityNotesEnabled);
     next.commercialBaseline = ["off", "standard", "premium", "luxury"].includes(incoming.commercialBaseline)
       ? incoming.commercialBaseline
       : DEFAULT_STATE.commercialBaseline;
@@ -659,6 +592,30 @@
         persistSizePresets();
         renderSizePresetList();
       });
+    });
+  }
+
+  function bindSizeQuickPresets() {
+    const container = document.getElementById("promoSizeQuickPresets");
+    if (!container) return;
+    container.addEventListener("click", (e) => {
+      const chip = e.target.closest(".promo-sqp-chip");
+      if (!chip) return;
+      const mode = chip.dataset.sqpMode;
+      if (mode === "direct") {
+        applySizePreset({
+          sizeMode: "direct",
+          directSizeUnit: chip.dataset.sqpUnit || "px",
+          directSizeW: chip.dataset.sqpW || "",
+          directSizeH: chip.dataset.sqpH || "",
+        });
+      } else {
+        applySizePreset({
+          sizeMode: "ratio",
+          ratio: chip.dataset.sqpRatio || "4:5",
+          orientation: chip.dataset.sqpOrientation || "vertical",
+        });
+      }
     });
   }
 
@@ -884,7 +841,9 @@
   }
 
   function promptModeLabel() {
-    return state.promptMode === "optimized" ? "모델 최적화용" : "검토용";
+    if (state.promptMode === "optimized") return "모델 최적화용";
+    if (state.promptMode === "basic") return "기본";
+    return "검토용";
   }
 
 
@@ -979,9 +938,7 @@
     if (textEntries.length > 7) {
       notes.push("직접 노출 텍스트가 많습니다. 핵심 문구만 남기면 이미지 품질이 더 좋아집니다.");
     }
-    if (!forbiddenTokens.includes("이모지 사용 금지")) {
-      notes.push("금지 규칙에 `이모지 사용 금지`를 유지하는 것을 권장합니다.");
-    }
+
     if (state.commercialBaseline === "off") {
       notes.push("상업 품질 기준이 꺼져 있어 결과물이 무난한 안내 이미지처럼 보일 수 있습니다.");
     }
@@ -1552,6 +1509,7 @@
     visualMetaphor: () => syncToggleFieldUI("visualMetaphor"),
     visualStyle: () => syncToggleFieldUI("visualStyle"),
     layoutComposition: () => syncToggleFieldUI("layoutComposition"),
+    qualityNotes: () => syncToggleFieldUI("qualityNotes"),
   };
 
   function bindAiToggleControls(scope) {
@@ -1613,9 +1571,7 @@
             status("Gemini 선택: CTA·한 줄 오퍼·첫 줄 훅·해시태그를 직접 입력으로 전환했습니다.", "info");
           }
         }
-        if (input.id === "promotionContentType") {
-          applyContentTypeTemplate(input.value);
-        }
+        
         if (
           input.id === "promotionRatio" ||
           input.id === "promotionSizeMode" ||
@@ -1698,34 +1654,14 @@
     });
   }
 
-  function applyContentTypeTemplate(type) {
-    if (!CONTENT_TYPE_VALUES.includes(type)) return;
-    state.contentType = type;
-    const profile = CONTENT_TYPE_SAMPLE_PROFILES[type] || CONTENT_TYPE_SAMPLE_PROFILES.none;
-    const template = CONTENT_TYPE_TEMPLATES[type];
+  
 
-    applySampleProfile(profile);
-
-    if (!template) {
-      status("직접 입력 템플릿 예시를 자동으로 적용했습니다.", "info");
-      return;
-    }
-
-    status(`'${template.name}' 템플릿 예시를 자동으로 적용했습니다.`, "success");
-  }
-
-  function bindTemplateCards() {
-    root.querySelectorAll("[data-promo-content-type]").forEach((button) => {
-      button.addEventListener("click", () => {
-        applyContentTypeTemplate(button.dataset.promoContentType);
-      });
-    });
-  }
+  
 
   function bindOptimizationControls() {
     const selectBindings = [
       { id: "promotionOutputLanguage", stateKey: "outputLanguage", normalize: normalizeOutputLanguage },
-      { id: "promotionPromptMode", stateKey: "promptMode", normalize: (value) => value === "optimized" ? "optimized" : "review" },
+      { id: "promotionPromptMode", stateKey: "promptMode", normalize: (value) => "basic" },
       { id: "promotionCommercialBaseline", stateKey: "commercialBaseline", normalize: (value) => ["off", "standard", "premium", "luxury"].includes(value) ? value : DEFAULT_STATE.commercialBaseline },
       { id: "promotionCreativityLevel", stateKey: "creativityLevel", normalize: (value) => ["stable", "balanced", "experimental"].includes(value) ? value : DEFAULT_STATE.creativityLevel },
     ];
@@ -1753,73 +1689,11 @@
       });
     });
 
-    document.querySelectorAll("[data-promo-variation]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.variationMode = btn.dataset.promoVariation;
-        document.querySelectorAll("[data-promo-variation]").forEach((b) => {
-          const active = b.dataset.promoVariation === state.variationMode;
-          b.classList.toggle("active", active);
-          b.setAttribute("aria-pressed", String(active));
-        });
-        promptDirty = false; // 변형 선택은 설정 변경 → 자동 생성 모드
-        renderPreview();
-      });
-    });
-
-    document.querySelectorAll("[data-promo-kv-placement]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.keyVisualPlacement = btn.dataset.promoKvPlacement || DEFAULT_STATE.keyVisualPlacement;
-        document.querySelectorAll("[data-promo-kv-placement]").forEach((b) => {
-          const active = b.dataset.promoKvPlacement === state.keyVisualPlacement;
-          b.classList.toggle("active", active);
-          b.setAttribute("aria-pressed", String(active));
-        });
-        promptDirty = false;
-        renderPreview();
-      });
-    });
-
-    root.querySelectorAll("[data-promo-commercial-baseline]").forEach((button) => {
-      if (button.tagName !== "BUTTON") return;
-      button.addEventListener("click", () => {
-        state.commercialBaseline = ["off", "standard", "premium", "luxury"].includes(button.dataset.promoCommercialBaseline)
-          ? button.dataset.promoCommercialBaseline
-          : DEFAULT_STATE.commercialBaseline;
-        syncStaticFields();
-        renderPreview();
-      });
-    });
-
-    root.querySelectorAll("[data-promo-creativity-level]").forEach((button) => {
-      if (button.tagName !== "BUTTON") return;
-      button.addEventListener("click", () => {
-        state.creativityLevel = ["stable", "balanced", "experimental"].includes(button.dataset.promoCreativityLevel)
-          ? button.dataset.promoCreativityLevel
-          : DEFAULT_STATE.creativityLevel;
-        syncStaticFields();
-        renderPreview();
-      });
-    });
-
-    [
-      { id: "promotionBigIdea", stateKey: "bigIdea" },
-      { id: "promotionVisualMetaphor", stateKey: "visualMetaphor" },
-    ].forEach(({ id, stateKey }) => {
-      const input = $(id);
-      if (!input) return;
-      const handler = () => {
-        state[stateKey] = input.value;
-        promptDirty = false; // 설계 필드 변경 → 자동 생성 모드 유지
-        renderPreview();
-      };
-      input.addEventListener("input", handler);
-      input.addEventListener("change", handler);
-    });
-
+    // 상세 모드 관련 필드 및 비주얼 기획 모드 전환 리스너 제거 (기본 모드로 고정)
     root.querySelectorAll("[data-promo-output-language]").forEach((button) => {
       if (button.tagName !== "BUTTON") return;
       button.addEventListener("click", () => {
-        state.outputLanguage = normalizeOutputLanguage(button.dataset.promoOutputLanguage);
+        state.outputLanguage = "en";
         syncStaticFields();
         renderPreview();
       });
@@ -1828,19 +1702,7 @@
     root.querySelectorAll("[data-promo-prompt-mode]").forEach((button) => {
       if (button.tagName !== "BUTTON") return;
       button.addEventListener("click", () => {
-        state.promptMode = button.dataset.promoPromptMode === "optimized" ? "optimized" : "review";
-        syncStaticFields();
-        renderPreview();
-      });
-    });
-
-    root.querySelectorAll("[data-promo-visual-planning-mode]").forEach((button) => {
-      if (button.tagName !== "BUTTON") return;
-      button.addEventListener("click", () => {
-        state.visualPlanningMode = button.dataset.promoVisualPlanningMode === "detail" ? "detail" : "basic";
-        if (isDetailVisualPlanningMode()) {
-          scrubConceptFromDetailPlanningFields();
-        }
+        state.promptMode = "basic";
         syncStaticFields();
         renderPreview();
       });
@@ -1938,9 +1800,7 @@
     status("색상과 배경 설정을 초기화했습니다.", "info");
   }
 
-  function reapplyCurrentTemplate() {
-    applyContentTypeTemplate(state.contentType);
-  }
+  
 
   function rerunOptimization() {
     sanitizeStateValues();
@@ -2271,7 +2131,6 @@
 
   function instructionEntries() {
     const entries = [
-      ["contentType", CONTENT_TYPE_TEMPLATES[state.contentType]?.name || "직접 입력"],
       ["sizeMode", state.sizeMode === "direct" ? "크기 직접 입력" : "비율 설정"],
       [state.sizeMode === "direct" ? "directSize" : "ratio", getSpecificationSummary()],
       ["orientation", getEffectiveOrientation() === "vertical" ? "세로형" : "가로형"],
@@ -2329,7 +2188,7 @@
   function summaryItems(textEntries, instructionItems, validation) {
     const items = [
       ASSET_LABELS[state.assetType],
-      CONTENT_TYPE_TEMPLATES[state.contentType]?.name || "직접 입력",
+      "직접 입력",
       outputLanguageLabel(),
       promptModeLabel(),
       state.sizeMode === "direct" ? `직접 크기 ${getSpecificationSummary()}` : getSpecificationSummary(),
@@ -2490,14 +2349,10 @@
   }
 
   function buildPromptPreview(validation = latestValidation) {
-    return withBasicModeDetailFieldsExcluded(() => {
-      state.targetEngine = normalizeTargetEngine(state.targetEngine);
-      latestLint = detectPromptLint(validation, visibleTextEntries(), instructionEntries());
-      const raw = state.promptMode === "optimized"
-        ? renderOptimizedPrompt(validation, latestLint)
-        : renderReviewPrompt(validation, latestLint);
-      return sanitizePromptForAI(raw, state.targetEngine);
-    });
+    state.targetEngine = normalizeTargetEngine(state.targetEngine);
+    latestLint = detectPromptLint(validation, visibleTextEntries(), instructionEntries());
+    const raw = renderBasicPrompt(validation, latestLint);
+    return sanitizePromptForAI(raw, state.targetEngine);
   }
 
   // ── 섹션 뷰어: 변경된 섹션 글자색 하이라이트 ──────────────────
@@ -2519,9 +2374,59 @@
     const viewer = $("promotionPromptViewer");
     if (!viewer) return;
 
-    const sections = withBasicModeDetailFieldsExcluded(
-      () => createPromptSections(validation, latestLint)
-    );
+    if (state.promptMode === "optimized") {
+      const lines = (promptDraft || "").split(/\r?\n/);
+      const title = "Optimized Prompt";
+      viewer.innerHTML = "<div class=\"promo-viewer-section\">" +
+        "<div class=\"promo-viewer-section-title\">" + escapeHtml(title) + "</div>" +
+        "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 편집\">Edit</button>" +
+        "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"편집 취소\" style=\"display:none\">Cancel</button>" +
+        "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"이 섹션 복사\">Copy</button>" +
+        "<div class=\"promo-section-lines-container\">" +
+        lines.map((line) => "<div class=\"promo-viewer-line\">" + escapeHtml(line) + "</div>").join("") +
+        "</div>" +
+        "</div>";
+      _prevSectionHashes = null;
+      return;
+    }
+
+    if (state.promptMode === "basic") {
+      const rawPrompt = (promptDraft || "");
+      const blocks = rawPrompt.split(/\n\n+/);
+      const sections = [];
+      blocks.forEach((block) => {
+        const lines = block.split(/\r?\n/);
+        if (lines.length === 0 || (lines.length === 1 && lines[0] === "")) return;
+        const firstLine = lines[0].trim();
+        let title = "";
+        let bodyLines = lines;
+        if (firstLine.startsWith("[") && firstLine.endsWith("]")) {
+          title = firstLine;
+          bodyLines = lines.slice(1);
+        }
+        sections.push({
+          title: title,
+          lines: bodyLines
+        });
+      });
+
+      viewer.innerHTML = sections.map((section) => {
+        const linesHtml = section.lines
+          .map((line) => "<div class=\"promo-viewer-line\">" + escapeHtml(line) + "</div>")
+          .join("");
+        return "<div class=\"promo-viewer-section\">" +
+          (section.title ? "<div class=\"promo-viewer-section-title\">" + escapeHtml(section.title) + "</div>" : "") +
+          "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 편집\">Edit</button>" +
+          "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"편집 취소\" style=\"display:none\">Cancel</button>" +
+          "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"이 섹션 복사\">Copy</button>" +
+          "<div class=\"promo-section-lines-container\">" + linesHtml + "</div>" +
+          "</div>";
+      }).join("");
+      _prevSectionHashes = null;
+      return;
+    }
+
+    const sections = createPromptSections(validation, latestLint);
     const isFirstRender = _prevSectionHashes === null;
     const canHighlight = !_viewerEditMode && !isFirstRender;
     const newHashes = new Map(sections.map((s) => [s.title, s.lines.join("\n")]));
@@ -2539,51 +2444,45 @@
     // is-changed 없이 렌더링 — data-changed 속성으로 마킹
     viewer.innerHTML = sections.map((section) => {
       const linesHtml = section.lines
-        .map((line) => `<div class="promo-viewer-line">${escapeHtml(line)}</div>`)
+        .map((line) => "<div class=\"promo-viewer-line\">" + escapeHtml(line) + "</div>")
         .join("");
-      const dataAttr = changedTitles.has(section.title) ? ' data-changed="true"' : "";
-      return `<div class="promo-viewer-section"${dataAttr}>` +
-        `<div class="promo-viewer-section-title">${escapeHtml(section.title)}</div>` +
-        linesHtml +
-        `</div>`;
+      const dataAttr = changedTitles.has(section.title) ? " data-changed=\"true\"" : "";
+      return "<div class=\"promo-viewer-section\"" + dataAttr + ">" +
+        "<div class=\"promo-viewer-section-title\">" + escapeHtml(section.title) + "</div>" +
+        "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 편집\">Edit</button>" +
+        "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"편집 취소\" style=\"display:none\">Cancel</button>" +
+        "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"이 섹션 복사\">Copy</button>" +
+        "<div class=\"promo-section-lines-container\">" + linesHtml + "</div>" +
+        "</div>";
     }).join("");
 
     _prevSectionHashes = newHashes;
 
-    // 이전 RAF 취소 후 다음 프레임에 클래스 추가 → CSS 애니메이션 확실히 시작
     if (_viewerAnimRafId) cancelAnimationFrame(_viewerAnimRafId);
     _viewerAnimRafId = null;
 
     if (changedTitles.size > 0) {
       _viewerAnimRafId = requestAnimationFrame(() => {
         _viewerAnimRafId = null;
-        const els = viewer.querySelectorAll('[data-changed="true"]');
+        const els = viewer.querySelectorAll("[data-changed=\"true\"]");
         els.forEach((el) => {
           el.removeAttribute("data-changed");
           el.classList.add("is-changed");
         });
-        // 첫 번째 변경 섹션으로 스크롤 (뷰어가 보일 때만)
         if (els[0] && !_viewerEditMode) {
           els[0].scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
       });
     }
   }
+
   // ─────────────────────────────────────────────────────────────
 
   function renderPreview() {
-    const previewState = withBasicModeDetailFieldsExcluded(() => {
-      const textEntries = visibleTextEntries();
-      const instructionItems = instructionEntries();
-      const validation = validateState();
-      return {
-        textEntries,
-        instructionItems,
-        validation,
-        autoPrompt: buildPromptPreview(validation),
-      };
-    });
-    const { textEntries, instructionItems, validation, autoPrompt } = previewState;
+    const textEntries = visibleTextEntries();
+    const instructionItems = instructionEntries();
+    const validation = validateState();
+    const autoPrompt = buildPromptPreview(validation);
 
     latestValidation = validation;
 
@@ -2822,6 +2721,7 @@
 
     const inputNode = $(`promotion${fieldCamel}`);
     if (inputNode) {
+      inputNode.disabled = !enabled;
       const section = inputNode.closest(".gen-config-group");
       if (section) section.classList.toggle("promo-field-disabled", !enabled);
     }
@@ -2931,17 +2831,7 @@
       if (input) input.checked = isEnabled(value);
     });
 
-    document.querySelectorAll("[data-promo-variation]").forEach((btn) => {
-      const active = btn.dataset.promoVariation === state.variationMode;
-      btn.classList.toggle("active", active);
-      btn.setAttribute("aria-pressed", String(active));
-    });
-
-    document.querySelectorAll("[data-promo-kv-placement]").forEach((btn) => {
-      const active = btn.dataset.promoKvPlacement === state.keyVisualPlacement;
-      btn.classList.toggle("active", active);
-      btn.setAttribute("aria-pressed", String(active));
-    });
+    // variation, kv-placement 동기화 제거
 
     document.querySelectorAll(".promo-type-tab").forEach((button) => {
       const active = button.dataset.promoAsset === state.assetType;
@@ -2949,12 +2839,7 @@
       button.setAttribute("aria-selected", active ? "true" : "false");
     });
 
-    root.querySelectorAll("[data-promo-content-type]").forEach((button) => {
-      const active = button.dataset.promoContentType === state.contentType;
-      button.classList.toggle("active", active);
-      button.setAttribute("aria-pressed", active ? "true" : "false");
-    });
-
+    
     root.querySelectorAll("[data-promo-output-language]").forEach((button) => {
       if (button.tagName !== "BUTTON") return;
       const active = normalizeOutputLanguage(button.dataset.promoOutputLanguage) === state.outputLanguage;
@@ -2964,32 +2849,21 @@
 
     root.querySelectorAll("[data-promo-prompt-mode]").forEach((button) => {
       if (button.tagName !== "BUTTON") return;
-      const active = (button.dataset.promoPromptMode === "optimized" ? "optimized" : "review") === state.promptMode;
+      const active = button.dataset.promoPromptMode === state.promptMode;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });
 
-    root.querySelectorAll("[data-promo-visual-planning-mode]").forEach((button) => {
+    root.querySelectorAll("[data-layout-choice]").forEach((button) => {
       if (button.tagName !== "BUTTON") return;
-      const mode = button.dataset.promoVisualPlanningMode === "detail" ? "detail" : "basic";
-      const active = mode === state.visualPlanningMode;
+      const active = button.dataset.layoutChoice === state.layoutComposition;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });
 
-    root.classList.toggle("promo-basic-mode", isBasicVisualPlanningMode());
-    root.classList.toggle("promo-detail-mode", isDetailVisualPlanningMode());
-    root.querySelectorAll("[data-promo-mode-panel]").forEach((panel) => {
-      const panelMode = panel.dataset.promoModePanel;
-      panel.hidden = panelMode === "basic" ? !isBasicVisualPlanningMode() : !isDetailVisualPlanningMode();
-    });
+    syncCustomWeightPanel();
 
-    const modeHint = $("promotionVisualPlanningModeHint");
-    if (modeHint) {
-      modeHint.textContent = isBasicVisualPlanningMode()
-        ? "컨셉 제안에서 적용한 스타일 코어와 홍보 적응 규칙을 기본 패널에서 항목별로 편집하고, 그 값을 최종 프롬프트의 비주얼 기준으로 사용합니다."
-        : "컨셉 제안 섹션을 제외하고, 3~5번에서 직접 기획한 비주얼 방향·색상·품질 지시를 중심으로 프롬프트를 구성합니다.";
-    }
+    root.classList.add("promo-basic-mode");
 
     syncConceptBadgeUI();
 
@@ -3022,6 +2896,7 @@
     syncToggleFieldUI("visualMetaphor");
     syncToggleFieldUI("visualStyle");
     syncToggleFieldUI("layoutComposition");
+    syncToggleFieldUI("qualityNotes");
   }
 
   function resetAll() {
@@ -3049,18 +2924,31 @@
     status(`${ASSET_LABELS[nextType]} 모드로 전환했습니다.`, "info");
   }
 
-  function getSelectedSampleProfile() {
-    return CONTENT_TYPE_SAMPLE_PROFILES[state.contentType] || CONTENT_TYPE_SAMPLE_PROFILES.none;
-  }
+  
+
+  const _SAMPLE_CONCEPT_KEYS = new Set([
+    'appliedConceptStyle', 'appliedConceptName', 'appliedConceptEmoji',
+    'appliedConceptCategory', 'appliedConceptDesc', 'appliedConceptTags',
+    'appliedConceptPalette', 'appliedConceptPromotionPrompt', 'appliedConceptVisualDNA',
+    'appliedConceptPaletteStrategy', 'appliedConceptTextureRendering',
+    'appliedConceptLightingMood', 'appliedConceptShapeLanguage',
+    'appliedConceptLayoutBehavior', 'appliedConceptTypographyGuidance',
+    'appliedConceptCampaignAdaptation', 'appliedConceptObjectAdaptation',
+    'appliedConceptAvoid', 'appliedConceptQualityRules', 'conceptInfluenceMode',
+  ]);
 
   function applySampleProfile(profile) {
     if (!profile) return;
 
-    assignState({
-      ...state,
-      ...profile.state,
-      colorStrategy: state.colorStrategy,
-    });
+    const profileState = profile.state || {};
+    const regularState = {};
+    const conceptState = {};
+    for (const [k, v] of Object.entries(profileState)) {
+      if (_SAMPLE_CONCEPT_KEYS.has(k)) conceptState[k] = v;
+      else regularState[k] = v;
+    }
+
+    assignState({ ...state, ...regularState, colorStrategy: state.colorStrategy });
 
     if (!isAiColorStrategy() && profile.paletteId) {
       applyPaletteSnapshot(findPaletteById(profile.paletteId));
@@ -3070,46 +2958,72 @@
       setPresetFieldValues(fieldId, values);
     });
 
-    promptDirty = false;
-    syncStaticFields();
     renderTypeFields();
-    renderPreview();
-  }
 
-  function applySample() {
-    if (state.assetType !== "image") return;
+    // 비주얼 컨셉: 화풍 믹서 pathway(applyPromotionConceptStyle)로 라우팅
+    const mixerStyle = profile.mixerStyle || (Object.keys(conceptState).length ? (() => {
+      const palette = (conceptState.appliedConceptPalette || '').split(/\s*,\s*/).filter(Boolean);
+      return {
+        nameKo: conceptState.appliedConceptName || '',
+        nameEn: conceptState.appliedConceptName || '',
+        emoji: conceptState.appliedConceptEmoji || '🎨',
+        category: conceptState.appliedConceptCategory || '',
+        desc: conceptState.appliedConceptDesc || '',
+        prompt: conceptState.appliedConceptStyle || '',
+        promotionPrompt: conceptState.appliedConceptStyle || '',
+        palette,
+        tags: [],
+        promptParts: {
+          paletteStrategy:      conceptState.appliedConceptPaletteStrategy || '',
+          textureRendering:     conceptState.appliedConceptTextureRendering || '',
+          lightingMood:         conceptState.appliedConceptLightingMood || '',
+          shapeLanguage:        conceptState.appliedConceptShapeLanguage || '',
+          layoutBehavior:       conceptState.appliedConceptLayoutBehavior || '',
+          typographyGuidance:   conceptState.appliedConceptTypographyGuidance || '',
+          campaignAdaptation:   conceptState.appliedConceptCampaignAdaptation || '',
+          objectAdaptation:     conceptState.appliedConceptObjectAdaptation || '',
+          avoid:                conceptState.appliedConceptAvoid || '',
+          qualityRules:         conceptState.appliedConceptQualityRules || '',
+        },
+      };
+    })() : null);
 
-    const profile = getSelectedSampleProfile();
-    const contentName = state.contentType === "none"
-      ? "기본 홍보 이미지"
-      : (CONTENT_TYPE_TEMPLATES[state.contentType]?.name || "선택한 템플릿");
-
-    applySampleProfile(profile);
-    status(`${contentName} 샘플을 적용했습니다. 프리셋이 있는 항목은 현재 화면에 보이는 프리셋 안에서만 채웠습니다.`, "success");
-  }
-
-  function applyRandomPresets() {
-    if (state.assetType === "image") {
-      const selectedPalette = !isAiColorStrategy() && colorPresets.length
-        ? colorPresets[Math.floor(Math.random() * colorPresets.length)]
-        : null;
-      if (selectedPalette) {
-        applyPaletteSnapshot(selectedPalette);
+    if (mixerStyle && typeof window.applyPromotionConceptStyle === 'function') {
+      window.applyPromotionConceptStyle(mixerStyle);
+      // 화풍 믹서 팔레트도 동기화 (탭 전환 없이 상태만 업데이트)
+      if (mixerStyle.palette && mixerStyle.palette.length && typeof window.applyMixerSamplePalette === 'function') {
+        window.applyMixerSamplePalette(mixerStyle.palette, mixerStyle.nameKo);
       }
-
-      UNIFIED_RANDOMIZABLE_PRESET_FIELDS.forEach((fieldId) => {
-        const options = getQuickButtonOptions(fieldId);
-        if (!options.length) return;
-        const { min, max } = randomFieldSelectionCount(fieldId);
-        setPresetFieldValues(fieldId, pickRandomSubset(options, min, max));
-      });
-
+    } else {
       promptDirty = false;
       syncStaticFields();
-      renderTypeFields();
       renderPreview();
-      status("이미지 규격과 직접 노출 텍스트는 유지하고, 프리셋 항목만 랜덤 적용했습니다.", "success");
+    }
+  }
+
+  let _lastSampleIndex = -1;
+
+  function applySample() {
+    const pool = (window.PROMO_DATA && SAMPLE_PROFILES && SAMPLE_PROFILES.length > 0) ? SAMPLE_PROFILES : [DEFAULT_SAMPLE_PROFILE];
+    let idx;
+    do { idx = Math.floor(Math.random() * pool.length); } while (pool.length > 1 && idx === _lastSampleIndex);
+    _lastSampleIndex = idx;
+    applySampleProfile(pool[idx]);
+    status(`샘플 ${idx + 1}/${pool.length} — 내용을 수정해 사용하세요.`, "success");
+  }
+
+  function applyRandomMixerPreset() {
+    const randomBtn = document.getElementById("btnMixerRandom");
+    if (!randomBtn) {
+      status("화풍 믹서가 아직 로드되지 않았습니다. 화풍 믹서 탭을 한 번 방문한 뒤 다시 시도하세요.", "error");
       return;
+    }
+    randomBtn.click();
+    const applyBtn = document.getElementById("btnMixerApply");
+    if (applyBtn) {
+      applyBtn.click();
+    } else {
+      status("화풍 믹서 랜덤 조합 후 적용 버튼을 찾지 못했습니다.", "error");
     }
   }
 
@@ -3279,9 +3193,68 @@
     });
   }
 
+  function updateCustomWeightGauge() {
+    const tw = Math.max(0, parseInt(state.layoutWeightTitle) || 0);
+    const vw = Math.max(0, parseInt(state.layoutWeightVisual) || 0);
+    const iw = Math.max(0, parseInt(state.layoutWeightInfo) || 0);
+    const bw = Math.max(0, 100 - tw - vw - iw);
+    state.layoutWeightBackground = String(bw);
+
+    const setVal = (id, val) => { const el = $(id); if (el) el.textContent = val + "%"; };
+    const setWidth = (id, val) => { const el = $(id); if (el) el.style.width = val + "%"; };
+
+    setVal("promotionLayoutWeightTitleVal", tw);
+    setVal("promotionLayoutWeightVisualVal", vw);
+    setVal("promotionLayoutWeightInfoVal", iw);
+    setVal("promotionLayoutWeightBackgroundVal", bw);
+
+    setWidth("promotionLayoutWeightTitleGauge", tw);
+    setWidth("promotionLayoutWeightVisualGauge", vw);
+    setWidth("promotionLayoutWeightInfoGauge", iw);
+    setWidth("promotionLayoutWeightBackgroundGauge", bw);
+  }
+
+  function syncCustomWeightPanel() {
+    const isCustom = state.layoutComposition === "custom";
+    const panel = $("promotionLayoutCustomContainer");
+    if (panel) panel.style.display = isCustom ? "" : "none";
+    if (isCustom) updateCustomWeightGauge();
+  }
+
+  function bindLayoutChoiceBtns() {
+    root.querySelectorAll("[data-layout-choice]").forEach((button) => {
+      if (button.tagName !== "BUTTON") return;
+      button.addEventListener("click", () => {
+        state.layoutComposition = button.dataset.layoutChoice;
+        const sel = $("promotionLayoutComposition");
+        if (sel) sel.value = state.layoutComposition;
+        syncStaticFields();
+        syncCustomWeightPanel();
+        renderPreview();
+      });
+    });
+  }
+
+  function bindCustomWeightSliders() {
+    const sliderMap = [
+      { id: "promotionLayoutWeightTitle",  key: "layoutWeightTitle" },
+      { id: "promotionLayoutWeightVisual", key: "layoutWeightVisual" },
+      { id: "promotionLayoutWeightInfo",   key: "layoutWeightInfo" },
+    ];
+    sliderMap.forEach(({ id, key }) => {
+      $(id)?.addEventListener("input", (e) => {
+        state[key] = e.target.value;
+        updateCustomWeightGauge();
+        renderPreview();
+      });
+    });
+  }
+
   function bindStaticInputs() {
     bindFieldInputs(root);
     bindQuickButtons(root);
+    bindLayoutChoiceBtns();
+    bindCustomWeightSliders();
     bindAntiAiPresetBtns();
     bindAiToggleControls(root);
   }
@@ -3333,7 +3306,8 @@
       });
     };
 
-    setText(".promo-step-copy small", "피해야 할 요소, 상업 완성도.");
+    setText(".promo-step-copy small", "필수 요소와 금지 표현, 결과물 품질 조건을 설정합니다.");
+    setText("label[for='promotionMandatoryElements'] + .gen-config-guide", "로고, QR코드, 날짜·장소처럼 결과물에 반드시 확보해야 할 요소를 적습니다.");
     setText("label[for='promotionForbiddenElements'] + .gen-config-guide", "다른 단계에서 이미 지정한 색상, 배경, 액션버튼, 배치가 아니라 제외할 표현만 적습니다.");
 
 
@@ -3347,8 +3321,8 @@
     setOptions("promotionCreativityLevel", { stable: "안정형", balanced: "균형형", experimental: "실험형" });
     setSegmentLabels("[data-promo-creativity-level]", { stable: "안정형", balanced: "균형형", experimental: "실험형" }, "promoCreativityLevel");
 
-    setText("label[for='promotionQualityNotes']", "결과물 결함 방지");
-    setText("label[for='promotionQualityNotes'] + .gen-config-guide", "내용 추가나 배치 지시가 아니라 텍스트 깨짐, 저해상도, 왜곡, 노이즈 같은 산출물 결함만 지정합니다.");
+    setText("label[for='promotionQualityNotes']", "품질 조건");
+    setText("label[for='promotionQualityNotes'] + .gen-config-guide", "Optimized 공통 규칙을 바탕으로 가독성, 대비, 여백, 왜곡 방지 같은 품질 기준을 지정합니다.");
     const qualityContainer = step.querySelector(".promo-quick-btns[data-quick-for='promotionQualityNotes']");
     if (qualityContainer) {
       qualityContainer.innerHTML = STEP5_QUALITY_OPTIONS
@@ -3357,7 +3331,7 @@
     }
     const qualityInput = $("promotionQualityNotes");
     if (qualityInput) {
-      qualityInput.placeholder = "예: 텍스트 가장자리는 선명하게, 작은 글자는 번짐 없이, 인물 얼굴과 손가락 왜곡 방지";
+      qualityInput.placeholder = "예: 헤드라인과 배경의 명도 대비를 높이고, 작은 글자는 번짐 없이 선명하게 표현";
     }
   }
 
@@ -3413,87 +3387,6 @@
     `;
   }
 
-  function applyStep3ChoiceTaxonomy() {
-    const step = $("promotionStepVisual");
-    if (!step) return;
-    const setText = (selector, text) => {
-      const node = step.querySelector(selector);
-      if (node) node.textContent = text;
-    };
-    const setHtml = (selector, html) => {
-      const node = step.querySelector(selector);
-      if (node) node.innerHTML = html;
-    };
-
-    setText(".promo-step-copy strong", "비주얼 방향");
-    setText(".promo-step-copy small", "전체 아이디어를 먼저 고르고, 톤·상징·표현방식만 짧게 보완합니다.");
-
-    const body = step.querySelector(".promo-step-body");
-    if (body && !$("promotionVisualIdeaPresets")) {
-      body.insertAdjacentHTML("afterbegin", `
-        <section class="gen-config-group gen-config-group-wide promo-visual-preset-panel" id="promotionVisualIdeaPresets">
-          <label class="gen-config-label">아이디어 빠른 선택</label>
-          <p class="gen-config-guide">하나를 고르면 톤, 핵심 개념, 비주얼 은유, 스타일이 함께 정리됩니다. 이후 세부 항목은 직접 수정할 수 있습니다.</p>
-          <div class="promo-visual-preset-grid">
-            ${STEP3_IDEA_PRESETS.map((preset) => `
-              <button type="button" class="promo-visual-preset-btn" data-visual-idea-preset="${escapeHtml(preset.id)}">
-                <strong>${escapeHtml(preset.label)}</strong>
-                <span>${escapeHtml(preset.desc)}</span>
-              </button>
-            `).join("")}
-          </div>
-        </section>
-      `);
-    }
-
-    const subgroupLabels = step.querySelectorAll(".promo-visual-subgroup-label");
-    const subgroupDescs = step.querySelectorAll(".promo-visual-subgroup-desc");
-    if (subgroupLabels[0]) subgroupLabels[0].textContent = "아이디어";
-    if (subgroupDescs[0]) subgroupDescs[0].textContent = "무드와 상징을 선택합니다";
-    if (subgroupLabels[1]) subgroupLabels[1].textContent = "표현 방식";
-    if (subgroupDescs[1]) subgroupDescs[1].textContent = "그래픽 스타일만 선택합니다";
-
-    setText("label[for='promotionTone']", "톤");
-    setText("label[for='promotionTone'] + .gen-config-guide", "브랜드가 전달해야 할 감정만 짧게 고릅니다.");
-    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionTone']"), STEP3_VISUAL_OPTION_GROUPS.tone);
-
-    setHtml("label[for='promotionBigIdea']", `핵심 개념 <span class="promo-field-badge instruction">아이디어</span>`);
-    setText("label[for='promotionBigIdea'] + .gen-config-guide", "이미지 한 장이 말해야 할 중심 아이디어를 고릅니다.");
-    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionBigIdea']"), STEP3_VISUAL_OPTION_GROUPS.bigIdea);
-
-    setHtml("label[for='promotionVisualMetaphor']", `상징 장면 <span class="promo-field-badge instruction">아이디어</span>`);
-    setText("label[for='promotionVisualMetaphor'] + .gen-config-guide", "직접 설명 대신 이미지로 보여줄 장면을 1개만 고릅니다.");
-    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionVisualMetaphor']"), STEP3_VISUAL_OPTION_GROUPS.visualMetaphor);
-
-    setText("label[for='promotionVisualStyle']", "표현 스타일");
-    setText("label[for='promotionVisualStyle'] + .gen-config-guide", "색상과 배경은 4단계에서 정하고, 여기서는 표현 방식만 고릅니다.");
-    replaceQuickButtons(step.querySelector(".promo-quick-btns[data-quick-for='promotionVisualStyle']"), STEP3_VISUAL_OPTION_GROUPS.visualStyle);
-
-    $("promotionBigIdea")?.setAttribute("data-promo-field", "bigIdea");
-    $("promotionVisualMetaphor")?.setAttribute("data-promo-field", "visualMetaphor");
-  }
-
-  function bindStep3IdeaPresets() {
-    const AI_MODE_KEYS = new Set(["tone", "bigIdea", "visualMetaphor", "visualStyle"]);
-    root.querySelectorAll("[data-visual-idea-preset]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const preset = STEP3_IDEA_PRESETS.find((item) => item.id === button.dataset.visualIdeaPreset);
-        if (!preset) return;
-        Object.entries(preset.fields).forEach(([key, value]) => {
-          state[key] = value;
-          if (AI_MODE_KEYS.has(key)) state[`${key}Mode`] = "manual";
-        });
-        root.querySelectorAll("[data-visual-idea-preset]").forEach((b) => {
-          b.classList.toggle("is-active", b === button);
-          b.setAttribute("aria-pressed", b === button ? "true" : "false");
-        });
-        promptDirty = false;
-        syncStaticFields();
-        syncQuickButtonStates(root);
-        renderPreview();
-      });
-    });
-  }
 
   function init() {
     // Bind prompt engine to this IIFE's state and helpers
@@ -3503,10 +3396,8 @@
       getNonConceptPromptLines,
       shouldUseCompactPromptGuidance,
       isBasicVisualPlanningMode,
-      isDetailVisualPlanningMode,
       hasBasicConceptPromptInput,
       conceptStripValuesFromState,
-      visualPlanningModeLabel,
       compactConceptSummary,
       kindBadgeHtml,
       status,
@@ -3522,27 +3413,201 @@
     });
     attachStaticFieldBadges();
     applyActionCtaQrHierarchy();
-    applyStep3ChoiceTaxonomy();
     applyStep5ChoiceTaxonomy();
     loadColorPresets();
     renderColorPresetOptions();
     loadSizePresets();
     renderSizePresetList();
+    bindSizeQuickPresets();
     bindSizePresetControls();
     bindTabs();
-    bindTemplateCards();
     bindStaticInputs();
     bindOptimizationControls();
     bindColorPickers();
     bindColorModeControls();
     bindColorClearButtons();
-    bindStep3IdeaPresets();
     bindLoadInput();
     bindPromptEditor();
     bindWarningModalEvents();
     const goConceptTab = () => { document.getElementById("tabBtnPromotionPlanner")?.click(); };
     $("promotionConceptSelectBtn")?.addEventListener("click", goConceptTab);
     $("promotionConceptChangeBtn")?.addEventListener("click", goConceptTab);
+
+    // 섹션별 Copy / Cancel / Edit 버튼 이벤트 위임 바인딩
+    $("promotionPromptViewer")?.addEventListener("click", (e) => {
+      const copyBtn = e.target.closest(".promo-section-copy-btn");
+      if (copyBtn) {
+        const sectionEl = copyBtn.closest(".promo-viewer-section");
+        if (!sectionEl) return;
+
+        let textToCopy = "";
+        const inlineTextarea = sectionEl.querySelector(".promo-section-inline-textarea");
+        if (inlineTextarea) {
+          textToCopy = inlineTextarea.value;
+        } else {
+          const lines = [];
+          sectionEl.querySelectorAll(".promo-viewer-line").forEach((el) => {
+            lines.push(el.textContent);
+          });
+          textToCopy = lines.length > 0 ? lines.join("\n") : (promptDraft || "");
+        }
+
+        const sectionTitleEl = sectionEl.querySelector(".promo-viewer-section-title");
+        const sectionTitle = sectionTitleEl ? sectionTitleEl.textContent.trim() : "";
+        if (state.promptMode === "basic" && sectionTitle && sectionTitle.startsWith("[")) {
+          textToCopy = sectionTitle + "\n" + textToCopy;
+        }
+
+        navigator.clipboard.writeText(textToCopy)
+          .then(() => {
+            copyBtn.textContent = "Copied!";
+            const sectionTitle = sectionEl.querySelector(".promo-viewer-section-title")?.textContent || "섹션";
+            status("'" + sectionTitle + "'" + " 텍스트를 복사했습니다.", "success");
+            setTimeout(() => {
+              copyBtn.textContent = "Copy";
+            }, 1500);
+          })
+          .catch((err) => {
+            status("섹션 텍스트 복사에 실패했습니다.", "error");
+          });
+        return;
+      }
+
+      const cancelBtn = e.target.closest(".promo-section-cancel-btn");
+      if (cancelBtn) {
+        const sectionEl = cancelBtn.closest(".promo-viewer-section");
+        if (!sectionEl) return;
+
+        const linesContainer = sectionEl.querySelector(".promo-section-lines-container");
+        const inlineTextarea = sectionEl.querySelector(".promo-section-inline-textarea");
+        const editBtn = sectionEl.querySelector(".promo-section-edit-btn");
+
+        if (inlineTextarea) {
+          inlineTextarea.remove();
+        }
+        if (linesContainer) {
+          linesContainer.style.display = "";
+        }
+        if (editBtn) {
+          editBtn.textContent = "Edit";
+          editBtn.classList.remove("is-active");
+        }
+        cancelBtn.style.display = "none";
+        status("섹션 편집을 취소했습니다.", "info");
+        return;
+      }
+
+      const editBtn = e.target.closest(".promo-section-edit-btn");
+      if (editBtn) {
+        const sectionEl = editBtn.closest(".promo-viewer-section");
+        if (!sectionEl) return;
+
+        const linesContainer = sectionEl.querySelector(".promo-section-lines-container");
+        const isActive = editBtn.classList.contains("is-active");
+
+        if (isActive) {
+          const inlineTextarea = sectionEl.querySelector(".promo-section-inline-textarea");
+          if (inlineTextarea && linesContainer) {
+            const rawText = inlineTextarea.value;
+            const lines = rawText.split(/\r?\n/);
+            linesContainer.innerHTML = lines
+              .map((line) => "<div class=\"promo-viewer-line\">" + escapeHtml(line) + "</div>")
+              .join("");
+            inlineTextarea.remove();
+            linesContainer.style.display = "";
+          }
+
+          const cancelBtn = sectionEl.querySelector(".promo-section-cancel-btn");
+          if (cancelBtn) cancelBtn.style.display = "none";
+
+          editBtn.textContent = "Edit";
+          editBtn.classList.remove("is-active");
+          status("섹션 변경 사항을 저장했습니다. (메인 프롬프트에 실시간 반영)", "success");
+
+          const viewer = $("promotionPromptViewer");
+          const allSections = [];
+          viewer.querySelectorAll(".promo-viewer-section").forEach((sec) => {
+            const titleEl = sec.querySelector(".promo-viewer-section-title");
+            const titleText = titleEl ? titleEl.textContent.trim() : "";
+            
+            const secLines = [];
+            const secTextarea = sec.querySelector(".promo-section-inline-textarea");
+            if (secTextarea) {
+              secLines.push(secTextarea.value);
+            } else {
+              sec.querySelectorAll(".promo-viewer-line").forEach((lineEl) => {
+                secLines.push(lineEl.textContent);
+              });
+            }
+
+            if (state.promptMode === "basic") {
+              if (titleText) {
+                allSections.push(titleText + "\n" + secLines.join("\n"));
+              } else {
+                allSections.push(secLines.join("\n"));
+              }
+            } else if (state.promptMode === "optimized") {
+              allSections.push(secLines.join("\n"));
+            } else {
+              if (titleText) {
+                allSections.push("## " + titleText + "\n" + secLines.join("\n"));
+              } else {
+                allSections.push(secLines.join("\n"));
+              }
+            }
+          });
+
+          let finalPrompt = "";
+          if (state.promptMode === "optimized") {
+            finalPrompt = allSections.join("\n");
+          } else {
+            finalPrompt = allSections.join("\n\n");
+          }
+
+          const preview = $("promotionPromptPreview");
+          promptDraft = finalPrompt;
+          if (preview) {
+            preview.value = finalPrompt;
+          }
+          promptDirty = true;
+
+          const previewBadge = $("promotionPreviewBadge");
+          if (previewBadge) previewBadge.textContent = "직접 편집 중";
+          const shuffleBtn = $("promotionShuffleLayoutBtn");
+          if (shuffleBtn) shuffleBtn.style.display = "none";
+          
+          updateStatsBar(finalPrompt);
+
+        } else {
+          if (linesContainer) {
+            const lines = [];
+            linesContainer.querySelectorAll(".promo-viewer-line").forEach((el) => {
+              lines.push(el.textContent);
+            });
+            const bodyText = lines.join("\n");
+
+            linesContainer.style.display = "none";
+
+            const textarea = document.createElement("textarea");
+            textarea.className = "promo-section-inline-textarea";
+            textarea.value = bodyText;
+            textarea.spellcheck = false;
+            sectionEl.appendChild(textarea);
+            textarea.focus();
+            
+            textarea.style.height = "auto";
+            textarea.style.height = (textarea.scrollHeight + 10) + "px";
+          }
+
+          const cancelBtn = sectionEl.querySelector(".promo-section-cancel-btn");
+          if (cancelBtn) cancelBtn.style.display = "inline-block";
+
+          editBtn.textContent = "Save";
+          editBtn.classList.add("is-active");
+        }
+        return;
+      }
+    });
 
     // 배지 클릭 시 생성엔진 토글 및 동기화 이벤트
     $("promotionTargetEngineBadge")?.addEventListener("click", () => {
@@ -3554,6 +3619,8 @@
       }
     });
 
+    $("promotionSampleBtn")?.addEventListener("click", applySample);
+    $("promotionRandomPresetBtn")?.addEventListener("click", applyRandomMixerPreset);
     $("promotionSaveBtn")?.addEventListener("click", saveSettings);
     $("promotionLoadBtn")?.addEventListener("click", loadSettings);
     $("promotionPaletteSaveBtn")?.addEventListener("click", saveCurrentPalettePreset);
@@ -3561,10 +3628,22 @@
     $("promotionPalettePresetSelect")?.addEventListener("change", () => applySelectedPalettePreset({ silent: true }));
     $("promotionPaletteDeleteBtn")?.addEventListener("click", deleteSelectedPalettePreset);
     $("promotionResetBtn")?.addEventListener("click", resetAll);
+    $("promotionQualityNotesResetBtn")?.addEventListener("click", () => {
+      state.qualityNotes = DEFAULT_STATE.qualityNotes;
+      state.qualityNotesEnabled = "true";
+      const input = $("promotionQualityNotes");
+      if (input) {
+        input.value = DEFAULT_STATE.qualityNotes;
+      }
+      syncToggleFieldUI("qualityNotes");
+      promptDirty = false;
+      renderPreview();
+      status("품질 조건이 기본값으로 초기화되었습니다.", "success");
+    });
     $("promotionCopyPromptBtn")?.addEventListener("click", copyPrompt);
     $("promotionShuffleLayoutBtn")?.addEventListener("click", () => {
       const keys = Object.keys(LAYOUT_COMPOSITION_PROFILES);
-      const currentKey = state.layoutComposition || "centered";
+      const currentKey = state.layoutComposition || "title_focus";
       const candidates = keys.filter((k) => k !== currentKey);
       const newKey = candidates[Math.floor(Math.random() * candidates.length)];
       state.layoutComposition = newKey;
@@ -3628,8 +3707,7 @@
     state.conceptInfluenceMode = "strong";
 
     const conceptParts = conceptPromptPartsFromStyle(style);
-    Object.assign(conceptParts, getContentConceptBridgeOverrides(conceptParts));
-    applyConceptPartsToState(conceptParts);
+        applyConceptPartsToState(conceptParts);
     scrubConceptFromDetailPlanningFields(conceptStripValues);
 
     promptDirty = false;
@@ -3637,6 +3715,33 @@
     renderPreview();
 
     status(`'${style.nameKo}' 콘셉트가 기본 모드 프롬프트 편집 패널에 적용되었습니다.`, "success");
+  };
+
+  window.clearPromotionConceptStyle = function () {
+    state.appliedConceptStyle = "";
+    state.appliedConceptName = "";
+    state.appliedConceptCategory = "";
+    state.appliedConceptEmoji = "";
+    state.appliedConceptDesc = "";
+    state.appliedConceptTags = "";
+    state.appliedConceptPalette = "";
+    state.appliedConceptPromotionPrompt = "";
+    state.appliedConceptVisualDNA = "";
+    state.appliedConceptPaletteStrategy = "";
+    state.appliedConceptTextureRendering = "";
+    state.appliedConceptLightingMood = "";
+    state.appliedConceptShapeLanguage = "";
+    state.appliedConceptLayoutBehavior = "";
+    state.appliedConceptTypographyGuidance = "";
+    state.appliedConceptCampaignAdaptation = "";
+    state.appliedConceptObjectAdaptation = "";
+    state.appliedConceptAvoid = "";
+    state.appliedConceptQualityRules = "";
+    state.conceptInfluenceMode = "none";
+
+    promptDirty = false;
+    syncStaticFields();
+    renderPreview();
   };
 
   init();
