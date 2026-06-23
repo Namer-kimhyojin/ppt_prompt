@@ -1578,23 +1578,23 @@
       if (!ov) return "";
       const hasStructured = ov.mediumRendering || ov.colorRoles || ov.textureInfo;
       if (!hasStructured) {
-        return `\n[화풍 믹서 연동 — 비주얼 스타일 지시]\n- 연동 스타일명: ${ov.nameKo}\n- 비주얼 렌더링 지시문: ${ov.prompt}\n`;
+        return `\n[비주얼 믹서 연동 — 비주얼 스타일 지시]\n- 연동 스타일명: ${ov.nameKo}\n- 비주얼 렌더링 지시문: ${ov.prompt}\n`;
       }
       if (prefix === "Cover") {
-        return `\n[화풍 믹서 연동 — 비주얼 스타일 지시 (표지 전체 적용)]\n` +
+        return `\n[비주얼 믹서 연동 — 비주얼 스타일 지시 (표지 전체 적용)]\n` +
           `- 연동 스타일: ${ov.nameKo}\n` +
           (ov.mediumRendering ? `- 렌더링 방식: ${ov.mediumRendering}\n` : "") +
           (ov.colorRoles ? `- 팔레트 역할 분배: ${ov.colorRoles}\n` : "") +
           (ov.layoutFeel ? `- 구도 & 배치감: ${ov.layoutFeel}\n` : "") +
           (ov.typographyGuidance ? `- 타이포그래피 처리: ${ov.typographyGuidance}\n` : "");
       } else if (prefix === "Divider") {
-        return `\n[화풍 믹서 연동 — 비주얼 스타일 지시 (간지 중간 강도)]\n` +
+        return `\n[비주얼 믹서 연동 — 비주얼 스타일 지시 (간지 중간 강도)]\n` +
           `- 연동 스타일: ${ov.nameKo}\n` +
           (ov.textureInfo ? `- 텍스처 & 질감: ${ov.textureInfo}\n` : "") +
           (ov.colorRoles ? `- 팔레트 역할 분배: ${ov.colorRoles}\n` : "") +
           (ov.typographyGuidance ? `- 타이포그래피 처리: ${ov.typographyGuidance}\n` : "");
       } else {
-        return `\n[화풍 믹서 연동 — 배경 스타일 힌트 (절제 적용)]\n` +
+        return `\n[비주얼 믹서 연동 — 배경 스타일 힌트 (절제 적용)]\n` +
           `- 스타일 힌트: ${ov.nameKo}\n` +
           (ov.textureInfo ? `- 질감 요소 (낮은 대비, 배경 전용): ${ov.textureInfo}\n` : "") +
           (ov.colorRoles ? `- 팔레트 역할 분배: ${ov.colorRoles}\n` : "");
@@ -1953,7 +1953,7 @@ ${logoBlockEn}${qrBlockEn}
       badge.className = 'slide-doc-mixer-badge';
       pane.insertBefore(badge, pane.firstChild);
     }
-    badge.innerHTML = `<span class="slide-doc-mixer-badge-icon">🎨</span> 화풍 믹서 연동 중: <strong>${nameKo}</strong> <button type="button" class="slide-doc-mixer-badge-clear" id="btnSlideDocMixerClear">연동 해제</button>`;
+    badge.innerHTML = `<span class="slide-doc-mixer-badge-icon">🎨</span> 비주얼 믹서 연동 중: <strong>${nameKo}</strong> <button type="button" class="slide-doc-mixer-badge-clear" id="btnSlideDocMixerClear">연동 해제</button>`;
     badge.style.display = 'flex';
     const clearBtn = document.getElementById('btnSlideDocMixerClear');
     if (clearBtn) clearBtn.addEventListener('click', () => { if (typeof window.clearMixerFromSlideDocument === 'function') window.clearMixerFromSlideDocument(); });
@@ -1994,7 +1994,7 @@ ${logoBlockEn}${qrBlockEn}
     setupColorPresets('slideDividerColorPresetGrid', 'divider');
     setupColorPresets('slideBackgroundColorPresetGrid', 'background');
     setupColorPresets('slideSignboardColorPresetGrid', 'signboard');
-    _showSlideDocMixerBadge(mixerData.nameKo || '화풍 믹서');
+    _showSlideDocMixerBadge(mixerData.nameKo || '비주얼 믹서');
     const tabBtn = document.getElementById('tabBtnSlideDocument');
     if (tabBtn) tabBtn.click();
   };

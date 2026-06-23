@@ -1158,9 +1158,9 @@
           const label = fieldHintLabels[fieldKey] || FIELD_LABELS[fieldKey] || fieldKey;
           return `
             <div class="promo-validation-detail ${type === "error" ? "is-error" : "is-warning"}">
-              <strong>${escapeHtml(localizeValue(label))}</strong>
+              <strong>${escapeHtml(label)}</strong>
               <ul>
-                ${messages.map((item) => `<li>${escapeHtml(localizeValue(item))}</li>`).join("")}
+                ${messages.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
               </ul>
             </div>
           `;
@@ -1171,8 +1171,8 @@
     if (!validation.errors.length && !validation.warnings.length) {
       node.innerHTML = `
         <div class="promo-validation-item is-ok">
-          <strong>${localizeSentence("입력 상태 양호", "All Inputs Valid")}</strong>
-          <span>${localizeSentence("현재 입력으로 프롬프트를 복사하거나 설정을 저장할 수 있습니다.", "You can now copy the prompt or save your configuration with the current inputs.")}</span>
+          <strong>입력 상태 양호</strong>
+          <span>현재 입력으로 프롬프트를 복사하거나 설정을 저장할 수 있습니다.</span>
         </div>
       `;
       updateFieldWarningsUI(validation);
@@ -1183,8 +1183,8 @@
     if (validation.errors.length) {
       blocks.push(`
         <div class="promo-validation-item is-error">
-          <strong>${localizeSentence("보완이 필요한 항목", "Required Fixes")}</strong>
-          <span>${localizeSentence("아래 항목을 먼저 수정하면 프롬프트 복사와 이미지 품질이 함께 안정됩니다.", "Fix the items below first to stabilize both prompt copying and image quality.")}</span>
+          <strong>보완이 필요한 항목</strong>
+          <span>아래 항목을 먼저 수정하면 프롬프트 복사와 이미지 품질이 함께 안정됩니다.</span>
           <div class="promo-validation-detail-list">
             ${renderFieldIssueCards(validation.fieldErrors, "error")}
           </div>
@@ -3015,7 +3015,7 @@
   function applyRandomMixerPreset() {
     const randomBtn = document.getElementById("btnMixerRandom");
     if (!randomBtn) {
-      status("화풍 믹서가 아직 로드되지 않았습니다. 화풍 믹서 탭을 한 번 방문한 뒤 다시 시도하세요.", "error");
+      status("비주얼 믹서가 아직 로드되지 않았습니다. 비주얼 믹서 탭을 한 번 방문한 뒤 다시 시도하세요.", "error");
       return;
     }
     randomBtn.click();
@@ -3023,7 +3023,7 @@
     if (applyBtn) {
       applyBtn.click();
     } else {
-      status("화풍 믹서 랜덤 조합 후 적용 버튼을 찾지 못했습니다.", "error");
+      status("비주얼 믹서 랜덤 조합 후 적용 버튼을 찾지 못했습니다.", "error");
     }
   }
 

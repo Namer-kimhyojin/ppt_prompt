@@ -850,7 +850,7 @@
       if (typeof window.applyMixerPaletteForStyle === 'function') {
         window.applyMixerPaletteForStyle(style.id || style);
       } else {
-        alert('화풍 믹서가 준비되지 않았습니다.');
+        alert('비주얼 믹서가 준비되지 않았습니다.');
       }
     });
 
