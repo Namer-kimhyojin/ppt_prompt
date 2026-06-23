@@ -2873,7 +2873,8 @@
     { id: 'morning', label: '☀️ 모닝 & 에어리' },
     { id: 'nordic', label: '🏔️ 노르딕 & 스칸디' },
     { id: 'candy', label: '🍬 캔디 & 팝 비비드' },
-    { id: 'warm_earth', label: '🌿 웜 어스 & 내추럴' }
+    { id: 'warm_earth', label: '🌿 웜 어스 & 내추럴' },
+    { id: 'multicolor', label: '🎨 멀티컬러 & 비비드' }
   ];
 
   const MIXER_PALETTES = [
@@ -3643,7 +3644,35 @@
     { id: 'pal-clay-rose', category: 'warm_earth', name: '클레이 로즈 & 베이지', mode: 'light', colors: ['#FBF5F0', '#F0D8C8', '#D8A888', '#B07050', '#603828'], colorMapping: 'warm ivory background, pale adobe base, soft clay-rose midtones, muted terracotta highlight, deep earth shadow' },
     { id: 'pal-moss-stone', category: 'warm_earth', name: '모스 & 스톤 그레이', mode: 'light', colors: ['#F2F4EE', '#D8DCC8', '#A0A880', '#6C7850', '#303820'], colorMapping: 'light stone-white background, pale pebble base, muted moss-grey midtones, olive-green highlight, deep dark-lichen shadow' },
     { id: 'pal-raw-linen', category: 'warm_earth', name: '로 리넨 & 차콜', mode: 'light', colors: ['#FAF6EE', '#F0E8D4', '#D8C8A4', '#A09060', '#3A3028'], colorMapping: 'natural linen-cream background, warm undyed base, soft raw-cloth midtones, aged hemp highlight, deep charcoal anchor' },
-    { id: 'pal-volcanic-earth', category: 'warm_earth', name: '화산 어스 레드 & 블랙', mode: 'dark', colors: ['#100808', '#2E1010', '#602020', '#C04030', '#D89070'], colorMapping: 'dark volcanic-black background, deep lava-earth shadows, burnt sienna midtones, vivid burnt-orange highlights, warm sand-terracotta accents' }
+    { id: 'pal-volcanic-earth', category: 'warm_earth', name: '화산 어스 레드 & 블랙', mode: 'dark', colors: ['#100808', '#2E1010', '#602020', '#C04030', '#D89070'], colorMapping: 'dark volcanic-black background, deep lava-earth shadows, burnt sienna midtones, vivid burnt-orange highlights, warm sand-terracotta accents' },
+
+    // ==========================================
+    // 11. 멀티컬러 & 비비드 (multicolor) - 24 items
+    // ==========================================
+    { id: 'pal-sunset-spectrum', category: 'multicolor', name: '선셋 스펙트럼 그라디언트', mood: 'festival', mode: 'dark', colors: ['#1A0030', '#8B00FF', '#FF0080', '#FF6600', '#FFD700'], colorMapping: 'deep violet dusk to neon purple, fiery magenta, blazing orange, golden horizon — full sunset spectrum gradient' },
+    { id: 'pal-tropical-paradise', category: 'multicolor', name: '트로피컬 파라다이스', mood: 'festival', mode: 'light', colors: ['#00D4AA', '#FF6B6B', '#FFE66D', '#4ECDC4', '#FF8E53'], colorMapping: 'vibrant teal waves, warm coral accents, sunny lemon pop, turquoise shimmer, bright tangerine highlights' },
+    { id: 'pal-neon-carnival', category: 'multicolor', name: '네온 카니발', mood: 'festival', mode: 'dark', colors: ['#0A0A1A', '#FF00FF', '#00FFFF', '#FFFF00', '#FF4500'], colorMapping: 'deep dark background, electric magenta, glowing cyan, neon yellow, blazing orange-red carnival lights' },
+    { id: 'pal-aurora-dreams', category: 'multicolor', name: '오로라 드림', mood: 'festival', mode: 'dark', colors: ['#050514', '#003366', '#00AA88', '#FF44CC', '#FFD700'], colorMapping: 'deep midnight navy, arctic blue base, aurora green shimmer, dancing magenta highlight, golden glimmer' },
+    { id: 'pal-spring-festival', category: 'multicolor', name: '봄 페스티벌', mood: 'festival', mode: 'light', colors: ['#FF6B9D', '#FFB347', '#6BCB77', '#4D96FF', '#FFFFFF'], colorMapping: 'cherry blossom pink, warm apricot orange, fresh spring green, clear sky blue, bright white space' },
+    { id: 'pal-candy-rainbow', category: 'multicolor', name: '캔디 레인보우', mood: 'festival', mode: 'light', colors: ['#FF4D4D', '#FF9900', '#FFEE00', '#33CC33', '#0066FF'], colorMapping: 'vivid candy red, bright orange, lemon yellow, fresh lime green, electric blue — full spectrum candy rainbow' },
+    { id: 'pal-tropical-ocean', category: 'multicolor', name: '트로피컬 오션', mood: 'festival', mode: 'light', colors: ['#00B4D8', '#90E0EF', '#FF6B6B', '#FFD166', '#06D6A0'], colorMapping: 'bright ocean blue, aqua shimmer, coral pop, sun yellow, emerald waves — tropical beach vibe' },
+    { id: 'pal-cosmos-multi', category: 'multicolor', name: '코스모스 멀티 그라디언트', mood: 'festival', mode: 'dark', colors: ['#04001C', '#1A0050', '#6200CC', '#00AAFF', '#FF44AA'], colorMapping: 'deep cosmic void, galaxy purple, electric violet nebula, bright star blue, hot pink stardust' },
+    { id: 'pal-midsummer-multi', category: 'multicolor', name: '한여름 멀티컬러', mood: 'festival', mode: 'light', colors: ['#FF6B6B', '#FF8E53', '#FFA07A', '#98D8C8', '#45B7D1'], colorMapping: 'sunset coral, warm peach-orange, soft salmon, aqua shimmer, clear sky blue — summer sunset to ocean' },
+    { id: 'pal-christmas-duo', category: 'multicolor', name: '크리스마스 레드 & 그린', mood: 'festival', mode: 'dark', colors: ['#0A1A0A', '#1A4A1A', '#CC0000', '#FFD700', '#FFFFFF'], colorMapping: 'deep dark green base, forest Christmas green, vivid red, bright gold star, crisp white snow' },
+    { id: 'pal-cyberpunk-glow', category: 'multicolor', name: '사이버펑크 글로우', mood: 'vivid', mode: 'dark', colors: ['#0D0221', '#FF0090', '#00FFFF', '#FFFF00', '#7B00FF'], colorMapping: 'black void base, hot neon pink, electric cyan, acid yellow, ultra-violet glow — cyberpunk neon city' },
+    { id: 'pal-acid-festival', category: 'multicolor', name: '애시드 페스티벌', mood: 'vivid', mode: 'dark', colors: ['#111111', '#FF2D55', '#00FF88', '#FFD700', '#AA00FF'], colorMapping: 'dark base, acid red, neon mint green, bright gold, electric purple — high voltage vivid palette' },
+    { id: 'pal-holographic-foil', category: 'multicolor', name: '홀로그래픽 포일', mood: 'vivid', mode: 'dark', colors: ['#0A0A14', '#FF00CC', '#00CCFF', '#CCFF00', '#FF6600'], colorMapping: 'dark base, iridescent magenta, cyan foil, electric lime, vivid orange — holographic metallic shift' },
+    { id: 'pal-pop-art-cmyk', category: 'multicolor', name: '팝아트 CMYK', mood: 'vivid', mode: 'light', colors: ['#FF0066', '#FFDD00', '#00AAFF', '#000000', '#FFFFFF'], colorMapping: 'pop art hot pink, vivid yellow, bold cyan, graphic black, stark white — CMYK halftone pop art palette' },
+    { id: 'pal-neon-tokyo', category: 'multicolor', name: '네온 도쿄 나이트', mood: 'vivid', mode: 'dark', colors: ['#0D0D1A', '#FF2B6B', '#00E5FF', '#FF9500', '#BD00FF'], colorMapping: 'dark Tokyo night, hot neon red-pink, electric cyan, vivid amber, glowing purple neon sign palette' },
+    { id: 'pal-retro-70s', category: 'multicolor', name: '레트로 70년대', mood: 'retro', mode: 'light', colors: ['#8B4513', '#DAA520', '#CD853F', '#808000', '#D2691E'], colorMapping: 'warm sienna brown, golden mustard, sandy tan, olive drab, burnt orange — authentic 70s earthy retro palette' },
+    { id: 'pal-retro-80s-neon', category: 'multicolor', name: '빈티지 80년대 네온', mood: 'retro', mode: 'dark', colors: ['#1A001A', '#FF00FF', '#00FFFF', '#FF69B4', '#7FFF00'], colorMapping: 'dark retro backdrop, hot magenta neon, electric cyan, pink synthwave, chartreuse — classic 80s neon palette' },
+    { id: 'pal-retro-pastel', category: 'multicolor', name: '레트로 파스텔 빈티지', mood: 'retro', mode: 'light', colors: ['#F5E6D3', '#D4A5A5', '#9B9B9B', '#8FBC8F', '#C8A882'], colorMapping: 'warm cream background, dusty rose, vintage grey, sage green, antique camel — faded vintage poster palette' },
+    { id: 'pal-vaporwave', category: 'multicolor', name: '베이퍼웨이브', mood: 'retro', mode: 'dark', colors: ['#1B0232', '#FF71CE', '#01CDFE', '#05FFA1', '#B967FF'], colorMapping: 'deep purple night, hot pink, digital cyan, neon mint, electric violet — vaporwave aesthetic palette' },
+    { id: 'pal-luxury-jewel', category: 'multicolor', name: '럭셔리 주얼톤', mood: 'luxury', mode: 'dark', colors: ['#0A0A0A', '#1B4332', '#1A237E', '#7B0D1E', '#C9A84A'], colorMapping: 'black luxury base, deep emerald jewel, sapphire royal blue, ruby red, 24k gold — premium jewel palette' },
+    { id: 'pal-art-deco', category: 'multicolor', name: '아트 데코 골드 & 블랙', mood: 'luxury', mode: 'dark', colors: ['#0C0C0C', '#1A1A1A', '#C8A84A', '#4A90C8', '#FFFFFF'], colorMapping: 'black art deco base, charcoal surface, warm gold geometric accent, sapphire blue highlight, crisp white outline' },
+    { id: 'pal-midnight-velvet', category: 'multicolor', name: '미드나잇 벨벳 럭셔리', mood: 'luxury', mode: 'dark', colors: ['#0D0520', '#1A0A3D', '#4A1E8A', '#C0A060', '#EDE8D0'], colorMapping: 'near-black velvet base, deep royal purple, regal amethyst, antique gold shimmer, champagne highlight' },
+    { id: 'pal-earthy-rainbow', category: 'multicolor', name: '어스 레인보우 내추럴', mood: 'natural', mode: 'light', colors: ['#C0392B', '#E67E22', '#F1C40F', '#27AE60', '#2980B9'], colorMapping: 'earthy red clay, warm amber orange, sun gold, forest green, sky blue — natural earth-toned rainbow spectrum' },
+    { id: 'pal-botanical-duo', category: 'multicolor', name: '보타닉 코랄 & 그린', mood: 'natural', mode: 'light', colors: ['#2D6A4F', '#40916C', '#FF7F51', '#FFB347', '#FEFAE0'], colorMapping: 'deep forest green, vibrant tropical green, coral orange bloom, warm amber, natural cream white' }
   ];
 
   // 브랜드/플랫폼 기반 프리셋 추가 (레고, 마리오, 로블록스, 마비노기 등) 및 미리캔버스/캔바/웹툰/애니/영화 등
@@ -3661,6 +3690,14 @@
 
   // MIXER_PALETTES에 병합 (중복 id는 덮어쓰지 않음)
   EXTRA_BRAND_PALETTES.forEach(p => { if (!MIXER_PALETTES.find(x => x.id === p.id)) MIXER_PALETTES.push(p); });
+
+  // 개별 팔레트 mood 오버라이드 맵 (카테고리 기본값과 다른 것만)
+  const PALETTE_MOOD_MAP = {
+    'pal-vintage': 'retro', 'pal-vintage-navy': 'retro', 'pal-film-grain': 'retro', 'pal-anime-cinematic': 'retro',
+    'pal-white-premium': 'luxury', 'pal-tax-gold': 'luxury', 'pal-court-navy': 'luxury', 'pal-plum-velvet': 'luxury', 'pal-tiffany': 'luxury',
+    'pal-holographic': 'vivid', 'pal-vivid-rainbow': 'festival', 'pal-miami-vice': 'festival', 'pal-disco-foil': 'festival',
+    'pal-neon-sunset': 'festival', 'pal-lego': 'festival', 'pal-mario': 'festival', 'pal-roblox': 'festival',
+  };
 
   // 컨셉 제안 탭의 프리셋(window.CONCEPT_STYLES)을 팔레트로 동적으로 병합
   try {
@@ -4000,6 +4037,7 @@
   let selectedPaletteIdx = 0; // 기본: 선택 안 함 (None)
   let activePaletteFilter = 'all';
   let activePaletteColorFilter = 'all';
+  let activePaletteTagFilter = 'all';
   let activeMediumCategory = MIXER_MEDIUMS.find(medium => medium.id === selectedMediumId)?.category || 'tech3d';
   let activePaletteCategory = 'all';
   let isPaletteOverriddenByUser = false;
@@ -4969,30 +5007,47 @@
       transform: scale(1.15);
     }
 
-    /* 두 필터 나란히 */
+    /* 필터 바 묶음 — 세로 스택 */
     .mixer-pal-filters-row {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 6px;
       margin-bottom: 14px;
     }
 
-    /* 팔레트 필터 탭 바 */
+    /* 각 필터 행: 레이블 + 컨테이너 */
+    .mixer-pal-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 필터 레이블 (좌측 고정폭) */
+    .mixer-pal-filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft, #64748b);
+      min-width: 34px;
+      text-align: right;
+      flex-shrink: 0;
+      letter-spacing: 0.01em;
+    }
+
+    /* 팔레트 필터 탭 컨테이너 (3개 행 공통) */
     .mixer-pal-filter-tabs {
       display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 4px;
-      margin-bottom: 0;
       background: var(--surface-2, #f1f5f9);
       padding: 4px;
       border-radius: 8px;
-      width: fit-content;
       border: 1px solid var(--line, #e2e8f0);
     }
     .mixer-pal-filter-btn {
       border: 0;
       background: transparent;
-      padding: 5px 12px;
+      padding: 5px 11px;
       font-size: 11px;
       font-weight: 600;
       color: var(--text-secondary, #64748b);
@@ -5002,6 +5057,7 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      white-space: nowrap;
     }
     .mixer-pal-filter-btn.active {
       background: var(--surface-1, #ffffff);
@@ -5010,12 +5066,9 @@
       font-weight: 700;
     }
 
-    /* 색상 계열 필터 */
+    /* 색상 스와치 컨테이너 — mixer-pal-filter-tabs 공통 스타일 상속 */
     .mixer-pal-color-filter {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
     }
     .mixer-pal-color-btn {
       border: 2px solid transparent;
@@ -6976,24 +7029,44 @@
 
             <!-- 필터 바 묶음 -->
             <div class="mixer-pal-filters-row">
-              <!-- 라이트/다크 모드 톤 필터 바 -->
-              <div class="mixer-pal-filter-tabs">
-                <button type="button" class="mixer-pal-filter-btn active" data-pal-filter="all">🌈 전체</button>
-                <button type="button" class="mixer-pal-filter-btn" data-pal-filter="dark">🌙 다크 지향</button>
-                <button type="button" class="mixer-pal-filter-btn" data-pal-filter="light">☀️ 라이트 지향</button>
+              <!-- 톤 필터 -->
+              <div class="mixer-pal-filter-group">
+                <span class="mixer-pal-filter-label">톤</span>
+                <div class="mixer-pal-filter-tabs">
+                  <button type="button" class="mixer-pal-filter-btn active" data-pal-filter="all">🌈 전체</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-filter="dark">🌙 다크</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-filter="light">☀️ 라이트</button>
+                </div>
               </div>
 
-              <!-- 색상 계열 필터 -->
-              <div class="mixer-pal-color-filter" id="mixerPalColorFilter">
-                <button type="button" class="mixer-pal-color-btn active" data-pal-color="all" title="전체">전체</button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="red" title="레드 계열" style="--swatch:#e53935;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="orange" title="오렌지 계열" style="--swatch:#fb8c00;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="yellow" title="옐로우 계열" style="--swatch:#fdd835;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="green" title="그린 계열" style="--swatch:#43a047;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="blue" title="블루 계열" style="--swatch:#1e88e5;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="purple" title="퍼플 계열" style="--swatch:#8e24aa;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="pink" title="핑크 계열" style="--swatch:#e91e8c;"></button>
-                <button type="button" class="mixer-pal-color-btn" data-pal-color="neutral" title="뉴트럴/모노" style="--swatch:#90a4ae;"></button>
+              <!-- 색상 필터 -->
+              <div class="mixer-pal-filter-group">
+                <span class="mixer-pal-filter-label">색상</span>
+                <div class="mixer-pal-filter-tabs mixer-pal-color-filter" id="mixerPalColorFilter">
+                  <button type="button" class="mixer-pal-color-btn active" data-pal-color="all" title="전체">전체</button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="red" title="레드" style="--swatch:#e53935;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="orange" title="오렌지" style="--swatch:#fb8c00;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="yellow" title="옐로우" style="--swatch:#fdd835;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="green" title="그린" style="--swatch:#43a047;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="blue" title="블루" style="--swatch:#1e88e5;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="purple" title="퍼플" style="--swatch:#8e24aa;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="pink" title="핑크" style="--swatch:#e91e8c;"></button>
+                  <button type="button" class="mixer-pal-color-btn" data-pal-color="neutral" title="뉴트럴" style="--swatch:#90a4ae;"></button>
+                </div>
+              </div>
+
+              <!-- 분위기 필터 -->
+              <div class="mixer-pal-filter-group">
+                <span class="mixer-pal-filter-label">분위기</span>
+                <div class="mixer-pal-filter-tabs mixer-pal-mood-filter" id="mixerPalMoodFilter">
+                  <button type="button" class="mixer-pal-filter-btn active" data-pal-mood="all">🌐 전체</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-mood="vivid">✨ 비비드</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-mood="festival">🎪 페스티벌</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-mood="retro">🕹 레트로</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-mood="luxury">💎 럭셔리</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-mood="natural">🌿 내추럴</button>
+                  <button type="button" class="mixer-pal-filter-btn" data-pal-mood="minimal">📐 미니멀</button>
+                </div>
               </div>
             </div><!-- /.mixer-pal-filters-row -->
 
@@ -7123,11 +7196,14 @@
         activePaletteCategory = btn.dataset.paletteCat;
         // 색상 계열 필터 초기화
         activePaletteColorFilter = 'all';
+        activePaletteTagFilter = 'all';
         container.querySelectorAll('.mixer-pal-color-btn').forEach(b => b.classList.toggle('active', b.dataset.palColor === 'all'));
+        container.querySelectorAll('[data-pal-mood]').forEach(b => b.classList.toggle('active', b.dataset.palMood === 'all'));
         const firstPalette = MIXER_PALETTES.find(palette =>
           (activePaletteCategory === 'all' || palette.category === activePaletteCategory) &&
           (activePaletteFilter === 'all' || palette.mode === activePaletteFilter) &&
-          paletteMatchesColorFilter(palette, activePaletteColorFilter)
+          paletteMatchesColorFilter(palette, activePaletteColorFilter) &&
+          paletteMatchesTagFilter(palette, activePaletteTagFilter)
         );
         if (firstPalette) selectedPaletteIdx = MIXER_PALETTES.indexOf(firstPalette);
         container.querySelectorAll('[data-palette-cat]').forEach(tab => {
@@ -7141,10 +7217,10 @@
       });
     });
 
-    // 팔레트 톤 필터 버튼 바인딩
-    container.querySelectorAll('.mixer-pal-filter-btn').forEach(btn => {
+    // 팔레트 톤 필터 버튼 바인딩 (data-pal-filter 속성 한정 — 무드 버튼과 충돌 방지)
+    container.querySelectorAll('.mixer-pal-filter-btn[data-pal-filter]').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.mixer-pal-filter-btn').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.mixer-pal-filter-btn[data-pal-filter]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activePaletteFilter = btn.dataset.palFilter;
         const currentPalette = MIXER_PALETTES[selectedPaletteIdx];
@@ -7153,7 +7229,8 @@
           const firstPalette = MIXER_PALETTES.find(palette =>
             palette.category === activePaletteCategory &&
             (activePaletteFilter === 'all' || palette.mode === activePaletteFilter) &&
-            paletteMatchesColorFilter(palette, activePaletteColorFilter)
+            paletteMatchesColorFilter(palette, activePaletteColorFilter) &&
+            paletteMatchesTagFilter(palette, activePaletteTagFilter)
           );
           if (firstPalette) selectedPaletteIdx = MIXER_PALETTES.indexOf(firstPalette);
         }
@@ -7170,9 +7247,29 @@
         btn.classList.add('active');
         activePaletteColorFilter = btn.dataset.palColor;
         const firstPalette = MIXER_PALETTES.find(palette =>
-          palette.category === activePaletteCategory &&
+          (activePaletteCategory === 'all' || palette.category === activePaletteCategory) &&
           (activePaletteFilter === 'all' || palette.mode === activePaletteFilter) &&
-          paletteMatchesColorFilter(palette, activePaletteColorFilter)
+          paletteMatchesColorFilter(palette, activePaletteColorFilter) &&
+          paletteMatchesTagFilter(palette, activePaletteTagFilter)
+        );
+        if (firstPalette) selectedPaletteIdx = MIXER_PALETTES.indexOf(firstPalette);
+        renderPalettes();
+        updateMixerSummaryBar();
+        renderPreviewCard();
+      });
+    });
+
+    // 팔레트 무드/분위기 필터 바인딩
+    container.querySelectorAll('[data-pal-mood]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('[data-pal-mood]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activePaletteTagFilter = btn.dataset.palMood;
+        const firstPalette = MIXER_PALETTES.find(palette =>
+          (activePaletteCategory === 'all' || palette.category === activePaletteCategory) &&
+          (activePaletteFilter === 'all' || palette.mode === activePaletteFilter) &&
+          paletteMatchesColorFilter(palette, activePaletteColorFilter) &&
+          paletteMatchesTagFilter(palette, activePaletteTagFilter)
         );
         if (firstPalette) selectedPaletteIdx = MIXER_PALETTES.indexOf(firstPalette);
         renderPalettes();
@@ -7502,6 +7599,26 @@
   function paletteMatchesColorFilter(pal, filter) {
     if (filter === 'all') return true;
     return pal.colors.some(c => c.length === 7 && hexToHueFamily(c) === filter);
+  }
+
+  function getPaletteMood(pal) {
+    if (pal.mood) return pal.mood;
+    var override = PALETTE_MOOD_MAP[pal.id];
+    if (override) return override;
+    var cat = pal.category;
+    if (cat === 'candy' || cat === 'energy') return 'vivid';
+    if (cat === 'warm_earth' || cat === 'nature') return 'natural';
+    if (cat === 'nordic') return 'minimal';
+    if (cat === 'soft' && pal.mode === 'light') return 'minimal';
+    if (cat === 'light_pastel' || cat === 'morning') return 'minimal';
+    if (cat === 'multicolor') return 'festival';
+    if (cat === 'official') return 'luxury';
+    return null;
+  }
+
+  function paletteMatchesTagFilter(pal, filter) {
+    if (filter === 'all') return true;
+    return getPaletteMood(pal) === filter;
   }
 
   // 스타일/미디엄에 맞는 팔레트를 자동 매핑하는 기본 전략
@@ -8818,7 +8935,8 @@
       if (p.id === 'none') return false;
       return (activePaletteCategory === 'all' || p.category === activePaletteCategory) &&
              (activePaletteFilter === 'all' || p.mode === activePaletteFilter) &&
-             paletteMatchesColorFilter(p, activePaletteColorFilter);
+             paletteMatchesColorFilter(p, activePaletteColorFilter) &&
+             paletteMatchesTagFilter(p, activePaletteTagFilter);
     });
 
     const displayList = [MIXER_PALETTES.find(p => p.id === 'none'), ...list].filter(Boolean);
