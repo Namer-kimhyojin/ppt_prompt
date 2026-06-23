@@ -111,6 +111,13 @@
       submitBtn.textContent = '로그인 중...';
 
       try {
+        // 서버 없는 환경(Netlify 등)이면 인증 건너뜀
+        var isServer = await PromptDeckAuth.detectServer();
+        if (!isServer) {
+          window.location.href = getReturnUrl();
+          return;
+        }
+
         var session = await PromptDeckAuth.login(username, password);
         if (!session) {
           errEl.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';

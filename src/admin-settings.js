@@ -57,10 +57,17 @@
   fetch('/api/auth/has-users').then(function (r) {
     return r.ok ? r.json() : null;
   }).then(function (d) {
-    if (!d) return;
+    if (!d) {
+      // 서버 없음(정적 환경) → 캐시 초기화, 리다이렉트 안 함
+      localStorage.setItem(HAS_USERS_SK, '0');
+      return;
+    }
     localStorage.setItem(HAS_USERS_SK, d.hasUsers ? '1' : '0');
     if (cachedHasUsers === null) maybeRedirect(d.hasUsers);
-  }).catch(function () {});
+  }).catch(function () {
+    // 서버 없음 → 캐시 초기화
+    localStorage.setItem(HAS_USERS_SK, '0');
+  });
 
   // ─── 현재 사용자 탭 권한 ─────────────────────────────────────────────────────
   // 서버 세션에서 tabPermissions 읽기 (세션에 포함되어 있음)

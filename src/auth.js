@@ -30,7 +30,10 @@
         return true;
       }
     } catch (_) {}
+    // 서버 없음 → 캐시 초기화해 불필요한 로그인 redirect 방지
     _serverMode = false;
+    localStorage.setItem(HAS_USERS_SK, '0');
+    localStorage.removeItem(SESSION_SK);
     return false;
   }
 
@@ -194,6 +197,11 @@
     // 초기화: has-users 캐시를 서버에서 갱신
     async init() {
       await _detectServer();
+    },
+
+    // 서버 모드 여부 (정적 환경 판별용)
+    async detectServer() {
+      return _detectServer();
     }
   };
 
