@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la *.js *.bak *.orig)",
+      "Bash(ls -la .git)",
+      "Bash(node --check app_test.js)",
+      "Bash(node --check app_fix.js)",
+      "Bash(node --check app_fix2.js)",
+      "Bash(node --check app_final.js)",
+      "Bash(node fix_js.js)",
+      "Bash(node --check app_shadow.js)",
+      "Bash(node --check app_merged.js)",
+      "Bash(node --check app_korean.js)",
+      "Bash(rm c:/Users/aplus/ppt_prompt/fix_*.py c:/Users/aplus/ppt_prompt/apply_korean.py c:/Users/aplus/ppt_prompt/restore_korean.py c:/Users/aplus/ppt_prompt/check_vss.py c:/Users/aplus/ppt_prompt/korean_map.py)",
+      "Bash(rm c:/Users/aplus/ppt_prompt/app_candidate*.js c:/Users/aplus/ppt_prompt/app_merged.js c:/Users/aplus/ppt_prompt/app_pre_rewrite_*.js)",
+      "Bash(node -e ' *)",
+      "WebFetch(domain:localhost)",
+      "Bash(node --check \"c:/Users/aplus/ppt_prompt/app.js\")",
+      "Bash(Get-Date -Format \"yyyyMMdd_HHmmss\")",
+      "Bash(node --check \"c:/Users/aplus/ppt_prompt/src/designer-config-globals.js\")",
+      "Bash(start \"\" \"c:\\\\Users\\\\aplus\\\\ppt_prompt\\\\index.html\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);try{new Function\\(fs.readFileSync\\('c:/Users/aplus/ppt_prompt/src/promotion.js','utf8'\\)\\);console.log\\('OK'\\)}catch\\(e\\){console.error\\(e.message\\)}\")",
+      "Bash(Get-Content \"c:\\\\Users\\\\aplus\\\\ppt_prompt\\\\styles\\\\promotion.css\")",
+      "Bash(Measure-Object -Line)",
+      "Bash(Select-Object -ExpandProperty Lines)",
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\aplus\\\\ppt_prompt\\\\styles\\\\promotion.css\"\\).Count)",
+      "WebSearch",
+      "Bash(node server/start-mock.js)",
+      "Bash(Get-Process -Name \"node\")",
+      "Bash(Stop-Process -Force)",
+      "Bash(Write-Host \"done\")",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force)",
+      "PowerShell($url = \"https://image.pollinations.ai/prompt/A%20blue%20square%20on%20white%20background?width=1600&height=900&nologo=true&model=flux\"; try { $r = Invoke-WebRequest -Uri $url -Method GET -TimeoutSec 30; Write-Host \"Status:\" $r.StatusCode \"ContentType:\" $r.Headers[\"Content-Type\"] \"Size:\" $r.RawContentLength } catch { Write-Host \"Error:\" $_.Exception.Message })",
+      "PowerShell(Start-Process -FilePath \"node\" -ArgumentList \"server/start-pollinations.js\" -WorkingDirectory \"C:\\\\Users\\\\aplus\\\\ppt_prompt\" -WindowStyle Hidden)",
+      "Bash(findstr /n \"DEFAULT_COLOR_SYSTEM\\\\|const.*colorSystem\\\\|color.*preset\\\\|bg.*style\" app.js)",
+      "Bash(findstr /i \"ai\\\\|위임\\\\|자동\" app.js)",
+      "Bash(findstr /i \"ai\\\\|위임\\\\|자동\" *.js)",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 1; Start-Process -FilePath \"node\" -ArgumentList \"server/start-pollinations.js\" -WorkingDirectory \"C:\\\\Users\\\\aplus\\\\ppt_prompt\" -WindowStyle Hidden; Start-Sleep -Seconds 2; $r = Invoke-RestMethod -Uri \"http://127.0.0.1:4173/\" -Method GET; Write-Host \"서버 정상 응답: $\\($r.Length\\) bytes\")",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 1; Start-Process -FilePath \"node\" -ArgumentList \"server/start-pollinations.js\" -WorkingDirectory \"C:\\\\Users\\\\aplus\\\\ppt_prompt\" -WindowStyle Hidden; Start-Sleep -Seconds 2; $r = Invoke-RestMethod -Uri \"http://127.0.0.1:4173/\" -Method GET; Write-Host \"서버 정상: $\\($r.Length\\) bytes\")",
+      "PowerShell(taskkill /F /IM node.exe 2>$null)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\aplus\\ppt_prompt"
+    ]
+  }
+}

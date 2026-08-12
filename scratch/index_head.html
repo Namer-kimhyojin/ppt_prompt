@@ -1,0 +1,3132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptDeck | 발표자료 프롬프트 설계기</title>
+  <meta
+    name="description"
+    content="이미지 프롬프트를 페이지 유형, 색상, 레이아웃, 금지 규칙까지 구조적으로 설계하는 도구"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="data:," />
+  <script>
+    (() => {
+      const saved = localStorage.getItem("promptdeck_theme");
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
+    })();
+  </script>
+  <script src="src/auth.js"></script>
+  <script src="src/admin-settings.js"></script>
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/admin.css" />
+  <link rel="stylesheet" href="styles/designer.css" />
+  <link rel="stylesheet" href="styles/generator.css" />
+  <link rel="stylesheet" href="styles/promotion.css" />
+  <link rel="stylesheet" href="styles/concept-suggest.css" />
+  <link rel="stylesheet" href="styles/image-generation.css" />
+  <link rel="stylesheet" href="styles/map-prompt.css" />
+  <link rel="stylesheet" href="styles/slide-document.css" />
+  <link rel="stylesheet" href="styles/theme.css?v=concept-dark-20260605" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-block">
+      <div class="brand-mark">PD</div>
+      <div class="brand-copy">
+        <h1 class="brand-title">PromptDeck</h1>
+        <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="user-bar" id="userBar" style="display:none">
+        <span class="user-bar-name" id="userBarName"></span>
+        <button type="button" class="user-bar-logout" id="userBarLogout">로그아웃</button>
+      </div>
+      <a href="admin.html" class="admin-icon-link" title="관리자 설정" aria-label="관리자 설정">⚙</a>
+      <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="다크 모드로 전환" aria-pressed="false">
+        <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+        <span class="theme-toggle-text">다크</span>
+      </button>
+    </div>
+  </header>
+  <div id="adminAdBannerTop" style="display:none"></div>
+
+  <div class="app-tabs-bar">
+    <nav class="app-tabs" role="tablist">
+      <button type="button" class="app-tab-btn active" id="tabBtnDesigner" role="tab" aria-selected="true" aria-controls="paneDesigner">
+        슬라이드 프롬프트
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnGenerator" role="tab" aria-selected="false" aria-controls="paneGenerator">
+        슬라이드 분리기
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">
+        슬라이드 이미지 생성
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">
+        지도 이미지
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">
+        부속 양식
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnPromotionPlanner" role="tab" aria-selected="false" aria-controls="panePromotionPlanner">
+        컨셉 제안
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnConceptMixer" role="tab" aria-selected="false" aria-controls="paneConceptMixer">
+        비주얼 믹서
+      </button>
+      <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">
+        홍보용 이미지
+      </button>
+    </nav>
+    <div class="header-actions" id="tabActions">
+      <button type="button" class="btn ghost" id="btnClearSelections">선택 전체 해제</button>
+      <button type="button" class="btn ghost" id="btnReset">초기화</button>
+      <button type="button" class="btn secondary" id="btnCopy">한글 프롬프트 복사</button>
+      <button type="button" class="btn primary" id="btnCopyEn">영문 프롬프트 복사</button>
+    </div>
+  </div>
+
+  <div class="tab-pane active" id="paneDesigner" role="tabpanel">
+    <div id="slideConfigBanner" style="display:none; background:#fff3e0; color:#e65100; padding:10px 20px; border-bottom:1px solid #ffe0b2;">
+      <div style="display:flex; justify-content:space-between; align-items:center; max-width:1440px; margin:0 auto;">
+        <span id="slideConfigText" style="font-weight:700;"></span>
+        <button id="slideConfigDoneBtn" style="padding:6px 12px; background:#e65100; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">개별 설정 완료 후 돌아가기</button>
+      </div>
+    </div>
+    <main class="workspace">
+      <aside class="builder-panel" id="builderPanel">
+        <section class="panel-card" id="section-pageType">
+          <div class="panel-card-head">
+            <div>
+              <h2 class="panel-card-title">페이지 유형</h2>
+              <p class="panel-card-subtitle">표지, 목차, 본문, 맺음말처럼 슬라이드의 역할부터 먼저 정합니다.</p>
+            </div>
+            <span class="panel-badge accent">필수</span>
+          </div>
+          <div class="page-type-grid" id="pageTypeGrid"></div>
+        </section>
+
+        <div class="editor-sections" id="sectionsRoot"></div>
+
+        <section class="editor-section user-input-section" id="section-user">
+          <div class="editor-section-head">
+            <div>
+              <div class="editor-section-index">입력</div>
+              <h2 class="editor-section-title" id="userInputTitle">실제 본문 내용 입력</h2>
+              <p class="editor-section-subtitle" id="userInputSubtitle">
+                슬라이드 안에 실제로 반영할 제목, 수치, 구조, 키 메시지만 입력합니다.
+              </p>
+            </div>
+          </div>
+          <div class="user-input-body" id="group-user-content">
+            <label class="user-input-field">
+              <span class="user-input-label">슬라이드에 표시할 내용</span>
+              <textarea
+                id="userContent"
+                class="user-content-input"
+                placeholder="예) 공급망 90% 중국 의존, 75개 소부장사 집적, 14조 투자효과"
+              ></textarea>
+            </label>
+            <label class="user-input-field">
+              <span class="user-input-label">디자인 이해용 스크립트/맥락</span>
+              <textarea
+                id="userDesignContext"
+                class="user-content-input compact"
+                placeholder="발표자 스크립트, 의도, 청중에게 전달할 흐름을 입력하세요. 이 내용은 슬라이드에 원문 그대로 넣지 않습니다."
+              ></textarea>
+            </label>
+            <label class="user-input-field">
+              <span class="user-input-label">슬라이드 구성 시 금지 요소</span>
+              <textarea
+                id="userExclusions"
+                class="user-content-input compact"
+                placeholder="예) 발표자 스크립트 원문 그대로 삽입, 내부 메모, 출처 설명 문장, 장황한 배경 설명, 정보 과밀 배치"
+              ></textarea>
+            </label>
+            <p class="input-hint" id="userInputHint">
+              표시 내용은 사용자가 직접 입력한 경우에만 슬라이드 본문에 반영하고, 금지 요소는 피해야 할 구성 조건으로 전달합니다.
+            </p>
+          </div>
+        </section>
+      </aside>
+
+      <section class="preview-panel">
+        <section class="preview-card">
+          <div class="preview-card-head">
+            <div>
+              <h2 class="preview-card-title">빠른 프리셋</h2>
+              <p class="preview-card-subtitle">자주 쓰는 조합을 바로 불러와 시작할 수 있습니다.</p>
+            </div>
+            <button type="button" class="btn secondary option-tree-open-btn" id="optionTreeOpenBtn">옵션 트리</button>
+          </div>
+          <div class="template-chips" id="templateChips"></div>
+        </section>
+
+        <section class="preview-card">
+          <div class="preview-card-head">
+            <div>
+              <h2 class="preview-card-title">현재 선택 요약</h2>
+              <p class="preview-card-subtitle">지금 선택한 옵션을 짧은 칩 형태로 빠르게 확인합니다.</p>
+            </div>
+          </div>
+          <div class="summary-chips" id="summaryChips">
+            <span class="summary-empty">아직 선택한 옵션이 없습니다.</span>
+          </div>
+        </section>
+
+        <section class="preview-card prompt-card">
+          <div class="preview-card-head">
+            <div>
+              <h2 class="preview-card-title">생성 프롬프트</h2>
+              <p class="preview-card-subtitle">선택한 항목에 따라 프롬프트가 실시간으로 조합됩니다.</p>
+            </div>
+            <div class="lang-switch" role="group" aria-label="프롬프트 언어">
+              <button type="button" class="lang-btn active" id="btnKo">한국어</button>
+              <button type="button" class="lang-btn" id="btnEn">English</button>
+            </div>
+          </div>
+          <div class="prompt-sections" id="promptSections"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="tab-pane pane-generator gen-wrap" id="paneGenerator" role="tabpanel">
+    <div class="gen-main">
+      <section class="gen-section">
+        <div class="gen-section-head">
+          <h2>입력</h2>
+          <span class="gen-badge">MD → Slide Prompts</span>
+        </div>
+        <div class="gen-content">
+          <div class="gen-field">
+            <label for="genCommonPrompt">공통 프롬프트</label>
+            <textarea id="genCommonPrompt" class="gen-textarea" rows="12">Use case: productivity-visual / infographic-diagram
+Asset type: 16:9 Korean government proposal presentation slide image
+Model intent: Nano Banana Pro / Gemini 3 Pro Image Preview
+Canvas: 16:9 landscape, 2K or 4K, clean full-slide image, no outer frame
+
+Global visual style:
+- Professional Korean industrial policy proposal deck, executive decision material, not a generic template.
+- White to very-light cool gray background with subtle grid/map-line texture.
+- Deep navy, steel blue, graphite gray, muted cyan accents; red only for risk/bottleneck; avoid purple gradients.
+- Render only concise on-slide Korean text: title, header, short labels, key numbers, card titles.
+- Convert long tables into visual matrices, dashboards, pipelines, maps, or cards.
+- No logos, no watermark, no decorative people, no long paragraphs.
+- One slide = one main claim = one central visual structure.</textarea>
+            <p class="gen-hint">모든 슬라이드에 공통으로 들어갈 스타일 가이드라인과 모델 지시문을 입력하세요.</p>
+          </div>
+
+          <div class="gen-field">
+            <label>MD 파일 불러오기</label>
+            <div class="gen-filebox">
+              <input id="genFileInput" type="file" accept=".md,.txt,text/markdown,text/plain" />
+              <div class="gen-hint">또는 아래 입력창에 MD 내용을 그대로 붙여넣어도 됩니다.</div>
+            </div>
+          </div>
+
+          <div class="gen-field">
+            <label for="genMdInput">발표자료 기획용 MD</label>
+            <textarea id="genMdInput" class="gen-textarea" rows="16" placeholder="## 슬라이드 01. 제목&#10;### 헤더 블록..."></textarea>
+          </div>
+
+          <div class="gen-field">
+            <div class="gen-inline-head">
+              <label for="genSplitRules">슬라이드 구분 규칙</label>
+              <div class="gen-inline-actions">
+                <button class="gen-btn ghost" id="genSplitRulesHelpBtn" type="button">규칙 도우미 열기</button>
+                <button class="gen-btn secondary" id="genSplitRulesResetBtn" type="button">기본값 복원</button>
+              </div>
+            </div>
+            <textarea id="genSplitRules" class="gen-textarea" rows="4">slide|^##\s+슬라이드\s+(\d{2})\.\s*(.+)$
+appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
+            <p class="gen-hint">한 줄에 하나씩 `type|regex` 형식으로 입력합니다. 도우미에서 만든 규칙은 자동 저장되며, MD 내용과 맞는지 아래에서 바로 확인할 수 있습니다.</p>
+            <div class="gen-split-manage">
+              <div class="gen-split-manage-row">
+                <input id="genSplitRulesName" class="gen-input-text" type="text" placeholder="저장할 규칙 이름" />
+                <button class="gen-btn secondary" id="genSplitRulesSaveNamedBtn" type="button">현재 규칙 저장</button>
+              </div>
+              <div class="gen-split-manage-row">
+                <select id="genSplitRulesSavedSelect" class="gen-select" aria-label="저장된 구분 규칙"></select>
+                <button class="gen-btn ghost" id="genSplitRulesLoadNamedBtn" type="button">불러오기</button>
+                <button class="gen-btn ghost" id="genSplitRulesDeleteNamedBtn" type="button">삭제</button>
+              </div>
+            </div>
+            <div class="gen-split-live">
+              <div class="gen-split-live-head">
+                <strong>실시간 구분 미리보기</strong>
+                <span id="genSplitRulesPreviewBadge">대기 중</span>
+              </div>
+              <div id="genSplitRulesPreview" class="gen-split-live-list" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="gen-row">
+            <div class="gen-field">
+              <label for="genMaxChars">슬라이드별 본문 최대 길이</label>
+              <input id="genMaxChars" class="gen-input-text" type="text" value="3600" />
+            </div>
+            <div class="gen-field">
+              <label for="genFormat">출력 형식</label>
+              <select id="genFormat" class="gen-select">
+                <option value="markdown">Markdown</option>
+                <option value="jsonl">JSONL</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="gen-actions">
+            <button id="genGenerateBtn" class="gen-btn">프롬프트 생성</button>
+            <button class="gen-btn ghost" id="genSampleBtn" type="button">예시 MD 넣기</button>
+            <button class="gen-btn secondary" id="genSaveProjectBtn" type="button">프로젝트 저장</button>
+            <button class="gen-btn secondary" id="genLoadProjectBtn" type="button">불러오기</button>
+            <input type="file" id="genLoadProjectInput" accept=".json" style="display:none;" />
+            <button class="gen-btn secondary" id="genClearBtn" type="button">초기화</button>
+          </div>
+          <div class="gen-warn" id="genMessage"></div>
+        </div>
+      </section>
+
+      <section class="gen-section">
+        <div class="gen-section-head">
+          <h2>결과</h2>
+          <span class="gen-badge" id="genResultBadge">0 prompts</span>
+        </div>
+        <div class="gen-content">
+          <div class="gen-stats">
+            <div class="gen-stat"><b id="genSlideCount">0</b><span>본문 슬라이드</span></div>
+            <div class="gen-stat"><b id="genAppendixCount">0</b><span>부록</span></div>
+            <div class="gen-stat"><b id="genCharCount">0</b><span>문자 수</span></div>
+          </div>
+          <div class="gen-viewer">
+            <div class="gen-slide-list" id="genSlideList"></div>
+            <div>
+              <div class="gen-viewer-toolbar">
+                <input id="genJumpInput" class="gen-input-text" type="text" placeholder="예: 1, 05, A1" />
+                <button class="gen-btn ghost" id="genJumpBtn" type="button">이동</button>
+                <button class="gen-btn ghost" id="genPrevBtn" type="button">이전</button>
+                <button class="gen-btn ghost" id="genNextBtn" type="button">다음</button>
+                <button class="gen-btn ghost" id="genEditCurrentBtn" type="button">편집</button>
+                <button class="gen-btn" id="genCopyCurrentTopBtn" type="button">현재 복사</button>
+              </div>
+              <pre class="gen-pre" id="genOutput"></pre>
+              <div class="gen-lint-panel" id="genLintPanel">
+                <div class="gen-lint-head">
+                  <strong>프롬프트 진단</strong>
+                  <span class="gen-badge" id="genLintBadge">대기 중</span>
+                </div>
+                <div class="gen-lint-metrics" id="genLintMetrics"></div>
+                <div class="gen-lint-diff" id="genLintDiff"></div>
+                <div class="gen-lint-list" id="genLintList"></div>
+              </div>
+              <div class="gen-editor-panel" id="genEditorPanel">
+                <div class="gen-edit-toolbar">
+                  <button class="gen-btn" id="genSaveEditBtn" type="button">편집 내용 저장</button>
+                  <button class="gen-btn ghost" id="genRestoreSavedBtn" type="button">저장값 불러오기</button>
+                  <button class="gen-btn secondary" id="genCloseEditBtn" type="button">보기로 돌아가기</button>
+                </div>
+                <textarea id="genPromptEditor" class="gen-textarea" aria-label="현재 슬라이드 프롬프트 편집기"></textarea>
+                <p class="gen-hint">편집 후 저장해야 복사와 다운로드 결과에 반영됩니다. 저장값은 이 브라우저에 보관됩니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="gen-actions">
+            <button class="gen-btn" id="genCopyCurrentBtn" type="button">현재 슬라이드 프롬프트 복사</button>
+            <button class="gen-btn secondary" id="genCopyBtn" type="button">전체 결과 복사</button>
+            <button class="gen-btn ghost" id="genDownloadBtn" type="button">전체 파일 다운로드</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="tab-pane gen-wrap promo-wrap" id="panePromotion" role="tabpanel">
+    <div class="gen-main promo-main">
+      <section class="gen-section promo-legacy-placeholder" style="grid-column: 1 / -1; display:none;">
+        <div class="gen-section-head">
+          <h2>홍보용 이미지</h2>
+          <span class="gen-badge">작업 가이드</span>
+        </div>
+        <div class="gen-content">
+          <div class="gen-config-note" style="margin-bottom:16px;">
+            포스터, 카드뉴스, SNS 홍보이미지를 발표자료와 분리해 설계하는 전용 작업 탭입니다. 실제 화면 텍스트와 디자인 지시를 나눠서 프롬프트를 정리할 수 있습니다.
+          </div>
+
+          <div class="gen-config-fields">
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label">현재 제공 기능</label>
+              <p class="gen-config-guide">포스터, 카드뉴스, SNS 홍보이미지별 입력 항목과 프롬프트 미리보기, 설정 저장/불러오기를 제공합니다.</p>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label">권장 흐름</label>
+              <p class="gen-config-guide">목적과 타깃을 먼저 정한 뒤 실제 노출 텍스트, 자산별 지시, 금지 요소 순서로 입력하면 정리가 쉽습니다.</p>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label">안정성</label>
+              <p class="gen-config-guide">필수 입력 누락과 비율/크기 오류를 바로 확인할 수 있고, 현재 설정을 JSON 파일로 저장하거나 다시 불러올 수 있습니다.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section class="gen-section promo-builder-section">
+        <div class="gen-section-head">
+          <h2>홍보용 이미지 설정</h2>
+          <span class="gen-badge" id="promotionAssetBadge">홍보 이미지</span>
+        </div>
+        <div class="gen-content">
+
+          <!-- ── STEP 1: 빠른 시작 (접힘) ── -->
+          <details class="promo-step-disclosure" id="promotionStepStart" open>
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">1</span>
+              <div class="promo-step-copy">
+                <strong>제작 규격</strong>
+                <small>대상 생성 엔진과 이미지 규격을 설정합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+
+          <div class="gen-config-fields promo-start-fields">
+
+            <section class="gen-config-group gen-config-group-wide" style="display: none;">
+              <label class="gen-config-label" for="promotionTargetEngine">대상 생성 엔진</label>
+              <select id="promotionTargetEngine" class="gen-select" data-promo-field="targetEngine">
+                <option value="dalle" selected>OpenAI GPT Image 2 (gpt-image-2 / DALL-E 3)</option>
+              </select>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <div class="promo-size-mode-row">
+                <div class="promo-size-mode-left">
+                  <label class="gen-config-label" for="promotionSizeMode">규격 입력 방식</label>
+                  <p class="gen-config-guide">비율 기준 또는 실제 출력 크기 중 선택합니다.</p>
+                  <select id="promotionSizeMode" class="gen-select" data-promo-field="sizeMode">
+                    <option value="ratio">비율 설정</option>
+                    <option value="direct">크기 직접 입력</option>
+                  </select>
+                </div>
+                <div class="promo-size-preset-panel">
+                  <div class="promo-size-preset-header">
+                    <span class="promo-size-preset-label">내 규격</span>
+                    <button type="button" class="promo-size-preset-save-btn" id="promotionSizePresetSaveBtn" title="현재 규격을 저장">+ 저장</button>
+                  </div>
+                  <div class="promo-size-preset-save-row" id="promotionSizePresetSaveRow" style="display:none;">
+                    <input type="text" class="gen-input-text promo-size-preset-name-input" id="promotionSizePresetNameInput" placeholder="규격 이름 (예: 인스타 정방형)" maxlength="20" />
+                    <button type="button" class="gen-btn promo-size-preset-confirm-btn" id="promotionSizePresetConfirmBtn">저장</button>
+                    <button type="button" class="gen-btn ghost promo-size-preset-cancel-btn" id="promotionSizePresetCancelBtn">취소</button>
+                  </div>
+                  <div class="promo-size-preset-list" id="promotionSizePresetList">
+                    <span class="promo-size-preset-empty">저장된 규격 없음</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionRatio">이미지 규격</label>
+              <p class="gen-config-guide">선택한 방식에 따라 비율 또는 크기를 지정합니다.</p>
+              <div class="promo-size-quick-presets" id="promoSizeQuickPresets">
+                <div class="promo-sqp-group">
+                  <span class="promo-sqp-label">SNS</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="1:1" data-sqp-orientation="vertical" title="정방형 · 인스타 · 카카오 채널">1:1</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="4:5" data-sqp-orientation="vertical" title="인스타그램 피드 세로">4:5</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="2:3" data-sqp-orientation="vertical" title="핀터레스트 · 세로 피드">2:3</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="9:16" data-sqp-orientation="vertical" title="스토리 · 릴스 · 틱톡">9:16</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="16:9" data-sqp-orientation="horizontal" title="유튜브 썸네일 · 페이스북">16:9</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="3:1" data-sqp-orientation="horizontal" title="트위터/X 헤더 · 링크드인 배너">3:1</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="2:1" data-sqp-orientation="horizontal" title="페이스북 이벤트 커버 · 와이드 배너">2:1</button>
+                </div>
+                <div class="promo-sqp-group">
+                  <span class="promo-sqp-label">카카오</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="direct" data-sqp-unit="px" data-sqp-w="800" data-sqp-h="600" title="카카오 메시지 (800×600 px)">메시지</button>
+                </div>
+                <div class="promo-sqp-group">
+                  <span class="promo-sqp-label">복사용지 (A4, B4 등)</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="5:7" data-sqp-orientation="vertical" title="일반 복사용지 세로 (A4·A3·A5 등 공통 비율)">세로</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="7:5" data-sqp-orientation="horizontal" title="일반 복사용지 가로 (A4·A3·A5 등 공통 비율)">가로</button>
+                </div>
+              </div>
+              <div id="promotionRatioModeBox">
+                <div class="gen-inline-row">
+                  <select id="promotionRatio" class="gen-select" data-promo-field="ratio">
+                    <option value="1:1">1:1</option>
+                    <option value="4:5">4:5</option>
+                    <option value="3:4">3:4</option>
+                    <option value="2:3">2:3</option>
+                    <option value="5:7">5:7</option>
+                    <option value="9:16">9:16</option>
+                    <option value="16:9">16:9</option>
+                    <option value="3:2">3:2</option>
+                    <option value="7:5">7:5</option>
+                    <option value="2:1">2:1</option>
+                    <option value="3:1">3:1</option>
+                    <option value="custom">직접 입력</option>
+                  </select>
+                  <select id="promotionOrientation" class="gen-select" data-promo-field="orientation">
+                    <option value="vertical">세로형</option>
+                    <option value="horizontal">가로형</option>
+                  </select>
+                </div>
+              </div>
+              <div id="promotionDirectSizeBox" style="display:none; margin-top:8px;">
+                <div class="gen-inline-row">
+                  <select id="promotionDirectSizeUnit" class="gen-select promo-unit-select" data-promo-field="directSizeUnit">
+                    <option value="px">px</option>
+                    <option value="cm">cm</option>
+                  </select>
+                  <div class="gen-input-with-unit">
+                    <input type="text" id="promotionDirectSizeW" class="gen-input-text" placeholder="너비" data-promo-field="directSizeW" />
+                    <span class="gen-unit" id="promotionDirectSizeUnitLabelW">px</span>
+                  </div>
+                  <span class="gen-sep">×</span>
+                  <div class="gen-input-with-unit">
+                    <input type="text" id="promotionDirectSizeH" class="gen-input-text" placeholder="높이" data-promo-field="directSizeH" />
+                    <span class="gen-unit" id="promotionDirectSizeUnitLabelH">px</span>
+                  </div>
+                </div>
+                <p class="gen-hint promo-inline-hint">예: `1080 × 1350 px`, `21 × 29.7 cm`처럼 실제 출력 크기가 정해져 있을 때 사용합니다.</p>
+              </div>
+              <div id="promotionCustomRatioBox" class="gen-inline-row" style="display:none; margin-top:8px;">
+                <input type="text" id="promotionCustomRatioW" class="gen-input-text" placeholder="너비(W)" data-promo-field="customRatioW" />
+                <span class="gen-sep">:</span>
+                <input type="text" id="promotionCustomRatioH" class="gen-input-text" placeholder="높이(H)" data-promo-field="customRatioH" />
+              </div>
+            </section>
+          </div><!-- /promo-start-fields -->
+
+            </div><!-- /promo-step-body -->
+          </details><!-- /step 1 -->
+
+          <!-- ── STEP 2: 핵심 메시지 ── -->
+          <details class="promo-step-disclosure" id="promotionStepMessage" open>
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">2</span>
+              <div class="promo-step-copy">
+                <strong>핵심 메시지</strong>
+                <small>이미지에 담길 목적·타깃·텍스트·CTA. 가장 중요한 정보를 먼저 입력합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+          <div class="gen-config-fields promo-common-fields">
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="promotionGoal">홍보 목적</label>
+              <p class="gen-config-guide">지원사업 모집, 행사 초청, 교육 참가 등 목표를 기재</p>
+              <div class="promo-quick-btns" data-quick-for="promotionGoal">
+                <button type="button" class="btn-quick">지원사업 참가기업 모집</button>
+                <button type="button" class="btn-quick">교육·훈련 참가 유도</button>
+                <button type="button" class="btn-quick">행사·포럼 참가 초청</button>
+                <button type="button" class="btn-quick">성과 발표·기관 홍보</button>
+                <button type="button" class="btn-quick">공고·안내 확산</button>
+              </div>
+              <input id="promotionGoal" class="gen-input-text" type="text" data-promo-field="goal" placeholder="예: 지원사업 참가기업 모집 전환" />
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="promotionAudience">핵심 타깃</label>
+              <p class="gen-config-guide">누가 이 이미지를 보고 반응해야 하는지 한 문장으로 적습니다.</p>
+              <div class="promo-quick-btns" data-quick-for="promotionAudience">
+                <button type="button" class="btn-quick">지역 중소기업</button>
+                <button type="button" class="btn-quick">예비창업자·스타트업</button>
+                <button type="button" class="btn-quick">대학생·청년구직자</button>
+                <button type="button" class="btn-quick">연구자·대학 교원</button>
+                <button type="button" class="btn-quick">지역 기업인·관계자</button>
+              </div>
+              <input id="promotionAudience" class="gen-input-text" type="text" data-promo-field="audience" placeholder="예: 지역 중소기업 실무자, 예비창업자" />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionHeadline">헤드라인</label>
+              <p class="gen-config-guide">가장 먼저 보여줄 한 줄 메시지입니다.</p>
+              <input id="promotionHeadline" class="gen-input-text" type="text" data-promo-field="headline" placeholder="예: 공급망 전환의 다음 거점, 지금 합류하세요" />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionSubheadline">서브 카피</label>
+              <p class="gen-config-guide">헤드라인을 보완하는 설명이나 혜택 문구를 적습니다.</p>
+              <textarea id="promotionSubheadline" class="gen-textarea" rows="3" data-promo-field="subheadline" placeholder="예: 참가 대상, 핵심 혜택, 일정 요약"></textarea>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionBodyCopy">본문 포인트</label>
+              <p class="gen-config-guide">줄바꿈으로 항목을 나누고, 하위 내용은 들여쓰기한 불릿이나 1.1 번호로 입력하면 위계가 유지됩니다.</p>
+              <textarea id="promotionBodyCopy" class="gen-textarea" rows="5" data-promo-field="bodyCopy" placeholder="예:&#10;행사 정보&#10;  - 5월 31일 마감&#10;  - 서울 코엑스 개최&#10;참가 혜택&#10;  - 현장 네트워킹 제공"></textarea>
+            </section>
+
+            <section class="gen-config-group" id="promotionCtaSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionCta">CTA <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="cta" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionCtaModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="cta" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="cta" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">사용자가 마지막에 무엇을 하길 원하는지 명확히 적습니다.</p>
+              <div id="promotionCtaInput" style="display:none">
+                <input id="promotionCta" class="gen-input-text" type="text" data-promo-field="cta" placeholder="예: 지금 신청하기" />
+              </div>
+              <div id="promotionCtaAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+            <!-- 한 줄 오퍼 -->
+            <section class="gen-config-group gen-config-group-wide" id="promotionPosterOfferSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionPosterOffer">한 줄 오퍼 <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="posterOffer" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionPosterOfferModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="posterOffer" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="posterOffer" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">이미지 안에 직접 노출할 핵심 혜택 한 줄. 비워두면 AI가 자동 생성합니다.</p>
+              <div id="promotionPosterOfferInput" style="display:none">
+                <input id="promotionPosterOffer" class="gen-input-text" type="text" data-promo-field="posterOffer" placeholder="예: 사전 등록 시 VIP 네트워킹 세션 초청" />
+              </div>
+              <div id="promotionPosterOfferAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+            <!-- 첫 줄 훅 -->
+            <section class="gen-config-group gen-config-group-wide" id="promotionSnsHookSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionSnsHook">첫 줄 훅 <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="snsHook" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionSnsHookModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="snsHook" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="snsHook" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">SNS 피드·스토리 첫 화면에서 즉시 시선을 끌 짧은 문장입니다.</p>
+              <div id="promotionSnsHookInput" style="display:none">
+                <input id="promotionSnsHook" class="gen-input-text" type="text" data-promo-field="snsHook" placeholder="예: 이번 주말 단 하루" />
+              </div>
+              <div id="promotionSnsHookAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+            <!-- 해시태그/태그 -->
+            <section class="gen-config-group gen-config-group-wide" id="promotionSnsHashtagsSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionSnsHashtags">해시태그/태그 <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="snsHashtags" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionSnsHashtagsModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="snsHashtags" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="snsHashtags" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">이미지 안 또는 캡션에 쓸 해시태그입니다. 비워두면 AI가 자동 생성합니다.</p>
+              <div id="promotionSnsHashtagsInput" style="display:none">
+                <textarea id="promotionSnsHashtags" class="gen-textarea" rows="3" data-promo-field="snsHashtags" placeholder="예: #채용설명회&#10;#사전신청&#10;#커리어이벤트"></textarea>
+              </div>
+              <div id="promotionSnsHashtagsAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+          </div><!-- /promo-common-fields message -->
+            </div><!-- /promo-step-body -->
+          </details><!-- /step 2 -->
+
+          <!-- ── STEP 3: 비주얼 컨셉 & 레이아웃 ── -->
+          <details class="promo-step-disclosure" id="promotionStepVisual" open>
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">3</span>
+              <div class="promo-step-copy">
+                <strong>비주얼 컨셉 &amp; 레이아웃</strong>
+                <small>스타일 컨셉과 레이아웃 구도를 함께 설정합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+              <div class="gen-config-fields">
+                <section class="gen-config-group gen-config-group-wide promo-basic-concept-panel" id="promotionBasicConceptPanel">
+                  <div class="gen-config-label" style="margin-bottom:10px">비주얼 컨셉</div>
+                  <div id="promotionConceptEmpty" class="promo-concept-empty">
+                    <p class="promo-concept-empty-text">컨셉이 아직 적용되지 않았습니다. 비주얼 믹서 탭에서 스타일을 선택하면 자동으로 반영됩니다.</p>
+                    <button type="button" class="promo-concept-nav-btn" id="promotionConceptSelectBtn">비주얼 믹서로 이동 →</button>
+                  </div>
+                  <div id="promotionConceptApplied" class="promo-concept-applied" hidden>
+                    <div class="promo-concept-card">
+                      <div class="promo-concept-card-header">
+                        <span class="promo-concept-card-emoji" id="promotionConceptEmoji"></span>
+                        <div class="promo-concept-card-meta">
+                          <span class="promo-concept-card-name" id="promotionConceptName"></span>
+                          <span class="promo-concept-card-cat" id="promotionConceptCat"></span>
+                        </div>
+                        <button type="button" class="promo-concept-change-btn" id="promotionConceptChangeBtn">컨셉 변경</button>
+                      </div>
+                      <p class="promo-concept-card-desc" id="promotionConceptCardDesc"></p>
+                      <div class="promo-concept-card-palette" id="promotionConceptCardPalette"></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="gen-config-group gen-config-group-wide promo-layout-composition-panel">
+                  <div class="gen-config-label-row" style="margin-bottom:10px">
+                    <label class="gen-config-label" for="promotionLayoutComposition">레이아웃 강조 포인트 <span class="promo-warning-icon-wrapper" data-warning-field="layoutComposition"></span></label>
+                    <div class="promo-ai-toggle-header">
+                      <label class="promo-ai-toggle-switch" title="사용 여부">
+                        <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="layoutComposition" checked />
+                        <span class="promo-ai-toggle-track"></span>
+                      </label>
+                      <div class="promo-ai-mode-btns" id="promotionLayoutCompositionModeBtns">
+                        <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="layoutComposition" data-mode="ai">AI 자동</button>
+                        <button type="button" class="promo-ai-mode-btn" data-toggle-mode="layoutComposition" data-mode="manual">직접 입력</button>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="gen-config-guide">헤드라인·비주얼·정보 중 어느 요소를 화면에서 가장 먼저 읽히게 할지 선택합니다.</p>
+                  <div id="promotionLayoutCompositionInput" style="display:none">
+                    <div class="promo-layout-choice-btns">
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="title_focus">타이틀 중심</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="visual_focus">비주얼 중심</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="info_focus">정보 중심</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="title_info_hybrid">타이틀+정보 혼합</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="visual_info_hybrid">비주얼+정보 혼합</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="custom">사용자 정의 비중</button>
+                    </div>
+                    <select id="promotionLayoutComposition" data-promo-field="layoutComposition" style="display:none">
+                      <option value="title_focus">타이틀 중심</option>
+                      <option value="visual_focus">비주얼 중심</option>
+                      <option value="info_focus">정보 중심</option>
+                      <option value="title_info_hybrid">타이틀+정보 혼합</option>
+                      <option value="visual_info_hybrid">비주얼+정보 혼합</option>
+                      <option value="custom">사용자 정의 비중</option>
+                    </select>
+                  </div>
+
+                  <!-- Custom layout weight configuration -->
+                  <div id="promotionLayoutCustomContainer" style="display:none; margin-top:16px;">
+                    <!-- Segmented weight gauge -->
+                    <div class="promo-weight-gauge-bar" id="promotionLayoutWeightGauge">
+                      <div class="promo-weight-gauge-seg seg-title" id="promotionLayoutWeightTitleGauge" style="width: 25%" title="타이틀"></div>
+                      <div class="promo-weight-gauge-seg seg-visual" id="promotionLayoutWeightVisualGauge" style="width: 25%" title="키비주얼"></div>
+                      <div class="promo-weight-gauge-seg seg-info" id="promotionLayoutWeightInfoGauge" style="width: 25%" title="정보"></div>
+                      <div class="promo-weight-gauge-seg seg-bg" id="promotionLayoutWeightBackgroundGauge" style="width: 25%" title="배경이미지"></div>
+                    </div>
+
+                    <!-- Sliders Grid -->
+                    <div class="promo-weight-sliders-grid">
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-title"></span>
+                          <span class="promo-weight-slider-name">타이틀 (Headline/Subtitle)</span>
+                          <span class="promo-weight-slider-val">
+                            <span class="promo-weight-raw" id="promotionLayoutWeightTitleVal">25</span>
+                            <span class="promo-weight-arrow">→</span>
+                            <span class="promo-weight-alloc" id="promotionLayoutWeightTitleAlloc">25%</span>
+                          </span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightTitle" min="0" max="100" value="25" />
+                      </div>
+
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-visual"></span>
+                          <span class="promo-weight-slider-name">키비주얼 (Key Visual / Metaphor)</span>
+                          <span class="promo-weight-slider-val">
+                            <span class="promo-weight-raw" id="promotionLayoutWeightVisualVal">25</span>
+                            <span class="promo-weight-arrow">→</span>
+                            <span class="promo-weight-alloc" id="promotionLayoutWeightVisualAlloc">25%</span>
+                          </span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightVisual" min="0" max="100" value="25" />
+                      </div>
+
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-info"></span>
+                          <span class="promo-weight-slider-name">정보 (Body Copy / Details)</span>
+                          <span class="promo-weight-slider-val">
+                            <span class="promo-weight-raw" id="promotionLayoutWeightInfoVal">25</span>
+                            <span class="promo-weight-arrow">→</span>
+                            <span class="promo-weight-alloc" id="promotionLayoutWeightInfoAlloc">25%</span>
+                          </span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightInfo" min="0" max="100" value="25" />
+                      </div>
+
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-bg"></span>
+                          <span class="promo-weight-slider-name">배경이미지 (Background)</span>
+                          <span class="promo-weight-slider-val">
+                            <span class="promo-weight-alloc promo-weight-bg-alloc" id="promotionLayoutWeightBackgroundVal">25%</span>
+                            <span class="promo-weight-bg-auto">자동</span>
+                          </span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightBackground" min="0" max="100" value="25" disabled style="opacity:0.45;cursor:not-allowed" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="promotionLayoutCompositionAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+                </section>
+              </div>
+            </div>
+          </details><!-- /step 3 -->
+
+          <!-- ── STEP 4: 제약 사항과 품질 조건 ── -->
+          <details class="promo-step-disclosure" id="promotionStepConstraints">
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">4</span>
+              <div class="promo-step-copy">
+                <strong>제약 사항과 품질 조건</strong>
+                <small>필수 요소와 금지 표현, 결과물 품질 조건을 설정합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+              <div class="gen-config-fields">
+                <section class="gen-config-group">
+                  <label class="gen-config-label" for="promotionMandatoryElements">필수 포함 요소 <span class="promo-field-badge visible">필수 조건</span></label>
+                  <p class="gen-config-guide">로고, QR코드, 날짜·장소처럼 결과물에 반드시 확보해야 할 요소를 적습니다.</p>
+                  <div class="promo-quick-btns" data-quick-for="promotionMandatoryElements">
+                    <button type="button" class="btn-quick">공식 로고 자리</button>
+                    <button type="button" class="btn-quick">QR코드 자리</button>
+                    <button type="button" class="btn-quick">주최·주관 표기</button>
+                    <button type="button" class="btn-quick">날짜·장소 정보</button>
+                    <button type="button" class="btn-quick">CTA</button>
+                    <button type="button" class="btn-quick">출처·저작권 표기</button>
+                  </div>
+                  <textarea id="promotionMandatoryElements" class="gen-textarea" rows="4" data-promo-field="mandatoryElements" placeholder="예: 행사 공식 로고 자리, 신청용 QR코드 자리, 주최·주관 표기"></textarea>
+                </section>
+
+                <section class="gen-config-group">
+                  <label class="gen-config-label" for="promotionForbiddenElements">금지 요소 <span class="promo-field-badge constraint">제약</span></label>
+                  <p class="gen-config-guide">다른 단계에서 이미 지정한 색상, 배경, 액션버튼, 배치가 아니라 제외할 표현만 적습니다.</p>
+                  <div class="promo-quick-btns" data-quick-for="promotionForbiddenElements">
+                    <button type="button" class="btn-quick">임의 추가 텍스트</button>
+                    <button type="button" class="btn-quick">가짜 로고·상표</button>
+                    <button type="button" class="btn-quick">워터마크·서명</button>
+                    <button type="button" class="btn-quick">목업 프레임·외부 흰 여백</button>
+                    <button type="button" class="btn-quick">텍스트 왜곡·가짜 글리프</button>
+                    <button type="button" class="btn-quick">과도한 장식·복잡한 배경</button>
+                  </div>
+                  <textarea id="promotionForbiddenElements" class="gen-textarea" rows="4" data-promo-field="forbiddenElements" placeholder="예: 임의 추가 텍스트, 가짜 로고, 워터마크, 목업 화면"></textarea>
+                </section>
+
+                <section class="gen-config-group gen-config-group-wide">
+                  <div class="gen-config-label-row">
+                    <label class="gen-config-label" for="promotionQualityNotes">품질 조건 <span class="promo-field-badge instruction">품질</span></label>
+                    <div class="promo-ai-toggle-header">
+                      <button type="button" class="promo-reset-field-btn" id="promotionQualityNotesResetBtn" title="기본값으로 되돌리기">↺ 되돌리기</button>
+                      <label class="promo-ai-toggle-switch" title="사용 여부">
+                        <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="qualityNotes" checked />
+                        <span class="promo-ai-toggle-track"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <p class="gen-config-guide">가독성, 대비, 여백, 왜곡 방지 및 품질 결함 제외 기준을 지정합니다.</p>
+                  <textarea id="promotionQualityNotes" class="gen-textarea" rows="6" data-promo-field="qualityNotes" placeholder="품질 조건을 입력하세요"></textarea>
+                </section>
+              </div>
+            </div>
+          </details><!-- /step 4 -->
+
+          <div class="promo-validation" id="promotionValidation" aria-live="polite"></div>
+
+          <!-- 하단 액션 바 -->
+          <div class="promo-action-bar">
+            <div class="promo-action-bar-primary">
+              <button type="button" class="gen-btn secondary" id="promotionSampleBtn">샘플 채우기</button>
+              <button type="button" class="gen-btn secondary" id="promotionRandomPresetBtn">랜덤 프리셋</button>
+            </div>
+            <div class="promo-action-bar-secondary">
+              <button type="button" class="gen-btn ghost" id="promotionSaveBtn">저장</button>
+              <button type="button" class="gen-btn ghost" id="promotionLoadBtn">불러오기</button>
+              <button type="button" class="gen-btn ghost" id="promotionResetBtn">초기화</button>
+            </div>
+            <input id="promotionLoadInput" type="file" accept="application/json,.json" hidden />
+          </div>
+        </div>
+      </section>
+
+      <section class="gen-section promo-preview-section">
+
+        <!-- ① 고정 헤더: 언어/모드 컨트롤 + 복사 버튼 -->
+        <div class="promo-preview-topbar">
+          <div class="promo-preview-topbar-actions">
+            <span class="gen-badge" id="promotionPreviewBadge">초안</span>
+            <button type="button" class="gen-btn secondary" id="promotionResetPromptBtn">초안 반영</button>
+            <button type="button" class="gen-btn secondary" id="promotionShuffleLayoutBtn">↻ 레이아웃</button>
+            <button type="button" class="gen-btn promo-copy-btn" id="promotionCopyPromptBtn">복사</button>
+          </div>
+          <!-- hidden selects (JS 연동용) -->
+          <select id="promotionOutputLanguage" class="gen-select" data-promo-output-language style="display:none">
+            <option value="en" selected>English</option>
+          </select>
+          <select id="promotionPromptMode" class="gen-select" data-promo-prompt-mode style="display:none">
+            <option value="basic" selected>기본</option>
+          </select>
+        </div>
+
+        <!-- ② 통계 바 (topbar 바로 아래, 항상 가시 영역에 위치) -->
+        <div class="promo-stats-bar" id="promotionStatsBar">
+          <div class="promo-stats-row">
+            <span class="promo-stat-chip" id="promotionStatSections">섹션 –</span>
+            <span class="promo-stat-chip" id="promotionStatLines">– 줄</span>
+            <span class="promo-stat-chip promo-stat-chars" id="promotionStatChars">– 자</span>
+            <span class="promo-stat-chip promo-stat-tokens" id="promotionStatTokens">≈ – 토큰</span>
+            <span class="promo-stat-chip promo-stat-transfer" id="promotionStatTransfer">전송 기준 –</span>
+            <button type="button" class="promo-viewer-edit-btn" id="promotionViewerToggleBtn" title="직접 편집 모드로 전환">✎ 편집</button>
+          </div>
+          <div class="promo-token-gauge" id="promotionTokenGauge">
+            <div class="promo-token-gauge-fill" id="promotionTokenGaugeFill"></div>
+          </div>
+        </div>
+
+        <!-- ③ 프롬프트 body: 뷰어(기본) + textarea(편집 모드) -->
+        <div class="promo-prompt-body">
+          <!-- 섹션 뷰어: 변경된 섹션 글자색 하이라이트, promptDirty=false 일 때 표시 -->
+          <div id="promotionPromptViewer" class="promo-prompt-viewer" aria-live="polite"></div>
+          <!-- 직접 편집 textarea: 편집 모드 또는 promptDirty=true 일 때 표시 -->
+          <textarea class="gen-textarea promo-pre promo-prompt-editor promo-mode-hidden" id="promotionPromptPreview" spellcheck="false"></textarea>
+        </div>
+
+
+      </section>
+    </div>
+  </div>
+
+  <div class="tab-pane concept-suggest-wrap" id="panePromotionPlanner" role="tabpanel">
+    <div class="concept-toolbar">
+      <div class="concept-search-wrap">
+        <input type="search" id="conceptSearchInput" class="concept-search-input" placeholder="스타일 검색 (이름·태그·설명…)" autocomplete="off" />
+        <button type="button" class="concept-search-clear" id="conceptSearchClear" aria-label="검색 초기화" hidden>✕</button>
+      </div>
+      <div class="concept-color-mode" id="conceptColorMode" role="group" aria-label="컨셉 색상 모드">
+        <span class="concept-color-mode-label">색상 모드</span>
+        <button type="button" class="concept-color-mode-btn active" data-concept-color-mode="light" aria-pressed="true">라이트</button>
+        <button type="button" class="concept-color-mode-btn" data-concept-color-mode="dark" aria-pressed="false">다크</button>
+      </div>
+      <div class="concept-engine-mode" id="conceptEngineMode" role="group" aria-label="대상 생성 엔진">
+        <span class="concept-engine-label">생성 엔진</span>
+        <button type="button" class="concept-engine-btn active" data-concept-engine="dalle" aria-pressed="true">OpenAI</button>
+        <button type="button" class="concept-engine-btn" data-concept-engine="imagen" aria-pressed="false">Google</button>
+      </div>
+      <div class="concept-result-count" id="conceptResultCount"></div>
+    </div>
+    <div class="concept-filter-bar" id="conceptFilterBar"></div>
+    <div class="concept-grid" id="conceptGrid"></div>
+  </div>
+
+  <div class="tab-pane concept-mixer-page" id="paneConceptMixer" role="tabpanel">
+    <div class="concept-mixer-container" id="conceptMixerContainer" style="display: flex; padding: 16px; flex-direction: column; gap: 20px; flex: 1; overflow-y: auto;"></div>
+  </div>
+
+  <div class="tab-pane gen-wrap slide-image-wrap" id="paneSlideImage" role="tabpanel">
+    <div class="gen-main slide-image-main">
+      <section class="gen-section">
+        <div class="gen-section-head">
+          <h2>이미지 생성 설정</h2>
+          <span class="gen-badge" id="slideImageServerBadge">로컬 서버</span>
+        </div>
+        <div class="gen-content">
+
+          <!-- API 설정 패널 -->
+          <div class="slide-image-config-panel" id="slideImageConfigPanel">
+            <div class="slide-image-config-head">
+              <strong>이미지 생성 서비스</strong>
+              <button type="button" class="gen-btn ghost slide-image-config-toggle" id="slideImageConfigToggle">설정 열기</button>
+            </div>
+            <div class="slide-image-config-body" id="slideImageConfigBody" hidden>
+              <div class="slide-image-config-notice">
+                <strong>🔒 API 키는 로컬 테스트 서버에만 적용됩니다</strong>
+                <ul>
+                  <li>입력한 API 키는 내 컴퓨터에서 실행 중인 로컬 서버에만 전달되며, GitHub에 저장되지 않습니다.</li>
+                  <li>로컬 테스트 서버를 재시작하면 화면에서 저장한 임시 설정은 초기화됩니다.</li>
+                  <li><strong>Pollinations</strong>는 API 키 없이 무료로 사용할 수 있습니다.</li>
+                </ul>
+              </div>
+              <div class="slide-image-config-row">
+                <label class="slide-image-config-label" for="slideImageProvider">서비스 선택</label>
+                <select id="slideImageProvider" class="gen-select">
+                  <option value="mock">목업 (테스트용)</option>
+                  <option value="pollinations">Pollinations (무료, API 키 불필요)</option>
+                  <option value="google">Google Gemini</option>
+                  <option value="openai">OpenAI DALL·E 3</option>
+                </select>
+              </div>
+              <div class="slide-image-config-row" id="slideImageGoogleKeyRow" hidden>
+                <label class="slide-image-config-label" for="slideImageGoogleKey">Google API 키</label>
+                <div class="slide-image-config-key-row">
+                  <input id="slideImageGoogleKey" class="gen-input-text" type="password" placeholder="AIza..." autocomplete="off" />
+                  <button type="button" class="gen-btn ghost slide-image-key-toggle" data-target="slideImageGoogleKey">표시</button>
+                </div>
+                <p class="gen-hint">Google AI Studio에서 발급한 Gemini API 키를 입력합니다. 비워두고 저장하면 기존 로컬 설정 키를 유지합니다.</p>
+              </div>
+              <div class="slide-image-config-row" id="slideImageOpenAIKeyRow" hidden>
+                <label class="slide-image-config-label" for="slideImageOpenAIKey">OpenAI API 키</label>
+                <div class="slide-image-config-key-row">
+                  <input id="slideImageOpenAIKey" class="gen-input-text" type="password" placeholder="sk-..." autocomplete="off" />
+                  <button type="button" class="gen-btn ghost slide-image-key-toggle" data-target="slideImageOpenAIKey">표시</button>
+                </div>
+                <p class="gen-hint">platform.openai.com에서 발급한 API 키를 입력합니다. 비워두고 저장하면 기존 로컬 설정 키를 유지합니다.</p>
+              </div>
+              <div class="slide-image-config-actions">
+                <button type="button" class="gen-btn" id="slideImageSaveConfigBtn">설정 저장</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-image-actions">
+            <button type="button" class="gen-btn secondary" id="slideImageHealthBtn">서비스 상태 확인</button>
+            <button type="button" class="gen-btn secondary" id="slideImageLoadPromptBtn">현재 프롬프트 가져오기</button>
+            <button type="button" class="gen-btn secondary" id="slideImageLoadDeckBtn">분리기 프롬프트 목록 가져오기</button>
+            <button type="button" class="gen-btn" id="slideImageGenerateBtn">이미지 생성</button>
+          </div>
+
+          <div class="gen-field">
+            <label for="slideImageTitle">슬라이드 제목</label>
+            <input id="slideImageTitle" class="gen-input-text" type="text" value="slide-01" />
+          </div>
+
+          <div class="gen-field">
+            <label for="slideImagePrompt">이미지 생성 프롬프트</label>
+            <textarea id="slideImagePrompt" class="gen-textarea slide-image-prompt" rows="18" placeholder="슬라이드 프롬프트 제작 탭에서 프롬프트를 만든 뒤, 현재 프롬프트 가져오기를 눌러주세요."></textarea>
+          </div>
+
+          <div class="slide-image-status" id="slideImageStatus" aria-live="polite">대기 중</div>
+
+          <div class="slide-image-queue-panel">
+            <div class="slide-image-queue-head">
+              <strong>순차 생성 큐</strong>
+              <span id="slideImageQueueSummary">0개 대기</span>
+            </div>
+            <div class="slide-image-queue-settings">
+              <label>
+                요청 간격(ms)
+                <input id="slideImageDelayMs" class="gen-input-text" type="number" min="0" step="1000" value="10000" />
+              </label>
+              <label>
+                실패 재시도
+                <input id="slideImageMaxRetries" class="gen-input-text" type="number" min="0" max="5" value="1" />
+              </label>
+            </div>
+            <div class="slide-image-actions">
+              <button type="button" class="gen-btn" id="slideImageStartQueueBtn">전체 순차 생성</button>
+              <button type="button" class="gen-btn secondary" id="slideImageRetryFailedBtn">실패 항목만 다시 생성</button>
+              <button type="button" class="gen-btn secondary" id="slideImagePauseQueueBtn">일시정지</button>
+              <button type="button" class="gen-btn secondary" id="slideImageResumeQueueBtn">재개</button>
+              <button type="button" class="gen-btn ghost" id="slideImageStopQueueBtn">중지</button>
+            </div>
+            <div class="slide-image-job-list" id="slideImageJobList">
+              <div class="slide-image-job-empty">슬라이드 분리기에서 프롬프트를 생성한 뒤 목록을 가져오세요.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="gen-section">
+        <div class="gen-section-head">
+          <h2>생성 결과</h2>
+          <span class="gen-badge" id="slideImageResultBadge">결과 없음</span>
+        </div>
+        <div class="gen-content">
+          <div class="slide-image-preview" id="slideImagePreview">
+            <span>아직 생성된 이미지가 없습니다.</span>
+          </div>
+          <div class="slide-image-gallery-nav">
+            <button type="button" class="gen-btn ghost" id="slideImagePrevBtn" disabled>← 이전</button>
+            <span class="slide-image-gallery-counter" id="slideImageGalleryCounter">0 / 0</span>
+            <button type="button" class="gen-btn ghost" id="slideImageNextBtn" disabled>다음 →</button>
+          </div>
+          <div class="slide-image-result-meta" id="slideImageResultMeta"></div>
+          <div class="slide-image-gallery-actions">
+            <button type="button" class="gen-btn secondary" id="slideImageOpenFolderBtn" disabled>outputs 폴더 열기</button>
+            <button type="button" class="gen-btn ghost" id="slideImageClearGalleryBtn" disabled>갤러리 초기화</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="tab-pane gen-wrap map-wrap" id="paneMapPrompt" role="tabpanel">
+    <div class="gen-main map-main">
+      <section class="gen-section map-builder-section">
+        <div class="gen-section-head">
+          <h2>지도 강조 이미지 프롬프트</h2>
+          <span class="gen-badge">Reference Map → Business Visual</span>
+        </div>
+        <div class="gen-content">
+          <div class="map-intro">
+            <strong>첨부할 지도 이미지를 기준으로 특정 구역을 강조하는 사업계획서용 이미지를 설계합니다.</strong>
+            <span>프롬프트와 함께 지도 이미지를 모델에 첨부하고, 아래 항목에는 어떤 지역을 어떤 방식으로 강조할지 입력합니다.</span>
+          </div>
+
+          <div class="gen-row">
+            <div class="gen-field">
+              <label for="mapProjectName">사업/문서명</label>
+              <input id="mapProjectName" class="gen-input-text" type="text" placeholder="예: ○○ 산업단지 조성사업 사업계획서" />
+            </div>
+            <div class="gen-field">
+              <label for="mapOutputType">이미지 용도</label>
+              <select id="mapOutputType" class="gen-select">
+                <option value="business-plan">사업계획서 본문 삽입 이미지</option>
+                <option value="result-report">결과보고서 성과·위치 설명 이미지</option>
+                <option value="proposal-document">제안서 본문 설득용 지도 이미지</option>
+                <option value="proposal-slide">제안 발표용 슬라이드 지도</option>
+                <option value="executive-summary">요약 보고서 핵심 위치도</option>
+                <option value="site-analysis">입지 분석·권역 설명 이미지</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapReferenceNote">첨부 지도 이미지 설명</label>
+            <select id="mapReferencePreset" class="gen-select map-text-preset" aria-label="첨부 지도 이미지 설명 프리셋">
+              <option value="">프리셋 선택 · 선택 후 문구 수정 가능</option>
+              <option value="admin-road">행정경계 + 주요 도로 지도</option>
+              <option value="marked-site">사용자 표시 대상지 포함 지도</option>
+              <option value="satellite-site">위성/항공사진 기반 위치도</option>
+              <option value="transport-network">광역 교통망 중심 지도</option>
+              <option value="industrial-context">산업단지·거점 포함 권역도</option>
+              <option value="urban-plan">도시계획·토지이용계획도</option>
+              <option value="business-plan-purpose">사업계획서용 입지 타당성 지도</option>
+              <option value="result-report-purpose">결과보고서용 추진 결과 지도</option>
+              <option value="proposal-purpose">제안서용 비교·설득 지도</option>
+            </select>
+            <textarea id="mapReferenceNote" class="gen-textarea" rows="4" placeholder="예: 시·군 경계와 주요 도로가 표시된 행정구역 지도. 사용자가 붉은 펜으로 표시한 영역이 대상 부지임."></textarea>
+            <p class="gen-hint">실제 지도 이미지는 프롬프트와 함께 별도로 첨부하세요. 이 입력은 모델이 참조 이미지를 해석하는 기준 설명입니다.</p>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapTargetArea">강조할 특정 구역</label>
+            <select id="mapTargetPreset" class="gen-select map-text-preset" aria-label="강조할 특정 구역 프리셋">
+              <option value="">프리셋 선택 · 선택 후 문구 수정 가능</option>
+              <option value="center-district">지도 중앙 대상 부지</option>
+              <option value="marked-boundary">사용자 표시 경계 내부</option>
+              <option value="ic-corridor">IC·간선도로 인접 구역</option>
+              <option value="station-area">역세권·대중교통 결절부</option>
+              <option value="waterfront-zone">하천·해안 인접 개발 구역</option>
+              <option value="industrial-expansion">기존 산단 확장 후보지</option>
+              <option value="business-core-site">사업계획 핵심 대상지</option>
+              <option value="result-completed-area">결과보고 완료·성과 구역</option>
+              <option value="proposal-priority-area">제안서 우선 제안 구역</option>
+            </select>
+            <textarea id="mapTargetArea" class="gen-textarea" rows="4" placeholder="예: 지도 중앙 남동쪽의 ○○읍 일대, ○○IC와 국도 00호선 사이 대상 부지."></textarea>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapContextInfo">주변 맥락과 사업 메시지</label>
+            <select id="mapContextPreset" class="gen-select map-text-preset" aria-label="주변 맥락과 사업 메시지 프리셋">
+              <option value="">프리셋 선택 · 선택 후 문구 수정 가능</option>
+              <option value="accessibility">광역 접근성 강조</option>
+              <option value="industrial-linkage">산업거점 연계 강조</option>
+              <option value="balanced-development">지역 균형발전 명분 강조</option>
+              <option value="tourism-commerce">관광·상권 활성화 강조</option>
+              <option value="public-infra">공공 인프라·생활권 개선 강조</option>
+              <option value="future-growth">미래 성장축·확장성 강조</option>
+              <option value="business-feasibility">사업계획 타당성 메시지</option>
+              <option value="result-performance">결과보고 성과 메시지</option>
+              <option value="proposal-differentiation">제안서 차별화 메시지</option>
+            </select>
+            <textarea id="mapContextInfo" class="gen-textarea" rows="5" placeholder="예: 광역 교통망 접근성, 배후 산업단지와의 연계, 후보지의 전략적 위치를 강조."></textarea>
+          </div>
+
+          <div class="gen-field">
+            <div class="gen-inline-head">
+              <label>강조 기법</label>
+              <button type="button" class="gen-btn ghost" id="mapTechniqueClearBtn">선택 해제</button>
+            </div>
+            <div class="map-technique-grid" id="mapTechniqueGrid"></div>
+          </div>
+
+          <div class="gen-row">
+            <div class="gen-field">
+              <label for="mapVisualTone">시각 톤</label>
+              <select id="mapVisualTone" class="gen-select">
+                <option value="official">공공기관 보고서형 · 절제된 전문성</option>
+                <option value="premium">고급 사업제안서형 · 선명한 설득력</option>
+                <option value="technical">입지 분석형 · 데이터/도면 느낌</option>
+                <option value="minimal">미니멀 위치도형 · 핵심 구역만 강조</option>
+              </select>
+            </div>
+            <div class="gen-field">
+              <label for="mapCanvas">출력 규격</label>
+              <select id="mapCanvas" class="gen-select">
+                <option value="16:9 landscape business presentation image">16:9 발표자료</option>
+                <option value="A4 landscape report figure">A4 가로 보고서 그림</option>
+                <option value="A4 portrait report figure">A4 세로 보고서 그림</option>
+                <option value="wide executive summary map figure">와이드 요약 보고서</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="map-visual-panel">
+            <div class="gen-inline-head">
+              <label>비주얼 세부 설정</label>
+              <span class="gen-badge">Tone / Color / Detail</span>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <label for="mapColorPalette">색상 팔레트</label>
+                <select id="mapColorPalette" class="gen-select">
+                  <option value="gov-blue">공공 보고서형 블루 · 네이비/스틸블루/화이트</option>
+                  <option value="green-growth">지역개발형 그린 · 딥그린/세이지/라임 포인트</option>
+                  <option value="infra-orange">인프라 강조형 오렌지 · 차콜/오렌지/라이트그레이</option>
+                  <option value="mono-accent">모노톤 + 포인트 · 회색 지도/단일 강조색</option>
+                  <option value="ai">AI 위임 · 지도 내용과 사업 메시지에 맞춰 선택</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <label for="mapHighlightColor">강조 색상</label>
+                <select id="mapHighlightColor" class="gen-select">
+                  <option value="blue">신뢰감 있는 블루</option>
+                  <option value="red">위치 집중용 레드</option>
+                  <option value="green">개발/환경 연계 그린</option>
+                  <option value="orange">교통/인프라 강조 오렌지</option>
+                  <option value="cyan">첨단/데이터 느낌 시안</option>
+                  <option value="ai">AI 위임 · 원본 지도 대비에 맞춰 선택</option>
+                </select>
+              </div>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <label for="mapBaseStyle">지도 베이스 처리</label>
+                <select id="mapBaseStyle" class="gen-select">
+                  <option value="clean-vector">클린 벡터 지도화</option>
+                  <option value="desaturated-original">원본 지도 저채도 보정</option>
+                  <option value="paper-report">보고서용 종이 질감 지도</option>
+                  <option value="technical-blueprint">기술 도면/블루프린트 느낌</option>
+                  <option value="satellite-muted">절제된 위성/항공사진 기반</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <label for="mapBackgroundTreatment">배경 처리</label>
+                <select id="mapBackgroundTreatment" class="gen-select">
+                  <option value="white-report">화이트 보고서 배경</option>
+                  <option value="soft-panel">은은한 패널/카드 배경</option>
+                  <option value="full-bleed-map">지도 전체 화면형</option>
+                  <option value="muted-context">주변부 흐림/저채도 처리</option>
+                  <option value="transparent-overlay">반투명 분석 레이어 중심</option>
+                </select>
+              </div>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <label for="mapLabelDensity">라벨 밀도</label>
+                <select id="mapLabelDensity" class="gen-select">
+                  <option value="minimal">최소 라벨 · 대상지와 핵심 거점만</option>
+                  <option value="balanced">균형 라벨 · 사업계획서 기본 수준</option>
+                  <option value="detailed">상세 라벨 · 입지 분석용</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <label for="mapDepthStyle">입체감/질감</label>
+                <select id="mapDepthStyle" class="gen-select">
+                  <option value="flat">평면형 · 가장 명료한 보고서 스타일</option>
+                  <option value="subtle-depth">은은한 입체감 · 그림자/레이어 약하게</option>
+                  <option value="premium-layered">고급 레이어형 · 인셋/패널/음영 활용</option>
+                  <option value="business-3d">사업계획서형 3D · 낮은 입체 지도</option>
+                  <option value="isometric-3d">아이소메트릭 3D · 입지 구조 강조</option>
+                  <option value="no-3d">3D 배제 · 지도 정확성 최우선</option>
+                </select>
+              </div>
+            </div>
+            <div class="gen-row">
+              <div class="gen-field">
+                <div class="map-option-head">
+                  <label for="mapThreeDStyle">3D 연출 방식</label>
+                  <button type="button" class="map-sample-btn" id="mapThreeDPreviewBtn">샘플 보기</button>
+                </div>
+                <select id="mapThreeDStyle" class="gen-select">
+                  <option value="none">사용 안 함 · 평면 지도 중심</option>
+                  <option value="raised-site">대상지만 살짝 들어 올리기</option>
+                  <option value="layered-terrain">지형/권역 레이어를 낮게 적층</option>
+                  <option value="extruded-district">대상 구역을 낮은 블록 형태로 강조</option>
+                  <option value="isometric-board">아이소메트릭 보드형 지도</option>
+                  <option value="ai">AI 위임 · 지도 정확도를 해치지 않는 범위에서 결정</option>
+                </select>
+              </div>
+              <div class="gen-field">
+                <div class="map-option-head">
+                  <label for="mapCameraAngle">3D 카메라/시점</label>
+                  <button type="button" class="map-sample-btn" id="mapCameraPreviewBtn">샘플 보기</button>
+                </div>
+                <select id="mapCameraAngle" class="gen-select">
+                  <option value="top-down">정투영에 가까운 탑뷰</option>
+                  <option value="low-isometric">낮은 아이소메트릭 시점</option>
+                  <option value="report-perspective">보고서용 약한 원근 시점</option>
+                  <option value="no-perspective">원근 왜곡 최소화</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapLabels">표시할 라벨/범례</label>
+            <textarea id="mapLabels" class="gen-textarea" rows="3" placeholder="예: 대상지, 주변 산업단지, 고속도로 IC, 주요 교통축, 행정구역명"></textarea>
+          </div>
+
+          <div class="gen-field">
+            <label for="mapExclusions">피해야 할 요소</label>
+            <textarea id="mapExclusions" class="gen-textarea" rows="3" placeholder="예: 부정확한 지명 추가, 실제 경계 왜곡, 과도한 3D 효과, 장식적 네온, 복잡한 배경"></textarea>
+          </div>
+
+          <div class="gen-actions">
+            <button type="button" class="gen-btn" id="mapGeneratePromptBtn">프롬프트 생성</button>
+            <button type="button" class="gen-btn secondary" id="mapCopyPromptBtn">프롬프트 복사</button>
+            <button type="button" class="gen-btn secondary" id="mapSampleBtn">샘플 채우기</button>
+            <button type="button" class="gen-btn ghost" id="mapResetBtn">초기화</button>
+          </div>
+          <div class="gen-warn" id="mapMessage"></div>
+        </div>
+      </section>
+
+      <section class="gen-section map-preview-section">
+        <div class="gen-section-head">
+          <h2>생성 프롬프트</h2>
+          <span class="gen-badge" id="mapPromptBadge">대기 중</span>
+        </div>
+        <div class="gen-content">
+          <textarea id="mapPromptPreview" class="gen-textarea map-prompt-preview" rows="26" readonly></textarea>
+          <div class="map-guide-panel">
+            <strong>사용 방법</strong>
+            <ol>
+              <li>강조할 구역이 표시된 지도 이미지를 이미지 생성 모델에 첨부합니다.</li>
+              <li>이 탭에서 생성한 프롬프트를 함께 입력합니다.</li>
+              <li>결과 이미지에서 지명·경계·도로명은 원본 지도와 대조해 검수합니다.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 부속 양식 통합 탭 -->
+  <div class="tab-pane gen-wrap" id="paneSlideDocument" role="tabpanel" style="flex-direction: column;">
+
+    <!-- 세부 서브 탭 바 -->
+    <div class="slide-sub-tabs-bar" role="tablist">
+      <button type="button" class="slide-sub-tab-btn active" data-target="paneSlideCover">문서 표지 생성</button>
+      <button type="button" class="slide-sub-tab-btn" data-target="paneSlideDivider">문서 간지 생성</button>
+      <button type="button" class="slide-sub-tab-btn" data-target="paneSlideBackground">문서 배경 생성</button>
+      <button type="button" class="slide-sub-tab-btn" data-target="paneSlideSignboard">안내판 생성</button>
+    </div>
+
+    <!-- 헤더 액션 프록시 연동용 숨겨진 버튼들 -->
+    <div style="display: none;">
+      <button type="button" id="slideDocCopyPromptBtn"></button>
+      <button type="button" id="slideDocSampleBtn"></button>
+      <button type="button" id="slideDocResetBtn"></button>
+    </div>
+
+    <div class="slide-sub-panes-container" style="flex: 1; overflow-y: auto;">
+
+      <!-- [서브 탭 1] 문서 표지 생성 -->
+      <div class="slide-sub-pane active" id="paneSlideCover">
+        <div class="gen-main slide-doc-main">
+
+          <!-- LEFT PANEL: Inputs & Options -->
+          <section class="gen-section slide-doc-builder-section">
+            <div class="gen-section-head">
+              <h2>문서 표지 기획 및 설정</h2>
+              <span class="gen-badge" id="slideCoverAssetBadge">표지 슬라이드</span>
+            </div>
+
+            <div class="gen-content">
+              <!-- STEP 1: 문서 종류 및 규격 -->
+              <details class="promo-step-disclosure" id="slideCoverStepType" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">1</span>
+                  <div class="promo-step-copy">
+                    <strong>문서 종류 및 방향 설정</strong>
+                    <small>발표자료(PPT)/보고서 규격 및 가로/세로 방향 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverDocumentType">문서 종류</label>
+                      <select id="slideCoverDocumentType" class="gen-select" data-slide-cover-field="documentType">
+                        <option value="ppt">발표자료 PPT (16:9)</option>
+                        <option value="report">보고서 Report (A4)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverOrientation">문서 방향</label>
+                      <select id="slideCoverOrientation" class="gen-select" data-slide-cover-field="orientation">
+                        <option value="landscape">가로형 (Landscape)</option>
+                        <option value="portrait">세로형 (Portrait)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 2: 핵심 내용 입력 -->
+              <details class="promo-step-disclosure" id="slideCoverStepContent" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">2</span>
+                  <div class="promo-step-copy">
+                    <strong>표시 텍스트 및 콘텐츠</strong>
+                    <small>표지에 표시할 헤드라인, 서브 타이틀 및 메타 정보</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideCoverHeadline">메인 헤드라인</label>
+                      <input id="slideCoverHeadline" class="gen-input-text" type="text" data-slide-cover-field="headline" placeholder="예: 2026 차세대 AI 반도체 산업 전략" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideCoverSubheadline">서브 타이틀</label>
+                      <input id="slideCoverSubheadline" class="gen-input-text" type="text" data-slide-cover-field="subheadline" placeholder="예: 초격차 기술 확보 및 공급망 허브 구축 방안" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideCoverMetaInfo">소속 / 발표자 / 일자</label>
+                      <input id="slideCoverMetaInfo" class="gen-input-text" type="text" data-slide-cover-field="metaInfo" placeholder="예: 산업통상자원부 · 2026. 05. 20" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverHeaderText">머릿말 문구</label>
+                      <input id="slideCoverHeaderText" class="gen-input-text" type="text" placeholder="예: 국정기획보고서" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverHeaderPosition">머릿말 위치</label>
+                      <select id="slideCoverHeaderPosition" class="gen-select">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="left">좌측 정렬 (Left)</option>
+                        <option value="center">중앙 정렬 (Center)</option>
+                        <option value="right">우측 정렬 (Right)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverFooterText">꼬릿말 문구</label>
+                      <input id="slideCoverFooterText" class="gen-input-text" type="text" placeholder="예: CONFIDENTIAL" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverFooterPosition">꼬릿말 위치</label>
+                      <select id="slideCoverFooterPosition" class="gen-select">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="left">좌측 정렬 (Left)</option>
+                        <option value="center">중앙 정렬 (Center)</option>
+                        <option value="right">우측 정렬 (Right)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 3: 디자인 스타일 & 톤앤매너 -->
+              <details class="promo-step-disclosure" id="slideCoverStepVisual" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">3</span>
+                  <div class="promo-step-copy">
+                    <strong>디자인 스타일 & 톤앤매너</strong>
+                    <small>브랜드 톤, 레이아웃 은유, 비주얼 전략 선택</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverBrandTone">브랜드 톤</label>
+                      <input id="slideCoverBrandTone" class="gen-input-text" type="text" data-slide-cover-field="brandTone" placeholder="예: 전문적인, 미래지향적" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverLayoutMetaphor">디자인 스타일 테마</label>
+                      <select id="slideCoverLayoutMetaphor" class="gen-select" data-slide-cover-field="layoutMetaphor">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="geometric">기하학적 추상형 (Geometric Abstract)</option>
+                        <option value="3d_isometric">3D 입체 오브젝트 (3D Isometric Object)</option>
+                        <option value="editorial">매거진 에디토리얼형 (Editorial Magazine)</option>
+                        <option value="glassmorphism">글래스모피즘 오버레이 (Glassmorphism Overlay)</option>
+                        <option value="light_refraction">빛과 굴절 오버레이 (Light & Refraction)</option>
+                        <option value="minimal_line">미니멀리즘 라인 아트 (Minimal Line Art)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideCoverLayoutMetaphorCustom" class="gen-input-text hide" placeholder="원하는 스타일 테마 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverLayoutStructure">표지 레이아웃 구조</label>
+                      <select id="slideCoverLayoutStructure" class="gen-select" data-slide-cover-field="layoutStructure">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="centered_split">중앙 분할형 (Centered Split Layout)</option>
+                        <option value="asymmetric_block">비대칭 블록형 (Asymmetric Block Layout)</option>
+                        <option value="minimal_typo">여백 강조 타이포형 (Minimal Typographic Layout)</option>
+                        <option value="editorial_grid">매거진 그리드형 (Editorial Grid Layout)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideCoverLayoutStructureCustom" class="gen-input-text hide" placeholder="원하는 표지 레이아웃 구조 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverVisualStrategy">비주얼 구성 방식</label>
+                      <select id="slideCoverVisualStrategy" class="gen-select" data-slide-cover-field="visualStrategy">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="minimal_shape">미니멀도형 (Minimal Shapes)</option>
+                        <option value="geometric_pattern">기하학 패턴 (Geometric Patterns)</option>
+                        <option value="texture_pattern">텍스처/패턴 (Subtle Textures)</option>
+                        <option value="realistic_synth">실사이미지 합성 (Realistic Photo Synthesis)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideCoverVisualStrategyCustom" class="gen-input-text hide" placeholder="원하는 비주얼 구성 방식 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <div id="slideCoverSubjectImageGroup" class="gen-config-group gen-config-group-wide hide" style="margin-top: 5px;">
+                      <label class="gen-config-label" for="slideCoverSubjectImageDesc">합성할 주제 이미지/오브젝트 묘사</label>
+                      <input type="text" id="slideCoverSubjectImageDesc" class="gen-input-text" placeholder="예: 투명한 프리즘 유리 구체, 로봇 공학 핸드 등" />
+                    </div>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverLayerComplexity">레이어 깊이 구조</label>
+                      <select id="slideCoverLayerComplexity" class="gen-select" data-slide-cover-field="layerComplexity">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="single">단일 레이어 구성 (Flat 2D Layout)</option>
+                        <option value="composite">복합 레이어 구성 (Multi-layered Depth & Overlaps)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideCoverLayerComplexityCustom" class="gen-input-text hide" placeholder="원하는 레이어 깊이 구조 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverArtStyle">아트 스타일</label>
+                      <select id="slideCoverArtStyle" class="gen-select" data-slide-cover-field="artStyle">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="vector_flat">플랫 벡터 (Flat Vector)</option>
+                        <option value="claymorphism">클레이모피즘 (Claymorphism)</option>
+                        <option value="neumorphism">뉴모피즘 (Neumorphism)</option>
+                        <option value="isometric_3d">3D 아이소메트릭 (Isometric 3D)</option>
+                        <option value="line_art">미니멀 라인아트 (Minimal Line Art)</option>
+                        <option value="abstract_glass">추상 글래스 그래픽 (Abstract Glass)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideCoverArtStyleCustom" class="gen-input-text hide" placeholder="원하는 아트 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideCoverBgBrightness">배경 명도 테마</label>
+                      <select id="slideCoverBgBrightness" class="gen-select" data-slide-cover-field="bgBrightness">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="light">라이트 모드 (Light Mode)</option>
+                        <option value="dark">다크 모드 (Dark Mode)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideCoverGradTransEffect">그라데이션 & 투명 효과</label>
+                      <select id="slideCoverGradTransEffect" class="gen-select" data-slide-cover-field="gradTransEffect">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="soft_gradient">은은한 그라데이션 (Soft Pastel Gradient)</option>
+                        <option value="glassmorphism">반투명 유리 효과 (Frosted Glassmorphism)</option>
+                        <option value="liquid_gradient">액체형 유동 그라데이션 (Liquid Flow Gradient)</option>
+                        <option value="prism_refraction">프리즘 빛 굴절 (Prism & Light Refraction)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideCoverGradTransEffectCustom" class="gen-input-text hide" placeholder="원하는 효과 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 4: 컬러 시스템 -->
+              <details class="promo-step-disclosure" id="slideCoverStepColors" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">4</span>
+                  <div class="promo-step-copy">
+                    <strong>컬러 시스템</strong>
+                    <small>주조색, 보조색, 배경색 설정 및 커스텀 컬러 추가</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="color-system-toggle-row" style="margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="slideCoverUseColorSystem" checked style="width: 17px; height: 17px; cursor: pointer;" />
+                    <label for="slideCoverUseColorSystem" style="font-weight: 600; font-size: 13px; cursor: pointer; user-select: none;">컬러 시스템 가이드 사용</label>
+                  </div>
+                  <div class="color-system-fields-wrapper" id="slideCoverColorFieldsWrapper">
+                    <div class="gen-config-fields">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label">컬러 프리셋</label>
+                        <div class="promo-color-presets-grid" id="slideCoverColorPresetGrid">
+                          <!-- JS dynamically populates this -->
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideCoverPrimaryColor">주조색 (Primary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideCoverPrimaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideCoverPrimaryColor" class="gen-input-text" placeholder="#0F3D8A" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideCoverSecondaryColor">보조색 (Secondary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideCoverSecondaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideCoverSecondaryColor" class="gen-input-text" placeholder="#D9E4F5" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideCoverBackgroundColor">배경색 (Background)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideCoverBackgroundColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideCoverBackgroundColor" class="gen-input-text" placeholder="#F5F7FB" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideCoverAccentColor">강조색 (Accent)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideCoverAccentColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideCoverAccentColor" class="gen-input-text" placeholder="#FF7A00" />
+                        </div>
+                      </section>
+                    </div>
+
+                    <!-- 사용자 컬러시스템 등록 -->
+                    <div class="custom-color-reg-panel" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line);">
+                      <h4 class="custom-color-reg-title" style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--ink-faint);">나만의 컬러 시스템 추가</h4>
+                      <div class="gen-config-fields" style="gap: 10px;">
+                        <section class="gen-config-group gen-config-group-wide" style="margin-bottom: 5px;">
+                          <input type="text" id="slideCoverCustomName" class="gen-input-text" placeholder="팔레트 이름 (예: 브랜드 오렌지)" style="font-size: 12px; height: 32px;" />
+                        </section>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">주조색</label>
+                            <input type="color" id="slideCoverCustomPrimary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#0F3D8A" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">보조색</label>
+                            <input type="color" id="slideCoverCustomSecondary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#DDE7F8" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">배경색</label>
+                            <input type="color" id="slideCoverCustomBg" class="gen-color-picker" style="width: 100%; height: 28px;" value="#F5F7FB" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">강조색</label>
+                            <input type="color" id="slideCoverCustomAccent" class="gen-color-picker" style="width: 100%; height: 28px;" value="#FF6B2C" />
+                          </div>
+                        </div>
+                        <button type="button" class="promo-quick-action-btn" id="slideCoverAddCustomColorBtn" style="width: 100%; height: 32px; font-size: 12px; margin-top: 5px;">컬러시스템 등록</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 5: 로고 & QR코드 -->
+              <details class="promo-step-disclosure" id="slideCoverStepLogoQR">
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">5</span>
+                  <div class="promo-step-copy">
+                    <strong>로고 &amp; QR코드</strong>
+                    <small>로고 영역 및 QR코드 삽입 여부 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+
+                    <!-- 로고 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 8px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                        <label class="gen-config-label" style="margin:0;">로고 목록</label>
+                        <button type="button" class="promo-quick-action-btn" id="slideCoverAddLogoBtn" style="height:28px; font-size:12px; padding:0 10px;">+ 로고 추가</button>
+                      </div>
+                      <div id="slideCoverLogoList" style="display:flex; flex-direction:column; gap:8px;"></div>
+                      <p id="slideCoverLogoEmpty" style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">로고 없음 — 추가 버튼을 눌러 로고를 등록하세요.</p>
+                    </section>
+
+                    <!-- QR코드 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="padding-top: 4px;">
+                      <label class="gen-config-label" for="slideCoverQrMode">QR코드 삽입 여부</label>
+                      <select id="slideCoverQrMode" class="gen-select">
+                        <option value="none">QR코드 없음</option>
+                        <option value="placeholder">QR코드 영역 placeholder 삽입</option>
+                        <option value="full">QR코드 삽입 (링크 지정)</option>
+                      </select>
+                    </section>
+                    <div id="slideCoverQrDetails" style="display:none; width:100%;">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideCoverQrUrl">QR코드 링크 주소</label>
+                        <input id="slideCoverQrUrl" class="gen-input-text" type="text" placeholder="예: https://example.com/report" />
+                      </section>
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideCoverQrCaption">QR코드 안내문구</label>
+                        <input id="slideCoverQrCaption" class="gen-input-text" type="text" placeholder="예: 보고서 전문 보기" />
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideCoverQrPosition">QR코드 위치</label>
+                        <select id="slideCoverQrPosition" class="gen-select">
+                          <option value="bottom_right">우측 하단</option>
+                          <option value="bottom_left">좌측 하단</option>
+                          <option value="bottom_center">하단 중앙</option>
+                          <option value="top_right">우측 상단</option>
+                        </select>
+                      </section>
+                    </div>
+
+                  </div>
+                </div>
+              </details>
+
+            </div>
+          </section>
+
+          <!-- RIGHT PANEL: Preview Output -->
+          <section class="gen-section slide-doc-preview-section">
+            <div class="gen-section-head">
+              <h2>프롬프트 미리보기 및 복사</h2>
+            </div>
+
+            <div class="gen-content">
+              <!-- Live Preview Output -->
+              <div class="preview-card prompt-card">
+                <div class="preview-card-head">
+                  <div>
+                    <h3 class="preview-card-title">생성 프롬프트</h3>
+                    <p class="preview-card-subtitle">조합 및 최적화된 프롬프트가 실시간으로 노출됩니다.</p>
+                  </div>
+                  <div class="lang-switch" role="group" aria-label="프롬프트 언어">
+                    <button type="button" class="lang-btn active" id="slideCoverBtnKo">한국어</button>
+                    <button type="button" class="lang-btn" id="slideCoverBtnEn">English</button>
+                  </div>
+                </div>
+                <textarea id="slideCoverPromptPreview" class="gen-textarea" rows="18" readonly></textarea>
+              </div>
+
+              <div class="promo-quick-action-row" style="margin-top: 15px;">
+                <button type="button" class="promo-quick-action-btn" id="slideCoverSampleBtn">샘플 데이터 채우기</button>
+                <button type="button" class="promo-quick-action-btn" id="slideCoverResetBtn">초기화</button>
+                <button type="button" class="promo-quick-action-btn is-primary" id="slideCoverCopyPromptBtn">프롬프트 복사</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- [서브 탭 2] 문서 간지 생성 -->
+      <div class="slide-sub-pane" id="paneSlideDivider">
+        <div class="gen-main slide-doc-main">
+
+          <!-- LEFT PANEL: Inputs & Options -->
+          <section class="gen-section slide-doc-builder-section">
+            <div class="gen-section-head">
+              <h2>문서 간지 기획 및 설정</h2>
+              <span class="gen-badge" id="slideDividerAssetBadge">간지 슬라이드</span>
+            </div>
+
+            <div class="gen-content">
+              <!-- STEP 1: 문서 종류 및 규격 -->
+              <details class="promo-step-disclosure" id="slideDividerStepType" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">1</span>
+                  <div class="promo-step-copy">
+                    <strong>문서 종류 및 방향 설정</strong>
+                    <small>발표자료(PPT)/보고서 규격 및 가로/세로 방향 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerDocumentType">문서 종류</label>
+                      <select id="slideDividerDocumentType" class="gen-select" data-slide-divider-field="documentType">
+                        <option value="ppt">발표자료 PPT (16:9)</option>
+                        <option value="report">보고서 Report (A4)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerOrientation">문서 방향</label>
+                      <select id="slideDividerOrientation" class="gen-select" data-slide-divider-field="orientation">
+                        <option value="landscape">가로형 (Landscape)</option>
+                        <option value="portrait">세로형 (Portrait)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 2: 핵심 내용 입력 -->
+              <details class="promo-step-disclosure" id="slideDividerStepContent" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">2</span>
+                  <div class="promo-step-copy">
+                    <strong>표시 텍스트 및 콘텐츠</strong>
+                    <small>간지에 표시할 장(Chapter) 번호 및 섹션 명칭</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideDividerHeadline">장 번호 / 대구분</label>
+                      <input id="slideDividerHeadline" class="gen-input-text" type="text" data-slide-divider-field="headline" placeholder="예: 제 2 장. 혁신 기술 및 경쟁력 분석" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideDividerSubheadline">서브 타이틀</label>
+                      <input id="slideDividerSubheadline" class="gen-input-text" type="text" data-slide-divider-field="subheadline" placeholder="예: 미세 공정 한계 돌파를 위한 핵심 과제" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideDividerMetaInfo">메타 / 카테고리 정보</label>
+                      <input id="slideDividerMetaInfo" class="gen-input-text" type="text" data-slide-divider-field="metaInfo" placeholder="예: SECTION 02" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerHeaderText">머릿말 문구</label>
+                      <input id="slideDividerHeaderText" class="gen-input-text" type="text" placeholder="예: 국정기획보고서" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerHeaderPosition">머릿말 위치</label>
+                      <select id="slideDividerHeaderPosition" class="gen-select">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="left">좌측 정렬 (Left)</option>
+                        <option value="center">중앙 정렬 (Center)</option>
+                        <option value="right">우측 정렬 (Right)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerFooterText">꼬릿말 문구</label>
+                      <input id="slideDividerFooterText" class="gen-input-text" type="text" placeholder="예: CONFIDENTIAL" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerFooterPosition">꼬릿말 위치</label>
+                      <select id="slideDividerFooterPosition" class="gen-select">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="left">좌측 정렬 (Left)</option>
+                        <option value="center">중앙 정렬 (Center)</option>
+                        <option value="right">우측 정렬 (Right)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 2-2: 배경 프레임 & 가이드 영역 설정 -->
+              <details class="promo-step-disclosure" id="slideDividerStepFrame" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">2-2</span>
+                  <div class="promo-step-copy">
+                    <strong>배경 프레임 & 가이드 영역 설정</strong>
+                    <small>간지 슬라이드의 머릿말, 꼬릿말 구분선 및 외곽 테두리 스타일 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerHeaderStyle">머릿말 구분선</label>
+                      <select id="slideDividerHeaderStyle" class="gen-select" data-slide-divider-field="headerStyle">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="thin_line">얇은 실선 머릿말 구분선</option>
+                        <option value="accent_block">강조 컬러 블록 머릿말 구분선</option>
+                        <option value="double_line">이중 실선 머릿말 프레임</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerHeaderStyleCustom" class="gen-input-text hide" placeholder="원하는 머릿말 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerFooterStyle">꼬릿말 구분선</label>
+                      <select id="slideDividerFooterStyle" class="gen-select" data-slide-divider-field="footerStyle">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="dots">점선 꼬릿말 구분선</option>
+                        <option value="bottom_bar">하단 얇은 바 꼬릿말 구분선</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerFooterStyleCustom" class="gen-input-text hide" placeholder="원하는 꼬릿말 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerBorderStyle">외곽 테두리</label>
+                      <select id="slideDividerBorderStyle" class="gen-select" data-slide-divider-field="borderStyle">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="thin_frame">외곽 실선 프레임 테두리</option>
+                        <option value="corners">모서리 앵글 라인 테두리 장식</option>
+                        <option value="double_frame">이중 실선 프레임 테두리</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerBorderStyleCustom" class="gen-input-text hide" placeholder="원하는 테두리 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerMarginArea">여백 및 배치 방식</label>
+                      <select id="slideDividerMarginArea" class="gen-select" data-slide-divider-field="marginArea">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="center_80">중앙 80% 완전 여백 레이아웃</option>
+                        <option value="asymmetric_right">우측 70% 여백 레이아웃</option>
+                        <option value="grid_split">2분할 그리드 프레임 레이아웃</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerMarginAreaCustom" class="gen-input-text hide" placeholder="원하는 배치 방식 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 3: 디자인 스타일 & 톤앤매너 -->
+              <details class="promo-step-disclosure" id="slideDividerStepVisual" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">3</span>
+                  <div class="promo-step-copy">
+                    <strong>디자인 스타일 & 톤앤매너</strong>
+                    <small>브랜드 톤, 레이아웃 은유, 비주얼 전략 선택</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerBrandTone">브랜드 톤</label>
+                      <input id="slideDividerBrandTone" class="gen-input-text" type="text" data-slide-divider-field="brandTone" placeholder="예: 심플한, 절제된" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerLayoutMetaphor">디자인 스타일 테마</label>
+                      <select id="slideDividerLayoutMetaphor" class="gen-select" data-slide-divider-field="layoutMetaphor">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="minimal_line">미니멀리즘 라인 아트 (Minimal Line Art)</option>
+                        <option value="geometric">기하학적 추상형 (Geometric Abstract)</option>
+                        <option value="3d_isometric">3D 입체 오브젝트 (3D Isometric Object)</option>
+                        <option value="editorial">매거진 에디토리얼형 (Editorial Magazine)</option>
+                        <option value="glassmorphism">글래스모피즘 오버레이 (Glassmorphism Overlay)</option>
+                        <option value="light_refraction">빛과 굴절 오버레이 (Light & Refraction)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerLayoutMetaphorCustom" class="gen-input-text hide" placeholder="원하는 스타일 테마 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerStyle">간지 데코레이션 스타일</label>
+                      <select id="slideDividerStyle" class="gen-select" data-slide-divider-field="dividerStyle">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="bold_number">장 번호 볼드 표기형 (Chapter Number Bold)</option>
+                        <option value="vertical_bar">세로 분할 라인 바 (Vertical Accent Line Bar)</option>
+                        <option value="frosted_plate">글래스모피즘 플레이트 오버레이 (Frosted Glass Plate)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerStyleCustom" class="gen-input-text hide" placeholder="원하는 데코레이션 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerVisualStrategy">비주얼 구성 방식</label>
+                      <select id="slideDividerVisualStrategy" class="gen-select" data-slide-divider-field="visualStrategy">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="minimal_shape">미니멀도형 (Minimal Shapes)</option>
+                        <option value="geometric_pattern">기하학 패턴 (Geometric Patterns)</option>
+                        <option value="texture_pattern">텍스처/패턴 (Subtle Textures)</option>
+                        <option value="realistic_synth">실사이미지 합성 (Realistic Photo Synthesis)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerVisualStrategyCustom" class="gen-input-text hide" placeholder="원하는 비주얼 구성 방식 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <div id="slideDividerSubjectImageGroup" class="gen-config-group gen-config-group-wide hide" style="margin-top: 5px;">
+                      <label class="gen-config-label" for="slideDividerSubjectImageDesc">합성할 주제 이미지/오브젝트 묘사</label>
+                      <input type="text" id="slideDividerSubjectImageDesc" class="gen-input-text" placeholder="예: 투명한 프리즘 유리 구체, 로봇 공학 핸드 등" />
+                    </div>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerLayerComplexity">레이어 깊이 구조</label>
+                      <select id="slideDividerLayerComplexity" class="gen-select" data-slide-divider-field="layerComplexity">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="single">단일 레이어 구성 (Flat 2D Layout)</option>
+                        <option value="composite">복합 레이어 구성 (Multi-layered Depth & Overlaps)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerLayerComplexityCustom" class="gen-input-text hide" placeholder="원하는 레이어 깊이 구조 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerArtStyle">아트 스타일</label>
+                      <select id="slideDividerArtStyle" class="gen-select" data-slide-divider-field="artStyle">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="vector_flat">플랫 벡터 (Flat Vector)</option>
+                        <option value="claymorphism">클레이모피즘 (Claymorphism)</option>
+                        <option value="neumorphism">뉴모피즘 (Neumorphism)</option>
+                        <option value="isometric_3d">3D 아이소메트릭 (Isometric 3D)</option>
+                        <option value="line_art">미니멀 라인아트 (Minimal Line Art)</option>
+                        <option value="abstract_glass">추상 글래스 그래픽 (Abstract Glass)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerArtStyleCustom" class="gen-input-text hide" placeholder="원하는 아트 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideDividerBgBrightness">배경 명도 테마</label>
+                      <select id="slideDividerBgBrightness" class="gen-select" data-slide-divider-field="bgBrightness">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="light">라이트 모드 (Light Mode)</option>
+                        <option value="dark">다크 모드 (Dark Mode)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideDividerGradTransEffect">그라데이션 & 투명 효과</label>
+                      <select id="slideDividerGradTransEffect" class="gen-select" data-slide-divider-field="gradTransEffect">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="soft_gradient">은은한 그라데이션 (Soft Pastel Gradient)</option>
+                        <option value="glassmorphism">반투명 유리 효과 (Frosted Glassmorphism)</option>
+                        <option value="liquid_gradient">액체형 유동 그라데이션 (Liquid Flow Gradient)</option>
+                        <option value="prism_refraction">프리즘 빛 굴절 (Prism & Light Refraction)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideDividerGradTransEffectCustom" class="gen-input-text hide" placeholder="원하는 효과 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 4: 컬러 시스템 -->
+              <details class="promo-step-disclosure" id="slideDividerStepColors" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">4</span>
+                  <div class="promo-step-copy">
+                    <strong>컬러 시스템</strong>
+                    <small>주조색, 보조색, 배경색 설정 및 커스텀 컬러 추가</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="color-system-toggle-row" style="margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="slideDividerUseColorSystem" checked style="width: 17px; height: 17px; cursor: pointer;" />
+                    <label for="slideDividerUseColorSystem" style="font-weight: 600; font-size: 13px; cursor: pointer; user-select: none;">컬러 시스템 가이드 사용</label>
+                  </div>
+                  <div class="color-system-fields-wrapper" id="slideDividerColorFieldsWrapper">
+                    <div class="gen-config-fields">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label">컬러 프리셋</label>
+                        <div class="promo-color-presets-grid" id="slideDividerColorPresetGrid">
+                          <!-- JS dynamically populates this -->
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideDividerPrimaryColor">주조색 (Primary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideDividerPrimaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideDividerPrimaryColor" class="gen-input-text" placeholder="#0F3D8A" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideDividerSecondaryColor">보조색 (Secondary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideDividerSecondaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideDividerSecondaryColor" class="gen-input-text" placeholder="#D9E4F5" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideDividerBackgroundColor">배경색 (Background)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideDividerBackgroundColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideDividerBackgroundColor" class="gen-input-text" placeholder="#F5F7FB" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideDividerAccentColor">강조색 (Accent)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideDividerAccentColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideDividerAccentColor" class="gen-input-text" placeholder="#FF7A00" />
+                        </div>
+                      </section>
+                    </div>
+
+                    <!-- 사용자 컬러시스템 등록 -->
+                    <div class="custom-color-reg-panel" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line);">
+                      <h4 class="custom-color-reg-title" style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--ink-faint);">나만의 컬러 시스템 추가</h4>
+                      <div class="gen-config-fields" style="gap: 10px;">
+                        <section class="gen-config-group gen-config-group-wide" style="margin-bottom: 5px;">
+                          <input type="text" id="slideDividerCustomName" class="gen-input-text" placeholder="팔레트 이름 (예: 브랜드 오렌지)" style="font-size: 12px; height: 32px;" />
+                        </section>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">주조색</label>
+                            <input type="color" id="slideDividerCustomPrimary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#0F3D8A" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">보조색</label>
+                            <input type="color" id="slideDividerCustomSecondary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#DDE7F8" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">배경색</label>
+                            <input type="color" id="slideDividerCustomBg" class="gen-color-picker" style="width: 100%; height: 28px;" value="#F5F7FB" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">강조색</label>
+                            <input type="color" id="slideDividerCustomAccent" class="gen-color-picker" style="width: 100%; height: 28px;" value="#FF6B2C" />
+                          </div>
+                        </div>
+                        <button type="button" class="promo-quick-action-btn" id="slideDividerAddCustomColorBtn" style="width: 100%; height: 32px; font-size: 12px; margin-top: 5px;">컬러시스템 등록</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 5: 로고 & QR코드 -->
+              <details class="promo-step-disclosure" id="slideDividerStepLogoQR">
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">5</span>
+                  <div class="promo-step-copy">
+                    <strong>로고 &amp; QR코드</strong>
+                    <small>로고 영역 및 QR코드 삽입 여부 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+
+                    <!-- 로고 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 8px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                        <label class="gen-config-label" style="margin:0;">로고 목록</label>
+                        <button type="button" class="promo-quick-action-btn" id="slideDividerAddLogoBtn" style="height:28px; font-size:12px; padding:0 10px;">+ 로고 추가</button>
+                      </div>
+                      <div id="slideDividerLogoList" style="display:flex; flex-direction:column; gap:8px;"></div>
+                      <p id="slideDividerLogoEmpty" style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">로고 없음 — 추가 버튼을 눌러 로고를 등록하세요.</p>
+                    </section>
+
+                    <!-- QR코드 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="padding-top: 4px;">
+                      <label class="gen-config-label" for="slideDividerQrMode">QR코드 삽입 여부</label>
+                      <select id="slideDividerQrMode" class="gen-select">
+                        <option value="none">QR코드 없음</option>
+                        <option value="placeholder">QR코드 영역 placeholder 삽입</option>
+                        <option value="full">QR코드 삽입 (링크 지정)</option>
+                      </select>
+                    </section>
+                    <div id="slideDividerQrDetails" style="display:none; width:100%;">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideDividerQrUrl">QR코드 링크 주소</label>
+                        <input id="slideDividerQrUrl" class="gen-input-text" type="text" placeholder="예: https://example.com/report" />
+                      </section>
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideDividerQrCaption">QR코드 안내문구</label>
+                        <input id="slideDividerQrCaption" class="gen-input-text" type="text" placeholder="예: 보고서 전문 보기" />
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideDividerQrPosition">QR코드 위치</label>
+                        <select id="slideDividerQrPosition" class="gen-select">
+                          <option value="bottom_right">우측 하단</option>
+                          <option value="bottom_left">좌측 하단</option>
+                          <option value="bottom_center">하단 중앙</option>
+                          <option value="top_right">우측 상단</option>
+                        </select>
+                      </section>
+                    </div>
+
+                  </div>
+                </div>
+              </details>
+
+            </div>
+          </section>
+
+          <!-- RIGHT PANEL: Preview Output -->
+          <section class="gen-section slide-doc-preview-section">
+            <div class="gen-section-head">
+              <h2>프롬프트 미리보기 및 복사</h2>
+            </div>
+
+            <div class="gen-content">
+              <!-- Live Preview Output -->
+              <div class="preview-card prompt-card">
+                <div class="preview-card-head">
+                  <div>
+                    <h3 class="preview-card-title">생성 프롬프트</h3>
+                    <p class="preview-card-subtitle">조합 및 최적화된 프롬프트가 실시간으로 노출됩니다.</p>
+                  </div>
+                  <div class="lang-switch" role="group" aria-label="프롬프트 언어">
+                    <button type="button" class="lang-btn active" id="slideDividerBtnKo">한국어</button>
+                    <button type="button" class="lang-btn" id="slideDividerBtnEn">English</button>
+                  </div>
+                </div>
+                <textarea id="slideDividerPromptPreview" class="gen-textarea" rows="18" readonly></textarea>
+              </div>
+
+              <div class="promo-quick-action-row" style="margin-top: 15px;">
+                <button type="button" class="promo-quick-action-btn" id="slideDividerSampleBtn">샘플 데이터 채우기</button>
+                <button type="button" class="promo-quick-action-btn" id="slideDividerResetBtn">초기화</button>
+                <button type="button" class="promo-quick-action-btn is-primary" id="slideDividerCopyPromptBtn">프롬프트 복사</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- [서브 탭 3] 문서 배경 생성 -->
+      <div class="slide-sub-pane" id="paneSlideBackground">
+        <div class="gen-main slide-doc-main">
+
+          <!-- LEFT PANEL: Inputs & Options -->
+          <section class="gen-section slide-doc-builder-section">
+            <div class="gen-section-head">
+              <h2>문서 배경 기획 및 설정</h2>
+              <span class="gen-badge" id="slideBackgroundAssetBadge">배경 슬라이드</span>
+            </div>
+
+            <div class="gen-content">
+              <!-- STEP 1: 문서 종류 및 규격 -->
+              <details class="promo-step-disclosure" id="slideBackgroundStepType" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">1</span>
+                  <div class="promo-step-copy">
+                    <strong>문서 종류 및 방향 설정</strong>
+                    <small>발표자료(PPT)/보고서 규격 및 가로/세로 방향 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundDocumentType">문서 종류</label>
+                      <select id="slideBackgroundDocumentType" class="gen-select" data-slide-background-field="documentType">
+                        <option value="ppt">발표자료 PPT (16:9)</option>
+                        <option value="report">보고서 Report (A4)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundOrientation">문서 방향</label>
+                      <select id="slideBackgroundOrientation" class="gen-select" data-slide-background-field="orientation">
+                        <option value="landscape">가로형 (Landscape)</option>
+                        <option value="portrait">세로형 (Portrait)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 2: 배경 프레임 & 가이드 영역 설정 -->
+              <details class="promo-step-disclosure" id="slideBackgroundStepLayout" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">2</span>
+                  <div class="promo-step-copy">
+                    <strong>배경 프레임 & 가이드 영역 설정</strong>
+                    <small>머릿말, 꼬릿말, 테두리 프레임 연출 스타일 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundHeaderStyle">머릿말 가이드라인</label>
+                      <select id="slideBackgroundHeaderStyle" class="gen-select" data-slide-background-field="headerStyle">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="thin_line">얇은 실선 머릿말 구분선</option>
+                        <option value="accent_block">강조 컬러 블록 머릿말 구분선</option>
+                        <option value="double_line">이중 실선 머릿말 프레임</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundHeaderStyleCustom" class="gen-input-text hide" placeholder="원하는 머릿말 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundFooterStyle">꼬릿말 가이드라인</label>
+                      <select id="slideBackgroundFooterStyle" class="gen-select" data-slide-background-field="footerStyle">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="dots">점선 꼬릿말 구분선</option>
+                        <option value="bottom_bar">하단 얇은 바 꼬릿말 구분선</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundFooterStyleCustom" class="gen-input-text hide" placeholder="원하는 꼬릿말 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundBorderStyle">테두리 프레임 스타일</label>
+                      <select id="slideBackgroundBorderStyle" class="gen-select" data-slide-background-field="borderStyle">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="thin_frame">외곽 실선 프레임 테두리</option>
+                        <option value="corners">모서리 앵글 라인 테두리 장식</option>
+                        <option value="double_frame">이중 실선 프레임 테두리</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundBorderStyleCustom" class="gen-input-text hide" placeholder="원하는 테두리 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundMarginArea">본문 콘텐츠 배치 영역</label>
+                      <select id="slideBackgroundMarginArea" class="gen-select" data-slide-background-field="marginArea">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="center_80">중앙 80% 완전 여백 레이아웃</option>
+                        <option value="asymmetric_right">우측 70% 여백 레이아웃</option>
+                        <option value="grid_split">2분할 그리드 프레임 레이아웃</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundMarginAreaCustom" class="gen-input-text hide" placeholder="원하는 배치 방식 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundHeaderText">머릿말 문구</label>
+                      <input id="slideBackgroundHeaderText" class="gen-input-text" type="text" placeholder="예: 국정기획보고서" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundHeaderPosition">머릿말 위치</label>
+                      <select id="slideBackgroundHeaderPosition" class="gen-select">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="left">좌측 정렬 (Left)</option>
+                        <option value="center">중앙 정렬 (Center)</option>
+                        <option value="right">우측 정렬 (Right)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundFooterText">꼬릿말 문구</label>
+                      <input id="slideBackgroundFooterText" class="gen-input-text" type="text" placeholder="예: CONFIDENTIAL" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundFooterPosition">꼬릿말 위치</label>
+                      <select id="slideBackgroundFooterPosition" class="gen-select">
+                        <option value="none">지정하지 않음 (프롬프트 제외)</option>
+                        <option value="left">좌측 정렬 (Left)</option>
+                        <option value="center">중앙 정렬 (Center)</option>
+                        <option value="right">우측 정렬 (Right)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 3: 디자인 스타일 & 톤앤매너 -->
+              <details class="promo-step-disclosure" id="slideBackgroundStepVisual" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">3</span>
+                  <div class="promo-step-copy">
+                    <strong>디자인 스타일 & 톤앤매너</strong>
+                    <small>브랜드 톤, 레이아웃 은유, 비주얼 전략 선택</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundBrandTone">브랜드 톤</label>
+                      <input id="slideBackgroundBrandTone" class="gen-input-text" type="text" data-slide-background-field="brandTone" placeholder="예: 미니멀한, 일관성 있는" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundLayoutMetaphor">디자인 스타일 테마</label>
+                      <select id="slideBackgroundLayoutMetaphor" class="gen-select" data-slide-background-field="layoutMetaphor">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="geometric">기하학적 추상형 (Geometric Abstract)</option>
+                        <option value="minimal_line">미니멀리즘 라인 아트 (Minimal Line Art)</option>
+                        <option value="editorial">매거진 에디토리얼형 (Editorial Magazine)</option>
+                        <option value="glassmorphism">글래스모피즘 오버레이 (Glassmorphism Overlay)</option>
+                        <option value="light_refraction">빛과 굴절 오버레이 (Light & Refraction)</option>
+                        <option value="3d_isometric">3D 입체 오브젝트 (3D Isometric Object)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundLayoutMetaphorCustom" class="gen-input-text hide" placeholder="원하는 스타일 테마 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundVisualStrategy">비주얼 구성 방식</label>
+                      <select id="slideBackgroundVisualStrategy" class="gen-select" data-slide-background-field="visualStrategy">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="minimal_shape">미니멀도형 (Minimal Shapes)</option>
+                        <option value="geometric_pattern">기하학 패턴 (Geometric Patterns)</option>
+                        <option value="texture_pattern">텍스처/패턴 (Subtle Textures)</option>
+                        <option value="realistic_synth">실사이미지 합성 (Realistic Photo Synthesis)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundVisualStrategyCustom" class="gen-input-text hide" placeholder="원하는 비주얼 구성 방식 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <div id="slideBackgroundSubjectImageGroup" class="gen-config-group gen-config-group-wide hide" style="margin-top: 5px;">
+                      <label class="gen-config-label" for="slideBackgroundSubjectImageDesc">합성할 주제 이미지/오브젝트 묘사</label>
+                      <input type="text" id="slideBackgroundSubjectImageDesc" class="gen-input-text" placeholder="예: 투명한 프리즘 유리 구체, 로봇 공학 핸드 등" />
+                    </div>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundLayerComplexity">레이어 깊이 구조</label>
+                      <select id="slideBackgroundLayerComplexity" class="gen-select" data-slide-background-field="layerComplexity">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="single">단일 레이어 구성 (Flat 2D Layout)</option>
+                        <option value="composite">복합 레이어 구성 (Multi-layered Depth & Overlaps)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundLayerComplexityCustom" class="gen-input-text hide" placeholder="원하는 레이어 깊이 구조 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundArtStyle">아트 스타일</label>
+                      <select id="slideBackgroundArtStyle" class="gen-select" data-slide-background-field="artStyle">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="vector_flat">플랫 벡터 (Flat Vector)</option>
+                        <option value="claymorphism">클레이모피즘 (Claymorphism)</option>
+                        <option value="neumorphism">뉴모피즘 (Neumorphism)</option>
+                        <option value="isometric_3d">3D 아이소메트릭 (Isometric 3D)</option>
+                        <option value="line_art">미니멀 라인아트 (Minimal Line Art)</option>
+                        <option value="abstract_glass">추상 글래스 그래픽 (Abstract Glass)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundArtStyleCustom" class="gen-input-text hide" placeholder="원하는 아트 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideBackgroundBgBrightness">배경 명도 테마</label>
+                      <select id="slideBackgroundBgBrightness" class="gen-select" data-slide-background-field="bgBrightness">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="light">라이트 모드 (Light Mode)</option>
+                        <option value="dark">다크 모드 (Dark Mode)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideBackgroundGradTransEffect">그라데이션 & 투명 효과</label>
+                      <select id="slideBackgroundGradTransEffect" class="gen-select" data-slide-background-field="gradTransEffect">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="soft_gradient">은은한 그라데이션 (Soft Pastel Gradient)</option>
+                        <option value="glassmorphism">반투명 유리 효과 (Frosted Glassmorphism)</option>
+                        <option value="liquid_gradient">액체형 유동 그라데이션 (Liquid Flow Gradient)</option>
+                        <option value="prism_refraction">프리즘 빛 굴절 (Prism & Light Refraction)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideBackgroundGradTransEffectCustom" class="gen-input-text hide" placeholder="원하는 효과 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 4: 컬러 시스템 -->
+              <details class="promo-step-disclosure" id="slideBackgroundStepColors" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">4</span>
+                  <div class="promo-step-copy">
+                    <strong>컬러 시스템</strong>
+                    <small>주조색, 보조색, 배경색 설정 및 커스텀 컬러 추가</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="color-system-toggle-row" style="margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="slideBackgroundUseColorSystem" checked style="width: 17px; height: 17px; cursor: pointer;" />
+                    <label for="slideBackgroundUseColorSystem" style="font-weight: 600; font-size: 13px; cursor: pointer; user-select: none;">컬러 시스템 가이드 사용</label>
+                  </div>
+                  <div class="color-system-fields-wrapper" id="slideBackgroundColorFieldsWrapper">
+                    <div class="gen-config-fields">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label">컬러 프리셋</label>
+                        <div class="promo-color-presets-grid" id="slideBackgroundColorPresetGrid">
+                          <!-- JS dynamically populates this -->
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideBackgroundPrimaryColor">주조색 (Primary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideBackgroundPrimaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideBackgroundPrimaryColor" class="gen-input-text" placeholder="#0F3D8A" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideBackgroundSecondaryColor">보조색 (Secondary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideBackgroundSecondaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideBackgroundSecondaryColor" class="gen-input-text" placeholder="#D9E4F5" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideBackgroundBackgroundColor">배경색 (Background)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideBackgroundBackgroundColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideBackgroundBackgroundColor" class="gen-input-text" placeholder="#F5F7FB" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideBackgroundAccentColor">강조색 (Accent)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideBackgroundAccentColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideBackgroundAccentColor" class="gen-input-text" placeholder="#FF7A00" />
+                        </div>
+                      </section>
+                    </div>
+
+                    <!-- 사용자 컬러시스템 등록 -->
+                    <div class="custom-color-reg-panel" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line);">
+                      <h4 class="custom-color-reg-title" style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--ink-faint);">나만의 컬러 시스템 추가</h4>
+                      <div class="gen-config-fields" style="gap: 10px;">
+                        <section class="gen-config-group gen-config-group-wide" style="margin-bottom: 5px;">
+                          <input type="text" id="slideBackgroundCustomName" class="gen-input-text" placeholder="팔레트 이름 (예: 브랜드 오렌지)" style="font-size: 12px; height: 32px;" />
+                        </section>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">주조색</label>
+                            <input type="color" id="slideBackgroundCustomPrimary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#0F3D8A" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">보조색</label>
+                            <input type="color" id="slideBackgroundCustomSecondary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#DDE7F8" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">배경색</label>
+                            <input type="color" id="slideBackgroundCustomBg" class="gen-color-picker" style="width: 100%; height: 28px;" value="#F5F7FB" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">강조색</label>
+                            <input type="color" id="slideBackgroundCustomAccent" class="gen-color-picker" style="width: 100%; height: 28px;" value="#FF6B2C" />
+                          </div>
+                        </div>
+                        <button type="button" class="promo-quick-action-btn" id="slideBackgroundAddCustomColorBtn" style="width: 100%; height: 32px; font-size: 12px; margin-top: 5px;">컬러시스템 등록</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 5: 로고 & QR코드 -->
+              <details class="promo-step-disclosure" id="slideBackgroundStepLogoQR">
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">5</span>
+                  <div class="promo-step-copy">
+                    <strong>로고 &amp; QR코드</strong>
+                    <small>로고 영역 및 QR코드 삽입 여부 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+
+                    <!-- 로고 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 8px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                        <label class="gen-config-label" style="margin:0;">로고 목록</label>
+                        <button type="button" class="promo-quick-action-btn" id="slideBackgroundAddLogoBtn" style="height:28px; font-size:12px; padding:0 10px;">+ 로고 추가</button>
+                      </div>
+                      <div id="slideBackgroundLogoList" style="display:flex; flex-direction:column; gap:8px;"></div>
+                      <p id="slideBackgroundLogoEmpty" style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">로고 없음 — 추가 버튼을 눌러 로고를 등록하세요.</p>
+                    </section>
+
+                    <!-- QR코드 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="padding-top: 4px;">
+                      <label class="gen-config-label" for="slideBackgroundQrMode">QR코드 삽입 여부</label>
+                      <select id="slideBackgroundQrMode" class="gen-select">
+                        <option value="none">QR코드 없음</option>
+                        <option value="placeholder">QR코드 영역 placeholder 삽입</option>
+                        <option value="full">QR코드 삽입 (링크 지정)</option>
+                      </select>
+                    </section>
+                    <div id="slideBackgroundQrDetails" style="display:none; width:100%;">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideBackgroundQrUrl">QR코드 링크 주소</label>
+                        <input id="slideBackgroundQrUrl" class="gen-input-text" type="text" placeholder="예: https://example.com/report" />
+                      </section>
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideBackgroundQrCaption">QR코드 안내문구</label>
+                        <input id="slideBackgroundQrCaption" class="gen-input-text" type="text" placeholder="예: 보고서 전문 보기" />
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideBackgroundQrPosition">QR코드 위치</label>
+                        <select id="slideBackgroundQrPosition" class="gen-select">
+                          <option value="bottom_right">우측 하단</option>
+                          <option value="bottom_left">좌측 하단</option>
+                          <option value="bottom_center">하단 중앙</option>
+                          <option value="top_right">우측 상단</option>
+                        </select>
+                      </section>
+                    </div>
+
+                  </div>
+                </div>
+              </details>
+
+            </div>
+          </section>
+
+          <!-- RIGHT PANEL: Preview Output -->
+          <section class="gen-section slide-doc-preview-section">
+            <div class="gen-section-head">
+              <h2>프롬프트 미리보기 및 복사</h2>
+            </div>
+
+            <div class="gen-content">
+              <!-- Live Preview Output -->
+              <div class="preview-card prompt-card">
+                <div class="preview-card-head">
+                  <div>
+                    <h3 class="preview-card-title">생성 프롬프트</h3>
+                    <p class="preview-card-subtitle">조합 및 최적화된 프롬프트가 실시간으로 노출됩니다.</p>
+                  </div>
+                  <div class="lang-switch" role="group" aria-label="프롬프트 언어">
+                    <button type="button" class="lang-btn active" id="slideBackgroundBtnKo">한국어</button>
+                    <button type="button" class="lang-btn" id="slideBackgroundBtnEn">English</button>
+                  </div>
+                </div>
+                <textarea id="slideBackgroundPromptPreview" class="gen-textarea" rows="18" readonly></textarea>
+              </div>
+
+              <div class="promo-quick-action-row" style="margin-top: 15px;">
+                <button type="button" class="promo-quick-action-btn" id="slideBackgroundSampleBtn">샘플 데이터 채우기</button>
+                <button type="button" class="promo-quick-action-btn" id="slideBackgroundResetBtn">초기화</button>
+                <button type="button" class="promo-quick-action-btn is-primary" id="slideBackgroundCopyPromptBtn">프롬프트 복사</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- [서브 탭 4] 안내판 생성 -->
+      <div class="slide-sub-pane" id="paneSlideSignboard">
+        <div class="gen-main slide-doc-main">
+
+          <!-- LEFT PANEL: Inputs & Options -->
+          <section class="gen-section slide-doc-builder-section">
+            <div class="gen-section-head">
+              <h2>안내판 기획 및 설정</h2>
+              <span class="gen-badge" id="slideSignboardAssetBadge">안내판 슬라이드</span>
+            </div>
+
+            <div class="gen-content">
+              <!-- STEP 1: 문서 종류 및 방향 설정 -->
+              <details class="promo-step-disclosure" id="slideSignboardStepType" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">1</span>
+                  <div class="promo-step-copy">
+                    <strong>문서 종류 및 방향 설정</strong>
+                    <small>발표자료(PPT)/보고서 규격 및 가로/세로 방향 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardDocumentType">문서 종류</label>
+                      <select id="slideSignboardDocumentType" class="gen-select" data-slide-signboard-field="documentType">
+                        <option value="a4">A4 규격 (A4 Size)</option>
+                        <option value="a3">A3 규격 (A3 Size)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardOrientation">문서 방향</label>
+                      <select id="slideSignboardOrientation" class="gen-select" data-slide-signboard-field="orientation">
+                        <option value="landscape">가로형 (Landscape)</option>
+                        <option value="portrait">세로형 (Portrait)</option>
+                      </select>
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 2: 핵심 내용 입력 -->
+              <details class="promo-step-disclosure" id="slideSignboardStepContent" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">2</span>
+                  <div class="promo-step-copy">
+                    <strong>안내 정보 입력</strong>
+                    <small>행사 제목, 일정, 담당자 정보, 안내 위치 및 방향 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideSignboardHeadline">행사 제목</label>
+                      <input id="slideSignboardHeadline" class="gen-input-text" type="text" data-slide-signboard-field="headline" placeholder="예: 2026 차세대 AI 반도체 산업 전략 발표회" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideSignboardSchedule">일정 (일자/시간)</label>
+                      <input id="slideSignboardSchedule" class="gen-input-text" type="text" placeholder="예: 2026. 06. 17 (수) 14:00 ~ 17:00" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideSignboardContactInfo">담당 부서 및 정보</label>
+                      <input id="slideSignboardContactInfo" class="gen-input-text" type="text" placeholder="예: 산업통상자원부 반도체정책과" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideSignboardContactPhone">담당 연락처</label>
+                      <input id="slideSignboardContactPhone" class="gen-input-text" type="text" placeholder="예: 02-123-4567" />
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide" style="display: flex; align-items: center; gap: 8px; margin-top: 8px; margin-bottom: 8px;">
+                      <input type="checkbox" id="slideSignboardIncludeContact" checked style="width: 17px; height: 17px; cursor: pointer; margin: 0;" />
+                      <label for="slideSignboardIncludeContact" style="font-weight: 600; font-size: 13px; cursor: pointer; user-select: none; margin: 0;">담당 연락처 표기 (전화번호 포함)</label>
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardDirectionArrow">위치 화살표 방향</label>
+                      <select id="slideSignboardDirectionArrow" class="gen-select">
+                        <option value="right">우측 화살표 (→)</option>
+                        <option value="left">좌측 화살표 (←)</option>
+                        <option value="up">위쪽 화살표 (↑)</option>
+                        <option value="down">아래쪽 화살표 (↓)</option>
+                        <option value="none">화살표 미표기</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideSignboardLocationText">행사 위치 (장소)</label>
+                      <input id="slideSignboardLocationText" class="gen-input-text" type="text" placeholder="예: 3층 대회의실" />
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 3: 디자인 스타일 & 톤앤매너 -->
+              <details class="promo-step-disclosure" id="slideSignboardStepVisual" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">3</span>
+                  <div class="promo-step-copy">
+                    <strong>디자인 스타일 & 톤앤매너</strong>
+                    <small>브랜드 톤, 디자인 스타일 테마, 비주얼 전략 선택</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardBrandTone">브랜드 톤</label>
+                      <input id="slideSignboardBrandTone" class="gen-input-text" type="text" data-slide-signboard-field="brandTone" placeholder="예: 전문적이고 시인성 높은" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardLayoutMetaphor">디자인 스타일 테마</label>
+                      <select id="slideSignboardLayoutMetaphor" class="gen-select" data-slide-signboard-field="layoutMetaphor">
+                        <option value="geometric">기하학적 추상형 (Geometric Abstract)</option>
+                        <option value="3d_isometric">3D 입체 오브젝트 (3D Isometric Object)</option>
+                        <option value="editorial">매거진 에디토리얼형 (Editorial Magazine)</option>
+                        <option value="glassmorphism">글래스모피즘 오버레이 (Glassmorphism Overlay)</option>
+                        <option value="light_refraction">빛과 굴절 오버레이 (Light & Refraction)</option>
+                        <option value="minimal_line">미니멀리즘 라인 아트 (Minimal Line Art)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideSignboardLayoutMetaphorCustom" class="gen-input-text hide" placeholder="원하는 스타일 테마 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardVisualStrategy">비주얼 구성 방식</label>
+                      <select id="slideSignboardVisualStrategy" class="gen-select" data-slide-signboard-field="visualStrategy">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="minimal_shape">미니멀도형 (Minimal Shapes)</option>
+                        <option value="geometric_pattern">기하학 패턴 (Geometric Patterns)</option>
+                        <option value="texture_pattern">텍스처/패턴 (Subtle Textures)</option>
+                        <option value="realistic_synth">실사이미지 합성 (Realistic Photo Synthesis)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideSignboardVisualStrategyCustom" class="gen-input-text hide" placeholder="원하는 비주얼 구성 방식 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <div id="slideSignboardSubjectImageGroup" class="gen-config-group gen-config-group-wide hide" style="margin-top: 5px;">
+                      <label class="gen-config-label" for="slideSignboardSubjectImageDesc">합성할 주제 이미지/오브젝트 묘사</label>
+                      <input type="text" id="slideSignboardSubjectImageDesc" class="gen-input-text" placeholder="예: 투명한 프리즘 유리 구체, 로봇 공학 핸드 등" />
+                    </div>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardLayerComplexity">레이어 깊이 구조</label>
+                      <select id="slideSignboardLayerComplexity" class="gen-select" data-slide-signboard-field="layerComplexity">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="single">단일 레이어 구성 (Flat 2D Layout)</option>
+                        <option value="composite">복합 레이어 구성 (Multi-layered Depth & Overlaps)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideSignboardLayerComplexityCustom" class="gen-input-text hide" placeholder="원하는 레이어 깊이 구조 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardArtStyle">아트 스타일</label>
+                      <select id="slideSignboardArtStyle" class="gen-select" data-slide-signboard-field="artStyle">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="vector_flat">플랫 벡터 (Flat Vector)</option>
+                        <option value="claymorphism">클레이모피즘 (Claymorphism)</option>
+                        <option value="neumorphism">뉴모피즘 (Neumorphism)</option>
+                        <option value="isometric_3d">3D 아이소메트릭 (Isometric 3D)</option>
+                        <option value="line_art">미니멀 라인아트 (Minimal Line Art)</option>
+                        <option value="abstract_glass">추상 글래스 그래픽 (Abstract Glass)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideSignboardArtStyleCustom" class="gen-input-text hide" placeholder="원하는 아트 스타일 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                    <section class="gen-config-group">
+                      <label class="gen-config-label" for="slideSignboardBgBrightness">배경 명도 테마</label>
+                      <select id="slideSignboardBgBrightness" class="gen-select" data-slide-signboard-field="bgBrightness">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="light">라이트 모드 (Light Mode)</option>
+                        <option value="dark">다크 모드 (Dark Mode)</option>
+                      </select>
+                    </section>
+                    <section class="gen-config-group gen-config-group-wide">
+                      <label class="gen-config-label" for="slideSignboardGradTransEffect">그라데이션 & 투명 효과</label>
+                      <select id="slideSignboardGradTransEffect" class="gen-select" data-slide-signboard-field="gradTransEffect">
+                        <option value="none">지정하지 않음 (AI 자율 설정)</option>
+                        <option value="soft_gradient">은은한 그라데이션 (Soft Pastel Gradient)</option>
+                        <option value="glassmorphism">반투명 유리 효과 (Frosted Glassmorphism)</option>
+                        <option value="liquid_gradient">액체형 유동 그라데이션 (Liquid Flow Gradient)</option>
+                        <option value="prism_refraction">프리즘 빛 굴절 (Prism & Light Refraction)</option>
+                        <option value="custom">직접 입력...</option>
+                      </select>
+                      <input type="text" id="slideSignboardGradTransEffectCustom" class="gen-input-text hide" placeholder="원하는 효과 직접 입력" style="margin-top: 6px;" />
+                    </section>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 4: 컬러 시스템 -->
+              <details class="promo-step-disclosure" id="slideSignboardStepColors" open>
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">4</span>
+                  <div class="promo-step-copy">
+                    <strong>컬러 시스템</strong>
+                    <small>주조색, 보조색, 배경색 설정 및 커스텀 컬러 추가</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="color-system-toggle-row" style="margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="slideSignboardUseColorSystem" checked style="width: 17px; height: 17px; cursor: pointer;" />
+                    <label for="slideSignboardUseColorSystem" style="font-weight: 600; font-size: 13px; cursor: pointer; user-select: none;">컬러 시스템 가이드 사용</label>
+                  </div>
+                  <div class="color-system-fields-wrapper" id="slideSignboardColorFieldsWrapper">
+                    <div class="gen-config-fields">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label">컬러 프리셋</label>
+                        <div class="promo-color-presets-grid" id="slideSignboardColorPresetGrid">
+                          <!-- JS dynamically populates this -->
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideSignboardPrimaryColor">주조색 (Primary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideSignboardPrimaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideSignboardPrimaryColor" class="gen-input-text" placeholder="#0F3D8A" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideSignboardSecondaryColor">보조색 (Secondary)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideSignboardSecondaryColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideSignboardSecondaryColor" class="gen-input-text" placeholder="#DDE7F8" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideSignboardBackgroundColor">배경색 (Background)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideSignboardBackgroundColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideSignboardBackgroundColor" class="gen-input-text" placeholder="#F5F7FB" />
+                        </div>
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideSignboardAccentColor">강조색 (Accent)</label>
+                        <div class="gen-color-picker-row">
+                          <input type="color" id="slideSignboardAccentColorPicker" class="gen-color-picker" />
+                          <input type="text" id="slideSignboardAccentColor" class="gen-input-text" placeholder="#FF7A00" />
+                        </div>
+                      </section>
+                    </div>
+
+                    <!-- 사용자 컬러시스템 등록 -->
+                    <div class="custom-color-reg-panel" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line);">
+                      <h4 class="custom-color-reg-title" style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--ink-faint);">나만의 컬러 시스템 추가</h4>
+                      <div class="gen-config-fields" style="gap: 10px;">
+                        <section class="gen-config-group gen-config-group-wide" style="margin-bottom: 5px;">
+                          <input type="text" id="slideSignboardCustomName" class="gen-input-text" placeholder="팔레트 이름 (예: 브랜드 오렌지)" style="font-size: 12px; height: 32px;" />
+                        </section>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">주조색</label>
+                            <input type="color" id="slideSignboardCustomPrimary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#0F3D8A" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">보조색</label>
+                            <input type="color" id="slideSignboardCustomSecondary" class="gen-color-picker" style="width: 100%; height: 28px;" value="#DDE7F8" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">배경색</label>
+                            <input type="color" id="slideSignboardCustomBg" class="gen-color-picker" style="width: 100%; height: 28px;" value="#F5F7FB" />
+                          </div>
+                          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                            <label style="font-size: 10px; color: var(--ink-faint);">강조색</label>
+                            <input type="color" id="slideSignboardCustomAccent" class="gen-color-picker" style="width: 100%; height: 28px;" value="#FF6B2C" />
+                          </div>
+                        </div>
+                        <button type="button" class="promo-quick-action-btn" id="slideSignboardAddCustomColorBtn" style="width: 100%; height: 32px; font-size: 12px; margin-top: 5px;">컬러시스템 등록</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- STEP 5: 로고 & QR코드 -->
+              <details class="promo-step-disclosure" id="slideSignboardStepLogoQR">
+                <summary class="promo-step-summary">
+                  <span class="promo-step-num">5</span>
+                  <div class="promo-step-copy">
+                    <strong>로고 &amp; QR코드</strong>
+                    <small>로고 영역 및 QR코드 삽입 여부 설정</small>
+                  </div>
+                </summary>
+                <div class="promo-step-body">
+                  <div class="gen-config-fields">
+                    <!-- 로고 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 8px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                        <label class="gen-config-label" style="margin:0;">로고 목록</label>
+                        <button type="button" class="promo-quick-action-btn" id="slideSignboardAddLogoBtn" style="height:28px; font-size:12px; padding:0 10px;">+ 로고 추가</button>
+                      </div>
+                      <div id="slideSignboardLogoList" style="display:flex; flex-direction:column; gap:8px;"></div>
+                      <p id="slideSignboardLogoEmpty" style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">로고 없음 — 추가 버튼을 눌러 로고를 등록하세요.</p>
+                    </section>
+
+                    <!-- QR코드 섹션 -->
+                    <section class="gen-config-group gen-config-group-wide" style="padding-top: 4px;">
+                      <label class="gen-config-label" for="slideSignboardQrMode">QR코드 삽입 여부</label>
+                      <select id="slideSignboardQrMode" class="gen-select">
+                        <option value="none">QR코드 없음</option>
+                        <option value="placeholder">QR코드 영역 placeholder 삽입</option>
+                        <option value="full">QR코드 삽입 (링크 지정)</option>
+                      </select>
+                    </section>
+                    <div id="slideSignboardQrDetails" style="display:none; width:100%;">
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideSignboardQrUrl">QR코드 링크 주소</label>
+                        <input id="slideSignboardQrUrl" class="gen-input-text" type="text" placeholder="예: https://example.com/sign" />
+                      </section>
+                      <section class="gen-config-group gen-config-group-wide">
+                        <label class="gen-config-label" for="slideSignboardQrCaption">QR코드 안내문구</label>
+                        <input id="slideSignboardQrCaption" class="gen-input-text" type="text" placeholder="예: 상세 내용 확인하기" />
+                      </section>
+                      <section class="gen-config-group">
+                        <label class="gen-config-label" for="slideSignboardQrPosition">QR코드 위치</label>
+                        <select id="slideSignboardQrPosition" class="gen-select">
+                          <option value="bottom_right">우측 하단</option>
+                          <option value="bottom_left">좌측 하단</option>
+                          <option value="bottom_center">하단 중앙</option>
+                          <option value="top_right">우측 상단</option>
+                        </select>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          <!-- RIGHT PANEL: Preview Output -->
+          <section class="gen-section slide-doc-preview-section">
+            <div class="gen-section-head">
+              <h2>프롬프트 미리보기 및 복사</h2>
+            </div>
+
+            <div class="gen-content">
+              <!-- Live Preview Output -->
+              <div class="preview-card prompt-card">
+                <div class="preview-card-head">
+                  <div>
+                    <h3 class="preview-card-title">생성 프롬프트</h3>
+                    <p class="preview-card-subtitle">조합 및 최적화된 프롬프트가 실시간으로 노출됩니다.</p>
+                  </div>
+                  <div class="lang-switch" role="group" aria-label="프롬프트 언어">
+                    <button type="button" class="lang-btn active" id="slideSignboardBtnKo">한국어</button>
+                    <button type="button" class="lang-btn" id="slideSignboardBtnEn">English</button>
+                  </div>
+                </div>
+                <textarea id="slideSignboardPromptPreview" class="gen-textarea" rows="18" readonly></textarea>
+              </div>
+
+              <div class="promo-quick-action-row" style="margin-top: 15px;">
+                <button type="button" class="promo-quick-action-btn" id="slideSignboardSampleBtn">샘플 데이터 채우기</button>
+                <button type="button" class="promo-quick-action-btn" id="slideSignboardResetBtn">초기화</button>
+                <button type="button" class="promo-quick-action-btn is-primary" id="slideSignboardCopyPromptBtn">프롬프트 복사</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="gen-modal" id="mapThreeDPreviewModal" hidden>
+    <div class="gen-modal-backdrop" data-close-map-preview></div>
+    <div class="gen-modal-dialog map-sample-dialog" role="dialog" aria-modal="true" aria-labelledby="mapThreeDPreviewTitle">
+      <div class="gen-modal-head">
+        <div>
+          <h3 id="mapThreeDPreviewTitle">3D 샘플 미리보기</h3>
+          <p id="mapThreeDPreviewSubtitle">선택한 지도 3D 옵션의 예상 연출을 확인합니다.</p>
+        </div>
+        <button type="button" class="gen-btn ghost" data-close-map-preview>닫기</button>
+      </div>
+      <div class="gen-modal-body">
+        <div class="map-sample-modal-body">
+          <div class="map-sample-art" id="mapThreeDPreviewArt" aria-hidden="true"></div>
+          <div class="map-sample-copy">
+            <strong id="mapThreeDPreviewName">샘플</strong>
+            <p id="mapThreeDPreviewDesc"></p>
+          </div>
+        </div>
+      </div>
+      <div class="gen-modal-foot">
+        <button type="button" class="gen-btn secondary" data-close-map-preview>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gen-modal" id="optionTreeModal" hidden>
+    <div class="gen-modal-backdrop" data-close-option-tree></div>
+    <div class="gen-modal-dialog option-tree-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="optionTreeModalTitle">
+      <div class="gen-modal-head">
+        <div>
+          <h3 id="optionTreeModalTitle">옵션 트리</h3>
+          <p>상위 카테고리와 하위 옵션 그룹을 한 번에 보고 바로 이동합니다.</p>
+        </div>
+        <button type="button" class="gen-btn ghost" data-close-option-tree>닫기</button>
+      </div>
+      <div class="gen-modal-body">
+        <div class="option-tree option-tree-in-modal" id="optionTree"></div>
+      </div>
+      <div class="gen-modal-foot">
+        <button type="button" class="gen-btn secondary" data-close-option-tree>확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gen-modal" id="genConfigModal" hidden>
+    <div class="gen-modal-backdrop" data-close-config-modal></div>
+    <div class="gen-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="genConfigTitle">
+      <div class="gen-modal-head">
+        <div>
+          <h3 id="genConfigTitle">슬라이드 개별 프롬프트 설정</h3>
+          <p id="genConfigSubtitle">슬라이드별 선택 요소를 조정해 프롬프트를 다시 생성합니다.</p>
+        </div>
+        <button type="button" class="gen-btn ghost" id="genConfigCloseBtn">닫기</button>
+      </div>
+      <div class="gen-modal-body">
+        <div class="gen-config-note">
+          공통 색상 시스템과 높이 값 같은 공통 값은 현재 프롬프트 설계 탭의 공통 설정을 그대로 사용합니다.
+        </div>
+        <div class="gen-config-summary" id="genConfigSummary"></div>
+        <div class="gen-config-fields" id="genConfigFields"></div>
+      </div>
+      <div class="gen-modal-foot">
+        <button type="button" class="gen-btn secondary" id="genConfigResetBtn">개별 설정 해제</button>
+        <button type="button" class="gen-btn ghost" id="genConfigUseCurrentBtn">현재 공통 설정 불러오기</button>
+        <button type="button" class="gen-btn" id="genConfigSaveBtn">이 슬라이드에 적용</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gen-modal" id="genSplitRulesModal" hidden>
+    <div class="gen-modal-backdrop" data-close-split-modal></div>
+    <div class="gen-modal-dialog gen-split-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="genSplitRulesModalTitle">
+      <div class="gen-modal-head">
+        <div>
+          <h3 id="genSplitRulesModalTitle">슬라이드 구분 규칙 도우미</h3>
+          <p id="genSplitRulesModalSubtitle">정규식을 직접 쓰지 않고도 자주 쓰는 구분 규칙을 만들어 입력창에 추가할 수 있습니다.</p>
+        </div>
+        <button type="button" class="gen-btn ghost" id="genSplitRulesCloseBtn">닫기</button>
+      </div>
+      <div class="gen-modal-body">
+        <div class="gen-config-note">
+          `slide`는 본문 슬라이드 수에, `appendix`는 부록 수에 반영됩니다. 규칙은 반드시 `번호`와 `제목`을 잡는 2개의 캡처 그룹을 가져야 합니다.
+        </div>
+
+        <section class="gen-split-section">
+          <div class="gen-split-section-head">
+            <strong>빠른 프리셋</strong>
+            <span>자주 쓰는 형식을 한 번에 추가합니다.</span>
+          </div>
+          <div class="gen-split-preset-list">
+            <button type="button" class="gen-split-preset" data-rule-type="slide" data-rule-pattern="^##\s+슬라이드\s+(\d{2})\.\s*(.+)$">`## 슬라이드 01. 제목`</button>
+            <button type="button" class="gen-split-preset" data-rule-type="appendix" data-rule-pattern="^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$">`## 부록 A1. 제목`</button>
+            <button type="button" class="gen-split-preset" data-rule-type="slide" data-rule-pattern="^###\s+STEP\s+(\d+)\s*-\s*(.+)$">`### STEP 1 - 제목`</button>
+            <button type="button" class="gen-split-preset" data-rule-type="appendix" data-rule-pattern="^###\s+ANNEX\s+([A-Z]\d+)\s*-\s*(.+)$">`### ANNEX A1 - 제목`</button>
+          </div>
+        </section>
+
+        <section class="gen-split-section">
+          <div class="gen-split-section-head">
+            <strong>규칙 만들기</strong>
+            <span>입력값을 고르면 규칙이 자동으로 만들어집니다.</span>
+          </div>
+          <div class="gen-config-fields gen-split-builder-fields">
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="genSplitBuilderType">구분 종류</label>
+              <p class="gen-config-guide">본문 슬라이드인지, 부록인지 선택합니다.</p>
+              <select id="genSplitBuilderType" class="gen-select">
+                <option value="slide">slide</option>
+                <option value="appendix">appendix</option>
+              </select>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="genSplitBuilderHeading">헤더 깊이</label>
+              <p class="gen-config-guide">MD에서 슬라이드 시작을 표시하는 `#` 개수입니다.</p>
+              <select id="genSplitBuilderHeading" class="gen-select">
+                <option value="##">##</option>
+                <option value="###">###</option>
+                <option value="####">####</option>
+              </select>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="genSplitBuilderPrefix">구분어</label>
+              <p class="gen-config-guide">번호 앞에 오는 고정 단어를 입력합니다. 예: 슬라이드, 부록, STEP</p>
+              <input id="genSplitBuilderPrefix" class="gen-input-text" type="text" value="슬라이드" />
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="genSplitBuilderNumber">번호 형식</label>
+              <p class="gen-config-guide">01, 1, A1 같은 번호 형태를 고릅니다.</p>
+              <select id="genSplitBuilderNumber" class="gen-select">
+                <option value="digits2">두 자리 숫자 01</option>
+                <option value="digits">숫자 1</option>
+                <option value="digits3">세 자리 숫자 001</option>
+                <option value="letterDigits">문자+숫자 A1</option>
+                <option value="letters">문자 A</option>
+                <option value="roman">로마 숫자 IV</option>
+                <option value="koreanDigits">한글+숫자 가1</option>
+                <option value="custom">직접 입력</option>
+              </select>
+              <div class="gen-number-preset-list" aria-label="번호 예시 빠른 선택">
+                <button type="button" class="gen-number-preset" data-number-example="01">01</button>
+                <button type="button" class="gen-number-preset" data-number-example="1">1</button>
+                <button type="button" class="gen-number-preset" data-number-example="A1">A1</button>
+                <button type="button" class="gen-number-preset" data-number-example="IV">IV</button>
+                <button type="button" class="gen-number-preset" data-number-example="가1">가1</button>
+                <button type="button" class="gen-number-preset" data-number-example="1-1">1-1</button>
+              </div>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="genSplitBuilderNumberCustom">직접 입력 번호 정규식</label>
+              <p class="gen-config-guide">정규식 대신 실제 번호 예시를 넣어도 됩니다. 예: 01, A1, 1-1</p>
+              <input id="genSplitBuilderNumberCustom" class="gen-input-text" type="text" value="" placeholder="예: 1-1 또는 [IVX]+" disabled />
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="genSplitBuilderSeparator">제목 앞 구분자</label>
+              <p class="gen-config-guide">번호 뒤에서 제목 앞까지 들어가는 구분자를 입력합니다. 예: `.`, `-`, `:`</p>
+              <input id="genSplitBuilderSeparator" class="gen-input-text" type="text" value=". " />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="genSplitBuilderPreviewRegex">생성된 규칙 미리보기</label>
+              <p class="gen-config-guide">아래 규칙이 실제 입력창에 들어갑니다.</p>
+              <textarea id="genSplitBuilderPreviewRegex" class="gen-textarea" rows="2" readonly></textarea>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="genSplitBuilderPreviewSample">예시 헤더</label>
+              <p class="gen-config-guide">현재 설정으로 인식될 예시입니다.</p>
+              <input id="genSplitBuilderPreviewSample" class="gen-input-text" type="text" readonly />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <div class="gen-split-live-head">
+                <strong>이 규칙 적용 미리보기</strong>
+                <span id="genSplitBuilderLiveBadge">대기 중</span>
+              </div>
+              <div id="genSplitBuilderLivePreview" class="gen-split-live-list" aria-live="polite"></div>
+            </section>
+          </div>
+        </section>
+      </div>
+      <div class="gen-modal-foot">
+        <button type="button" class="gen-btn secondary" id="genSplitRulesClearBtn">입력창 비우기</button>
+        <button type="button" class="gen-btn ghost" id="genSplitRulesReplaceBtn">입력창 덮어쓰기</button>
+        <button type="button" class="gen-btn" id="genSplitRulesAppendBtn">규칙 추가</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminAdBannerBottom" style="display:none"></div>
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script>
+    window.__errors = [];
+    window.onerror = (msg, src, line, col, err) => {
+      window.__errors.push({ msg, src: (src||'').split('/').slice(-2).join('/'), line, col });
+      const t = document.getElementById('toast');
+      if (t) { t.textContent = '⚠ JS 오류: ' + msg + ' (' + (src||'').split('/').slice(-1)[0] + ':' + line + ')'; t.style.cssText = 'display:block;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#bf3b3b;color:#fff;padding:12px 20px;border-radius:10px;z-index:9999;max-width:90vw;white-space:pre-wrap;font-size:13px'; }
+    };
+    window.addEventListener('unhandledrejection', e => {
+      window.onerror(e.reason?.message || String(e.reason), 'promise', 0, 0, e.reason);
+    });
+  </script>
+  <script src="src/designer-config-globals.js"></script>
+  <script src="app.js"></script>
+  <script src="src/promptdeck-api-globals.js"></script>
+  <script src="src/tabs.js"></script>
+  <script src="src/theme.js"></script>
+  <script src="src/generator.js"></script>
+  <script src="src/promotion-data.js"></script>
+  <script src="src/promotion-utils.js"></script>
+  <script src="src/promotion-i18n.js"></script>
+  <script src="src/promotion-prompt-engine.js"></script>
+  <script src="src/promotion.js"></script>
+  <script src="src/concept-styles.js"></script>
+  <script src="src/concept-suggest.js"></script>
+  <script src="src/concept-mixer-presets.js"></script>
+  <script src="src/concept-mixer-presets/subjects.js"></script>
+  <script src="src/concept-mixer-presets/mediums.js"></script>
+  <script src="src/concept-mixer-presets/palettes.js"></script>
+  <script src="src/concept-mixer-presets/compositions.js"></script>
+  <script src="src/concept-mixer-presets/typographies.js"></script>
+  <script src="src/concept-mixer.js"></script>
+  <script src="src/image-generation-client.js"></script>
+  <script src="src/generation-queue.js"></script>
+  <script src="src/slide-image-generation.js"></script>
+  <script src="src/map-prompt.js"></script>
+  <script src="src/slide-document.js"></script>
+</body>
+</html>

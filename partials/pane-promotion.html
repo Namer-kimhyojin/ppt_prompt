@@ -1,0 +1,557 @@
+  <div class="tab-pane gen-wrap promo-wrap" id="panePromotion" role="tabpanel">
+    <div class="gen-main promo-main">
+      <section class="gen-section promo-legacy-placeholder" style="grid-column: 1 / -1; display:none;">
+        <div class="gen-section-head">
+          <h2>홍보용 이미지</h2>
+          <span class="gen-badge">작업 가이드</span>
+        </div>
+        <div class="gen-content">
+          <div class="gen-config-note" style="margin-bottom:16px;">
+            포스터, 카드뉴스, SNS 홍보이미지를 발표자료와 분리해 설계하는 전용 작업 탭입니다. 실제 화면 텍스트와 디자인 지시를 나눠서 프롬프트를 정리할 수 있습니다.
+          </div>
+
+          <div class="gen-config-fields">
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label">현재 제공 기능</label>
+              <p class="gen-config-guide">포스터, 카드뉴스, SNS 홍보이미지별 입력 항목과 프롬프트 미리보기, 설정 저장/불러오기를 제공합니다.</p>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label">권장 흐름</label>
+              <p class="gen-config-guide">목적과 타깃을 먼저 정한 뒤 실제 노출 텍스트, 자산별 지시, 금지 요소 순서로 입력하면 정리가 쉽습니다.</p>
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label">안정성</label>
+              <p class="gen-config-guide">필수 입력 누락과 비율/크기 오류를 바로 확인할 수 있고, 현재 설정을 JSON 파일로 저장하거나 다시 불러올 수 있습니다.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section class="gen-section promo-builder-section">
+        <div class="gen-section-head">
+          <h2>홍보용 이미지 설정</h2>
+          <span class="gen-badge" id="promotionAssetBadge">홍보 이미지</span>
+        </div>
+        <div class="gen-content">
+
+          <!-- ── STEP 1: 빠른 시작 (접힘) ── -->
+          <details class="promo-step-disclosure" id="promotionStepStart" open>
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">1</span>
+              <div class="promo-step-copy">
+                <strong>제작 규격</strong>
+                <small>대상 생성 엔진과 이미지 규격을 설정합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+
+          <div class="gen-config-fields promo-start-fields">
+
+            <section class="gen-config-group gen-config-group-wide" style="display: none;">
+              <label class="gen-config-label" for="promotionTargetEngine">대상 생성 엔진</label>
+              <select id="promotionTargetEngine" class="gen-select" data-promo-field="targetEngine">
+                <option value="dalle" selected>OpenAI GPT Image 2 (gpt-image-2 / DALL-E 3)</option>
+              </select>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <div class="promo-size-mode-row">
+                <div class="promo-size-mode-left">
+                  <label class="gen-config-label" for="promotionSizeMode">규격 입력 방식</label>
+                  <p class="gen-config-guide">비율 기준 또는 실제 출력 크기 중 선택합니다.</p>
+                  <select id="promotionSizeMode" class="gen-select" data-promo-field="sizeMode">
+                    <option value="ratio">비율 설정</option>
+                    <option value="direct">크기 직접 입력</option>
+                  </select>
+                </div>
+                <div class="promo-size-preset-panel">
+                  <div class="promo-size-preset-header">
+                    <span class="promo-size-preset-label">내 규격</span>
+                    <button type="button" class="promo-size-preset-save-btn" id="promotionSizePresetSaveBtn" title="현재 규격을 저장">+ 저장</button>
+                  </div>
+                  <div class="promo-size-preset-save-row" id="promotionSizePresetSaveRow" style="display:none;">
+                    <input type="text" class="gen-input-text promo-size-preset-name-input" id="promotionSizePresetNameInput" placeholder="규격 이름 (예: 인스타 정방형)" maxlength="20" />
+                    <button type="button" class="gen-btn promo-size-preset-confirm-btn" id="promotionSizePresetConfirmBtn">저장</button>
+                    <button type="button" class="gen-btn ghost promo-size-preset-cancel-btn" id="promotionSizePresetCancelBtn">취소</button>
+                  </div>
+                  <div class="promo-size-preset-list" id="promotionSizePresetList">
+                    <span class="promo-size-preset-empty">저장된 규격 없음</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <div class="promo-size-section-head">
+                <label class="gen-config-label" for="promotionRatio">이미지 규격</label>
+              </div>
+              <p class="gen-config-guide">선택한 방식에 따라 비율 또는 크기를 지정합니다.</p>
+              <div class="promo-size-quick-presets" id="promoSizeQuickPresets">
+                <div class="promo-sqp-group">
+                  <span class="promo-sqp-label">SNS</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="1:1" data-sqp-orientation="vertical" title="정방형 · 인스타 · 카카오 채널">1:1</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="4:5" data-sqp-orientation="vertical" title="인스타그램 피드 세로">4:5</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="2:3" data-sqp-orientation="vertical" title="핀터레스트 · 세로 피드">2:3</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="9:16" data-sqp-orientation="vertical" title="스토리 · 릴스 · 틱톡">9:16</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="16:9" data-sqp-orientation="horizontal" title="유튜브 썸네일 · 페이스북">16:9</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="3:1" data-sqp-orientation="horizontal" title="트위터/X 헤더 · 링크드인 배너">3:1</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="2:1" data-sqp-orientation="horizontal" title="페이스북 이벤트 커버 · 와이드 배너">2:1</button>
+                </div>
+                <div class="promo-sqp-group">
+                  <span class="promo-sqp-label">카카오</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="direct" data-sqp-unit="px" data-sqp-w="800" data-sqp-h="600" title="카카오 메시지 (800×600 px)">메시지</button>
+                </div>
+                <div class="promo-sqp-group">
+                  <span class="promo-sqp-label">복사용지 (A4, B4 등)</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="5:7" data-sqp-orientation="vertical" title="일반 복사용지 세로 (A4·A3·A5 등 공통 비율)">세로</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="7:5" data-sqp-orientation="horizontal" title="일반 복사용지 가로 (A4·A3·A5 등 공통 비율)">가로</button>
+                </div>
+              </div>
+              <div id="promotionRatioModeBox">
+                <div class="gen-inline-row">
+                  <select id="promotionRatio" class="gen-select" data-promo-field="ratio">
+                    <option value="1:1">1:1</option>
+                    <option value="4:5">4:5</option>
+                    <option value="3:4">3:4</option>
+                    <option value="2:3">2:3</option>
+                    <option value="5:7">5:7</option>
+                    <option value="9:16">9:16</option>
+                    <option value="16:9">16:9</option>
+                    <option value="3:2">3:2</option>
+                    <option value="7:5">7:5</option>
+                    <option value="2:1">2:1</option>
+                    <option value="3:1">3:1</option>
+                    <option value="custom">직접 입력</option>
+                  </select>
+                  <select id="promotionOrientation" class="gen-select" data-promo-field="orientation">
+                    <option value="vertical">세로형</option>
+                    <option value="horizontal">가로형</option>
+                  </select>
+                </div>
+              </div>
+              <div id="promotionDirectSizeBox" style="display:none; margin-top:8px;">
+                <div class="gen-inline-row">
+                  <select id="promotionDirectSizeUnit" class="gen-select promo-unit-select" data-promo-field="directSizeUnit">
+                    <option value="px">px</option>
+                    <option value="cm">cm</option>
+                  </select>
+                  <div class="gen-input-with-unit">
+                    <input type="text" id="promotionDirectSizeW" class="gen-input-text" placeholder="너비" data-promo-field="directSizeW" />
+                    <span class="gen-unit" id="promotionDirectSizeUnitLabelW">px</span>
+                  </div>
+                  <span class="gen-sep">×</span>
+                  <div class="gen-input-with-unit">
+                    <input type="text" id="promotionDirectSizeH" class="gen-input-text" placeholder="높이" data-promo-field="directSizeH" />
+                    <span class="gen-unit" id="promotionDirectSizeUnitLabelH">px</span>
+                  </div>
+                </div>
+                <p class="gen-hint promo-inline-hint">예: `1080 × 1350 px`, `21 × 29.7 cm`처럼 실제 출력 크기가 정해져 있을 때 사용합니다.</p>
+              </div>
+              <div id="promotionCustomRatioBox" class="gen-inline-row" style="display:none; margin-top:8px;">
+                <input type="text" id="promotionCustomRatioW" class="gen-input-text" placeholder="너비(W)" data-promo-field="customRatioW" />
+                <span class="gen-sep">:</span>
+                <input type="text" id="promotionCustomRatioH" class="gen-input-text" placeholder="높이(H)" data-promo-field="customRatioH" />
+              </div>
+            </section>
+          </div><!-- /promo-start-fields -->
+
+            </div><!-- /promo-step-body -->
+          </details><!-- /step 1 -->
+
+          <!-- ── STEP 2: 핵심 메시지 ── -->
+          <details class="promo-step-disclosure" id="promotionStepMessage" open>
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">2</span>
+              <div class="promo-step-copy">
+                <strong>핵심 메시지</strong>
+                <small>이미지에 담길 목적·타깃·텍스트·CTA. 가장 중요한 정보를 먼저 입력합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+          <div class="gen-config-fields promo-common-fields">
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="promotionGoal">홍보 목적</label>
+              <p class="gen-config-guide">지원사업 모집, 행사 초청, 교육 참가 등 목표를 기재</p>
+              <div class="promo-quick-btns" data-quick-for="promotionGoal">
+                <button type="button" class="btn-quick">지원사업 참가기업 모집</button>
+                <button type="button" class="btn-quick">교육·훈련 참가 유도</button>
+                <button type="button" class="btn-quick">행사·포럼 참가 초청</button>
+                <button type="button" class="btn-quick">성과 발표·기관 홍보</button>
+                <button type="button" class="btn-quick">공고·안내 확산</button>
+              </div>
+              <input id="promotionGoal" class="gen-input-text" type="text" data-promo-field="goal" placeholder="예: 지원사업 참가기업 모집 전환" />
+            </section>
+
+            <section class="gen-config-group">
+              <label class="gen-config-label" for="promotionAudience">핵심 타깃</label>
+              <p class="gen-config-guide">누가 이 이미지를 보고 반응해야 하는지 한 문장으로 적습니다.</p>
+              <div class="promo-quick-btns" data-quick-for="promotionAudience">
+                <button type="button" class="btn-quick">지역 중소기업</button>
+                <button type="button" class="btn-quick">예비창업자·스타트업</button>
+                <button type="button" class="btn-quick">대학생·청년구직자</button>
+                <button type="button" class="btn-quick">연구자·대학 교원</button>
+                <button type="button" class="btn-quick">지역 기업인·관계자</button>
+              </div>
+              <input id="promotionAudience" class="gen-input-text" type="text" data-promo-field="audience" placeholder="예: 지역 중소기업 실무자, 예비창업자" />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionHeadline">헤드라인</label>
+              <p class="gen-config-guide">가장 먼저 보여줄 한 줄 메시지입니다.</p>
+              <input id="promotionHeadline" class="gen-input-text" type="text" data-promo-field="headline" placeholder="예: 공급망 전환의 다음 거점, 지금 합류하세요" />
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionSubheadline">서브 카피</label>
+              <p class="gen-config-guide">헤드라인을 보완하는 설명이나 혜택 문구를 적습니다.</p>
+              <textarea id="promotionSubheadline" class="gen-textarea" rows="3" data-promo-field="subheadline" placeholder="예: 참가 대상, 핵심 혜택, 일정 요약"></textarea>
+            </section>
+
+            <section class="gen-config-group gen-config-group-wide">
+              <label class="gen-config-label" for="promotionBodyCopy">본문 포인트</label>
+              <p class="gen-config-guide">줄바꿈으로 항목을 나누고, 하위 내용은 들여쓰기한 불릿이나 1.1 번호로 입력하면 위계가 유지됩니다.</p>
+              <textarea id="promotionBodyCopy" class="gen-textarea" rows="5" data-promo-field="bodyCopy" placeholder="예:&#10;행사 정보&#10;  - 5월 31일 마감&#10;  - 서울 코엑스 개최&#10;참가 혜택&#10;  - 현장 네트워킹 제공"></textarea>
+            </section>
+
+            <section class="gen-config-group" id="promotionCtaSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionCta">CTA <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="cta" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionCtaModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="cta" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="cta" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">사용자가 마지막에 무엇을 하길 원하는지 명확히 적습니다.</p>
+              <div id="promotionCtaInput" style="display:none">
+                <input id="promotionCta" class="gen-input-text" type="text" data-promo-field="cta" placeholder="예: 지금 신청하기" />
+              </div>
+              <div id="promotionCtaAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+            <!-- 한 줄 오퍼 -->
+            <section class="gen-config-group gen-config-group-wide" id="promotionPosterOfferSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionPosterOffer">한 줄 오퍼 <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="posterOffer" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionPosterOfferModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="posterOffer" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="posterOffer" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">이미지 안에 직접 노출할 핵심 혜택 한 줄. 비워두면 AI가 자동 생성합니다.</p>
+              <div id="promotionPosterOfferInput" style="display:none">
+                <input id="promotionPosterOffer" class="gen-input-text" type="text" data-promo-field="posterOffer" placeholder="예: 사전 등록 시 VIP 네트워킹 세션 초청" />
+              </div>
+              <div id="promotionPosterOfferAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+            <!-- 첫 줄 훅 -->
+            <section class="gen-config-group gen-config-group-wide" id="promotionSnsHookSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionSnsHook">첫 줄 훅 <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="snsHook" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionSnsHookModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="snsHook" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="snsHook" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">SNS 피드·스토리 첫 화면에서 즉시 시선을 끌 짧은 문장입니다.</p>
+              <div id="promotionSnsHookInput" style="display:none">
+                <input id="promotionSnsHook" class="gen-input-text" type="text" data-promo-field="snsHook" placeholder="예: 이번 주말 단 하루" />
+              </div>
+              <div id="promotionSnsHookAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+            <!-- 해시태그/태그 -->
+            <section class="gen-config-group gen-config-group-wide" id="promotionSnsHashtagsSection">
+              <div class="gen-config-label-row">
+                <label class="gen-config-label" for="promotionSnsHashtags">해시태그/태그 <span class="promo-field-badge visible">이미지 텍스트</span></label>
+                <div class="promo-ai-toggle-header">
+                  <label class="promo-ai-toggle-switch" title="사용 여부">
+                    <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="snsHashtags" checked />
+                    <span class="promo-ai-toggle-track"></span>
+                  </label>
+                  <div class="promo-ai-mode-btns" id="promotionSnsHashtagsModeBtns">
+                    <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="snsHashtags" data-mode="ai">AI 자동</button>
+                    <button type="button" class="promo-ai-mode-btn" data-toggle-mode="snsHashtags" data-mode="manual">직접 입력</button>
+                  </div>
+                </div>
+              </div>
+              <p class="gen-config-guide">이미지 안 또는 캡션에 쓸 해시태그입니다. 비워두면 AI가 자동 생성합니다.</p>
+              <div id="promotionSnsHashtagsInput" style="display:none">
+                <textarea id="promotionSnsHashtags" class="gen-textarea" rows="3" data-promo-field="snsHashtags" placeholder="예: #채용설명회&#10;#사전신청&#10;#커리어이벤트"></textarea>
+              </div>
+              <div id="promotionSnsHashtagsAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+            </section>
+
+          </div><!-- /promo-common-fields message -->
+            </div><!-- /promo-step-body -->
+          </details><!-- /step 2 -->
+
+          <!-- ── STEP 3: 비주얼 컨셉 & 레이아웃 ── -->
+          <details class="promo-step-disclosure" id="promotionStepVisual" open>
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">3</span>
+              <div class="promo-step-copy">
+                <strong>비주얼 컨셉 &amp; 레이아웃</strong>
+                <small>스타일 컨셉과 레이아웃 구도를 함께 설정합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+              <div class="gen-config-fields">
+                <section class="gen-config-group gen-config-group-wide promo-basic-concept-panel" id="promotionBasicConceptPanel">
+                  <div class="gen-config-label" style="margin-bottom:10px">비주얼 컨셉</div>
+                  <div id="promotionConceptEmpty" class="promo-concept-empty">
+                    <p class="promo-concept-empty-text">컨셉이 아직 적용되지 않았습니다. 컨셉 제안 탭에서 스타일을 선택하면 자동으로 반영됩니다.</p>
+                    <button type="button" class="promo-concept-nav-btn" id="promotionConceptSelectBtn">컨셉 제안으로 이동 →</button>
+                  </div>
+                  <div id="promotionConceptApplied" class="promo-concept-applied" hidden>
+                    <div class="promo-concept-card">
+                      <div class="promo-concept-card-header">
+                        <span class="promo-concept-card-emoji" id="promotionConceptEmoji"></span>
+                        <div class="promo-concept-card-meta">
+                          <span class="promo-concept-card-name" id="promotionConceptName"></span>
+                          <span class="promo-concept-card-cat" id="promotionConceptCat"></span>
+                        </div>
+                        <button type="button" class="promo-concept-change-btn" id="promotionConceptChangeBtn">컨셉 변경</button>
+                      </div>
+                      <p class="promo-concept-card-desc" id="promotionConceptCardDesc"></p>
+                      <div class="promo-concept-card-palette" id="promotionConceptCardPalette"></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="gen-config-group gen-config-group-wide promo-layout-composition-panel">
+                  <div class="gen-config-label-row" style="margin-bottom:10px">
+                    <label class="gen-config-label" for="promotionLayoutComposition">레이아웃 강조 포인트 <span class="promo-warning-icon-wrapper" data-warning-field="layoutComposition"></span></label>
+                    <div class="promo-ai-toggle-header">
+                      <label class="promo-ai-toggle-switch" title="사용 여부">
+                        <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="layoutComposition" checked />
+                        <span class="promo-ai-toggle-track"></span>
+                      </label>
+                      <div class="promo-ai-mode-btns" id="promotionLayoutCompositionModeBtns">
+                        <button type="button" class="promo-ai-mode-btn active" data-toggle-mode="layoutComposition" data-mode="ai">AI 자동</button>
+                        <button type="button" class="promo-ai-mode-btn" data-toggle-mode="layoutComposition" data-mode="manual">직접 입력</button>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="gen-config-guide">헤드라인·비주얼·정보 중 어느 요소를 화면에서 가장 먼저 읽히게 할지 선택합니다.</p>
+                  <div class="promo-layout-strict-option" style="margin: 8px 0 12px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="promotionLayoutStrict" data-promo-field="layoutStrictSeparation" checked style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent, #4361ee);" />
+                    <label for="promotionLayoutStrict" style="font-size: 13px; font-weight: 500; color: var(--text-primary, #1e293b); cursor: pointer; user-select: none;">
+                      엄격한 구역 분할 적용 (체크 해제 시 비주얼과 텍스트가 자연스럽게 어우러지는 유기적 레이아웃으로 변경)
+                    </label>
+                  </div>
+                  <div id="promotionLayoutCompositionInput" style="display:none">
+                    <div class="promo-layout-choice-btns">
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="title_focus">타이틀 중심</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="visual_focus">비주얼 중심</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="info_focus">정보 중심</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="title_info_hybrid">타이틀+정보 혼합</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="visual_info_hybrid">비주얼+정보 혼합</button>
+                      <button type="button" class="promo-layout-choice-btn" data-layout-choice="custom">사용자 지정 (커스텀)</button>
+                    </div>
+                    <select id="promotionLayoutComposition" data-promo-field="layoutComposition" style="display:none">
+                      <option value="title_focus">타이틀 중심</option>
+                      <option value="visual_focus">비주얼 중심</option>
+                      <option value="info_focus">정보 중심</option>
+                      <option value="title_info_hybrid">타이틀+정보 혼합</option>
+                      <option value="visual_info_hybrid">비주얼+정보 혼합</option>
+                      <option value="custom">사용자 지정 (커스텀)</option>
+                    </select>
+                  </div>
+                  <!-- Custom layout weight configuration -->
+                  <div id="promotionLayoutCustomContainer" style="display:none; margin-top:16px;">
+                    <!-- Segmented weight gauge -->
+                    <div class="promo-weight-gauge-bar" id="promotionLayoutWeightGauge">
+                      <div class="promo-weight-gauge-seg seg-title" id="promotionLayoutWeightTitleGauge" style="width: 25%" title="타이틀"></div>
+                      <div class="promo-weight-gauge-seg seg-visual" id="promotionLayoutWeightVisualGauge" style="width: 25%" title="키비주얼"></div>
+                      <div class="promo-weight-gauge-seg seg-info" id="promotionLayoutWeightInfoGauge" style="width: 25%" title="정보"></div>
+                      <div class="promo-weight-gauge-seg seg-bg" id="promotionLayoutWeightBackgroundGauge" style="width: 25%" title="배경이미지"></div>
+                    </div>
+
+                    <!-- Sliders Grid -->
+                    <div class="promo-weight-sliders-grid">
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-title"></span>
+                          <span class="promo-weight-slider-name">타이틀 (Headline/Subtitle)</span>
+                          <span class="promo-weight-slider-val" id="promotionLayoutWeightTitleVal">25%</span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightTitle" min="0" max="100" value="25" />
+                      </div>
+
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-visual"></span>
+                          <span class="promo-weight-slider-name">키비주얼 (Key Visual / Metaphor)</span>
+                          <span class="promo-weight-slider-val" id="promotionLayoutWeightVisualVal">25%</span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightVisual" min="0" max="100" value="25" />
+                      </div>
+
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-info"></span>
+                          <span class="promo-weight-slider-name">정보 (Body Copy / Details)</span>
+                          <span class="promo-weight-slider-val" id="promotionLayoutWeightInfoVal">25%</span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightInfo" min="0" max="100" value="25" />
+                      </div>
+
+                      <div class="promo-weight-slider-item">
+                        <div class="promo-weight-slider-label-row">
+                          <span class="promo-weight-slider-dot dot-bg"></span>
+                          <span class="promo-weight-slider-name">배경이미지 (Background)</span>
+                          <span class="promo-weight-slider-val" id="promotionLayoutWeightBackgroundVal">25%</span>
+                        </div>
+                        <input type="range" class="promo-weight-slider" id="promotionLayoutWeightBackground" min="0" max="100" value="25" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="promotionLayoutCompositionAiPlaceholder" class="promo-ai-placeholder">AI가 자동으로 생성합니다</div>
+                </section>
+              </div>
+            </div>
+          </details><!-- /step 3 -->
+
+          <!-- ── STEP 4: 제약 사항과 품질 조건 ── -->
+          <details class="promo-step-disclosure" id="promotionStepConstraints">
+            <summary class="promo-step-summary">
+              <span class="promo-step-num">4</span>
+              <div class="promo-step-copy">
+                <strong>제약 사항과 품질 조건</strong>
+                <small>필수 요소와 금지 표현, 결과물 품질 조건을 설정합니다.</small>
+              </div>
+            </summary>
+            <div class="promo-step-body">
+              <div class="gen-config-fields">
+                <section class="gen-config-group">
+                  <label class="gen-config-label" for="promotionMandatoryElements">필수 포함 요소 <span class="promo-field-badge visible">필수 조건</span></label>
+                  <p class="gen-config-guide">로고, QR코드, 날짜·장소처럼 결과물에 반드시 확보해야 할 요소를 적습니다.</p>
+                  <div class="promo-quick-btns" data-quick-for="promotionMandatoryElements">
+                    <button type="button" class="btn-quick">공식 로고 자리</button>
+                    <button type="button" class="btn-quick">QR코드 자리</button>
+                    <button type="button" class="btn-quick">주최·주관 표기</button>
+                    <button type="button" class="btn-quick">날짜·장소 정보</button>
+                    <button type="button" class="btn-quick">CTA</button>
+                    <button type="button" class="btn-quick">출처·저작권 표기</button>
+                  </div>
+                  <textarea id="promotionMandatoryElements" class="gen-textarea" rows="4" data-promo-field="mandatoryElements" placeholder="예: 행사 공식 로고 자리, 신청용 QR코드 자리, 주최·주관 표기"></textarea>
+                </section>
+
+                <section class="gen-config-group">
+                  <label class="gen-config-label" for="promotionForbiddenElements">금지 요소 <span class="promo-field-badge constraint">제약</span></label>
+                  <p class="gen-config-guide">다른 단계에서 이미 지정한 색상, 배경, 액션버튼, 배치가 아니라 제외할 표현만 적습니다.</p>
+                  <div class="promo-quick-btns" data-quick-for="promotionForbiddenElements">
+                    <button type="button" class="btn-quick">임의 추가 텍스트</button>
+                    <button type="button" class="btn-quick">가짜 로고·상표</button>
+                    <button type="button" class="btn-quick">워터마크·서명</button>
+                    <button type="button" class="btn-quick">목업 프레임·외부 흰 여백</button>
+                    <button type="button" class="btn-quick">텍스트 왜곡·가짜 글리프</button>
+                    <button type="button" class="btn-quick">과도한 장식·복잡한 배경</button>
+                  </div>
+                  <textarea id="promotionForbiddenElements" class="gen-textarea" rows="4" data-promo-field="forbiddenElements" placeholder="예: 임의 추가 텍스트, 가짜 로고, 워터마크, 목업 화면"></textarea>
+                </section>
+
+                <section class="gen-config-group gen-config-group-wide">
+                  <div class="gen-config-label-row">
+                    <label class="gen-config-label" for="promotionQualityNotes">품질 조건 <span class="promo-field-badge instruction">품질</span></label>
+                    <div class="promo-ai-toggle-header">
+                      <button type="button" class="promo-reset-field-btn" id="promotionQualityNotesResetBtn" title="기본값으로 되돌리기">↺ 되돌리기</button>
+                      <label class="promo-ai-toggle-switch" title="사용 여부">
+                        <input type="checkbox" class="promo-ai-toggle-enabled" data-toggle-field="qualityNotes" checked />
+                        <span class="promo-ai-toggle-track"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <p class="gen-config-guide">가독성, 대비, 여백, 왜곡 방지 및 품질 결함 제외 기준을 지정합니다.</p>
+                  <textarea id="promotionQualityNotes" class="gen-textarea" rows="6" data-promo-field="qualityNotes" placeholder="품질 조건을 입력하세요"></textarea>
+                </section>
+              </div>
+            </div>
+          </details><!-- /step 4 -->
+
+          <div class="promo-validation" id="promotionValidation" aria-live="polite"></div>
+
+          <!-- 하단 액션 바 -->
+          <div class="promo-action-bar">
+            <div class="promo-action-bar-primary">
+              <button type="button" class="gen-btn secondary" id="promotionSampleBtn">샘플 채우기</button>
+              <button type="button" class="gen-btn secondary" id="promotionRandomPresetBtn">랜덤 프리셋</button>
+            </div>
+            <div class="promo-action-bar-secondary">
+              <button type="button" class="gen-btn ghost" id="promotionSaveBtn">저장</button>
+              <button type="button" class="gen-btn ghost" id="promotionLoadBtn">불러오기</button>
+              <button type="button" class="gen-btn ghost" id="promotionResetBtn">초기화</button>
+            </div>
+            <input id="promotionLoadInput" type="file" accept="application/json,.json" hidden />
+          </div>
+        </div>
+      </section>
+
+      <section class="gen-section promo-preview-section">
+
+        <!-- ① 고정 헤더: 언어/모드 컨트롤 + 복사 버튼 -->
+        <div class="promo-preview-topbar">
+          <div class="promo-preview-topbar-actions">
+            <span class="gen-badge" id="promotionPreviewBadge">초안</span>
+            <button type="button" class="gen-btn secondary" id="promotionResetPromptBtn">초안 반영</button>
+            <button type="button" class="gen-btn secondary" id="promotionShuffleLayoutBtn">↻ 레이아웃</button>
+            <button type="button" class="gen-btn promo-copy-btn" id="promotionCopyPromptBtn">복사</button>
+          </div>
+          <!-- hidden selects (JS 연동용) -->
+          <select id="promotionOutputLanguage" class="gen-select" data-promo-output-language style="display:none">
+            <option value="en" selected>English</option>
+          </select>
+          <select id="promotionPromptMode" class="gen-select" data-promo-prompt-mode style="display:none">
+            <option value="basic" selected>기본</option>
+          </select>
+        </div>
+
+        <!-- ② 통계 바 (topbar 바로 아래, 항상 가시 영역에 위치) -->
+        <div class="promo-stats-bar" id="promotionStatsBar">
+          <div class="promo-stats-row">
+            <span class="promo-stat-chip" id="promotionStatSections">섹션 –</span>
+            <span class="promo-stat-chip" id="promotionStatLines">– 줄</span>
+            <span class="promo-stat-chip promo-stat-chars" id="promotionStatChars">– 자</span>
+            <span class="promo-stat-chip promo-stat-tokens" id="promotionStatTokens">≈ – 토큰</span>
+            <span class="promo-stat-chip promo-stat-transfer" id="promotionStatTransfer">전송 기준 –</span>
+            <button type="button" class="promo-viewer-edit-btn" id="promotionViewerToggleBtn" title="직접 편집 모드로 전환">✎ 편집</button>
+          </div>
+          <div class="promo-token-gauge" id="promotionTokenGauge">
+            <div class="promo-token-gauge-fill" id="promotionTokenGaugeFill"></div>
+          </div>
+        </div>
+
+        <!-- ③ 프롬프트 body: 뷰어(기본) + textarea(편집 모드) -->
+        <div class="promo-prompt-body">
+          <!-- 섹션 뷰어: 변경된 섹션 글자색 하이라이트, promptDirty=false 일 때 표시 -->
+          <div id="promotionPromptViewer" class="promo-prompt-viewer" aria-live="polite"></div>
+          <!-- 직접 편집 textarea: 편집 모드 또는 promptDirty=true 일 때 표시 -->
+          <textarea class="gen-textarea promo-pre promo-prompt-editor promo-mode-hidden" id="promotionPromptPreview" spellcheck="false"></textarea>
+        </div>
+
+
+      </section>
+    </div>
+  </div>

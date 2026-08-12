@@ -1,0 +1,26 @@
+:root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { margin: 0; color: #172033; background: #f5f7fb; line-height: 1.72; }
+.legal-shell { width: min(920px, calc(100% - 32px)); margin: 32px auto 64px; padding: 36px; box-sizing: border-box; background: #fff; border: 1px solid #dce2ec; border-radius: 18px; box-shadow: 0 14px 40px rgba(20, 33, 61, .08); }
+.legal-home { color: #3156b8; text-decoration: none; }
+h1 { margin: 18px 0 6px; font-size: clamp(26px, 4vw, 38px); line-height: 1.25; }
+h2 { margin: 34px 0 10px; font-size: 20px; }
+h3 { margin: 22px 0 8px; font-size: 16px; }
+p, li { font-size: 14px; }
+.legal-shell a { overflow-wrap: anywhere; }
+.legal-shell code, .legal-shell pre { font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+.legal-shell code { overflow-wrap: anywhere; }
+.legal-shell ul, .legal-shell ol { padding-left: 24px; }
+.legal-meta, .legal-note { color: #5d687a; font-size: 13px; }
+.legal-note { padding: 12px 14px; border-radius: 9px; background: #f0f4fb; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { border: 1px solid #dce2ec; padding: 9px; text-align: left; vertical-align: top; }
+th { background: #f2f5fa; }
+details { margin-top: 14px; }
+summary { cursor: pointer; font-weight: 700; }
+pre { max-width: 100%; margin: 10px 0 0; padding: 14px; box-sizing: border-box; white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: auto; border: 1px solid #dce2ec; border-radius: 9px; background: #f7f9fc; font-size: 12px; line-height: 1.55; }
+.legal-nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 36px; padding-top: 18px; border-top: 1px solid #dce2ec; font-size: 13px; }
+.legal-nav a { color: #3156b8; }
+.promptdeck-legal-footer { display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;padding:18px 16px;color:#657084;font-size:12px;border-top:1px solid rgba(128,128,128,.22); }
+.promptdeck-legal-footer a { color:inherit; }
+@media (prefers-color-scheme: dark) { body { color:#e7ebf3;background:#111621; }.legal-shell{background:#1a2130;border-color:#303b50}.legal-note,th{background:#222c3d}th,td,pre{border-color:#344158}pre{background:#141b28}.legal-home,.legal-nav a{color:#9ab4ff} }
+@media (max-width: 640px) { .legal-shell { padding: 22px 18px; margin-top: 14px; overflow-x: auto; } }

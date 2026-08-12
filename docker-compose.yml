@@ -1,0 +1,37 @@
+# 시놀로지 Container Manager(구 Docker)용 구성
+# 사용법은 docs/nas-deployment.md 참고.
+services:
+  promptdeck:
+    build: .
+    container_name: promptdeck
+    restart: always
+    env_file:
+      - .env
+    ports:
+      # 공개 포트로 직접 노출하지 않고 NAS 리버스 프록시에서만 연결한다.
+      - "127.0.0.1:4173:4173"
+    environment:
+      NODE_ENV: "production"
+      PROMPTDECK_HOST: "0.0.0.0"
+      PROMPTDECK_PORT: "4173"
+      PROMPTDECK_OUTPUT_DIR: "/data/outputs"
+      PROMPTDECK_TRUST_PROXY: "true"
+      PROMPTDECK_SECURE_COOKIES: "true"
+      PROMPTDECK_PUBLIC_BASE_URL: "${PROMPTDECK_PUBLIC_BASE_URL:?HTTPS 공개 URL을 설정하세요}"
+      PROMPTDECK_AUTH_ENABLED: "${PROMPTDECK_AUTH_ENABLED:-false}"
+      PROMPTDECK_BOOTSTRAP_ADMIN_USERNAME: "${PROMPTDECK_BOOTSTRAP_ADMIN_USERNAME:-}"
+      PROMPTDECK_BOOTSTRAP_ADMIN_PASSWORD: "${PROMPTDECK_BOOTSTRAP_ADMIN_PASSWORD:-}"
+      PROMPTDECK_OPERATOR_NAME: "${PROMPTDECK_OPERATOR_NAME:?운영자명을 설정하세요}"
+      PROMPTDECK_OPERATOR_ADDRESS: "${PROMPTDECK_OPERATOR_ADDRESS:?운영자 주소를 설정하세요}"
+      PROMPTDECK_PRIVACY_OFFICER: "${PROMPTDECK_PRIVACY_OFFICER:?개인정보 보호책임자를 설정하세요}"
+      PROMPTDECK_PRIVACY_EMAIL: "${PROMPTDECK_PRIVACY_EMAIL:?개인정보 문의 이메일을 설정하세요}"
+      PROMPTDECK_SMTP_PROVIDER: "${PROMPTDECK_SMTP_PROVIDER:-}"
+      PROMPTDECK_OUTPUT_RETENTION_DAYS: "${PROMPTDECK_OUTPUT_RETENTION_DAYS:-30}"
+      PROMPTDECK_AUDIT_RETENTION_DAYS: "${PROMPTDECK_AUDIT_RETENTION_DAYS:-365}"
+      # 이미지 생성까지 쓰려면 아래 주석 해제 후 키 입력
+      # IMAGE_PROVIDER: "google"
+      # GEMINI_API_KEY: "..."
+    volumes:
+      # NAS 실제 폴더에 저장 데이터를 영구 보존한다.
+      # 왼쪽 경로를 NAS의 원하는 위치로 바꾼다. (예: /volume1/docker/promptdeck/outputs)
+      - ./outputs:/data/outputs

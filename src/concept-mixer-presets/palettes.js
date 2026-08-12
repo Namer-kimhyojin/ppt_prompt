@@ -1,0 +1,1116 @@
+// 비주얼 믹서 프리셋 - 색상 테마
+(function () {
+  const PALETTE_CATEGORIES = [
+    { id: 'tech', label: '🌐 테크 & 미래지향' },
+    { id: 'nature', label: '🌿 자연 & 친환경' },
+    { id: 'energy', label: '🔥 에너지 & 액티브' },
+    { id: 'soft', label: '🌸 감성 & 클래식' },
+    { id: 'official', label: '🏛️ 공공 & 기관' },
+    { id: 'light_pastel', label: '🌸 파스텔 라이트' },
+    { id: 'morning', label: '☀️ 모닝 & 에어리' },
+    { id: 'nordic', label: '🏔️ 노르딕 & 스칸디' },
+    { id: 'candy', label: '🍬 캔디 & 팝 비비드' },
+    { id: 'warm_earth', label: '🌿 웜 어스 & 내추럴' },
+    { id: 'multicolor', label: '🎨 멀티컬러 & 비비드' }
+  ];
+
+  const MIXER_PALETTES = [
+    {
+      id: 'none',
+      category: 'all',
+      name: '선택안함',
+      mode: 'light',
+      colors: [],
+      colorMapping: '본연의 색',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    // ==========================================
+    // 1. 테크 & 미래지향 (tech) - 8 items
+    // ==========================================
+    {
+      id: 'pal-cyber',
+      category: 'tech',
+      name: '사이버 시안 & 마젠타',
+      mode: 'dark',
+      colors: ['#0F0C1B', '#1B1736', '#2F2663', '#00F0FF', '#FF007F'],
+      colorMapping: 'near-black dark background, electric cyan glow, neon magenta accent highlights, deep violet shadows',
+      mood: 'minimal',
+      usage: 'event'
+    },
+    {
+      id: 'pal-obsidian',
+      category: 'tech',
+      name: '옵시디언 다크 테크',
+      mode: 'dark',
+      colors: ['#0A0D14', '#1A2333', '#2D3A52', '#00E5FF', '#E2E8F0'],
+      colorMapping: 'dark obsidian metallic surfaces, glowing electric cyan tech lines, stark white highlights, deep slate-blue shadows',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-quantum',
+      category: 'tech',
+      name: '퀀텀 바이올렛',
+      mode: 'dark',
+      colors: ['#120024', '#2E004F', '#5E008F', '#B800FF', '#00FFFF'],
+      colorMapping: 'cosmic deep purple background, vibrant electric violet energy flows, glowing cyan highlights',
+      mood: 'minimal',
+      usage: 'event'
+    },
+    {
+      id: 'pal-aurora-neon',
+      category: 'tech',
+      name: '오로라 네온 그린',
+      mode: 'dark',
+      colors: ['#05161C', '#0B333E', '#166E7A', '#00FF87', '#00FFFF'],
+      colorMapping: 'dark teal-black background, deep ocean blue shadows, radiant neon green energy lines, glowing cyan highlights',
+      mood: 'minimal',
+      usage: 'event'
+    },
+    {
+      id: 'pal-cybernetic-silver',
+      category: 'tech',
+      name: '사이버네틱 실버 & 블루',
+      mode: 'dark',
+      colors: ['#0D1117', '#1F2937', '#4B5563', '#3B82F6', '#60A5FA'],
+      colorMapping: 'deep steel black background, dark charcoal shadows, metallic silver midtones, vibrant electric blue highlights, glowing light blue accents',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-deep-ai',
+      category: 'tech',
+      name: '딥 러닝 인디고',
+      mode: 'dark',
+      colors: ['#030712', '#1E1B4B', '#312E81', '#4F46E5', '#818CF8'],
+      colorMapping: 'near-black dark background, deep indigo shadows, royal blue midtones, electric blue highlights, soft violet accents',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-matrix',
+      category: 'tech',
+      name: '매트릭스 디지털 그린',
+      mode: 'dark',
+      colors: ['#050F08', '#0D2B17', '#1F5C33', '#00FF41', '#85FF9E'],
+      colorMapping: 'deep digital black background, dark forest shadows, matrix green stream lines, ultra-bright neon green highlights, light mint accents',
+      mood: 'minimal',
+      usage: 'event'
+    },
+    {
+      id: 'pal-fusion-neon',
+      category: 'tech',
+      name: '퓨전 오렌지 & 퍼플',
+      mode: 'dark',
+      colors: ['#180026', '#3E0066', '#8800CC', '#FF4E00', '#FFB300'],
+      colorMapping: 'deep cosmic purple background, dark violet shadows, electric magenta midtones, fiery neon orange highlights, bright gold accents',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    { id: 'pal-holographic', category: 'tech', name: '홀로그래픽 레인보우', mode: 'dark', colors: ['#0A0A1A', '#1A0A3A', '#3D1A8F', '#FF00CC', '#00FFFF'], colorMapping: 'deep space black background, dark violet base, holographic rainbow spectrum shift, iridescent magenta and cyan highlights', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-stealth-tech', category: 'tech', name: '스텔스 테크 블랙', mode: 'dark', colors: ['#030303', '#0D0D0D', '#1A1A1A', '#2D2D2D', '#00B4D8'], colorMapping: 'absolute black background, charcoal shadows, dark steel midtones, graphite surfaces, single electric blue accent', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-plasma-blue', category: 'tech', name: '플라즈마 블루 리액터', mode: 'dark', colors: ['#000B1E', '#001A4A', '#002FA8', '#0062FF', '#80B3FF'], colorMapping: 'deep navy-black background, dark marine blue shadows, intense plasma blue core, electric sky blue highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-biotech-teal', category: 'tech', name: '바이오테크 틸 & 그린', mode: 'dark', colors: ['#041A15', '#083328', '#0F6650', '#00CC88', '#A0FFDC'], colorMapping: 'deep bio-black background, dark teal shadows, bioluminescent emerald midtones, neon mint green highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-sunset-circuit', category: 'tech', name: '선셋 서킷 골드', mode: 'dark', colors: ['#150A00', '#3D1F00', '#7A3D00', '#FF8C00', '#FFD700'], colorMapping: 'deep burnt-black background, dark burnt orange shadows, amber circuit lines, bright orange highlight, gold accent nodes', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-radioactive', category: 'tech', name: '라디오액티브 옐로우 그린', mode: 'dark', colors: ['#060F00', '#0F2200', '#244400', '#64FF00', '#CCFF66'], colorMapping: 'dark toxic black base, deep military green shadows, radioactive bright green core, neon lime yellow highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-dark-rose-tech', category: 'tech', name: '다크 로즈 테크', mode: 'dark', colors: ['#1A0010', '#3D0025', '#8B005A', '#FF0090', '#FF80C8'], colorMapping: 'dark crimson-black base, deep wine shadows, electric rose-pink highlights, bright hot pink accent', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-ice-core', category: 'tech', name: '아이스 코어 화이트', mode: 'dark', colors: ['#F0F4FF', '#C8D8FF', '#90B4FF', '#4A90E2', '#1A3A8F'], colorMapping: 'crisp ice-white surface, pale blue midtones, cool sky blue highlights, deep navy shadows, precise tech aesthetic', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-tech-gradient', category: 'tech', name: '일렉트릭 그라디언트 블루', mode: 'dark', colors: ['#0A0E17', '#1A233D', '#0070F3', '#7928CA', '#FF0080'], colorMapping: 'deep electric black background, steel tech navy base, bright system blue, vivid electric purple, energetic magenta highlight', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-dark-cyber', category: 'tech', name: '사이버 펑크 시안 & 오렌지', mode: 'dark', colors: ['#05080E', '#0F172A', '#00D8FF', '#FF5722', '#FFFFFF'], colorMapping: 'dark slate cyber-background, cybernetic navy shadows, electric neon cyan midtones, high-contrast traffic orange highlights, stark white details', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-ai-deep', category: 'tech', name: '딥러닝 마젠타 테크', mode: 'dark', colors: ['#090910', '#181824', '#3F3F5C', '#E91E63', '#FFFFFF'], colorMapping: 'deep space black-violet background, dark silicon gray shadows, metallic iron midtones, brilliant hot pink highlights, bright white details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-quantum-teal', category: 'tech', name: '양자컴퓨팅 퀀텀 틸', mode: 'dark', colors: ['#0C0720', '#16233B', '#00F5D4', '#7B2CBF', '#FF007F'], colorMapping: 'deep quantum black background, space-navy shadows, bioluminescent teal midtones, glowing neon magenta accents, electric purple details', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-meta-purple', category: 'tech', name: '메타버스 바이올렛 & 라임', mode: 'dark', colors: ['#0F051D', '#1D1135', '#7B2CBF', '#9D4EDD', '#CCFF00'], colorMapping: 'dark digital purple background, deep violet shadows, cybernetic lavender midtones, futuristic neon lime highlights, electric purple details', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-robotics-red', category: 'tech', name: '로보틱스 레이저 레드', mode: 'dark', colors: ['#0C0C0E', '#1E2022', '#686D76', '#E50914', '#F5F5F7'], colorMapping: 'dark robotic gray background, industrial black shadows, metallic iron midtones, high-contrast laser red highlights, bright white details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-saas-blue', category: 'tech', name: '글로벌 SaaS 블루', mode: 'light', colors: ['#F4F7FC', '#E2E8F0', '#0070F3', '#FF9F1C', '#1E293B'], colorMapping: 'clean white background, soft corporate gray shadows, trusted SaaS cobalt blue, vibrant solar yellow-orange highlights, dark slate text anchors', mood: 'minimal', usage: 'corporate' },
+
+    // ==========================================
+    // 2. 자연 & 친환경 (nature) - 8 items
+    // ==========================================
+    {
+      id: 'pal-forest',
+      category: 'nature',
+      name: '에코 포레스트 그린',
+      mode: 'dark',
+      colors: ['#0B221E', '#1A3A34', '#3B7A57', '#8AE9A8', '#EFFFF3'],
+      colorMapping: 'deep forest green shadows, organic emerald-green midtones, bright mint green highlights, soft off-white ambient glow',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-hydro',
+      category: 'nature',
+      name: '클린 하이드로 블루',
+      mode: 'light',
+      colors: ['#E0F7FA', '#80DEEA', '#26C6DA', '#00B4D8', '#006064'],
+      colorMapping: 'luminous clean cyan and hydro-blue primary shapes, soft light-blue gradients, deep teal accents, bright aquamarine highlights',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-sand',
+      category: 'nature',
+      name: '어시 웜 샌드',
+      mode: 'light',
+      colors: ['#2F2519', '#4E3E2F', '#8D7B68', '#C8B6A4', '#F1DEC9'],
+      colorMapping: 'earthy warm brown shadows, sandy beige midtones, soft cream-white highlights, terracotta accents',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-savannah',
+      category: 'nature',
+      name: '새벽 사바나 웜',
+      mode: 'light',
+      colors: ['#1A120B', '#3C2A21', '#D5AEA1', '#E5BA73', '#FFF5E4'],
+      colorMapping: 'deep earthy dark brown background, warm soil shadows, soft terracotta midtones, sunset golden-yellow highlights, warm ivory ambient glow',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-glacier',
+      category: 'nature',
+      name: '빙하 아틱 쿨',
+      mode: 'light',
+      colors: ['#0A1931', '#15305B', '#5B85AA', '#A2DBFA', '#E8F1F5'],
+      colorMapping: 'deep arctic navy shadows, cold glacier blue midtones, pale frost blue highlights, crystalline ice-white accents',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-autumn-leaf',
+      category: 'nature',
+      name: '단풍 클래식 브라운',
+      mode: 'light',
+      colors: ['#2C1107', '#5C200B', '#A74A1B', '#D07A3E', '#F4C493'],
+      colorMapping: 'rich mahogany brown background, deep rust-red shadows, vibrant copper midtones, warm orange-gold highlights, soft peach-cream accents',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-deep-sea',
+      category: 'nature',
+      name: '심해 마린 블루',
+      mode: 'dark',
+      colors: ['#010B14', '#04213D', '#0C4B82', '#1089FF', '#7CD1F9'],
+      colorMapping: 'abyssal black-blue background, deep navy shadows, rich sapphire midtones, bright electric blue highlights, luminous sky blue accents',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-botanic',
+      category: 'nature',
+      name: '보타닉 가든 올리브',
+      mode: 'light',
+      colors: ['#1E251C', '#344231', '#5B7056', '#9AB98C', '#DDE6D8'],
+      colorMapping: 'deep olive-black shadows, muted forest-green midtones, sage green highlights, soft grey-green background, pale leaf-green accents',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    { id: 'pal-ocean-deep', category: 'nature', name: '오션 딥 블루', mode: 'dark', colors: ['#010D1A', '#022A4A', '#0A5C8A', '#1A8FBF', '#7DD4EC'], colorMapping: 'deep ocean black-blue shadows, dark indigo depths, rich cerulean midtones, bright sky-blue highlights, pale aqua shimmer', mood: 'natural', usage: 'brand' },
+    { id: 'pal-morning-dew', category: 'nature', name: '모닝 듀 그린', mode: 'light', colors: ['#E8F5E9', '#C8E6C9', '#81C784', '#388E3C', '#1B5E20'], colorMapping: 'pale mint-white background, soft celadon midtones, fresh grass-green highlights, deep forest green shadows', mood: 'natural', usage: 'brand' },
+    { id: 'pal-coral-reef', category: 'nature', name: '산호초 코랄 & 청록', mode: 'light', colors: ['#FF7043', '#FF8A65', '#FFB74D', '#4DD0E1', '#00838F'], colorMapping: 'warm coral orange primary, soft peach midtones, golden sand accents, clear turquoise blue highlights, deep teal depth', mood: 'natural', usage: 'brand' },
+    { id: 'pal-cherry-forest', category: 'nature', name: '체리 포레스트 레드', mode: 'dark', colors: ['#1A0507', '#3D0A10', '#7A1521', '#CC1F30', '#FFADBA'], colorMapping: 'deep mahogany-black shadows, dark burgundy midtones, vivid cherry-red highlights, soft rose-pink accents', mood: 'natural', usage: 'brand' },
+    { id: 'pal-arctic-snow', category: 'nature', name: '북극 스노우 화이트', mode: 'light', colors: ['#FFFFFF', '#EFF4FF', '#C5D9FF', '#7EB3F8', '#2B6CB0'], colorMapping: 'pure white snow surface, pale ice-blue shadow, cool blue-grey midtones, clear sky blue highlights, deep navy anchors', mood: 'natural', usage: 'brand' },
+    { id: 'pal-amber-wood', category: 'nature', name: '앰버 우드 & 오크', mode: 'light', colors: ['#FFF8E1', '#FFECB3', '#FFD54F', '#FF8F00', '#4E342E'], colorMapping: 'warm cream white background, soft amber highlights, golden honey midtones, rich burnt orange accents, deep espresso-brown shadows', mood: 'natural', usage: 'brand' },
+    { id: 'pal-midnight-jungle', category: 'nature', name: '미드나잇 정글 그린', mode: 'dark', colors: ['#071215', '#0E2B25', '#1D5C4A', '#2E9970', '#8AFFC1'], colorMapping: 'dark midnight jungle backdrop, deep mangrove shadows, vibrant rainforest green midtones, luminous mint-teal highlights', mood: 'natural', usage: 'brand' },
+    { id: 'pal-lava-rock', category: 'nature', name: '라바 록 & 애쉬', mode: 'dark', colors: ['#0F0800', '#2B1500', '#6B3500', '#CC5200', '#FF9A3C'], colorMapping: 'volcanic black-charcoal base, deep lava-rock shadows, molten orange midtones, bright ember highlights, warm ash-orange accents', mood: 'natural', usage: 'brand' },
+    { id: 'pal-eco-sage', category: 'nature', name: '에코 세이지 & 샌드', mode: 'light', colors: ['#FAF8F5', '#EAE6DF', '#A2B29F', '#7286D3', '#3A4F7C'], colorMapping: 'warm oat-cream background, soft linen-beige shadows, calm sage green midtones, clean water-blue highlights, deep navy anchors', mood: 'natural', usage: 'brand' },
+    { id: 'pal-ocean-breeze', category: 'nature', name: '오션 브리즈 코랄', mode: 'light', colors: ['#F0F8FF', '#D2E3EB', '#0F4C81', '#FF6F59', '#1C2D37'], colorMapping: 'clear light sea-mist background, pale aqua highlights, deep ocean blue midtones, vibrant coral-orange accent highlights, dark navy shadows', mood: 'natural', usage: 'brand' },
+    { id: 'pal-biophilic-moss', category: 'nature', name: '바이오필릭 모스 그린', mode: 'light', colors: ['#F2EDE4', '#DFD3C3', '#6E85B7', '#3F497F', '#B3541E'], colorMapping: 'soft warm clay background, sand beige shadows, calm moss-grey midtones, forest deep blue accents, warm brick terracotta orange highlights', mood: 'natural', usage: 'brand' },
+    { id: 'pal-eco-cardboard', category: 'nature', name: '에코 리사이클 브라운', mode: 'light', colors: ['#EFE5C9', '#D0B993', '#4E6C50', '#395B64', '#B83B5E'], colorMapping: 'recycled cardboard beige background, kraft paper shadows, botanical leaf green midtones, slate forest-teal accents, striking crimson red highlights', mood: 'natural', usage: 'brand' },
+    { id: 'pal-ocean-plastic', category: 'nature', name: '오션 업사이클 마린', mode: 'light', colors: ['#E3F6FF', '#9AD0EC', '#153462', '#FF4C29', '#2E4C6D'], colorMapping: 'clear ocean-wave background, soft lagoon-blue shadows, deep plastic navy midtones, vibrant fluorescent coral red highlights, marine blue anchors', mood: 'natural', usage: 'brand' },
+    { id: 'pal-solar-energy', category: 'nature', name: '솔라 에너지 그린', mode: 'light', colors: ['#F9F9F9', '#D9ECDB', '#2E7D32', '#FF9F1C', '#1B5E20'], colorMapping: 'pure light air background, soft bio-green shadows, deep solar forest green midtones, bright solar energy orange highlights, eco green anchors', mood: 'natural', usage: 'brand' },
+
+    // ==========================================
+    // 3. 에너지 & 액티브 (energy) - 8 items
+    // ==========================================
+    {
+      id: 'pal-volcano',
+      category: 'energy',
+      name: '용광로 볼케이노',
+      mode: 'dark',
+      colors: ['#0E0807', '#2E140F', '#7B2A1E', '#F05A28', '#FFD07B'],
+      colorMapping: 'intense dark volcanic background, glowing red-hot molten lava accents, brilliant orange and amber-gold highlights',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-electric',
+      category: 'energy',
+      name: '일렉트릭 옐로우',
+      mode: 'dark',
+      colors: ['#0A0A0E', '#1E1B18', '#B08B00', '#FFD000', '#FFFFE0'],
+      colorMapping: 'dark charcoal background, electric gold-yellow energy lines, warm amber glows, pale yellow highlights',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-crimson',
+      category: 'energy',
+      name: '크림슨 스파크',
+      mode: 'dark',
+      colors: ['#1C0008', '#3D0016', '#9E0031', '#FF0055', '#FF80A4'],
+      colorMapping: 'deep burgundy-black shadows, hot crimson sparks, glowing pink highlights, magenta accents',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-solar-plasma',
+      category: 'energy',
+      name: '태양 플라즈마 골드',
+      mode: 'dark',
+      colors: ['#1C0A00', '#4A1C00', '#B84A00', '#FF8F00', '#FFE082'],
+      colorMapping: 'intense dark amber background, deep burnt-orange shadows, molten copper midtones, brilliant golden-yellow highlights, pale sun-gold accents',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-supernova',
+      category: 'energy',
+      name: '초신성 코스믹 마젠타',
+      mode: 'dark',
+      colors: ['#11001C', '#31004C', '#8F00FF', '#FF00AA', '#FF85E3'],
+      colorMapping: 'deep space purple background, rich violet shadows, electric purple midtones, explosive neon magenta highlights, soft pink accents',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-hydrogen-fire',
+      category: 'energy',
+      name: '수소 블루 플레임',
+      mode: 'dark',
+      colors: ['#03001E', '#13003E', '#7300FF', '#00B4FF', '#8CE8FF'],
+      colorMapping: 'deep ultraviolet-black background, deep indigo shadows, burning blue flame midtones, bright neon cyan highlights, soft sky-blue glow',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-lithium-charge',
+      category: 'energy',
+      name: '리튬 이온 액티브',
+      mode: 'dark',
+      colors: ['#0B132B', '#1C2541', '#3A506B', '#5BC0BE', '#6FFFE9'],
+      colorMapping: 'deep steel navy background, dark slate-blue shadows, electric cyan charge highlights, bright aquamarine accent glows',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    {
+      id: 'pal-kinetic-fusion',
+      category: 'energy',
+      name: '키네틱 오렌지 & 시안',
+      mode: 'dark',
+      colors: ['#0F1016', '#1E2235', '#FF5A09', '#00D2C4', '#FFFFFF'],
+      colorMapping: 'dark charcoal-blue background, deep steel shadows, high-contrast kinetic orange streaks, glowing electric teal highlights, bright white sparks',
+      mood: 'vivid',
+      usage: 'event'
+    },
+    { id: 'pal-thunder-yellow', category: 'energy', name: '천둥 옐로우 & 블랙', mode: 'dark', colors: ['#0A0A00', '#1F1F00', '#5C5C00', '#FFD600', '#FFFF66'], colorMapping: 'electric black background, dark khaki shadows, bold chrome-yellow strike, vivid gold highlights, neon yellow sparks', mood: 'vivid', usage: 'event' },
+    { id: 'pal-magma-red', category: 'energy', name: '마그마 레드 & 오렌지', mode: 'dark', colors: ['#100000', '#380000', '#8B0000', '#E53935', '#FF8A65'], colorMapping: 'deep magma-black background, dark crimson shadows, intense red core, bright scarlet highlights, warm orange surface glow', mood: 'vivid', usage: 'event' },
+    { id: 'pal-sprint-lime', category: 'energy', name: '스프린트 라임 & 블랙', mode: 'dark', colors: ['#020800', '#0A1A00', '#1F3D00', '#7FBF00', '#C8FF33'], colorMapping: 'athletic black base, dark military green shadows, bold lime green midtones, vivid electric lime highlights', mood: 'vivid', usage: 'event' },
+    { id: 'pal-cobalt-charge', category: 'energy', name: '코발트 차지 블루', mode: 'dark', colors: ['#000816', '#001533', '#003080', '#0050E6', '#66A3FF'], colorMapping: 'deep navy black background, dark indigo base, vibrant cobalt blue energy field, bright electric blue highlights', mood: 'vivid', usage: 'event' },
+    { id: 'pal-ice-sprint', category: 'energy', name: '아이스 스프린트 쿨', mode: 'light', colors: ['#F0FAFF', '#C3EDFF', '#7DD3F8', '#0EA5E9', '#0369A1'], colorMapping: 'crisp ice white surface, cool mist blue base, vivid sky blue highlights, deep ocean blue anchors', mood: 'vivid', usage: 'event' },
+    { id: 'pal-acid-green', category: 'energy', name: '애시드 그린 & 퍼플', mode: 'dark', colors: ['#0A0014', '#1C0030', '#580070', '#B000E0', '#A8FF00'], colorMapping: 'deep void-black background, dark purple base, vibrant violet midtones, sharp acid-green contrast highlight', mood: 'vivid', usage: 'event' },
+    { id: 'pal-sunset-fire', category: 'energy', name: '선셋 파이어 그라디언트', mode: 'dark', colors: ['#1A0010', '#5C0028', '#B5003C', '#FF4500', '#FF9900'], colorMapping: 'deep dusk-crimson background, dark maroon shadows, vivid fire-red midtones, bright orange flame highlights, warm amber glow', mood: 'vivid', usage: 'event' },
+    { id: 'pal-titanium', category: 'energy', name: '티타늄 실버 & 크롬', mode: 'dark', colors: ['#0C0C0C', '#1C1C1C', '#404040', '#7A7A7A', '#E8E8E8'], colorMapping: 'dark charcoal black base, gunmetal shadows, titanium grey midtones, brushed silver highlights, chrome-white specular', mood: 'vivid', usage: 'event' },
+    { id: 'pal-startup-red', category: 'energy', name: '스타트업 크림슨 & 골드', mode: 'dark', colors: ['#0A0002', '#220004', '#9B111E', '#FFB300', '#F5F5F7'], colorMapping: 'deep charcoal-crimson background, dark burgundy shadows, high-energy startup red midtones, active warm gold highlights, clean white details', mood: 'vivid', usage: 'event' },
+    { id: 'pal-marketing-neon', category: 'energy', name: '마케팅 네온 라임 & 퍼플', mode: 'dark', colors: ['#0D0B14', '#1F1A3A', '#8E2DE2', '#4A00E0', '#CCFF00'], colorMapping: 'deep violet-black background, dark purple base, vibrant violet-blue midtones, neon lime highlights, electric yellow accents', mood: 'vivid', usage: 'event' },
+    { id: 'pal-unicorn-pitch', category: 'energy', name: '유니콘 피치 딥퍼플', mode: 'dark', colors: ['#0A0514', '#180E29', '#E0115F', '#00D8FF', '#FF007F'], colorMapping: 'deep investment purple background, dark space shadows, vibrant orchid pink midtones, glowing neon cyan highlights, electric hot pink accents', mood: 'vivid', usage: 'event' },
+    { id: 'pal-brand-electric', category: 'energy', name: '브랜드 일렉트릭 오렌지', mode: 'dark', colors: ['#0D131A', '#1E293B', '#0F172A', '#FF6B35', '#EAEFF8'], colorMapping: 'deep corporate blue-black background, slate shadows, dark steel base, vibrant brand orange highlights, cool white details', mood: 'vivid', usage: 'event' },
+    { id: 'pal-active-yellow', category: 'energy', name: '스포츠 액티브 옐로우', mode: 'dark', colors: ['#0D0D0D', '#2B2B2B', '#1C1C1C', '#E2F105', '#FFFFFF'], colorMapping: 'matte black dynamic background, dark graphite shadows, charcoal base, energetic active lime-yellow highlights, stark white details', mood: 'vivid', usage: 'event' },
+    { id: 'pal-festival-vibe', category: 'energy', name: '페스티벌 비비드 핫핑크', mode: 'dark', colors: ['#12011A', '#2E033B', '#FF007F', '#00F0FF', '#BD00FF'], colorMapping: 'vivid festival night background, deep purple shadows, glowing hot-pink midtones, electric blue highlights, intense purple accents', mood: 'vivid', usage: 'event' },
+
+    // ==========================================
+    // 4. 감성 & 클래식 (soft) - 8 items
+    // ==========================================
+    {
+      id: 'pal-candy',
+      category: 'soft',
+      name: '솜사탕 파스텔',
+      mode: 'light',
+      colors: ['#FFCCD5', '#FFB3C6', '#E8CBF5', '#FFF5EB', '#4A3B40'],
+      colorMapping: 'soft pastel pink base, dreamy lavender-violet gradients, warm cream highlights, dark plum accents',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-vintage',
+      category: 'soft',
+      name: '아날로그 웜 빈티지',
+      mode: 'light',
+      colors: ['#3D352E', '#857467', '#C2B2A2', '#E6DED5', '#FFE5B4'],
+      colorMapping: 'warm vintage sepia shadows, nostalgic beige midtones, warm light amber highlights, rustic cream background',
+      mood: 'retro',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-neutral',
+      category: 'soft',
+      name: '뉴트럴 쿨 그레이',
+      mode: 'light',
+      colors: ['#1E2022', '#3F4448', '#8B949E', '#D5DCE2', '#FFFFFF'],
+      colorMapping: 'minimalist dark charcoal and cool gray surfaces, clean white highlights, slate-gray shadows',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-cherry-blossom',
+      category: 'soft',
+      name: '벚꽃 핑크 그라데이션',
+      mode: 'light',
+      colors: ['#4A373A', '#8C5E62', '#D9828A', '#FFB3BA', '#FFF2F2'],
+      colorMapping: 'deep burgundy-brown shadows, warm rose-grey midtones, soft cherry blossom pink highlights, delicate blush-white background',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-morning-mist',
+      category: 'soft',
+      name: '새벽 안개 라벤더',
+      mode: 'light',
+      colors: ['#1B1C22', '#3E4153', '#7A80A8', '#B7BCDF', '#EAEBFF'],
+      colorMapping: 'cool misty dark background, slate-blue shadows, dusky lavender midtones, pale lavender-blue highlights, soft white fog accents',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-matcha-latte',
+      category: 'soft',
+      name: '말차 라떼 그린',
+      mode: 'light',
+      colors: ['#2D3325', '#576249', '#8C9A78', '#C5D0B2', '#F3F6EB'],
+      colorMapping: 'deep olive-brown shadows, warm matcha green midtones, soft sage highlights, creamy milk-white background',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-warm-cozy',
+      category: 'soft',
+      name: '난로가 웜 베이지',
+      mode: 'light',
+      colors: ['#332721', '#5C4A42', '#A38A7F', '#E2D4CD', '#FDFBF7'],
+      colorMapping: 'deep cocoa brown shadows, warm taupe midtones, soft linen-beige highlights, pure cream-white background',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-monochrome-soft',
+      category: 'soft',
+      name: '소프트 모노크롬 그레이',
+      mode: 'light',
+      colors: ['#1A1A1A', '#3A3A3A', '#7F7F7F', '#CCCCCC', '#F5F5F5'],
+      colorMapping: 'classic charcoal background, medium dark gray shadows, neutral gray midtones, light gray highlights, clean soft off-white borders',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    { id: 'pal-dusty-rose', category: 'soft', name: '더스티 로즈 & 그레이', mode: 'light', colors: ['#FDF0F0', '#F5CACA', '#D4888A', '#9E4E52', '#4A1F22'], colorMapping: 'pale blush white background, soft rose highlights, dusty mauve midtones, deep muted burgundy shadows', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-indigo-dream', category: 'soft', name: '인디고 드림 퍼플', mode: 'dark', colors: ['#0F0A2A', '#221555', '#4B3B9A', '#8B7DD8', '#D4CDFF'], colorMapping: 'deep indigo-black backdrop, muted violet shadows, classic indigo midtones, soft lavender highlights, dreamy pale violet accents', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-sage-mist', category: 'soft', name: '세이지 미스트 그린', mode: 'light', colors: ['#F4F7F0', '#D8E8D0', '#9DC4A0', '#5A8A60', '#2E5734'], colorMapping: 'fog-white background, pale celadon base, soft sage green highlights, muted forest midtones, deep botanical shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-caramel-latte', category: 'soft', name: '카라멜 라떼 브라운', mode: 'light', colors: ['#FFF8F0', '#FFE4C4', '#D4A06A', '#8B6242', '#3E2B1A'], colorMapping: 'creamy milk white background, warm caramel highlights, espresso brown midtones, dark chocolate shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-vintage-navy', category: 'soft', name: '빈티지 네이비 & 크림', mode: 'dark', colors: ['#0A1628', '#1A2E4A', '#2E4A72', '#8A9BC4', '#F5E8D0'], colorMapping: 'dark navy background, deep ocean blue shadows, muted slate-blue midtones, soft periwinkle highlights, warm vintage cream accents', mood: 'retro', usage: 'brand' },
+    { id: 'pal-terracotta-soft', category: 'soft', name: '소프트 테라코타 & 베이지', mode: 'light', colors: ['#FFF4EC', '#FFD9B7', '#D4845A', '#A05030', '#5C2E18'], colorMapping: 'warm ivory background, soft peach highlights, terracotta clay midtones, burnt sienna shadows, dark mahogany anchor', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-tiffany', category: 'soft', name: '티파니 블루 & 크림', mode: 'light', colors: ['#FAFAFA', '#E0F5F5', '#8FD5D5', '#3DADA8', '#1A6363'], colorMapping: 'clean white background, pale aqua base, signature tiffany blue midtones, deep teal accents, luxury fresh tone', mood: 'luxury', usage: 'brand' },
+    { id: 'pal-plum-velvet', category: 'soft', name: '플럼 벨벳 바이올렛', mode: 'dark', colors: ['#1A0A24', '#3D1555', '#6E2FAA', '#B070E0', '#E8C0FF'], colorMapping: 'deep plum-black background, dark mulberry shadows, rich violet midtones, soft lavender highlights, delicate pale lilac accents', mood: 'luxury', usage: 'brand' },
+    { id: 'pal-editorial-olive', category: 'soft', name: '에디토리얼 올리브 & 머스터드', mode: 'light', colors: ['#FCFBF9', '#EAE6DF', '#6B705C', '#A98467', '#FFE169'], colorMapping: 'warm book-paper background, pale natural gray, modern matte olive green midtones, leather sienna accents, soft mustard-yellow highlights', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-classic-navy', category: 'soft', name: '비즈니스 정장 네이비 & 탄', mode: 'light', colors: ['#FAF9F6', '#E5E7EB', '#1E3A8A', '#92400E', '#1F2937'], colorMapping: 'clean off-white background, soft corporate gray shadows, classic oxford navy blue, premium leather tan highlights, dark charcoal anchors', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-consulting-blue', category: 'soft', name: '전략컨설팅 블루 & 앰버', mode: 'light', colors: ['#F9FAFB', '#D2E3ED', '#0B2545', '#134074', '#F48C06'], colorMapping: 'clean slate white background, soft azure-gray shadows, trusted strategy navy midtones, secure dark-cobalt bases, bright orange-amber highlights', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-leather-tan', category: 'soft', name: '브리티시 포레스트 & 탄', mode: 'light', colors: ['#FDFBF7', '#E7E5E0', '#1C3F24', '#8C6239', '#2C3E50'], colorMapping: 'oxford paper background, warm cloth gray shadows, deep British forest green, classic premium leather tan highlights, dark navy anchors', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-editorial-peach', category: 'soft', name: '매거진 피치 올리브', mode: 'light', colors: ['#FFFBF7', '#EAE5D9', '#556B2F', '#FF8F70', '#2E3238'], colorMapping: 'creamy magazine background, book paper shadows, matte olive green accents, soft organic peach highlights, dark slate text anchors', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-museum-monochrome', category: 'soft', name: '도록 모노 & 루비 레드', mode: 'light', colors: ['#FAF9F5', '#E5E4E2', '#3A3A3C', '#1C1C1E', '#9E1C22'], colorMapping: 'gallery white background, light gray paper shadows, graphic charcoal midtones, stark museum-black anchors, bold ruby-red highlights', mood: 'minimal', usage: 'brand' },
+
+    // ==========================================
+    // 5. 공공 & 기관 (official) - 8 items
+    // ==========================================
+    {
+      id: 'pal-gov-blue',
+      category: 'official',
+      name: '대한민국 정부 공식 블루',
+      mode: 'light',
+      colors: ['#003087', '#0047AB', '#1565C0', '#FFB300', '#E3F2FD'],
+      colorMapping: 'deep Korean government navy blue, official cobalt blue, clear sky blue, bright traditional gold accent highlights, soft blue-white light accents',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-gyeongbuk',
+      category: 'official',
+      name: '경상북도 대표 컬러',
+      mode: 'light',
+      colors: ['#1A3C6E', '#2E6DA4', '#5BA4D1', '#FFB800', '#FFF8E1'],
+      colorMapping: 'deep Gyeongbuk navy blue, medium sky blue, bright traditional gold accent, warm cream background',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-sample-industrial-city',
+      category: 'official',
+      name: '해솔 스틸 오렌지',
+      mode: 'dark',
+      colors: ['#0D1B2A', '#1B3A5C', '#FF4D00', '#FF8C42', '#FFD6B3'],
+      colorMapping: 'deep steel-dark navy background, industrial blue shadows, signature sample industrial city molten steel orange, warm amber highlights',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-innovation-hub-green',
+      category: 'official',
+      name: '혁신지원센터 혁신 그린',
+      mode: 'light',
+      colors: ['#004D40', '#00796B', '#26A69A', '#FF6D00', '#E0F2F1'],
+      colorMapping: 'deep innovation teal, vibrant teal midtones, energetic orange accent highlights, soft aqua-white ambient, representing growth and technology',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-steel-industrial',
+      category: 'official',
+      name: '산업부 스틸 그레이',
+      mode: 'dark',
+      colors: ['#1A1A2E', '#16213E', '#0F3460', '#A8A8B3', '#E0E0E0'],
+      colorMapping: 'deep charcoal industrial background, dark steel blue shadows, neutral silver metallic midtones, bright steel white highlights',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-esg-public',
+      category: 'official',
+      name: 'ESG 공공 그린',
+      mode: 'light',
+      colors: ['#1B5E20', '#388E3C', '#81C784', '#E65100', '#F1F8E9'],
+      colorMapping: 'deep forest policy green, vibrant eco green, light leaf green, warm terracotta orange accent highlights, clean white-green background',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-white-premium',
+      category: 'official',
+      name: '공공기관 화이트 프리미엄',
+      mode: 'light',
+      colors: ['#1A237E', '#283593', '#3949AB', '#D81B60', '#F5F5F5'],
+      colorMapping: 'deep formal navy blue, regal indigo midtones, medium periwinkle, brilliant ruby magenta accent highlights, clean white premium background',
+      mood: 'luxury',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-safety-orange',
+      category: 'official',
+      name: '공공 안전 오렌지',
+      mode: 'dark',
+      colors: ['#1A0A00', '#BF360C', '#E64A19', '#FF7043', '#FFCCBC'],
+      colorMapping: 'dark industrial background, deep warning red shadows, bold safety orange accent, warm coral highlights, light peach ambient',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    { id: 'pal-public-teal', category: 'official', name: '공공 테크 틸', mode: 'light', colors: ['#002B33', '#004D5C', '#00838F', '#FFD600', '#E0F7FA'], colorMapping: 'deep teal government background, dark ocean shadows, smart city teal midtones, electric yellow accent highlights, clean pale sky accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-ministry-forest', category: 'official', name: '산림청 포레스트', mode: 'light', colors: ['#F1F8E9', '#DCEDC8', '#8BC34A', '#E84545', '#1B3A0D'], colorMapping: 'pale nature-white background, soft lime accents, fresh leaf-green midtones, vibrant autumn-red accent highlights, deep forest green shadows', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-welfare-purple', category: 'official', name: '사회복지 보라 & 베이지', mode: 'light', colors: ['#FBF8FF', '#EDE7F6', '#B39DDB', '#FF7043', '#2E003E'], colorMapping: 'soft white background, pale lilac base, warm violet midtones, caring orange-coral accent highlights, deep plum anchor', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-tax-gold', category: 'official', name: '세무 골드 & 다크 블루', mode: 'dark', colors: ['#0A1628', '#1A2E4A', '#2E4A72', '#C8A84A', '#FFD980'], colorMapping: 'formal navy background, dark steel-blue shadows, dignified gold midtones, bright warm gold highlights', mood: 'luxury', usage: 'corporate' },
+    { id: 'pal-emergency-red', category: 'official', name: '재난 대응 레드 & 화이트', mode: 'dark', colors: ['#1A0000', '#5C0000', '#B71C1C', '#F44336', '#FFFFFF'], colorMapping: 'dark alert-black background, deep crisis-red shadows, bold emergency red highlights, stark white contrast signal', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-court-navy', category: 'official', name: '사법부 네이비 & 골드', mode: 'dark', colors: ['#080C14', '#14243A', '#2A4880', '#4A72C0', '#C8A84A'], colorMapping: 'deep formal navy backdrop, dark charcoal-blue shadows, dignified steel-blue midtones, authoritative gold accents', mood: 'luxury', usage: 'corporate' },
+    { id: 'pal-education-sky', category: 'official', name: '교육부 스카이 블루', mode: 'light', colors: ['#F0F8FF', '#BBDEFB', '#64B5F6', '#FF8F00', '#0D3B8A'], colorMapping: 'clear sky-white background, pale azure highlights, bright educational blue midtones, warm orange accent highlights, deep navy shadows', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-defense-grey', category: 'official', name: '국방 밀리터리 그레이', mode: 'dark', colors: ['#0A0C0A', '#1C2118', '#3A4232', '#E65100', '#B0B8A2'], colorMapping: 'dark military black-green base, olive-grey shadows, field grey midtones, emergency red-orange accent highlights, pale khaki accents', mood: 'minimal', usage: 'corporate' },
+
+    // 추가 공공기관 전용 컬러 팔레트 (21종)
+    { id: 'pal-admin-indigo', category: 'official', name: '행정안전 인디고', mode: 'light', colors: ['#F4F6F9', '#D9E2EC', '#627D98', '#FF5722', '#102A43'], colorMapping: 'clean white background, soft steel-blue midtones, deep navy administration blue shadows, bright red-orange accent highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-korea-trad', category: 'official', name: '한국 전통 오방색', mode: 'light', colors: ['#FAF5EF', '#E2C29B', '#4E7F65', '#1B2C40', '#D63031'], colorMapping: 'korean traditional cream paper background, warm ocher midtones, dancheong green accents, deep navy shadows, cinnabar red highlights', mood: 'retro', usage: 'corporate' },
+    { id: 'pal-culture-beige', category: 'official', name: '문화재단 샌드 베이지', mode: 'light', colors: ['#F5EBE6', '#D5C3B3', '#8C7A6B', '#1E2D4A', '#E84545'], colorMapping: 'warm sand-beige background, soft clay midtones, deep indigo shadows, dark brown accents, terracotta-red highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-science-cyan', category: 'official', name: '과학기술원 사이언', mode: 'dark', colors: ['#0A0F1D', '#162A45', '#00D2FC', '#FF007F', '#ECEFF1'], colorMapping: 'deep space black-blue background, tech dark blue shadows, electric cyan highlights, vibrant magenta accent, stark white details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-seoul-hangang', category: 'official', name: '서울 스카이 & 한강', mode: 'light', colors: ['#F0F4F8', '#BCCCDC', '#486581', '#FF9F1C', '#0F1B29'], colorMapping: 'clear sky-white background, pale azure shadows, deep Han River blue midtones, bright orange sunlight highlights, charcoal anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-env-green', category: 'official', name: '기후환경 에코 그린', mode: 'light', colors: ['#E8F5E9', '#A5D6A7', '#4CAF50', '#FFAB00', '#795548'], colorMapping: 'soft mint background, light eco green midtones, deep forest green shadows, brilliant gold sun highlights, organic brown soil accents', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-sme-orange', category: 'official', name: '중기 지원 활력 오렌지', mode: 'light', colors: ['#FDF6F0', '#F3D2C1', '#F58220', '#101820', '#6C7A89'], colorMapping: 'warm gray-white background, pale peach midtones, energetic orange accents, charcoal gray shadows', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-medical-blue', category: 'official', name: '보건의료 메디컬 틸', mode: 'light', colors: ['#F0FDFC', '#CCF5F1', '#00A896', '#FF3F6C', '#023E8A'], colorMapping: 'clean medical white background, light mint shadows, soothing teal midtones, vivid heart-red highlights, deep navy blue anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-police-dark', category: 'official', name: '경찰청 치안 블루', mode: 'dark', colors: ['#050B14', '#0F1E36', '#1A365D', '#E53935', '#E2E8F0'], colorMapping: 'deep police navy background, dark steel-blue shadows, vibrant police blue highlights, warning siren red highlights, stark silver details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-energy-teal', category: 'official', name: '신재생 에너지 틸', mode: 'light', colors: ['#E0F7FA', '#80DEEA', '#00ACC1', '#FFB300', '#006064'], colorMapping: 'light aqua-blue background, pale teal shadows, deep renewable energy teal midtones, bright amber gold energy highlights', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-agri-clay', category: 'official', name: '농식품부 올리브 & 흙빛', mode: 'light', colors: ['#FAF6F0', '#E6D5C3', '#A89F91', '#5D6B54', '#D35400'], colorMapping: 'cozy cream background, warm clay shadows, olive agriculture green midtones, ripe persimmon orange highlights, deep espresso brown anchors', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-port-marine', category: 'official', name: '해양항만 마린 딥', mode: 'dark', colors: ['#0A1128', '#1C2541', '#3A506B', '#5BC0BE', '#FF6F59'], colorMapping: 'deep ocean marine background, dark navy shadows, steel blue midtones, bright aqua highlight, warning coral orange accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-road-safety', category: 'official', name: '국토교통 도로 표지', mode: 'light', colors: ['#F5F5F5', '#E0E0E0', '#37474F', '#006644', '#FBC02D'], colorMapping: 'light asphalt-grey background, slate shadows, green highway sign midtones, bold warning yellow highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-youth-mint', category: 'official', name: '청년지원 피치 민트', mode: 'light', colors: ['#F5FDFB', '#E6F9F3', '#39A388', '#FF8F8F', '#2C3E50'], colorMapping: 'soothing pale mint background, minty highlights, dark charcoal-blue shadows, friendly coral peach-pink highlights', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-tourism-sand', category: 'official', name: '관광공사 코리안 헤리티지', mode: 'light', colors: ['#FAF5EF', '#EFE5D8', '#CBB89D', '#3E5C76', '#D05A3F'], colorMapping: 'korean traditional sand-beige background, soft clay shadows, deep sky blue midtones, warm persimmon-red highlights', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-weather-cloud', category: 'official', name: '기상청 구름 블루', mode: 'light', colors: ['#F5F8FC', '#D6E4F0', '#1E56A0', '#FF6D00', '#163172'], colorMapping: 'clear mist-white background, pale blue highlights, deep atmosphere blue midtones, warning orange alerts, storm navy shadows', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-patent-purple', category: 'official', name: '특허청 지식재산 퍼플', mode: 'dark', colors: ['#0E0A1A', '#221A36', '#5E35B1', '#00E5FF', '#B388FF'], colorMapping: 'deep purple space background, dark lavender shadows, creative indigo midtones, electric blue highlights', mood: 'luxury', usage: 'corporate' },
+    { id: 'pal-labor-teal', category: 'official', name: '고용노동 활력 틸', mode: 'light', colors: ['#F4F8FA', '#D2E3EB', '#007AA5', '#E28743', '#0F2C3D'], colorMapping: 'clear sky-white background, pale blue shadows, reliable deep labor teal midtones, warm rust-orange highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-financial-blue', category: 'official', name: '금융위 신뢰 다크', mode: 'dark', colors: ['#020813', '#0F1E36', '#1D3B68', '#FFB300', '#B0BEC5'], colorMapping: 'deep investment navy background, dark steel-blue shadows, cobalt blue highlights, golden analytics highlights, silver metallic accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-heritage-ink', category: 'official', name: '문화재청 고전 옥빛', mode: 'light', colors: ['#FAF7F2', '#E7E2D8', '#4A5B53', '#A63A50', '#1C2321'], colorMapping: 'traditional ink-white background, soft hanji shadows, classic jade green midtones, deep rosepoint accents, black ink anchors', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-job-recruitment', category: 'official', name: '채용 공고 로열 오렌지', mode: 'light', colors: ['#F9FAFC', '#E1E5EB', '#2A4365', '#FF6B35', '#2B2D42'], colorMapping: 'light corporate background, silver shadows, deep royal blue midtones, vivid hiring orange highlights', mood: 'vivid', usage: 'corporate' },
+
+    // 정부 부처 및 하위 소속기관 전용 추가 팔레트 (28종)
+    { id: 'pal-msit-science', category: 'official', name: '과학기술정보통신부 ICT', mode: 'dark', colors: ['#0C1020', '#1C2541', '#3A506B', '#00D2FC', '#E84545'], colorMapping: 'deep tech space background, dark steel-blue shadows, deep slate midtones, vibrant electric cyan highlights, energetic red ICT accent', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-me-env', category: 'official', name: '환경부 기후대응', mode: 'light', colors: ['#F1F8E9', '#C8E6C9', '#4CAF50', '#FF9F1C', '#E0F7FA'], colorMapping: 'pale clean air-white background, soft celadon shadows, ecological green midtones, bright solar yellow-orange highlights, clear pale sky ambient', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-mof-ocean', category: 'official', name: '해양수산부 스마트 해양', mode: 'light', colors: ['#E0F2F1', '#B2DFDB', '#00695C', '#FF8F00', '#00897B'], colorMapping: 'pale seafoam background, clear aqua-blue shadows, deep ocean teal midtones, warm sunset gold accents, bright marine turquoise highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-mosf-budget', category: 'official', name: '기획재정부 국고 재무', mode: 'dark', colors: ['#0A1128', '#14213D', '#FCA311', '#E5E5E5', '#FFFFFF'], colorMapping: 'deep trust navy-black background, formal navy shadows, stark gold-yellow chart accent, metallic silver midtones, clean white details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-mofa-diplomacy', category: 'official', name: '외교부 글로벌 비즈니스', mode: 'light', colors: ['#FAF6F0', '#E5D4C0', '#4A6FA5', '#166088', '#B7B8B6'], colorMapping: 'cozy cream background, warm parchment shadows, global diplomatic blue midtones, trust royal blue highlights, silver metallic accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-moj-law', category: 'official', name: '법무부 법치 & 정의', mode: 'dark', colors: ['#0D0B14', '#1F172E', '#5D4037', '#D4AF37', '#EDE7F6'], colorMapping: 'deep solemn purple-black background, dark mahogany shadows, authoritative gold highlights, warm light lavender details', mood: 'luxury', usage: 'corporate' },
+    { id: 'pal-mois-safety', category: 'official', name: '행정안전부 국민안전', mode: 'light', colors: ['#F5F5F5', '#E0E0E0', '#1A1A1A', '#FBC02D', '#29B6F6'], colorMapping: 'light safety gray background, dark slate shadows, high contrast black text zones, warning reflector yellow highlights, safety reflector blue details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-mcst-culture', category: 'official', name: '문화체육관광부 예술 융합', mode: 'light', colors: ['#FDF9F5', '#F5E6D3', '#D35400', '#9B59B6', '#2C3E50'], colorMapping: 'warm art-paper background, soft beige shadows, vibrant cultural orange midtones, creative orchid purple highlights, deep slate-blue anchors', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-mafra-agri', category: 'official', name: '농림축산식품부 풍요 벌판', mode: 'light', colors: ['#FCF8F2', '#E8D2A6', '#86A397', '#F29C38', '#4E6C50'], colorMapping: 'warm rice-husk background, golden grain highlights, calm sage green midtones, ripe agriculture gold highlights, deep agriculture green shadows, ripe pumpkin orange accent highlights', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-motie-industry', category: 'official', name: '산업통상자원부 신산업', mode: 'light', colors: ['#F4F7FB', '#D0DBEB', '#0F4C81', '#F58220', '#1D2A44'], colorMapping: 'light industrial gray background, clean steel shadows, deep industry blue midtones, high-energy orange accents', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-mohw-health', category: 'official', name: '보건복지부 복지 돌봄', mode: 'light', colors: ['#FAF8FC', '#E8E1F5', '#7E57C2', '#EC407A', '#26A69A'], colorMapping: 'soft lilac-white background, pale violet shadows, caring purple midtones, warm heart-pink highlights, healthy teal accents', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-moel-employment', category: 'official', name: '고용노동부 내일 배움', mode: 'light', colors: ['#F5F9FD', '#D1E4F6', '#1E88E5', '#FBC02D', '#1565C0'], colorMapping: 'clear youth sky-blue background, pale azure shadows, dependable career blue midtones, energetic yellow hope highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-mogef-family', category: 'official', name: '여성가족부 상생 평등', mode: 'light', colors: ['#FDF7FD', '#EDE2EE', '#BA68C8', '#FF8A65', '#4A148C'], colorMapping: 'soft magenta-white background, light purple shadows, gender equality violet midtones, warm orange family accents, deep violet anchors', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-molit-land', category: 'official', name: '국토교통부 스마트 건설', mode: 'light', colors: ['#F5F8F7', '#D5E5E2', '#00796B', '#FF5722', '#004D40'], colorMapping: 'light smart-city background, silver-gray shadows, technological teal midtones, bright infrastructure orange highlights, deep green anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-kcg-coastguard', category: 'official', name: '해양경찰청 조난 해양', mode: 'dark', colors: ['#050F26', '#0F2042', '#3A6073', '#00E5FF', '#FF6F00'], colorMapping: 'deep night ocean background, dark navy shadows, steel-blue sea surface, glowing electric cyan highlights, safety orange rescue signal', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-nfa-firefighter', category: 'official', name: '소방청 화재 진압', mode: 'dark', colors: ['#0C0D0E', '#1C1D1F', '#B71C1C', '#E65100', '#FFCC00'], colorMapping: 'dark charcoal soot background, deep ash-gray shadows, intense flame-red highlights, firefighter warning orange, stark hazard yellow details', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-forest-mountain', category: 'official', name: '산림청 산림 자원', mode: 'light', colors: ['#F4F8F5', '#E1EFE6', '#2E7D32', '#A0522D', '#1B5E20'], colorMapping: 'clean organic white background, soft pine-green shadows, vibrant mountain forest green, deep forest canopy shadows, woody sienna accents', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-kdca-quarantine', category: 'official', name: '질병관리청 백신 방역', mode: 'light', colors: ['#FAFDFC', '#E0F2F1', '#009688', '#E53935', '#004D40'], colorMapping: 'sterile hygiene white background, soft teal shadows, quarantine teal midtones, critical alert-red highlights, deep clinical green anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-customs-blue', category: 'official', name: '관세청 신속 통관', mode: 'light', colors: ['#F2F4F8', '#D6E4F0', '#1E56A0', '#C9A84A', '#163172'], colorMapping: 'light sea-freight background, cargo silver shadows, trusted customs navy midtones, secure gold seal accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-pps-procurement', category: 'official', name: '조달청 나라장터 에코', mode: 'light', colors: ['#F6F9FB', '#DCE6EC', '#005EA2', '#FF6B35', '#2E7D32'], colorMapping: 'clean white background, pale blue shadows, trusted procurement navy blue, warm orange commerce highlights, ecological green accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-kostat-stats', category: 'official', name: '통계청 데이터 비주얼', mode: 'light', colors: ['#F7F9FC', '#E3E8F0', '#1A365D', '#DD6B20', '#3182CE'], colorMapping: 'light metric-white background, silver shadows, deep data navy midtones, alert orange highlights, clear blue chart accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-kma-meteorology', category: 'official', name: '기상청 대기 위성', mode: 'dark', colors: ['#050811', '#0E1726', '#1A365D', '#4A90E2', '#FF9F1C'], colorMapping: 'deep space atmosphere background, satellite navy shadows, clean blue-sky midtones, solar orange warning highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-cha-heritage', category: 'official', name: '문화재청 전통 한옥', mode: 'light', colors: ['#FAF6F0', '#EAE0D5', '#5E503F', '#0A0908', '#2F4F4F'], colorMapping: 'traditional hanji background, weathered timber brown, slate roof grey, deep pine forest accents, antique gold highlights', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-local-library', category: 'official', name: '시립도서관 지식 인문', mode: 'light', colors: ['#FAF7F2', '#EFE9DE', '#C2A67E', '#3E2723', '#2C6A4F'], colorMapping: 'warm book-paper background, warm walnut wood shadows, classic gold-embossed details, deep forest green reading zone', mood: 'natural', usage: 'corporate' },
+    { id: 'pal-art-museum', category: 'official', name: '시립미술관 모던 갤러리', mode: 'light', colors: ['#FFFFFF', '#F0F0F0', '#0A0A0C', '#E91E63', '#2196F3'], colorMapping: 'pure white gallery background, clean grey shadow lines, stark graphic black anchors, modern art magenta accents, cobalt blue highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-local-clinic', category: 'official', name: '보건소 우리동네 돌봄', mode: 'light', colors: ['#F7FCFA', '#E1F5FE', '#00ACC1', '#006064', '#FFA726'], colorMapping: 'approachable pale teal background, soft clinic blue shadows, healing teal-green midtones, warm orange care accents', mood: 'vivid', usage: 'corporate' },
+    { id: 'pal-waterworks-blue', category: 'official', name: '상수도사업소 아리수 아쿠아', mode: 'light', colors: ['#F0F8FF', '#E1F5FE', '#03A9F4', '#01579B', '#FF3D00'], colorMapping: 'pure water-white background, fresh azure highlights, deep aquatic blue midtones, dark cobalt shadows, clean safety red highlights', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-local-training', category: 'official', name: '공무원 인재개발원', mode: 'light', colors: ['#F5F8FA', '#E2ECF1', '#1565C0', '#3E8E41', '#37474F'], colorMapping: 'clean education background, soft blue-grey shadows, trusted administration blue midtones, growth-oriented green accents', mood: 'minimal', usage: 'corporate' },
+
+    // ==========================================
+    // 6. 파스텔 라이트 (light_pastel) - 8 items
+    // ==========================================
+    {
+      id: 'pal-cherry-blossom',
+      category: 'light_pastel',
+      name: '체리 블라썸',
+      mode: 'light',
+      colors: ['#FFF0F5', '#FFD6E0', '#FFB3C6', '#FF8FAB', '#C9184A'],
+      colorMapping: 'pure white petal background, blush pink ambient, soft pink mid-tone, vivid cherry accent, deep rose emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-lavender-mist',
+      category: 'light_pastel',
+      name: '라벤더 미스트',
+      mode: 'light',
+      colors: ['#F8F5FF', '#E9D8FD', '#D6BCFA', '#B794F4', '#6B46C1'],
+      colorMapping: 'airy white-lavender background, pale violet ambient, soft lavender mid-tone, medium purple accent, deep violet emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-sky-cotton',
+      category: 'light_pastel',
+      name: '스카이 코튼',
+      mode: 'light',
+      colors: ['#F0F9FF', '#BAE6FD', '#7DD3FC', '#38BDF8', '#0369A1'],
+      colorMapping: 'cloud white background, baby sky blue ambient, light cornflower mid-tone, bright sky accent, ocean blue emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-mint-cream',
+      category: 'light_pastel',
+      name: '민트 크림',
+      mode: 'light',
+      colors: ['#F0FFFA', '#C6F6D5', '#9AE6B4', '#68D391', '#276749'],
+      colorMapping: 'cream white background, whisper mint ambient, soft sage mid-tone, fresh mint accent, forest green emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-peach-sorbet',
+      category: 'light_pastel',
+      name: '피치 소르베',
+      mode: 'light',
+      colors: ['#FFF7ED', '#FED7AA', '#FDBA74', '#FB923C', '#C2410C'],
+      colorMapping: 'warm cream background, apricot ambient, soft peach mid-tone, bright orange accent, terracotta emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-sunshine-yellow',
+      category: 'light_pastel',
+      name: '선샤인 옐로우',
+      mode: 'light',
+      colors: ['#FFFBEB', '#FEF3C7', '#FDE68A', '#FCD34D', '#D97706'],
+      colorMapping: 'soft butter background, pale lemon ambient, golden yellow mid-tone, bright sun accent, amber honey emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-rose-quartz',
+      category: 'light_pastel',
+      name: '로즈 쿼츠',
+      mode: 'light',
+      colors: ['#FFF5F7', '#FED7E2', '#FBB6CE', '#F687B3', '#B83280'],
+      colorMapping: 'white rose background, blush ambient, dusty rose mid-tone, vibrant pink accent, deep magenta emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    {
+      id: 'pal-lilac-spring',
+      category: 'light_pastel',
+      name: '라일락 스프링',
+      mode: 'light',
+      colors: ['#FAF5FF', '#EDE9FE', '#DDD6FE', '#A78BFA', '#5B21B6'],
+      colorMapping: 'white lilac background, soft purple ambient, medium violet mid-tone, vivid amethyst accent, deep purple emphasis',
+      mood: 'minimal',
+      usage: 'content'
+    },
+    { id: 'pal-pistachio', category: 'light_pastel', name: '피스타치오 그린 파스텔', mode: 'light', colors: ['#F4FBF2', '#D9F0D3', '#A8DDA0', '#5CB85C', '#2E7D32'], colorMapping: 'mint-white background, pale lettuce-green base, soft pistachio midtones, fresh green accent, deep forest shadow', mood: 'minimal', usage: 'content' },
+    { id: 'pal-baby-blue', category: 'light_pastel', name: '베이비 블루 & 클라우드', mode: 'light', colors: ['#F0F8FF', '#DBEEFF', '#AACCF5', '#5A96D8', '#1A5FAA'], colorMapping: 'cloud white background, pale sky blue base, soft cornflower midtones, bright baby blue highlight, deep azure anchor', mood: 'minimal', usage: 'content' },
+    { id: 'pal-apricot', category: 'light_pastel', name: '아프리코트 오렌지 파스텔', mode: 'light', colors: ['#FFF8F0', '#FFE4CC', '#FFBA85', '#E8823A', '#7A3A10'], colorMapping: 'cream white background, soft apricot base, warm tangerine midtones, vivid peach-orange highlight, dark rust shadow', mood: 'minimal', usage: 'content' },
+    { id: 'pal-powder-green', category: 'light_pastel', name: '파우더 그린 & 화이트', mode: 'light', colors: ['#FAFFFE', '#DCFBF5', '#A7EEE2', '#4BC9B8', '#19706A'], colorMapping: 'pure white background, lightest aqua base, soft powder-green midtones, vivid teal highlight, dark jade shadow', mood: 'minimal', usage: 'content' },
+    { id: 'pal-butter-yellow', category: 'light_pastel', name: '버터 옐로우 파스텔', mode: 'light', colors: ['#FFFEF0', '#FFFBC0', '#FFE870', '#EDB800', '#7A5800'], colorMapping: 'cream white background, light butter yellow base, warm sunflower midtones, vivid golden yellow highlight, deep amber shadow', mood: 'minimal', usage: 'content' },
+    { id: 'pal-nude-blush', category: 'light_pastel', name: '누드 블러시 & 베이지', mode: 'light', colors: ['#FFF7F4', '#FFEBDB', '#F5CDBC', '#D49A84', '#6B3C28'], colorMapping: 'warm white background, soft nude base, blush rose midtones, muted terracotta highlight, deep cocoa anchor', mood: 'minimal', usage: 'content' },
+    { id: 'pal-sky-iris', category: 'light_pastel', name: '스카이 아이리스 블루바이올렛', mode: 'light', colors: ['#F5F5FF', '#DCDCFF', '#B0B0FF', '#7070E8', '#2A2A99'], colorMapping: 'pale white background, lavender mist base, periwinkle midtones, vivid blue-violet highlight, deep iris shadow', mood: 'minimal', usage: 'content' },
+    { id: 'pal-cotton-white', category: 'light_pastel', name: '코튼 화이트 & 밀크', mode: 'light', colors: ['#FFFFFF', '#FAF9F7', '#F5F0EA', '#E8DDD0', '#B0A090'], colorMapping: 'pure white surface, warm cotton base, soft milk midtones, creamy linen highlight, gentle taupe shadow', mood: 'minimal', usage: 'content' },
+    { id: 'pal-pastel-infographic', category: 'light_pastel', name: '인포그래픽 파스텔 믹스', mode: 'light', colors: ['#FAF8FC', '#D1E8E2', '#D9B08C', '#E0A96D', '#1D2731'], colorMapping: 'light paper background, fresh pastel mint, soft almond cream midtones, warm sienna-gold highlights, dark indigo infographic text anchors', mood: 'minimal', usage: 'content' },
+    { id: 'pal-pastel-infographic2', category: 'light_pastel', name: '디저트 핑크 & 민트', mode: 'light', colors: ['#FAF6F0', '#FCD8D4', '#C3E5AE', '#6D8B74', '#4E3629'], colorMapping: 'soft bakery cream background, pastel donut pink highlights, soft pistachio green midtones, forest green accents, deep chocolate brown anchors', mood: 'minimal', usage: 'content' },
+    { id: 'pal-airy-cloud', category: 'light_pastel', name: '에어리 라일락 & 레몬', mode: 'light', colors: ['#FFFDF2', '#EAF2F8', '#EAE6FF', '#D2C4FB', '#0F172A'], colorMapping: 'fresh pale lemon background, airy cloud-blue shadows, soft lavender midtones, spring lilac highlights, deep charcoal anchors', mood: 'minimal', usage: 'content' },
+    { id: 'pal-modern-beige', category: 'light_pastel', name: '모던 샌드 & 차콜', mode: 'light', colors: ['#FAF8F5', '#EFEBE4', '#E6C594', '#D48C46', '#212529'], colorMapping: 'clean sand beige background, light linen shadows, warm sienna highlights, energetic copper-orange accents, dark charcoal anchors', mood: 'minimal', usage: 'content' },
+
+    // ==========================================
+    // 7. 모닝 & 에어리 (morning) - 8 items
+    // ==========================================
+    {
+      id: 'pal-golden-hour-light',
+      category: 'morning',
+      name: '골든 아워 라이트',
+      mode: 'light',
+      colors: ['#FFFAF0', '#FEF9C3', '#FEF08A', '#FACC15', '#CA8A04'],
+      colorMapping: 'warm white background, soft lemon ambient, golden yellow mid-tone, bright gold accent, amber emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-cloud-nine',
+      category: 'morning',
+      name: '클라우드 나인',
+      mode: 'light',
+      colors: ['#FFFFFF', '#F1F5F9', '#E2E8F0', '#94A3B8', '#334155'],
+      colorMapping: 'pure white background, cloud grey ambient, light silver mid-tone, cool slate accent, charcoal emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-cerulean-sky',
+      category: 'morning',
+      name: '세룰리안 스카이',
+      mode: 'light',
+      colors: ['#EFF6FF', '#DBEAFE', '#BFDBFE', '#60A5FA', '#1D4ED8'],
+      colorMapping: 'sky white background, pale blue ambient, cornflower mid-tone, cerulean accent, strong blue emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-spring-meadow',
+      category: 'morning',
+      name: '스프링 메도우',
+      mode: 'light',
+      colors: ['#F0FDF4', '#DCFCE7', '#BBF7D0', '#4ADE80', '#15803D'],
+      colorMapping: 'pure white-green background, spring grass ambient, fresh sage mid-tone, vivid meadow accent, forest emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-aurora-light',
+      category: 'morning',
+      name: '오로라 라이트',
+      mode: 'light',
+      colors: ['#F0FFF4', '#C6F6D5', '#B2F5EA', '#76E4F7', '#0694A2'],
+      colorMapping: 'airy mint background, soft aurora green ambient, teal transition mid-tone, bright cyan accent, deep teal emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-morning-rose',
+      category: 'morning',
+      name: '모닝 로즈',
+      mode: 'light',
+      colors: ['#FFF1F2', '#FFE4E6', '#FECDD3', '#FB7185', '#BE123C'],
+      colorMapping: 'white blush background, petal pink ambient, warm rose mid-tone, vivid coral-rose accent, deep crimson emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-marigold',
+      category: 'morning',
+      name: '메리골드',
+      mode: 'light',
+      colors: ['#FFFBEB', '#FEF3C7', '#FDE68A', '#F59E0B', '#92400E'],
+      colorMapping: 'warm vanilla background, honey amber ambient, golden marigold mid-tone, deep amber accent, warm brown emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-tropical-mist',
+      category: 'morning',
+      name: '트로피컬 미스트',
+      mode: 'light',
+      colors: ['#ECFDF5', '#D1FAE5', '#A7F3D0', '#34D399', '#065F46'],
+      colorMapping: 'tropical white background, light seafoam ambient, fresh emerald mid-tone, vibrant teal-green accent, deep jungle emphasis',
+      mood: 'minimal',
+      usage: 'brand'
+    },
+    { id: 'pal-dawn-pink', category: 'morning', name: '새벽 핑크 & 코랄', mode: 'light', colors: ['#FFF0F5', '#FFD6E8', '#FFB0CC', '#FF6F9E', '#9C2855'], colorMapping: 'dawn blush-white background, pale flamingo base, warm rose midtones, vivid dawn-coral highlight, deep raspberry shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-morning-lavender', category: 'morning', name: '모닝 라벤더 & 퍼플', mode: 'light', colors: ['#F9F5FF', '#EEE3FF', '#D4B8FF', '#9C6BFF', '#4A0099'], colorMapping: 'pale white background, soft lavender base, morning violet midtones, vivid purple highlight, deep aubergine shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-first-light', category: 'morning', name: '퍼스트 라이트 오렌지', mode: 'light', colors: ['#FFFAF0', '#FFE8C8', '#FFD08A', '#FFA040', '#7A4010'], colorMapping: 'ivory dawn background, soft golden cream base, warm amber midtones, vivid first-light orange highlight, deep tawny shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-mist-grey', category: 'morning', name: '미스트 그레이 & 블루', mode: 'light', colors: ['#F8FAFB', '#E8EAEE', '#C0C8D8', '#7890B8', '#2A3F68'], colorMapping: 'morning mist white background, pale grey-blue base, cool haze midtones, dusty slate-blue highlight, deep navy shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-morning-mint', category: 'morning', name: '모닝 민트 & 화이트', mode: 'light', colors: ['#F5FFFC', '#C8F5EA', '#80E8D0', '#30C0A8', '#0A6060'], colorMapping: 'fresh mint-white background, pale aqua base, soft spearmint midtones, vivid mint-teal highlight, deep jade shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-sun-haze', category: 'morning', name: '선 헤이즈 크림 & 옐로우', mode: 'light', colors: ['#FFFEF8', '#FFFCE0', '#FFF5A0', '#FFE040', '#AA8800'], colorMapping: 'warm cream background, pale butter base, soft sun-haze yellow midtones, vivid morning gold highlight, deep amber shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-morning-ocean', category: 'morning', name: '모닝 오션 블루', mode: 'light', colors: ['#F0FAFF', '#C8EDFF', '#80CFFF', '#28A8F0', '#0050A0'], colorMapping: 'sky-white background, light cloud-blue base, soft morning sea midtones, vivid cornflower highlight, deep ocean shadow', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-spring-breeze', category: 'morning', name: '봄 산들바람 & 그린', mode: 'light', colors: ['#F5FFF8', '#D0F5DC', '#90E0AC', '#30B060', '#0A5028'], colorMapping: 'fresh white background, pale mint-green base, soft spring leaf midtones, vivid grass-green highlight, deep forest shadow', mood: 'minimal', usage: 'brand' },
+
+    // ==========================================
+    // 8. 노르딕 & 스칸디 (nordic) - 8 items
+    // ==========================================
+    {
+      id: 'pal-nordic-birch',
+      category: 'nordic',
+      name: '노르딕 버치',
+      mode: 'light',
+      colors: ['#FAFAF9', '#F5F0EB', '#E5D5C0', '#C4A882', '#6B4C2A'],
+      colorMapping: 'white birch background, warm linen ambient, sand beige mid-tone, warm tan accent, birch bark emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-fjord-blue',
+      category: 'nordic',
+      name: '피오르드 블루',
+      mode: 'light',
+      colors: ['#F0F4F8', '#D9E2EC', '#BCCCDC', '#627D98', '#1F3A5F'],
+      colorMapping: 'pale sky background, misty grey-blue ambient, fjord mid-tone, steely blue accent, deep ocean emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-tundra-moss',
+      category: 'nordic',
+      name: '툰드라 모스',
+      mode: 'light',
+      colors: ['#F4F6EE', '#E8EDDF', '#CFD8AC', '#8D9E6B', '#4A5E33'],
+      colorMapping: 'pale grey-green background, soft sage ambient, dusty moss mid-tone, muted olive accent, dark forest emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-nordic-sand',
+      category: 'nordic',
+      name: '노르딕 샌드',
+      mode: 'light',
+      colors: ['#FDFCFB', '#F7F2EC', '#EDE0CD', '#D4B896', '#7C5C3A'],
+      colorMapping: 'pure white-warm background, soft dune ambient, sandy beige mid-tone, warm camel accent, rich coffee emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-midnight-sun',
+      category: 'nordic',
+      name: '미드나잇 선 라이트',
+      mode: 'light',
+      colors: ['#FFFBF0', '#FFF3CD', '#FFE4A0', '#FFD166', '#B8860B'],
+      colorMapping: 'champagne white background, pale amber ambient, golden light mid-tone, midnight sun gold accent, dark gold emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-lapland-rose',
+      category: 'nordic',
+      name: '라플란드 로즈',
+      mode: 'light',
+      colors: ['#FDF8F8', '#F9EBEA', '#F2D2CE', '#E8A89B', '#B55A4A'],
+      colorMapping: 'white rose background, blush tundra ambient, dusty salmon mid-tone, warm clay-rose accent, terracotta emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-scandi-teal',
+      category: 'nordic',
+      name: '스칸디 틸',
+      mode: 'light',
+      colors: ['#F0FAFA', '#CCEBEB', '#99D6D6', '#5BBCBC', '#206060'],
+      colorMapping: 'ice white background, pale aqua ambient, Nordic teal mid-tone, bright teal accent, dark sea emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    {
+      id: 'pal-hygge-grey',
+      category: 'nordic',
+      name: '히게 그레이',
+      mode: 'light',
+      colors: ['#FAFAFA', '#F0EFED', '#DCD9D4', '#ABA9A3', '#3D3B38'],
+      colorMapping: 'off-white background, warm grey ambient, cozy greige mid-tone, medium grey accent, charcoal emphasis',
+      mood: 'minimal',
+      usage: 'corporate'
+    },
+    { id: 'pal-aurora-nordic', category: 'nordic', name: '오로라 노르딕 나이트', mode: 'dark', colors: ['#060C14', '#0E1E30', '#1A3C5C', '#00C8A8', '#B8F5E8'], colorMapping: 'arctic night black-navy background, deep polar sea shadows, dark teal midtones, vivid aurora green highlights, pale mint glow accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-nordic-clay', category: 'nordic', name: '노르딕 클레이 테라', mode: 'light', colors: ['#FAF6F2', '#EDE0D4', '#C8A88C', '#8C6040', '#3C2A18'], colorMapping: 'warm white background, soft clay base, Nordic terracotta midtones, muted sienna highlight, dark espresso anchor', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-scandi-sage', category: 'nordic', name: '스칸디 세이지 & 화이트', mode: 'light', colors: ['#F8FBF7', '#E0EDD8', '#A8C89A', '#5A8A48', '#254018'], colorMapping: 'pure white background, pale sage base, fresh Scandinavian green midtones, muted olive highlight, deep forest anchor', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-nordic-navy', category: 'nordic', name: '노르딕 네이비 & 크림', mode: 'dark', colors: ['#0E1624', '#1C2E44', '#2E4A6E', '#8CAAC8', '#F0ECD8'], colorMapping: 'dark Nordic navy background, deep sea shadows, cool slate-blue midtones, soft periwinkle highlights, warm cream accents', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-lapland-snow', category: 'nordic', name: '라플란드 스노우 화이트', mode: 'light', colors: ['#FFFFFF', '#F5F5F8', '#E4E4EA', '#C0C0D4', '#7070A0'], colorMapping: 'pure snowfield white surface, faint icy blue-grey shadow, cool lavender midtones, muted slate accent, deep twilight anchor', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-swedish-red', category: 'nordic', name: '스웨덴 레드 & 화이트', mode: 'light', colors: ['#FFF5F5', '#FFD0D0', '#FF8080', '#CC0000', '#660000'], colorMapping: 'crisp white background, soft rose base, classic Swedish red midtones, vivid crimson highlight, deep burgundy shadow', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-nordic-mustard', category: 'nordic', name: '노르딕 머스타드 & 그레이', mode: 'light', colors: ['#FAF8F0', '#EDE8D0', '#D4C060', '#A08010', '#4A3800'], colorMapping: 'warm cream background, pale wheat base, classic Nordic mustard midtones, deep golden highlight, dark brown shadow', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-winter-coast', category: 'nordic', name: '겨울 해안 블루 & 베이지', mode: 'light', colors: ['#F8FAFB', '#DDE8F0', '#9CC4D8', '#4A8EB4', '#1A3E5C'], colorMapping: 'hazy white background, pale mist-blue base, Nordic sea midtones, clear coastal blue highlight, deep ocean navy shadow', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-scandi-gray', category: 'nordic', name: '스칸디 모던 그레이 & 머드', mode: 'light', colors: ['#FAF9F6', '#D1D5DB', '#4B5563', '#C2410C', '#1F2937'], colorMapping: 'pure light scandi-white background, neutral gray shadows, clean mud gray midtones, vibrant terracotta-red highlights, charcoal anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-denim-stone', category: 'nordic', name: '데님 블루 & 스톤 오렌지', mode: 'light', colors: ['#F3F4F6', '#D1D5DB', '#3B82F6', '#F59E0B', '#1E293B'], colorMapping: 'stony-white background, light cement shadows, deep denim blue midtones, high-contrast amber orange highlights, dark navy anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-scandi-brick', category: 'nordic', name: '스칸디 브릭 & 세이지', mode: 'light', colors: ['#FAF7F2', '#EAE0D5', '#8C9B86', '#C0392B', '#2C3E50'], colorMapping: 'warm norwegian white background, pale sand shadows, soft sage green midtones, classic nordic brick-red highlights, deep steel navy anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-scandi-forest', category: 'nordic', name: '스칸디 침엽수 포레스트', mode: 'light', colors: ['#F5F7F8', '#D8E2DC', '#0D3B2E', '#F59E0B', '#11221F'], colorMapping: 'cool arctic white background, soft silver-gray shadows, deep swedish spruce-green midtones, bright organic gold highlights, pine bark charcoal anchors', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-nordic-fog', category: 'nordic', name: '노르딕 안개 피요르드', mode: 'light', colors: ['#F8FAFC', '#D0D7DE', '#4F709C', '#FF5A36', '#213555'], colorMapping: 'cool fjord mist background, pale granite shadows, clean nordic fog-blue midtones, high-energy volcanic orange highlights, deep arctic navy anchors', mood: 'minimal', usage: 'corporate' },
+
+    // ==========================================
+    // 9. 캔디 & 팝 비비드 (candy) - 8 items
+    // ==========================================
+    {
+      id: 'pal-candy-pop',
+      category: 'candy',
+      name: '캔디 팝',
+      mode: 'light',
+      colors: ['#FFF0F6', '#FFB3D9', '#FF66AA', '#FF0080', '#990049'],
+      colorMapping: 'light bubblegum background, hot pink ambient, vibrant magenta mid-tone, electric pink accent, deep cherry emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-bubblegum-blue',
+      category: 'candy',
+      name: '버블검 블루',
+      mode: 'light',
+      colors: ['#F0F8FF', '#B3D9FF', '#66B3FF', '#0080FF', '#004D99'],
+      colorMapping: 'cloud blue background, sky blue ambient, vibrant cornflower mid-tone, electric blue accent, deep navy emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-citrus-pop',
+      category: 'candy',
+      name: '시트러스 팝',
+      mode: 'light',
+      colors: ['#FFFBF0', '#FFE066', '#FFB800', '#FF7A00', '#CC4400'],
+      colorMapping: 'cream white background, lemon yellow ambient, bright citrus mid-tone, vivid orange accent, deep ember emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-kiwi-lime',
+      category: 'candy',
+      name: '키위 라임',
+      mode: 'light',
+      colors: ['#F4FFF0', '#B3FFB3', '#66FF66', '#00CC00', '#006600'],
+      colorMapping: 'white mint background, pale green ambient, bright lime mid-tone, vivid green accent, forest emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-coral-punch',
+      category: 'candy',
+      name: '코랄 펀치',
+      mode: 'light',
+      colors: ['#FFF5F3', '#FFCCBB', '#FF8866', '#FF4422', '#CC1100'],
+      colorMapping: 'soft peach background, light coral ambient, warm coral mid-tone, vivid tomato accent, deep red emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-neon-dream',
+      category: 'candy',
+      name: '네온 드림',
+      mode: 'light',
+      colors: ['#F8FFFA', '#B3FFE0', '#66FFB3', '#00FF80', '#00994D'],
+      colorMapping: 'white mint background, neon mint ambient, electric emerald mid-tone, vivid neon green accent, deep jade emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-watermelon',
+      category: 'candy',
+      name: '워터멜론',
+      mode: 'light',
+      colors: ['#FFF8F8', '#FFB3B3', '#FF6666', '#FF1111', '#1A4422'],
+      colorMapping: 'pale rose background, watermelon pink ambient, vivid red mid-tone, bright cherry accent, deep watermelon rind emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    {
+      id: 'pal-cotton-candy',
+      category: 'candy',
+      name: '코튼 캔디',
+      mode: 'light',
+      colors: ['#FFF0FF', '#F9B3FF', '#EE66FF', '#CC00FF', '#660099'],
+      colorMapping: 'white lavender background, soft violet ambient, vivid orchid mid-tone, electric purple accent, deep grape emphasis',
+      mood: 'festival',
+      usage: 'event'
+    },
+    { id: 'pal-neon-sunset', category: 'candy', name: '네온 선셋 그라디언트', mode: 'dark', colors: ['#18000A', '#500020', '#FF0066', '#FF6600', '#FFE600'], colorMapping: 'deep dusk-black background, dark crimson shadows, vivid magenta-pink to neon orange gradient, bright yellow highlights', mood: 'festival', usage: 'event' },
+    { id: 'pal-electric-blue-pop', category: 'candy', name: '일렉트릭 블루 팝', mode: 'dark', colors: ['#000A2A', '#001A6A', '#0040FF', '#00AAFF', '#88DDFF'], colorMapping: 'deep electric navy background, dark cobalt shadows, vivid royal blue midtones, brilliant azure highlights, pale sky-blue glow', mood: 'festival', usage: 'event' },
+    { id: 'pal-sherbet', category: 'candy', name: '셔벗 믹스 파스텔', mode: 'light', colors: ['#FFF8F5', '#FFD0B8', '#FFAA80', '#FF7040', '#8A2800'], colorMapping: 'warm cream white background, pale sherbet base, vivid tangerine midtones, bright citrus-orange highlight, deep burnt shadow', mood: 'festival', usage: 'event' },
+    { id: 'pal-galaxy-pop', category: 'candy', name: '갤럭시 팝 스페이스', mode: 'dark', colors: ['#0A0010', '#250038', '#6600CC', '#BB00FF', '#FF66FF'], colorMapping: 'cosmic black background, deep space-purple shadows, vivid violet midtones, electric magenta highlights, bright pink-purple glow', mood: 'festival', usage: 'event' },
+    { id: 'pal-lemon-lime', category: 'candy', name: '레몬 라임 팝', mode: 'light', colors: ['#FFFFF0', '#FFFF99', '#CCFF00', '#88CC00', '#3A6600'], colorMapping: 'bright white background, pale lemon base, vivid lime-yellow midtones, electric green highlight, deep forest anchor', mood: 'festival', usage: 'event' },
+    { id: 'pal-miami-vice', category: 'candy', name: '마이애미 바이스 핑크 틸', mode: 'dark', colors: ['#0A1018', '#00303D', '#00BBAA', '#FF2280', '#FFBB44'], colorMapping: 'dark night background, deep teal shadows, vivid turquoise midtones, hot neon pink accent, warm golden highlight', mood: 'festival', usage: 'event' },
+    { id: 'pal-disco-foil', category: 'candy', name: '디스코 포일 골드 & 핑크', mode: 'dark', colors: ['#1A0A00', '#4A2000', '#CC8800', '#FF44AA', '#FFEE44'], colorMapping: 'dark disco-black background, deep amber shadows, gold foil midtones, hot pink highlight, bright yellow accent spark', mood: 'festival', usage: 'event' },
+    { id: 'pal-vivid-rainbow', category: 'candy', name: '비비드 레인보우 스펙트럼', mode: 'dark', colors: ['#0A0A0A', '#FF0000', '#FF8800', '#00CC00', '#0088FF'], colorMapping: 'deep black background, vivid primary rainbow spectrum across full hue range, bold saturated color story, graphic vivid pop art palette', mood: 'festival', usage: 'event' },
+    { id: 'pal-candy-pop', category: 'candy', name: '비비드 라임 & 체리', mode: 'light', colors: ['#FFFFE0', '#CCFF00', '#FF1493', '#1E90FF', '#4B0082'], colorMapping: 'light playful neon-cream background, electric lime green, vibrant cherry hot pink, sky blue highlights, deep violet anchors', mood: 'festival', usage: 'event' },
+    { id: 'pal-neon-retro', category: 'candy', name: '레트로 네온 마젠타', mode: 'dark', colors: ['#0B0314', '#3E005B', '#FF007F', '#00FFFF', '#7B2CBF'], colorMapping: '80s retro cyber background, dark purple shadows, neon hot pink midtones, glowing electric cyan highlights, vibrant purple accents', mood: 'festival', usage: 'event' },
+
+    // ==========================================
+    // 10. 웜 어스 & 내추럴 (warm_earth) - 8 items
+    // ==========================================
+    {
+      id: 'pal-terracotta',
+      category: 'warm_earth',
+      name: '테라코타',
+      mode: 'light',
+      colors: ['#FDF5F0', '#F5CDB4', '#E8956D', '#C15A2A', '#6B2E0E'],
+      colorMapping: 'warm linen background, peach sand ambient, terracotta mid-tone, rich clay accent, dark adobe emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-matcha-cream',
+      category: 'warm_earth',
+      name: '말차 크림',
+      mode: 'light',
+      colors: ['#F6F8F0', '#E4EDCF', '#C5D89A', '#8BAA4A', '#4A5E1F'],
+      colorMapping: 'cream white background, pale matcha ambient, soft green mid-tone, earthy green accent, dark matcha emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-sand-dune',
+      category: 'warm_earth',
+      name: '샌드 듄',
+      mode: 'light',
+      colors: ['#FDFAF5', '#F5EDD0', '#E5D09A', '#C4A454', '#7A5A18'],
+      colorMapping: 'ivory white background, light sand ambient, golden dune mid-tone, warm ochre accent, dark soil emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-clay-earth',
+      category: 'warm_earth',
+      name: '클레이 어스',
+      mode: 'light',
+      colors: ['#FCF5EE', '#F0D9C3', '#D9B491', '#B07843', '#5C3418'],
+      colorMapping: 'soft cream background, warm clay ambient, mid terracotta mid-tone, earthy brown accent, deep umber emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-linen-natural',
+      category: 'warm_earth',
+      name: '리넨 내추럴',
+      mode: 'light',
+      colors: ['#FEFCF8', '#F5EFE6', '#E8DDD0', '#C4AA8A', '#7A5D3C'],
+      colorMapping: 'natural white background, warm linen ambient, soft ecru mid-tone, camel tan accent, leather brown emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-sage-garden',
+      category: 'warm_earth',
+      name: '세이지 가든',
+      mode: 'light',
+      colors: ['#F4F7F2', '#D9E5D4', '#AABFA2', '#6B8C60', '#2E4A26'],
+      colorMapping: 'soft white-green background, pale sage ambient, dusty sage mid-tone, garden green accent, deep forest emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-autumn-harvest',
+      category: 'warm_earth',
+      name: '오텀 하베스트',
+      mode: 'light',
+      colors: ['#FDF8F0', '#F5DDB4', '#E8A84A', '#C46A00', '#6B3200'],
+      colorMapping: 'warm white background, harvest wheat ambient, golden amber mid-tone, pumpkin orange accent, chestnut emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    {
+      id: 'pal-driftwood',
+      category: 'warm_earth',
+      name: '드리프트우드',
+      mode: 'light',
+      colors: ['#F8F6F3', '#EDE8E0', '#D4CAB8', '#9E907A', '#4A4030'],
+      colorMapping: 'white driftwood background, pale grey-beige ambient, warm taupe mid-tone, aged wood accent, dark bark emphasis',
+      mood: 'natural',
+      usage: 'brand'
+    },
+    { id: 'pal-desert-bloom', category: 'warm_earth', name: '데저트 블룸 핑크 & 샌드', mode: 'light', colors: ['#FFF8F0', '#FFDDC8', '#E8A880', '#C05838', '#602818'], colorMapping: 'warm sand white background, peach rose base, terracotta midtones, vivid desert clay highlight, deep burnt umber shadow', mood: 'natural', usage: 'brand' },
+    { id: 'pal-coffee-earth', category: 'warm_earth', name: '커피 어스 & 에스프레소', mode: 'dark', colors: ['#100800', '#2E1800', '#5C3010', '#A06030', '#E8C890'], colorMapping: 'dark espresso-black background, deep roast brown shadows, medium coffee earth midtones, warm caramel highlights, soft golden cream accents', mood: 'natural', usage: 'brand' },
+    { id: 'pal-organic-green', category: 'warm_earth', name: '오가닉 어스 그린', mode: 'light', colors: ['#F5F8EE', '#D8E8C0', '#A0C060', '#608030', '#2A3A10'], colorMapping: 'natural white background, pale lettuce-green base, organic leaf midtones, vivid herb-green highlight, deep root-green shadow', mood: 'natural', usage: 'brand' },
+    { id: 'pal-rust-denim', category: 'warm_earth', name: '러스트 레드 & 데님 블루', mode: 'dark', colors: ['#1A0800', '#4A1A08', '#9C4020', '#B8784A', '#4A6080'], colorMapping: 'dark russet-black background, deep rust-red shadows, warm brick midtones, dusty copper highlights, cool denim blue accent', mood: 'natural', usage: 'brand' },
+    { id: 'pal-clay-rose', category: 'warm_earth', name: '클레이 로즈 & 베이지', mode: 'light', colors: ['#FBF5F0', '#F0D8C8', '#D8A888', '#B07050', '#603828'], colorMapping: 'warm ivory background, pale adobe base, soft clay-rose midtones, muted terracotta highlight, deep earth shadow', mood: 'natural', usage: 'brand' },
+    { id: 'pal-moss-stone', category: 'warm_earth', name: '모스 & 스톤 그레이', mode: 'light', colors: ['#F2F4EE', '#D8DCC8', '#A0A880', '#6C7850', '#303820'], colorMapping: 'light stone-white background, pale pebble base, muted moss-grey midtones, olive-green highlight, deep dark-lichen shadow', mood: 'natural', usage: 'brand' },
+    { id: 'pal-raw-linen', category: 'warm_earth', name: '로 리넨 & 차콜', mode: 'light', colors: ['#FAF6EE', '#F0E8D4', '#D8C8A4', '#A09060', '#3A3028'], colorMapping: 'natural linen-cream background, warm undyed base, soft raw-cloth midtones, aged hemp highlight, deep charcoal anchor', mood: 'natural', usage: 'brand' },
+    { id: 'pal-volcanic-earth', category: 'warm_earth', name: '화산 어스 레드 & 블랙', mode: 'dark', colors: ['#100808', '#2E1010', '#602020', '#C04030', '#D89070'], colorMapping: 'dark volcanic-black background, deep lava-earth shadows, burnt sienna midtones, vivid burnt-orange highlights, warm sand-terracotta accents', mood: 'natural', usage: 'brand' },
+    { id: 'pal-clay-terracotta', category: 'warm_earth', name: '클레이 황토 & 로즈', mode: 'light', colors: ['#FAF5F0', '#EED8CA', '#D27C5A', '#A05C46', '#2E7D62'], colorMapping: 'warm clay background, soft adobe shadows, rich terracotta midtones, warm rose highlights, dark sage green accents', mood: 'natural', usage: 'brand' },
+    { id: 'pal-clay-canyon', category: 'warm_earth', name: '클레이 캐년 올리브', mode: 'light', colors: ['#FAF3E0', '#E4B382', '#A64B2A', '#D9AD50', '#5F7161'], colorMapping: 'arizona canyon clay background, warm dust orange shadows, rich earthy red-brown midtones, soft gold-sand highlights, calm sage green accents', mood: 'natural', usage: 'brand' },
+    { id: 'pal-warm-terracotta', category: 'warm_earth', name: '황토 점토 & 크림슨', mode: 'light', colors: ['#F9F6F0', '#EFE3C3', '#D6A270', '#8F432F', '#402E2A'], colorMapping: 'dignified warm loess background, light cream clay shadows, ocher brown midtones, striking crimson red highlights, dark sienna anchors', mood: 'natural', usage: 'brand' },
+
+    // ==========================================
+    // 11. 멀티컬러 & 비비드 (multicolor) - 24 items
+    // ==========================================
+    { id: 'pal-sunset-spectrum', category: 'multicolor', name: '선셋 스펙트럼 그라디언트', mood: 'festival', mode: 'dark', colors: ['#1A0030', '#8B00FF', '#FF0080', '#FF6600', '#FFD700'], colorMapping: 'deep violet dusk to neon purple, fiery magenta, blazing orange, golden horizon — full sunset spectrum gradient', usage: 'event' },
+    { id: 'pal-tropical-paradise', category: 'multicolor', name: '트로피컬 파라다이스', mood: 'festival', mode: 'light', colors: ['#00D4AA', '#FF6B6B', '#FFE66D', '#4ECDC4', '#FF8E53'], colorMapping: 'vibrant teal waves, warm coral accents, sunny lemon pop, turquoise shimmer, bright tangerine highlights', usage: 'event' },
+    { id: 'pal-neon-carnival', category: 'multicolor', name: '네온 카니발', mood: 'festival', mode: 'dark', colors: ['#0A0A1A', '#FF00FF', '#00FFFF', '#FFFF00', '#FF4500'], colorMapping: 'deep dark background, electric magenta, glowing cyan, neon yellow, blazing orange-red carnival lights', usage: 'event' },
+    { id: 'pal-aurora-dreams', category: 'multicolor', name: '오로라 드림', mood: 'festival', mode: 'dark', colors: ['#050514', '#003366', '#00AA88', '#FF44CC', '#FFD700'], colorMapping: 'deep midnight navy, arctic blue base, aurora green shimmer, dancing magenta highlight, golden glimmer', usage: 'event' },
+    { id: 'pal-spring-festival', category: 'multicolor', name: '봄 페스티벌', mood: 'festival', mode: 'light', colors: ['#FF6B9D', '#FFB347', '#6BCB77', '#4D96FF', '#FFFFFF'], colorMapping: 'cherry blossom pink, warm apricot orange, fresh spring green, clear sky blue, bright white space', usage: 'event' },
+    { id: 'pal-candy-rainbow', category: 'multicolor', name: '캔디 레인보우', mood: 'festival', mode: 'light', colors: ['#FF4D4D', '#FF9900', '#FFEE00', '#33CC33', '#0066FF'], colorMapping: 'vivid candy red, bright orange, lemon yellow, fresh lime green, electric blue — full spectrum candy rainbow', usage: 'event' },
+    { id: 'pal-tropical-ocean', category: 'multicolor', name: '트로피컬 오션', mood: 'festival', mode: 'light', colors: ['#00B4D8', '#90E0EF', '#FF6B6B', '#FFD166', '#06D6A0'], colorMapping: 'bright ocean blue, aqua shimmer, coral pop, sun yellow, emerald waves — tropical beach vibe', usage: 'event' },
+    { id: 'pal-cosmos-multi', category: 'multicolor', name: '코스모스 멀티 그라디언트', mood: 'festival', mode: 'dark', colors: ['#04001C', '#1A0050', '#6200CC', '#00AAFF', '#FF44AA'], colorMapping: 'deep cosmic void, galaxy purple, electric violet nebula, bright star blue, hot pink stardust', usage: 'event' },
+    { id: 'pal-midsummer-multi', category: 'multicolor', name: '한여름 멀티컬러', mood: 'festival', mode: 'light', colors: ['#FF6B6B', '#FF8E53', '#FFA07A', '#98D8C8', '#45B7D1'], colorMapping: 'sunset coral, warm peach-orange, soft salmon, aqua shimmer, clear sky blue — summer sunset to ocean', usage: 'event' },
+    { id: 'pal-christmas-duo', category: 'multicolor', name: '크리스마스 레드 & 그린', mood: 'festival', mode: 'dark', colors: ['#0A1A0A', '#1A4A1A', '#CC0000', '#FFD700', '#FFFFFF'], colorMapping: 'deep dark green base, forest Christmas green, vivid red, bright gold star, crisp white snow', usage: 'event' },
+    { id: 'pal-cyberpunk-glow', category: 'multicolor', name: '사이버펑크 글로우', mood: 'vivid', mode: 'dark', colors: ['#0D0221', '#FF0090', '#00FFFF', '#FFFF00', '#7B00FF'], colorMapping: 'black void base, hot neon pink, electric cyan, acid yellow, ultra-violet glow — cyberpunk neon city', usage: 'event' },
+    { id: 'pal-acid-festival', category: 'multicolor', name: '애시드 페스티벌', mood: 'vivid', mode: 'dark', colors: ['#111111', '#FF2D55', '#00FF88', '#FFD700', '#AA00FF'], colorMapping: 'dark base, acid red, neon mint green, bright gold, electric purple — high voltage vivid palette', usage: 'event' },
+    { id: 'pal-holographic-foil', category: 'multicolor', name: '홀로그래픽 포일', mood: 'vivid', mode: 'dark', colors: ['#0A0A14', '#FF00CC', '#00CCFF', '#CCFF00', '#FF6600'], colorMapping: 'dark base, iridescent magenta, cyan foil, electric lime, vivid orange — holographic metallic shift', usage: 'event' },
+    { id: 'pal-pop-art-cmyk', category: 'multicolor', name: '팝아트 CMYK', mood: 'vivid', mode: 'light', colors: ['#FF0066', '#FFDD00', '#00AAFF', '#000000', '#FFFFFF'], colorMapping: 'pop art hot pink, vivid yellow, bold cyan, graphic black, stark white — CMYK halftone pop art palette', usage: 'event' },
+    { id: 'pal-neon-tokyo', category: 'multicolor', name: '네온 도쿄 나이트', mood: 'vivid', mode: 'dark', colors: ['#0D0D1A', '#FF2B6B', '#00E5FF', '#FF9500', '#BD00FF'], colorMapping: 'dark Tokyo night, hot neon red-pink, electric cyan, vivid amber, glowing purple neon sign palette', usage: 'event' },
+    { id: 'pal-retro-70s', category: 'multicolor', name: '레트로 70년대', mood: 'retro', mode: 'light', colors: ['#8B4513', '#DAA520', '#CD853F', '#808000', '#D2691E'], colorMapping: 'warm sienna brown, golden mustard, sandy tan, olive drab, burnt orange — authentic 70s earthy retro palette', usage: 'event' },
+    { id: 'pal-retro-80s-neon', category: 'multicolor', name: '빈티지 80년대 네온', mood: 'retro', mode: 'dark', colors: ['#1A001A', '#FF00FF', '#00FFFF', '#FF69B4', '#7FFF00'], colorMapping: 'dark retro backdrop, hot magenta neon, electric cyan, pink synthwave, chartreuse — classic 80s neon palette', usage: 'event' },
+    { id: 'pal-retro-pastel', category: 'multicolor', name: '레트로 파스텔 빈티지', mood: 'retro', mode: 'light', colors: ['#F5E6D3', '#D4A5A5', '#9B9B9B', '#8FBC8F', '#C8A882'], colorMapping: 'warm cream background, dusty rose, vintage grey, sage green, antique camel — faded vintage poster palette', usage: 'event' },
+    { id: 'pal-vaporwave', category: 'multicolor', name: '베이퍼웨이브', mood: 'retro', mode: 'dark', colors: ['#1B0232', '#FF71CE', '#01CDFE', '#05FFA1', '#B967FF'], colorMapping: 'deep purple night, hot pink, digital cyan, neon mint, electric violet — vaporwave aesthetic palette', usage: 'event' },
+    { id: 'pal-luxury-jewel', category: 'multicolor', name: '럭셔리 주얼톤', mood: 'luxury', mode: 'dark', colors: ['#0A0A0A', '#1B4332', '#1A237E', '#7B0D1E', '#C9A84A'], colorMapping: 'black luxury base, deep emerald jewel, sapphire royal blue, ruby red, 24k gold — premium jewel palette', usage: 'event' },
+    { id: 'pal-art-deco', category: 'multicolor', name: '아트 데코 골드 & 블랙', mood: 'luxury', mode: 'dark', colors: ['#0C0C0C', '#1A1A1A', '#C8A84A', '#4A90C8', '#FFFFFF'], colorMapping: 'black art deco base, charcoal surface, warm gold geometric accent, sapphire blue highlight, crisp white outline', usage: 'event' },
+    { id: 'pal-midnight-velvet', category: 'multicolor', name: '미드나잇 벨벳 럭셔리', mood: 'luxury', mode: 'dark', colors: ['#0D0520', '#1A0A3D', '#4A1E8A', '#C0A060', '#EDE8D0'], colorMapping: 'near-black velvet base, deep royal purple, regal amethyst, antique gold shimmer, champagne highlight', usage: 'event' },
+    { id: 'pal-earthy-rainbow', category: 'multicolor', name: '어스 레인보우 내추럴', mood: 'natural', mode: 'light', colors: ['#C0392B', '#E67E22', '#F1C40F', '#27AE60', '#2980B9'], colorMapping: 'earthy red clay, warm amber orange, sun gold, forest green, sky blue — natural earth-toned rainbow spectrum', usage: 'event' },
+    { id: 'pal-botanical-duo', category: 'multicolor', name: '보타닉 코랄 & 그린', mood: 'natural', mode: 'light', colors: ['#2D6A4F', '#40916C', '#FF7F51', '#FFB347', '#FEFAE0'], colorMapping: 'deep forest green, vibrant tropical green, coral orange bloom, warm amber, natural cream white', usage: 'event' },
+  ];
+
+  // 브랜드/플랫폼 기반 프리셋 추가 (레고, 마리오, 로블록스, 마비노기 등) 및 미리캔버스/캔바/웹툰/애니/영화 등
+  const EXTRA_BRAND_PALETTES = [
+    { id: 'pal-lego', category: 'candy', name: '레고 브릭 컬러', mode: 'light', colors: ['#FF0000', '#FFDE00', '#0057A6', '#009A17', '#FFFFFF'], colorMapping: 'primary red bricks, bright yellow accents, deep blue, vivid green, clean white studs', mood: 'festival', usage: 'event' },
+    { id: 'pal-mario', category: 'candy', name: '마리오 클래식', mode: 'light', colors: ['#E60012', '#2A52BE', '#FFD400', '#6BCB77', '#FFFFFF'], colorMapping: 'Mario red primary, blue overalls, gold coin yellow, green accents, white highlights', mood: 'festival', usage: 'event' },
+    { id: 'pal-roblox', category: 'candy', name: '로블록스 플레이풀', mode: 'light', colors: ['#FF4F00', '#00ADEF', '#F2C94C', '#FFFFFF', '#2D2D2D'], colorMapping: 'bright playful orange, electric cyan, warm gold, neutral white and dark anchor', mood: 'festival', usage: 'event' },
+    { id: 'pal-mabinogi', category: 'soft', name: '마비노기 판타지', mode: 'light', colors: ['#6AA84F', '#8DB5E0', '#F3E5AB', '#D9A1C6', '#FFFFFF'], colorMapping: 'soft fantasy greens, pastel sky blue, warm parchment background, rosy pink accents', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-canva', category: 'modern', name: '캔바 스타일 템플릿', mode: 'light', colors: ['#1A73E8', '#F7F9FC', '#34A853', '#FBBC05', '#EA4335'], colorMapping: 'clean template-friendly blues, muted white backgrounds, fresh green and warm highlight tones similar to popular template sets', mood: 'minimal', usage: 'corporate' },
+    { id: 'pal-miricanvas', category: 'modern', name: '미리캔버스 트렌디', mode: 'light', colors: ['#FF7A7A', '#FFD57A', '#A18CD1', '#77D6C6', '#FFFFFF'], colorMapping: '트렌디한 소프트 파스텔과 비비드 포인트의 혼합 팔레트', mood: 'minimal', usage: 'brand' },
+    { id: 'pal-webtoon', category: 'soft', name: '웹툰 컬러 팝', mode: 'light', colors: ['#FF9DE2', '#FFB3C6', '#FFE8B8', '#A8D8FF', '#FFFFFF'], colorMapping: '웹툰 특유의 화사한 하이라이트와 파스텔 보조색', mood: 'minimal', usage: 'content' },
+    { id: 'pal-anime-cinematic', category: 'photo', name: '애니/시네마틱 톤', mode: 'dark', colors: ['#16213e', '#1a1a2e', '#e94560', '#c9a84c', '#8ecae6'], colorMapping: '영화 같은 다크 네이비 기반의 크림·골드 하이라이트, 선명한 레드 포인트', mood: 'retro', usage: 'content' },
+    { id: 'pal-film-grain', category: 'photo', name: '필름 & 시네마', mode: 'dark', colors: ['#0F172A', '#2B2F3A', '#8B6B46', '#C9A84C', '#EDE6DD'], colorMapping: '필름 그레인과 필름 톤의 따뜻한 하이라이트와 차가운 그림자 결합', mood: 'retro', usage: 'content' },
+  ];
+
+  // MIXER_PALETTES에 병합 (중복 id는 덮어쓰지 않음)
+  EXTRA_BRAND_PALETTES.forEach(p => { if (!MIXER_PALETTES.find(x => x.id === p.id)) MIXER_PALETTES.push(p); });
+
+  function getHexLightness(hex) {
+    const value = String(hex || '').trim().replace('#', '');
+    if (!/^[0-9a-f]{6}$/i.test(value)) return null;
+    const r = parseInt(value.slice(0, 2), 16);
+    const g = parseInt(value.slice(2, 4), 16);
+    const b = parseInt(value.slice(4, 6), 16);
+    return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+  }
+
+  for (let i = MIXER_PALETTES.length - 1; i >= 0; i -= 1) {
+    const palette = MIXER_PALETTES[i];
+    if (!palette) continue;
+    const category = String(palette.category || '');
+    const paletteId = String(palette.id || '');
+    const mapping = String(palette.colorMapping || '');
+    if (
+      category.startsWith('concept') ||
+      paletteId.startsWith('pal-style-') ||
+      /Concept Suggestion preset|컨셉 프리셋/i.test(mapping)
+    ) {
+      MIXER_PALETTES.splice(i, 1);
+    }
+  }
+
+  // 구도 및 리터칭 카테고리/프리셋 상수 정의
+
+  Object.assign(window.CONCEPT_MIXER_PRESETS, {
+    PALETTE_CATEGORIES,
+    MIXER_PALETTES,
+    EXTRA_BRAND_PALETTES,
+  });
+})();

@@ -1,0 +1,231 @@
+/* PromptDeck UI system final layer
+   Action docks belong to the right-side work panel and must never float over content. */
+:root {
+  --type-min: 12px;
+  --type-caption: 12px;
+  --type-label: 13px;
+  --type-body: 14px;
+  --type-control: 14px;
+  --type-subtitle: 16px;
+  --type-panel-title: 19px;
+  --type-page-title: 23px;
+}
+
+body {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.brand-title {
+  font-size: 22px;
+}
+
+.brand-subtitle,
+.app-tab-btn {
+  font-size: var(--type-body);
+}
+
+/* 화면 UI의 최소 글자 크기. 축소 슬라이드·인쇄 미리보기는 각 출력 비율을 유지한다. */
+.tab-pane :is(
+  small,
+  [class*="-badge"],
+  [class*="-eyebrow"],
+  [class*="-caption"],
+  [class*="-desc"],
+  [class*="-empty"],
+  [class*="-hint"],
+  [class*="-label"],
+  [class*="-meta"],
+  [class*="-name"],
+  [class*="-note"],
+  [class*="-status"],
+  [class*="-tag"],
+  [class*="-chip"],
+  [class*="-unit"],
+  [class*="-count"],
+  [class*="-index"],
+  [class*="-num"],
+  [class*="-mode"],
+  [class*="-summary"],
+  [class*="-sub"]
+):not(button, input, select, textarea, summary, label),
+#adminPanel :is(small, [class*="-meta"], [class*="-hint"], [class*="-status"], [class*="-badge"]),
+.qr-print-modal :is(small, [class*="-meta"], [class*="-hint"], [class*="-status"], [class*="-badge"]) {
+  font-size: var(--type-min) !important;
+  line-height: 1.45;
+}
+
+.tab-pane :is(label, .gen-label),
+#adminPanel label,
+.qr-print-modal label {
+  font-size: var(--type-label) !important;
+}
+
+.tab-pane :is(button, input, select, textarea, summary),
+#adminPanel :is(button, input, select, textarea, summary),
+.qr-print-modal :is(button, input, select, textarea, summary),
+.tab-action-dock .btn {
+  font-size: var(--type-control) !important;
+}
+
+.tab-pane :is(p, li, dt, dd),
+#adminPanel :is(p, li, dt, dd),
+.qr-print-modal :is(p, li, dt, dd) {
+  font-size: var(--type-body) !important;
+}
+
+.tab-pane :is(pre, code),
+#adminPanel :is(pre, code),
+.qr-print-modal :is(pre, code) {
+  font-size: var(--type-label) !important;
+}
+
+.tab-pane [role="dialog"] :is(span, small, code, kbd),
+.qr-print-modal :is(span, small, code, kbd),
+.qr-batch-modal-dialog .qr-batch-columns {
+  font-size: var(--type-min) !important;
+}
+
+.tab-pane :is(
+  .concept-card-name-ko,
+  .editor-section-index,
+  .prompt-block-head,
+  .prompt-ctrl-title,
+  .priority-notes-title,
+  .priority-notes-item,
+  .form-image-viewer-section-title,
+  .promo-viewer-section-title,
+  .cpd-issue,
+  .mixer-preview-code,
+  .mixer-preview-palette,
+  .mixer-preview-meta-label,
+  .mixer-action-label,
+  .option-card-icon,
+  .palette-hex-summary
+),
+.tab-pane :is(
+  .template-group-title,
+  .is-ok,
+  .cpd-institution-random-copy > span,
+  .cpd-mixer-link-row > span,
+  .cpd-summary-head > div > span,
+  .form-image-result-summary-bar span,
+  .form-image-prompt-toolbar > span,
+  .qr-sample-note strong,
+  .qr-stat-value,
+  .qr-tips-content kbd
+),
+.tab-pane :is(
+  .cpd-medium-card em,
+  .cpd-type-style-card em,
+  .cpd-photo-mode-guide > span,
+  .cpd-photo-advanced summary > em,
+  #cpdAccordion em,
+  .promo-concept-card-cat
+) {
+  font-size: var(--type-min) !important;
+  line-height: 1.45;
+}
+
+.tab-pane :is(.gen-section-head h2, .form-image-panel-head h2, .qr-preview-section-head h2) {
+  font-size: var(--type-panel-title) !important;
+}
+
+.tab-pane .cpd-summary-head h3 {
+  font-size: var(--type-panel-title) !important;
+}
+.tab-action-host > .tab-action-dock {
+  position: static !important;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-height: 60px;
+  padding: 10px 12px;
+  margin-bottom: var(--workspace-gap, 20px) !important;
+  border: 1px solid var(--line, #d7dee9);
+  border-radius: var(--radius-md, 14px);
+  background: var(--surface, #ffffff);
+  box-shadow: var(--shadow-soft, 0 6px 18px rgba(15, 23, 42, 0.06));
+}
+
+/* 비주얼 믹서와 같은 독립형 우측 작업 열: 도크와 결과 카드는 형제 패널이다. */
+.tab-action-column {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  gap: var(--workspace-gap, 20px);
+  overflow: visible;
+}
+
+.tab-action-column.tab-action-host > .tab-action-dock {
+  width: 100%;
+  margin: 0 !important;
+}
+
+.tab-action-column > :not(.tab-action-dock) {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.tab-action-column > .gen-result-section,
+.tab-action-column > .map-preview-section,
+.tab-action-column > .promo-preview-section,
+.tab-action-column > .form-image-result-panel,
+.tab-action-column > .qr-gen-preview-section {
+  position: static !important;
+  top: auto !important;
+  align-self: stretch;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+#paneMapPrompt .map-result-stack > .map-preview-section {
+  border-color: var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-panel);
+  box-shadow: var(--shadow-soft);
+}
+
+#paneMapPrompt .map-result-stack > .map-preview-section > .gen-section-head {
+  padding: var(--panel-padding-compact) var(--panel-padding);
+}
+
+#paneMapPrompt .map-result-stack > .map-preview-section > .gen-content {
+  padding: var(--panel-padding);
+}
+
+#panePromotion .promo-copy-prompt-mobile {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  #tabActions.tab-action-dock {
+    display: none !important;
+  }
+}
+
+@media (min-width: 961px) {
+  #paneDesigner .preview-panel.tab-action-host,
+  #paneCommonPrompt .cpd-summary-inner.tab-action-host,
+  #paneGenerator .gen-result-stack.tab-action-host,
+  #paneSlideImage .slide-image-result-section.tab-action-host,
+  #paneMapPrompt .map-result-stack.tab-action-host,
+  #paneSlideDocument .slide-doc-preview-section.tab-action-host,
+  #paneConceptMixer .mixer-right.tab-action-host,
+  #paneFormImage .form-image-result-stack.tab-action-host,
+  #panePromotion .promo-result-stack.tab-action-host,
+  #paneQrGenerator .qr-result-stack.tab-action-host {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  #paneQrGenerator .qr-result-stack.tab-action-host #btnQrGenerate {
+    display: none;
+  }
+}

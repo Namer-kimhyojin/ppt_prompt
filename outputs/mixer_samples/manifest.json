@@ -1,0 +1,5792 @@
+{
+  "mix-energy-bipv": [
+    "/outputs/mixer_samples/mix-energy-bipv_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-solidstate": [
+    "/outputs/mixer_samples/mix-energy-solidstate_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-strip": [
+    "/outputs/mixer_samples/mix-steel-strip_0.jpg",
+    null,
+    null
+  ],
+  "mix-soft-sdv": [
+    "/outputs/mixer_samples/mix-soft-sdv_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-dna": [
+    "/outputs/mixer_samples/mix-bio-dna_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-petri": [
+    "/outputs/mixer_samples/mix-bio-petri_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-vertical-farm": [
+    "/outputs/mixer_samples/mix-bio-vertical-farm_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-mrna-vaccine": [
+    "/outputs/mixer_samples/mix-bio-mrna-vaccine_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-cybernetic": [
+    "/outputs/mixer_samples/mix-bio-cybernetic_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-cell": [
+    "/outputs/mixer_samples/mix-bio-cell_0.png",
+    null,
+    null
+  ],
+  "mix-steel-wire-rod": [
+    "/outputs/mixer_samples/mix-steel-wire-rod_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-blast-furnace": [
+    "/outputs/mixer_samples/mix-steel-blast-furnace_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-heavy-plate": [
+    "/outputs/mixer_samples/mix-steel-heavy-plate_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-battery-005": [
+    "/outputs/mixer_samples/mix-tech-battery-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-ar-try-on": [
+    "/outputs/mixer_samples/mix-brand-ar-try-on_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-wearable-sensor": [
+    "/outputs/mixer_samples/mix-bio-wearable-sensor_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-energy-005": [
+    "/outputs/mixer_samples/mix-tech-energy-005_0.jpg",
+    null,
+    null
+  ],
+  "med-infographic-icon-text": [
+    "/outputs/mixer_samples/med-infographic-icon-text_0.png",
+    null,
+    null
+  ],
+  "med-clay": [
+    "/outputs/mixer_samples/med-clay_0.jpg",
+    null,
+    null
+  ],
+  "med-iso": [
+    "/outputs/mixer_samples/med-iso_0.jpg",
+    null,
+    null
+  ],
+  "med-voxel": [
+    "/outputs/mixer_samples/med-voxel_0.jpg",
+    null,
+    null
+  ],
+  "med-lowpoly": [
+    "/outputs/mixer_samples/med-lowpoly_0.jpg",
+    null,
+    null
+  ],
+  "med-hologram": [
+    "/outputs/mixer_samples/med-hologram_0.jpg",
+    null,
+    null
+  ],
+  "med-fluiddyn": [
+    "/outputs/mixer_samples/med-fluiddyn_0.png",
+    null,
+    null
+  ],
+  "med-spline": [
+    "/outputs/mixer_samples/med-spline_0.jpg",
+    null,
+    null
+  ],
+  "med-neon-glow": [
+    "/outputs/mixer_samples/med-neon-glow_0.jpg",
+    null,
+    null
+  ],
+  "med-product-3d": [
+    "/outputs/mixer_samples/med-product-3d_0.jpg",
+    null,
+    null
+  ],
+  "med-technical-explode": [
+    "/outputs/mixer_samples/med-technical-explode_0.jpg",
+    null,
+    null
+  ],
+  "med-crystal-3d": [
+    "/outputs/mixer_samples/med-crystal-3d_0.jpg",
+    null,
+    null
+  ],
+  "med-chrome-3d": [
+    "/outputs/mixer_samples/med-chrome-3d_0.jpg",
+    null,
+    null
+  ],
+  "med-bubble-3d": [
+    "/outputs/mixer_samples/med-bubble-3d_0.jpg",
+    null,
+    null
+  ],
+  "med-wireframe-3d": [
+    "/outputs/mixer_samples/med-wireframe-3d_0.jpg",
+    null,
+    null
+  ],
+  "med-particle-3d": [
+    "/outputs/mixer_samples/med-particle-3d_0.jpg",
+    null,
+    null
+  ],
+  "med-pencil": [
+    "/outputs/mixer_samples/med-pencil_0.png",
+    null,
+    null
+  ],
+  "med-charcoal": [
+    "/outputs/mixer_samples/med-charcoal_0.jpg",
+    null,
+    null
+  ],
+  "med-encaustic": [
+    "/outputs/mixer_samples/med-encaustic_0.jpg",
+    null,
+    null
+  ],
+  "med-halftone": [
+    "/outputs/mixer_samples/med-halftone_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-tourism": [
+    "/outputs/mixer_samples/mix-space-tourism_0.jpg",
+    null,
+    null
+  ],
+  "med-watercolor": [
+    "/outputs/mixer_samples/med-watercolor_0.jpg",
+    null,
+    null
+  ],
+  "med-oil": [
+    "/outputs/mixer_samples/med-oil_0.png",
+    null,
+    null
+  ],
+  "med-ink": [
+    "/outputs/mixer_samples/med-ink_0.jpg",
+    null,
+    null
+  ],
+  "med-crayon": [
+    "/outputs/mixer_samples/med-crayon_0.jpg",
+    null,
+    null
+  ],
+  "med-gouache": [
+    "/outputs/mixer_samples/med-gouache_0.jpg",
+    null,
+    null
+  ],
+  "med-acrylic": [
+    "/outputs/mixer_samples/med-acrylic_0.jpg",
+    null,
+    null
+  ],
+  "med-etching": [
+    "/outputs/mixer_samples/med-etching_0.jpg",
+    null,
+    null
+  ],
+  "med-soft-pastel": [
+    "/outputs/mixer_samples/med-soft-pastel_0.jpg",
+    null,
+    null
+  ],
+  "med-lino-print": [
+    "/outputs/mixer_samples/med-lino-print_0.jpg",
+    null,
+    null
+  ],
+  "med-collage": [
+    "/outputs/mixer_samples/med-collage_0.jpg",
+    null,
+    null
+  ],
+  "med-monotype": [
+    "/outputs/mixer_samples/med-monotype_0.jpg",
+    null,
+    null
+  ],
+  "med-tempera": [
+    "/outputs/mixer_samples/med-tempera_0.jpg",
+    null,
+    null
+  ],
+  "med-marbling": [
+    "/outputs/mixer_samples/med-marbling_0.jpg",
+    null,
+    null
+  ],
+  "med-glass": [
+    "/outputs/mixer_samples/med-glass_0.jpg",
+    null,
+    null
+  ],
+  "med-flat": [
+    "/outputs/mixer_samples/med-flat_0.jpg",
+    null,
+    null
+  ],
+  "med-neon": [
+    "/outputs/mixer_samples/med-neon_0.jpg",
+    null,
+    null
+  ],
+  "med-bauhaus": [
+    "/outputs/mixer_samples/med-bauhaus_0.jpg",
+    null,
+    null
+  ],
+  "med-risograph": [
+    "/outputs/mixer_samples/med-risograph_0.jpg",
+    null,
+    null
+  ],
+  "med-cyberpunk-vector": [
+    "/outputs/mixer_samples/med-cyberpunk-vector_0.jpg",
+    null,
+    null
+  ],
+  "med-psychedelic": [
+    "/outputs/mixer_samples/med-psychedelic_0.jpg",
+    null,
+    null
+  ],
+  "med-duotone": [
+    "/outputs/mixer_samples/med-duotone_0.jpg",
+    null,
+    null
+  ],
+  "med-swiss-typography": [
+    "/outputs/mixer_samples/med-swiss-typography_0.jpg",
+    null,
+    null
+  ],
+  "med-retro-poster": [
+    "/outputs/mixer_samples/med-retro-poster_0.jpg",
+    null,
+    null
+  ],
+  "med-brutalism-web": [
+    "/outputs/mixer_samples/med-brutalism-web_0.jpg",
+    null,
+    null
+  ],
+  "med-neon-sign": [
+    "/outputs/mixer_samples/med-neon-sign_0.jpg",
+    null,
+    null
+  ],
+  "med-abstract-geo": [
+    "/outputs/mixer_samples/med-abstract-geo_0.jpg",
+    null,
+    null
+  ],
+  "med-art-deco": [
+    "/outputs/mixer_samples/med-art-deco_0.jpg",
+    null,
+    null
+  ],
+  "med-zine": [
+    "/outputs/mixer_samples/med-zine_0.jpg",
+    null,
+    null
+  ],
+  "med-cel-anime": [
+    "/outputs/mixer_samples/med-cel-anime_0.png",
+    null,
+    null
+  ],
+  "med-webtoon": [
+    "/outputs/mixer_samples/med-webtoon_0.png",
+    null,
+    null
+  ],
+  "med-american-comic": [
+    "/outputs/mixer_samples/med-american-comic_0.png",
+    null,
+    null
+  ],
+  "med-manga": [
+    "/outputs/mixer_samples/med-manga_0.png",
+    null,
+    null
+  ],
+  "med-chibi": [
+    "/outputs/mixer_samples/med-chibi_0.png",
+    null,
+    null
+  ],
+  "med-ghibli": [
+    "/outputs/mixer_samples/med-ghibli_0.png",
+    null,
+    null
+  ],
+  "med-cyber-cyberpunk": [
+    "/outputs/mixer_samples/med-cyber-cyberpunk_0.png",
+    null,
+    null
+  ],
+  "med-ink-splatter": [
+    "/outputs/mixer_samples/med-ink-splatter_0.jpg",
+    null,
+    null
+  ],
+  "med-shonen": [
+    "/outputs/mixer_samples/med-shonen_0.png",
+    null,
+    null
+  ],
+  "med-anime-bg": [
+    "/outputs/mixer_samples/med-anime-bg_0.png",
+    null,
+    null
+  ],
+  "med-vintage-anime": [
+    "/outputs/mixer_samples/med-vintage-anime_0.png",
+    null,
+    null
+  ],
+  "med-manhwa-line": [
+    "/outputs/mixer_samples/med-manhwa-line_0.png",
+    null,
+    null
+  ],
+  "med-cel-shade-3d": [
+    "/outputs/mixer_samples/med-cel-shade-3d_0.png",
+    null,
+    null
+  ],
+  "med-art-nouveau-illust": [
+    "/outputs/mixer_samples/med-art-nouveau-illust_0.png",
+    null,
+    null
+  ],
+  "med-shoujo-sparkle": [
+    "/outputs/mixer_samples/med-shoujo-sparkle_0.jpg",
+    null,
+    null
+  ],
+  "med-seinen-dark": [
+    "/outputs/mixer_samples/med-seinen-dark_0.jpg",
+    null,
+    null
+  ],
+  "med-mahou-shoujo": [
+    "/outputs/mixer_samples/med-mahou-shoujo_0.jpg",
+    null,
+    null
+  ],
+  "med-kyoani": [
+    "/outputs/mixer_samples/med-kyoani_0.jpg",
+    null,
+    null
+  ],
+  "med-trigger-bold": [
+    "/outputs/mixer_samples/med-trigger-bold_0.jpg",
+    null,
+    null
+  ],
+  "med-ufotable-glow": [
+    "/outputs/mixer_samples/med-ufotable-glow_0.jpg",
+    null,
+    null
+  ],
+  "med-isekailight-novel": [
+    "/outputs/mixer_samples/med-isekailight-novel_0.jpg",
+    null,
+    null
+  ],
+  "med-vtuber-l2d": [
+    "/outputs/mixer_samples/med-vtuber-l2d_0.jpg",
+    null,
+    null
+  ],
+  "med-gacha-card": [
+    "/outputs/mixer_samples/med-gacha-card_0.jpg",
+    null,
+    null
+  ],
+  "med-jrpg-illust": [
+    "/outputs/mixer_samples/med-jrpg-illust_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-rpg": [
+    "/outputs/mixer_samples/med-pixel-rpg_0.jpg",
+    null,
+    null
+  ],
+  "med-horror-manga": [
+    "/outputs/mixer_samples/med-horror-manga_0.jpg",
+    null,
+    null
+  ],
+  "med-mecha-design": [
+    "/outputs/mixer_samples/med-mecha-design_0.jpg",
+    null,
+    null
+  ],
+  "med-kemono-anthro": [
+    "/outputs/mixer_samples/med-kemono-anthro_0.jpg",
+    null,
+    null
+  ],
+  "med-sports-manga": [
+    "/outputs/mixer_samples/med-sports-manga_0.jpg",
+    null,
+    null
+  ],
+  "med-webtoon-romance": [
+    "/outputs/mixer_samples/med-webtoon-romance_0.jpg",
+    null,
+    null
+  ],
+  "med-webtoon-dark-action": [
+    "/outputs/mixer_samples/med-webtoon-dark-action_0.jpg",
+    null,
+    null
+  ],
+  "med-disney-classic": [
+    "/outputs/mixer_samples/med-disney-classic_0.jpg",
+    null,
+    null
+  ],
+  "med-disney-modern": [
+    "/outputs/mixer_samples/med-disney-modern_0.jpg",
+    null,
+    null
+  ],
+  "med-cartoon-network": [
+    "/outputs/mixer_samples/med-cartoon-network_0.jpg",
+    null,
+    null
+  ],
+  "med-nickelodeon": [
+    "/outputs/mixer_samples/med-nickelodeon_0.jpg",
+    null,
+    null
+  ],
+  "med-french-bd": [
+    "/outputs/mixer_samples/med-french-bd_0.jpg",
+    null,
+    null
+  ],
+  "med-moebius": [
+    "/outputs/mixer_samples/med-moebius_0.jpg",
+    null,
+    null
+  ],
+  "med-adult-animation": [
+    "/outputs/mixer_samples/med-adult-animation_0.jpg",
+    null,
+    null
+  ],
+  "med-indie-animation": [
+    "/outputs/mixer_samples/med-indie-animation_0.jpg",
+    null,
+    null
+  ],
+  "med-2000s-flash": [
+    "/outputs/mixer_samples/med-2000s-flash_0.jpg",
+    null,
+    null
+  ],
+  "med-ukiyoe-manga": [
+    "/outputs/mixer_samples/med-ukiyoe-manga_0.png",
+    null,
+    null
+  ],
+  "med-manhwa-classical": [
+    "/outputs/mixer_samples/med-manhwa-classical_0.jpg",
+    null,
+    null
+  ],
+  "med-tokusatsu-poster": [
+    "/outputs/mixer_samples/med-tokusatsu-poster_0.jpg",
+    null,
+    null
+  ],
+  "med-doujin-circle": [
+    "/outputs/mixer_samples/med-doujin-circle_0.jpg",
+    null,
+    null
+  ],
+  "med-anime-eyecatch": [
+    "/outputs/mixer_samples/med-anime-eyecatch_0.jpg",
+    null,
+    null
+  ],
+  "med-film-photo": [
+    "/outputs/mixer_samples/med-film-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-micro-photo": [
+    "/outputs/mixer_samples/med-micro-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-exposure-photo": [
+    "/outputs/mixer_samples/med-exposure-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-press-photo": [
+    "/outputs/mixer_samples/med-press-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-polaroid": [
+    "/outputs/mixer_samples/med-polaroid_0.jpg",
+    null,
+    null
+  ],
+  "med-drone": [
+    "/outputs/mixer_samples/med-drone_0.jpg",
+    null,
+    null
+  ],
+  "med-thermal": [
+    "/outputs/mixer_samples/med-thermal_0.jpg",
+    null,
+    null
+  ],
+  "med-macro": [
+    "/outputs/mixer_samples/med-macro_0.jpg",
+    null,
+    null
+  ],
+  "med-film-grain": [
+    "/outputs/mixer_samples/med-film-grain_0.jpg",
+    null,
+    null
+  ],
+  "med-tilt-shift": [
+    "/outputs/mixer_samples/med-tilt-shift_0.jpg",
+    null,
+    null
+  ],
+  "med-high-key": [
+    "/outputs/mixer_samples/med-high-key_0.jpg",
+    null,
+    null
+  ],
+  "med-hdr-landscape": [
+    "/outputs/mixer_samples/med-hdr-landscape_0.jpg",
+    null,
+    null
+  ],
+  "med-night-portrait": [
+    "/outputs/mixer_samples/med-night-portrait_0.jpg",
+    null,
+    null
+  ],
+  "med-editorial-color": [
+    "/outputs/mixer_samples/med-editorial-color_0.jpg",
+    null,
+    null
+  ],
+  "med-infrared": [
+    "/outputs/mixer_samples/med-infrared_0.jpg",
+    null,
+    null
+  ],
+  "med-double-exposure": [
+    "/outputs/mixer_samples/med-double-exposure_0.jpg",
+    null,
+    null
+  ],
+  "med-origami": [
+    "/outputs/mixer_samples/med-origami_0.jpg",
+    null,
+    null
+  ],
+  "med-felt": [
+    "/outputs/mixer_samples/med-felt_0.jpg",
+    null,
+    null
+  ],
+  "med-papercut": [
+    "/outputs/mixer_samples/med-papercut_0.jpg",
+    null,
+    null
+  ],
+  "med-embroidery": [
+    "/outputs/mixer_samples/med-embroidery_0.jpg",
+    null,
+    null
+  ],
+  "med-diorama": [
+    "/outputs/mixer_samples/med-diorama_0.jpg",
+    null,
+    null
+  ],
+  "med-stainedglass": [
+    "/outputs/mixer_samples/med-stainedglass_0.jpg",
+    null,
+    null
+  ],
+  "med-ceramic": [
+    "/outputs/mixer_samples/med-ceramic_0.jpg",
+    null,
+    null
+  ],
+  "med-leather": [
+    "/outputs/mixer_samples/med-leather_0.jpg",
+    null,
+    null
+  ],
+  "med-pottery-craft": [
+    "/outputs/mixer_samples/med-pottery-craft_0.jpg",
+    null,
+    null
+  ],
+  "med-macrame": [
+    "/outputs/mixer_samples/med-macrame_0.jpg",
+    null,
+    null
+  ],
+  "med-wood-carving": [
+    "/outputs/mixer_samples/med-wood-carving_0.jpg",
+    null,
+    null
+  ],
+  "med-glass-blowing": [
+    "/outputs/mixer_samples/med-glass-blowing_0.jpg",
+    null,
+    null
+  ],
+  "med-jewelry-craft": [
+    "/outputs/mixer_samples/med-jewelry-craft_0.jpg",
+    null,
+    null
+  ],
+  "med-papercraft": [
+    "/outputs/mixer_samples/med-papercraft_0.jpg",
+    null,
+    null
+  ],
+  "med-whitepaper": [
+    "/outputs/mixer_samples/med-whitepaper_0.jpg",
+    null,
+    null
+  ],
+  "med-official-photo": [
+    "/outputs/mixer_samples/med-official-photo_0.png",
+    null,
+    null
+  ],
+  "med-report-diagram": [
+    "/outputs/mixer_samples/med-report-diagram_0.jpg",
+    null,
+    null
+  ],
+  "med-annual-report": [
+    "/outputs/mixer_samples/med-annual-report_0.jpg",
+    null,
+    null
+  ],
+  "med-presentation-slide": [
+    "/outputs/mixer_samples/med-presentation-slide_0.jpg",
+    null,
+    null
+  ],
+  "med-data-journalism": [
+    "/outputs/mixer_samples/med-data-journalism_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-retro": [
+    "/outputs/mixer_samples/med-pixel-retro_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-16bit": [
+    "/outputs/mixer_samples/med-pixel-16bit_0.jpg",
+    null,
+    null
+  ],
+  "med-concept-fantasy": [
+    "/outputs/mixer_samples/med-concept-fantasy_0.jpg",
+    null,
+    null
+  ],
+  "med-game-hud": [
+    "/outputs/mixer_samples/med-game-hud_0.jpg",
+    null,
+    null
+  ],
+  "med-synthwave": [
+    "/outputs/mixer_samples/med-synthwave_0.jpg",
+    null,
+    null
+  ],
+  "med-vaporwave": [
+    "/outputs/mixer_samples/med-vaporwave_0.jpg",
+    null,
+    null
+  ],
+  "med-concept-scifi": [
+    "/outputs/mixer_samples/med-concept-scifi_0.jpg",
+    null,
+    null
+  ],
+  "med-mobile-game-ui": [
+    "/outputs/mixer_samples/med-mobile-game-ui_0.jpg",
+    null,
+    null
+  ],
+  "med-concept-game": [
+    "/outputs/mixer_samples/med-concept-game_0.jpg",
+    null,
+    null
+  ],
+  "med-moba-splash": [
+    "/outputs/mixer_samples/med-moba-splash_0.jpg",
+    null,
+    null
+  ],
+  "med-tactical-map": [
+    "/outputs/mixer_samples/med-tactical-map_0.jpg",
+    null,
+    null
+  ],
+  "med-boss-monster": [
+    "/outputs/mixer_samples/med-boss-monster_0.jpg",
+    null,
+    null
+  ],
+  "med-side-scroll-bg": [
+    "/outputs/mixer_samples/med-side-scroll-bg_0.jpg",
+    null,
+    null
+  ],
+  "med-3d-game-scene": [
+    "/outputs/mixer_samples/med-3d-game-scene_0.jpg",
+    null,
+    null
+  ],
+  "med-character-sheet": [
+    "/outputs/mixer_samples/med-character-sheet_0.jpg",
+    null,
+    null
+  ],
+  "med-minhwa": [
+    "/outputs/mixer_samples/med-minhwa_0.jpg",
+    null,
+    null
+  ],
+  "med-ukiyoe": [
+    "/outputs/mixer_samples/med-ukiyoe_0.png",
+    null,
+    null
+  ],
+  "med-chinese-inkwash": [
+    "/outputs/mixer_samples/med-chinese-inkwash_0.jpg",
+    null,
+    null
+  ],
+  "med-linocut": [
+    "/outputs/mixer_samples/med-linocut_0.jpg",
+    null,
+    null
+  ],
+  "med-vintage-poster": [
+    "/outputs/mixer_samples/med-vintage-poster_0.jpg",
+    null,
+    null
+  ],
+  "med-constructivism": [
+    "/outputs/mixer_samples/med-constructivism_0.jpg",
+    null,
+    null
+  ],
+  "med-korean-calligraphy": [
+    "/outputs/mixer_samples/med-korean-calligraphy_0.jpg",
+    null,
+    null
+  ],
+  "med-serigraphy": [
+    "/outputs/mixer_samples/med-serigraphy_0.jpg",
+    null,
+    null
+  ],
+  "med-woodblock": [
+    "/outputs/mixer_samples/med-woodblock_0.jpg",
+    null,
+    null
+  ],
+  "med-stencil-graffiti": [
+    "/outputs/mixer_samples/med-stencil-graffiti_0.jpg",
+    null,
+    null
+  ],
+  "med-mosaic-art": [
+    "/outputs/mixer_samples/med-mosaic-art_0.jpg",
+    null,
+    null
+  ],
+  "med-letterpress": [
+    "/outputs/mixer_samples/med-letterpress_0.jpg",
+    null,
+    null
+  ],
+  "med-folk-art": [
+    "/outputs/mixer_samples/med-folk-art_0.jpg",
+    null,
+    null
+  ],
+  "med-copperplate-illust": [
+    "/outputs/mixer_samples/med-copperplate-illust_0.jpg",
+    null,
+    null
+  ],
+  "med-glitch": [
+    "/outputs/mixer_samples/med-glitch_0.jpg",
+    null,
+    null
+  ],
+  "med-generative": [
+    "/outputs/mixer_samples/med-generative_0.png",
+    null,
+    null
+  ],
+  "med-abstract-expr": [
+    "/outputs/mixer_samples/med-abstract-expr_0.jpg",
+    null,
+    null
+  ],
+  "med-optical-illusion": [
+    "/outputs/mixer_samples/med-optical-illusion_0.jpg",
+    null,
+    null
+  ],
+  "med-fractal": [
+    "/outputs/mixer_samples/med-fractal_0.jpg",
+    null,
+    null
+  ],
+  "med-psychedelic-art": [
+    "/outputs/mixer_samples/med-psychedelic-art_0.jpg",
+    null,
+    null
+  ],
+  "med-kinetic-pattern": [
+    "/outputs/mixer_samples/med-kinetic-pattern_0.png",
+    null,
+    null
+  ],
+  "med-color-field": [
+    "/outputs/mixer_samples/med-color-field_0.jpg",
+    null,
+    null
+  ],
+  "med-suprematism": [
+    "/outputs/mixer_samples/med-suprematism_0.jpg",
+    null,
+    null
+  ],
+  "med-op-art": [
+    "/outputs/mixer_samples/med-op-art_0.jpg",
+    null,
+    null
+  ],
+  "med-data-art": [
+    "/outputs/mixer_samples/med-data-art_0.jpg",
+    null,
+    null
+  ],
+  "med-glitch-art": [
+    "/outputs/mixer_samples/med-glitch-art_0.jpg",
+    null,
+    null
+  ],
+  "med-light-art": [
+    "/outputs/mixer_samples/med-light-art_0.jpg",
+    null,
+    null
+  ],
+  "med-algorithmic-art": [
+    "/outputs/mixer_samples/med-algorithmic-art_0.jpg",
+    null,
+    null
+  ],
+  "med-arch-render": [
+    "/outputs/mixer_samples/med-arch-render_0.jpg",
+    null,
+    null
+  ],
+  "med-blueprint": [
+    "/outputs/mixer_samples/med-blueprint_0.jpg",
+    null,
+    null
+  ],
+  "med-interior-viz": [
+    "/outputs/mixer_samples/med-interior-viz_0.jpg",
+    null,
+    null
+  ],
+  "med-urban-planning": [
+    "/outputs/mixer_samples/med-urban-planning_0.jpg",
+    null,
+    null
+  ],
+  "med-section-drawing": [
+    "/outputs/mixer_samples/med-section-drawing_0.jpg",
+    null,
+    null
+  ],
+  "med-landscape-arch": [
+    "/outputs/mixer_samples/med-landscape-arch_0.jpg",
+    null,
+    null
+  ],
+  "med-heritage-drawing": [
+    "/outputs/mixer_samples/med-heritage-drawing_0.jpg",
+    null,
+    null
+  ],
+  "med-space-planning": [
+    "/outputs/mixer_samples/med-space-planning_0.jpg",
+    null,
+    null
+  ],
+  "med-parametric-arch": [
+    "/outputs/mixer_samples/med-parametric-arch_0.jpg",
+    null,
+    null
+  ],
+  "med-biophilic-arch": [
+    "/outputs/mixer_samples/med-biophilic-arch_0.jpg",
+    null,
+    null
+  ],
+  "med-adaptive-reuse": [
+    "/outputs/mixer_samples/med-adaptive-reuse_0.jpg",
+    null,
+    null
+  ],
+  "med-arch-diagram": [
+    "/outputs/mixer_samples/med-arch-diagram_0.jpg",
+    null,
+    null
+  ],
+  "med-night-arch": [
+    "/outputs/mixer_samples/med-night-arch_0.jpg",
+    null,
+    null
+  ],
+  "med-urban-masterplan": [
+    "/outputs/mixer_samples/med-urban-masterplan_0.jpg",
+    null,
+    null
+  ],
+  "med-interior-render": [
+    "/outputs/mixer_samples/med-interior-render_0.jpg",
+    null,
+    null
+  ],
+  "med-timber-arch": [
+    "/outputs/mixer_samples/med-timber-arch_0.jpg",
+    null,
+    null
+  ],
+  "med-fashion-illust": [
+    "/outputs/mixer_samples/med-fashion-illust_0.jpg",
+    null,
+    null
+  ],
+  "med-luxury-mag": [
+    "/outputs/mixer_samples/med-luxury-mag_0.jpg",
+    null,
+    null
+  ],
+  "med-beauty-ad": [
+    "/outputs/mixer_samples/med-beauty-ad_0.jpg",
+    null,
+    null
+  ],
+  "med-sports-illust": [
+    "/outputs/mixer_samples/med-sports-illust_0.jpg",
+    null,
+    null
+  ],
+  "med-childrens-book": [
+    "/outputs/mixer_samples/med-childrens-book_0.jpg",
+    null,
+    null
+  ],
+  "med-portrait-editorial": [
+    "/outputs/mixer_samples/med-portrait-editorial_0.jpg",
+    null,
+    null
+  ],
+  "med-food-editorial": [
+    "/outputs/mixer_samples/med-food-editorial_0.jpg",
+    null,
+    null
+  ],
+  "med-lifestyle-photo": [
+    "/outputs/mixer_samples/med-lifestyle-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-luxury-product": [
+    "/outputs/mixer_samples/med-luxury-product_0.jpg",
+    null,
+    null
+  ],
+  "med-sports-editorial": [
+    "/outputs/mixer_samples/med-sports-editorial_0.jpg",
+    null,
+    null
+  ],
+  "med-beauty-campaign": [
+    "/outputs/mixer_samples/med-beauty-campaign_0.jpg",
+    null,
+    null
+  ],
+  "med-travel-editorial": [
+    "/outputs/mixer_samples/med-travel-editorial_0.jpg",
+    null,
+    null
+  ],
+  "med-corporate-portrait": [
+    "/outputs/mixer_samples/med-corporate-portrait_0.jpg",
+    null,
+    null
+  ],
+  "med-architecture-editorial": [
+    "/outputs/mixer_samples/med-architecture-editorial_0.jpg",
+    null,
+    null
+  ],
+  "med-conceptual-fashion": [
+    "/outputs/mixer_samples/med-conceptual-fashion_0.jpg",
+    null,
+    null
+  ],
+  "med-social-content": [
+    "/outputs/mixer_samples/med-social-content_0.jpg",
+    null,
+    null
+  ],
+  "med-photobash": [
+    "/outputs/mixer_samples/med-photobash_0.jpg",
+    null,
+    null
+  ],
+  "med-digital-impasto": [
+    "/outputs/mixer_samples/med-digital-impasto_0.jpg",
+    null,
+    null
+  ],
+  "med-matte-painting": [
+    "/outputs/mixer_samples/med-matte-painting_0.jpg",
+    null,
+    null
+  ],
+  "med-concept-sketch": [
+    "/outputs/mixer_samples/med-concept-sketch_0.jpg",
+    null,
+    null
+  ],
+  "med-speed-paint": [
+    "/outputs/mixer_samples/med-speed-paint_0.jpg",
+    null,
+    null
+  ],
+  "med-3d-paint-hybrid": [
+    "/outputs/mixer_samples/med-3d-paint-hybrid_0.jpg",
+    null,
+    null
+  ],
+  "med-noise-texture": [
+    "/outputs/mixer_samples/med-noise-texture_0.jpg",
+    null,
+    null
+  ],
+  "med-digital-ink": [
+    "/outputs/mixer_samples/med-digital-ink_0.jpg",
+    null,
+    null
+  ],
+  "med-environment-concept": [
+    "/outputs/mixer_samples/med-environment-concept_0.jpg",
+    null,
+    null
+  ],
+  "med-creature-design": [
+    "/outputs/mixer_samples/med-creature-design_0.jpg",
+    null,
+    null
+  ],
+  "med-character-concept": [
+    "/outputs/mixer_samples/med-character-concept_0.jpg",
+    null,
+    null
+  ],
+  "med-sci-fi-matte": [
+    "/outputs/mixer_samples/med-sci-fi-matte_0.jpg",
+    null,
+    null
+  ],
+  "med-book-cover-art": [
+    "/outputs/mixer_samples/med-book-cover-art_0.jpg",
+    null,
+    null
+  ],
+  "med-storyboard": [
+    "/outputs/mixer_samples/med-storyboard_0.jpg",
+    null,
+    null
+  ],
+  "med-graphic-novel": [
+    "/outputs/mixer_samples/med-graphic-novel_0.jpg",
+    null,
+    null
+  ],
+  "med-fan-art": [
+    "/outputs/mixer_samples/med-fan-art_0.jpg",
+    null,
+    null
+  ],
+  "med-app-dashboard": [
+    "/outputs/mixer_samples/med-app-dashboard_0.jpg",
+    null,
+    null
+  ],
+  "med-wireframe": [
+    "/outputs/mixer_samples/med-wireframe_0.jpg",
+    null,
+    null
+  ],
+  "med-gamification-ui": [
+    "/outputs/mixer_samples/med-gamification-ui_0.jpg",
+    null,
+    null
+  ],
+  "med-glassmorphism": [
+    "/outputs/mixer_samples/med-glassmorphism_0.jpg",
+    null,
+    null
+  ],
+  "med-neumorphism": [
+    "/outputs/mixer_samples/med-neumorphism_0.jpg",
+    null,
+    null
+  ],
+  "med-dark-mode-app": [
+    "/outputs/mixer_samples/med-dark-mode-app_0.jpg",
+    null,
+    null
+  ],
+  "med-data-viz-infographic": [
+    "/outputs/mixer_samples/med-data-viz-infographic_0.jpg",
+    null,
+    null
+  ],
+  "med-system-arch-diagram": [
+    "/outputs/mixer_samples/med-system-arch-diagram_0.jpg",
+    null,
+    null
+  ],
+  "med-onboarding-flow": [
+    "/outputs/mixer_samples/med-onboarding-flow_0.jpg",
+    null,
+    null
+  ],
+  "med-e-commerce-ui": [
+    "/outputs/mixer_samples/med-e-commerce-ui_0.jpg",
+    null,
+    null
+  ],
+  "med-design-system": [
+    "/outputs/mixer_samples/med-design-system_0.jpg",
+    null,
+    null
+  ],
+  "med-landing-page-ui": [
+    "/outputs/mixer_samples/med-landing-page-ui_0.jpg",
+    null,
+    null
+  ],
+  "med-mobile-notification": [
+    "/outputs/mixer_samples/med-mobile-notification_0.jpg",
+    null,
+    null
+  ],
+  "med-auth-ui": [
+    "/outputs/mixer_samples/med-auth-ui_0.jpg",
+    null,
+    null
+  ],
+  "med-data-table-ui": [
+    "/outputs/mixer_samples/med-data-table-ui_0.jpg",
+    null,
+    null
+  ],
+  "med-empty-state": [
+    "/outputs/mixer_samples/med-empty-state_0.jpg",
+    null,
+    null
+  ],
+  "med-iso-pixel-city": [
+    "/outputs/mixer_samples/med-iso-pixel-city_0.jpg",
+    null,
+    null
+  ],
+  "med-dot-art-sprite": [
+    "/outputs/mixer_samples/med-dot-art-sprite_0.jpg",
+    null,
+    null
+  ],
+  "med-rpg-bg-pixel": [
+    "/outputs/mixer_samples/med-rpg-bg-pixel_0.jpg",
+    null,
+    null
+  ],
+  "med-dither-grayscale": [
+    "/outputs/mixer_samples/med-dither-grayscale_0.jpg",
+    null,
+    null
+  ],
+  "med-hi-res-pixel": [
+    "/outputs/mixer_samples/med-hi-res-pixel_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-particles": [
+    "/outputs/mixer_samples/med-pixel-particles_0.jpg",
+    null,
+    null
+  ],
+  "med-retro-crt": [
+    "/outputs/mixer_samples/med-retro-crt_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-anim-still": [
+    "/outputs/mixer_samples/med-pixel-anim-still_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-portrait": [
+    "/outputs/mixer_samples/med-pixel-portrait_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-landscape": [
+    "/outputs/mixer_samples/med-pixel-landscape_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-icon-set": [
+    "/outputs/mixer_samples/med-pixel-icon-set_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-horror": [
+    "/outputs/mixer_samples/med-pixel-horror_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-map": [
+    "/outputs/mixer_samples/med-pixel-map_0.jpg",
+    null,
+    null
+  ],
+  "med-voxel-art": [
+    "/outputs/mixer_samples/med-voxel-art_0.jpg",
+    null,
+    null
+  ],
+  "med-demoscene": [
+    "/outputs/mixer_samples/med-demoscene_0.jpg",
+    null,
+    null
+  ],
+  "med-pixel-cutscene": [
+    "/outputs/mixer_samples/med-pixel-cutscene_0.jpg",
+    null,
+    null
+  ],
+  "med-golden-hour": [
+    "/outputs/mixer_samples/med-golden-hour_0.jpg",
+    null,
+    null
+  ],
+  "med-aurora-long-exp": [
+    "/outputs/mixer_samples/med-aurora-long-exp_0.jpg",
+    null,
+    null
+  ],
+  "med-misty-forest": [
+    "/outputs/mixer_samples/med-misty-forest_0.jpg",
+    null,
+    null
+  ],
+  "med-reflection-symmetry": [
+    "/outputs/mixer_samples/med-reflection-symmetry_0.jpg",
+    null,
+    null
+  ],
+  "med-underwater": [
+    "/outputs/mixer_samples/med-underwater_0.jpg",
+    null,
+    null
+  ],
+  "med-aerial-drone": [
+    "/outputs/mixer_samples/med-aerial-drone_0.jpg",
+    null,
+    null
+  ],
+  "med-bw-street-doc": [
+    "/outputs/mixer_samples/med-bw-street-doc_0.jpg",
+    null,
+    null
+  ],
+  "med-studio-still-life": [
+    "/outputs/mixer_samples/med-studio-still-life_0.jpg",
+    null,
+    null
+  ],
+  "med-wildlife-photo": [
+    "/outputs/mixer_samples/med-wildlife-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-storm-sky": [
+    "/outputs/mixer_samples/med-storm-sky_0.jpg",
+    null,
+    null
+  ],
+  "med-season-color": [
+    "/outputs/mixer_samples/med-season-color_0.jpg",
+    null,
+    null
+  ],
+  "med-ocean-wave": [
+    "/outputs/mixer_samples/med-ocean-wave_0.jpg",
+    null,
+    null
+  ],
+  "med-desert-sand": [
+    "/outputs/mixer_samples/med-desert-sand_0.jpg",
+    null,
+    null
+  ],
+  "med-mountain-fog": [
+    "/outputs/mixer_samples/med-mountain-fog_0.jpg",
+    null,
+    null
+  ],
+  "med-macro-nature": [
+    "/outputs/mixer_samples/med-macro-nature_0.jpg",
+    null,
+    null
+  ],
+  "med-night-sky-photo": [
+    "/outputs/mixer_samples/med-night-sky-photo_0.jpg",
+    null,
+    null
+  ],
+  "med-yt-whiteboard": [
+    "/outputs/mixer_samples/med-yt-whiteboard_0.jpg",
+    null,
+    null
+  ],
+  "med-yt-flat-vector": [
+    "/outputs/mixer_samples/med-yt-flat-vector_0.jpg",
+    null,
+    null
+  ],
+  "med-yt-doodle": [
+    "/outputs/mixer_samples/med-yt-doodle_0.png",
+    null,
+    null
+  ],
+  "med-yt-historical-doc": [
+    "/outputs/mixer_samples/med-yt-historical-doc_0.png",
+    null,
+    null
+  ],
+  "med-yt-webtoon-comic": [
+    "/outputs/mixer_samples/med-yt-webtoon-comic_0.png",
+    null,
+    null
+  ],
+  "med-yt-news-info": [
+    "/outputs/mixer_samples/med-yt-news-info_0.jpg",
+    null,
+    null
+  ],
+  "med-yt-isometric": [
+    "/outputs/mixer_samples/med-yt-isometric_0.jpg",
+    null,
+    null
+  ],
+  "med-yt-collage": [
+    "/outputs/mixer_samples/med-yt-collage_0.png",
+    null,
+    null
+  ],
+  "med-yt-line-pictogram": [
+    "/outputs/mixer_samples/med-yt-line-pictogram_0.png",
+    null,
+    null
+  ],
+  "med-yt-clay-soft": [
+    "/outputs/mixer_samples/med-yt-clay-soft_0.png",
+    null,
+    null
+  ],
+  "med-yt-vintage-textbook": [
+    "/outputs/mixer_samples/med-yt-vintage-textbook_0.jpg",
+    null,
+    null
+  ],
+  "med-yt-diagram": [
+    "/outputs/mixer_samples/med-yt-diagram_0.jpg",
+    null,
+    null
+  ],
+  "med-public-modern-line": [
+    "/outputs/mixer_samples/med-public-modern-line_0.png",
+    null,
+    null
+  ],
+  "med-public-soft-color": [
+    "/outputs/mixer_samples/med-public-soft-color_0.png",
+    null,
+    null
+  ],
+  "med-public-icon-system": [
+    "/outputs/mixer_samples/med-public-icon-system_0.png",
+    null,
+    null
+  ],
+  "med-public-flat-design": [
+    "/outputs/mixer_samples/med-public-flat-design_0.png",
+    null,
+    null
+  ],
+  "med-public-geometric-modern": [
+    "/outputs/mixer_samples/med-public-geometric-modern_0.png",
+    null,
+    null
+  ],
+  "med-public-pastel-simple": [
+    "/outputs/mixer_samples/med-public-pastel-simple_0.png",
+    null,
+    null
+  ],
+  "med-public-lineart-official": [
+    "/outputs/mixer_samples/med-public-lineart-official_0.png",
+    null,
+    null
+  ],
+  "med-public-minimal-brand": [
+    "/outputs/mixer_samples/med-public-minimal-brand_0.png",
+    null,
+    null
+  ],
+  "med-minimal-grid-system": [
+    "/outputs/mixer_samples/med-minimal-grid-system_0.png",
+    null,
+    null
+  ],
+  "med-minimal-circle-geometry": [
+    "/outputs/mixer_samples/med-minimal-circle-geometry_0.png",
+    null,
+    null
+  ],
+  "med-minimal-bauhaus": [
+    "/outputs/mixer_samples/med-minimal-bauhaus_0.jpg",
+    null,
+    null
+  ],
+  "med-minimal-swiss-design": [
+    "/outputs/mixer_samples/med-minimal-swiss-design_0.png",
+    null,
+    null
+  ],
+  "med-minimal-dot-pattern": [
+    "/outputs/mixer_samples/med-minimal-dot-pattern_0.png",
+    null,
+    null
+  ],
+  "med-minimal-line-composition": [
+    "/outputs/mixer_samples/med-minimal-line-composition_0.png",
+    null,
+    null
+  ],
+  "med-minimal-shape-abstract": [
+    "/outputs/mixer_samples/med-minimal-shape-abstract_0.jpg",
+    null,
+    null
+  ],
+  "med-minimal-typography-focus": [
+    "/outputs/mixer_samples/med-minimal-typography-focus_0.png",
+    null,
+    null
+  ],
+  "med-infographic-data-visual": [
+    "/outputs/mixer_samples/med-infographic-data-visual_0.png",
+    null,
+    null
+  ],
+  "med-corporate-portrait-studio": [
+    "/outputs/mixer_samples/med-corporate-portrait-studio_0.png",
+    null,
+    null
+  ],
+  "med-corporate-boardroom-shot": [
+    "/outputs/mixer_samples/med-corporate-boardroom-shot_0.jpg",
+    null,
+    null
+  ],
+  "med-corporate-workspace-office": [
+    "/outputs/mixer_samples/med-corporate-workspace-office_0.png",
+    null,
+    null
+  ],
+  "med-corporate-outdoor-business": [
+    "/outputs/mixer_samples/med-corporate-outdoor-business_0.jpg",
+    null,
+    null
+  ],
+  "med-corporate-detail-macro": [
+    "/outputs/mixer_samples/med-corporate-detail-macro_0.jpg",
+    null,
+    null
+  ],
+  "med-corporate-product-showcase": [
+    "/outputs/mixer_samples/med-corporate-product-showcase_0.jpg",
+    null,
+    null
+  ],
+  "med-government-official-seal": [
+    "/outputs/mixer_samples/med-government-official-seal_0.png",
+    null,
+    null
+  ],
+  "med-public-service-campaign": [
+    "/outputs/mixer_samples/med-public-service-campaign_0.png",
+    null,
+    null
+  ],
+  "med-institutional-report-style": [
+    "/outputs/mixer_samples/med-institutional-report-style_0.png",
+    null,
+    null
+  ],
+  "med-pub-bold-outline": [
+    "/outputs/mixer_samples/med-pub-bold-outline_0.png",
+    null,
+    null
+  ],
+  "med-pub-rounded-char": [
+    "/outputs/mixer_samples/med-pub-rounded-char_0.png",
+    null,
+    null
+  ],
+  "med-pub-isometric-flat": [
+    "/outputs/mixer_samples/med-pub-isometric-flat_0.png",
+    null,
+    null
+  ],
+  "med-pub-cutout-paper": [
+    "/outputs/mixer_samples/med-pub-cutout-paper_0.png",
+    null,
+    null
+  ],
+  "med-pub-dual-tone-line": [
+    "/outputs/mixer_samples/med-pub-dual-tone-line_0.png",
+    null,
+    null
+  ],
+  "med-pub-tech-node": [
+    "/outputs/mixer_samples/med-pub-tech-node_0.png",
+    null,
+    null
+  ],
+  "med-pub-silhouette-color": [
+    "/outputs/mixer_samples/med-pub-silhouette-color_0.png",
+    null,
+    null
+  ],
+  "med-pub-sketch-color": [
+    "/outputs/mixer_samples/med-pub-sketch-color_0.png",
+    null,
+    null
+  ],
+  "med-pub-3d-soft-render": [
+    "/outputs/mixer_samples/med-pub-3d-soft-render_0.png",
+    null,
+    null
+  ],
+  "med-pub-vector-geo-char": [
+    "/outputs/mixer_samples/med-pub-vector-geo-char_0.png",
+    null,
+    null
+  ],
+  "med-pub-event-bold": [
+    "/outputs/mixer_samples/med-pub-event-bold_0.png",
+    null,
+    null
+  ],
+  "med-pub-brochure-cover": [
+    "/outputs/mixer_samples/med-pub-brochure-cover_0.png",
+    null,
+    null
+  ],
+  "med-pub-grant-announce": [
+    "/outputs/mixer_samples/med-pub-grant-announce_0.png",
+    null,
+    null
+  ],
+  "med-pub-edu-bright": [
+    "/outputs/mixer_samples/med-pub-edu-bright_0.png",
+    null,
+    null
+  ],
+  "med-pub-conference-dark": [
+    "/outputs/mixer_samples/med-pub-conference-dark_0.png",
+    null,
+    null
+  ],
+  "med-pub-sns-square": [
+    "/outputs/mixer_samples/med-pub-sns-square_0.png",
+    null,
+    null
+  ],
+  "med-pub-banner-wide": [
+    "/outputs/mixer_samples/med-pub-banner-wide_0.png",
+    null,
+    null
+  ],
+  "med-pub-newsletter": [
+    "/outputs/mixer_samples/med-pub-newsletter_0.png",
+    null,
+    null
+  ],
+  "med-pub-certificate": [
+    "/outputs/mixer_samples/med-pub-certificate_0.png",
+    null,
+    null
+  ],
+  "med-pub-safety-notice": [
+    "/outputs/mixer_samples/med-pub-safety-notice_0.png",
+    null,
+    null
+  ],
+  "med-pub-gradient-wave": [
+    "/outputs/mixer_samples/med-pub-gradient-wave_0.png",
+    null,
+    null
+  ],
+  "med-pub-hex-pattern": [
+    "/outputs/mixer_samples/med-pub-hex-pattern_0.jpg",
+    null,
+    null
+  ],
+  "med-pub-diagonal-split": [
+    "/outputs/mixer_samples/med-pub-diagonal-split_0.png",
+    null,
+    null
+  ],
+  "med-pub-dot-grid-bg": [
+    "/outputs/mixer_samples/med-pub-dot-grid-bg_0.png",
+    null,
+    null
+  ],
+  "med-pub-blob-pastel": [
+    "/outputs/mixer_samples/med-pub-blob-pastel_0.png",
+    null,
+    null
+  ],
+  "med-pub-duotone": [
+    "/outputs/mixer_samples/med-pub-duotone_0.png",
+    null,
+    null
+  ],
+  "med-pub-photo-clean": [
+    "/outputs/mixer_samples/med-pub-photo-clean_0.png",
+    null,
+    null
+  ],
+  "med-pub-photo-warm": [
+    "/outputs/mixer_samples/med-pub-photo-warm_0.png",
+    null,
+    null
+  ],
+  "med-pub-photo-cool": [
+    "/outputs/mixer_samples/med-pub-photo-cool_0.png",
+    null,
+    null
+  ],
+  "med-pub-photo-bw-accent": [
+    "/outputs/mixer_samples/med-pub-photo-bw-accent_0.png",
+    null,
+    null
+  ],
+  "med-pub-policy-cardnews": [
+    "/outputs/mixer_samples/med-pub-policy-cardnews_0.png",
+    null,
+    null
+  ],
+  "med-pub-grant-recruit-card": [
+    "/outputs/mixer_samples/med-pub-grant-recruit-card_0.png",
+    null,
+    null
+  ],
+  "med-pub-application-step-guide": [
+    "/outputs/mixer_samples/med-pub-application-step-guide_0.png",
+    null,
+    null
+  ],
+  "med-pub-benefit-comparison": [
+    "/outputs/mixer_samples/med-pub-benefit-comparison_0.png",
+    null,
+    null
+  ],
+  "med-pub-faq-notice-card": [
+    "/outputs/mixer_samples/med-pub-faq-notice-card_0.png",
+    null,
+    null
+  ],
+  "med-pub-deadline-alert": [
+    "/outputs/mixer_samples/med-pub-deadline-alert_0.png",
+    null,
+    null
+  ],
+  "med-pub-youth-business-support": [
+    "/outputs/mixer_samples/med-pub-youth-business-support_0.png",
+    null,
+    null
+  ],
+  "med-pub-local-program-poster": [
+    "/outputs/mixer_samples/med-pub-local-program-poster_0.png",
+    null,
+    null
+  ],
+  "med-pub-performance-report-card": [
+    "/outputs/mixer_samples/med-pub-performance-report-card_0.png",
+    null,
+    null
+  ],
+  "med-pub-citizen-participation-card": [
+    "/outputs/mixer_samples/med-pub-citizen-participation-card_0.png",
+    null,
+    null
+  ],
+  "med-pub-service-launch-guide": [
+    "/outputs/mixer_samples/med-pub-service-launch-guide_0.png",
+    null,
+    null
+  ],
+  "med-pub-checklist-carousel": [
+    "/outputs/mixer_samples/med-pub-checklist-carousel_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-bold-type": [
+    "/outputs/mixer_samples/med-cardnews-bold-type_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-vibrant-bg": [
+    "/outputs/mixer_samples/med-cardnews-vibrant-bg_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-gradient": [
+    "/outputs/mixer_samples/med-cardnews-gradient_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-text-overlay": [
+    "/outputs/mixer_samples/med-cardnews-text-overlay_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-geometric-type": [
+    "/outputs/mixer_samples/med-cardnews-geometric-type_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-type-illust": [
+    "/outputs/mixer_samples/med-cardnews-type-illust_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-minimal-text": [
+    "/outputs/mixer_samples/med-cardnews-minimal-text_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-handdrawn-type": [
+    "/outputs/mixer_samples/med-cardnews-handdrawn-type_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-pop-art": [
+    "/outputs/mixer_samples/med-cardnews-pop-art_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-flat-char": [
+    "/outputs/mixer_samples/med-cardnews-flat-char_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-muted-tone": [
+    "/outputs/mixer_samples/med-cardnews-muted-tone_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-line-draw": [
+    "/outputs/mixer_samples/med-cardnews-line-draw_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-watercolor": [
+    "/outputs/mixer_samples/med-cardnews-watercolor_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-draw-type": [
+    "/outputs/mixer_samples/med-cardnews-draw-type_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-simple-icon": [
+    "/outputs/mixer_samples/med-cardnews-simple-icon_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-soft-style": [
+    "/outputs/mixer_samples/med-cardnews-soft-style_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-insta-vibe": [
+    "/outputs/mixer_samples/med-cardnews-insta-vibe_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-trendy": [
+    "/outputs/mixer_samples/med-cardnews-trendy_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-bright-bg": [
+    "/outputs/mixer_samples/med-cardnews-bright-bg_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-dark-bg": [
+    "/outputs/mixer_samples/med-cardnews-dark-bg_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-texture-bg": [
+    "/outputs/mixer_samples/med-cardnews-texture-bg_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-bokeh": [
+    "/outputs/mixer_samples/med-cardnews-bokeh_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-color-block": [
+    "/outputs/mixer_samples/med-cardnews-color-block_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-composite": [
+    "/outputs/mixer_samples/med-cardnews-composite_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-attention": [
+    "/outputs/mixer_samples/med-cardnews-attention_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-info-focus": [
+    "/outputs/mixer_samples/med-cardnews-info-focus_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-emotional": [
+    "/outputs/mixer_samples/med-cardnews-emotional_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-cta": [
+    "/outputs/mixer_samples/med-cardnews-cta_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-story": [
+    "/outputs/mixer_samples/med-cardnews-story_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-statistics": [
+    "/outputs/mixer_samples/med-cardnews-statistics_0.png",
+    null,
+    null
+  ],
+  "med-cardnews-gamified": [
+    "/outputs/mixer_samples/med-cardnews-gamified_0.jpg",
+    null,
+    null
+  ],
+  "med-cardnews-interactive": [
+    "/outputs/mixer_samples/med-cardnews-interactive_0.jpg",
+    null,
+    null
+  ],
+  "comp-cluster-scatter": [
+    "/outputs/mixer_samples/comp-cluster-scatter_0.jpg",
+    null,
+    null
+  ],
+  "comp-diagonals": [
+    "/outputs/mixer_samples/comp-diagonals_0.jpg",
+    null,
+    null
+  ],
+  "comp-extreme-wide": [
+    "/outputs/mixer_samples/comp-extreme-wide_0.jpg",
+    null,
+    null
+  ],
+  "comp-floating-suspension": [
+    "/outputs/mixer_samples/comp-floating-suspension_0.jpg",
+    null,
+    null
+  ],
+  "comp-ground-level": [
+    "/outputs/mixer_samples/comp-ground-level_0.jpg",
+    null,
+    null
+  ],
+  "comp-split": [
+    "/outputs/mixer_samples/comp-split_0.jpg",
+    null,
+    null
+  ],
+  "comp-zoom-burst": [
+    "/outputs/mixer_samples/comp-zoom-burst_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-crispr": [
+    "/outputs/mixer_samples/mix-bio-crispr_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-gene-sequencing": [
+    "/outputs/mixer_samples/mix-bio-gene-sequencing_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-microbiome": [
+    "/outputs/mixer_samples/mix-bio-microbiome_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-monoclonal": [
+    "/outputs/mixer_samples/mix-bio-monoclonal_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-organoid": [
+    "/outputs/mixer_samples/mix-bio-organoid_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-synthetic-protein": [
+    "/outputs/mixer_samples/mix-bio-synthetic-protein_0.jpg",
+    null,
+    null
+  ],
+  "mix-bio-tissue-engineering": [
+    "/outputs/mixer_samples/mix-bio-tissue-engineering_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-ai-copywriter": [
+    "/outputs/mixer_samples/mix-brand-ai-copywriter_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-b2b": [
+    "/outputs/mixer_samples/mix-brand-b2b_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-collab": [
+    "/outputs/mixer_samples/mix-brand-collab_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-experiential": [
+    "/outputs/mixer_samples/mix-brand-experiential_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-fandom": [
+    "/outputs/mixer_samples/mix-brand-fandom_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-influencer": [
+    "/outputs/mixer_samples/mix-brand-influencer_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-mascot": [
+    "/outputs/mixer_samples/mix-brand-mascot_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-packaging": [
+    "/outputs/mixer_samples/mix-brand-packaging_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-rebranding": [
+    "/outputs/mixer_samples/mix-brand-rebranding_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-social-media": [
+    "/outputs/mixer_samples/mix-brand-social-media_0.jpg",
+    null,
+    null
+  ],
+  "mix-brand-visual-identity": [
+    "/outputs/mixer_samples/mix-brand-visual-identity_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-3d-print-art": [
+    "/outputs/mixer_samples/mix-creative-3d-print-art_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-ai-art": [
+    "/outputs/mixer_samples/mix-creative-ai-art_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-ai-music": [
+    "/outputs/mixer_samples/mix-creative-ai-music_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-brand-film": [
+    "/outputs/mixer_samples/mix-creative-brand-film_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-fashion": [
+    "/outputs/mixer_samples/mix-creative-fashion_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-gamedev": [
+    "/outputs/mixer_samples/mix-creative-gamedev_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-interactive": [
+    "/outputs/mixer_samples/mix-creative-interactive_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-mediaart": [
+    "/outputs/mixer_samples/mix-creative-mediaart_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-ott": [
+    "/outputs/mixer_samples/mix-creative-ott_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-podcast": [
+    "/outputs/mixer_samples/mix-creative-podcast_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-sound-design": [
+    "/outputs/mixer_samples/mix-creative-sound-design_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-vfx": [
+    "/outputs/mixer_samples/mix-creative-vfx_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-virtual-prod": [
+    "/outputs/mixer_samples/mix-creative-virtual-prod_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-webtoon": [
+    "/outputs/mixer_samples/mix-creative-webtoon_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-xr": [
+    "/outputs/mixer_samples/mix-creative-xr_0.jpg",
+    null,
+    null
+  ],
+  "mix-creative-youtuber": [
+    "/outputs/mixer_samples/mix-creative-youtuber_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-esports": [
+    "/outputs/mixer_samples/mix-culture-esports_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-festival": [
+    "/outputs/mixer_samples/mix-culture-festival_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-food-tour": [
+    "/outputs/mixer_samples/mix-culture-food-tour_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-heritage-tour": [
+    "/outputs/mixer_samples/mix-culture-heritage-tour_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-heritage": [
+    "/outputs/mixer_samples/mix-culture-heritage_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-kpop": [
+    "/outputs/mixer_samples/mix-culture-kpop_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-media-facade": [
+    "/outputs/mixer_samples/mix-culture-media-facade_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-mice": [
+    "/outputs/mixer_samples/mix-culture-mice_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-music-festival": [
+    "/outputs/mixer_samples/mix-culture-music-festival_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-sports": [
+    "/outputs/mixer_samples/mix-culture-sports_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-street-art": [
+    "/outputs/mixer_samples/mix-culture-street-art_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-traditional-craft": [
+    "/outputs/mixer_samples/mix-culture-traditional-craft_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-webtoon": [
+    "/outputs/mixer_samples/mix-culture-webtoon_0.jpg",
+    null,
+    null
+  ],
+  "mix-culture-wellness": [
+    "/outputs/mixer_samples/mix-culture-wellness_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-ai-language": [
+    "/outputs/mixer_samples/mix-edu-ai-language_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-distance": [
+    "/outputs/mixer_samples/mix-edu-distance_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-gifted": [
+    "/outputs/mixer_samples/mix-edu-gifted_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-lab": [
+    "/outputs/mixer_samples/mix-edu-lab_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-library": [
+    "/outputs/mixer_samples/mix-edu-library_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-research-publish": [
+    "/outputs/mixer_samples/mix-edu-research-publish_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-skills-training": [
+    "/outputs/mixer_samples/mix-edu-skills-training_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-smart-class": [
+    "/outputs/mixer_samples/mix-edu-smart-class_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-special": [
+    "/outputs/mixer_samples/mix-edu-special_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-stem-lab": [
+    "/outputs/mixer_samples/mix-edu-stem-lab_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-stem": [
+    "/outputs/mixer_samples/mix-edu-stem_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-univ-startup": [
+    "/outputs/mixer_samples/mix-edu-univ-startup_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-vr-classroom": [
+    "/outputs/mixer_samples/mix-edu-vr-classroom_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-vr-learning": [
+    "/outputs/mixer_samples/mix-edu-vr-learning_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-ammonia-combustion": [
+    "/outputs/mixer_samples/mix-energy-ammonia-combustion_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-electrolysis": [
+    "/outputs/mixer_samples/mix-energy-electrolysis_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-ess-grid": [
+    "/outputs/mixer_samples/mix-energy-ess-grid_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-fuelcell": [
+    "/outputs/mixer_samples/mix-energy-fuelcell_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-geothermal": [
+    "/outputs/mixer_samples/mix-energy-geothermal_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-grid-storage": [
+    "/outputs/mixer_samples/mix-energy-grid-storage_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-lithium": [
+    "/outputs/mixer_samples/mix-energy-lithium_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-offshore-wind": [
+    "/outputs/mixer_samples/mix-energy-offshore-wind_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-pumped-hydro": [
+    "/outputs/mixer_samples/mix-energy-pumped-hydro_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-smr": [
+    "/outputs/mixer_samples/mix-energy-smr_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-tidal": [
+    "/outputs/mixer_samples/mix-energy-tidal_0.jpg",
+    null,
+    null
+  ],
+  "mix-energy-wind-offshore": [
+    "/outputs/mixer_samples/mix-energy-wind-offshore_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-air-quality": [
+    "/outputs/mixer_samples/mix-env-air-quality_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-biodiversity": [
+    "/outputs/mixer_samples/mix-env-biodiversity_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-blue-carbon": [
+    "/outputs/mixer_samples/mix-env-blue-carbon_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-carbon-neutral": [
+    "/outputs/mixer_samples/mix-env-carbon-neutral_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-circular": [
+    "/outputs/mixer_samples/mix-env-circular_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-dac": [
+    "/outputs/mixer_samples/mix-env-dac_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-drought": [
+    "/outputs/mixer_samples/mix-env-drought_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-green-city": [
+    "/outputs/mixer_samples/mix-env-green-city_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-heat-island": [
+    "/outputs/mixer_samples/mix-env-heat-island_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-hydrogen": [
+    "/outputs/mixer_samples/mix-env-hydrogen_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-nature-based": [
+    "/outputs/mixer_samples/mix-env-nature-based_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-ocean-cleanup": [
+    "/outputs/mixer_samples/mix-env-ocean-cleanup_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-solar-farm": [
+    "/outputs/mixer_samples/mix-env-solar-farm_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-waste-material": [
+    "/outputs/mixer_samples/mix-env-waste-material_0.jpg",
+    null,
+    null
+  ],
+  "mix-env-zerowaste": [
+    "/outputs/mixer_samples/mix-env-zerowaste_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-actuarial": [
+    "/outputs/mixer_samples/mix-finance-actuarial_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-algorithmic-arbitrage": [
+    "/outputs/mixer_samples/mix-finance-algorithmic-arbitrage_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-central-bank-digital": [
+    "/outputs/mixer_samples/mix-finance-central-bank-digital_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-credit-scoring": [
+    "/outputs/mixer_samples/mix-finance-credit-scoring_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-crypto-wallet": [
+    "/outputs/mixer_samples/mix-finance-crypto-wallet_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-esg-investment": [
+    "/outputs/mixer_samples/mix-finance-esg-investment_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-fintech-pay": [
+    "/outputs/mixer_samples/mix-finance-fintech-pay_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-ipo": [
+    "/outputs/mixer_samples/mix-finance-ipo_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-reit": [
+    "/outputs/mixer_samples/mix-finance-reit_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-robo-adv2": [
+    "/outputs/mixer_samples/mix-finance-robo-adv2_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-robotic-advisor": [
+    "/outputs/mixer_samples/mix-finance-robotic-advisor_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-stock-trading": [
+    "/outputs/mixer_samples/mix-finance-stock-trading_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-trade": [
+    "/outputs/mixer_samples/mix-finance-trade_0.jpg",
+    null,
+    null
+  ],
+  "mix-finance-venture": [
+    "/outputs/mixer_samples/mix-finance-venture_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-agri-drone": [
+    "/outputs/mixer_samples/mix-food-agri-drone_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-aquaculture": [
+    "/outputs/mixer_samples/mix-food-aquaculture_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-cafe-culture": [
+    "/outputs/mixer_samples/mix-food-cafe-culture_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-coldchain": [
+    "/outputs/mixer_samples/mix-food-coldchain_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-cultured-meat": [
+    "/outputs/mixer_samples/mix-food-cultured-meat_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-dessert-art": [
+    "/outputs/mixer_samples/mix-food-dessert-art_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-farmersmarket": [
+    "/outputs/mixer_samples/mix-food-farmersmarket_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-fermentation": [
+    "/outputs/mixer_samples/mix-food-fermentation_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-food-safety": [
+    "/outputs/mixer_samples/mix-food-food-safety_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-fusion": [
+    "/outputs/mixer_samples/mix-food-fusion_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-korean-fine": [
+    "/outputs/mixer_samples/mix-food-korean-fine_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-molecular": [
+    "/outputs/mixer_samples/mix-food-molecular_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-plant-protein": [
+    "/outputs/mixer_samples/mix-food-plant-protein_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-traditional-craft": [
+    "/outputs/mixer_samples/mix-food-traditional-craft_0.jpg",
+    null,
+    null
+  ],
+  "mix-food-vertical-farm": [
+    "/outputs/mixer_samples/mix-food-vertical-farm_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-ai-diagnosis": [
+    "/outputs/mixer_samples/mix-health-ai-diagnosis_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-care-robot": [
+    "/outputs/mixer_samples/mix-health-care-robot_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-dental": [
+    "/outputs/mixer_samples/mix-health-dental_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-drone": [
+    "/outputs/mixer_samples/mix-health-drone_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-genomics": [
+    "/outputs/mixer_samples/mix-health-genomics_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-icu": [
+    "/outputs/mixer_samples/mix-health-icu_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-mental": [
+    "/outputs/mixer_samples/mix-health-mental_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-precision": [
+    "/outputs/mixer_samples/mix-health-precision_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-public-health": [
+    "/outputs/mixer_samples/mix-health-public-health_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-rehab": [
+    "/outputs/mixer_samples/mix-health-rehab_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-surgical-robot": [
+    "/outputs/mixer_samples/mix-health-surgical-robot_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-telemedicine": [
+    "/outputs/mixer_samples/mix-health-telemedicine_0.jpg",
+    null,
+    null
+  ],
+  "mix-health-wearable": [
+    "/outputs/mixer_samples/mix-health-wearable_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-aerogel": [
+    "/outputs/mixer_samples/mix-mat-aerogel_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-bio-plastic": [
+    "/outputs/mixer_samples/mix-mat-bio-plastic_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-bioplastic": [
+    "/outputs/mixer_samples/mix-mat-bioplastic_0.png",
+    null,
+    null
+  ],
+  "mix-mat-carbon-fiber": [
+    "/outputs/mixer_samples/mix-mat-carbon-fiber_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-ceramic": [
+    "/outputs/mixer_samples/mix-mat-ceramic_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-graphene": [
+    "/outputs/mixer_samples/mix-mat-graphene_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-metamaterial": [
+    "/outputs/mixer_samples/mix-mat-metamaterial_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-nanocomposite": [
+    "/outputs/mixer_samples/mix-mat-nanocomposite_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-self-healing": [
+    "/outputs/mixer_samples/mix-mat-self-healing_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-semiconductor": [
+    "/outputs/mixer_samples/mix-mat-semiconductor_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-shape-memory": [
+    "/outputs/mixer_samples/mix-mat-shape-memory_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-smart-textile": [
+    "/outputs/mixer_samples/mix-mat-smart-textile_0.jpg",
+    null,
+    null
+  ],
+  "mix-mat-superconductor": [
+    "/outputs/mixer_samples/mix-mat-superconductor_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-ai-logistics": [
+    "/outputs/mixer_samples/mix-mob-ai-logistics_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-autonomous-truck": [
+    "/outputs/mixer_samples/mix-mob-autonomous-truck_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-autonomous": [
+    "/outputs/mixer_samples/mix-mob-autonomous_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-bike-share": [
+    "/outputs/mixer_samples/mix-mob-bike-share_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-drone-delivery": [
+    "/outputs/mixer_samples/mix-mob-drone-delivery_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-evtol": [
+    "/outputs/mixer_samples/mix-mob-evtol_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-hydrogen-ship": [
+    "/outputs/mixer_samples/mix-mob-hydrogen-ship_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-hyperloop": [
+    "/outputs/mixer_samples/mix-mob-hyperloop_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-last-mile": [
+    "/outputs/mixer_samples/mix-mob-last-mile_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-micromobility": [
+    "/outputs/mixer_samples/mix-mob-micromobility_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-mobility-hub": [
+    "/outputs/mixer_samples/mix-mob-mobility-hub_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-smart-port": [
+    "/outputs/mixer_samples/mix-mob-smart-port_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-smartport": [
+    "/outputs/mixer_samples/mix-mob-smartport_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-supply-chain": [
+    "/outputs/mixer_samples/mix-mob-supply-chain_0.jpg",
+    null,
+    null
+  ],
+  "mix-mob-uam": [
+    "/outputs/mixer_samples/mix-mob-uam_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bat-001": [
+    "/outputs/mixer_samples/mix-net-bat-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bat-002": [
+    "/outputs/mixer_samples/mix-net-bat-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bat-003": [
+    "/outputs/mixer_samples/mix-net-bat-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bat-004": [
+    "/outputs/mixer_samples/mix-net-bat-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bat-005": [
+    "/outputs/mixer_samples/mix-net-bat-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bat-006": [
+    "/outputs/mixer_samples/mix-net-bat-006_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bio-001": [
+    "/outputs/mixer_samples/mix-net-bio-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bio-003": [
+    "/outputs/mixer_samples/mix-net-bio-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bio-004": [
+    "/outputs/mixer_samples/mix-net-bio-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-bio-005": [
+    "/outputs/mixer_samples/mix-net-bio-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-ene-001": [
+    "/outputs/mixer_samples/mix-net-ene-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-ene-002": [
+    "/outputs/mixer_samples/mix-net-ene-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-ene-003": [
+    "/outputs/mixer_samples/mix-net-ene-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-ene-004": [
+    "/outputs/mixer_samples/mix-net-ene-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-ene-005": [
+    "/outputs/mixer_samples/mix-net-ene-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-sw-001": [
+    "/outputs/mixer_samples/mix-net-sw-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-sw-002": [
+    "/outputs/mixer_samples/mix-net-sw-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-sw-003": [
+    "/outputs/mixer_samples/mix-net-sw-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-net-sw-004": [
+    "/outputs/mixer_samples/mix-net-sw-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-aqua": [
+    "/outputs/mixer_samples/mix-ocean-aqua_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-biomarine": [
+    "/outputs/mixer_samples/mix-ocean-biomarine_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-cleanup": [
+    "/outputs/mixer_samples/mix-ocean-cleanup_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-coral": [
+    "/outputs/mixer_samples/mix-ocean-coral_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-data-cable": [
+    "/outputs/mixer_samples/mix-ocean-data-cable_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-deepsea": [
+    "/outputs/mixer_samples/mix-ocean-deepsea_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-energy": [
+    "/outputs/mixer_samples/mix-ocean-energy_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-microplastic": [
+    "/outputs/mixer_samples/mix-ocean-microplastic_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-offshore": [
+    "/outputs/mixer_samples/mix-ocean-offshore_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-processing": [
+    "/outputs/mixer_samples/mix-ocean-processing_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-rov": [
+    "/outputs/mixer_samples/mix-ocean-rov_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-seaweed": [
+    "/outputs/mixer_samples/mix-ocean-seaweed_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-tidal-energy": [
+    "/outputs/mixer_samples/mix-ocean-tidal-energy_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-tourism": [
+    "/outputs/mixer_samples/mix-ocean-tourism_0.jpg",
+    null,
+    null
+  ],
+  "mix-ocean-weather": [
+    "/outputs/mixer_samples/mix-ocean-weather_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-carbon-market": [
+    "/outputs/mixer_samples/mix-policy-carbon-market_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-industrial-complex": [
+    "/outputs/mixer_samples/mix-policy-industrial-complex_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-industry-육성": [
+    "/outputs/mixer_samples/mix-policy-industry-육성_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-oda": [
+    "/outputs/mixer_samples/mix-policy-oda_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-performance-mgmt": [
+    "/outputs/mixer_samples/mix-policy-performance-mgmt_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-procurement": [
+    "/outputs/mixer_samples/mix-policy-procurement_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-rd-funding": [
+    "/outputs/mixer_samples/mix-policy-rd-funding_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-reg-sandbox": [
+    "/outputs/mixer_samples/mix-policy-reg-sandbox_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-regional-innovation": [
+    "/outputs/mixer_samples/mix-policy-regional-innovation_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-smart-admin": [
+    "/outputs/mixer_samples/mix-policy-smart-admin_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-smartcity-plan": [
+    "/outputs/mixer_samples/mix-policy-smartcity-plan_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-sme-support": [
+    "/outputs/mixer_samples/mix-policy-sme-support_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-startup-fund": [
+    "/outputs/mixer_samples/mix-policy-startup-fund_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-innovation-hub-incubation": [
+    "/outputs/mixer_samples/mix-policy-innovation-hub-incubation_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-autonomous-transit": [
+    "/outputs/mixer_samples/mix-public-autonomous-transit_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-border-control": [
+    "/outputs/mixer_samples/mix-public-border-control_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-digital-id": [
+    "/outputs/mixer_samples/mix-public-digital-id_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-digital-twin": [
+    "/outputs/mixer_samples/mix-public-digital-twin_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-disaster-control": [
+    "/outputs/mixer_samples/mix-public-disaster-control_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-e-gov": [
+    "/outputs/mixer_samples/mix-public-e-gov_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-e-petition": [
+    "/outputs/mixer_samples/mix-public-e-petition_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-ev-bus": [
+    "/outputs/mixer_samples/mix-public-ev-bus_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-gov-cloud": [
+    "/outputs/mixer_samples/mix-public-gov-cloud_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-intelligent-traffic": [
+    "/outputs/mixer_samples/mix-public-intelligent-traffic_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-national-grid": [
+    "/outputs/mixer_samples/mix-public-national-grid_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-smart-city": [
+    "/outputs/mixer_samples/mix-public-smart-city_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-smart-safety": [
+    "/outputs/mixer_samples/mix-public-smart-safety_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-social-housing": [
+    "/outputs/mixer_samples/mix-public-social-housing_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-waste-sorting": [
+    "/outputs/mixer_samples/mix-public-waste-sorting_0.jpg",
+    null,
+    null
+  ],
+  "mix-public-water-treatment": [
+    "/outputs/mixer_samples/mix-public-water-treatment_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-budget": [
+    "/outputs/mixer_samples/mix-pubviz-budget_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-circular": [
+    "/outputs/mixer_samples/mix-pubviz-circular_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-eval": [
+    "/outputs/mixer_samples/mix-pubviz-eval_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-flowchart": [
+    "/outputs/mixer_samples/mix-pubviz-flowchart_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-loc-map": [
+    "/outputs/mixer_samples/mix-pubviz-loc-map_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-orgchart": [
+    "/outputs/mixer_samples/mix-pubviz-orgchart_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-policy-slide": [
+    "/outputs/mixer_samples/mix-pubviz-policy-slide_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-process-step": [
+    "/outputs/mixer_samples/mix-pubviz-process-step_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-report-cover": [
+    "/outputs/mixer_samples/mix-pubviz-report-cover_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-stat-map": [
+    "/outputs/mixer_samples/mix-pubviz-stat-map_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-survey": [
+    "/outputs/mixer_samples/mix-pubviz-survey_0.jpg",
+    null,
+    null
+  ],
+  "mix-pubviz-timeline": [
+    "/outputs/mixer_samples/mix-pubviz-timeline_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-agribio-complex": [
+    "/outputs/mixer_samples/mix-regional-agribio-complex_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-anchor": [
+    "/outputs/mixer_samples/mix-regional-anchor_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-blue-economy": [
+    "/outputs/mixer_samples/mix-regional-blue-economy_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-export": [
+    "/outputs/mixer_samples/mix-regional-export_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-hydrogen-hub": [
+    "/outputs/mixer_samples/mix-regional-hydrogen-hub_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-innovation-center": [
+    "/outputs/mixer_samples/mix-regional-innovation-center_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-local-brand": [
+    "/outputs/mixer_samples/mix-regional-local-brand_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-sample-harbor": [
+    "/outputs/mixer_samples/mix-regional-sample-harbor_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-rural-revital": [
+    "/outputs/mixer_samples/mix-regional-rural-revital_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-secondary-battery": [
+    "/outputs/mixer_samples/mix-regional-secondary-battery_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-special-zone": [
+    "/outputs/mixer_samples/mix-regional-special-zone_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-startup-campus": [
+    "/outputs/mixer_samples/mix-regional-startup-campus_0.jpg",
+    null,
+    null
+  ],
+  "mix-soft-ai-brain": [
+    "/outputs/mixer_samples/mix-soft-ai-brain_0.jpg",
+    null,
+    null
+  ],
+  "mix-soft-edge-ai": [
+    "/outputs/mixer_samples/mix-soft-edge-ai_0.jpg",
+    null,
+    null
+  ],
+  "mix-soft-xr-dev": [
+    "/outputs/mixer_samples/mix-soft-xr-dev_0.jpg",
+    null,
+    null
+  ],
+  "mix-software-api": [
+    "/outputs/mixer_samples/mix-software-api_0.jpg",
+    null,
+    null
+  ],
+  "mix-software-blockchain": [
+    "/outputs/mixer_samples/mix-software-blockchain_0.jpg",
+    null,
+    null
+  ],
+  "mix-software-devops": [
+    "/outputs/mixer_samples/mix-software-devops_0.jpg",
+    null,
+    null
+  ],
+  "mix-software-digital-twin": [
+    "/outputs/mixer_samples/mix-software-digital-twin_0.jpg",
+    null,
+    null
+  ],
+  "mix-software-quantum": [
+    "/outputs/mixer_samples/mix-software-quantum_0.jpg",
+    null,
+    null
+  ],
+  "mix-software-robotic": [
+    "/outputs/mixer_samples/mix-software-robotic_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-asteroid-mining": [
+    "/outputs/mixer_samples/mix-space-asteroid-mining_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-deep-probe": [
+    "/outputs/mixer_samples/mix-space-deep-probe_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-deep-space-telescope": [
+    "/outputs/mixer_samples/mix-space-deep-space-telescope_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-elevator": [
+    "/outputs/mixer_samples/mix-space-elevator_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-exoplanet": [
+    "/outputs/mixer_samples/mix-space-exoplanet_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-fusion-propulsion": [
+    "/outputs/mixer_samples/mix-space-fusion-propulsion_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-geo-satellite": [
+    "/outputs/mixer_samples/mix-space-geo-satellite_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-lunar-base": [
+    "/outputs/mixer_samples/mix-space-lunar-base_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-mars-colony": [
+    "/outputs/mixer_samples/mix-space-mars-colony_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-orbital-hotel": [
+    "/outputs/mixer_samples/mix-space-orbital-hotel_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-rocket-launch": [
+    "/outputs/mixer_samples/mix-space-rocket-launch_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-satellite-orbit": [
+    "/outputs/mixer_samples/mix-space-satellite-orbit_0.jpg",
+    null,
+    null
+  ],
+  "mix-space-space-station": [
+    "/outputs/mixer_samples/mix-space-space-station_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-ai-inspection": [
+    "/outputs/mixer_samples/mix-steel-ai-inspection_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-cold-coil": [
+    "/outputs/mixer_samples/mix-steel-cold-coil_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-continuous-casting": [
+    "/outputs/mixer_samples/mix-steel-continuous-casting_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-forging": [
+    "/outputs/mixer_samples/mix-steel-forging_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-galvanized": [
+    "/outputs/mixer_samples/mix-steel-galvanized_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-h-beam": [
+    "/outputs/mixer_samples/mix-steel-h-beam_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-hot-rolling": [
+    "/outputs/mixer_samples/mix-steel-hot-rolling_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-pipe": [
+    "/outputs/mixer_samples/mix-steel-pipe_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-scrap-recycling": [
+    "/outputs/mixer_samples/mix-steel-scrap-recycling_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-smart-factory": [
+    "/outputs/mixer_samples/mix-steel-smart-factory_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-stainless": [
+    "/outputs/mixer_samples/mix-steel-stainless_0.jpg",
+    null,
+    null
+  ],
+  "mix-steel-tempering": [
+    "/outputs/mixer_samples/mix-steel-tempering_0.png",
+    null,
+    null
+  ],
+  "mix-talent-battery-006": [
+    "/outputs/mixer_samples/mix-talent-battery-006_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-battery-007": [
+    "/outputs/mixer_samples/mix-talent-battery-007_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-battery-008": [
+    "/outputs/mixer_samples/mix-talent-battery-008_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-battery-009": [
+    "/outputs/mixer_samples/mix-talent-battery-009_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-battery-010": [
+    "/outputs/mixer_samples/mix-talent-battery-010_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-battery-011": [
+    "/outputs/mixer_samples/mix-talent-battery-011_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-bio-001": [
+    "/outputs/mixer_samples/mix-talent-bio-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-bio-002": [
+    "/outputs/mixer_samples/mix-talent-bio-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-bio-003": [
+    "/outputs/mixer_samples/mix-talent-bio-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-bio-004": [
+    "/outputs/mixer_samples/mix-talent-bio-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-bio-005": [
+    "/outputs/mixer_samples/mix-talent-bio-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-bms-ai": [
+    "/outputs/mixer_samples/mix-talent-bms-ai_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-dismantle-safety": [
+    "/outputs/mixer_samples/mix-talent-dismantle-safety_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-energy-001": [
+    "/outputs/mixer_samples/mix-talent-energy-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-energy-002": [
+    "/outputs/mixer_samples/mix-talent-energy-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-energy-003": [
+    "/outputs/mixer_samples/mix-talent-energy-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-energy-004": [
+    "/outputs/mixer_samples/mix-talent-energy-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-energy-005": [
+    "/outputs/mixer_samples/mix-talent-energy-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-energy-006": [
+    "/outputs/mixer_samples/mix-talent-energy-006_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-meister": [
+    "/outputs/mixer_samples/mix-talent-meister_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-phd-rd": [
+    "/outputs/mixer_samples/mix-talent-phd-rd_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sem-workshop": [
+    "/outputs/mixer_samples/mix-talent-sem-workshop_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sw-001": [
+    "/outputs/mixer_samples/mix-talent-sw-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sw-002": [
+    "/outputs/mixer_samples/mix-talent-sw-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sw-003": [
+    "/outputs/mixer_samples/mix-talent-sw-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sw-004": [
+    "/outputs/mixer_samples/mix-talent-sw-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sw-005": [
+    "/outputs/mixer_samples/mix-talent-sw-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-talent-sw-006": [
+    "/outputs/mixer_samples/mix-talent-sw-006_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-battery-001": [
+    "/outputs/mixer_samples/mix-tech-battery-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-battery-002": [
+    "/outputs/mixer_samples/mix-tech-battery-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-battery-003": [
+    "/outputs/mixer_samples/mix-tech-battery-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-battery-004": [
+    "/outputs/mixer_samples/mix-tech-battery-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-bio-001": [
+    "/outputs/mixer_samples/mix-tech-bio-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-bio-002": [
+    "/outputs/mixer_samples/mix-tech-bio-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-bio-003": [
+    "/outputs/mixer_samples/mix-tech-bio-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-bio-004": [
+    "/outputs/mixer_samples/mix-tech-bio-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-bio-005": [
+    "/outputs/mixer_samples/mix-tech-bio-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-dry-process": [
+    "/outputs/mixer_samples/mix-tech-dry-process_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-energy-001": [
+    "/outputs/mixer_samples/mix-tech-energy-001_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-energy-002": [
+    "/outputs/mixer_samples/mix-tech-energy-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-energy-004": [
+    "/outputs/mixer_samples/mix-tech-energy-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-lisulfur-uam": [
+    "/outputs/mixer_samples/mix-tech-lisulfur-uam_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-rec-transfer": [
+    "/outputs/mixer_samples/mix-tech-rec-transfer_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-sodium-mass": [
+    "/outputs/mixer_samples/mix-tech-sodium-mass_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-solid-startup": [
+    "/outputs/mixer_samples/mix-tech-solid-startup_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-sw-002": [
+    "/outputs/mixer_samples/mix-tech-sw-002_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-sw-003": [
+    "/outputs/mixer_samples/mix-tech-sw-003_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-sw-004": [
+    "/outputs/mixer_samples/mix-tech-sw-004_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-sw-005": [
+    "/outputs/mixer_samples/mix-tech-sw-005_0.jpg",
+    null,
+    null
+  ],
+  "mix-tech-sw-006": [
+    "/outputs/mixer_samples/mix-tech-sw-006_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-24h": [
+    "/outputs/mixer_samples/mix-urban-24h_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-autonomous-city": [
+    "/outputs/mixer_samples/mix-urban-autonomous-city_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-bike-network": [
+    "/outputs/mixer_samples/mix-urban-bike-network_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-cultural-district": [
+    "/outputs/mixer_samples/mix-urban-cultural-district_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-flood-resilient": [
+    "/outputs/mixer_samples/mix-urban-flood-resilient_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-green-corridor": [
+    "/outputs/mixer_samples/mix-urban-green-corridor_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-mixed-tower": [
+    "/outputs/mixer_samples/mix-urban-mixed-tower_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-modular": [
+    "/outputs/mixer_samples/mix-urban-modular_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-regen": [
+    "/outputs/mixer_samples/mix-urban-regen_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-retail": [
+    "/outputs/mixer_samples/mix-urban-retail_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-skyscraper": [
+    "/outputs/mixer_samples/mix-urban-skyscraper_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-smarthome": [
+    "/outputs/mixer_samples/mix-urban-smarthome_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-transit": [
+    "/outputs/mixer_samples/mix-urban-transit_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-underground": [
+    "/outputs/mixer_samples/mix-urban-underground_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-waterfront": [
+    "/outputs/mixer_samples/mix-urban-waterfront_0.jpg",
+    null,
+    null
+  ],
+  "mix-urban-zeroenergy": [
+    "/outputs/mixer_samples/mix-urban-zeroenergy_0.jpg",
+    null,
+    null
+  ],
+  "typo-3d-extrude": [
+    "/outputs/mixer_samples/typo-3d-extrude_0.jpg",
+    null,
+    null
+  ],
+  "typo-display-grotesque": [
+    "/outputs/mixer_samples/typo-display-grotesque_0.jpg",
+    null,
+    null
+  ],
+  "typo-graffiti": [
+    "/outputs/mixer_samples/typo-graffiti_0.jpg",
+    null,
+    null
+  ],
+  "typo-outlined-hollow": [
+    "/outputs/mixer_samples/typo-outlined-hollow_0.jpg",
+    null,
+    null
+  ],
+  "typo-psychedelic-warp": [
+    "/outputs/mixer_samples/typo-psychedelic-warp_0.jpg",
+    null,
+    null
+  ],
+  "typo-retro-diner": [
+    "/outputs/mixer_samples/typo-retro-diner_0.jpg",
+    null,
+    null
+  ],
+  "mix-policy-welfare": [
+    "/outputs/mixer_samples/mix-policy-welfare_0.jpg",
+    null,
+    null
+  ],
+  "mix-edu-conference": [
+    "/outputs/mixer_samples/mix-edu-conference_0.jpg",
+    null,
+    null
+  ],
+  "none": [
+    "/outputs/mixer_samples/none_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-smart-greenindu": [
+    "/outputs/mixer_samples/mix-regional-smart-greenindu_0.jpg",
+    null,
+    null
+  ],
+  "mix-regional-postech-campus": [
+    "/outputs/mixer_samples/mix-regional-postech-campus_0.jpg",
+    null,
+    null
+  ],
+  "uwiz-s-1783328184938-9618": [
+    "/outputs/mixer_samples/uwiz-s-1783328184938-9618_0.jpg",
+    null,
+    null
+  ],
+  "uwiz-s-1783481568272-4710": [
+    "/outputs/mixer_samples/uwiz-s-1783481568272-4710_0.jpg",
+    null,
+    null
+  ],
+  "uwiz-s-1782971758596-8596": [
+    "/outputs/mixer_samples/uwiz-s-1782971758596-8596_0.jpg",
+    null,
+    null
+  ],
+  "med-3d": [
+    "/outputs/mixer_samples/med-3d_0.jpg",
+    null,
+    null
+  ],
+  "uwiz-s-1783493256757-1676": [
+    "/outputs/mixer_samples/uwiz-s-1783493256757-1676_0.jpg",
+    null,
+    null
+  ],
+  "uwiz-s-1783486116031-1919": [
+    "/outputs/mixer_samples/uwiz-s-1783486116031-1919_0.jpg",
+    null,
+    null
+  ],
+  "uwiz-s-1783841865197-5822": [
+    "/outputs/mixer_samples/uwiz-s-1783841865197-5822_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-face-reaction-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-face-reaction-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-photo-cutout-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-photo-cutout-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-chibi-daily-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-chibi-daily-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-clay-face-emojis-v1": [
+    "/outputs/mixer_samples/photo-transform-clay-face-emojis-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-handdrawn-reaction-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-handdrawn-reaction-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-personal-mascot-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-personal-mascot-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-pet-reaction-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-pet-reaction-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-couple-duo-stickers-v1": [
+    "/outputs/mixer_samples/photo-transform-couple-duo-stickers-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-animated-face-bounce-v1": [
+    "/outputs/mixer_samples/photo-transform-animated-face-bounce-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-animated-character-wave-v1": [
+    "/outputs/mixer_samples/photo-transform-animated-character-wave-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-animated-heart-pop-v1": [
+    "/outputs/mixer_samples/photo-transform-animated-heart-pop-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-animated-celebration-loop-v1": [
+    "/outputs/mixer_samples/photo-transform-animated-celebration-loop-v1_0.png",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-soft-window-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-soft-window-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-airy-high-key-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-airy-high-key-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-sculpted-low-key-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-sculpted-low-key-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-window-shadow-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-window-shadow-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-golden-hour-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-golden-hour-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-blue-hour-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-blue-hour-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-warm-tungsten-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-warm-tungsten-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-direct-flash-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-direct-flash-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-neon-reflection-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-neon-reflection-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-nuanced-mono-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-nuanced-mono-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-powder-pastel-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-powder-pastel-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-earthy-natural-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-earthy-natural-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-jewel-tone-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-jewel-tone-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-cobalt-orange-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-cobalt-orange-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-white-minimal-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-white-minimal-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-black-studio-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-black-studio-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-architectural-lines-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-architectural-lines-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-botanical-frame-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-botanical-frame-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-water-reflection-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-water-reflection-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-prism-light-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-prism-light-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-glass-chrome-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-glass-chrome-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-paper-tactile-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-paper-tactile-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-analog-grain-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-analog-grain-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-controlled-motion-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-controlled-motion-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-intimate-closeup-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-intimate-closeup-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-environmental-wide-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-environmental-wide-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-balanced-symmetry-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-balanced-symmetry-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-negative-space-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-negative-space-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-cinematic-haze-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-cinematic-haze-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-crisp-commercial-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-crisp-commercial-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-soft-window-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-soft-window-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-airy-high-key-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-airy-high-key-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-sculpted-low-key-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-sculpted-low-key-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-window-shadow-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-window-shadow-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-golden-hour-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-golden-hour-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-blue-hour-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-blue-hour-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-warm-tungsten-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-warm-tungsten-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-direct-flash-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-direct-flash-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-neon-reflection-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-neon-reflection-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-nuanced-mono-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-nuanced-mono-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-powder-pastel-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-powder-pastel-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-earthy-natural-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-earthy-natural-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-jewel-tone-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-jewel-tone-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-cobalt-orange-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-cobalt-orange-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-white-minimal-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-white-minimal-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-black-studio-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-black-studio-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-architectural-lines-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-architectural-lines-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-botanical-frame-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-botanical-frame-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-water-reflection-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-water-reflection-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-prism-light-v1": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-prism-light-v1_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-soft-window-v2": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-soft-window-v2_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-soft-window-v3": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-soft-window-v3_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-profile-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-profile-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-editorial-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-editorial-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-relationship-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-relationship-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-content-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-content-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-film-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-film-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-art-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-art-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-character-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-character-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-sticker-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-sticker-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-fantasy-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-fantasy-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-intimate-closeup-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-intimate-closeup-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-environmental-wide-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-environmental-wide-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-balanced-symmetry-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-balanced-symmetry-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-negative-space-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-negative-space-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-cinematic-haze-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-cinematic-haze-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-timewarp-crisp-commercial-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-timewarp-crisp-commercial-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-soft-window-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-soft-window-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-airy-high-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-airy-high-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-sculpted-low-key-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-sculpted-low-key-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-window-shadow-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-window-shadow-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-golden-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-golden-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-blue-hour-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-blue-hour-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-warm-tungsten-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-warm-tungsten-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-direct-flash-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-direct-flash-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-neon-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-neon-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-nuanced-mono-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-nuanced-mono-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-powder-pastel-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-powder-pastel-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-earthy-natural-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-earthy-natural-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-jewel-tone-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-jewel-tone-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-cobalt-orange-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-cobalt-orange-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-white-minimal-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-white-minimal-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-black-studio-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-black-studio-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-architectural-lines-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-architectural-lines-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-botanical-frame-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-botanical-frame-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-water-reflection-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-water-reflection-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-prism-light-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-prism-light-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-glass-chrome-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-glass-chrome-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-paper-tactile-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-paper-tactile-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-analog-grain-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-analog-grain-v4_0.jpg",
+    null,
+    null
+  ],
+  "photo-transform-expanded-toy-controlled-motion-v4": [
+    "/outputs/mixer_samples/photo-transform-expanded-toy-controlled-motion-v4_0.jpg",
+    null,
+    null
+  ]
+}

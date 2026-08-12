@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptDeck 관리자</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:," />
+  <script>
+    (() => {
+      const saved = localStorage.getItem('promptdeck_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    })();
+  </script>
+  <script src="src/auth.js"></script>
+  <!-- 서버 세션 검증 전까지 콘텐츠 숨김 -->
+  <style id="admin-auth-guard">body{visibility:hidden!important}</style>
+  <script>
+    (async () => {
+      function deny() { window.location.replace('index.html'); }
+      try {
+        var r = await fetch('/api/admin/access', { cache: 'no-store' });
+        if (!r.ok) { deny(); return; }
+        var d = await r.json();
+        if (!d.ok || !d.authenticated) { deny(); return; }
+        // 인증 OK → 콘텐츠 노출
+        var g = document.getElementById('admin-auth-guard');
+        if (g) g.remove();
+      } catch (_) { deny(); }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles/admin.css" />
+</head>
+<body>
+
+<div class="admin-wrap">
+
+  <!-- 헤더 -->
+  <header class="admin-header">
+    <div class="admin-header-info">
+      <h1>관리자 설정</h1>
+      <p>앱 설정을 변경합니다. 저장 후 메인 앱 새로고침 시 반영됩니다.</p>
+    </div>
+    <div class="admin-header-actions">
+      <span class="admin-session-name" id="adminSessionName"></span>
+      <button type="button" class="admin-theme-btn" id="adminThemeBtn">☾ 다크</button>
+      <a href="index.html" class="admin-back">← 앱으로</a>
+      <button type="button" class="admin-back" id="adminModeExitBtn">&#44288;&#47532;&#51088; &#47784;&#46300; &#51333;&#47308;</button>
+    </div>
+  </header>
+
+  <!-- 프로그램 정보 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">프로그램 정보</h2>
+    <div class="admin-field">
+      <label class="admin-label" for="adminProgramName">프로그램명</label>
+      <input type="text" id="adminProgramName" class="admin-input" placeholder="PromptDeck" maxlength="40" />
+      <span class="admin-hint">앱 헤더 타이틀과 브라우저 탭 제목에 표시됩니다.</span>
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="adminProgramSubtitle">부제목 / 설명</label>
+      <input type="text" id="adminProgramSubtitle" class="admin-input" placeholder="이미지 프롬프트를 구조적으로 설계하는 워크스페이스" maxlength="80" />
+      <span class="admin-hint">헤더 아래에 작게 표시되는 설명 문구입니다.</span>
+    </div>
+  </section>
+
+  <!-- API 연동 -->
+  <section class="admin-section" id="adminApiIntegrationSection">
+    <h2 class="admin-section-title">API 연동</h2>
+    <div class="admin-field">
+      <label class="admin-label" for="adminUnsplashKey">Unsplash Access Key</label>
+      <div class="admin-input-row">
+        <input type="password" id="adminUnsplashKey" class="admin-input" placeholder="Unsplash API Access Key" autocomplete="off" spellcheck="false" />
+        <button type="button" class="admin-pw-btn" id="adminUnsplashKeyToggle">표시</button>
+      </div>
+      <span class="admin-hint">서버에만 전송·저장되는 쓰기 전용 값입니다. 비워두면 기존 키를 유지하며, 검색 결과 이미지는 서버 로컬 폴더에 저장됩니다.</span>
+    </div>
+  </section>
+
+  <!-- 관리자 비밀번호 변경 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">관리자 비밀번호 변경</h2>
+    <div class="admin-field">
+      <label class="admin-label" for="adminCurrentAccessKey">현재 비밀번호</label>
+      <div class="admin-input-row">
+        <input type="password" id="adminCurrentAccessKey" class="admin-input" placeholder="현재 관리자 비밀번호" autocomplete="current-password" spellcheck="false" />
+        <button type="button" class="admin-pw-btn" id="adminAccessKeyShowBtn">표시</button>
+      </div>
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="adminNewAccessKey">새 비밀번호</label>
+      <div class="admin-input-row">
+        <input type="password" id="adminNewAccessKey" class="admin-input" placeholder="최소 12자 이상" autocomplete="new-password" spellcheck="false" />
+      </div>
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="adminNewAccessKeyConfirm">새 비밀번호 확인</label>
+      <div class="admin-input-row">
+        <input type="password" id="adminNewAccessKeyConfirm" class="admin-input" placeholder="새 비밀번호 다시 입력" autocomplete="new-password" spellcheck="false" />
+      </div>
+      <span class="admin-hint">변경 후 즉시 적용되며, 기존 키는 더 이상 사용할 수 없습니다.</span>
+    </div>
+    <div class="admin-field">
+      <button type="button" class="admin-btn admin-btn-save" id="adminAccessKeyUpdateBtn">비밀번호 변경</button>
+      <span class="admin-save-status" id="adminAccessKeyUpdateStatus"></span>
+    </div>
+  </section>
+
+  <!-- 탭 관리 -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">
+      탭 관리
+      <span class="admin-section-hint">작업군 선택 또는 드래그로 위치 변경 · 이름 입력으로 탭명 변경</span>
+    </h2>
+    <div class="admin-tab-manager" id="adminTabManager">
+      <!-- JS 렌더링 -->
+    </div>
+  </section>
+
+  <!-- 사용자 관리 -->
+  <section class="admin-section" id="adminUserManagement" hidden>
+    <h2 class="admin-section-title">사용자 관리</h2>
+
+    <!-- 사용자 추가 -->
+    <details class="admin-create-user" id="adminCreateUserDetails">
+      <summary class="admin-create-user-summary">+ 사용자 추가</summary>
+      <div class="admin-create-user-body">
+        <div class="admin-field-row">
+          <div class="admin-field">
+            <label class="admin-label" for="newUsername">아이디</label>
+            <input type="text" id="newUsername" class="admin-input" placeholder="영문/숫자" autocomplete="off" />
+          </div>
+          <div class="admin-field">
+            <label class="admin-label" for="newPassword">비밀번호</label>
+            <input type="password" id="newPassword" class="admin-input" placeholder="12자 이상, 문자 종류 3가지" autocomplete="new-password" />
+          </div>
+          <div class="admin-field">
+            <label class="admin-label" for="newUserRole">역할</label>
+            <select id="newUserRole" class="admin-input">
+              <option value="user">일반 사용자</option>
+              <option value="admin">관리자</option>
+            </select>
+          </div>
+        </div>
+        <label class="admin-hint"><input type="checkbox" id="newUserAdultConfirmed" /> 이 사용자가 만 18세 이상임을 확인했습니다.</label>
+        <div class="admin-create-user-error" id="newUserError"></div>
+        <button type="button" class="admin-btn admin-btn-save" id="createUserBtn">사용자 생성</button>
+      </div>
+    </details>
+
+    <!-- 사용자 목록 -->
+    <div id="adminUserList" class="admin-user-list"></div>
+
+    <!-- 접근 요청 대기 목록 -->
+    <div id="adminPendingSection" class="admin-pending-section" style="display:none">
+      <h3 class="admin-pending-title">탭 접근 요청 대기</h3>
+      <div id="adminPendingList" class="admin-pending-list"></div>
+    </div>
+  </section>
+
+  <!-- Google AdSense -->
+  <section class="admin-section">
+    <h2 class="admin-section-title">Google AdSense</h2>
+    <div class="admin-field">
+      <div class="admin-tab-row" style="padding:0;border:none;">
+        <div class="admin-tab-info"><span class="admin-tab-name">Google 광고 활성화</span></div>
+        <label class="admin-switch" aria-label="Google 광고 활성화">
+          <input type="checkbox" id="adminAdsEnabled" />
+          <span class="admin-switch-track"></span>
+        </label>
+      </div>
+      <span class="admin-hint">Client ID를 저장하면 사이트 검토와 CMP·Auto ads용 Google 태그가 연결됩니다. 사이트가 검토 중이면 실제 광고는 아직 표시되지 않을 수 있으며, 운영 전 Google의 개인정보 보호 및 메시지에서 필요한 CMP 메시지를 게시하세요. 슬롯 ID를 추가하면 아래의 수동 배너가 표시됩니다.</span>
+    </div>
+    <div id="adminAdsSub" class="admin-ads-sub" style="display:none">
+      <div class="admin-field">
+        <label class="admin-label" for="adminAdClient">Ad Client ID</label>
+        <div class="admin-input-row">
+          <input type="text" id="adminAdClient" class="admin-input" placeholder="ca-pub-XXXXXXXXXXXXXXXX" spellcheck="false" autocomplete="off" />
+          <button type="button" class="admin-pw-btn" id="adminAdClientFromAdsTxt">ads.txt 불러오기</button>
+        </div>
+        <span class="admin-hint">사이트 루트의 ads.txt에 등록된 Google 게시자 ID를 불러오거나 AdSense 광고 코드의 client 값을 입력합니다.</span>
+      </div>
+      <div class="admin-field">
+        <label class="admin-label" for="adminAdSlotTop">광고 슬롯 1 ID <span class="admin-label-note">데스크톱 왼쪽 · 모바일</span></label>
+        <input type="text" id="adminAdSlotTop" class="admin-input" placeholder="선택 사항: data-ad-slot 숫자" spellcheck="false" inputmode="numeric" />
+      </div>
+      <div class="admin-field">
+        <label class="admin-label" for="adminAdSlotBottom">광고 슬롯 2 ID <span class="admin-label-note">데스크톱 오른쪽</span></label>
+        <input type="text" id="adminAdSlotBottom" class="admin-input" placeholder="선택 사항: data-ad-slot 숫자" spellcheck="false" inputmode="numeric" />
+        <span class="admin-hint">수동 배너를 사용하지 않고 Auto ads만 사용할 때는 두 슬롯을 비워 둡니다.</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 하단 고정 바 -->
+<div class="admin-footer">
+  <div class="admin-footer-inner">
+    <button type="button" class="admin-btn admin-btn-save" id="adminSaveBtn">설정 저장</button>
+    <button type="button" class="admin-btn admin-btn-reset" id="adminResetBtn">전체 초기화</button>
+    <span class="admin-save-status" id="adminSaveStatus"></span>
+  </div>
+</div>
+
+<!-- 비밀번호 변경 모달 -->
+<div class="admin-modal-overlay" id="pwModal" style="display:none" aria-modal="true" role="dialog">
+  <div class="admin-modal">
+    <h3 class="admin-modal-title">비밀번호 변경</h3>
+    <div class="admin-field">
+      <label class="admin-label" for="pwModalInput">새 비밀번호</label>
+      <input type="password" id="pwModalInput" class="admin-input" placeholder="4자 이상" autocomplete="new-password" />
+    </div>
+    <div class="admin-modal-error" id="pwModalError"></div>
+    <div class="admin-modal-actions">
+      <button type="button" class="admin-btn admin-btn-save" id="pwModalSaveBtn">변경</button>
+      <button type="button" class="admin-btn admin-btn-reset" id="pwModalCancelBtn">취소</button>
+    </div>
+  </div>
+</div>
+
+<script src="src/admin.js"></script>
+<script src="src/legal-links.js"></script>
+</body>
+</html>

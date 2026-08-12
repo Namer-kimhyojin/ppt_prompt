@@ -1,0 +1,38 @@
+{
+  "name": "promptdeck",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:server": "node server/local-server.js",
+    "start": "node server/local-server.js",
+    "dev:mock": "node server/start-mock.js",
+    "dev:pollinations": "node server/start-pollinations.js",
+    "dev:gemini": "node server/start-gemini.js",
+    "smoke:test": "node scripts/smoke-test.mjs",
+    "diagram:test": "node scripts/data-diagram-smoke-test.mjs",
+    "promotion:test": "node scripts/promotion-parser-test.mjs",
+    "label:test": "node scripts/label-sheet-engine-test.mjs && node scripts/label-sheet-assets-test.mjs && node scripts/label-sheet-package-test.mjs",
+    "admin:test": "node scripts/admin-mode-smoke-test.mjs",
+    "security:test": "node scripts/security-smoke-test.mjs",
+    "public:test": "node scripts/public-access-smoke-test.mjs",
+    "build:static": "node scripts/build-static.mjs",
+    "static:test": "node scripts/static-smoke-test.mjs",
+    "pages:admin:test": "node scripts/pages-admin-smoke-test.mjs",
+    "release:static": "node scripts/deploy-static-release.mjs",
+    "deploy:check": "node scripts/deployment-preflight.mjs --target=docker",
+    "batch:subjects": "node scripts/batch-generate-subjects.mjs",
+    "batch:mediums": "node scripts/batch-generate-mediums.mjs",
+    "batch:photo-previews": "node scripts/batch-generate-photo-transform-previews.mjs",
+    "slide-style:preview:visual": "node scripts/import-visual-spectrum-previews.mjs",
+    "slide-style:preview:visual:fallback": "node scripts/generate-visual-spectrum-previews.mjs --html-fallback",
+    "slide-style:validate": "node scripts/validate-slide-style-catalog.mjs",
+    "safe:check": "node scripts/safe-run.mjs",
+    "safe:preflight": "node scripts/safe-preflight.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.54.2"
+  },
+  "dependencies": {
+    "nodemailer": "^9.0.3"
+  }
+}

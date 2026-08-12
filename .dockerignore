@@ -1,0 +1,21 @@
+.git
+.github
+node_modules
+.claude
+.codex-remote-attachments
+.playwright-mcp
+scratch
+tmp
+backup
+backups
+partials
+비주얼 믹스 가이드
+outputs
+*.log
+.env
+.env.*
+!.env.example
+server/config.local.js
+scripts/fixtures
+dist-static
+static-deploy.json

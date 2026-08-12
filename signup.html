@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원가입</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:," />
+  <script>
+    (() => {
+      const saved = localStorage.getItem('promptdeck_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    })();
+  </script>
+  <link rel="stylesheet" href="styles/login.css" />
+  <script src="src/auth.js"></script>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="login-logo">
+    <div class="login-logo-mark">PD</div>
+    <div>
+      <h1 class="login-app-name" id="signupAppName">PromptDeck</h1>
+      <p class="login-app-sub">회원가입</p>
+    </div>
+  </div>
+
+  <div id="signupDone" style="display:none">
+    <div id="signupDoneMsg" style="color:#1a7a3c;background:#e8f7ee;border:1px solid #b2dcbf;border-radius:8px;padding:14px 16px;font-size:14px;line-height:1.6;margin-bottom:20px"></div>
+    <a href="login.html" class="login-btn" style="display:block;text-align:center;text-decoration:none;line-height:1.5;padding-top:13px">로그인하러 가기</a>
+  </div>
+
+  <form id="signupForm">
+    <div class="login-field">
+      <label for="signupUsername">아이디</label>
+      <input type="text" id="signupUsername" class="login-input" placeholder="영문·숫자·._-, 2~40자" autocomplete="username" minlength="2" maxlength="40" pattern="[A-Za-z0-9._-]+" required />
+    </div>
+    <div class="login-field">
+      <label for="signupEmail">이메일</label>
+      <input type="email" id="signupEmail" class="login-input" placeholder="example@example.com" autocomplete="email" required />
+    </div>
+    <div class="login-field">
+      <label for="signupPassword">비밀번호</label>
+      <input type="password" id="signupPassword" class="login-input" placeholder="12자 이상, 문자 종류 3가지 이상" autocomplete="new-password" minlength="12" maxlength="128" required />
+    </div>
+    <div style="display:grid;gap:10px;margin:14px 0;font-size:13px;line-height:1.5">
+      <label><input type="checkbox" id="agreeTerms" required /> <a href="terms.html" target="_blank" rel="noopener">이용약관</a>에 동의합니다. (필수)</label>
+      <label><input type="checkbox" id="agreePrivacy" required /> <a href="privacy.html" target="_blank" rel="noopener">개인정보 처리방침</a>을 확인하고 동의합니다. (필수)</label>
+      <label><input type="checkbox" id="confirmAge" required /> 만 18세 이상입니다. (필수)</label>
+    </div>
+    <div class="login-field">
+      <label for="signupPasswordConfirm">비밀번호 확인</label>
+      <input type="password" id="signupPasswordConfirm" class="login-input" placeholder="비밀번호 재입력" autocomplete="new-password" required />
+    </div>
+    <div class="login-error" id="signupError"></div>
+    <button type="submit" class="login-btn" id="signupSubmit">가입하기</button>
+  </form>
+
+  <div class="login-footer">
+    이미 계정이 있으신가요? <a href="login.html">로그인</a>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ADMIN_SK = 'promptdeck_admin';
+  var legalInfo = { termsVersion: '2026-07-17', privacyVersion: '2026-07-17' };
+  function getAdminSettings() {
+    try { return JSON.parse(localStorage.getItem(ADMIN_SK) || '{}'); } catch (e) { return {}; }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/public-info').then(function (r) { return r.ok ? r.json() : null; }).then(function (info) {
+      if (info) {
+        legalInfo = info;
+        if (info.allowSignups === false) {
+          var submit = document.getElementById('signupSubmit');
+          if (submit) submit.disabled = true;
+          var notice = document.getElementById('signupError');
+          if (notice) notice.textContent = '현재 운영자가 신규 회원가입을 받지 않습니다.';
+        }
+      }
+    }).catch(function () {});
+    // 이미 로그인된 경우
+    if (PromptDeckAuth.loadSession()) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    var s = getAdminSettings();
+    if (s.programName) {
+      document.title = s.programName + ' 회원가입';
+      var nameEl = document.getElementById('signupAppName');
+      if (nameEl) nameEl.textContent = s.programName;
+    }
+
+    var form        = document.getElementById('signupForm');
+    var errEl       = document.getElementById('signupError');
+    var submitBtn   = document.getElementById('signupSubmit');
+    var doneEl      = document.getElementById('signupDone');
+    var doneMsgEl   = document.getElementById('signupDoneMsg');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var username = document.getElementById('signupUsername').value.trim();
+      var email    = document.getElementById('signupEmail').value.trim();
+      var pw       = document.getElementById('signupPassword').value;
+      var pw2      = document.getElementById('signupPasswordConfirm').value;
+
+      errEl.textContent = '';
+
+      if (username.length < 2) {
+        errEl.textContent = '아이디는 2자 이상 입력해주세요.';
+        return;
+      }
+      if (pw.length < 12) {
+        errEl.textContent = '비밀번호는 12자 이상 입력해주세요.';
+        return;
+      }
+      if (pw !== pw2) {
+        errEl.textContent = '비밀번호가 일치하지 않습니다.';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '처리 중...';
+
+      try {
+        var isServer = await PromptDeckAuth.detectServer();
+        if (!isServer) {
+          errEl.textContent = '서버 모드에서만 회원가입이 가능합니다.';
+          return;
+        }
+
+        var result = await PromptDeckAuth.signup(username, email, pw, {
+          termsVersion: legalInfo.termsVersion,
+          privacyVersion: legalInfo.privacyVersion,
+          ageConfirmed: document.getElementById('confirmAge').checked
+        });
+        if (!result) {
+          errEl.textContent = '서버 연결에 실패했습니다.';
+          return;
+        }
+        if (!result.ok) {
+          errEl.textContent = result.error || '가입에 실패했습니다.';
+          return;
+        }
+
+        // 성공
+        form.style.display = 'none';
+        doneEl.style.display = 'block';
+        if (result.autoApproved) {
+          doneMsgEl.textContent = '가입이 완료되었습니다. 바로 로그인하실 수 있습니다.';
+        } else {
+          doneMsgEl.textContent = result.email + '으로 인증 메일을 발송했습니다. 메일함(스팸함 포함)을 확인하여 24시간 안에 이메일 인증을 완료해주세요.';
+        }
+      } catch (err) {
+        errEl.textContent = err.message || '오류가 발생했습니다.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '가입하기';
+      }
+    });
+  });
+})();
+</script>
+<script src="src/legal-links.js"></script>
+</body>
+</html>

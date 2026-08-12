@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>오픈소스·제3자 고지 | PromptDeck</title><link rel="stylesheet" href="styles/legal.css"></head><body><main class="legal-shell"><a class="legal-home" href="index.html">← PromptDeck</a><h1>오픈소스·제3자 고지</h1><p class="legal-meta">확인 기준일: 2026년 8월 12일 · promptdeck.kr 정적 공개판</p>
+
+<h2>1. 공개판에 포함된 오픈소스</h2>
+<p>현재 정적 공개판의 브라우저 실행 파일을 점검한 결과, 다음 제3자 라이브러리가 직접 포함되어 있습니다. 해당 구성요소에는 PromptDeck 약관보다 각 오픈소스 라이선스가 우선 적용됩니다.</p>
+<table><thead><tr><th>구성요소</th><th>버전·파일</th><th>용도</th><th>저작권·라이선스</th></tr></thead><tbody><tr><td><a href="https://github.com/soldair/node-qrcode">node-qrcode (qrcode)</a></td><td>1.5.1<br><code>src/qrcode.min.js</code></td><td>브라우저 안에서 QR 코드 생성</td><td>Copyright © 2012 Ryan Day<br>MIT License</td></tr></tbody></table>
+
+<details><summary>node-qrcode MIT License 전문</summary><pre>The MIT License (MIT)
+
+Copyright (c) 2012 Ryan Day
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</pre></details>
+
+<h2>2. 서버판·개발 도구 의존성</h2>
+<p>아래 패키지는 정적 공개판의 브라우저 코드에는 포함되지 않습니다. 선택적 로컬 서버 또는 개발·검증 환경에서만 사용하며, 정확한 설치 버전은 <code>package-lock.json</code>을 기준으로 합니다.</p>
+<table><thead><tr><th>구성요소</th><th>잠금 버전</th><th>범위</th><th>라이선스·고지 위치</th></tr></thead><tbody><tr><td><a href="https://github.com/nodemailer/nodemailer">Nodemailer</a></td><td>9.0.3</td><td>서버판의 선택적 인증 이메일 전송</td><td>MIT-0 · <code>node_modules/nodemailer/LICENSE</code></td></tr><tr><td><a href="https://github.com/microsoft/playwright">Playwright</a></td><td>1.59.1</td><td>개발·브라우저 검증 전용</td><td>Apache-2.0 · <code>node_modules/playwright/LICENSE</code>, <code>NOTICE</code>, <code>ThirdPartyNotices.txt</code></td></tr></tbody></table>
+
+<h2>3. 외부 서비스와 외부 링크</h2>
+<p>외부 서비스는 오픈소스 라이선스 대상과 구분됩니다. 현재 공개판의 실제 상태는 다음과 같습니다.</p>
+<table><thead><tr><th>서비스</th><th>현재 사용 방식</th><th>적용 조건</th></tr></thead><tbody><tr><td><a href="https://www.cloudflare.com/">Cloudflare Pages·Functions</a></td><td>정적 호스팅, CDN, 동일 출처 관리자 설정 API와 보안</td><td><a href="https://www.cloudflare.com/terms/">서비스 약관</a> · <a href="https://www.cloudflare.com/privacypolicy/">개인정보 정책</a></td></tr><tr><td><a href="https://spoo.me/">Spoo.me</a></td><td>이용자가 경고를 확인한 경우에만 원본 URL을 보내 단축주소 생성</td><td><a href="https://spoo.me/terms-of-service">서비스 약관</a> · <a href="https://spoo.me/privacy-policy">개인정보 정책</a></td></tr><tr><td>Gemini·Adobe Firefly·Microsoft Designer</td><td>외부 사이트를 새 창으로 여는 링크만 제공. 프롬프트·이미지 자동 전송 없음</td><td>이동 후 각 사이트의 약관·개인정보 정책</td></tr><tr><td>Google AdSense</td><td>2026년 8월 12일 공개 관리자 설정에 광고 클라이언트가 등록되어 있고 수동 슬롯은 비어 있음. 현재 소스는 이 구성을 자동 광고·동의 메시지 태그 모드로 처리하므로 이 버전이 서비스되면 Google 태그 요청 가능</td><td><a href="https://support.google.com/adsense/answer/48182">게시자 정책</a> · <a href="https://support.google.com/adsense/answer/13554116">CMP 요구사항</a> · <a href="https://policies.google.com/privacy">개인정보 정책</a></td></tr></tbody></table>
+
+<h2>4. 미리보기·샘플 자산</h2><p>PromptDeck에는 서비스 사용법을 보여주기 위한 미리보기와 샘플 이미지가 포함됩니다. 일부 미리보기는 생성형 AI로 제작되었으며, 예를 들어 슬라이드 스타일 자산은 <a href="assets/slide-style-previews/visual-spectrum-provenance.json">provenance 기록</a>에서 생성 방식·검토일·파일 해시를 확인할 수 있습니다. 이러한 자산은 오픈소스로 배포된 것이 아니며, 별도 허락 없이 원본을 추출해 재판매·재배포할 권리를 부여하지 않습니다.</p>
+
+<h2>5. 상표와 고지 갱신</h2><p>“QR Code”는 DENSO WAVE INCORPORATED의 등록상표입니다. 그 밖의 회사명·제품명·로고는 각 권리자의 상표일 수 있으며, 표시는 연동·설명의 목적일 뿐 제휴나 보증을 뜻하지 않습니다.</p><p>의존성 추가·버전 변경·외부 서비스 활성화 시 이 문서와 배포물의 라이선스 전문·NOTICE를 함께 갱신합니다. 누락된 고지를 발견하면 <a href="copyright-policy.html">저작권·권리침해 신고 절차</a>를 이용해 주세요.</p>
+<nav class="legal-nav"><a href="privacy.html">개인정보 처리방침</a><a href="terms.html">이용약관</a><a href="ai-policy.html">AI 이용 안내</a><a href="copyright-policy.html">저작권·신고</a></nav></main></body></html>

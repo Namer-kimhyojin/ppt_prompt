@@ -1,0 +1,31 @@
+node_modules/
+outputs/*
+!outputs/.gitkeep
+!outputs/mixer_samples/
+outputs/mixer_samples/*
+!outputs/mixer_samples/mix-policy-innovation-hub-incubation_0.jpg
+!outputs/mixer_samples/mix-regional-sample-harbor_0.jpg
+server/config.local.js
+.env
+.env.*
+!.env.example
+.dev.vars*
+dist-static/
+static-deploy.json
+.playwright-mcp/
+.claude/
+backup/
+backups/
+PromptDeck_backup(07.02.).zip
+비주얼 믹스 가이드.zip
+
+# Local/generated worktree artifacts
+.codex-remote-attachments/
+artifacts/
+tmp/
+tmp-convert.*
+assets/photo-transform-previews/*.png
+clean-profile-bundled-check.png
+promptdeck-five-stage-desktop.png
+slide-style-preset-expansion-plan.md
+slide-style-presets-132.json

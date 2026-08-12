@@ -1,0 +1,4239 @@
+#paneLabelSheet {
+  min-width: 0;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+#paneLabelSheet .label-sheet-shell {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: var(--workspace-top) var(--workspace-gutter) var(--workspace-bottom);
+}
+
+#paneLabelSheet .label-sheet-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 44%),
+    var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+#paneLabelSheet .label-sheet-hero h2,
+#paneLabelSheet .label-sheet-result-head h2 {
+  margin: 4px 0 6px;
+  color: var(--ink);
+  font-size: clamp(21px, 2vw, 28px);
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+}
+
+#paneLabelSheet .label-sheet-hero p,
+#paneLabelSheet .label-sheet-result-head p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+#paneLabelSheet .label-sheet-kicker {
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+#paneLabelSheet .label-sheet-hero-badges {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-hero-badges span,
+#paneLabelSheet .label-sheet-result-badge,
+#paneLabelSheet .label-sheet-step-state {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-intent-panel {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 12px;
+  padding: 22px 24px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--accent-soft) 24%, var(--surface));
+  box-shadow: var(--shadow-soft);
+}
+
+#paneLabelSheet .label-sheet-intent-head,
+#paneLabelSheet .label-sheet-intent-head > div,
+#paneLabelSheet .label-sheet-intent-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+#paneLabelSheet .label-sheet-intent-head > div {
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-intent-head h3 {
+  margin: 2px 0 4px;
+  color: var(--ink);
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+}
+
+#paneLabelSheet .label-sheet-intent-head p,
+#paneLabelSheet .label-sheet-intent-footer p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+#paneLabelSheet .label-sheet-intent-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#paneLabelSheet .label-sheet-intent-fieldset legend {
+  margin-bottom: 9px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+#paneLabelSheet .label-sheet-intent-grid {
+  display: grid;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-intent-grid-output {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-intent-grid-type {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-intent-grid-side {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-intent-card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 112px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-items: start;
+  gap: 8px 10px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+#paneLabelSheet .label-sheet-intent-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--line));
+  transform: translateY(-1px);
+}
+
+#paneLabelSheet .label-sheet-intent-card:has(input:checked) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 50%, var(--surface));
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+#paneLabelSheet .label-sheet-intent-card input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+}
+
+#paneLabelSheet .label-sheet-intent-card-copy,
+#paneLabelSheet .label-sheet-intent-card-compact > span {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+#paneLabelSheet .label-sheet-intent-card strong {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+#paneLabelSheet .label-sheet-intent-card small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-intent-chip {
+  grid-column: 2;
+  width: max-content;
+  max-width: 100%;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+#paneLabelSheet .label-sheet-intent-card:has(input:checked) .label-sheet-intent-chip {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+#paneLabelSheet .label-sheet-intent-card-compact {
+  min-height: 78px;
+  align-content: center;
+  padding: 12px;
+}
+
+#paneLabelSheet .label-sheet-intent-footer {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+#paneLabelSheet .label-sheet-intent-footer p strong {
+  color: var(--ink);
+}
+
+#paneLabelSheet .label-sheet-intent-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-intent-actions .btn {
+  min-height: 42px;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-sample-picker {
+  display: grid;
+  min-width: 190px;
+  gap: 4px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-sample-picker select {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 34px 8px 10px;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+#paneLabelSheet .label-sheet-progress-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+#paneLabelSheet .label-sheet-progress {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#paneLabelSheet .label-sheet-progress-mode {
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-progress li {
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-progress li.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+#paneLabelSheet .label-sheet-progress li.is-complete:not(.is-active) {
+  border-color: color-mix(in srgb, var(--status-success) 38%, var(--line));
+}
+
+#paneLabelSheet .label-sheet-progress button {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+#paneLabelSheet .label-sheet-progress li span,
+#paneLabelSheet .label-sheet-step-number {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+#paneLabelSheet .label-sheet-progress li strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-direct-assets {
+  display: grid;
+  min-width: 0;
+  gap: 18px;
+}
+
+#paneLabelSheet .label-sheet-mode-note,
+#paneLabelSheet .label-sheet-capability-note,
+#paneLabelSheet .label-sheet-output-route p {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent-soft) 34%, var(--surface));
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+#paneLabelSheet .label-sheet-mode-note strong,
+#paneLabelSheet .label-sheet-output-route strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-output-route {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+#paneLabelSheet .label-sheet-output-route p {
+  border-left: 3px solid var(--accent);
+}
+
+#paneLabelSheet .label-sheet-spec-duplex,
+#paneLabelSheet .label-sheet-background-dna,
+#paneLabelSheet .label-sheet-common-layout,
+#paneLabelSheet .label-sheet-qr-card {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-spec-duplex[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-scope-badge {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-face-editor-head {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-dna-status {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-dna-status strong {
+  color: var(--accent-strong);
+}
+
+#paneLabelSheet .label-sheet-advanced-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-advanced-panel > summary {
+  min-height: 44px;
+  padding: 11px 13px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-advanced-panel[open] > summary {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-advanced-panel-body {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+  padding: 14px;
+}
+
+#paneLabelSheet .label-sheet-capability-note {
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-qr-card[data-available="false"] {
+  border-style: dashed;
+  opacity: 0.78;
+}
+
+#paneLabelSheet .label-sheet-qr-card[data-available="false"] .label-sheet-capability-note {
+  border-color: color-mix(in srgb, var(--status-warning) 35%, var(--line));
+  color: var(--status-warning);
+}
+
+#paneLabelSheet .label-sheet-legacy-document-type {
+  display: none;
+}
+
+#paneLabelSheet[data-output-goal="print"] [data-label-sheet-goal]:not([data-label-sheet-goal~="print"]),
+#paneLabelSheet[data-output-goal="prompt"] [data-label-sheet-goal]:not([data-label-sheet-goal~="prompt"]),
+#paneLabelSheet [data-label-sheet-goal="both"] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-layout {
+  display: grid;
+  grid-template-columns: minmax(540px, 1.12fr) minmax(420px, 0.88fr);
+  gap: var(--workspace-gap);
+  align-items: start;
+}
+
+#paneLabelSheet .label-sheet-builder,
+#paneLabelSheet .label-sheet-result-stack {
+  display: grid;
+  min-width: 0;
+  gap: var(--workspace-gap);
+}
+
+#paneLabelSheet .label-sheet-builder {
+  align-content: start;
+  grid-auto-rows: max-content;
+}
+
+#paneLabelSheet .label-sheet-step,
+#paneLabelSheet .label-sheet-result-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+#paneLabelSheet #labelSheetIntentPanel,
+#paneLabelSheet .label-sheet-step,
+#paneLabelSheet #labelSheetWysiwygDetails,
+#paneLabelSheet #labelSheetQuickEditbar,
+#paneLabelSheet #labelSheetFocusEditor,
+#paneLabelSheet #labelSheetResultCard,
+#paneLabelSheet .label-sheet-action-dock {
+  scroll-margin-top: calc(var(--app-header-height) + var(--tabs-bar-height) + 14px);
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) #tabActions,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-preflight-card,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-prompt-card,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-package-card,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-print-job-card,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-secondary-actions,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) #labelSheetStatus {
+  display: none !important;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="design"]) .label-sheet-wysiwyg-details,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="design"]) .label-sheet-quick-editor,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="design"]) .label-sheet-focus-editor {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-step > summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  min-height: 72px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px var(--panel-padding);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+#paneLabelSheet .label-sheet-step > summary::-webkit-details-marker {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-step > summary::after {
+  content: "펼치기  ⌄";
+  display: inline-grid;
+  grid-column: 4;
+  grid-row: 1;
+  min-width: 82px;
+  height: 34px;
+  padding: 0 10px;
+  place-items: center;
+  justify-self: end;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-soft) 32%, var(--surface));
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 2px 7px color-mix(in srgb, var(--ink) 8%, transparent);
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+#paneLabelSheet .label-sheet-step[open] > summary::after {
+  content: "접기  ⌃";
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 58%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-step > summary:hover::after,
+#paneLabelSheet .label-sheet-step > summary:focus-visible::after {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 72%, var(--surface));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-soft) 58%, transparent);
+}
+
+#paneLabelSheet .label-sheet-step > summary > span:nth-child(2) {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+#paneLabelSheet .label-sheet-step > summary strong {
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+#paneLabelSheet .label-sheet-step > summary small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-step > summary .label-sheet-step-state {
+  grid-column: 3;
+  grid-row: 1;
+  margin-right: 0;
+}
+
+#paneLabelSheet .label-sheet-step[open] > summary {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-step-body {
+  display: grid;
+  min-width: 0;
+  gap: 18px;
+  padding: var(--panel-padding);
+}
+
+#paneLabelSheet .label-sheet-form-grid {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+#paneLabelSheet .label-sheet-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-field {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#paneLabelSheet .label-sheet-field[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-field-wide {
+  grid-column: span 2;
+}
+
+#paneLabelSheet .label-sheet-field > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-field small,
+#paneLabelSheet .label-sheet-help,
+#paneLabelSheet .label-sheet-subhead small,
+#paneLabelSheet .label-sheet-check small,
+#paneLabelSheet .label-sheet-choice small,
+#paneLabelSheet .label-sheet-calibration-box small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-field input:not([type="range"]):not([type="radio"]):not([type="checkbox"]),
+#paneLabelSheet .label-sheet-field select,
+#paneLabelSheet .label-sheet-field textarea,
+#paneLabelSheet .label-sheet-prompt-card textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-height);
+  padding: 9px 11px;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-sm);
+  outline: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-field textarea,
+#paneLabelSheet .label-sheet-prompt-card textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+#paneLabelSheet .label-sheet-field input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+#paneLabelSheet #labelSheetTextScaleValue {
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-prompt-card textarea {
+  min-height: 210px;
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--surface-alt) 72%, var(--surface));
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#paneLabelSheet .label-sheet-prompt-navigation {
+  display: flex;
+  min-width: 0;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-prompt-cycle-toolbar {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 3%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-prompt-cycle-toolbar .label-sheet-prompt-navigation {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#paneLabelSheet .label-sheet-prompt-cycle-toolbar .label-sheet-prompt-navigation > label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-prompt-copy-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-prompt-copy-actions .btn {
+  min-width: 0;
+  min-height: 42px;
+}
+
+#paneLabelSheet .label-sheet-prompt-copy-progress {
+  min-width: 104px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-prompt-navigation > label {
+  display: grid;
+  min-width: min(100%, 320px);
+  gap: 5px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-prompt-navigation select {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+#paneLabelSheet .label-sheet-prompt-page-controls {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#paneLabelSheet #labelSheetPromptPageStatus,
+#paneLabelSheet #labelSheetPromptPageStatusBottom {
+  min-width: 54px;
+  color: var(--ink);
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#paneLabelSheet input::placeholder,
+#paneLabelSheet textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+#paneLabelSheet input[type="range"] {
+  width: 100%;
+  min-height: 28px;
+  accent-color: var(--accent);
+}
+
+#paneLabelSheet input[type="radio"],
+#paneLabelSheet input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+#paneLabelSheet button:focus-visible,
+#paneLabelSheet input:focus-visible,
+#paneLabelSheet select:focus-visible,
+#paneLabelSheet textarea:focus-visible,
+#paneLabelSheet summary:focus-visible,
+#paneLabelSheet [tabindex="0"]:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+#paneLabelSheet .label-sheet-subsection,
+#paneLabelSheet .label-sheet-import-review,
+#paneLabelSheet .label-sheet-data-mapping,
+#paneLabelSheet .label-sheet-asset-library,
+#paneLabelSheet .label-sheet-background-generator,
+#paneLabelSheet .label-sheet-crop-editor,
+#paneLabelSheet .label-sheet-duplex-settings,
+#paneLabelSheet .label-sheet-integration-card,
+#paneLabelSheet .label-sheet-package-card,
+#paneLabelSheet .label-sheet-print-job-card,
+#paneLabelSheet .label-sheet-preflight-card,
+#paneLabelSheet .label-sheet-prompt-card {
+  display: grid;
+  min-width: 0;
+  gap: 13px;
+  padding: var(--panel-padding-compact);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-data-mapping {
+  padding: 12px;
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 24%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-data-mapping[hidden] {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-mapping-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-mapping-back {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+#paneLabelSheet .label-sheet-mapping-back summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-mapping-back .label-sheet-mapping-grid {
+  margin-top: 10px;
+}
+
+#paneLabelSheet .label-sheet-integration-card {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 34%, var(--surface-alt));
+}
+
+#paneLabelSheet .label-sheet-package-card {
+  margin-top: 12px;
+}
+
+#paneLabelSheet .label-sheet-print-job-card {
+  display: grid;
+  gap: 13px;
+  margin-top: 12px;
+}
+
+#paneLabelSheet .label-sheet-prompt-mode-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  align-items: stretch;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-privacy-status {
+  display: flex;
+  min-width: 0;
+  min-height: var(--control-height);
+  align-items: center;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--status-success) 28%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--status-success) 8%, var(--surface));
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-page-image-register {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+  padding: 12px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 32%, var(--line));
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-page-image-register .label-sheet-upload-line {
+  align-items: stretch;
+}
+
+#paneLabelSheet .label-sheet-page-image-register .btn,
+#paneLabelSheet .label-sheet-print-job-actions .btn {
+  min-height: var(--control-height);
+}
+
+#paneLabelSheet .label-sheet-crop-editor[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-crop-layout {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(220px, 0.92fr) minmax(220px, 1.08fr);
+  align-items: start;
+  gap: 14px;
+}
+
+#paneLabelSheet .label-sheet-crop-stage {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(45deg, color-mix(in srgb, var(--line) 42%, transparent) 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, color-mix(in srgb, var(--line) 42%, transparent) 25%, transparent 25%) 0 8px / 16px 16px,
+    var(--surface-soft);
+}
+
+#paneLabelSheet #labelSheetCropPreviewImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet #labelSheetCropPreviewBox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow: 0 0 0 999px rgba(8, 15, 28, 0.48);
+  pointer-events: none;
+}
+
+#paneLabelSheet .label-sheet-crop-controls {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+#paneLabelSheet .label-sheet-crop-control {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#paneLabelSheet .label-sheet-crop-control > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-crop-control output {
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-print-job-fields {
+  align-items: end;
+}
+
+#paneLabelSheet .label-sheet-print-job-actions {
+  align-items: stretch;
+}
+
+#paneLabelSheet .label-sheet-generation-options {
+  max-width: 420px;
+}
+
+#paneLabelSheet .label-sheet-switch {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--line-control);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet #labelSheetQrControls[data-enabled="false"] {
+  opacity: 0.58;
+}
+
+#paneLabelSheet #labelSheetQrControls[data-enabled="false"] input,
+#paneLabelSheet #labelSheetQrControls[data-enabled="false"] select,
+#paneLabelSheet #labelSheetQrControls[data-enabled="false"] button {
+  cursor: not-allowed;
+}
+
+#paneLabelSheet .label-sheet-field-badge {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-qr-token-bar,
+#paneLabelSheet .label-sheet-qr-assignment-actions,
+#paneLabelSheet .label-sheet-qr-resolved-preview {
+  grid-column: 1 / -1;
+}
+
+#paneLabelSheet .label-sheet-qr-token-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-qr-token-bar > span {
+  margin-right: 2px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-qr-token-bar button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--line-control);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: ui-monospace, "D2Coding", Consolas, monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-qr-token-bar button:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+#paneLabelSheet .label-sheet-qr-resolved-preview {
+  overflow-wrap: anywhere;
+}
+
+#paneLabelSheet #labelSheetGenerationStatus,
+#paneLabelSheet #labelSheetQrStatus,
+#paneLabelSheet #labelSheetPackageStatus {
+  margin: 0;
+}
+
+#paneLabelSheet .label-sheet-subhead,
+#paneLabelSheet .label-sheet-calibration-box {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#paneLabelSheet .label-sheet-subhead > div,
+#paneLabelSheet .label-sheet-calibration-box > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+#paneLabelSheet .label-sheet-subhead strong,
+#paneLabelSheet .label-sheet-calibration-box strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-inline-actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-compact-btn {
+  min-height: 34px;
+  padding: 0 11px;
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-inline-status {
+  min-width: 0;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-data-tabs,
+#paneLabelSheet .label-sheet-content-tabs,
+#paneLabelSheet .label-sheet-face-toggle {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-data-tabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-content-tabs,
+#paneLabelSheet .label-sheet-face-toggle {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-data-tabs button,
+#paneLabelSheet .label-sheet-content-tabs button,
+#paneLabelSheet .label-sheet-face-toggle button,
+#paneLabelSheet .label-sheet-page-controls button {
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#paneLabelSheet .label-sheet-data-tabs button.active,
+#paneLabelSheet .label-sheet-content-tabs button.active,
+#paneLabelSheet .label-sheet-face-toggle button.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+#paneLabelSheet .label-sheet-data-panel,
+#paneLabelSheet .label-sheet-content-panel {
+  display: none;
+  min-width: 0;
+  padding: 4px 0 0;
+}
+
+#paneLabelSheet .label-sheet-data-panel.active,
+#paneLabelSheet .label-sheet-content-panel.active {
+  display: block;
+}
+
+#paneLabelSheet .label-sheet-data-panel[hidden],
+#paneLabelSheet .label-sheet-content-panel[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-field-action {
+  min-height: var(--control-height);
+  align-self: end;
+  justify-content: center;
+}
+
+#paneLabelSheet .label-sheet-upload-line {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-file-button {
+  display: inline-flex;
+  min-height: var(--control-height);
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+#paneLabelSheet .label-sheet-file-button input,
+#paneLabelSheet #labelSheetAssetInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-tools {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(360px, auto);
+  align-items: center;
+  gap: 10px 14px;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent-soft) 20%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-copy strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-copy small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-actions .btn {
+  min-width: 0;
+  min-height: 38px;
+  padding-inline: 10px;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-spreadsheet-status {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+#paneLabelSheet #labelSheetRecordTable {
+  width: 100%;
+  min-width: 1160px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+#paneLabelSheet #labelSheetRecordTable th,
+#paneLabelSheet #labelSheetRecordTable td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  text-align: left;
+  vertical-align: middle;
+}
+
+#paneLabelSheet #labelSheetRecordTable th {
+  background: var(--surface-alt);
+  color: var(--ink);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet #labelSheetRecordTable tr:last-child td {
+  border-bottom: 0;
+}
+
+#paneLabelSheet #labelSheetRecordTable tr[data-record-id] {
+  cursor: pointer;
+}
+
+#paneLabelSheet #labelSheetRecordTable tr[data-record-id].is-selected td {
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+}
+
+#paneLabelSheet #labelSheetRecordTable input {
+  width: 100%;
+  min-width: 84px;
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid var(--line-control);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+#paneLabelSheet #labelSheetRecordTable input.is-spreadsheet-active {
+  border-color: var(--accent);
+  outline: 2px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  outline-offset: 1px;
+  background: color-mix(in srgb, var(--accent-soft) 24%, var(--surface));
+}
+
+#paneLabelSheet #labelSheetRecordTable .label-sheet-selection-cell {
+  width: 54px;
+  text-align: center;
+}
+
+#paneLabelSheet #labelSheetRecordTable input[type="checkbox"] {
+  display: block;
+  width: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 0 auto;
+  padding: 0;
+  accent-color: var(--accent);
+}
+
+#paneLabelSheet .label-sheet-empty-row td {
+  padding: 24px 12px !important;
+  text-align: center !important;
+}
+
+#paneLabelSheet .label-sheet-asset-drop {
+  display: grid;
+  min-height: 184px;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  padding: 22px;
+  border: 2px dashed color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 4%, var(--surface));
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: center;
+}
+
+#paneLabelSheet .label-sheet-asset-drop.is-dragover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+#paneLabelSheet .label-sheet-asset-drop strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+#paneLabelSheet .label-sheet-asset-drop small {
+  max-width: 520px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-drop-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+#paneLabelSheet .label-sheet-asset-list {
+  display: grid;
+  min-height: 104px;
+  grid-template-columns: repeat(auto-fill, minmax(146px, 1fr));
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-asset-card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+#paneLabelSheet .label-sheet-asset-card.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+#paneLabelSheet .label-sheet-asset-radio {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+#paneLabelSheet .label-sheet-asset-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--surface-soft);
+}
+
+#paneLabelSheet .label-sheet-asset-card-body {
+  display: grid;
+  gap: 3px;
+  padding: 9px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-empty-state {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 20px 12px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+#paneLabelSheet .label-sheet-check,
+#paneLabelSheet .label-sheet-choice {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-check input,
+#paneLabelSheet .label-sheet-choice input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+}
+
+#paneLabelSheet .label-sheet-check span,
+#paneLabelSheet .label-sheet-choice span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-choice:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+#paneLabelSheet .label-sheet-choice-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#paneLabelSheet .label-sheet-choice-fieldset legend {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-choice-grid {
+  display: grid;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-choice-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-calibration-box {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-result-card {
+  padding: var(--panel-padding);
+}
+
+#paneLabelSheet .label-sheet-result-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+#paneLabelSheet .label-sheet-result-head h2 {
+  font-size: 21px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-soft) 22%, var(--surface-alt));
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 9px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-controls[hidden] {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-actions {
+  grid-column: 1 / -1;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-full,
+#paneLabelSheet .label-sheet-wysiwyg-text-field {
+  grid-column: 1 / -1;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-context {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr);
+  align-items: end;
+  gap: 9px;
+  padding: 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-record {
+  display: grid;
+  min-height: 42px;
+  align-content: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-record span,
+#paneLabelSheet .label-sheet-wysiwyg-record output {
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-record output {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-text-field textarea {
+  min-height: 82px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-check {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-check input {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-check span {
+  display: grid;
+  gap: 1px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-check strong,
+#paneLabelSheet .label-sheet-wysiwyg-check small {
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-color-field input[type="color"] {
+  width: 100%;
+  min-height: 42px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-presets {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-presets > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-presets strong,
+#paneLabelSheet .label-sheet-wysiwyg-presets small {
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-preset-controls {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(180px, 1fr) auto auto auto;
+  align-items: end;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-preview-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#paneLabelSheet .label-sheet-face-toggle {
+  min-width: 168px;
+}
+
+#paneLabelSheet .label-sheet-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#paneLabelSheet .label-sheet-page-controls button {
+  display: grid;
+  width: 38px;
+  padding: 0;
+  place-items: center;
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-page-controls button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+#paneLabelSheet #labelSheetPageStatus {
+  min-width: 52px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 750;
+  text-align: center;
+}
+
+#paneLabelSheet .label-sheet-page-preview {
+  display: grid;
+  min-height: 420px;
+  place-items: center;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(45deg, color-mix(in srgb, var(--line) 36%, transparent) 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, color-mix(in srgb, var(--line) 36%, transparent) 25%, transparent 25%) 0 8px / 16px 16px,
+    var(--surface-soft);
+}
+
+#paneLabelSheet .label-sheet-a4-sheet {
+  position: relative;
+  display: grid;
+  width: min(100%, 440px);
+  aspect-ratio: 210 / 297;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+  color: #172033;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.2);
+}
+
+#paneLabelSheet .label-sheet-a4-sheet.is-landscape {
+  width: min(100%, 570px);
+  aspect-ratio: 297 / 210;
+}
+
+#paneLabelSheet .label-sheet-a4-sheet > .label-sheet-preview-page {
+  width: 100%;
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-a4-sheet .label-sheet-preview-canvas {
+  display: block;
+  max-width: 100%;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-overlay {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-hit {
+  position: absolute;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-hit:hover,
+#paneLabelSheet .label-sheet-wysiwyg-hit:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 14%, transparent);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-hit.is-selected {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-soft) 72%, transparent);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-space {
+  position: absolute;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-content {
+  position: absolute;
+  z-index: 2;
+  min-width: 10%;
+  min-height: 10%;
+  border: 1px dashed color-mix(in srgb, var(--accent) 30%, transparent);
+  background: transparent;
+  cursor: move;
+  outline: 0;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-content.is-active,
+#paneLabelSheet .label-sheet-wysiwyg-content:focus-visible {
+  border: 2px solid color-mix(in srgb, var(--accent) 86%, #ffffff);
+  background: color-mix(in srgb, var(--accent-soft) 10%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-soft) 58%, transparent);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field {
+  position: absolute;
+  display: flex;
+  min-width: 20px;
+  min-height: 16px;
+  align-items: flex-start;
+  overflow: hidden;
+  padding: 2px 4px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 68%, #ffffff);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--accent-soft) 28%, transparent);
+  color: color-mix(in srgb, var(--accent-strong) 82%, #111827);
+  cursor: grab;
+  font-size: clamp(8px, 1.4vw, 12px);
+  line-height: 1.15;
+  opacity: 0.72;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  white-space: pre-line;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-overlay.is-focus-editor .label-sheet-wysiwyg-field {
+  box-sizing: border-box;
+  align-items: flex-start;
+  color: var(--wysiwyg-preview-color, #111827);
+  line-height: 1.25;
+  opacity: 0.94;
+  text-shadow: var(--wysiwyg-preview-shadow, none);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-overlay.is-focus-editor .label-sheet-wysiwyg-field.is-active {
+  background: color-mix(in srgb, var(--accent-soft) 34%, rgba(255, 255, 255, 0.54));
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field.is-active {
+  border-style: solid;
+  border-width: 2px;
+  background: color-mix(in srgb, var(--accent-soft) 68%, rgba(255, 255, 255, 0.48));
+  cursor: move;
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field.is-auto-wrapped {
+  border-color: color-mix(in srgb, var(--status-success) 78%, #ffffff);
+  background: color-mix(in srgb, var(--status-success) 12%, transparent);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field.is-auto-wrapped.is-active {
+  border-color: var(--status-success);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--status-success) 20%, transparent), 0 2px 8px rgba(15, 23, 42, 0.18);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field:active {
+  cursor: grabbing;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field.is-hidden-field {
+  border-color: var(--status-warning);
+  background: color-mix(in srgb, var(--status-warning) 16%, transparent);
+  color: var(--status-warning);
+  opacity: 0.64;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-resize-handle {
+  position: absolute;
+  z-index: 8;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #ffffff;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.34);
+  pointer-events: auto;
+  touch-action: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-resize-handle.is-width {
+  top: 50%;
+  right: -8px;
+  cursor: ew-resize;
+  transform: translateY(-50%);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-resize-handle.is-corner {
+  right: -8px;
+  bottom: -8px;
+  cursor: nwse-resize;
+}
+
+#paneLabelSheet [data-tone="error"] {
+  color: var(--status-error);
+}
+
+#paneLabelSheet [data-tone="warning"] {
+  color: var(--status-warning);
+}
+
+#paneLabelSheet [data-tone="success"] {
+  color: var(--status-success);
+}
+
+#paneLabelSheet .label-sheet-preview-grid {
+  position: absolute;
+  display: grid;
+  gap: var(--label-gap-y, 0) var(--label-gap-x, 0);
+  inset: var(--label-margin-top, 4%) var(--label-margin-right, 4%) var(--label-margin-bottom, 4%) var(--label-margin-left, 4%);
+  grid-template-columns: repeat(var(--label-columns, 3), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--label-rows, 8), minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-preview-cell {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px dashed #9ba7b7;
+  background: #f8fafc;
+}
+
+#paneLabelSheet .label-sheet-preview-placeholder {
+  display: grid;
+  max-width: 70%;
+  gap: 7px;
+  color: #637083;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+#paneLabelSheet .label-sheet-preview-placeholder strong {
+  color: #253247;
+  font-size: 14px;
+}
+
+#paneLabelSheet .label-sheet-output-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+#paneLabelSheet .label-sheet-output-summary div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-output-summary dt {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-output-summary dd {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-preflight-card,
+#paneLabelSheet .label-sheet-prompt-card {
+  margin-top: 12px;
+}
+
+#paneLabelSheet .label-sheet-preflight {
+  display: grid;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-preflight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-error {
+  background: var(--danger-soft);
+  color: var(--status-error);
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-warning {
+  background: color-mix(in srgb, var(--status-warning) 10%, var(--surface));
+  color: var(--status-warning);
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-success {
+  background: var(--success-soft);
+  color: var(--status-success);
+}
+
+#paneLabelSheet .label-sheet-result-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#paneLabelSheet .label-sheet-result-actions .btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 10px;
+  white-space: normal;
+}
+
+#paneLabelSheet .label-sheet-result-actions #labelSheetSampleBtn,
+#paneLabelSheet .label-sheet-result-actions #labelSheetResetBtn {
+  grid-column: span 1;
+}
+
+#paneLabelSheet code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+:root[data-theme="dark"] #paneLabelSheet .label-sheet-a4-sheet,
+:root[data-theme="dark"] #paneLabelSheet .label-sheet-asset-card img {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] #paneLabelSheet .label-sheet-hero,
+:root[data-theme="dark"] #paneLabelSheet .label-sheet-intent-panel,
+:root[data-theme="dark"] #paneLabelSheet .label-sheet-step,
+:root[data-theme="dark"] #paneLabelSheet .label-sheet-result-card {
+  border-color: var(--line);
+  background-color: var(--surface);
+}
+
+.label-sheet-print-root,
+.label-sheet-print-mount {
+  display: none;
+}
+
+@media (max-width: 1180px) {
+  #paneLabelSheet .label-sheet-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-result-stack {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 860px) {
+  #paneLabelSheet .label-sheet-intent-grid-output {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-intent-grid-type {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-intent-grid-side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-intent-grid-output .label-sheet-intent-card {
+    min-height: 88px;
+  }
+
+  #paneLabelSheet .label-sheet-grid-3,
+  #paneLabelSheet .label-sheet-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-prompt-mode-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-wysiwyg-preset-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  #paneLabelSheet .label-sheet-spreadsheet-tools {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-spreadsheet-actions .btn {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-wysiwyg-resize-handle {
+    width: 18px;
+    height: 18px;
+  }
+
+  #paneLabelSheet .label-sheet-shell {
+    padding: 14px 12px calc(92px + env(safe-area-inset-bottom));
+  }
+
+  #paneLabelSheet .label-sheet-hero {
+    display: grid;
+    gap: 14px;
+    padding: var(--panel-padding-compact);
+    border-radius: var(--radius-md);
+  }
+
+  #paneLabelSheet .label-sheet-intent-panel {
+    gap: 16px;
+    padding: var(--panel-padding-compact);
+    border-radius: var(--radius-md);
+  }
+
+  #paneLabelSheet .label-sheet-intent-head,
+  #paneLabelSheet .label-sheet-intent-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-intent-head > .btn,
+  #paneLabelSheet .label-sheet-intent-actions,
+  #paneLabelSheet .label-sheet-intent-actions > .btn,
+  #paneLabelSheet .label-sheet-sample-picker {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-intent-actions {
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-hero-badges {
+    justify-content: flex-start;
+  }
+
+  #paneLabelSheet .label-sheet-progress {
+    gap: 5px;
+  }
+
+  #paneLabelSheet .label-sheet-progress-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-progress-mode {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-progress li {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-progress button {
+    min-height: 44px;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 3px;
+    text-align: center;
+  }
+
+  #paneLabelSheet .label-sheet-progress li strong {
+    display: block;
+    font-size: 12px;
+  }
+
+  #paneLabelSheet .label-sheet-progress li span {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  #paneLabelSheet .label-sheet-layout,
+  #paneLabelSheet .label-sheet-builder,
+  #paneLabelSheet .label-sheet-result-stack {
+    gap: 12px;
+  }
+
+  #paneLabelSheet .label-sheet-step,
+  #paneLabelSheet .label-sheet-result-card {
+    border-radius: var(--radius-md);
+  }
+
+  #paneLabelSheet .label-sheet-step > summary {
+    grid-template-columns: auto minmax(0, 1fr) 34px;
+    min-height: 64px;
+    gap: 9px;
+    padding: 11px 12px;
+  }
+
+  #paneLabelSheet .label-sheet-step > summary::after {
+    content: "⌄";
+    grid-column: 3;
+    min-width: 34px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    font-size: 17px;
+  }
+
+  #paneLabelSheet .label-sheet-step[open] > summary::after {
+    content: "⌃";
+  }
+
+  #paneLabelSheet .label-sheet-step > summary .label-sheet-step-state {
+    display: none;
+  }
+
+  #paneLabelSheet .label-sheet-step-body,
+  #paneLabelSheet .label-sheet-result-card {
+    padding: var(--panel-padding-compact);
+  }
+
+  #paneLabelSheet .label-sheet-grid-2,
+  #paneLabelSheet .label-sheet-grid-3,
+  #paneLabelSheet .label-sheet-grid-4,
+  #paneLabelSheet .label-sheet-mapping-grid,
+  #paneLabelSheet .label-sheet-wysiwyg-controls,
+  #paneLabelSheet .label-sheet-wysiwyg-context,
+  #paneLabelSheet .label-sheet-wysiwyg-preset-controls,
+  #paneLabelSheet .label-sheet-choice-grid-2,
+  #paneLabelSheet .label-sheet-crop-layout,
+  #paneLabelSheet .label-sheet-result-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-field-wide,
+  #paneLabelSheet .label-sheet-result-actions #labelSheetSampleBtn,
+  #paneLabelSheet .label-sheet-result-actions #labelSheetResetBtn {
+    grid-column: auto;
+  }
+
+  #paneLabelSheet .label-sheet-data-tabs button,
+  #paneLabelSheet .label-sheet-content-tabs button,
+  #paneLabelSheet .label-sheet-face-toggle button,
+  #paneLabelSheet .label-sheet-page-controls button,
+  #paneLabelSheet .label-sheet-file-button,
+  #paneLabelSheet .label-sheet-switch,
+  #paneLabelSheet .label-sheet-field-action,
+  #paneLabelSheet .label-sheet-result-actions .btn,
+  #paneLabelSheet .label-sheet-asset-toolbar .btn,
+  #paneLabelSheet .label-sheet-page-image-register .btn,
+  #paneLabelSheet .label-sheet-print-job-actions .btn,
+  #paneLabelSheet .label-sheet-qr-assignment-actions .btn,
+  #paneLabelSheet .label-sheet-qr-token-bar button,
+  #paneLabelSheet .label-sheet-data-mapping .btn,
+  #paneLabelSheet .label-sheet-wysiwyg > .label-sheet-subhead .btn,
+  #paneLabelSheet .label-sheet-wysiwyg-actions .btn,
+  #paneLabelSheet .label-sheet-wysiwyg-preset-controls .btn,
+  #paneLabelSheet .label-sheet-wysiwyg-check,
+  #paneLabelSheet #labelSheetWysiwygSize,
+  #paneLabelSheet .label-sheet-prompt-mode-grid select,
+  #paneLabelSheet #labelSheetSkippedSlots,
+  #paneLabelSheet .label-sheet-print-job-card input,
+  #paneLabelSheet .label-sheet-print-job-card select,
+  #paneLabelSheet .label-sheet-crop-control input[type="range"] {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-wysiwyg-preset-controls .btn {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-field input:not([type="range"]):not([type="radio"]):not([type="checkbox"]),
+  #paneLabelSheet .label-sheet-field select,
+  #paneLabelSheet .label-sheet-field textarea {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet #labelSheetRecordTable input:not([type="checkbox"]) {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet #labelSheetRecordTable input[type="checkbox"] {
+    width: 24px;
+    min-width: 24px;
+    min-height: 24px;
+  }
+
+  #paneLabelSheet .label-sheet-subhead,
+  #paneLabelSheet .label-sheet-calibration-box,
+  #paneLabelSheet .label-sheet-preview-toolbar,
+  #paneLabelSheet .label-sheet-result-head,
+  #paneLabelSheet .label-sheet-face-editor-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-face-editor-head {
+    display: flex;
+  }
+
+  #paneLabelSheet .label-sheet-subhead .label-sheet-inline-actions,
+  #paneLabelSheet .label-sheet-subhead .btn,
+  #paneLabelSheet .label-sheet-subhead .label-sheet-switch,
+  #paneLabelSheet .label-sheet-calibration-box .btn,
+  #paneLabelSheet .label-sheet-face-editor-head .label-sheet-scope-badge {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-navigation {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-navigation > label,
+  #paneLabelSheet .label-sheet-prompt-navigation select {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-page-controls {
+    justify-content: center;
+  }
+
+  #paneLabelSheet .label-sheet-crop-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-print-job-actions .btn {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-face-toggle {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-page-controls {
+    justify-content: center;
+  }
+
+  #paneLabelSheet .label-sheet-page-preview {
+    min-height: 340px;
+    padding: 14px;
+  }
+
+  #paneLabelSheet .label-sheet-output-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 440px) {
+  #paneLabelSheet .label-sheet-spreadsheet-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-intent-grid-type {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-intent-grid-side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-intent-card-compact {
+    min-height: 70px;
+  }
+
+  #paneLabelSheet .label-sheet-progress button {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  #paneLabelSheet .label-sheet-data-tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-asset-toolbar .btn,
+  #paneLabelSheet .label-sheet-upload-line > * {
+    width: 100%;
+  }
+
+  #paneLabelSheet .label-sheet-page-preview {
+    min-height: 300px;
+    padding: 10px;
+  }
+}
+
+/* Goal-specific workspace: prompt design and WYSIWYG output stay in one result surface. */
+#paneLabelSheet .label-sheet-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+#paneLabelSheet .label-sheet-action-dock {
+  position: relative;
+  top: auto;
+  z-index: 8;
+  display: grid;
+  gap: 8px;
+  margin: 0 calc(var(--panel-padding-compact) * -0.2);
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--ink) 10%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+#paneLabelSheet .label-sheet-action-dock-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-action-dock-group .btn {
+  min-width: 0;
+  min-height: 42px;
+  padding-inline: 10px;
+}
+
+#paneLabelSheet .label-sheet-action-dock-meta {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+#paneLabelSheet .label-sheet-action-dock-meta span {
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-dna-toolbar {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.6fr) minmax(0, 1.4fr);
+  align-items: end;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-dna-featured-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-dna-featured-head strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-dna-gallery {
+  margin-inline: 0;
+  padding-bottom: 6px;
+}
+
+#paneLabelSheet .label-sheet-dna-summary {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent-soft) 25%, var(--surface));
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+body.label-sheet-dna-dialog-open {
+  overflow: hidden;
+}
+
+.label-sheet-dna-dialog-backdrop {
+  z-index: 10040;
+}
+
+#paneLabelSheet .label-sheet-prompt-split-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-prompt-split-summary > div {
+  display: flex;
+  min-width: 0;
+  min-height: 56px;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-prompt-split-summary strong {
+  display: grid;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-prompt-split-summary span {
+  min-width: 0;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+#paneLabelSheet .label-sheet-prompt-split-summary i {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 900;
+}
+
+#paneLabelSheet .label-sheet-prompt-result-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-prompt-result-tabs button {
+  min-height: 40px;
+  border: 0;
+  border-radius: calc(var(--radius-sm) - 3px);
+  background: transparent;
+  color: var(--ink-soft);
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-prompt-result-tabs button.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+#paneLabelSheet .label-sheet-prompt-result-panel {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-prompt-result-panel[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet[data-output-goal="prompt"] .label-sheet-prompt-card {
+  order: 3;
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+}
+
+#paneLabelSheet[data-output-goal="prompt"] .label-sheet-preview-toolbar,
+#paneLabelSheet[data-output-goal="prompt"] .label-sheet-page-preview,
+#paneLabelSheet[data-output-goal="prompt"] .label-sheet-output-summary {
+  order: 4;
+}
+
+#paneLabelSheet[data-output-goal="prompt"] .label-sheet-preflight-card {
+  order: 5;
+}
+
+#paneLabelSheet .label-sheet-secondary-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-free-background .label-sheet-advanced-panel-body {
+  display: grid;
+  gap: 12px;
+}
+
+#paneLabelSheet .label-sheet-free-background-steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#paneLabelSheet .label-sheet-free-background-step {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-free-background-step > div {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-free-background-step strong,
+#paneLabelSheet .label-sheet-free-background-step small {
+  display: block;
+}
+
+#paneLabelSheet .label-sheet-free-background-step small {
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-free-step-number {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-free-prompt textarea {
+  min-height: 132px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-free-tool-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-free-register-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#paneLabelSheet #labelSheetFreeBackgroundInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details {
+  margin: 0 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-alt);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details > summary {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details > summary > span:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details > summary small,
+#paneLabelSheet .label-sheet-wysiwyg-details > summary > span:last-child {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details .label-sheet-wysiwyg {
+  margin: 0;
+  border: 0;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+#paneLabelSheet .label-sheet-preview-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-quick-editor {
+  display: grid;
+  gap: 9px;
+  margin: 0 0 12px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 52%, var(--line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-soft) 24%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-quick-editor[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet [data-wysiwyg-text-only][hidden],
+#paneLabelSheet [data-wysiwyg-qr-only][hidden],
+#paneLabelSheet [data-wysiwyg-box-only][hidden],
+#paneLabelSheet [data-wysiwyg-text-box-only][hidden],
+#paneLabelSheet [data-wysiwyg-size-only][hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-quick-editor-head {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-quick-editor-head > div {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+#paneLabelSheet .label-sheet-quick-editor-head small {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+#paneLabelSheet #labelSheetQuickRecordLabel {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-quick-editor-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-quick-editor-controls > * {
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-quick-size input,
+#paneLabelSheet #labelSheetOpenDetailedEditBtn {
+  width: 100%;
+}
+
+#paneLabelSheet .label-sheet-quick-align > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-quick-align button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-right-width: 0;
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+#paneLabelSheet .label-sheet-quick-align button:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+#paneLabelSheet .label-sheet-quick-align button:last-child {
+  border-right-width: 1px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+#paneLabelSheet .label-sheet-quick-align button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+#paneLabelSheet .label-sheet-focus-editor {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-soft) 16%, var(--surface));
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+#paneLabelSheet .label-sheet-focus-editor[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-focus-editor-head,
+#paneLabelSheet .label-sheet-page-overview-head {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#paneLabelSheet .label-sheet-focus-editor-head > div,
+#paneLabelSheet .label-sheet-page-overview-head > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-focus-head-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-focus-editor-head > .label-sheet-focus-head-actions {
+  display: flex;
+  width: auto;
+  flex-wrap: nowrap;
+}
+
+#paneLabelSheet .label-sheet-focus-head-actions .btn {
+  min-height: 36px;
+}
+
+#paneLabelSheet .label-sheet-focus-face-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(44px, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-focus-face-toggle button {
+  min-height: 34px;
+  padding: 5px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-focus-face-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+#paneLabelSheet .label-sheet-focus-editor-head strong,
+#paneLabelSheet .label-sheet-page-overview-head strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+#paneLabelSheet .label-sheet-focus-editor-head small,
+#paneLabelSheet .label-sheet-page-overview-head small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet #labelSheetFocusRecordLabel,
+#paneLabelSheet #labelSheetPageSelectionStatus {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-focus-scope {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-focus-scope button {
+  display: grid;
+  min-width: 0;
+  min-height: 58px;
+  align-content: center;
+  gap: 2px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+#paneLabelSheet .label-sheet-focus-scope button strong,
+#paneLabelSheet .label-sheet-focus-scope button small {
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-focus-scope button small {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+#paneLabelSheet .label-sheet-focus-scope button.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 62%, var(--surface));
+  color: var(--accent-strong);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+#paneLabelSheet .label-sheet-focus-navigation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-focus-navigation {
+  display: grid;
+  grid-template-columns: auto minmax(86px, 1fr) auto minmax(86px, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-focus-navigation .btn {
+  min-height: 42px;
+}
+
+#paneLabelSheet .label-sheet-focus-nav-label {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#paneLabelSheet #labelSheetFocusPosition,
+#paneLabelSheet #labelSheetFocusPageStatus {
+  min-width: 60px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+#paneLabelSheet .label-sheet-focus-tooldeck {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 44%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent-soft) 34%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-focus-tooldeck-head {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-focus-tooldeck-head > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-focus-tooldeck-head strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-focus-tooldeck-head small {
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-focus-tool-tabs,
+#paneLabelSheet .label-sheet-focus-targets {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+#paneLabelSheet .label-sheet-focus-tool-tabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-focus-tool-tabs button,
+#paneLabelSheet .label-sheet-focus-targets button,
+#paneLabelSheet .label-sheet-focus-action-group button {
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-focus-tooldeck .label-sheet-focus-tool-tabs > button,
+#paneLabelSheet .label-sheet-focus-tooldeck .label-sheet-focus-targets > button,
+#paneLabelSheet .label-sheet-focus-tooldeck .label-sheet-focus-action-group > button {
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-focus-tool-tabs button.active,
+#paneLabelSheet .label-sheet-focus-targets button.active,
+#paneLabelSheet .label-sheet-focus-action-group button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+#paneLabelSheet .label-sheet-focus-targets {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+}
+
+#paneLabelSheet .label-sheet-focus-targets > span {
+  grid-column: 1 / -1;
+}
+
+#paneLabelSheet .label-sheet-focus-targets > span,
+#paneLabelSheet .label-sheet-focus-action-group > span {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-focus-targets kbd,
+#paneLabelSheet .label-sheet-focus-action-group kbd,
+#paneLabelSheet .label-sheet-focus-shortcut-help kbd {
+  display: inline-grid;
+  min-width: 19px;
+  min-height: 19px;
+  place-items: center;
+  margin-right: 3px;
+  padding: 1px 4px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 10px;
+  opacity: 0.78;
+}
+
+#paneLabelSheet .label-sheet-focus-targets kbd,
+#paneLabelSheet .label-sheet-focus-action-group kbd {
+  min-width: 16px;
+  min-height: 16px;
+  margin-right: 2px;
+  padding: 0 3px;
+  font-size: 9px;
+}
+
+#paneLabelSheet .label-sheet-focus-shortcut-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-focus-action-group {
+  display: grid;
+  grid-template-columns: auto repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 5px;
+}
+
+#paneLabelSheet .label-sheet-focus-action-group[data-wysiwyg-size-only] {
+  grid-template-columns: auto repeat(2, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-focus-action-group[data-wysiwyg-text-only] {
+  grid-template-columns: auto repeat(3, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-focus-shortcut-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-focus-shortcut-help[hidden],
+#paneLabelSheet .label-sheet-focus-tool-panel[hidden] {
+  display: none !important;
+}
+
+#paneLabelSheet .label-sheet-focus-targets button:disabled,
+#paneLabelSheet .label-sheet-focus-face-toggle button:disabled,
+#paneLabelSheet .label-sheet-focus-action-group button:disabled {
+  cursor: not-allowed;
+  opacity: 0.44;
+}
+
+#paneLabelSheet .label-sheet-focus-tool-panel {
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-focus-tool-panel > :last-child {
+  margin-bottom: 0;
+}
+
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated,
+#paneLabelSheet .label-sheet-common-layout.is-focus-integrated,
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated {
+  margin: 0;
+  box-shadow: none;
+}
+
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated .label-sheet-quick-editor-head,
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated .label-sheet-quick-scope-control,
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated .label-sheet-quick-target-control,
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated .label-sheet-quick-align,
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated #labelSheetOpenDetailedEditBtn,
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated #labelSheetQuickStatus {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-quick-editor.is-focus-integrated .label-sheet-quick-editor-controls {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-common-layout.is-focus-integrated {
+  gap: 9px;
+  padding: 10px;
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-common-layout.is-focus-integrated .label-sheet-subhead small {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-common-layout.is-focus-integrated .label-sheet-style-controls {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated > summary {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated[open] > summary {
+  border: 0;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated,
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated .label-sheet-wysiwyg {
+  border: 0;
+  background: transparent;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated .label-sheet-wysiwyg {
+  padding: 0;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated .label-sheet-subhead,
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated .label-sheet-wysiwyg-context,
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated .label-sheet-wysiwyg-target-control,
+#paneLabelSheet .label-sheet-wysiwyg-details.is-focus-integrated #labelSheetWysiwygStatus {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-preview-toolbar.is-editing-hidden {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-focus-stage {
+  display: grid;
+  min-height: clamp(360px, 50vh, 560px);
+  place-items: center;
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+}
+
+#paneLabelSheet .label-sheet-focus-surface {
+  position: relative;
+  display: grid;
+  width: min(100%, 720px);
+  aspect-ratio: 4 / 3;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+  color: #172033;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.26);
+}
+
+#paneLabelSheet .label-sheet-focus-surface > .label-sheet-preview-page {
+  transition: filter 160ms ease, opacity 160ms ease;
+}
+
+#paneLabelSheet .label-sheet-focus-surface.is-edit-contrast > .label-sheet-preview-page {
+  filter: saturate(0.58) brightness(1.12);
+  opacity: 0.46;
+}
+
+#paneLabelSheet .label-sheet-focus-surface.is-portrait {
+  width: min(100%, 420px);
+}
+
+#paneLabelSheet .label-sheet-focus-surface > .label-sheet-preview-page,
+#paneLabelSheet .label-sheet-focus-surface .label-sheet-preview-canvas {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#paneLabelSheet .label-sheet-focus-editor.is-rendering .label-sheet-focus-surface {
+  opacity: 0.72;
+}
+
+#paneLabelSheet .label-sheet-focus-surface .label-sheet-wysiwyg-field {
+  font-size: clamp(10px, 1.6vw, 15px);
+}
+
+#paneLabelSheet .label-sheet-focus-surface .label-sheet-wysiwyg-qr {
+  font-size: clamp(10px, 1.4vw, 14px);
+}
+
+#paneLabelSheet .label-sheet-focus-surface .label-sheet-wysiwyg-resize-handle {
+  width: 18px;
+  height: 18px;
+}
+
+#paneLabelSheet .label-sheet-focus-status {
+  margin: 0;
+}
+
+#paneLabelSheet .label-sheet-page-overview-head {
+  margin: 4px 0 8px;
+  padding: 0 2px;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-overlay.is-selection-only .label-sheet-wysiwyg-hit.is-selected::after {
+  content: attr(data-selection-label);
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.22);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-overlay.is-focus-editor .label-sheet-wysiwyg-hit.is-selected {
+  border-width: 2px;
+  border-color: color-mix(in srgb, var(--accent) 82%, #ffffff);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-qr {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  min-width: 18px;
+  min-height: 18px;
+  place-items: center;
+  border: 2px dashed color-mix(in srgb, var(--accent) 76%, #ffffff);
+  border-radius: 3px;
+  background: color-mix(in srgb, #ffffff 82%, transparent);
+  color: #111827;
+  cursor: grab;
+  font-size: clamp(8px, 1.2vw, 11px);
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.82;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-qr canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-qr.is-active {
+  border-style: solid;
+  border-color: var(--accent);
+  opacity: 1;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-soft) 72%, transparent), 0 3px 9px rgba(15, 23, 42, 0.2);
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-qr.is-behind {
+  z-index: 1;
+  opacity: 0.58;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-qr.is-behind.is-active {
+  opacity: 0.86;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-qr:active {
+  cursor: grabbing;
+}
+
+@media (min-width: 1101px) {
+  #paneLabelSheet #labelSheetResultCard {
+    position: relative;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+    overscroll-behavior: auto;
+    scrollbar-gutter: auto;
+  }
+}
+
+@media (min-width: 1181px) {
+  #paneLabelSheet .label-sheet-layout {
+    align-items: start;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-builder {
+    display: none;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-result-stack {
+    width: min(100%, 1320px);
+    margin: 0 auto;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-editor {
+    grid-template-columns: minmax(380px, 0.78fr) minmax(540px, 1.22fr);
+    grid-template-areas:
+      "focus-head focus-head"
+      "focus-scope focus-nav"
+      "focus-tools focus-stage"
+      "focus-status focus-status";
+    align-items: start;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-editor-head {
+    grid-area: focus-head;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-scope {
+    grid-area: focus-scope;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-navigation-grid {
+    grid-area: focus-nav;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-tooldeck {
+    grid-area: focus-tools;
+    align-self: start;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-stage {
+    grid-area: focus-stage;
+    min-height: clamp(380px, 50vh, 520px);
+    padding: 14px;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-surface:not(.is-portrait) {
+    width: min(100%, 620px);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-focus-status {
+    grid-area: focus-status;
+  }
+
+  #paneLabelSheet .label-sheet-builder,
+  #paneLabelSheet .label-sheet-result-stack {
+    align-self: start;
+  }
+
+  #paneLabelSheet #labelSheetResultCard {
+    min-height: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"]:not([data-active-step="output"]) .label-sheet-preview-toolbar {
+    position: sticky;
+    top: calc(var(--app-header-height) + var(--tabs-bar-height) + 12px);
+    z-index: 7;
+    margin: 0 0 10px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 8%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"]:not([data-active-step="output"]) .label-sheet-page-preview {
+    position: sticky;
+    top: calc(var(--app-header-height) + var(--tabs-bar-height) + 76px);
+    z-index: 6;
+    container-type: size;
+    height: clamp(360px, calc(100dvh - var(--app-header-height) - var(--tabs-bar-height) - 92px), 640px);
+    min-height: 0;
+    padding: 12px;
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"]:not([data-active-step="output"]) .label-sheet-page-preview .label-sheet-a4-sheet {
+    width: min(100%, calc(100cqh * 210 / 297));
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"]:not([data-active-step="output"]) .label-sheet-page-preview .label-sheet-a4-sheet.is-landscape {
+    width: min(100%, calc(100cqh * 297 / 210));
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-page-preview {
+    position: relative;
+    top: auto;
+    height: clamp(260px, 34vh, 360px);
+    min-height: 260px;
+    padding: 12px;
+    box-shadow: none;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-page-preview .label-sheet-a4-sheet {
+    width: min(100%, calc(100cqh * 210 / 297));
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="design"] .label-sheet-page-preview .label-sheet-a4-sheet.is-landscape {
+    width: min(100%, calc(100cqh * 297 / 210));
+  }
+}
+
+@media (max-width: 720px) {
+  #paneLabelSheet .label-sheet-dna-toolbar,
+  #paneLabelSheet .label-sheet-action-dock-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-action-dock {
+    position: relative;
+  }
+
+  #paneLabelSheet .label-sheet-action-dock-meta {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-copy-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-prompt-copy-progress {
+    grid-column: 1 / -1;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-split-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-prompt-split-summary i {
+    display: none;
+  }
+
+  #paneLabelSheet .label-sheet-free-tool-row,
+  #paneLabelSheet .label-sheet-quick-editor-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-free-register-row > *,
+  #paneLabelSheet .label-sheet-free-tool-row .btn,
+  #paneLabelSheet .label-sheet-quick-editor-controls > .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-preview-toolbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #paneLabelSheet .label-sheet-preview-toolbar-actions > .btn {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-quick-editor-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-focus-editor-head,
+  #paneLabelSheet .label-sheet-page-overview-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-focus-head-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  #paneLabelSheet .label-sheet-focus-head-actions .btn {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-focus-scope {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-focus-navigation-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-focus-navigation {
+    grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-focus-tooldeck-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet #labelSheetFocusShortcutHelpBtn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-focus-tool-tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-focus-tool-tabs button,
+  #paneLabelSheet .label-sheet-focus-targets button,
+  #paneLabelSheet .label-sheet-focus-action-group button {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-focus-targets {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-focus-targets > span {
+    grid-column: 1 / -1;
+  }
+
+  #paneLabelSheet .label-sheet-focus-shortcut-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-focus-action-group {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-focus-action-group > span {
+    grid-column: 1 / -1;
+  }
+
+  #paneLabelSheet .label-sheet-focus-action-group[data-wysiwyg-size-only] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-focus-action-group[data-wysiwyg-text-only] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-common-layout.is-focus-integrated .label-sheet-style-controls,
+  #paneLabelSheet .label-sheet-quick-editor.is-focus-integrated .label-sheet-quick-editor-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-focus-stage {
+    min-height: 320px;
+    padding: 10px;
+  }
+
+  #paneLabelSheet .label-sheet-quick-align button,
+  #paneLabelSheet .label-sheet-focus-navigation .btn,
+  #paneLabelSheet #labelSheetQuickSize,
+  #paneLabelSheet #labelSheetQuickWidth,
+  #paneLabelSheet #labelSheetQuickHeight {
+    min-height: 44px;
+  }
+}
+
+/* 2026-08-12 workflow workspace: one stage, one focus, contextual actions. */
+#paneLabelSheet .label-sheet-hero {
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 10px;
+  padding: 14px 18px;
+}
+
+#paneLabelSheet .label-sheet-hero h2 {
+  margin: 2px 0 3px;
+  font-size: clamp(20px, 1.7vw, 24px);
+}
+
+#paneLabelSheet .label-sheet-hero p {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-hero-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-workspace-mode {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 6px 11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-help-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+#paneLabelSheet .label-sheet-help-button {
+  min-height: 34px;
+  padding-inline: 10px;
+}
+
+#paneLabelSheet .label-sheet-help-tooltip {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(320px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.55;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity var(--transition), transform var(--transition);
+  white-space: normal;
+}
+
+#paneLabelSheet .label-sheet-help-popover:hover .label-sheet-help-tooltip,
+#paneLabelSheet .label-sheet-help-popover:focus-within .label-sheet-help-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#paneLabelSheet .label-sheet-intent-edit-btn {
+  display: none;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-panel {
+  display: block;
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-head,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-fieldset,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-sample-picker,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) #labelSheetIntentSampleBtn,
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) #labelSheetIntentContinueBtn {
+  display: none;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-footer {
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-progress-row {
+  margin-bottom: 8px;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-footer p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-edit-btn {
+  display: inline-flex;
+}
+
+#paneLabelSheet[data-flow-view="guided"][data-active-step="intent"] .label-sheet-layout {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-intent-panel {
+  gap: 14px;
+  padding: 18px;
+}
+
+#paneLabelSheet .label-sheet-intent-card {
+  min-height: 96px;
+  padding: 13px;
+}
+
+#paneLabelSheet .label-sheet-intent-card-compact {
+  min-height: 68px;
+}
+
+#paneLabelSheet .label-sheet-progress-row {
+  position: relative;
+  z-index: 1;
+  top: auto;
+  margin: 0;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 8%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+#paneLabelSheet .label-sheet-progress li,
+#paneLabelSheet .label-sheet-progress button,
+#paneLabelSheet .label-sheet-progress-mode {
+  min-height: 40px;
+}
+
+#paneLabelSheet .label-sheet-step > summary {
+  min-height: 58px;
+  padding-block: 10px;
+}
+
+#paneLabelSheet .label-sheet-step > summary::after {
+  height: 32px;
+}
+
+#paneLabelSheet .label-sheet-context-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-soft) 28%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-context-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-context-copy > span {
+  color: var(--accent-strong);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+#paneLabelSheet .label-sheet-context-copy strong {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+#paneLabelSheet .label-sheet-context-copy small {
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+#paneLabelSheet .label-sheet-context-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-context-actions .btn {
+  min-height: 38px;
+  white-space: nowrap;
+}
+
+#paneLabelSheet[data-flow-view="all"] .label-sheet-context-bar,
+#paneLabelSheet .label-sheet-output-route {
+  display: none;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-action-dock {
+  display: none !important;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-result-head {
+  margin-bottom: 10px;
+}
+
+#paneLabelSheet[data-flow-view="guided"]:not([data-active-step="output"]) .label-sheet-result-head p {
+  display: none;
+}
+
+#paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-result-head {
+  margin-bottom: 0;
+}
+
+#paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-action-dock {
+  margin: 0;
+  box-shadow: none;
+}
+
+#paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-page-overview-head,
+#paneLabelSheet[data-flow-view="guided"] .label-sheet-secondary-actions {
+  display: none !important;
+}
+
+@media (min-width: 861px) and (hover: hover) {
+  #paneLabelSheet .label-sheet-step > summary[data-compact-help="true"] small,
+  #paneLabelSheet label[data-compact-help="true"] > small,
+  #paneLabelSheet .label-sheet-intent-card[data-compact-help="true"] small {
+    display: none;
+  }
+
+  #paneLabelSheet label[data-compact-help="true"] {
+    position: relative;
+  }
+
+  #paneLabelSheet label[data-compact-help="true"]::after {
+    content: attr(data-help);
+    position: absolute;
+    z-index: 60;
+    top: calc(100% + 6px);
+    left: 0;
+    width: min(300px, 80vw);
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--ink);
+    color: var(--surface);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.45;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-3px);
+    transition: opacity var(--transition), transform var(--transition);
+    white-space: normal;
+  }
+
+  #paneLabelSheet label[data-compact-help="true"]:hover::after,
+  #paneLabelSheet label[data-compact-help="true"]:focus-within::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 1181px) {
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-builder {
+    display: none;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-result-stack {
+    width: min(100%, 1360px);
+    margin: 0 auto;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] #labelSheetResultCard {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-result-head {
+    grid-area: result-head;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-context-bar {
+    grid-area: context;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-active-step="output"] .label-sheet-action-dock {
+    grid-area: actions;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] #labelSheetResultCard {
+    grid-template-columns: minmax(520px, 1.15fr) minmax(360px, 0.85fr);
+    grid-template-areas:
+      "result-head result-head"
+      "context context"
+      "actions actions"
+      "toolbar preflight"
+      "preview package"
+      "summary print-job"
+      "status status";
+    align-items: start;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] .label-sheet-preview-toolbar {
+    grid-area: toolbar;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] .label-sheet-page-preview {
+    grid-area: preview;
+    min-height: clamp(500px, 66vh, 700px);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] .label-sheet-output-summary {
+    grid-area: summary;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] .label-sheet-preflight-card {
+    grid-area: preflight;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] .label-sheet-package-card {
+    grid-area: package;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] .label-sheet-print-job-card {
+    grid-area: print-job;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="print"][data-active-step="output"] #labelSheetStatus {
+    grid-area: status;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] #labelSheetResultCard {
+    grid-template-columns: minmax(300px, 0.62fr) minmax(620px, 1.38fr);
+    grid-template-areas:
+      "result-head result-head"
+      "context context"
+      "actions actions"
+      "preview prompt"
+      "summary prompt"
+      "preflight prompt"
+      "status status";
+    align-items: start;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] .label-sheet-page-preview {
+    grid-area: preview;
+    min-height: 460px;
+    padding: 16px;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] .label-sheet-output-summary {
+    grid-area: summary;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] .label-sheet-preflight-card {
+    grid-area: preflight;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] .label-sheet-prompt-card {
+    grid-area: prompt;
+    align-self: stretch;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] .label-sheet-prompt-card textarea {
+    min-height: clamp(380px, 50vh, 600px);
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"][data-active-step="output"] #labelSheetStatus {
+    grid-area: status;
+    margin: 0;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"][data-output-goal="prompt"]:not([data-active-step="output"]) .label-sheet-result-stack {
+    position: sticky;
+    top: calc(var(--app-header-height) + var(--tabs-bar-height) + 64px);
+  }
+}
+
+@media (max-width: 720px) {
+  #paneLabelSheet .label-sheet-hero {
+    gap: 9px;
+    padding: 12px;
+  }
+
+  #paneLabelSheet .label-sheet-hero p {
+    display: none;
+  }
+
+  #paneLabelSheet .label-sheet-hero-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #paneLabelSheet .label-sheet-workspace-mode {
+    min-width: 0;
+    max-width: calc(100% - 84px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #paneLabelSheet .label-sheet-progress-row {
+    top: auto;
+    padding: 5px;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-footer {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  #paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-actions,
+  #paneLabelSheet[data-flow-view="guided"]:not([data-active-step="intent"]) .label-sheet-intent-edit-btn {
+    width: auto;
+    min-height: 40px;
+  }
+
+  #paneLabelSheet .label-sheet-context-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-context-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #paneLabelSheet .label-sheet-context-actions .btn {
+    min-height: 44px;
+  }
+
+  #paneLabelSheet .label-sheet-context-actions .btn:only-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media print {
+  body.label-sheet-printing > *:not(.label-sheet-print-root) {
+    display: none !important;
+  }
+
+  body.label-sheet-printing > .label-sheet-print-root {
+    display: block !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .label-sheet-print-root .label-sheet-print-page {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    background: #fff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .label-sheet-print-root .label-sheet-print-page.is-landscape {
+    width: 297mm;
+    height: 210mm;
+  }
+
+  .label-sheet-print-root .label-sheet-print-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .label-sheet-print-root .label-sheet-print-grid {
+    position: absolute;
+    display: grid;
+    inset: 0;
+  }
+
+  .label-sheet-print-root .label-sheet-print-cell {
+    position: relative;
+    overflow: hidden;
+  }
+}
