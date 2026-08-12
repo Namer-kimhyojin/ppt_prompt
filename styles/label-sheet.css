@@ -1096,12 +1096,14 @@
 }
 
 #paneLabelSheet .label-sheet-qr-token-bar,
+#paneLabelSheet .label-sheet-output-token-bar,
 #paneLabelSheet .label-sheet-qr-assignment-actions,
 #paneLabelSheet .label-sheet-qr-resolved-preview {
   grid-column: 1 / -1;
 }
 
-#paneLabelSheet .label-sheet-qr-token-bar {
+#paneLabelSheet .label-sheet-qr-token-bar,
+#paneLabelSheet .label-sheet-output-token-bar {
   display: flex;
   min-width: 0;
   align-items: center;
@@ -1109,14 +1111,16 @@
   gap: 7px;
 }
 
-#paneLabelSheet .label-sheet-qr-token-bar > span {
+#paneLabelSheet .label-sheet-qr-token-bar > span,
+#paneLabelSheet .label-sheet-output-token-bar > strong {
   margin-right: 2px;
   color: var(--ink-soft);
   font-size: 12px;
   font-weight: 800;
 }
 
-#paneLabelSheet .label-sheet-qr-token-bar button {
+#paneLabelSheet .label-sheet-qr-token-bar button,
+#paneLabelSheet .label-sheet-output-token-bar button {
   min-height: 32px;
   padding: 0 9px;
   border: 1px solid var(--line-control);
@@ -1129,9 +1133,47 @@
   font-weight: 800;
 }
 
-#paneLabelSheet .label-sheet-qr-token-bar button:hover {
+#paneLabelSheet .label-sheet-qr-token-bar button:hover,
+#paneLabelSheet .label-sheet-output-token-bar button:hover {
   border-color: var(--accent);
   color: var(--accent-strong);
+}
+
+#paneLabelSheet .label-sheet-output-token-bar {
+  margin-top: 12px;
+}
+
+#paneLabelSheet .label-sheet-output-resolved-preview {
+  display: block;
+  margin-top: 10px;
+  white-space: pre-line;
+}
+
+#paneLabelSheet .label-sheet-output-visibility {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border: 1px solid var(--line-control);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-output-visibility input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+#paneLabelSheet .label-sheet-output-field.is-output-hidden > input,
+#paneLabelSheet .label-sheet-output-field.is-output-hidden > textarea {
+  opacity: 0.55;
 }
 
 #paneLabelSheet .label-sheet-qr-resolved-preview {
@@ -1348,7 +1390,7 @@
 
 #paneLabelSheet #labelSheetRecordTable {
   width: 100%;
-  min-width: 1160px;
+  min-width: 2200px;
   border-collapse: collapse;
   font-size: 12px;
 }

@@ -135,7 +135,7 @@ async function verifyViewport(label, viewport) {
     await page.waitForFunction(() => window.PromptDeckLabelSheet.assetStore.list().filter((asset) => asset.filename.startsWith("기본-")).length >= 6, null, { timeout: 60_000 });
     if (!(await page.evaluate(() => Boolean(window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData && window.QRGeneratorCore)))) failures.push(`${label}: 라벨 패키지·표 데이터·QR 공용 모듈이 누락되었습니다.`);
     if (!(await page.evaluate(() => typeof window.QRGeneratorCore?.getCurrentValue === "function"))) failures.push(`${label}: QR 생성기의 현재 값을 라벨에 전달하는 연결이 누락되었습니다.`);
-    if ((await page.locator("#labelSheetRecordTable thead th").count()) !== 10 || !(await visible("#labelSheetRecordTable"))) failures.push(`${label}: 프롬프트 모드의 공통 데이터 검토·직접 편집 표가 누락되었습니다.`);
+    if ((await page.locator("#labelSheetRecordTable thead th").count()) !== 18 || !(await visible("#labelSheetRecordTable"))) failures.push(`${label}: 프롬프트 모드의 원본 데이터 검토·직접 편집 표가 누락되었습니다.`);
     if (await visible("#labelSheetQrAssignBtn") || await visible("#labelSheetQrUseCurrentBtn")) failures.push(`${label}: 프롬프트 설계에 실제 QR 값 배정 기능이 노출됩니다.`);
     if (!(await visible("#labelSheetQrResolvedPreview"))) failures.push(`${label}: 프롬프트 설계의 QR 예약 상태 확인이 숨겨졌습니다.`);
     if (await visible("#labelSheetGenerateMissingBtn")) failures.push(`${label}: 프롬프트 설계에서 라벨 AI 배경 생성이 노출됩니다.`);

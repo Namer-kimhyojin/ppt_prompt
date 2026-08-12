@@ -11,7 +11,7 @@
     "smoke:test": "node scripts/smoke-test.mjs",
     "diagram:test": "node scripts/data-diagram-smoke-test.mjs",
     "promotion:test": "node scripts/promotion-parser-test.mjs",
-    "label:test": "node scripts/label-sheet-engine-test.mjs && node scripts/label-sheet-assets-test.mjs && node scripts/label-sheet-package-test.mjs",
+    "label:test": "node scripts/label-sheet-engine-test.mjs && node scripts/label-sheet-data-mapping-test.mjs && node scripts/label-sheet-assets-test.mjs && node scripts/label-sheet-package-test.mjs",
     "admin:test": "node scripts/admin-mode-smoke-test.mjs",
     "security:test": "node scripts/security-smoke-test.mjs",
     "public:test": "node scripts/public-access-smoke-test.mjs",

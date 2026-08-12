@@ -104,6 +104,7 @@
   let focusBackgroundMuted = true;
   let focusToolPanel = "quick";
   let activeSpreadsheetCell = null;
+  let activeOutputTemplateInput = null;
   let layoutPresets = [];
   const DNA_STYLE_BATCH_SIZE = 36;
   const dnaStyleBrowser = {
@@ -115,11 +116,21 @@
   const WYSIWYG_FIELD_KEYS = Object.freeze(["number", "title", "subtitle", "body", "footer"]);
   const WYSIWYG_TARGET_KEYS = Object.freeze(["content", ...WYSIWYG_FIELD_KEYS, "qr"]);
   const WYSIWYG_FIELD_LABELS = Object.freeze({ content: "전체 콘텐츠", number: "연번", title: "제목", subtitle: "부제", body: "본문", footer: "하단 문구", qr: "QR 영역" });
+  const OUTPUT_FIELD_KEYS = Object.freeze(["title", "subtitle", "body", "footer"]);
+  const OUTPUT_FIELD_LABELS = Object.freeze({ title: "제목", subtitle: "부제", body: "본문", footer: "하단 문구" });
   const RECORD_TABLE_COLUMNS = Object.freeze([
     Object.freeze({ field: "id", label: "ID", aliases: ["id", "label_id", "labelid", "라벨id", "라벨아이디"] }),
     Object.freeze({ field: "number", label: "번호", aliases: ["번호", "연번", "number", "serial", "sequence"] }),
+    Object.freeze({ field: "data.name", label: "이름", aliases: ["이름", "성명", "이름·구분", "이름구분", "name", "data.name"] }),
+    Object.freeze({ field: "data.category", label: "구분·소속", aliases: ["구분소속", "구분·소속", "구분", "소속", "category", "affiliation", "data.category"] }),
     Object.freeze({ field: "front.title", label: "앞면 제목", aliases: ["앞면제목", "앞면 제목", "front_title", "front.title", "title", "제목"] }),
-    Object.freeze({ field: "data.name", label: "이름·구분", aliases: ["이름구분", "이름·구분", "이름", "구분", "name", "category", "data.name"] }),
+    Object.freeze({ field: "front.subtitle", label: "앞면 부제", aliases: ["앞면부제", "앞면 부제", "front_subtitle", "front.subtitle", "subtitle", "부제"] }),
+    Object.freeze({ field: "front.body", label: "앞면 본문", aliases: ["앞면본문", "앞면 본문", "front_body", "front.body", "body", "본문"] }),
+    Object.freeze({ field: "front.footer", label: "앞면 하단", aliases: ["앞면하단", "앞면 하단", "front_footer", "front.footer", "footer", "하단"] }),
+    Object.freeze({ field: "back.title", label: "뒷면 제목", aliases: ["뒷면제목", "뒷면 제목", "back_title", "back.title"] }),
+    Object.freeze({ field: "back.subtitle", label: "뒷면 부제", aliases: ["뒷면부제", "뒷면 부제", "back_subtitle", "back.subtitle"] }),
+    Object.freeze({ field: "back.body", label: "뒷면 본문", aliases: ["뒷면본문", "뒷면 본문", "back_body", "back.body"] }),
+    Object.freeze({ field: "back.footer", label: "뒷면 하단", aliases: ["뒷면하단", "뒷면 하단", "back_footer", "back.footer"] }),
     Object.freeze({ field: "front.qrValue", label: "앞면 QR", aliases: ["앞면qr", "앞면 qr", "front_qr", "front_qr_value", "front.qrvalue"] }),
     Object.freeze({ field: "back.qrValue", label: "뒷면 QR", aliases: ["뒷면qr", "뒷면 qr", "back_qr", "back_qr_value", "back.qrvalue"] }),
     Object.freeze({ field: "front.backgroundFile", label: "앞면 배경", aliases: ["앞면배경", "앞면 배경", "front_background", "front_background_file", "front.backgroundfile"] }),
@@ -258,6 +269,22 @@
       normalized[key] = next;
     });
     return normalized;
+  }
+
+  function clearRecordTextLayoutOverrides(input, sideName, variant) {
+    const layouts = normalizeRecordTextLayouts(input);
+    let cleared = 0;
+    Object.keys(layouts).forEach((key) => {
+      if (layouts[key]?.[sideName]?.[variant]) {
+        layouts[key][sideName][variant] = null;
+        cleared += 1;
+      }
+      const hasRemainingLayout = ["front", "back"].some((candidateSide) =>
+        ["withQr", "withoutQr"].some((candidateVariant) => Boolean(layouts[key]?.[candidateSide]?.[candidateVariant]))
+      );
+      if (!hasRemainingLayout) delete layouts[key];
+    });
+    return { layouts, cleared };
   }
 
   function reconcileSelectedRecordIds() {
@@ -922,6 +949,26 @@
     };
   }
 
+  function defaultOutputVisibility() {
+    return Object.fromEntries(["front", "back"].map((sideName) => [
+      sideName,
+      Object.fromEntries(OUTPUT_FIELD_KEYS.map((fieldName) => [fieldName, true])),
+    ]));
+  }
+
+  function normalizeOutputVisibility(input = {}) {
+    return Object.fromEntries(["front", "back"].map((sideName) => [
+      sideName,
+      Object.fromEntries(OUTPUT_FIELD_KEYS.map((fieldName) => [fieldName, input?.[sideName]?.[fieldName] !== false])),
+    ]));
+  }
+
+  function outputVisibilityControlId(sideName, fieldName) {
+    const side = sideName === "back" ? "Back" : "Front";
+    const field = `${fieldName.slice(0, 1).toUpperCase()}${fieldName.slice(1)}`;
+    return `labelSheet${side}${field}Visible`;
+  }
+
   function fillVisualStyleOptions() {
     const select = $("labelSheetVisualStyle");
     if (!select || !VISUAL_STYLES?.listDiagramStyles) return;
@@ -1125,7 +1172,7 @@
     const advanced = $("labelSheetQrAdvanced");
     const controls = $("labelSheetQrControls");
     if (controls) controls.dataset.enabled = String(enabled);
-    ["labelSheetQrSide", "labelSheetQrPosition", "labelSheetQrSize", "labelSheetQrLayoutMode"].forEach((id) => {
+    ["labelSheetQrSide", "labelSheetQrPosition", "labelSheetQrSize", "labelSheetQrMargin", "labelSheetQrLayoutMode"].forEach((id) => {
       if ($(id)) $(id).disabled = !enabled;
     });
     ["labelSheetQrSource", "labelSheetQrTemplate", "labelSheetQrAssignScope", "labelSheetUseQrStyleBtn", "labelSheetQrAssignBtn", "labelSheetQrUseCurrentBtn", "labelSheetQrClearBtn"].forEach((id) => {
@@ -1234,6 +1281,11 @@
     setControl("labelSheetBackSubtitle", settings.backSubtitle ?? "");
     setControl("labelSheetBackBody", settings.backBody ?? "");
     setControl("labelSheetBackFooter", settings.backFooter ?? "");
+    const outputVisibility = normalizeOutputVisibility(settings.outputVisibility);
+    ["front", "back"].forEach((sideName) => OUTPUT_FIELD_KEYS.forEach((fieldName) => {
+      const control = $(outputVisibilityControlId(sideName, fieldName));
+      if (control) control.checked = outputVisibility[sideName][fieldName];
+    }));
     setControl("labelSheetBackgroundPrompt", settings.backgroundPrompt ?? "");
     setControl("labelSheetDocumentType", settings.documentType ?? "label");
     syncIntentDocumentType(settings.documentType ?? "label");
@@ -1260,6 +1312,7 @@
     setControl("labelSheetQrPosition", qr.position);
     setControl("labelSheetQrLayoutMode", qr.layoutMode);
     setControl("labelSheetQrSize", qr.sizePercent);
+    setControl("labelSheetQrMargin", qr.margin);
     setControl("labelSheetGenerationDelay", Number(settings.generationDelayMs ?? GENERATION_DELAY_MS) / 1000);
     setControl("labelSheetGenerationRetries", settings.generationRetries ?? 1);
     const printJob = normalizePrintJob(settings.printJob);
@@ -1275,6 +1328,7 @@
     updateFocalOutputs();
     updatePrintJobControls();
     applyOutputGoalUi(outputGoal, { save: false });
+    updateOutputTemplatePreviews();
   }
 
   function rounded(input) {
@@ -1397,6 +1451,10 @@
       backSubtitle: value("labelSheetBackSubtitle"),
       backBody: value("labelSheetBackBody"),
       backFooter: value("labelSheetBackFooter"),
+      outputVisibility: normalizeOutputVisibility(Object.fromEntries(["front", "back"].map((sideName) => [
+        sideName,
+        Object.fromEntries(OUTPUT_FIELD_KEYS.map((fieldName) => [fieldName, checked(outputVisibilityControlId(sideName, fieldName))])),
+      ]))),
       backgroundPrompt: value("labelSheetBackgroundPrompt"),
       documentType: value("labelSheetDocumentType") || "label",
       outputGoal,
@@ -1433,6 +1491,7 @@
         position: value("labelSheetQrPosition"),
         layoutMode: value("labelSheetQrLayoutMode"),
         sizePercent: numberValue("labelSheetQrSize", 28),
+        margin: numberValue("labelSheetQrMargin", 4),
       }),
     };
     project.assets = projectAssetMetadata();
@@ -1545,6 +1604,88 @@
     return record.data?.[normalized] ?? record?.[sideName]?.[normalized] ?? record?.[normalized] ?? "";
   }
 
+  function normalizedOutputToken(input) {
+    return cleanText(input).normalize("NFKC").toLowerCase().replace(/[\s_-]+/gu, "");
+  }
+
+  function outputTokenResult(record, keyInput, sideName) {
+    const key = cleanText(keyInput);
+    const token = normalizedOutputToken(key);
+    const side = sideName === "back" ? "back" : "front";
+    const aliases = {
+      id: ["id", "아이디", "라벨id", "labelid"],
+      number: ["번호", "연번", "number", "serial", "sequence"],
+      name: ["이름", "성명", "name"],
+      category: ["구분", "소속", "구분소속", "category", "affiliation"],
+      title: ["제목", "title"],
+      subtitle: ["부제", "subtitle"],
+      body: ["본문", "body", "content"],
+      footer: ["하단", "하단문구", "footer"],
+    };
+    const matches = (name) => aliases[name].some((alias) => normalizedOutputToken(alias) === token);
+    if (matches("id")) return { found: true, value: record?.id ?? "" };
+    if (matches("number")) return { found: true, value: record?.number ?? "" };
+    if (matches("name")) return { found: true, value: record?.data?.name ?? "" };
+    if (matches("category")) return { found: true, value: record?.data?.category ?? "" };
+    if (matches("title")) return { found: true, value: record?.[side]?.title ?? "" };
+    if (matches("subtitle")) return { found: true, value: record?.[side]?.subtitle ?? "" };
+    if (matches("body")) return { found: true, value: record?.[side]?.body ?? "" };
+    if (matches("footer")) return { found: true, value: record?.[side]?.footer ?? "" };
+
+    const qualified = token.match(/^(앞면|front|뒷면|뒤면|back)[.·:]?(제목|title|부제|subtitle|본문|body|content|하단|하단문구|footer)$/u);
+    if (qualified) {
+      const qualifiedSide = ["뒷면", "뒤면", "back"].includes(qualified[1]) ? "back" : "front";
+      const fieldToken = qualified[2];
+      const fieldName = Object.keys(aliases).find((name) => ["title", "subtitle", "body", "footer"].includes(name)
+        && aliases[name].some((alias) => normalizedOutputToken(alias) === normalizedOutputToken(fieldToken)));
+      if (fieldName) return { found: true, value: record?.[qualifiedSide]?.[fieldName] ?? "" };
+    }
+
+    const dataKey = token.startsWith("data.") ? key.slice(key.indexOf(".") + 1) : key;
+    if (Object.prototype.hasOwnProperty.call(record?.data || {}, dataKey)) return { found: true, value: record.data[dataKey] ?? "" };
+    const matchingDataKey = Object.keys(record?.data || {}).find((candidate) => normalizedOutputToken(candidate) === normalizedOutputToken(dataKey));
+    if (matchingDataKey) return { found: true, value: record.data[matchingDataKey] ?? "" };
+    return { found: false, value: "" };
+  }
+
+  function resolveOutputTemplate(record, sideName, templateInput) {
+    const emptyTokens = new Set();
+    const unknownTokens = new Set();
+    let tokenCount = 0;
+    const template = String(templateInput ?? "");
+    const value = template.replace(/\{\{\s*([^{}|]+?)\s*(?:\|\s*(url)\s*)?\}\}/gu, (_match, key, modifier) => {
+      tokenCount += 1;
+      const result = outputTokenResult(record, key, sideName);
+      const tokenValue = String(result.value ?? "");
+      if (!result.found) unknownTokens.add(cleanText(key));
+      else if (!cleanText(tokenValue)) emptyTokens.add(cleanText(key));
+      return modifier === "url" ? encodeURIComponent(tokenValue) : tokenValue;
+    });
+    return {
+      value: cleanText(value),
+      tokenCount,
+      emptyTokens: Array.from(emptyTokens),
+      unknownTokens: Array.from(unknownTokens),
+    };
+  }
+
+  function outputTemplateSetting(settings, sideName, fieldName) {
+    const prefix = sideName === "back" ? "back" : "front";
+    return settings?.[`${prefix}${fieldName.slice(0, 1).toUpperCase()}${fieldName.slice(1)}`] ?? "";
+  }
+
+  function resolveOutputField(record, sideName, fieldName, settings, visibilityInput) {
+    const visibility = normalizeOutputVisibility(visibilityInput || settings?.outputVisibility);
+    if (visibility[sideName]?.[fieldName] === false) {
+      return { value: "", tokenCount: 0, emptyTokens: [], unknownTokens: [], hidden: true };
+    }
+    const template = String(outputTemplateSetting(settings, sideName, fieldName) ?? "");
+    if (!cleanText(template)) {
+      return { value: cleanText(record?.[sideName]?.[fieldName]), tokenCount: 0, emptyTokens: [], unknownTokens: [], hidden: false };
+    }
+    return { ...resolveOutputTemplate(record, sideName, template), hidden: false };
+  }
+
   function resolveQrTemplate(record, sideName, template) {
     const emptyTokens = new Set();
     let tokenCount = 0;
@@ -1581,6 +1722,7 @@
       position: value("labelSheetQrPosition"),
       layoutMode: value("labelSheetQrLayoutMode"),
       sizePercent: numberValue("labelSheetQrSize", 28),
+      margin: numberValue("labelSheetQrMargin", 4),
     });
   }
 
@@ -1784,6 +1926,77 @@
     onProjectControlsChanged("QR 템플릿 토큰을 추가했습니다.");
   }
 
+  function outputSettingsFromControls() {
+    return {
+      ...(project.settings || {}),
+      frontTitle: value("labelSheetFrontTitle"),
+      frontSubtitle: value("labelSheetFrontSubtitle"),
+      frontBody: value("labelSheetFrontBody"),
+      frontFooter: value("labelSheetFrontFooter"),
+      backTitle: value("labelSheetBackTitle"),
+      backSubtitle: value("labelSheetBackSubtitle"),
+      backBody: value("labelSheetBackBody"),
+      backFooter: value("labelSheetBackFooter"),
+      outputVisibility: normalizeOutputVisibility(Object.fromEntries(["front", "back"].map((sideName) => [
+        sideName,
+        Object.fromEntries(OUTPUT_FIELD_KEYS.map((fieldName) => [fieldName, checked(outputVisibilityControlId(sideName, fieldName))])),
+      ]))),
+    };
+  }
+
+  function updateOutputVisibilityControls() {
+    pane.querySelectorAll("[data-label-sheet-output-visible]").forEach((control) => {
+      const field = control.closest(".label-sheet-output-field");
+      if (field) field.classList.toggle("is-output-hidden", !control.checked);
+      control.setAttribute("aria-label", `${control.dataset.labelSheetOutputVisible?.startsWith("back.") ? "뒷면" : "앞면"} ${OUTPUT_FIELD_LABELS[control.dataset.labelSheetOutputVisible?.split(".")[1]] || "문구"} 출력 표시`);
+    });
+  }
+
+  function updateOutputTemplatePreviews() {
+    const record = project.records.find((item) => !item.data?.excluded);
+    const settings = outputSettingsFromControls();
+    ["front", "back"].forEach((sideName) => {
+      const output = $(`labelSheet${sideName === "back" ? "Back" : "Front"}ResolvedPreview`);
+      if (!output) return;
+      if (!record) {
+        output.textContent = "원본 데이터를 입력하면 첫 티켓의 실제 출력 문구를 확인할 수 있습니다.";
+        output.dataset.tone = "";
+        return;
+      }
+      const emptyTokens = new Set();
+      const unknownTokens = new Set();
+      const lines = OUTPUT_FIELD_KEYS.map((fieldName) => {
+        const resolved = resolveOutputField(record, sideName, fieldName, settings, settings.outputVisibility);
+        resolved.emptyTokens.forEach((token) => emptyTokens.add(token));
+        resolved.unknownTokens.forEach((token) => unknownTokens.add(token));
+        if (resolved.hidden) return `${OUTPUT_FIELD_LABELS[fieldName]}: 숨김`;
+        return `${OUTPUT_FIELD_LABELS[fieldName]}: ${resolved.value || "(빈 값)"}`;
+      });
+      const notes = [
+        unknownTokens.size ? `알 수 없는 호출: ${Array.from(unknownTokens).map((token) => `{{${token}}}`).join(", ")}` : "",
+        emptyTokens.size ? `첫 데이터에서 빈 호출: ${Array.from(emptyTokens).map((token) => `{{${token}}}`).join(", ")}` : "",
+      ].filter(Boolean);
+      output.textContent = `첫 데이터 ${record.id}${cleanText(record.number) ? ` · 번호 ${record.number}` : ""}\n${lines.join(" · ")}${notes.length ? `\n${notes.join(" · ")}` : ""}`;
+      output.dataset.tone = unknownTokens.size ? "warning" : "success";
+    });
+    updateOutputVisibilityControls();
+  }
+
+  function insertOutputTemplateToken(button) {
+    const panel = button.closest("[data-label-sheet-output-token-bar]")?.closest(".label-sheet-content-panel");
+    const activeBelongsToPanel = activeOutputTemplateInput && panel?.contains(activeOutputTemplateInput);
+    const input = activeBelongsToPanel ? activeOutputTemplateInput : panel?.querySelector("[data-label-sheet-output-template]");
+    if (!input) return;
+    const token = button.dataset.labelSheetOutputToken || "";
+    const start = Number.isInteger(input.selectionStart) ? input.selectionStart : input.value.length;
+    const end = Number.isInteger(input.selectionEnd) ? input.selectionEnd : start;
+    input.value = `${input.value.slice(0, start)}${token}${input.value.slice(end)}`;
+    input.setSelectionRange(start + token.length, start + token.length);
+    activeOutputTemplateInput = input;
+    input.focus();
+    onProjectControlsChanged("출력 템플릿에 데이터 호출을 추가했습니다.");
+  }
+
   function effectiveProject(sourceProject = project, options = {}) {
     if (sourceProject === project && options.sync !== false) syncProjectFromControls();
     const working = ENGINE.normalizeProject(sourceProject);
@@ -1795,6 +2008,7 @@
     const contrast = settings.textContrast;
     const visualDesign = resolveVisualDesign(settings);
     const qr = normalizeQrSettings(settings.qr);
+    const outputVisibility = normalizeOutputVisibility(settings.outputVisibility);
     const textLayouts = normalizeTextLayouts(settings.textLayouts);
     const recordTextLayouts = normalizeRecordTextLayouts(settings.recordTextLayouts);
     const promptOnly = normalizeOutputGoal(settings.outputGoal) === "prompt";
@@ -1822,6 +2036,7 @@
       .filter((record) => !record.data?.excluded)
       .map((record) => {
         const next = deepClone(record);
+        const sourceRecord = deepClone(record);
         if (!showNumbers) {
           next.number = "";
           next.front.number = "";
@@ -1829,12 +2044,9 @@
         }
         resolveRecordBackground(next, "front");
         resolveRecordBackground(next, "back");
-        const nameLine = [cleanText(next.data?.name), cleanText(next.data?.category)].filter(Boolean).join(" · ");
-        const inheritedBody = [nameLine, cleanText(settings.frontBody)].filter(Boolean).join("\n");
-        next.front.title = cleanText(next.front.title) || cleanText(settings.frontTitle);
-        next.front.subtitle = cleanText(next.front.subtitle) || cleanText(settings.frontSubtitle);
-        next.front.body = cleanText(next.front.body) || inheritedBody;
-        next.front.footer = cleanText(next.front.footer) || cleanText(settings.frontFooter);
+        OUTPUT_FIELD_KEYS.forEach((fieldName) => {
+          next.front[fieldName] = resolveOutputField(sourceRecord, "front", fieldName, settings, outputVisibility).value;
+        });
         next.front.number = showNumbers ? cleanText(next.front.number) || cleanText(next.number) : "";
         next.front.backgroundPrompt = [cleanText(next.front.backgroundPrompt) || cleanText(settings.backgroundPrompt), visualDesign.stylePrompt].filter(Boolean).join("\n");
         next.front.imageFit = imageFit;
@@ -1845,10 +2057,9 @@
         next.front.qrStyle = { ...deepClone(qr), enabled: next.front.qrEnabled };
         next.front.qrValue = next.front.qrEnabled ? qrValueFor(next, "front", qr) : "";
 
-        next.back.title = cleanText(next.back.title) || cleanText(settings.backTitle);
-        next.back.subtitle = cleanText(next.back.subtitle) || cleanText(settings.backSubtitle);
-        next.back.body = cleanText(next.back.body) || cleanText(settings.backBody);
-        next.back.footer = cleanText(next.back.footer) || cleanText(settings.backFooter);
+        OUTPUT_FIELD_KEYS.forEach((fieldName) => {
+          next.back[fieldName] = resolveOutputField(sourceRecord, "back", fieldName, settings, outputVisibility).value;
+        });
         next.back.backgroundPrompt = [cleanText(next.back.backgroundPrompt) || cleanText(settings.backgroundPrompt), visualDesign.stylePrompt].filter(Boolean).join("\n");
         next.back.imageFit = imageFit;
         next.back.focalPoint = deepClone(focalPoint);
@@ -2072,6 +2283,7 @@
       source: value("labelSheetQrSource"),
       template: value("labelSheetQrTemplate"),
     });
+    setControl("labelSheetQrMargin", project.settings.qr.margin);
     setElementStatus("labelSheetQrStatus", `QR 탭 스타일 적용 · ${project.settings.qr.ecc} 보정 · 여백 ${project.settings.qr.margin}칸`, "success");
     onProjectControlsChanged("QR코드 생성기의 색상·점·오류 보정 설정을 가져왔습니다.");
   }
@@ -2155,13 +2367,14 @@
   function renderRecordTable() {
     const tbody = $("labelSheetRecordTableBody");
     if (!tbody) return;
+    renderRecordTableHeader();
     const rows = draftActive ? draftRecords : project.records;
     tbody.replaceChildren();
     if (!rows.length) {
       const row = document.createElement("tr");
       row.className = "label-sheet-empty-row";
       const cell = document.createElement("td");
-      cell.colSpan = 10;
+      cell.colSpan = RECORD_TABLE_COLUMNS.length + 1;
       cell.textContent = "직접 입력을 적용하거나 표·CSV 데이터를 가져오면 여기에 표시됩니다.";
       row.appendChild(cell);
       tbody.appendChild(row);
@@ -2172,6 +2385,7 @@
     if ($("labelSheetImportCommitBtn")) $("labelSheetImportCommitBtn").disabled = !draftActive;
     if ($("labelSheetImportUndoBtn")) $("labelSheetImportUndoBtn").disabled = !draftActive && !undoRecords;
     updateQrAssignmentPreview();
+    updateOutputTemplatePreviews();
     updateIntentSummary();
     updateProgressState();
     renderDataMappingControls();
@@ -2179,7 +2393,19 @@
     restoreSpreadsheetActiveCell();
   }
 
-  function editableCell(record, index, field, textValue, draft) {
+  function renderRecordTableHeader() {
+    const row = $("labelSheetRecordTable")?.querySelector("thead tr");
+    if (!row) return;
+    const columns = [{ label: "선택" }, ...RECORD_TABLE_COLUMNS];
+    row.replaceChildren(...columns.map((column) => {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = column.label;
+      return cell;
+    }));
+  }
+
+  function editableCell(record, index, field, textValue, draft, label = field) {
     const cell = document.createElement("td");
     const input = document.createElement("input");
     input.type = "text";
@@ -2187,7 +2413,7 @@
     input.dataset.recordIndex = String(index);
     input.dataset.recordField = field;
     input.dataset.recordDraft = String(draft);
-    input.setAttribute("aria-label", `${index + 1}행 ${field}`);
+    input.setAttribute("aria-label", `${index + 1}행 ${label}`);
     cell.appendChild(input);
     return cell;
   }
@@ -2210,24 +2436,22 @@
     selection.setAttribute("aria-label", `${index + 1}행 QR·배경 배정 대상으로 선택`);
     selectionCell.appendChild(selection);
     row.appendChild(selectionCell);
-    row.appendChild(editableCell(record, index, "id", record.id, draft));
-    row.appendChild(editableCell(record, index, "number", record.number, draft));
-    row.appendChild(editableCell(record, index, "front.title", record.front?.title, draft));
-    row.appendChild(editableCell(record, index, "data.name", record.data?.name || record.data?.category || "", draft));
-    row.appendChild(editableCell(record, index, "front.qrValue", record.front?.qrValue, draft));
-    row.appendChild(editableCell(record, index, "back.qrValue", record.back?.qrValue, draft));
-    row.appendChild(editableCell(record, index, "front.backgroundFile", record.front?.backgroundFile, draft));
-    row.appendChild(editableCell(record, index, "back.backgroundFile", record.back?.backgroundFile, draft));
-    const excludeCell = document.createElement("td");
-    const exclude = document.createElement("input");
-    exclude.type = "checkbox";
-    exclude.checked = Boolean(record.data?.excluded);
-    exclude.dataset.recordIndex = String(index);
-    exclude.dataset.recordField = "data.excluded";
-    exclude.dataset.recordDraft = String(draft);
-    exclude.setAttribute("aria-label", `${index + 1}행 출력 제외`);
-    excludeCell.appendChild(exclude);
-    row.appendChild(excludeCell);
+    RECORD_TABLE_COLUMNS.forEach((column) => {
+      if (column.type !== "boolean") {
+        row.appendChild(editableCell(record, index, column.field, spreadsheetValue(record, column.field), draft, column.label));
+        return;
+      }
+      const cell = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = Boolean(spreadsheetValue(record, column.field));
+      input.dataset.recordIndex = String(index);
+      input.dataset.recordField = column.field;
+      input.dataset.recordDraft = String(draft);
+      input.setAttribute("aria-label", `${index + 1}행 ${column.label}`);
+      cell.appendChild(input);
+      row.appendChild(cell);
+    });
     return row;
   }
 
@@ -2251,17 +2475,28 @@
     return draft ? draftRecords : project.records;
   }
 
+  function recordFieldValue(record, field) {
+    if (!record || !field) return "";
+    return field.split(".").reduce((current, key) => current?.[key], record) ?? "";
+  }
+
+  function setRecordFieldValue(record, field, nextValue) {
+    const parts = field.split(".");
+    if (parts.length < 2) return false;
+    let current = record;
+    parts.slice(0, -1).forEach((key) => {
+      if (!current[key] || typeof current[key] !== "object") current[key] = {};
+      current = current[key];
+    });
+    current[parts.at(-1)] = nextValue;
+    return true;
+  }
+
   function spreadsheetValue(record, field) {
     if (field === "id") return record?.id ?? "";
     if (field === "number") return record?.number ?? "";
-    if (field === "front.title") return record?.front?.title ?? "";
-    if (field === "data.name") return record?.data?.name || record?.data?.category || "";
-    if (field === "front.qrValue") return record?.front?.qrValue ?? "";
-    if (field === "back.qrValue") return record?.back?.qrValue ?? "";
-    if (field === "front.backgroundFile") return record?.front?.backgroundFile ?? "";
-    if (field === "back.backgroundFile") return record?.back?.backgroundFile ?? "";
     if (field === "data.excluded") return Boolean(record?.data?.excluded);
-    return "";
+    return recordFieldValue(record, field);
   }
 
   function spreadsheetBoolean(input) {
@@ -2298,21 +2533,15 @@
       if (draftRaw) draftRaw.label_id = cleanText(nextValue);
       else migrateRecordIdentity(previousId, record.id, index, target);
       if (draftRaw) {
-        const row = target.closest?.("tr[data-record-id]");
+        const row = target?.closest?.("tr[data-record-id]");
         if (row) row.dataset.recordId = record.id;
       }
     }
     else if (field === "number") {
       record.number = String(nextValue);
       record.front.number = String(nextValue);
+      record.back.number = String(nextValue);
       if (draftRaw) draftRaw.number = String(nextValue);
-    } else if (field === "front.title") {
-      record.front.title = String(nextValue);
-      if (draftRaw) draftRaw.front_title = String(nextValue);
-    }
-    else if (field === "data.name") {
-      record.data.name = String(nextValue);
-      if (draftRaw) draftRaw.name = String(nextValue);
     }
     else if (field === "front.qrValue") {
       const qrSettings = draftRaw ? null : qrSettingsForManualSide("front");
@@ -2348,7 +2577,13 @@
       record.data.excluded = spreadsheetBoolean(nextValue);
       if (draftRaw) draftRaw.data = { ...(draftRaw.data || {}), excluded: spreadsheetBoolean(nextValue) };
     }
-    else return false;
+    else if (/^(front|back)\.(title|subtitle|body|footer)$/u.test(field) || /^(data)\.(name|category)$/u.test(field)) {
+      setRecordFieldValue(record, field, String(nextValue));
+      if (draftRaw) {
+        const targetName = DATA_MAPPING.definition(field)?.target;
+        if (targetName) draftRaw[targetName] = String(nextValue);
+      }
+    } else return false;
     return true;
   }
 
@@ -3226,9 +3461,16 @@
   }
 
   function commitWysiwygLayout(context) {
-    if (!context?.layout) return;
-    if (context.scope === "record" && context.recordKey) project.settings.recordTextLayouts = context.recordLayouts;
-    else project.settings.textLayouts = context.layouts;
+    if (!context) return 0;
+    if (context.scope === "record" && context.recordKey) {
+      project.settings.recordTextLayouts = context.recordLayouts;
+      return 0;
+    }
+    project.settings.textLayouts = context.layouts;
+    const cleared = clearRecordTextLayoutOverrides(project.settings?.recordTextLayouts, context.sideName, context.variant);
+    context.recordLayouts = cleared.layouts;
+    project.settings.recordTextLayouts = cleared.layouts;
+    return cleared.cleared;
   }
 
   function replaceActiveWysiwygLayout(fields) {
@@ -3236,11 +3478,11 @@
     const next = normalizeTextFieldLayoutSet(fields);
     if (context.scope === "record" && context.recordKey) {
       context.recordLayouts[context.recordKey][context.sideName][context.variant] = next;
-      project.settings.recordTextLayouts = context.recordLayouts;
     } else {
       context.layouts[context.sideName][context.variant] = next;
-      project.settings.textLayouts = context.layouts;
     }
+    context.layout = next;
+    commitWysiwygLayout(context);
     return next;
   }
 
@@ -3418,33 +3660,39 @@
 
   function handleFocusEditorKeydown(event) {
     if (!wysiwygEnabled || event.defaultPrevented || event.ctrlKey || event.metaKey) return;
-    if (event.target.closest("input, select, textarea, button, [contenteditable='true']")) return;
+    const textEntry = Boolean(event.target.closest?.("input:not([type='checkbox']):not([type='radio']), select, textarea, [contenteditable='true']"));
+    const consume = () => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    if (event.altKey && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+      consume();
+      const direction = ({ ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down" })[event.key];
+      nudgeActiveWysiwyg(direction, event.shiftKey ? 5 : 1);
+      return;
+    }
+    const alignmentKey = event.key.toLowerCase();
+    if ((event.altKey || !textEntry) && ["l", "c", "r"].includes(alignmentKey) && WYSIWYG_FIELD_KEYS.includes(wysiwygField)) {
+      consume();
+      const align = ({ l: "left", c: "center", r: "right" })[alignmentKey];
+      updateWysiwygField("align", align, `${WYSIWYG_FIELD_LABELS[wysiwygField]} 정렬을 바꿨습니다.`);
+      return;
+    }
+    if (event.altKey || textEntry) return;
     const numberTargets = ["content", "number", "title", "subtitle", "body", "footer", "qr"];
     if (/^[1-7]$/.test(event.key)) {
-      event.preventDefault();
+      consume();
       selectWysiwygTarget(numberTargets[Number(event.key) - 1], { focusStage: true });
       return;
     }
     if (event.key === "[" || event.key === "]") {
       if (wysiwygField === "content") return;
-      event.preventDefault();
+      consume();
       adjustActiveWysiwygSize(event.key === "[" ? -0.5 : 0.5);
       return;
     }
-    if (event.altKey && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
-      event.preventDefault();
-      const direction = ({ ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down" })[event.key];
-      nudgeActiveWysiwyg(direction, event.shiftKey ? 5 : 1);
-      return;
-    }
-    if (event.altKey && ["l", "c", "r"].includes(event.key.toLowerCase()) && WYSIWYG_FIELD_KEYS.includes(wysiwygField)) {
-      event.preventDefault();
-      const align = ({ l: "left", c: "center", r: "right" })[event.key.toLowerCase()];
-      updateWysiwygField("align", align, `${WYSIWYG_FIELD_LABELS[wysiwygField]} 정렬을 바꿨습니다.`);
-      return;
-    }
     if (event.key === "?") {
-      event.preventDefault();
+      consume();
       toggleFocusShortcutHelp();
     }
   }
@@ -3736,14 +3984,12 @@
   function resetWysiwygLayout() {
     const context = activeWysiwygLayout(false);
     if (wysiwygScope === "record" && context.recordKey) {
-      const recordLayouts = normalizeRecordTextLayouts(project.settings?.recordTextLayouts);
-      if (recordLayouts[context.recordKey]) recordLayouts[context.recordKey][previewSide][context.variant] = null;
-      project.settings.recordTextLayouts = recordLayouts;
+      if (context.recordLayouts[context.recordKey]) context.recordLayouts[context.recordKey][previewSide][context.variant] = null;
     } else {
-      const layouts = normalizeTextLayouts(project.settings?.textLayouts);
-      layouts[previewSide][context.variant] = null;
-      project.settings.textLayouts = layouts;
+      context.layouts[previewSide][context.variant] = null;
     }
+    context.layout = null;
+    commitWysiwygLayout(context);
     syncWysiwygControls();
     onProjectControlsChanged(`${wysiwygScope === "record" ? "선택 라벨" : "현재 면 공통"} 문구를 자동 배치로 되돌렸습니다.`, { rerenderTable: false });
   }
@@ -4326,7 +4572,7 @@
         selectPlacement();
       });
       if (!selectionOnly && index === activeIndex) {
-        const layoutContext = activeWysiwygLayout(true);
+        const layoutContext = activeWysiwygLayout(false);
         const layout = layoutContext.layout || createDefaultTextFieldLayout(layoutContext.variant);
         const textBox = wysiwygTextBoxMm(working, placement);
         const space = document.createElement("div");
@@ -4705,6 +4951,7 @@
       lastPreparedPrintRange = null;
       if ($("labelSheetPrintBtn")) $("labelSheetPrintBtn").textContent = "인쇄창 열기";
       if (options.rerenderTable !== false) renderRecordTable();
+      else updateOutputTemplatePreviews();
       if (message) setStatus(message);
       scheduleRefresh();
       queueSave();
@@ -6277,14 +6524,23 @@
     setControl("labelSheetPadding", profile.padding);
     updateSequenceControlState();
     setControl("labelSheetFirstSlot", 1);
-    setControl("labelSheetFrontTitle", profile.frontTitle);
-    setControl("labelSheetFrontSubtitle", profile.frontSubtitle);
-    setControl("labelSheetFrontBody", profile.frontBody);
-    setControl("labelSheetFrontFooter", profile.frontFooter);
-    setControl("labelSheetBackTitle", profile.backTitle);
-    setControl("labelSheetBackSubtitle", profile.backSubtitle);
-    setControl("labelSheetBackBody", profile.backBody);
-    setControl("labelSheetBackFooter", profile.backFooter);
+    setControl("labelSheetFrontTitle", "{{제목}}");
+    setControl("labelSheetFrontSubtitle", "{{부제}}");
+    setControl("labelSheetFrontBody", ["admission", "label"].includes(profile.type) ? "{{이름}} · {{구분}}" : "{{이름}} · {{구분}}\n{{본문}}");
+    setControl("labelSheetFrontFooter", "{{하단}}");
+    setControl("labelSheetBackTitle", "{{제목}}");
+    setControl("labelSheetBackSubtitle", "{{부제}}");
+    setControl("labelSheetBackBody", "{{본문}}");
+    setControl("labelSheetBackFooter", "{{하단}}");
+    const sampleVisibility = defaultOutputVisibility();
+    OUTPUT_FIELD_KEYS.forEach((fieldName) => {
+      const profileKey = `back${fieldName.slice(0, 1).toUpperCase()}${fieldName.slice(1)}`;
+      sampleVisibility.back[fieldName] = Boolean(cleanText(profile[profileKey]));
+    });
+    ["front", "back"].forEach((sideName) => OUTPUT_FIELD_KEYS.forEach((fieldName) => {
+      const control = $(outputVisibilityControlId(sideName, fieldName));
+      if (control) control.checked = sampleVisibility[sideName][fieldName];
+    }));
     setControl("labelSheetBackgroundPrompt", profile.backgroundPrompt);
     setControl("labelSheetDocumentType", profile.type);
     syncIntentDocumentType(profile.type);
@@ -6301,12 +6557,14 @@
     setControl("labelSheetQrPosition", "right");
     setControl("labelSheetQrLayoutMode", "adaptive");
     setControl("labelSheetQrSize", 28);
+    setControl("labelSheetQrMargin", 4);
     updateQrControlState(goal);
     setDuplexMode(requestedDuplex);
     setControl("labelSheetFlipEdge", "long");
     project.settings.documentType = profile.type;
     project.settings.textLayouts = normalizeTextLayouts(null);
     project.settings.recordTextLayouts = {};
+    project.settings.outputVisibility = sampleVisibility;
     applySequence({ replace: true, announce: false });
     const frontAssetId = assetStore.list().find((asset) => asset.filename === profile.frontAsset)?.assetId || "";
     const backAssetId = assetStore.list().find((asset) => asset.filename === profile.backAsset)?.assetId || "";
@@ -6316,6 +6574,14 @@
       record.data.name = name;
       record.data.category = category;
       record.data.course = category;
+      record.front.title = profile.frontTitle || "";
+      record.front.subtitle = profile.frontSubtitle || "";
+      record.front.body = ["admission", "label"].includes(profile.type) ? "" : (profile.frontBody || "");
+      record.front.footer = profile.frontFooter || "";
+      record.back.title = profile.backTitle || "";
+      record.back.subtitle = profile.backSubtitle || "";
+      record.back.body = profile.backBody || "";
+      record.back.footer = profile.backFooter || "";
       const qrRoute = profile.type === "meal-ticket" ? "sample-meal" : profile.type;
       const usesQr = profile.qr && (profile.qrCoverage === "all" || (profile.qrCoverage === "alternating" && index % 2 === 0));
       record.front.qrValue = usesQr ? `https://example.kr/${qrRoute}/${record.id}` : "";
@@ -6543,6 +6809,22 @@
       "labelSheetBackTitle", "labelSheetBackSubtitle", "labelSheetBackBody", "labelSheetBackFooter",
       "labelSheetBackgroundPrompt", "labelSheetContentOrientation", "labelSheetTextAlign", "labelSheetTextVerticalAlign", "labelSheetTextContrast",
     ].forEach((id) => listen(id, "input", () => onProjectControlsChanged()));
+    pane.addEventListener("focusin", (event) => {
+      const input = event.target.closest?.("[data-label-sheet-output-template]");
+      if (input) activeOutputTemplateInput = input;
+    });
+    pane.querySelectorAll("[data-label-sheet-output-token-bar]").forEach((bar) => {
+      bar.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-label-sheet-output-token]");
+        if (button) insertOutputTemplateToken(button);
+      });
+    });
+    pane.querySelectorAll("[data-label-sheet-output-visible]").forEach((control) => {
+      control.addEventListener("change", () => {
+        updateOutputVisibilityControls();
+        onProjectControlsChanged(`${control.dataset.labelSheetOutputVisible?.startsWith("back.") ? "뒷면" : "앞면"} 항목 표시 여부를 변경했습니다.`);
+      });
+    });
     listen("labelSheetTextScale", "input", () => {
       updateTextScaleOutput();
       onProjectControlsChanged();
@@ -6607,7 +6889,7 @@
       updateQrControlState();
       onProjectControlsChanged();
     });
-    ["labelSheetQrSide", "labelSheetQrSource", "labelSheetQrPosition", "labelSheetQrSize", "labelSheetQrLayoutMode", "labelSheetQrAssignScope"].forEach((id) => listen(id, "change", () => {
+    ["labelSheetQrSide", "labelSheetQrSource", "labelSheetQrPosition", "labelSheetQrSize", "labelSheetQrMargin", "labelSheetQrLayoutMode", "labelSheetQrAssignScope"].forEach((id) => listen(id, "change", () => {
       updateQrControlState();
       onProjectControlsChanged();
     }));
@@ -7024,6 +7306,10 @@
     resolveQrTemplate: (recordId, side = "front", template = value("labelSheetQrTemplate")) => {
       const record = project.records.find((item) => item.id === recordId);
       return record ? deepClone(resolveQrTemplate(record, side === "back" ? "back" : "front", template)) : null;
+    },
+    resolveOutputTemplate: (recordId, side = "front", template = "") => {
+      const record = project.records.find((item) => item.id === recordId);
+      return record ? deepClone(resolveOutputTemplate(record, side === "back" ? "back" : "front", template)) : null;
     },
     loadPayload: loadTransferPayload,
     loadTable: loadTablePayload,

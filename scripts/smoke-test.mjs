@@ -2667,7 +2667,58 @@ SLIDE-TWO-CONTENT`);
     record(qrDisabledOutputModel.previewText.includes("QR 꺼짐"), "Label-sheet QR-off preview did not confirm that QR space was removed", failures);
     await page.check("#labelSheetQrEnabled");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().settings.qr?.enabled === true);
-    record((await page.locator("#labelSheetRecordTable thead th").count()) === 10, "Label-sheet record table did not expose selection and front/back QR assignment columns", failures);
+    record((await page.locator("#labelSheetRecordTable thead th").count()) === 18, "Label-sheet record table did not expose the complete source data and front/back assignment columns", failures);
+    const outputTemplateProbe = await page.evaluate(() => {
+      const firstRow = document.querySelector("#labelSheetRecordTableBody tr[data-record-id]");
+      const field = (name) => firstRow?.querySelector(`[data-record-field="${name}"]`)?.value || "";
+      const project = window.PromptDeckLabelSheet.getProject();
+      return {
+        templates: [
+          document.querySelector("#labelSheetFrontTitle")?.value,
+          document.querySelector("#labelSheetFrontBody")?.value,
+          document.querySelector("#labelSheetFrontFooter")?.value,
+        ],
+        raw: {
+          name: field("data.name"),
+          category: field("data.category"),
+          title: field("front.title"),
+          subtitle: field("front.subtitle"),
+          body: field("front.body"),
+          footer: field("front.footer"),
+        },
+        rendered: project.records[0]?.front,
+        resolved: window.PromptDeckLabelSheet.resolveOutputTemplate("DEMO-MEAL-001", "front", "{{ID}}|{{번호}}|{{이름}}|{{구분}}|{{제목}}"),
+      };
+    });
+    record(
+      outputTemplateProbe.templates[0] === "{{제목}}" && outputTemplateProbe.templates[1].includes("{{이름}}") && outputTemplateProbe.templates[2] === "{{하단}}" &&
+        outputTemplateProbe.raw.name === "김배움" && outputTemplateProbe.raw.category === "배터리 기초" &&
+        outputTemplateProbe.raw.title === "샘플교육센터 교육생 식권" && outputTemplateProbe.raw.subtitle === "이차전지 전문인력 양성과정" &&
+        outputTemplateProbe.raw.body === "중식 1회 · 교육 당일 사용" && outputTemplateProbe.raw.footer.includes("샘플교육센터") &&
+        outputTemplateProbe.rendered?.body.includes("김배움 · 배터리 기초") && outputTemplateProbe.rendered?.body.includes("중식 1회") &&
+        outputTemplateProbe.resolved?.value.includes("DEMO-MEAL-001||김배움|배터리 기초|샘플교육센터 교육생 식권"),
+      `Label-sheet sample did not keep source data separate from token-driven output: ${JSON.stringify(outputTemplateProbe)}`,
+      failures
+    );
+    await page.locator("#labelSheetFrontTitle").focus();
+    await page.locator("#labelSheetFrontTitle").evaluate((input) => input.setSelectionRange(input.value.length, input.value.length));
+    await page.click('[data-label-sheet-output-token-bar="front"] [data-label-sheet-output-token="{{번호}}"]');
+    await page.waitForFunction(() => document.querySelector("#labelSheetFrontTitle")?.value === "{{제목}}{{번호}}");
+    record((await page.locator("#labelSheetFrontResolvedPreview").textContent()).includes("샘플교육센터 교육생 식권"), "Label-sheet output token button did not refresh the resolved preview", failures);
+    await page.locator("#labelSheetFrontTitle").fill("{{제목}}");
+    await page.uncheck("#labelSheetFrontSubtitleVisible");
+    await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.front?.subtitle === "");
+    record(
+      (await page.locator('#labelSheetRecordTableBody input[data-record-field="front.subtitle"]').first().inputValue()) === "이차전지 전문인력 양성과정" &&
+        (await page.locator("#labelSheetFrontSubtitle").inputValue()) === "{{부제}}",
+      "Label-sheet field visibility toggle removed source data or the output template instead of hiding only the rendered field",
+      failures
+    );
+    await page.check("#labelSheetFrontSubtitleVisible");
+    await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.front?.subtitle === "이차전지 전문인력 양성과정");
+    await page.selectOption("#labelSheetQrMargin", "8");
+    await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().settings.qr?.margin === 8);
+    record((await page.locator("#labelSheetQrMargin").inputValue()) === "8", "Label-sheet QR quiet-zone control did not persist its margin setting", failures);
     await page.selectOption("#labelSheetQrSource", "number");
     record(!(await page.locator("#labelSheetQrTemplate").isDisabled()), "Label-sheet QR template remained disabled outside template mode", failures);
     await page.locator("#labelSheetQrTemplate").fill("https://example.kr/check/{id}?name={name|url}");
@@ -3075,7 +3126,11 @@ SLIDE-TWO-CONTENT`);
     await page.selectOption("#labelSheetQrSize", "40");
     await page.selectOption("#labelSheetQrLayoutMode", "adaptive");
     await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').first().fill("https://example.kr/meal/MEAL-001");
-    await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.front?.qrValue === "https://example.kr/meal/MEAL-001");
+    await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').nth(1).fill("https://example.kr/meal/MEAL-002");
+    await page.waitForFunction(() => {
+      const records = window.PromptDeckLabelSheet.getProject().records;
+      return records[0]?.front?.qrValue === "https://example.kr/meal/MEAL-001" && records[1]?.front?.qrValue === "https://example.kr/meal/MEAL-002";
+    });
     await page.click("#labelSheetPreviewFrontBtn");
     await page.click("#labelSheetToggleAllStepsBtn");
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.flowView === "guided");
@@ -3167,6 +3222,15 @@ SLIDE-TWO-CONTENT`);
     record(Number(await page.locator("#labelSheetQuickSize").inputValue()) === focusSubtitleSizeBefore + 0.5, "Label-sheet integrated size shortcut did not update the selected field", failures);
     await page.locator("#labelSheetFocusStage").press("3");
     record((await page.locator('[data-label-sheet-focus-target="title"]').getAttribute("aria-pressed")) === "true", "Label-sheet numeric field shortcut did not return to the title field", failures);
+    const shortcutXBefore = Number(await page.locator("#labelSheetWysiwygX").inputValue());
+    await page.locator("#labelSheetQuickSize").focus();
+    await page.locator("#labelSheetQuickSize").press("Alt+ArrowRight");
+    await page.waitForFunction((before) => Number(document.querySelector("#labelSheetWysiwygX")?.value) === before + 1, shortcutXBefore);
+    await page.locator("#labelSheetQuickSize").press("Alt+r");
+    await page.waitForFunction(() => document.querySelector('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]')?.style.textAlign === "right");
+    await page.locator("#labelSheetFocusStage").press("c");
+    await page.waitForFunction(() => document.querySelector('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]')?.style.textAlign === "center");
+    record(Number(await page.locator("#labelSheetWysiwygX").inputValue()) === shortcutXBefore + 1, "Label-sheet Alt+arrow shortcut was ignored while an editor control held focus", failures);
     await page.click("#labelSheetFocusNext");
     await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim() === "2 / 2"
       && document.querySelectorAll("#labelSheetPreviewSurface .label-sheet-wysiwyg-hit.is-selected").length === 1
@@ -3207,6 +3271,30 @@ SLIDE-TWO-CONTENT`);
       "Label-sheet ID edit lost the selected row or left a stale row identity",
       failures
     );
+
+    await page.click("#labelSheetFocusScopeGlobal");
+    await page.waitForFunction(() => document.querySelector("#labelSheetFocusScopeGlobal")?.getAttribute("aria-pressed") === "true"
+      && document.querySelector("#labelSheetQuickScope")?.value === "global");
+    await page.locator("#labelSheetWysiwygWidth").fill("74");
+    await page.locator("#labelSheetWysiwygWidth").dispatchEvent("change");
+    await page.waitForFunction(() => {
+      const settings = window.PromptDeckLabelSheet.getProject().settings;
+      return settings.textLayouts?.front?.withQr?.title?.widthPercent === 74 &&
+        !settings.recordTextLayouts?.["record:MEAL-RENAMED"]?.front?.withQr;
+    });
+    await page.click("#labelSheetFocusScopeRecord");
+    await page.waitForFunction(() => document.querySelector("#labelSheetWysiwygWidth")?.value === "74"
+      && document.querySelector("#labelSheetWysiwygStatus")?.textContent.includes("공통값 상속"));
+    await page.click("#labelSheetFocusNext");
+    await page.waitForFunction(() => document.querySelector("#labelSheetWysiwygWidth")?.value === "74");
+    record(
+      !(await page.evaluate(() => Object.values(window.PromptDeckLabelSheet.getProject().settings.recordTextLayouts || {})
+        .some((entry) => Boolean(entry?.front?.withQr)))) &&
+        Number(await page.locator("#labelSheetWysiwygWidth").inputValue()) === 74,
+      "Label-sheet common layout did not replace per-ticket overrides for every ticket in the same face and QR variant",
+      failures
+    );
+    await page.click("#labelSheetFocusPrev");
 
     await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').nth(1).fill("MEAL-RENAMED");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-RENAMED");

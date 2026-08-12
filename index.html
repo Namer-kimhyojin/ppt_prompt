@@ -2003,6 +2003,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <div class="label-sheet-mapping-grid" id="labelSheetDataMappingControls">
                     <label class="label-sheet-field" for="labelSheetMapId"><span>라벨 ID</span><select id="labelSheetMapId" data-label-sheet-map="id"></select></label>
                     <label class="label-sheet-field" for="labelSheetMapNumber"><span>연번</span><select id="labelSheetMapNumber" data-label-sheet-map="number"></select></label>
+                    <label class="label-sheet-field" for="labelSheetMapName"><span>이름</span><select id="labelSheetMapName" data-label-sheet-map="data.name"></select></label>
+                    <label class="label-sheet-field" for="labelSheetMapCategory"><span>구분·소속</span><select id="labelSheetMapCategory" data-label-sheet-map="data.category"></select></label>
                     <label class="label-sheet-field" for="labelSheetMapFrontTitle"><span>앞면 제목</span><select id="labelSheetMapFrontTitle" data-label-sheet-map="front.title"></select></label>
                     <label class="label-sheet-field" for="labelSheetMapFrontSubtitle"><span>앞면 부제</span><select id="labelSheetMapFrontSubtitle" data-label-sheet-map="front.subtitle"></select></label>
                     <label class="label-sheet-field" for="labelSheetMapFrontBody"><span>앞면 본문</span><select id="labelSheetMapFrontBody" data-label-sheet-map="front.body"></select></label>
@@ -2036,8 +2038,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 </section>
                 <div class="label-sheet-table-scroll" tabindex="0" aria-label="가져온 라벨 데이터 표">
                   <table id="labelSheetRecordTable">
-                    <thead><tr><th scope="col">선택</th><th scope="col">ID</th><th scope="col">번호</th><th scope="col">앞면 제목</th><th scope="col">이름·구분</th><th scope="col">앞면 QR</th><th scope="col">뒷면 QR</th><th scope="col">앞면 배경</th><th scope="col">뒷면 배경</th><th scope="col">제외</th></tr></thead>
-                    <tbody id="labelSheetRecordTableBody"><tr class="label-sheet-empty-row"><td colspan="10">직접 입력을 적용하거나 표·CSV 데이터를 가져오면 여기에 표시됩니다.</td></tr></tbody>
+                    <thead><tr><th scope="col">선택</th><th scope="col">ID</th><th scope="col">번호</th><th scope="col">이름</th><th scope="col">구분·소속</th><th scope="col">앞면 제목</th><th scope="col">앞면 부제</th><th scope="col">앞면 본문</th><th scope="col">앞면 하단</th><th scope="col">뒷면 제목</th><th scope="col">뒷면 부제</th><th scope="col">뒷면 본문</th><th scope="col">뒷면 하단</th><th scope="col">앞면 QR</th><th scope="col">뒷면 QR</th><th scope="col">앞면 배경</th><th scope="col">뒷면 배경</th><th scope="col">제외</th></tr></thead>
+                    <tbody id="labelSheetRecordTableBody"><tr class="label-sheet-empty-row"><td colspan="18">직접 입력을 적용하거나 표·CSV 데이터를 가져오면 여기에 표시됩니다.</td></tr></tbody>
                   </table>
                 </div>
                 <p class="label-sheet-inline-status" id="labelSheetImportStatus" role="status" aria-live="polite">가져올 데이터를 기다리는 중입니다.</p>
@@ -2175,7 +2177,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
           <details class="label-sheet-step" id="labelSheetDesignContentStep" data-label-sheet-step="design" data-label-sheet-design-part="content" data-label-sheet-goal="print prompt">
             <summary>
               <span class="label-sheet-step-number" aria-hidden="true">4B</span>
-              <span><strong>면별 문구와 출력 요소</strong><small>앞면·뒷면 문구를 나누고, 공통 정렬과 출력용 QR을 설정합니다.</small></span>
+              <span><strong>데이터 기반 면별 출력</strong><small>원본 데이터는 표에서 관리하고, 앞·뒷면 출력은 {{이름}}, {{번호}} 같은 호출 문구로 조합합니다.</small></span>
               <span class="label-sheet-step-state" id="labelSheetDuplexStepState">단면</span>
             </summary>
             <div class="label-sheet-step-body">
@@ -2190,19 +2192,23 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               </div>
               <section class="label-sheet-content-panel active" id="labelSheetFrontContentPanel" role="tabpanel" aria-labelledby="labelSheetContentFrontTab">
                 <div class="label-sheet-form-grid label-sheet-grid-2">
-                  <label class="label-sheet-field" for="labelSheetFrontTitle"><span>앞면 제목</span><input id="labelSheetFrontTitle" type="text" maxlength="120" placeholder="예: 행사 출입표" /></label>
-                  <label class="label-sheet-field" for="labelSheetFrontSubtitle"><span>앞면 부제</span><input id="labelSheetFrontSubtitle" type="text" maxlength="160" placeholder="예: 2026 지역혁신 포럼" /></label>
-                  <label class="label-sheet-field" for="labelSheetFrontBody"><span>앞면 본문</span><textarea id="labelSheetFrontBody" rows="3" maxlength="1000" placeholder="이름, 소속, 좌석 등 공통 문구"></textarea></label>
-                  <label class="label-sheet-field" for="labelSheetFrontFooter"><span>앞면 하단 문구</span><textarea id="labelSheetFrontFooter" rows="3" maxlength="500" placeholder="날짜·장소·발행기관"></textarea></label>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetFrontTitle">제목 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetFrontTitleVisible"><input id="labelSheetFrontTitleVisible" type="checkbox" data-label-sheet-output-visible="front.title" checked /><span>표시</span></label></span><input id="labelSheetFrontTitle" type="text" maxlength="500" data-label-sheet-output-template="front.title" placeholder="예: {{제목}}" /></div>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetFrontSubtitle">부제 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetFrontSubtitleVisible"><input id="labelSheetFrontSubtitleVisible" type="checkbox" data-label-sheet-output-visible="front.subtitle" checked /><span>표시</span></label></span><input id="labelSheetFrontSubtitle" type="text" maxlength="500" data-label-sheet-output-template="front.subtitle" placeholder="예: {{부제}}" /></div>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetFrontBody">본문 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetFrontBodyVisible"><input id="labelSheetFrontBodyVisible" type="checkbox" data-label-sheet-output-visible="front.body" checked /><span>표시</span></label></span><textarea id="labelSheetFrontBody" rows="3" maxlength="1500" data-label-sheet-output-template="front.body" placeholder="예: {{이름}} · {{구분}}&#10;{{본문}}"></textarea></div>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetFrontFooter">하단 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetFrontFooterVisible"><input id="labelSheetFrontFooterVisible" type="checkbox" data-label-sheet-output-visible="front.footer" checked /><span>표시</span></label></span><textarea id="labelSheetFrontFooter" rows="3" maxlength="1000" data-label-sheet-output-template="front.footer" placeholder="예: {{하단}}"></textarea></div>
                 </div>
+                <div class="label-sheet-output-token-bar" data-label-sheet-output-token-bar="front" aria-label="앞면 출력 템플릿 데이터 호출"><strong>데이터 호출</strong><button type="button" data-label-sheet-output-token="{{ID}}">{{ID}}</button><button type="button" data-label-sheet-output-token="{{번호}}">{{번호}}</button><button type="button" data-label-sheet-output-token="{{이름}}">{{이름}}</button><button type="button" data-label-sheet-output-token="{{구분}}">{{구분}}</button><button type="button" data-label-sheet-output-token="{{제목}}">{{제목}}</button><button type="button" data-label-sheet-output-token="{{부제}}">{{부제}}</button><button type="button" data-label-sheet-output-token="{{본문}}">{{본문}}</button><button type="button" data-label-sheet-output-token="{{하단}}">{{하단}}</button></div>
+                <output class="label-sheet-inline-status label-sheet-output-resolved-preview" id="labelSheetFrontResolvedPreview" aria-live="polite">원본 데이터를 입력하면 첫 티켓의 실제 출력 문구를 확인할 수 있습니다.</output>
               </section>
               <section class="label-sheet-content-panel" id="labelSheetBackContentPanel" role="tabpanel" aria-labelledby="labelSheetContentBackTab" hidden>
                 <div class="label-sheet-form-grid label-sheet-grid-2">
-                  <label class="label-sheet-field" for="labelSheetBackTitle"><span>뒷면 제목</span><input id="labelSheetBackTitle" type="text" maxlength="120" placeholder="예: 이용 안내" /></label>
-                  <label class="label-sheet-field" for="labelSheetBackSubtitle"><span>뒷면 부제</span><input id="labelSheetBackSubtitle" type="text" maxlength="160" placeholder="예: 입장 시 제시해 주세요" /></label>
-                  <label class="label-sheet-field" for="labelSheetBackBody"><span>뒷면 본문</span><textarea id="labelSheetBackBody" rows="3" maxlength="1000" placeholder="이용 조건과 안내 사항"></textarea></label>
-                  <label class="label-sheet-field" for="labelSheetBackFooter"><span>뒷면 하단 문구</span><textarea id="labelSheetBackFooter" rows="3" maxlength="500" placeholder="문의처·유효 조건"></textarea></label>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetBackTitle">제목 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetBackTitleVisible"><input id="labelSheetBackTitleVisible" type="checkbox" data-label-sheet-output-visible="back.title" checked /><span>표시</span></label></span><input id="labelSheetBackTitle" type="text" maxlength="500" data-label-sheet-output-template="back.title" placeholder="예: {{제목}}" /></div>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetBackSubtitle">부제 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetBackSubtitleVisible"><input id="labelSheetBackSubtitleVisible" type="checkbox" data-label-sheet-output-visible="back.subtitle" checked /><span>표시</span></label></span><input id="labelSheetBackSubtitle" type="text" maxlength="500" data-label-sheet-output-template="back.subtitle" placeholder="예: {{부제}}" /></div>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetBackBody">본문 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetBackBodyVisible"><input id="labelSheetBackBodyVisible" type="checkbox" data-label-sheet-output-visible="back.body" checked /><span>표시</span></label></span><textarea id="labelSheetBackBody" rows="3" maxlength="1500" data-label-sheet-output-template="back.body" placeholder="예: {{본문}}"></textarea></div>
+                  <div class="label-sheet-field label-sheet-output-field"><span><label for="labelSheetBackFooter">하단 출력 템플릿</label><label class="label-sheet-output-visibility" for="labelSheetBackFooterVisible"><input id="labelSheetBackFooterVisible" type="checkbox" data-label-sheet-output-visible="back.footer" checked /><span>표시</span></label></span><textarea id="labelSheetBackFooter" rows="3" maxlength="1000" data-label-sheet-output-template="back.footer" placeholder="예: {{하단}}"></textarea></div>
                 </div>
+                <div class="label-sheet-output-token-bar" data-label-sheet-output-token-bar="back" aria-label="뒷면 출력 템플릿 데이터 호출"><strong>데이터 호출</strong><button type="button" data-label-sheet-output-token="{{ID}}">{{ID}}</button><button type="button" data-label-sheet-output-token="{{번호}}">{{번호}}</button><button type="button" data-label-sheet-output-token="{{이름}}">{{이름}}</button><button type="button" data-label-sheet-output-token="{{구분}}">{{구분}}</button><button type="button" data-label-sheet-output-token="{{제목}}">{{제목}}</button><button type="button" data-label-sheet-output-token="{{부제}}">{{부제}}</button><button type="button" data-label-sheet-output-token="{{본문}}">{{본문}}</button><button type="button" data-label-sheet-output-token="{{하단}}">{{하단}}</button></div>
+                <output class="label-sheet-inline-status label-sheet-output-resolved-preview" id="labelSheetBackResolvedPreview" aria-live="polite">원본 데이터를 입력하면 첫 티켓의 실제 출력 문구를 확인할 수 있습니다.</output>
               </section>
 
               <section class="label-sheet-qr-card" id="labelSheetQrSection" aria-labelledby="labelSheetQrTitle">
@@ -2219,6 +2225,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                       <label class="label-sheet-field" for="labelSheetQrSource" data-label-sheet-goal="print"><span>QR 데이터</span><select id="labelSheetQrSource"><option value="record">CSV의 front/back_qr_value</option><option value="number">각 라벨 번호</option><option value="id">각 label_id</option><option value="template">템플릿 조합</option></select></label>
                       <label class="label-sheet-field" for="labelSheetQrPosition"><span>배치</span><select id="labelSheetQrPosition"><option value="right">오른쪽</option><option value="left">왼쪽</option><option value="top-right">오른쪽 위</option><option value="bottom-right">오른쪽 아래</option><option value="top-left">왼쪽 위</option><option value="bottom-left">왼쪽 아래</option><option value="center">가운데</option></select></label>
                       <label class="label-sheet-field" for="labelSheetQrSize"><span>크기</span><select id="labelSheetQrSize"><option value="22">작게 · 22%</option><option value="28" selected>보통 · 28%</option><option value="34">크게 · 34%</option><option value="40">매우 크게 · 40%</option></select></label>
+                      <label class="label-sheet-field" for="labelSheetQrMargin"><span>QR 외곽 흰 여백</span><select id="labelSheetQrMargin"><option value="2">최소 · 2칸</option><option value="4" selected>보통 · 4칸</option><option value="6">넓게 · 6칸</option><option value="8">매우 넓게 · 8칸</option><option value="10">10칸</option><option value="12">12칸</option></select><small>코드 둘레의 판독용 여백(quiet zone)입니다.</small></label>
                       <label class="label-sheet-field" for="labelSheetQrLayoutMode"><span>QR 레이아웃</span><select id="labelSheetQrLayoutMode"><option value="adaptive">자동 감싸기 · 권장</option><option value="reserved">고정 여백 확보</option><option value="overlay">자유 겹침</option></select><small>자동 감싸기는 QR과 실제로 겹치는 문구만 줄이고, 자유 겹침은 경고만 표시합니다.</small></label>
                       <label class="label-sheet-field label-sheet-field-wide" for="labelSheetQrTemplate" data-label-sheet-goal="print">
                         <span>QR 템플릿 <em class="label-sheet-field-badge">입력 시 자동 선택</em></span>
@@ -2400,7 +2407,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <strong>이 티켓만</strong><small>선택한 1개에만 적용</small>
                 </button>
                 <button type="button" id="labelSheetFocusScopeGlobal" aria-pressed="false">
-                  <strong>현재 면 공통</strong><small>QR 유무가 같은 티켓에 적용</small>
+                  <strong>현재 면 공통</strong><small>같은 QR 유형 전체 적용 · 개별 레이아웃 덮어씀</small>
                 </button>
               </div>
               <div class="label-sheet-focus-navigation-grid">
@@ -2441,10 +2448,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <div class="label-sheet-focus-shortcut-actions" aria-label="선택 항목 빠른 조정">
                   <div class="label-sheet-focus-action-group"><span>미세 이동</span><button type="button" data-label-sheet-nudge="left">왼쪽</button><button type="button" data-label-sheet-nudge="up">위</button><button type="button" data-label-sheet-nudge="down">아래</button><button type="button" data-label-sheet-nudge="right">오른쪽</button></div>
                   <div class="label-sheet-focus-action-group" data-wysiwyg-size-only><span>크기</span><button type="button" id="labelSheetFocusSizeDown"><kbd>[</kbd> 작게</button><button type="button" id="labelSheetFocusSizeUp"><kbd>]</kbd> 크게</button></div>
-                  <div class="label-sheet-focus-action-group" data-wysiwyg-text-only><span>정렬</span><button type="button" data-label-sheet-focus-align="left">왼쪽</button><button type="button" data-label-sheet-focus-align="center">가운데</button><button type="button" data-label-sheet-focus-align="right">오른쪽</button></div>
+                  <div class="label-sheet-focus-action-group" data-wysiwyg-text-only><span>정렬</span><button type="button" data-label-sheet-focus-align="left"><kbd>L</kbd>왼쪽</button><button type="button" data-label-sheet-focus-align="center"><kbd>C</kbd>가운데</button><button type="button" data-label-sheet-focus-align="right"><kbd>R</kbd>오른쪽</button></div>
                 </div>
                 <div class="label-sheet-focus-shortcut-help" id="labelSheetFocusShortcutHelp" hidden>
-                  <strong>작업대 단축키</strong><span><kbd>1–7</kbd> 항목 선택 · <kbd>[</kbd><kbd>]</kbd> 크기 · <kbd>Alt</kbd>+방향키 이동 · <kbd>Alt</kbd>+<kbd>L/C/R</kbd> 정렬 · <kbd>?</kbd> 도움말</span>
+                  <strong>작업대 단축키</strong><span><kbd>1–7</kbd> 항목 선택 · <kbd>[</kbd><kbd>]</kbd> 크기 · <kbd>Alt</kbd>+방향키 이동 · 작업대에서 <kbd>L/C/R</kbd> 정렬 · 입력 중에는 <kbd>Alt</kbd>+<kbd>L/C/R</kbd> · <kbd>?</kbd> 도움말</span>
                 </div>
                 <div class="label-sheet-focus-tool-panel active" id="labelSheetFocusQuickPanel" role="tabpanel" aria-labelledby="labelSheetFocusQuickTab"></div>
                 <div class="label-sheet-focus-tool-panel" id="labelSheetFocusCommonPanel" role="tabpanel" aria-labelledby="labelSheetFocusCommonTab" hidden></div>
