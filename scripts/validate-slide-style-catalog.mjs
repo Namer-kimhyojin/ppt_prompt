@@ -110,6 +110,7 @@ for (const style of styles) {
     if (!String(style[key] || "").trim()) errors.push(`${style.id}: missing ${key}`);
   }
   if (!String(style.prompt?.ko || "").trim() || !String(style.prompt?.en || "").trim()) errors.push(`${style.id}: missing bilingual prompt`);
+  if (/[가-힣]/u.test(String(style.nameEn || "")) || /[가-힣]/u.test(String(style.prompt?.en || ""))) errors.push(`${style.id}: English prompt metadata contains Hangul`);
   if (!Array.isArray(style.aliases) || style.aliases.length === 0) errors.push(`${style.id}: missing aliases`);
   if (!Array.isArray(style.tags) || style.tags.length === 0) errors.push(`${style.id}: missing tags`);
 

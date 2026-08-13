@@ -341,70 +341,70 @@
   ];
   const SLIDE_STYLE_FACET_LABELS = Object.fromEntries(SLIDE_STYLE_FACET_FILTERS.flatMap((filter) => filter.options.map(([value, labelText]) => [`${filter.key}:${value}`, labelText])));
   const SLIDE_STYLE_PROMPT_COLOR_ROLES = [
-    ["background", "배경"],
-    ["primary", "주색"],
-    ["secondary", "보조색"],
-    ["accent", "강조색"],
-    ["textPrimary", "본문"],
+    ["background", "배경", "background"],
+    ["primary", "주색", "primary"],
+    ["secondary", "보조색", "secondary"],
+    ["accent", "강조색", "accent"],
+    ["textPrimary", "본문", "body text"],
   ];
   const SLIDE_STYLE_PROMPT_COMPOSITION_LABELS = {
     formLanguage: {
-      preciseGeometric: "정밀한 기하 형태",
-      softGeometric: "부드러운 기하 형태",
-      organic: "유기적 곡선 형태",
-      mixed: "기하와 유기 형태의 절제된 혼합",
+      preciseGeometric: "precise geometric forms",
+      softGeometric: "soft geometric forms",
+      organic: "organic curved forms",
+      mixed: "a restrained blend of geometric and organic forms",
     },
     lineLanguage: {
-      fineStructural: "가는 구조선",
-      boldDirectional: "굵은 방향선",
-      minimalDivider: "최소 구분선",
-      shapeLed: "색면 중심 구분",
-      softConnector: "부드러운 연결선",
+      fineStructural: "fine structural lines",
+      boldDirectional: "bold directional lines",
+      minimalDivider: "minimal dividers",
+      shapeLed: "color-field-led separation",
+      softConnector: "soft connector lines",
     },
     surfaceLanguage: {
-      flat: "평면형 표면",
-      mattePanels: "매트 패널",
-      controlledLayer: "절제된 다층 표면",
-      material: "선택적 재질감",
-      glass: "절제된 글래스 표면",
+      flat: "flat surfaces",
+      mattePanels: "matte panels",
+      controlledLayer: "controlled layered surfaces",
+      material: "selective material texture",
+      glass: "restrained glass surfaces",
     },
     spatialRhythm: {
-      ordered: "질서형 공간 리듬",
-      asymmetricEditorial: "비대칭 편집 리듬",
-      modular: "모듈형 공간 리듬",
-      flowing: "연속 흐름형 리듬",
-      causal: "인과 흐름",
-      diagonal: "대각선 진행 리듬",
-      evidenceToDecision: "근거에서 결정으로 이어지는 흐름",
-      exceptionDriven: "예외 우선 흐름",
-      mirrored: "대칭 비교 리듬",
-      narrative: "서사형 전개",
-      parallel: "병렬 비교 리듬",
-      progressive: "단계적 전개",
-      radial: "방사형 전개",
-      sequential: "순차형 전개",
-      spatial: "공간 관계형 전개",
-      stacked: "누적형 전개",
-      tabular: "표 형식의 정렬 리듬",
+      ordered: "an ordered spatial rhythm",
+      asymmetricEditorial: "an asymmetric editorial rhythm",
+      modular: "a modular spatial rhythm",
+      flowing: "a continuous flowing rhythm",
+      causal: "a cause-and-effect flow",
+      diagonal: "a diagonal directional rhythm",
+      evidenceToDecision: "a flow from evidence to decision",
+      exceptionDriven: "an exception-first flow",
+      mirrored: "a mirrored comparison rhythm",
+      narrative: "a narrative progression",
+      parallel: "a parallel comparison rhythm",
+      progressive: "a progressive sequence",
+      radial: "a radial progression",
+      sequential: "a sequential progression",
+      spatial: "a spatial-relational progression",
+      stacked: "a stacked progression",
+      tabular: "a table-aligned rhythm",
     },
     primaryVisualLanguage: {
-      adaptive: "콘텐츠에 맞는 주 시각 언어",
-      data: "데이터 시각화 중심",
-      diagram: "다이어그램 중심",
-      illustration: "일러스트레이션 중심",
-      photo: "사진 중심",
-      table: "표·비교 구조 중심",
-      technical3d: "기술 3D 중심",
-      threeD: "3D 오브젝트 중심",
-      typography: "타이포그래피 중심",
+      adaptive: "a content-adaptive primary visual language",
+      data: "data-visualization-led visuals",
+      diagram: "diagram-led visuals",
+      illustration: "illustration-led visuals",
+      photo: "photography-led visuals",
+      table: "table and comparison-led visuals",
+      technical3d: "technical 3D-led visuals",
+      threeD: "3D-object-led visuals",
+      typography: "typography-led visuals",
     },
   };
   const SLIDE_STYLE_PROMPT_TYPOGRAPHY_LABELS = {
-    public: "실무형 산세리프",
-    data: "수치 가독성 중심 산세리프",
-    editorial: "에디토리얼 대비형 타이포그래피",
-    premium: "프리미엄 편집형 타이포그래피",
-    technical: "기술 문서형 타이포그래피",
+    public: "a practical presentation sans serif",
+    data: "a data-optimized sans serif",
+    editorial: "editorial contrast typography",
+    premium: "premium editorial typography",
+    technical: "technical-document typography",
   };
   let directionUi = {
     source: state.visualDirection.source === "visual-mixer" ? "mixer" : state.visualDirection.source === "custom" ? "custom" : "common",
@@ -615,11 +615,7 @@
 
   function slideStylePromptColors(style, mode = slideStyleUi.promptPaletteMode) {
     const preset = style?.settings?.colors || {};
-    const source = mode === "current"
-      ? (state.colors || {})
-      : mode === "custom"
-        ? (slideStyleUi.promptColors || {})
-        : preset;
+    const source = mode === "custom" ? (slideStyleUi.promptColors || {}) : preset;
     return Object.fromEntries(SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role]) => [
       role,
       normalizeSlideStylePromptColor(source[role], preset[role] || state.colors?.[role]),
@@ -638,9 +634,8 @@
   }
 
   function slideStylePromptPaletteName(style, mode = slideStyleUi.promptPaletteMode) {
-    if (mode === "custom") return "직접 지정 팔레트";
-    if (mode === "current") return state.colors?.paletteNameKo || "현재 공통 설정 팔레트";
-    return style?.settings?.colors?.paletteNameKo || `${style?.nameKo || "선택 스타일"} 기본 팔레트`;
+    if (mode === "custom") return "Custom Palette";
+    return style?.settings?.colors?.paletteNameEn || `${style?.nameEn || "Selected Style"} Default Palette`;
   }
 
   function slideStylePromptFragment(value) {
@@ -656,36 +651,33 @@
     const typography = style.settings?.typography || {};
     const typographyTraits = [
       SLIDE_STYLE_PROMPT_TYPOGRAPHY_LABELS[style.settings?.typographyPreset],
-      { restrained: "절제된 제목", modern: "현대적인 제목", classic: "고전적인 제목" }[typography.headlineCharacter],
-      { reading: "읽기 우선", balanced: "균형 강조", strong: "강한 핵심 강조" }[typography.emphasis],
-      { airy: "넓은 호흡", balanced: "균형 잡힌 호흡", compact: "조밀한 정보 리듬", dramatic: "극적인 크기 대비" }[typography.rhythm],
+      { restrained: "restrained headlines", modern: "modern headlines", classic: "classic headlines" }[typography.headlineCharacter],
+      { reading: "reading-first hierarchy", balanced: "balanced emphasis", strong: "strong focal emphasis" }[typography.emphasis],
+      { airy: "an airy rhythm", balanced: "a balanced rhythm", compact: "a compact information rhythm", dramatic: "dramatic scale contrast" }[typography.rhythm],
     ].filter(Boolean);
-    const styleDirection = slideStylePromptFragment(style.prompt?.ko || style.description);
-    const distinctiveRules = (style.distinctiveRules || []).map(slideStylePromptFragment).filter(Boolean).slice(0, 3);
-    const avoidRules = (style.avoidRules || []).map(slideStylePromptFragment).filter(Boolean).slice(0, 3);
+    const styleDirection = slideStylePromptFragment(style.prompt?.en);
     const resolvedPalette = Object.fromEntries(SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role]) => [role, normalizeSlideStylePromptColor(palette?.[role], style.settings?.colors?.[role])]));
-    const colorRoles = SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role, labelText]) => `${labelText} ${resolvedPalette[role]}`).join(" · ");
+    const colorRoles = SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role, , labelTextEn]) => `${labelTextEn} ${resolvedPalette[role]}`).join("; ");
     const clauses = [
-      `디자인 지시: 기본 PPT 테마나 상투적인 템플릿 대신 ‘${style.nameKo}(${style.nameEn})’의 시각 DNA를 전체 발표자료에 적용하세요.`,
+      `Design directive: Apply the visual DNA of “${style.nameEn || style.nameKo}” across the entire presentation instead of using a default PowerPoint theme or a generic template.`,
       styleDirection ? `${styleDirection}.` : "",
-      `색상은 ‘${paletteName}’의 역할을 유지하세요: ${colorRoles}. 강조색은 핵심 수치·결론·행동 유도에만 제한하고, 가독성을 위한 명도 변형 외에는 임의의 색을 추가하지 마세요.`,
-      compositionTraits.length ? `형태와 구성은 ${[...new Set(compositionTraits)].join(" · ")}을 일관되게 유지하세요.` : "",
-      typographyTraits.length ? `타이포그래피는 ${[...new Set(typographyTraits)].join(" · ")}을 기준으로 제목·본문·수치의 위계를 분명히 하세요.` : "",
-      distinctiveRules.length ? `스타일 고유 요소: ${distinctiveRules.join(" / ")}.` : "",
-      "표지·목차·섹션 간지·본문·마무리는 각 목적에 맞게 레이아웃을 변주하되 같은 색상·타이포그래피·모티프를 이어가세요.",
-      `같은 카드 그리드의 기계적 반복, 무의미한 장식, 가짜 로고·워터마크, 읽기 어려운 작은 글자를 피하고 제공된 문구·수치·고유명사를 정확히 보존하세요.${avoidRules.length ? ` 추가 금지: ${avoidRules.join(" / ")}.` : ""}`,
+      `Maintain the functional roles of the “${paletteName}” palette: ${colorRoles}. Reserve the accent color for key figures, conclusions, and calls to action. Do not introduce additional colors except tonal variants required for legibility.`,
+      compositionTraits.length ? `Keep these visual and compositional traits consistent: ${[...new Set(compositionTraits)].join("; ")}.` : "",
+      typographyTraits.length ? `Establish a clear hierarchy among titles, body text, and figures using ${[...new Set(typographyTraits)].join("; ")}.` : "",
+      "Vary the layouts for the cover, agenda, section dividers, content slides, and closing according to their purpose while retaining the same palette, typography, and visual motifs.",
+      "Avoid mechanically repeating the same card grid, meaningless decoration, fake logos or watermarks, and illegibly small text.",
+      "Preserve all provided Korean text, numbers, dates, and proper nouns exactly as written. Do not translate, paraphrase, summarize, omit, or invent any content.",
     ];
     return clauses.filter(Boolean).join(" ");
   }
 
   function renderSlideStylePromptTool(style) {
     ensureSlideStylePromptPalette(style);
-    const mode = ["preset", "current", "custom"].includes(slideStyleUi.promptPaletteMode) ? slideStyleUi.promptPaletteMode : "preset";
+    const mode = ["preset", "custom"].includes(slideStyleUi.promptPaletteMode) ? slideStyleUi.promptPaletteMode : "preset";
     const palette = slideStylePromptColors(style, mode);
     const paletteModes = [
       ["preset", "스타일 기본색"],
-      ["current", "현재 설정색"],
-      ["custom", "직접 선택"],
+      ["custom", "색상 직접 지정"],
     ].map(([value, labelText]) => `<button type="button" class="${mode === value ? "active" : ""}" data-slide-style-prompt-palette-mode="${value}" aria-pressed="${mode === value}">${labelText}</button>`).join("");
     const colorFields = SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role, labelText]) => `<label><span>${labelText}</span><div><input type="color" value="${palette[role]}" data-slide-style-prompt-color="${role}" aria-label="${escapeHtml(`${style.nameKo} ${labelText} 직접 선택`)}"><code data-slide-style-prompt-color-value="${role}">${palette[role]}</code></div></label>`).join("");
     const prompt = buildSlideStyleCopyPrompt(style, palette, slideStylePromptPaletteName(style, mode));
@@ -5973,7 +5965,7 @@
     if (slideStylePromptPaletteMode) {
       const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
       const nextMode = slideStylePromptPaletteMode.dataset.slideStylePromptPaletteMode;
-      if (!style || !["preset", "current", "custom"].includes(nextMode)) return;
+      if (!style || !["preset", "custom"].includes(nextMode)) return;
       ensureSlideStylePromptPalette(style);
       if (nextMode === "custom" && slideStyleUi.promptPaletteMode !== "custom") {
         slideStyleUi.promptColors = slideStylePromptColors(style, slideStyleUi.promptPaletteMode);

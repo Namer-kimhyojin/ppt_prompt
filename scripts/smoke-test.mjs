@@ -671,11 +671,13 @@ async function runSmokeTest() {
     const presetSlideStyleCopyPrompt = await page.locator('[data-slide-style-prompt-output]').inputValue();
     record(
       (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-prompt-tool").count()) === 1 &&
-      (await page.locator("[data-slide-style-prompt-palette-mode]").count()) === 3 &&
-      presetSlideStyleCopyPrompt.includes("컨설팅 전략(Consulting Strategy)") &&
+      (await page.locator("[data-slide-style-prompt-palette-mode]").count()) === 2 &&
+      presetSlideStyleCopyPrompt.includes("Consulting Strategy") &&
       presetSlideStyleCopyPrompt.includes("#12315B") &&
-      presetSlideStyleCopyPrompt.includes("피라미드형 정보 위계") &&
-      presetSlideStyleCopyPrompt.includes("기본 PPT 테마"),
+      presetSlideStyleCopyPrompt.includes("pyramid-like information hierarchy") &&
+      presetSlideStyleCopyPrompt.includes("default PowerPoint theme") &&
+      presetSlideStyleCopyPrompt.includes("Do not translate, paraphrase, summarize, omit, or invent any content") &&
+      !/[가-힣]/.test(presetSlideStyleCopyPrompt),
       "Slide style gallery did not create a copy-ready presentation suffix from the selected style and preset colors",
       failures
     );
@@ -684,7 +686,7 @@ async function runSmokeTest() {
     await page.locator('[data-slide-style-prompt-color="primary"]').fill("#6D28D9");
     await page.locator('[data-slide-style-prompt-color="accent"]').fill("#F97316");
     const customSlideStyleCopyPrompt = await page.locator('[data-slide-style-prompt-output]').inputValue();
-    record(customSlideStyleCopyPrompt.includes("직접 지정 팔레트") && customSlideStyleCopyPrompt.includes("주색 #6D28D9") && customSlideStyleCopyPrompt.includes("강조색 #F97316"), "Direct color choices did not update the copy-ready slide style prompt", failures);
+    record(customSlideStyleCopyPrompt.includes("Custom Palette") && customSlideStyleCopyPrompt.includes("primary #6D28D9") && customSlideStyleCopyPrompt.includes("accent #F97316"), "Direct color choices did not update the copy-ready slide style prompt", failures);
     await page.click('[data-action="copy-slide-style-prompt"]');
     const copiedSlideStylePrompt = await page.evaluate(() => navigator.clipboard.readText());
     record(copiedSlideStylePrompt === customSlideStyleCopyPrompt, "Slide style prompt copy action did not copy only the visible presentation suffix", failures);
@@ -692,7 +694,7 @@ async function runSmokeTest() {
     record(
       await page.evaluate(() => window.__cpdSlideStyleGridBeforeSelection === document.querySelector("#cpdSlideStyleDialog .cpd-slide-style-grid")) &&
       (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-inspector h4").textContent()).includes("데이터 스토리텔링") &&
-      (await page.locator('[data-slide-style-prompt-output]').inputValue()).includes("주색 #174EA6"),
+      (await page.locator('[data-slide-style-prompt-output]').inputValue()).includes("primary #174EA6"),
       "Slide style switching recreated the gallery grid instead of updating the selection in place",
       failures
     );
