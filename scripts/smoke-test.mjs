@@ -668,10 +668,31 @@ async function runSmokeTest() {
     await page.click('[data-slide-style-id="consulting-strategy"]');
     record(await page.locator('.cpd-slide-style-draft').isVisible(), "Slide style selection did not open the application preview", failures);
     record((await page.locator("#cpdSlideStyleDialog .cpd-slide-style-inspector.has-selection .cpd-slide-style-draft").count()) === 1 && (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-browser > .cpd-slide-style-draft").count()) === 0, "Selected slide style was not kept in the fixed inspector", failures);
+    const presetSlideStyleCopyPrompt = await page.locator('[data-slide-style-prompt-output]').inputValue();
+    record(
+      (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-prompt-tool").count()) === 1 &&
+      (await page.locator("[data-slide-style-prompt-palette-mode]").count()) === 3 &&
+      presetSlideStyleCopyPrompt.includes("컨설팅 전략(Consulting Strategy)") &&
+      presetSlideStyleCopyPrompt.includes("#12315B") &&
+      presetSlideStyleCopyPrompt.includes("피라미드형 정보 위계") &&
+      presetSlideStyleCopyPrompt.includes("기본 PPT 테마"),
+      "Slide style gallery did not create a copy-ready presentation suffix from the selected style and preset colors",
+      failures
+    );
+    await page.click('[data-slide-style-prompt-palette-mode="custom"]');
+    record((await page.locator('[data-slide-style-prompt-color]:visible').count()) === 5, "Custom slide style prompt palette did not expose the five color roles", failures);
+    await page.locator('[data-slide-style-prompt-color="primary"]').fill("#6D28D9");
+    await page.locator('[data-slide-style-prompt-color="accent"]').fill("#F97316");
+    const customSlideStyleCopyPrompt = await page.locator('[data-slide-style-prompt-output]').inputValue();
+    record(customSlideStyleCopyPrompt.includes("직접 지정 팔레트") && customSlideStyleCopyPrompt.includes("주색 #6D28D9") && customSlideStyleCopyPrompt.includes("강조색 #F97316"), "Direct color choices did not update the copy-ready slide style prompt", failures);
+    await page.click('[data-action="copy-slide-style-prompt"]');
+    const copiedSlideStylePrompt = await page.evaluate(() => navigator.clipboard.readText());
+    record(copiedSlideStylePrompt === customSlideStyleCopyPrompt, "Slide style prompt copy action did not copy only the visible presentation suffix", failures);
     await page.click('[data-slide-style-id="data-storytelling"]');
     record(
       await page.evaluate(() => window.__cpdSlideStyleGridBeforeSelection === document.querySelector("#cpdSlideStyleDialog .cpd-slide-style-grid")) &&
-      (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-inspector h4").textContent()).includes("데이터 스토리텔링"),
+      (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-inspector h4").textContent()).includes("데이터 스토리텔링") &&
+      (await page.locator('[data-slide-style-prompt-output]').inputValue()).includes("주색 #174EA6"),
       "Slide style switching recreated the gallery grid instead of updating the selection in place",
       failures
     );
@@ -1020,6 +1041,22 @@ async function runSmokeTest() {
     record(await page.locator("#mobileTabActions").isHidden(), "Global mobile action bar conflicted with the common-prompt journey bar", failures);
     const mobileBriefOverflow = await page.locator("#cpdAccordionBody0 .cpd-brief-quick-grid").evaluate((element) => element.scrollWidth - element.clientWidth);
     record(mobileBriefOverflow <= 1, `Design-brief quick choices overflowed the mobile viewport by ${Math.round(mobileBriefOverflow)}px`, failures);
+    await page.click('.cpd-journey-header [data-action="open-slide-style-gallery"]');
+    await page.click('[data-slide-style-id="minimal-report"]');
+    const mobileSlideStylePromptGeometry = await page.locator("#cpdSlideStyleDialog .cpd-slide-style-inspector.has-selection").evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const prompt = element.querySelector(".cpd-slide-style-prompt-tool");
+      return {
+        left: rect.left,
+        right: rect.right,
+        promptOverflow: prompt ? prompt.scrollWidth - prompt.clientWidth : Number.POSITIVE_INFINITY,
+        paletteMinHeight: Math.min(...[...element.querySelectorAll("[data-slide-style-prompt-palette-mode]")].map((button) => button.getBoundingClientRect().height)),
+      };
+    });
+    record(mobileSlideStylePromptGeometry.left >= 0 && mobileSlideStylePromptGeometry.right <= 390 && mobileSlideStylePromptGeometry.promptOverflow <= 1, "Copy-ready slide style prompt tool overflowed the mobile viewport", failures);
+    record(mobileSlideStylePromptGeometry.paletteMinHeight >= 42, "Slide style prompt palette choices were smaller than the mobile touch target", failures);
+    await page.keyboard.press("Escape");
+    record(await page.locator("#cpdSlideStyleDialog").isHidden(), "Slide style prompt gallery did not close from the mobile keyboard route", failures);
     await page.setViewportSize({ width: 1440, height: 1200 });
     await page.locator('#cpdAccordionBody0 [data-brief-path="project.audience"][data-brief-value="실무자"]').click();
     await page.locator('#cpdAccordionBody0 [data-brief-path="project.presentationPurpose"][data-brief-value="현황과 성과 보고"]').click();

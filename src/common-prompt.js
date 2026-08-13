@@ -307,6 +307,9 @@
     audience: "all",
     supportInstrument: "all",
     media: "all",
+    promptPaletteMode: "preset",
+    promptPaletteStyleId: "",
+    promptColors: {},
   });
   let slideStyleUi = createSlideStyleUi();
   const SLIDE_STYLE_FACET_FILTERS = [
@@ -337,6 +340,72 @@
     },
   ];
   const SLIDE_STYLE_FACET_LABELS = Object.fromEntries(SLIDE_STYLE_FACET_FILTERS.flatMap((filter) => filter.options.map(([value, labelText]) => [`${filter.key}:${value}`, labelText])));
+  const SLIDE_STYLE_PROMPT_COLOR_ROLES = [
+    ["background", "배경"],
+    ["primary", "주색"],
+    ["secondary", "보조색"],
+    ["accent", "강조색"],
+    ["textPrimary", "본문"],
+  ];
+  const SLIDE_STYLE_PROMPT_COMPOSITION_LABELS = {
+    formLanguage: {
+      preciseGeometric: "정밀한 기하 형태",
+      softGeometric: "부드러운 기하 형태",
+      organic: "유기적 곡선 형태",
+      mixed: "기하와 유기 형태의 절제된 혼합",
+    },
+    lineLanguage: {
+      fineStructural: "가는 구조선",
+      boldDirectional: "굵은 방향선",
+      minimalDivider: "최소 구분선",
+      shapeLed: "색면 중심 구분",
+      softConnector: "부드러운 연결선",
+    },
+    surfaceLanguage: {
+      flat: "평면형 표면",
+      mattePanels: "매트 패널",
+      controlledLayer: "절제된 다층 표면",
+      material: "선택적 재질감",
+      glass: "절제된 글래스 표면",
+    },
+    spatialRhythm: {
+      ordered: "질서형 공간 리듬",
+      asymmetricEditorial: "비대칭 편집 리듬",
+      modular: "모듈형 공간 리듬",
+      flowing: "연속 흐름형 리듬",
+      causal: "인과 흐름",
+      diagonal: "대각선 진행 리듬",
+      evidenceToDecision: "근거에서 결정으로 이어지는 흐름",
+      exceptionDriven: "예외 우선 흐름",
+      mirrored: "대칭 비교 리듬",
+      narrative: "서사형 전개",
+      parallel: "병렬 비교 리듬",
+      progressive: "단계적 전개",
+      radial: "방사형 전개",
+      sequential: "순차형 전개",
+      spatial: "공간 관계형 전개",
+      stacked: "누적형 전개",
+      tabular: "표 형식의 정렬 리듬",
+    },
+    primaryVisualLanguage: {
+      adaptive: "콘텐츠에 맞는 주 시각 언어",
+      data: "데이터 시각화 중심",
+      diagram: "다이어그램 중심",
+      illustration: "일러스트레이션 중심",
+      photo: "사진 중심",
+      table: "표·비교 구조 중심",
+      technical3d: "기술 3D 중심",
+      threeD: "3D 오브젝트 중심",
+      typography: "타이포그래피 중심",
+    },
+  };
+  const SLIDE_STYLE_PROMPT_TYPOGRAPHY_LABELS = {
+    public: "실무형 산세리프",
+    data: "수치 가독성 중심 산세리프",
+    editorial: "에디토리얼 대비형 타이포그래피",
+    premium: "프리미엄 편집형 타이포그래피",
+    technical: "기술 문서형 타이포그래피",
+  };
   let directionUi = {
     source: state.visualDirection.source === "visual-mixer" ? "mixer" : state.visualDirection.source === "custom" ? "custom" : "common",
     applyRelated: false,
@@ -535,6 +604,115 @@
     return ko
       ? `갤러리 출발점은 ${style.nameKo}(${style.nameEn})이다. ${description}${signature}${avoid}${adjusted ? " 갤러리 적용 후 조정된 현재 색상·강조·자원 설정을 더 높은 우선순위로 따른다." : ""}`
       : `Use ${style.nameEn} as the gallery starting point. ${description}${adjusted ? " Give the currently adjusted color, emphasis, and resource settings higher priority than the starting preset." : ""}`;
+  }
+
+  function normalizeSlideStylePromptColor(value, fallback = "#111827") {
+    const normalized = String(value || "").trim().toUpperCase();
+    if (/^#[0-9A-F]{6}$/.test(normalized)) return normalized;
+    const normalizedFallback = String(fallback || "").trim().toUpperCase();
+    return /^#[0-9A-F]{6}$/.test(normalizedFallback) ? normalizedFallback : "#111827";
+  }
+
+  function slideStylePromptColors(style, mode = slideStyleUi.promptPaletteMode) {
+    const preset = style?.settings?.colors || {};
+    const source = mode === "current"
+      ? (state.colors || {})
+      : mode === "custom"
+        ? (slideStyleUi.promptColors || {})
+        : preset;
+    return Object.fromEntries(SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role]) => [
+      role,
+      normalizeSlideStylePromptColor(source[role], preset[role] || state.colors?.[role]),
+    ]));
+  }
+
+  function resetSlideStylePromptPalette(style) {
+    if (!style) return;
+    slideStyleUi.promptPaletteStyleId = style.id;
+    slideStyleUi.promptPaletteMode = "preset";
+    slideStyleUi.promptColors = slideStylePromptColors(style, "preset");
+  }
+
+  function ensureSlideStylePromptPalette(style) {
+    if (style && slideStyleUi.promptPaletteStyleId !== style.id) resetSlideStylePromptPalette(style);
+  }
+
+  function slideStylePromptPaletteName(style, mode = slideStyleUi.promptPaletteMode) {
+    if (mode === "custom") return "직접 지정 팔레트";
+    if (mode === "current") return state.colors?.paletteNameKo || "현재 공통 설정 팔레트";
+    return style?.settings?.colors?.paletteNameKo || `${style?.nameKo || "선택 스타일"} 기본 팔레트`;
+  }
+
+  function slideStylePromptFragment(value) {
+    return String(value || "").replace(/\s+/g, " ").trim().replace(/[.!?。]+$/u, "");
+  }
+
+  function buildSlideStyleCopyPrompt(style, palette = slideStylePromptColors(style), paletteName = slideStylePromptPaletteName(style)) {
+    if (!style) return "";
+    const composition = style.settings?.composition || {};
+    const compositionTraits = ["formLanguage", "lineLanguage", "surfaceLanguage", "spatialRhythm", "primaryVisualLanguage"]
+      .map((key) => SLIDE_STYLE_PROMPT_COMPOSITION_LABELS[key]?.[composition[key]])
+      .filter(Boolean);
+    const typography = style.settings?.typography || {};
+    const typographyTraits = [
+      SLIDE_STYLE_PROMPT_TYPOGRAPHY_LABELS[style.settings?.typographyPreset],
+      { restrained: "절제된 제목", modern: "현대적인 제목", classic: "고전적인 제목" }[typography.headlineCharacter],
+      { reading: "읽기 우선", balanced: "균형 강조", strong: "강한 핵심 강조" }[typography.emphasis],
+      { airy: "넓은 호흡", balanced: "균형 잡힌 호흡", compact: "조밀한 정보 리듬", dramatic: "극적인 크기 대비" }[typography.rhythm],
+    ].filter(Boolean);
+    const styleDirection = slideStylePromptFragment(style.prompt?.ko || style.description);
+    const distinctiveRules = (style.distinctiveRules || []).map(slideStylePromptFragment).filter(Boolean).slice(0, 3);
+    const avoidRules = (style.avoidRules || []).map(slideStylePromptFragment).filter(Boolean).slice(0, 3);
+    const resolvedPalette = Object.fromEntries(SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role]) => [role, normalizeSlideStylePromptColor(palette?.[role], style.settings?.colors?.[role])]));
+    const colorRoles = SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role, labelText]) => `${labelText} ${resolvedPalette[role]}`).join(" · ");
+    const clauses = [
+      `디자인 지시: 기본 PPT 테마나 상투적인 템플릿 대신 ‘${style.nameKo}(${style.nameEn})’의 시각 DNA를 전체 발표자료에 적용하세요.`,
+      styleDirection ? `${styleDirection}.` : "",
+      `색상은 ‘${paletteName}’의 역할을 유지하세요: ${colorRoles}. 강조색은 핵심 수치·결론·행동 유도에만 제한하고, 가독성을 위한 명도 변형 외에는 임의의 색을 추가하지 마세요.`,
+      compositionTraits.length ? `형태와 구성은 ${[...new Set(compositionTraits)].join(" · ")}을 일관되게 유지하세요.` : "",
+      typographyTraits.length ? `타이포그래피는 ${[...new Set(typographyTraits)].join(" · ")}을 기준으로 제목·본문·수치의 위계를 분명히 하세요.` : "",
+      distinctiveRules.length ? `스타일 고유 요소: ${distinctiveRules.join(" / ")}.` : "",
+      "표지·목차·섹션 간지·본문·마무리는 각 목적에 맞게 레이아웃을 변주하되 같은 색상·타이포그래피·모티프를 이어가세요.",
+      `같은 카드 그리드의 기계적 반복, 무의미한 장식, 가짜 로고·워터마크, 읽기 어려운 작은 글자를 피하고 제공된 문구·수치·고유명사를 정확히 보존하세요.${avoidRules.length ? ` 추가 금지: ${avoidRules.join(" / ")}.` : ""}`,
+    ];
+    return clauses.filter(Boolean).join(" ");
+  }
+
+  function renderSlideStylePromptTool(style) {
+    ensureSlideStylePromptPalette(style);
+    const mode = ["preset", "current", "custom"].includes(slideStyleUi.promptPaletteMode) ? slideStyleUi.promptPaletteMode : "preset";
+    const palette = slideStylePromptColors(style, mode);
+    const paletteModes = [
+      ["preset", "스타일 기본색"],
+      ["current", "현재 설정색"],
+      ["custom", "직접 선택"],
+    ].map(([value, labelText]) => `<button type="button" class="${mode === value ? "active" : ""}" data-slide-style-prompt-palette-mode="${value}" aria-pressed="${mode === value}">${labelText}</button>`).join("");
+    const colorFields = SLIDE_STYLE_PROMPT_COLOR_ROLES.map(([role, labelText]) => `<label><span>${labelText}</span><div><input type="color" value="${palette[role]}" data-slide-style-prompt-color="${role}" aria-label="${escapeHtml(`${style.nameKo} ${labelText} 직접 선택`)}"><code data-slide-style-prompt-color-value="${role}">${palette[role]}</code></div></label>`).join("");
+    const prompt = buildSlideStyleCopyPrompt(style, palette, slideStylePromptPaletteName(style, mode));
+    return `<section class="cpd-slide-style-prompt-tool" aria-labelledby="cpdSlideStylePromptTitle"><header><span>COPY &amp; USE</span><strong id="cpdSlideStylePromptTitle">발표자료 제작용 문구</strong><small>“발표자료 만들어줘.” 다음에 붙여넣을 디자인 지시문만 복사합니다.</small></header><div class="cpd-slide-style-prompt-palette-modes" role="group" aria-label="복사용 문구 색상 선택">${paletteModes}</div><div class="cpd-slide-style-prompt-colors"${mode === "custom" ? "" : " hidden"}>${colorFields}</div><textarea class="cpd-slide-style-prompt-output" data-slide-style-prompt-output rows="9" readonly spellcheck="false" aria-label="복사할 발표자료 디자인 지시문">${escapeHtml(prompt)}</textarea><footer><span>스타일·색상·레이아웃·타이포그래피·금지 조건 포함</span><button type="button" class="cpd-btn primary" data-action="copy-slide-style-prompt">문구만 복사</button></footer></section>`;
+  }
+
+  function syncSlideStylePromptTool() {
+    const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
+    const tool = document.querySelector("#cpdSlideStyleDialog .cpd-slide-style-prompt-tool");
+    if (!style || !tool) return;
+    tool.outerHTML = renderSlideStylePromptTool(style);
+  }
+
+  function syncSlideStylePromptOutput() {
+    const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
+    const dialog = document.getElementById("cpdSlideStyleDialog");
+    if (!style || !dialog) return;
+    const palette = slideStylePromptColors(style, slideStyleUi.promptPaletteMode);
+    const output = dialog.querySelector("[data-slide-style-prompt-output]");
+    if (output) output.value = buildSlideStyleCopyPrompt(style, palette, slideStylePromptPaletteName(style));
+    SLIDE_STYLE_PROMPT_COLOR_ROLES.forEach(([role]) => {
+      const color = palette[role];
+      const input = dialog.querySelector(`[data-slide-style-prompt-color="${role}"]`);
+      const value = dialog.querySelector(`[data-slide-style-prompt-color-value="${role}"]`);
+      if (input && input.value.toUpperCase() !== color) input.value = color;
+      if (value) value.textContent = color;
+    });
   }
 
   function loadUserPresets() {
@@ -1348,7 +1526,7 @@
     const previousBody = dialog.querySelector(".cpd-slide-style-dialog-body");
     if (previousBody) slideStyleGalleryScrollTop = previousBody.scrollTop;
     disconnectSlideStyleAutoLoad();
-    dialog.innerHTML = `<section class="cpd-dialog cpd-slide-style-dialog" role="dialog" aria-modal="true" aria-labelledby="cpdSlideStyleTitle" aria-describedby="cpdSlideStyleDesc"><div class="cpd-dialog-head"><div><span>STYLE GALLERY</span><h3 id="cpdSlideStyleTitle">슬라이드 디자인 스타일 갤러리</h3><p id="cpdSlideStyleDesc">목적과 분위기에 맞는 프리셋을 고른 뒤 적용 범위를 선택하세요.</p></div><button type="button" class="cpd-dialog-close" data-action="close-slide-style-gallery" aria-label="스타일 갤러리 닫기">×</button></div><div class="cpd-slide-style-dialog-body">${renderSlideStyleGallery()}</div><div class="cpd-dialog-actions cpd-slide-style-dialog-actions">${renderSlideStyleCurrent()}<button type="button" class="cpd-btn primary" data-action="close-slide-style-gallery">설정 마치기</button></div></section>`;
+    dialog.innerHTML = `<section class="cpd-dialog cpd-slide-style-dialog" role="dialog" aria-modal="true" aria-labelledby="cpdSlideStyleTitle" aria-describedby="cpdSlideStyleDesc"><div class="cpd-dialog-head"><div><span>STYLE GALLERY</span><h3 id="cpdSlideStyleTitle">슬라이드 디자인 스타일 갤러리</h3><p id="cpdSlideStyleDesc">스타일을 고른 뒤 색상을 맞춰 발표자료 제작 문구로 복사하거나 PromptDeck 공통 디자인에 적용하세요.</p></div><button type="button" class="cpd-dialog-close" data-action="close-slide-style-gallery" aria-label="스타일 갤러리 닫기">×</button></div><div class="cpd-slide-style-dialog-body">${renderSlideStyleGallery()}</div><div class="cpd-dialog-actions cpd-slide-style-dialog-actions">${renderSlideStyleCurrent()}<button type="button" class="cpd-btn primary" data-action="close-slide-style-gallery">설정 마치기</button></div></section>`;
     dialog.hidden = false;
     document.body.classList.add("cpd-dialog-open");
     setupSlideStyleAutoLoad(dialog);
@@ -1467,6 +1645,7 @@
   function renderSlideStyleDraft() {
     const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
     if (!style) return "";
+    ensureSlideStylePromptPalette(style);
     const palette = style.settings.colors;
     const swatches = [palette.primary, palette.secondary, palette.accent, palette.background, palette.textPrimary]
       .map((color) => `<i style="background:${escapeHtml(color)}" aria-hidden="true"></i>`).join("");
@@ -1478,14 +1657,14 @@
     const facetMarkup = facetBadges.length ? `<div class="cpd-slide-style-draft-facets">${[...new Set(facetBadges)].map((labelText) => `<span>${escapeHtml(labelText)}</span>`).join("")}</div>` : "";
     return `<section class="cpd-slide-style-draft" aria-labelledby="cpdSlideStyleDraftTitle">
       <div class="cpd-slide-style-draft-preview">${renderSlideStylePreview(style, `${style.nameKo} 적용 전 미리보기`)}</div>
-      <div class="cpd-slide-style-draft-copy"><span>${escapeHtml(SLIDE_STYLE_CATALOG.categoryLabel(style.category))}</span><h4 id="cpdSlideStyleDraftTitle">${escapeHtml(style.nameKo)} <small>${escapeHtml(style.nameEn)}</small></h4><p>${escapeHtml(style.description)}</p>${facetMarkup}<div class="cpd-slide-style-draft-meta"><span class="cpd-slide-style-swatches" role="img" aria-label="${escapeHtml(`${style.nameKo} 대표 색상 5종`)}">${swatches}</span><strong>${escapeHtml(style.bestFor)}</strong></div><div class="cpd-slide-style-scope-note"><strong>적용 범위 선택</strong><span>인상만 적용하면 현재 팔레트와 타이포그래피를 유지합니다. 전체 적용은 시각 문법·색상·글자·배경·활용 자원을 함께 맞춥니다.</span></div><div class="cpd-button-row cpd-slide-style-draft-actions"><button type="button" class="cpd-btn" data-action="apply-slide-style-character">디자인 인상만 적용</button><button type="button" class="cpd-btn primary" data-action="apply-slide-style-full">전체 디자인 적용</button><button type="button" class="cpd-btn" data-action="cancel-slide-style-draft">취소</button></div></div>
+      <div class="cpd-slide-style-draft-copy"><span>${escapeHtml(SLIDE_STYLE_CATALOG.categoryLabel(style.category))}</span><h4 id="cpdSlideStyleDraftTitle">${escapeHtml(style.nameKo)} <small>${escapeHtml(style.nameEn)}</small></h4><p>${escapeHtml(style.description)}</p>${facetMarkup}<div class="cpd-slide-style-draft-meta"><span class="cpd-slide-style-swatches" role="img" aria-label="${escapeHtml(`${style.nameKo} 대표 색상 5종`)}">${swatches}</span><strong>${escapeHtml(style.bestFor)}</strong></div>${renderSlideStylePromptTool(style)}<div class="cpd-slide-style-scope-note"><strong>PromptDeck 공통 디자인에도 적용하기</strong><span>인상만 적용하면 현재 팔레트와 타이포그래피를 유지합니다. 전체 적용은 시각 문법·색상·글자·배경·활용 자원을 함께 맞춥니다.</span></div><div class="cpd-button-row cpd-slide-style-draft-actions"><button type="button" class="cpd-btn" data-action="apply-slide-style-character">디자인 인상만 적용</button><button type="button" class="cpd-btn primary" data-action="apply-slide-style-full">전체 디자인 적용</button><button type="button" class="cpd-btn" data-action="cancel-slide-style-draft">취소</button></div></div>
     </section>`;
   }
 
   function renderSlideStyleInspector() {
     const draft = renderSlideStyleDraft();
     if (draft) return `<aside class="cpd-slide-style-inspector has-selection" aria-label="선택한 스타일 상세 설정">${draft}</aside>`;
-    return '<aside class="cpd-slide-style-inspector" aria-label="선택한 스타일 상세 설정"><div class="cpd-slide-style-inspector-empty"><span>STYLE PRESET</span><strong>스타일을 선택하세요</strong><p>목록의 카드를 누르면 이 영역에서 큰 미리보기와 적용 범위를 바로 확인할 수 있습니다.</p></div></aside>';
+    return '<aside class="cpd-slide-style-inspector" aria-label="선택한 스타일 상세 설정"><div class="cpd-slide-style-inspector-empty"><span>STYLE PRESET</span><strong>스타일을 선택하세요</strong><p>목록의 카드를 누르면 큰 미리보기, 색상 선택, 복사용 제작 문구를 바로 확인할 수 있습니다.</p></div></aside>';
   }
 
   function syncSlideStyleSelectionUi() {
@@ -1502,7 +1681,7 @@
     const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
     if (!style) {
       inspector.classList.remove("has-selection");
-      inspector.innerHTML = '<div class="cpd-slide-style-inspector-empty"><span>STYLE PRESET</span><strong>스타일을 선택하세요</strong><p>목록의 카드를 누르면 이 영역에서 큰 미리보기와 적용 범위를 바로 확인할 수 있습니다.</p></div>';
+      inspector.innerHTML = '<div class="cpd-slide-style-inspector-empty"><span>STYLE PRESET</span><strong>스타일을 선택하세요</strong><p>목록의 카드를 누르면 큰 미리보기, 색상 선택, 복사용 제작 문구를 바로 확인할 수 있습니다.</p></div>';
       inspector.scrollTop = 0;
       return;
     }
@@ -1564,6 +1743,8 @@
       swatches.setAttribute("aria-label", `${style.nameKo} 대표 색상 5종`);
       swatches.querySelectorAll("i").forEach((swatch, index) => { swatch.style.background = colors[index] || ""; });
     }
+    const promptTool = draft.querySelector(".cpd-slide-style-prompt-tool");
+    if (promptTool) promptTool.outerHTML = renderSlideStylePromptTool(style);
     inspector.scrollTop = 0;
   }
 
@@ -5148,6 +5329,23 @@
     try { await navigator.clipboard.writeText(text); toast("공통 프롬프트를 복사했습니다."); }
     catch (_) { document.getElementById("commonPromptOutput")?.select(); toast("직접 선택해 복사해주세요."); }
   }
+  async function copySlideStylePrompt() {
+    const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
+    if (!style) {
+      toast("복사할 슬라이드 스타일을 먼저 선택해주세요.");
+      return;
+    }
+    const output = document.querySelector("#cpdSlideStyleDialog [data-slide-style-prompt-output]");
+    const text = output?.value || buildSlideStyleCopyPrompt(style, slideStylePromptColors(style), slideStylePromptPaletteName(style));
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(`${style.nameKo} 발표자료 제작 문구를 복사했습니다.`);
+    } catch (_) {
+      output?.focus();
+      output?.select();
+      toast("문구를 선택했습니다. Ctrl+C로 복사해주세요.");
+    }
+  }
   function sendToGenerator() {
     const text = generate(false);
     if (!text) return;
@@ -5541,6 +5739,7 @@
       refresh({ full: true });
       return;
     }
+    if (action === "copy-slide-style-prompt") return copySlideStylePrompt();
     if (action === "apply-slide-style-character") return applySlideStyle(slideStyleUi.draftId, "character");
     if (action === "apply-slide-style-full") return applySlideStyle(slideStyleUi.draftId, "full");
     if (action === "cancel-slide-style-draft") {
@@ -5770,6 +5969,19 @@
     if (userPresetOverwrite) { overwriteUserPreset(userPresetOverwrite.dataset.userPresetOverwrite); return; }
     const userPresetDelete = event.target.closest("[data-user-preset-delete]");
     if (userPresetDelete) { deleteUserPreset(userPresetDelete.dataset.userPresetDelete); return; }
+    const slideStylePromptPaletteMode = event.target.closest("[data-slide-style-prompt-palette-mode]");
+    if (slideStylePromptPaletteMode) {
+      const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
+      const nextMode = slideStylePromptPaletteMode.dataset.slideStylePromptPaletteMode;
+      if (!style || !["preset", "current", "custom"].includes(nextMode)) return;
+      ensureSlideStylePromptPalette(style);
+      if (nextMode === "custom" && slideStyleUi.promptPaletteMode !== "custom") {
+        slideStyleUi.promptColors = slideStylePromptColors(style, slideStyleUi.promptPaletteMode);
+      }
+      slideStyleUi.promptPaletteMode = nextMode;
+      syncSlideStylePromptTool();
+      return;
+    }
     const slideStyleCategory = event.target.closest("[data-slide-style-category]");
     if (slideStyleCategory) {
       slideStyleUi.category = slideStyleCategory.dataset.slideStyleCategory || "recommended";
@@ -5782,7 +5994,9 @@
     const slideStyleCard = event.target.closest("[data-slide-style-id]");
     if (slideStyleCard) {
       const styleId = slideStyleCard.dataset.slideStyleId;
-      slideStyleUi.draftId = slideStyleUi.draftId === styleId ? "" : styleId;
+      const shouldSelect = slideStyleUi.draftId !== styleId;
+      slideStyleUi.draftId = shouldSelect ? styleId : "";
+      if (shouldSelect) resetSlideStylePromptPalette(SLIDE_STYLE_CATALOG?.get?.(styleId));
       syncSlideStyleSelectionUi();
       return;
     }
@@ -6047,6 +6261,18 @@
       quickStartDraft.sourceLength = target.value.length;
       const count = document.getElementById("cpdQuickSourceCount");
       if (count) count.textContent = `${target.value.length.toLocaleString("ko-KR")} / 30,000자`;
+      return;
+    }
+    if (target.dataset.slideStylePromptColor) {
+      const style = SLIDE_STYLE_CATALOG?.get?.(slideStyleUi.draftId);
+      const role = target.dataset.slideStylePromptColor;
+      if (!style || !SLIDE_STYLE_PROMPT_COLOR_ROLES.some(([key]) => key === role)) return;
+      slideStyleUi.promptPaletteMode = "custom";
+      slideStyleUi.promptColors = {
+        ...slideStylePromptColors(style, "custom"),
+        [role]: normalizeSlideStylePromptColor(target.value, style.settings?.colors?.[role]),
+      };
+      syncSlideStylePromptOutput();
       return;
     }
     if (target.matches("[data-slide-style-query]")) { slideStyleUi.query = target.value; return; }
@@ -6349,7 +6575,7 @@
       state.schemaVersion = SCHEMA_VERSION;
       expandedSteps = new Set();
       directionDraft = null;
-      slideStyleUi = { category: "recommended", query: "", draftId: "", visible: 24 };
+      slideStyleUi = createSlideStyleUi();
       directionUi.source = state.visualDirection.source === "visual-mixer" ? "mixer" : state.visualDirection.source === "custom" ? "custom" : "common";
       typographyDraft = null;
       typographyUi = { source: state.typography.source === "visual-mixer" ? "mixer" : state.typography.source === "custom" ? "custom" : "common", category: "recommended", visible: 12, scope: state.typography.visualTypographyScope || "headline" };
@@ -6364,6 +6590,10 @@
     getState: () => clone(state),
     validate: () => clone(validateFiveStageState()),
     buildPrompt,
+    buildSlideStyleCopyPrompt: (styleId, palette) => {
+      const style = SLIDE_STYLE_CATALOG?.get?.(styleId);
+      return style ? buildSlideStyleCopyPrompt(style, palette || slideStylePromptColors(style, "preset"), style.settings?.colors?.paletteNameKo) : "";
+    },
     sendToGenerator,
   };
   refresh({ full: true });
