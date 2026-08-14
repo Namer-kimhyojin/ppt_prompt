@@ -510,7 +510,9 @@ async function verifyBrowsers(origins, head) {
       for (const viewport of [{ width: 1920, height: 1080 }, { width: 1440, height: 1000 }, { width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 375, height: 667 }, { width: 844, height: 390 }]) {
         const label = `browser ${origin} at ${viewport.width}x${viewport.height}`;
         console.log(`[release] Verifying ${label}`);
-        await retry(label, () => verifyBrowserSurface(browser, origin, viewport, head.slice(0, 12)), 8, 2_500);
+        // Fresh edge nodes can briefly mix old and new static assets after upload.
+        // Match the bounded two-minute propagation window used by the HTTP checks.
+        await retry(label, () => verifyBrowserSurface(browser, origin, viewport, head.slice(0, 12)), 60, 2_000);
       }
     }
   } finally {
