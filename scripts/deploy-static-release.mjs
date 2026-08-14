@@ -430,7 +430,8 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
         pdfVisible: isVisible("#labelSheetExportPdfBtn"),
         workspaceReady: document.querySelector("#paneLabelSheet")?.dataset.labelWorkspaceLayoutReady === "true",
         workspaceRecordCount: document.querySelectorAll("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").length,
-        workspaceDocumentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1,
+        workspaceDocumentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1
+          && getComputedStyle(document.body).overflowY !== "hidden",
         workspaceHeaderDisplay: getComputedStyle(document.querySelector(".app-header")).display,
         workspaceBottomCollapsed: document.querySelector("#paneLabelSheet")?.classList.contains("is-bottom-collapsed"),
         workspaceToolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
