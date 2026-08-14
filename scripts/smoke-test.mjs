@@ -3340,6 +3340,8 @@ SLIDE-TWO-CONTENT`);
         project.settings.recordTextLayouts?.["record:MEAL-RENAMED"]?.front?.withQr?.title?.widthPercent === 62 &&
         !project.settings.recordTextLayouts?.["record:MEAL-001"];
     });
+    await page.waitForFunction(() => document.querySelector("#labelSheetFocusDescription")?.textContent.includes("MEAL-RENAMED")
+      && !document.querySelector("#labelSheetFocusEditor")?.classList.contains("is-rendering"));
     record(
       await firstRecordSelection.isChecked() && (await page.locator("#labelSheetRecordTableBody tr").first().getAttribute("data-record-id")) === "MEAL-RENAMED",
       "Label-sheet ID edit lost the selected row or left a stale row identity",
