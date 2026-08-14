@@ -343,6 +343,11 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
       await page.reload({ waitUntil: "domcontentloaded", timeout: 60_000 });
       await page.waitForFunction(() => Boolean(window.PromptDeckDataDiagram && window.PromptDeckTabs), null, { timeout: 30_000 });
       await assertOnlyPane("paneCommonPrompt", "same-URL reload");
+      await page.waitForLoadState("load");
+      await page.waitForTimeout(250);
+      // Reloading cancels unfinished image/ad requests from the previous document.
+      // Keep console/page errors, but do not treat those expected navigation aborts as failures.
+      requestFailures.length = 0;
     }
     assert((await page.locator("#diagramOpenSlideStyleGalleryBtn").count()) === 1, `${origin} edge still serves HTML without the full gallery control`);
     await page.evaluate(() => window.PromptDeckTabs.switchTab("dataDiagram"));
