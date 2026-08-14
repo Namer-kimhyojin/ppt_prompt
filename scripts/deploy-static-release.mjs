@@ -195,6 +195,7 @@ async function verifyAssetHashes(origin, head) {
     "src/data-diagram.js",
     "src/visual-style-contract.js",
     "src/slide-style-presets/visual-spectrum.js",
+    "src/slide-style-presets/proposal-planning.js",
     "src/slide-style-catalog.js",
     "styles/data-diagram.css",
     "src/static-mode.js",
@@ -211,7 +212,9 @@ async function verifyAssetHashes(origin, head) {
     "styles/label-sheet.css",
     "styles/label-sheet-workspace.css",
     "assets/slide-style-previews/decision-memo.jpg",
+    "assets/slide-style-previews/annual-business-plan.jpg",
     "assets/slide-style-previews/visual-spectrum-provenance.json",
+    "assets/slide-style-previews/proposal-planning-provenance.json",
   ];
   const hashes = {};
   for (const filename of files) {
@@ -223,19 +226,22 @@ async function verifyAssetHashes(origin, head) {
     assert(remoteHash === localHash, `${origin}/${filename} hash mismatch`);
     hashes[filename] = localHash;
   }
-  const provenance = JSON.parse(await fs.readFile(path.join(distDir, "assets", "slide-style-previews", "visual-spectrum-provenance.json"), "utf8"));
-  assert(provenance.sourceKind === "ai-image-generation" && provenance.reviewStatus === "visual-review-passed", "visual-spectrum provenance is not release-approved");
-  assert(Array.isArray(provenance.assets) && provenance.assets.length === 24, "visual-spectrum provenance must contain 24 assets");
-  for (const asset of provenance.assets) {
-    const filename = `assets/slide-style-previews/${asset.file}`;
-    const local = await fs.readFile(path.join(distDir, ...filename.split("/")));
-    const localHash = sha256(local);
-    assert(localHash === asset.sha256, `${filename} does not match reviewed provenance`);
-    const response = await fetchChecked(`${origin}/${filename}?release=${head}`);
-    assert(response.status === 200, `${origin}/${filename} returned ${response.status}`);
-    const remoteHash = sha256(Buffer.from(await response.arrayBuffer()));
-    assert(remoteHash === localHash, `${origin}/${filename} hash mismatch`);
-    hashes[filename] = localHash;
+  for (const [manifestFile, packKey] of [["visual-spectrum-provenance.json", "visualSpectrum"], ["proposal-planning-provenance.json", "proposalPlanning"]]) {
+    const provenance = JSON.parse(await fs.readFile(path.join(distDir, "assets", "slide-style-previews", manifestFile), "utf8"));
+    assert(provenance.pack === packKey, `${manifestFile} pack mismatch`);
+    assert(provenance.sourceKind === "ai-image-generation" && provenance.reviewStatus === "visual-review-passed", `${manifestFile} is not release-approved`);
+    assert(Array.isArray(provenance.assets) && provenance.assets.length === 24, `${manifestFile} must contain 24 assets`);
+    for (const asset of provenance.assets) {
+      const filename = `assets/slide-style-previews/${asset.file}`;
+      const local = await fs.readFile(path.join(distDir, ...filename.split("/")));
+      const localHash = sha256(local);
+      assert(localHash === asset.sha256, `${filename} does not match reviewed provenance`);
+      const response = await fetchChecked(`${origin}/${filename}?release=${head}`);
+      assert(response.status === 200, `${origin}/${filename} returned ${response.status}`);
+      const remoteHash = sha256(Buffer.from(await response.arrayBuffer()));
+      assert(remoteHash === localHash, `${origin}/${filename} hash mismatch`);
+      hashes[filename] = localHash;
+    }
   }
   return hashes;
 }
@@ -271,6 +277,8 @@ async function verifyHttpContracts(origin) {
 
   response = await fetchChecked(`${origin}/assets/slide-style-previews/decision-memo.jpg`);
   assert(response.status === 200, `${origin} slide-style preview asset returned ${response.status}`);
+  response = await fetchChecked(`${origin}/assets/slide-style-previews/annual-business-plan.jpg`);
+  assert(response.status === 200, `${origin} proposal-planning preview asset returned ${response.status}`);
 
   for (const privatePath of ["/server/local-server.js", "/.env", "/static-deploy.json", "/.git/config"]) {
     response = await fetchChecked(`${origin}${privatePath}`, { redirect: "manual" });
@@ -322,7 +330,13 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
       revision: new URL(image.currentSrc || image.src).searchParams.get("v"),
     }));
     assert(reviewedPreviewState.loaded, `${origin} reviewed AI preview did not load at 960x540`);
-    assert(reviewedPreviewState.revision === "13", `${origin} reviewed AI preview did not use revision 13`);
+    assert(reviewedPreviewState.revision === "14", `${origin} reviewed AI preview did not use revision 14`);
+    await page.locator("#diagramSlideStyleSearch").fill("Annual Business Plan");
+    await page.waitForFunction(() => document.querySelectorAll('#diagramSlideStyleAllGrid [data-slide-style-id="annual-business-plan"]').length === 1);
+    const proposalPreview = page.locator('#diagramSlideStyleAllGrid [data-slide-style-id="annual-business-plan"] img');
+    assert((await proposalPreview.count()) === 1, `${origin} gallery omitted the proposal-planning preview`);
+    await proposalPreview.evaluate((image) => image.decode());
+    assert(await proposalPreview.evaluate((image) => image.complete && image.naturalWidth === 960 && image.naturalHeight === 540), `${origin} proposal-planning preview did not load at 960x540`);
     const layout = await page.locator("#diagramSlideStyleDialog .diagram-style-dialog").evaluate((dialog) => {
       const body = dialog.querySelector(".diagram-style-dialog-body");
       return {
@@ -333,7 +347,7 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
         pageOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
       };
     });
-    assert(layout.count === 180, `${origin} browser did not load the 180-style catalog`);
+    assert(layout.count === 204, `${origin} browser did not load the 204-style catalog`);
     assert(layout.dialogWidth <= layout.viewportWidth + 1, `${origin} gallery dialog overflowed ${viewport.width}px viewport`);
     assert(!layout.bodyOverflow && !layout.pageOverflow, `${origin} gallery produced horizontal overflow at ${viewport.width}px`);
     await page.locator("#diagramSlideStyleDialog [data-diagram-style-dialog-close]").last().click();

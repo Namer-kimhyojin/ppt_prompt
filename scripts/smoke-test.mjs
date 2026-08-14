@@ -629,8 +629,14 @@ async function runSmokeTest() {
     record((await page.locator("#cpdSlideStyleDialog .cpd-slide-style-workspace").count()) === 1 && (await page.locator("#cpdSlideStyleDialog .cpd-slide-style-inspector").count()) === 1, "Slide style modal did not render the fixed inspector workspace", failures);
     const slideStyleGridColumns = await page.locator("#cpdSlideStyleDialog .cpd-slide-style-grid").evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(" ").filter(Boolean).length);
     record(slideStyleGridColumns === 3, `Slide style gallery did not use the compact three-column desktop grid (actual: ${slideStyleGridColumns})`, failures);
-    record((await page.locator("#cpdSlideStyleDialog .cpd-slide-style-facet-panel").count()) === 1 && (await page.locator("#cpdSlideStyleDialog [data-slide-style-filter]").count()) === 5, "Slide style workflow facet filters were not rendered", failures);
+    record((await page.locator("#cpdSlideStyleDialog .cpd-slide-style-facet-panel").count()) === 1 && (await page.locator("#cpdSlideStyleDialog [data-slide-style-filter]").count()) === 6 && (await page.locator('#cpdSlideStyleDialog [data-slide-style-filter="useCase"]').count()) === 1, "Slide style workflow facet filters were not rendered", failures);
     record((await page.locator('.cpd-slide-style-card').count()) === slideStyleMeta.recommended, `Recommended slide style gallery did not show the curated set (expected ${slideStyleMeta.recommended})`, failures);
+    const proposalUseCaseCount = await page.evaluate(() => window.PromptDeckSlideStyleCatalog?.list?.({ category: "all", useCase: "proposal" }).length || 0);
+    await page.selectOption('[data-slide-style-filter="useCase"]', "proposal");
+    const proposalUseCaseRenderedCount = await page.locator('.cpd-slide-style-card').count();
+    const proposalUseCaseReportedCount = Number((await page.locator('#cpdSlideStyleDialog .cpd-slide-style-count strong').textContent()).replace(/,/g, ""));
+    record(proposalUseCaseCount > 0 && proposalUseCaseReportedCount === proposalUseCaseCount && proposalUseCaseRenderedCount === Math.min(24, proposalUseCaseCount), "Proposal use-case filter did not report and render the expected presets", failures);
+    await page.click('[data-action="clear-slide-style-filters"]');
     await page.selectOption('[data-slide-style-filter="workStage"]', "poc");
     record((await page.locator('.cpd-slide-style-card').count()) === 2 && (await page.locator('[data-slide-style-id="tc-poc-plan"]').count()) === 1 && (await page.locator('[data-slide-style-id="tc-poc-result-scaleup"]').count()) === 1, "PoC workflow filter did not show the two PoC presets", failures);
     const pocStylePreview = page.locator('[data-slide-style-id="tc-poc-plan"] .cpd-slide-style-preview-image');
@@ -642,6 +648,16 @@ async function runSmokeTest() {
     const pocStylePreviewSize = await pocStylePreview.evaluate((image) => ({ width: image.naturalWidth, height: image.naturalHeight }));
     record(pocStylePreviewSize.width === 960 && pocStylePreviewSize.height === 540, "PoC generated preview did not load at the expected 960x540 source size", failures);
     await page.click('[data-action="clear-slide-style-filters"]');
+    await page.click('[data-slide-style-category="proposal-planning"]');
+    record((await page.locator('.cpd-slide-style-card').count()) === 24 && (await page.locator('[data-slide-style-id="annual-business-plan"]').count()) === 1 && (await page.locator('[data-slide-style-id="monitoring-evaluation-plan"]').count()) === 1, "Proposal and planning category did not show all 24 presets", failures);
+    const annualPlanPreview = page.locator('[data-slide-style-id="annual-business-plan"] .cpd-slide-style-preview-image');
+    await annualPlanPreview.scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => {
+      const image = document.querySelector('[data-slide-style-id="annual-business-plan"] .cpd-slide-style-preview-image');
+      return image?.complete && image.naturalWidth > 0;
+    });
+    const annualPlanPreviewSize = await annualPlanPreview.evaluate((image) => ({ width: image.naturalWidth, height: image.naturalHeight }));
+    record(annualPlanPreviewSize.width === 960 && annualPlanPreviewSize.height === 540, "Annual Business Plan preview did not load at the expected 960x540 source size", failures);
     await page.click('[data-slide-style-category="event-guidance"]');
     record((await page.locator('.cpd-slide-style-card').count()) === 12 && (await page.locator('[data-slide-style-id="event-seminar-overview"]').count()) === 1, "Event guidance category did not show the 12 event presets", failures);
     await page.selectOption('[data-slide-style-filter="workStage"]', "event-delivery");

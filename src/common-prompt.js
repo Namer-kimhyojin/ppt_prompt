@@ -297,11 +297,15 @@
   let colorHoverDraft = null;
   let colorUi = { query: "", intent: "all", temperature: "all", saturation: "all", contrast: "all", category: "all", mode: "all", usage: "all", visible: 12 };
   let directionDraft = null;
+  const initialSlideStyleVisible = (category = "recommended") => category === "recommended"
+    ? Math.max(24, SLIDE_STYLE_CATALOG?.list?.({ category: "recommended" })?.length || 0)
+    : 24;
   const createSlideStyleUi = () => ({
     category: "recommended",
     query: "",
     draftId: "",
-    visible: 24,
+    visible: initialSlideStyleVisible("recommended"),
+    useCase: "all",
     workStage: "all",
     documentType: "all",
     audience: "all",
@@ -314,14 +318,19 @@
   let slideStyleUi = createSlideStyleUi();
   const SLIDE_STYLE_FACET_FILTERS = [
     {
+      key: "useCase",
+      label: "문서목적",
+      options: [["all", "전체 목적"], ["proposal", "제안"], ["planning", "기획·계획"], ["strategy", "전략"], ["execution", "실행"], ["sales", "영업"], ["service", "서비스"], ["product", "제품"], ["partnership", "협업·제휴"], ["research", "연구"], ["public", "공공"]],
+    },
+    {
       key: "workStage",
       label: "업무단계",
-      options: [["all", "전체 단계"], ["discover", "기술 발굴"], ["diagnose", "진단"], ["evaluate", "평가·선정"], ["strategy", "전략 수립"], ["transfer", "기술이전·매칭"], ["poc", "PoC·실증"], ["market-entry", "시장진입"], ["performance", "성과관리"], ["risk", "리스크 대응"], ["event-promotion", "행사 모집·홍보"], ["event-agenda", "프로그램 구성"], ["event-delivery", "행사 진행"], ["event-followup", "결과·후속"]],
+      options: [["all", "전체 단계"], ["opportunity", "기회·문제 탐색"], ["proposal", "제안 설계"], ["planning", "실행계획"], ["strategy", "전략 수립"], ["execution", "수행·전환"], ["partnership", "협업·제휴"], ["research-planning", "연구기획"], ["monitoring", "모니터링"], ["discover", "기술 발굴"], ["diagnose", "진단"], ["evaluate", "평가·선정"], ["transfer", "기술이전·매칭"], ["poc", "PoC·실증"], ["market-entry", "시장진입"], ["performance", "성과관리"], ["risk", "리스크 대응"], ["event-promotion", "행사 모집·홍보"], ["event-agenda", "프로그램 구성"], ["event-delivery", "행사 진행"], ["event-followup", "결과·후속"]],
     },
     {
       key: "documentType",
       label: "문서유형",
-      options: [["all", "전체 문서"], ["diagnostic-report", "종합진단"], ["evaluation-board", "선정평가"], ["roadmap", "전략 로드맵"], ["tech-brief", "Tech Brief"], ["matching-board", "기술 매칭"], ["poc-plan", "PoC 기획"], ["poc-result", "PoC 결과"], ["portfolio-dashboard", "포트폴리오 관제"], ["case-study", "우수사례"], ["bm-plan", "BM 설계"], ["terms-comparison", "이전조건 비교"], ["gtm-plan", "GTM 전략"], ["investment-linkage", "투자·금융"], ["market-linkage", "조달·수출"], ["performance-report", "성과관리"], ["risk-register", "리스크 대응"], ["event-overview", "행사 개요"], ["registration-call", "참가 모집"], ["workshop-agenda", "워크숍 일정"], ["speaker-profile", "연사 소개"], ["multi-track-program", "멀티트랙"], ["hands-on-workshop", "실습 안내"], ["roundtable-guide", "라운드테이블"], ["venue-guide", "현장 동선"], ["webinar-guide", "웨비나"], ["academic-symposium", "학술 프로그램"], ["demo-showcase", "데모데이"], ["post-event-followup", "행사 후속"]],
+      options: [["all", "전체 문서"], ["business-plan", "사업·전략계획"], ["bid-proposal", "입찰·수주제안"], ["execution-plan", "수행·실행계획"], ["service-plan", "서비스·제품기획"], ["commercial-proposal", "영업·협업제안"], ["public-research-plan", "공공·연구기획"], ["diagnostic-report", "종합진단"], ["evaluation-board", "선정평가"], ["roadmap", "전략 로드맵"], ["tech-brief", "Tech Brief"], ["matching-board", "기술 매칭"], ["poc-plan", "PoC 기획"], ["poc-result", "PoC 결과"], ["portfolio-dashboard", "포트폴리오 관제"], ["case-study", "우수사례"], ["bm-plan", "BM 설계"], ["terms-comparison", "이전조건 비교"], ["gtm-plan", "GTM 전략"], ["investment-linkage", "투자·금융"], ["market-linkage", "조달·수출"], ["performance-report", "성과관리"], ["risk-register", "리스크 대응"], ["event-overview", "행사 개요"], ["registration-call", "참가 모집"], ["workshop-agenda", "워크숍 일정"], ["speaker-profile", "연사 소개"], ["multi-track-program", "멀티트랙"], ["hands-on-workshop", "실습 안내"], ["roundtable-guide", "라운드테이블"], ["venue-guide", "현장 동선"], ["webinar-guide", "웨비나"], ["academic-symposium", "학술 프로그램"], ["demo-showcase", "데모데이"], ["post-event-followup", "행사 후속"]],
     },
     {
       key: "audience",
@@ -1751,6 +1760,7 @@
     return SLIDE_STYLE_CATALOG?.list?.({
       category: slideStyleUi.category,
       query: slideStyleUi.query,
+      useCase: slideStyleUi.useCase,
       workStage: slideStyleUi.workStage,
       documentType: slideStyleUi.documentType,
       audience: slideStyleUi.audience,
@@ -1762,7 +1772,7 @@
   function renderSlideStyleFacetFilters() {
     const activeCount = SLIDE_STYLE_FACET_FILTERS.filter((filter) => slideStyleUi[filter.key] !== "all").length;
     const fields = SLIDE_STYLE_FACET_FILTERS.map((filter) => `<label><span>${escapeHtml(filter.label)}</span><select class="cpd-input" data-slide-style-filter="${filter.key}">${filter.options.map(([value, labelText]) => `<option value="${escapeHtml(value)}"${slideStyleUi[filter.key] === value ? " selected" : ""}>${escapeHtml(labelText)}</option>`).join("")}</select></label>`).join("");
-    return `<div class="cpd-slide-style-facet-panel"><div class="cpd-slide-style-facet-head"><div><strong>업무·행사 조건으로 좁히기</strong><span>기술사업화와 행사·교육 프리셋은 단계·문서·대상·진행수단을 함께 검색할 수 있습니다.</span></div>${activeCount ? `<button type="button" class="cpd-btn" data-action="clear-slide-style-filters">필터 ${activeCount}개 해제</button>` : ""}</div><div class="cpd-slide-style-facet-grid">${fields}</div></div>`;
+    return `<div class="cpd-slide-style-facet-panel"><div class="cpd-slide-style-facet-head"><div><strong>업무·문서 조건으로 좁히기</strong><span>제안·기획부터 기술사업화와 행사·교육까지 목적·단계·문서·대상·표현방식을 함께 검색할 수 있습니다.</span></div>${activeCount ? `<button type="button" class="cpd-btn" data-action="clear-slide-style-filters">필터 ${activeCount}개 해제</button>` : ""}</div><div class="cpd-slide-style-facet-grid">${fields}</div></div>`;
   }
 
   function renderSlideStyleCard(style, applied = selectedSlideStyle(), customized = isSlideStyleCustomized()) {
@@ -1815,7 +1825,7 @@
     const styles = allStyles.slice(0, slideStyleUi.visible);
     const cards = styles.length ? styles.map((style) => renderSlideStyleCard(style, applied, customized)).join("") : '<div class="cpd-slide-style-empty"><strong>조건에 맞는 스타일이 없습니다.</strong><span>검색어를 줄이거나 다른 카테고리를 선택해주세요.</span></div>';
     const autoLoad = renderSlideStyleAutoLoad(styles.length, allStyles.length);
-    return `<div class="cpd-slide-style-gallery"><div class="cpd-slide-style-toolbar"><label class="cpd-slide-style-search"><span>스타일 검색</span><div><input class="cpd-input" data-slide-style-query value="${escapeHtml(slideStyleUi.query)}" placeholder="예: PoC, 기술이전, 자기소개서, 베이지"><button type="button" class="cpd-btn" data-action="slide-style-search">검색</button>${slideStyleUi.query ? '<button type="button" class="cpd-btn" data-action="clear-slide-style-search">지우기</button>' : ""}</div></label><div class="cpd-slide-style-count"><strong>${allStyles.length}</strong><span>개 스타일</span></div></div><div class="cpd-slide-style-filters" role="tablist" aria-label="슬라이드 디자인 스타일 카테고리">${categories.map(([id, labelText]) => `<button type="button" role="tab" class="${slideStyleUi.category === id ? "active" : ""}" data-slide-style-category="${id}" aria-selected="${slideStyleUi.category === id}">${escapeHtml(labelText)}</button>`).join("")}</div>${renderSlideStyleFacetFilters()}<div class="cpd-slide-style-workspace"><div class="cpd-slide-style-browser"><div class="cpd-slide-style-grid">${cards}</div>${autoLoad}<p class="cpd-slide-style-footnote">각 미리보기는 해당 스타일의 시각 문법을 반영해 실제 생성한 샘플 슬라이드입니다. 실제 콘텐츠·수치·산업 대상은 개별 슬라이드 명세가 결정합니다.</p></div>${renderSlideStyleInspector()}</div></div>`;
+    return `<div class="cpd-slide-style-gallery"><div class="cpd-slide-style-toolbar"><label class="cpd-slide-style-search"><span>스타일 검색</span><div><input class="cpd-input" data-slide-style-query value="${escapeHtml(slideStyleUi.query)}" placeholder="예: 사업계획, RFP, 서비스 블루프린트, PoC"><button type="button" class="cpd-btn" data-action="slide-style-search">검색</button>${slideStyleUi.query ? '<button type="button" class="cpd-btn" data-action="clear-slide-style-search">지우기</button>' : ""}</div></label><div class="cpd-slide-style-count"><strong>${allStyles.length}</strong><span>개 스타일</span></div></div><div class="cpd-slide-style-filters" role="tablist" aria-label="슬라이드 디자인 스타일 카테고리">${categories.map(([id, labelText]) => `<button type="button" role="tab" class="${slideStyleUi.category === id ? "active" : ""}" data-slide-style-category="${id}" aria-selected="${slideStyleUi.category === id}">${escapeHtml(labelText)}</button>`).join("")}</div>${renderSlideStyleFacetFilters()}<div class="cpd-slide-style-workspace"><div class="cpd-slide-style-browser"><div class="cpd-slide-style-grid">${cards}</div>${autoLoad}<p class="cpd-slide-style-footnote">각 미리보기는 해당 스타일의 시각 문법을 반영해 실제 생성한 샘플 슬라이드입니다. 실제 콘텐츠·수치·산업 대상은 개별 슬라이드 명세가 결정합니다.</p></div>${renderSlideStyleInspector()}</div></div>`;
   }
 
   function renderVisualStyleJourney() {
@@ -5710,7 +5720,7 @@
     if (action === "slide-style-search") {
       slideStyleUi.query = root.querySelector("[data-slide-style-query]")?.value.trim() || "";
       slideStyleUi.draftId = "";
-      slideStyleUi.visible = 24;
+      slideStyleUi.visible = initialSlideStyleVisible(slideStyleUi.category);
       resetSlideStyleGalleryScroll();
       refresh({ full: true });
       return;
@@ -5718,7 +5728,7 @@
     if (action === "clear-slide-style-search") {
       slideStyleUi.query = "";
       slideStyleUi.draftId = "";
-      slideStyleUi.visible = 24;
+      slideStyleUi.visible = initialSlideStyleVisible(slideStyleUi.category);
       resetSlideStyleGalleryScroll();
       refresh({ full: true });
       return;
@@ -5726,7 +5736,7 @@
     if (action === "clear-slide-style-filters") {
       SLIDE_STYLE_FACET_FILTERS.forEach((filter) => { slideStyleUi[filter.key] = "all"; });
       slideStyleUi.draftId = "";
-      slideStyleUi.visible = 24;
+      slideStyleUi.visible = initialSlideStyleVisible(slideStyleUi.category);
       resetSlideStyleGalleryScroll();
       refresh({ full: true });
       return;
@@ -5978,7 +5988,7 @@
     if (slideStyleCategory) {
       slideStyleUi.category = slideStyleCategory.dataset.slideStyleCategory || "recommended";
       slideStyleUi.draftId = "";
-      slideStyleUi.visible = 24;
+      slideStyleUi.visible = initialSlideStyleVisible(slideStyleUi.category);
       resetSlideStyleGalleryScroll();
       refresh({ full: true });
       return;
@@ -6357,7 +6367,7 @@
     if (target.dataset.slideStyleFilter) {
       slideStyleUi[target.dataset.slideStyleFilter] = target.value;
       if (target.value !== "all" && slideStyleUi.category === "recommended") slideStyleUi.category = "all";
-      slideStyleUi.visible = 24;
+      slideStyleUi.visible = initialSlideStyleVisible(slideStyleUi.category);
       slideStyleUi.draftId = "";
       resetSlideStyleGalleryScroll();
       refresh({ full: true });

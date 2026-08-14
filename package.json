@@ -24,6 +24,7 @@
     "batch:mediums": "node scripts/batch-generate-mediums.mjs",
     "batch:photo-previews": "node scripts/batch-generate-photo-transform-previews.mjs",
     "slide-style:preview:visual": "node scripts/import-visual-spectrum-previews.mjs",
+    "slide-style:preview:proposal": "node scripts/import-visual-spectrum-previews.mjs --pack=proposalPlanning --manifest=proposal-planning-provenance.json --input-dir=tmp/proposal-planning-preview-selected",
     "slide-style:preview:visual:fallback": "node scripts/generate-visual-spectrum-previews.mjs --html-fallback",
     "slide-style:validate": "node scripts/validate-slide-style-catalog.mjs",
     "safe:check": "node scripts/safe-run.mjs",

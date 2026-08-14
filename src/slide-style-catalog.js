@@ -1,15 +1,16 @@
 (function (global) {
   "use strict";
 
-  const VERSION = 11;
+  const VERSION = 12;
   const RELEASE = Object.freeze({
-    expectedTotal: 180,
+    expectedTotal: 204,
     expectedNew: 24,
-    expectedRecommended: 24,
-    previewRevision: 13,
+    expectedRecommended: 30,
+    previewRevision: 14,
   });
   const CATEGORIES = [
     { id: "reporting", label: "보고·컨설팅", description: "의사결정, 정책, 데이터와 근거 전달" },
+    { id: "proposal-planning", label: "제안·기획", description: "사업계획, 입찰제안, 실행계획과 서비스·공공 기획" },
     { id: "korea-commercial", label: "한국 실무", description: "국내 기업·기관·산업 현장에서 자주 쓰는 상업 디자인" },
     { id: "technology-commercialization", label: "기술사업화", description: "기술 발굴, 검증, 이전, 시장진입과 성과관리 업무" },
     { id: "event-guidance", label: "행사·교육 안내", description: "세미나, 워크숍, 포럼과 교육 행사의 모집부터 후속 안내까지" },
@@ -1070,6 +1071,7 @@
 
   const CATEGORY_USE_CASES = {
     reporting: ["report"],
+    "proposal-planning": ["proposal", "planning"],
     "korea-commercial": ["proposal"],
     "technology-commercialization": ["technology-commercialization"],
     "event-guidance": ["event", "education"],

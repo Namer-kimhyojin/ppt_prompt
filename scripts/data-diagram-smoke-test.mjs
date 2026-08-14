@@ -109,11 +109,11 @@ try {
   record(contract.svg.includes('width="1920"') && contract.svg.includes('height="1080"'), "16:9 SVG export size is incorrect");
   record(contract.registry === "dataDiagram", "Data Diagram prompt source was not registered");
   record(contract.styleContractVersion === "1.1", "Shared VisualStyleContract v1.1 was not loaded");
-  record(contract.fullStyleCount === 180 && contract.styleCounts?.total === 180, "Data Diagram did not expose the complete 180-style slide gallery");
+  record(contract.fullStyleCount === 204 && contract.styleCounts?.total === 204, "Data Diagram did not expose the complete 204-style slide gallery");
   record(contract.styleCounts?.compatible > 10, "Diagram-compatible style count was still limited to the 10-card preview");
   record((await page.locator("#diagramBestMatch svg").textContent()).includes("참여기업 모집"), "Expected match did not use source labels");
 
-  record((await page.locator("#diagramSlideStyleCount").textContent()).includes("전체 갤러리 180개"), "Compact DNA gallery did not disclose the full catalog size");
+  record((await page.locator("#diagramSlideStyleCount").textContent()).includes("전체 갤러리 204개"), "Compact DNA gallery did not disclose the full catalog size");
   await page.click("#diagramOpenSlideStyleGalleryBtn");
   record(await page.locator("#diagramSlideStyleDialog").isVisible(), "Full slide-style gallery dialog did not open");
   const desktopGalleryGeometry = await page.locator("#diagramSlideStyleDialog").evaluate((backdrop) => {
@@ -137,7 +137,7 @@ try {
     "Full gallery heading or close control was clipped above the desktop viewport",
   );
   record((await page.locator("#diagramSlideStyleAllGrid .diagram-style-browser-card").count()) === 24, "Full gallery did not render its first 24-style batch");
-  record((await page.locator("#diagramSlideStyleCategories [role=tab]").count()) === 14, "Full gallery category navigation is incomplete");
+  record((await page.locator("#diagramSlideStyleCategories [role=tab]").count()) === 15, "Full gallery category navigation is incomplete");
   const desktopCategoryLayout = await page.locator("#diagramSlideStyleCategories").evaluate((categoryHost) => {
     const hostRect = categoryHost.getBoundingClientRect();
     const categories = [...categoryHost.querySelectorAll("[role=tab]")];

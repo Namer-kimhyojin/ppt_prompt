@@ -11,6 +11,7 @@ const sourceFiles = [
   "src/slide-style-presets/technology-commercialization.js",
   "src/slide-style-presets/event-guidance.js",
   "src/slide-style-presets/visual-spectrum.js",
+  "src/slide-style-presets/proposal-planning.js",
   "src/slide-style-catalog.js",
 ];
 const context = { console };
@@ -34,28 +35,40 @@ const byId = new Map();
 const byNameKo = new Map();
 const byNameEn = new Map();
 const requiredColorRoles = ["primary", "secondary", "accent", "background", "surface", "textPrimary", "textSecondary", "border"];
-const visualSpectrumDefinitions = context.window.PromptDeckSlideStylePresetPacks?.visualSpectrum || [];
-const visualSpectrumIds = new Set(visualSpectrumDefinitions.map((definition) => definition.id));
-const visualSpectrumById = new Map(visualSpectrumDefinitions.map((definition) => [definition.id, definition]));
-const provenancePath = path.resolve("assets/slide-style-previews/visual-spectrum-provenance.json");
-let provenance = null;
-try {
-  provenance = JSON.parse(fs.readFileSync(provenancePath, "utf8"));
-} catch (error) {
-  errors.push(`visual-spectrum provenance unavailable: ${error.message}`);
-}
-const provenanceAssets = new Map();
-if (provenance) {
-  if (provenance.sourceKind !== "ai-image-generation") errors.push("visual-spectrum provenance must identify AI image generation as the source");
-  if (provenance.reviewStatus !== "visual-review-passed") errors.push("visual-spectrum previews must pass visual review");
-  if (!Array.isArray(provenance.assets)) errors.push("visual-spectrum provenance assets must be an array");
+const reviewedPreviewPacks = [
+  { key: "visualSpectrum", manifest: "visual-spectrum-provenance.json" },
+  { key: "proposalPlanning", manifest: "proposal-planning-provenance.json" },
+];
+const reviewedDefinitions = new Map();
+const reviewedAssets = new Map();
+for (const pack of reviewedPreviewPacks) {
+  const definitions = context.window.PromptDeckSlideStylePresetPacks?.[pack.key] || [];
+  const definitionIds = new Set(definitions.map((definition) => definition.id));
+  definitions.forEach((definition) => reviewedDefinitions.set(definition.id, { definition, pack }));
+  let provenance = null;
+  try {
+    provenance = JSON.parse(fs.readFileSync(path.resolve("assets/slide-style-previews", pack.manifest), "utf8"));
+  } catch (error) {
+    errors.push(`${pack.key} provenance unavailable: ${error.message}`);
+  }
+  if (!provenance) continue;
+  if (provenance.pack !== pack.key) errors.push(`${pack.key} provenance pack mismatch`);
+  if (provenance.sourceKind !== "ai-image-generation") errors.push(`${pack.key} provenance must identify AI image generation as the source`);
+  if (provenance.reviewStatus !== "visual-review-passed") errors.push(`${pack.key} previews must pass visual review`);
+  const provenanceList = Array.isArray(provenance.assets) ? provenance.assets : [];
+  if (!Array.isArray(provenance.assets)) errors.push(`${pack.key} provenance assets must be an array`);
   else {
-    for (const asset of provenance.assets) {
-      if (!asset?.id) { errors.push("visual-spectrum provenance asset is missing id"); continue; }
-      if (provenanceAssets.has(asset.id)) errors.push(`duplicate visual-spectrum provenance: ${asset.id}`);
-      else provenanceAssets.set(asset.id, asset);
+    for (const asset of provenanceList) {
+      if (!asset?.id) { errors.push(`${pack.key} provenance asset is missing id`); continue; }
+      if (reviewedAssets.has(asset.id)) errors.push(`duplicate reviewed preview provenance: ${asset.id}`);
+      else reviewedAssets.set(asset.id, { asset, pack });
     }
   }
+  for (const asset of provenanceList) {
+    if (asset?.id && !definitionIds.has(asset.id)) errors.push(`orphan ${pack.key} provenance: ${asset.id}`);
+  }
+  const packAssetCount = provenanceList.filter((asset) => definitionIds.has(asset?.id)).length;
+  if (packAssetCount !== definitions.length) errors.push(`expected ${definitions.length} ${pack.key} provenance records, found ${packAssetCount}`);
 }
 
 function addUnique(map, value, label, id) {
@@ -132,10 +145,11 @@ for (const style of styles) {
     if (!size || size.width !== expectedPreviewSize.width || size.height !== expectedPreviewSize.height) {
       errors.push(`${style.id}: preview must be ${expectedPreviewSize.width}x${expectedPreviewSize.height} JPG`);
     }
-    if (visualSpectrumIds.has(style.id)) {
-      const asset = provenanceAssets.get(style.id);
-      const definition = visualSpectrumById.get(style.id);
-      if (!asset) errors.push(`${style.id}: missing AI preview provenance`);
+    if (reviewedDefinitions.has(style.id)) {
+      const reviewed = reviewedAssets.get(style.id);
+      const definition = reviewedDefinitions.get(style.id)?.definition;
+      const asset = reviewed?.asset;
+      if (!asset) errors.push(`${style.id}: missing reviewed AI preview provenance`);
       else {
         const digest = crypto.createHash("sha256").update(fs.readFileSync(previewPath)).digest("hex");
         if (asset.file !== `${style.id}.jpg`) errors.push(`${style.id}: provenance filename mismatch`);
@@ -145,13 +159,6 @@ for (const style of styles) {
       }
     }
   }
-}
-
-for (const id of provenanceAssets.keys()) {
-  if (!visualSpectrumIds.has(id)) errors.push(`orphan visual-spectrum provenance: ${id}`);
-}
-if (provenanceAssets.size !== visualSpectrumIds.size) {
-  errors.push(`expected ${visualSpectrumIds.size} visual-spectrum provenance records, found ${provenanceAssets.size}`);
 }
 
 const previewIds = fs.readdirSync(path.resolve("assets/slide-style-previews"))
@@ -173,6 +180,8 @@ const searchCases = [
   ["세미나 안내", "event-seminar-overview"], ["워크숍 일정", "event-workshop-agenda"], ["웨비나", "event-webinar-live"],
   ["의사결정 보고", "decision-memo"], ["북유럽 미니멀", "nordic-soft-minimal"], ["제품 출시", "product-launch-story"],
   ["시스템 구성도", "system-architecture-map"], ["수묵화", "ink-wash-modern"], ["Y2K", "holographic-y2k"],
+  ["연간 사업계획", "annual-business-plan"], ["RFP 요구 대응", "rfp-compliance-matrix"], ["PMO", "pmo-master-plan"],
+  ["서비스 블루프린트", "service-blueprint-plan"], ["전략적 제휴", "strategic-partnership-proposal"], ["연구기획", "research-proposal"],
 ];
 for (const [query, expectedId] of searchCases) {
   if (!catalog.list({ category: "all", query }).some((style) => style.id === expectedId)) errors.push(`search failed: ${query} -> ${expectedId}`);
@@ -187,6 +196,7 @@ if (!catalog.list({ category: "all", audience: "investor" }).some((style) => sty
 if (!catalog.list({ category: "all", supportInstrument: "transfer" }).some((style) => style.id === "tc-demand-supply-matching")) errors.push("facet failed: supportInstrument=transfer");
 if (catalog.list({ category: "technology-commercialization" }).length !== 16) errors.push("category failed: technology-commercialization");
 if (catalog.list({ category: "event-guidance" }).length !== 12) errors.push("category failed: event-guidance");
+if (catalog.list({ category: "proposal-planning" }).length !== 24) errors.push("category failed: proposal-planning");
 if (catalog.list({ category: "reporting" }).length !== 20) errors.push("category failed: reporting");
 if (catalog.list({ category: "branding" }).length !== 22) errors.push("category failed: branding");
 if (catalog.list({ category: "startup" }).length !== 13) errors.push("category failed: startup");

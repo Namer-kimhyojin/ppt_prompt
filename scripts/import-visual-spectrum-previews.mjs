@@ -15,10 +15,13 @@ if (args.get("--source") !== "imagegen") {
   throw new Error("Production preview import requires --source=imagegen.");
 }
 
-const inputDir = path.resolve(args.get("--input-dir") || "tmp/slide-style-preview-selected");
+const packKey = args.get("--pack") || "visualSpectrum";
+const packSlug = packKey.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+const defaultInputDir = packKey === "visualSpectrum" ? "tmp/slide-style-preview-selected" : `tmp/${packSlug}-preview-selected`;
+const inputDir = path.resolve(args.get("--input-dir") || defaultInputDir);
 const outputDir = path.resolve("assets/slide-style-previews");
 const reviewedOn = args.get("--reviewed-on") || new Date().toISOString().slice(0, 10);
-const manifestPath = path.join(outputDir, "visual-spectrum-provenance.json");
+const manifestPath = path.join(outputDir, args.get("--manifest") || `${packSlug}-provenance.json`);
 const sourceFiles = [
   "src/slide-style-presets/commercial-core.js",
   "src/slide-style-presets/commercial-visual.js",
@@ -27,6 +30,7 @@ const sourceFiles = [
   "src/slide-style-presets/technology-commercialization.js",
   "src/slide-style-presets/event-guidance.js",
   "src/slide-style-presets/visual-spectrum.js",
+  "src/slide-style-presets/proposal-planning.js",
   "src/slide-style-catalog.js",
 ];
 const context = { console };
@@ -36,8 +40,8 @@ for (const sourceFile of sourceFiles) {
   vm.runInContext(fs.readFileSync(path.resolve(sourceFile), "utf8"), context, { filename: sourceFile });
 }
 
-const definitions = context.window.PromptDeckSlideStylePresetPacks?.visualSpectrum || [];
-if (!definitions.length) throw new Error("visual-spectrum presets could not be loaded");
+const definitions = context.window.PromptDeckSlideStylePresetPacks?.[packKey] || [];
+if (!definitions.length) throw new Error(`${packKey} presets could not be loaded`);
 
 function pngDimensions(buffer) {
   if (buffer.length < 24 || buffer.toString("ascii", 1, 4) !== "PNG") return null;
@@ -124,7 +128,7 @@ try {
 
 const manifest = {
   schemaVersion: 1,
-  pack: "visualSpectrum",
+  pack: packKey,
   sourceKind: "ai-image-generation",
   generator: "OpenAI imagegen",
   reviewStatus: "visual-review-passed",
@@ -143,5 +147,5 @@ for (const asset of assets) {
 }
 fs.copyFileSync(path.join(stageDir, path.basename(manifestPath)), manifestPath);
 fs.rmSync(stageDir, { recursive: true, force: true });
-console.log(`imported ${assets.length} reviewed AI previews`);
+console.log(`imported ${assets.length} reviewed AI previews for ${packKey}`);
 console.log(`wrote ${path.relative(process.cwd(), manifestPath)}`);

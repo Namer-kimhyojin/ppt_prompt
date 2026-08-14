@@ -10,6 +10,7 @@ const sourceFiles = [
   "src/slide-style-presets/technology-commercialization.js",
   "src/slide-style-presets/event-guidance.js",
   "src/slide-style-presets/visual-spectrum.js",
+  "src/slide-style-presets/proposal-planning.js",
   "src/slide-style-catalog.js",
 ];
 const context = { console };
