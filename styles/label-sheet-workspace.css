@@ -16,7 +16,6 @@
   --label-workspace-resizer-size: 7px;
   position: relative;
   isolation: isolate;
-  display: grid;
   width: 100%;
   max-width: none;
   height: var(--label-workspace-available-height, calc(100dvh - var(--app-header-height) - var(--tabs-bar-height)));
@@ -30,6 +29,10 @@
   overscroll-behavior: none;
   background: var(--bg);
   color: var(--ink);
+}
+
+#paneLabelSheet.label-sheet-workspace-v2.active {
+  display: grid;
 }
 
 #paneLabelSheet.label-sheet-workspace-v2 > .label-sheet-shell,

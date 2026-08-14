@@ -94,6 +94,9 @@ try {
 
   const publicAppResponse = await fetch(`${origin}/`, { cache: "no-store" });
   assert.equal(publicAppResponse.status, 200);
+  assert.match(publicAppResponse.headers.get("cache-control") || "", /\bno-store\b/iu);
+  const publicAppEtag = publicAppResponse.headers.get("etag") || "";
+  assert.ok(publicAppEtag);
   const publicAppCsp = publicAppResponse.headers.get("content-security-policy") || "";
   const publicAppNonce = publicAppCsp.match(/'nonce-([^']+)'/u)?.[1] || "";
   assert.match(publicAppCsp, /'strict-dynamic'/u);
@@ -103,6 +106,21 @@ try {
   assert.ok(publicScriptTags.length > 0);
   publicScriptTags.forEach((match) => {
     assert.match(match[1], new RegExp(`\\bnonce=["']${publicAppNonce}["']`, "iu"));
+  });
+  const conditionalPublicAppResponse = await fetch(`${origin}/`, {
+    headers: { "if-none-match": publicAppEtag },
+  });
+  assert.equal(conditionalPublicAppResponse.status, 200);
+  assert.match(conditionalPublicAppResponse.headers.get("cache-control") || "", /\bno-store\b/iu);
+  const conditionalPublicAppCsp = conditionalPublicAppResponse.headers.get("content-security-policy") || "";
+  const conditionalPublicAppNonce = conditionalPublicAppCsp.match(/'nonce-([^']+)'/u)?.[1] || "";
+  assert.match(conditionalPublicAppNonce, /^[a-f0-9]{32}$/u);
+  assert.notEqual(conditionalPublicAppNonce, publicAppNonce);
+  const conditionalPublicAppHtml = await conditionalPublicAppResponse.text();
+  const conditionalScriptTags = Array.from(conditionalPublicAppHtml.matchAll(/<script\b([^>]*)>/gimu));
+  assert.equal(conditionalScriptTags.length, publicScriptTags.length);
+  conditionalScriptTags.forEach((match) => {
+    assert.match(match[1], new RegExp(`\\bnonce=["']${conditionalPublicAppNonce}["']`, "iu"));
   });
   const secondPublicAppResponse = await fetch(`${origin}/`, { cache: "no-store" });
   const secondPublicAppNonce = (secondPublicAppResponse.headers.get("content-security-policy") || "")
@@ -175,8 +193,25 @@ try {
   const browser = await chromium.launch({ channel: "msedge", headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    const browserSecurityErrors = [];
+    const browserPageErrors = [];
+    page.on("console", (message) => {
+      if (message.type() === "error" && /content security policy|violates.+script-src/iu.test(message.text())) {
+        browserSecurityErrors.push(message.text());
+      }
+    });
+    page.on("pageerror", (error) => browserPageErrors.push(error.stack || error.message));
     await page.route(/\.(?:avif|gif|jpe?g|png|webp)(?:\?.*)?$/iu, (route) => route.abort());
     await page.goto(origin, { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.PromptDeckTabs));
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => Boolean(window.PromptDeckTabs));
+    const visiblePaneIds = await page.locator(".tab-pane").evaluateAll((panes) => panes
+      .filter((pane) => getComputedStyle(pane).display !== "none" && pane.getClientRects().length > 0)
+      .map((pane) => pane.id));
+    assert.deepEqual(visiblePaneIds, ["paneCommonPrompt"]);
+    assert.deepEqual(browserSecurityErrors, []);
+    assert.deepEqual(browserPageErrors, []);
     await page.locator(".brand-mark").evaluate((element) => {
       for (let index = 0; index < 7; index += 1) element.click();
     });

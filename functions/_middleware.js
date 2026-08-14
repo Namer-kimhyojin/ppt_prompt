@@ -15,9 +15,13 @@ function buildPublicAppCsp(nonce) {
 
 async function servePublicApp(context) {
   const nonce = crypto.randomUUID().replaceAll("-", "");
-  const response = await context.next();
+  const requestHeaders = new Headers(context.request.headers);
+  requestHeaders.delete("if-none-match");
+  requestHeaders.delete("if-modified-since");
+  const response = await context.next(new Request(context.request, { headers: requestHeaders }));
   const headers = new Headers(response.headers);
   headers.set("Content-Security-Policy", buildPublicAppCsp(nonce));
+  headers.set("Cache-Control", "private, no-store, max-age=0");
   const securedResponse = new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

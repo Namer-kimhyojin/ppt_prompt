@@ -90,6 +90,17 @@ async function verifyViewport(label, viewport) {
   ), null, { timeout: 30_000 });
 
   const visible = async (selector) => page.locator(selector).isVisible().catch(() => false);
+  const expectOnlyPane = async (expectedId, phase) => {
+    const paneIds = await page.locator(".tab-pane").evaluateAll((panes) => panes
+      .filter((pane) => {
+        const style = getComputedStyle(pane);
+        return style.display !== "none" && style.visibility !== "hidden" && pane.getClientRects().length > 0;
+      })
+      .map((pane) => pane.id));
+    if (paneIds.length !== 1 || paneIds[0] !== expectedId) {
+      failures.push(`${label}: ${phase}에서 표시 pane이 하나가 아닙니다. expected=${expectedId}, actual=${paneIds.join(",")}`);
+    }
+  };
   const bodyText = await page.locator("body").innerText();
   if (bodyText.includes("공개 정적 버전 · 작업 내용과 로컬 이미지는 이 브라우저에만 저장됩니다.")) {
     failures.push(`${label}: 삭제된 정적 버전 안내 문구가 노출됩니다.`);
@@ -97,6 +108,7 @@ async function verifyViewport(label, viewport) {
   if (!(await visible("#tabBtnCommonPrompt"))) failures.push(`${label}: 기본 탭이 보이지 않습니다.`);
   if (await visible("#tabBtnSlideImage")) failures.push(`${label}: 서버 이미지 생성 탭이 노출됩니다.`);
   if (await visible("#userBar")) failures.push(`${label}: 계정 UI가 노출됩니다.`);
+  await expectOnlyPane("paneCommonPrompt", "기본 진입");
 
   const specialGroupFilter = page.locator('[data-tab-group-filter="special"]');
   if (!(await visible("#tabBtnDataDiagram")) && await specialGroupFilter.isVisible()) {
@@ -108,6 +120,7 @@ async function verifyViewport(label, viewport) {
     await page.locator("#tabBtnDataDiagram").click();
     await page.locator("#diagramSampleBtn").click();
     await page.waitForTimeout(150);
+    await expectOnlyPane("paneDataDiagram", "데이터 다이어그램 전환");
     if (!(await page.locator("#diagramDownloadSvgBtn").isEnabled())) failures.push(`${label}: 데이터 다이어그램 SVG 저장이 비활성화되었습니다.`);
     if (!(await page.locator("#diagramDownloadPngBtn").isEnabled())) failures.push(`${label}: 데이터 다이어그램 PNG 저장이 비활성화되었습니다.`);
     if (!(await page.locator("#diagramDownloadSpecBtn").isEnabled())) failures.push(`${label}: 데이터 다이어그램 JSON 저장이 비활성화되었습니다.`);
@@ -120,6 +133,7 @@ async function verifyViewport(label, viewport) {
   if (!labelTabVisible) failures.push(`${label}: 라벨·티켓 제작 탭이 보이지 않습니다.`);
   if (labelTabVisible) {
     await page.locator("#tabBtnLabelSheet").click();
+    await expectOnlyPane("paneLabelSheet", "라벨·티켓 전환");
     if ((await page.locator("#paneLabelSheet[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V2 작업공간이 초기화되지 않았습니다.`);
     if ((await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-frame + .label-sheet-workspace-bottom").count()) !== 1) failures.push(`${label}: 프로젝트 바·캔버스·데이터 시트 순서가 깨졌습니다.`);
     await page.evaluate(() => {
@@ -191,6 +205,7 @@ async function verifyViewport(label, viewport) {
   if (qrTabVisible) {
     await page.locator("#tabBtnQrGenerator").click();
     if (!(await visible("#paneQrGenerator"))) failures.push(`${label}: QR 탭 전환에 실패했습니다.`);
+    await expectOnlyPane("paneQrGenerator", "QR 전환");
   }
   if (pageErrors.length) failures.push(`${label}: 페이지 오류: ${pageErrors.join(" | ")}`);
   if (failedScripts.length) failures.push(`${label}: 스크립트 로드 실패: ${failedScripts.join(" | ")}`);

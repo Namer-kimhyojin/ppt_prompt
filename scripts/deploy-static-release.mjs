@@ -249,6 +249,9 @@ async function verifyAssetHashes(origin, head) {
 async function verifyHttpContracts(origin) {
   let response = await fetchChecked(`${origin}/`);
   assert(response.status === 200, `${origin}/ returned ${response.status}`);
+  assert(String(response.headers.get("cache-control") || "").includes("no-store"), `${origin}/ did not disable nonce HTML caching`);
+  const publicAppEtag = String(response.headers.get("etag") || "");
+  assert(publicAppEtag, `${origin}/ omitted its static HTML ETag`);
   const publicAppCsp = String(response.headers.get("content-security-policy") || "");
   const publicAppHtml = await response.text();
   const nonceMatch = publicAppCsp.match(/'nonce-([^']+)'/u);
@@ -260,6 +263,23 @@ async function verifyHttpContracts(origin) {
     const attribute = tag.match(/\snonce=(?:"([^"]+)"|'([^']+)')/iu);
     return (attribute?.[1] || attribute?.[2] || "") === nonceMatch[1];
   }), `${origin}/ did not apply its CSP nonce to every script tag`);
+
+  const conditionalResponse = await fetchChecked(`${origin}/`, {
+    headers: { "if-none-match": publicAppEtag },
+  });
+  assert(conditionalResponse.status === 200, `${origin}/ returned ${conditionalResponse.status} for a conditional nonce HTML request`);
+  assert(String(conditionalResponse.headers.get("cache-control") || "").includes("no-store"), `${origin}/ conditional response allowed nonce HTML caching`);
+  const conditionalCsp = String(conditionalResponse.headers.get("content-security-policy") || "");
+  const conditionalNonceMatch = conditionalCsp.match(/'nonce-([^']+)'/u);
+  assert(conditionalNonceMatch && /^[a-f0-9]{32}$/u.test(conditionalNonceMatch[1]), `${origin}/ conditional response omitted a valid nonce`);
+  assert(conditionalNonceMatch[1] !== nonceMatch[1], `${origin}/ conditional response reused its CSP nonce`);
+  const conditionalHtml = await conditionalResponse.text();
+  const conditionalScriptTags = conditionalHtml.match(/<script\b[^>]*>/giu) || [];
+  assert(conditionalScriptTags.length === scriptTags.length, `${origin}/ conditional response omitted script tags`);
+  assert(conditionalScriptTags.every((tag) => {
+    const attribute = tag.match(/\snonce=(?:"([^"]+)"|'([^']+)')/iu);
+    return (attribute?.[1] || attribute?.[2] || "") === conditionalNonceMatch[1];
+  }), `${origin}/ conditional response mixed CSP nonces`);
 
   response = await fetchChecked(`${origin}/admin.html`, { redirect: "manual" });
   assert(response.status === 302, `${origin}/admin.html did not redirect for an unauthenticated visitor`);
@@ -305,9 +325,29 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
   try {
     await page.goto(`${origin}/?release-browser=${cacheToken}-${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 60_000 });
     await page.waitForFunction(() => Boolean(window.PromptDeckDataDiagram && window.PromptDeckTabs), null, { timeout: 30_000 });
+    const assertOnlyPane = async (expectedId, phase) => {
+      const paneIds = await page.locator(".tab-pane").evaluateAll((panes) => panes
+        .filter((pane) => {
+          const style = getComputedStyle(pane);
+          return style.display !== "none" && style.visibility !== "hidden" && pane.getClientRects().length > 0;
+        })
+        .map((pane) => pane.id));
+      assert(
+        paneIds.length === 1 && paneIds[0] === expectedId,
+        `${origin} ${phase} displayed unexpected panes at ${viewport.width}x${viewport.height}: ${paneIds.join(",")}`,
+      );
+    };
+    await assertOnlyPane("paneCommonPrompt", "initial navigation");
+    if ((viewport.width === 1440 && viewport.height === 1000)
+      || (viewport.width === 390 && viewport.height === 844)) {
+      await page.reload({ waitUntil: "domcontentloaded", timeout: 60_000 });
+      await page.waitForFunction(() => Boolean(window.PromptDeckDataDiagram && window.PromptDeckTabs), null, { timeout: 30_000 });
+      await assertOnlyPane("paneCommonPrompt", "same-URL reload");
+    }
     assert((await page.locator("#diagramOpenSlideStyleGalleryBtn").count()) === 1, `${origin} edge still serves HTML without the full gallery control`);
     await page.evaluate(() => window.PromptDeckTabs.switchTab("dataDiagram"));
     await page.waitForSelector("#paneDataDiagram.active");
+    await assertOnlyPane("paneDataDiagram", "data diagram navigation");
     if (viewport.width <= 720) {
       const visualStep = page.locator('[data-diagram-step="visual"]');
       if (!(await visualStep.evaluate((element) => element.classList.contains("is-open")))) {
@@ -355,6 +395,7 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
 
     await page.evaluate(() => window.PromptDeckTabs.switchTab("labelSheet"));
     await page.waitForSelector("#paneLabelSheet.active");
+    await assertOnlyPane("paneLabelSheet", "label sheet navigation");
     await page.waitForFunction(() => Boolean(
       window.PromptDeckLabelSheet
       && window.PromptDeckLabelSheetEngine
