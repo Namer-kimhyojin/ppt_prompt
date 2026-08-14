@@ -96,7 +96,7 @@
   let manualPrintRange = null;
   let outputExportBusy = false;
   let currentWorkingProject = null;
-  let wysiwygEnabled = false;
+  let wysiwygEnabled = pane.classList.contains("label-sheet-workspace-v2");
   let wysiwygField = "title";
   let wysiwygScope = "record";
   let wysiwygPlacementIndex = 0;
@@ -3730,7 +3730,7 @@
     }
     if (controls) controls.hidden = !wysiwygEnabled;
     if (quickbar) quickbar.hidden = !wysiwygEnabled;
-    if (focusEditor) focusEditor.hidden = !wysiwygEnabled;
+    if (focusEditor) focusEditor.hidden = pane.classList.contains("label-sheet-workspace-v2") ? false : !wysiwygEnabled;
     if (previewToolbar) previewToolbar.classList.toggle("is-editing-hidden", wysiwygEnabled);
     if (!wysiwygEnabled) return;
     const context = activeWysiwygLayout(false);
@@ -6607,7 +6607,7 @@
     selectedRecordIds = new Set();
     previewSide = "front";
     currentPageIndex = 0;
-    wysiwygEnabled = false;
+    wysiwygEnabled = pane.classList.contains("label-sheet-workspace-v2");
     wysiwygPlacementIndex = 0;
     wysiwygField = "title";
     wysiwygScope = "record";
@@ -7285,10 +7285,19 @@
     }
     syncProjectFromControls();
     await refreshOutput();
-    updateProgressState("intent");
-    setFlowShowAll(false, { announce: false });
+    if (pane.classList.contains("label-sheet-workspace-v2")) {
+      updateProgressState("design");
+      setFlowShowAll(true, { announce: false });
+    } else {
+      updateProgressState("intent");
+      setFlowShowAll(false, { announce: false });
+    }
     const goalLabel = OUTPUT_GOALS[normalizeOutputGoal(project.settings?.outputGoal)].label;
-    setStatus(project.records.length ? `자동 저장된 프로젝트 ${project.records.length}건을 불러왔습니다.` : `${goalLabel} 목표를 확인한 뒤 규격 설정부터 진행해 주세요.`);
+    setStatus(project.records.length
+      ? `자동 저장된 프로젝트 ${project.records.length}건을 불러왔습니다.`
+      : pane.classList.contains("label-sheet-workspace-v2")
+        ? `${goalLabel} 작업대가 준비되었습니다. 샘플 또는 표·CSV 데이터로 바로 시작하세요.`
+        : `${goalLabel} 목표를 확인한 뒤 규격 설정부터 진행해 주세요.`);
   }
 
   const labelSheetApi = Object.freeze({

@@ -201,11 +201,15 @@ async function verifyAssetHashes(origin, head) {
     "src/tabular-data.js",
     "src/label-sheet-package.js",
     "src/label-sheet.js",
+    "src/label-sheet-workspace-layout.js",
+    "src/label-sheet-workspace.js",
     "src/label-sheet-renderer.js",
+    "src/tabs.js",
     "src/qr-batch.js",
     "src/qr-generator.js",
     "src/zip-writer.js",
     "styles/label-sheet.css",
+    "styles/label-sheet-workspace.css",
     "assets/slide-style-previews/decision-memo.jpg",
     "assets/slide-style-previews/visual-spectrum-provenance.json",
   ];
@@ -345,14 +349,25 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
       && window.PromptDeckTabularData
       && window.QRGeneratorCore
     ));
-    await page.locator("#labelSheetOutputGoalPrompt").check();
-    await page.locator('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]').check();
-    await page.locator("#labelSheetModeDuplex").check();
-    await page.locator("#labelSheetIntentSampleBtn").click();
+    await page.evaluate(() => {
+      const goal = document.querySelector("#labelSheetOutputGoalPrompt");
+      const type = document.querySelector('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]');
+      const duplex = document.querySelector("#labelSheetModeDuplex");
+      goal.checked = true;
+      goal.dispatchEvent(new Event("change", { bubbles: true }));
+      type.checked = true;
+      type.dispatchEvent(new Event("change", { bubbles: true }));
+      duplex.checked = true;
+      duplex.dispatchEvent(new Event("change", { bubbles: true }));
+      document.querySelector("#labelSheetIntentSampleBtn")?.click();
+    });
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
-    await page.locator("#labelSheetStepOutputBtn").click();
-    await page.locator("#labelSheetGeneratePromptBtn").click();
+    const promptAction = viewport.width <= 720
+      ? page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]')
+      : page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
+    await promptAction.click();
+    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
     const labelSurface = await page.evaluate(() => {
       const isVisible = (selector) => {
@@ -394,6 +409,9 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
         samplePreset: document.querySelector("#labelSheetSamplePreset")?.value || "",
         qrSourceVisible: isVisible("#labelSheetQrSource"),
         pdfVisible: isVisible("#labelSheetExportPdfBtn"),
+        workspaceReady: document.querySelector("#paneLabelSheet")?.dataset.labelWorkspaceLayoutReady === "true",
+        workspaceRecordCount: document.querySelectorAll("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").length,
+        workspaceDocumentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1,
         shellOverflow: Boolean(shell && shell.scrollWidth > shell.clientWidth + 1),
         pageOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
       };
@@ -426,7 +444,10 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
         && labelSurface.samplePresetCount === 3
         && labelSurface.samplePreset === "training-lunch"
         && !labelSurface.qrSourceVisible
-        && !labelSurface.pdfVisible,
+        && !labelSurface.pdfVisible
+        && labelSurface.workspaceReady
+        && labelSurface.workspaceRecordCount === 8
+        && !labelSurface.workspaceDocumentOverflow,
       `${origin} label full-image prompt separation contract failed`,
     );
     assert(!labelSurface.shellOverflow && !labelSurface.pageOverflow, `${origin} label surface overflowed ${viewport.width}px viewport`);
@@ -449,7 +470,7 @@ async function verifyBrowsers(origins, head) {
   }
   try {
     for (const origin of origins) {
-      for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+      for (const viewport of [{ width: 1920, height: 1080 }, { width: 1440, height: 1000 }, { width: 1280, height: 720 }, { width: 390, height: 844 }]) {
         const label = `browser ${origin} at ${viewport.width}x${viewport.height}`;
         console.log(`[release] Verifying ${label}`);
         await retry(label, () => verifyBrowserSurface(browser, origin, viewport, head.slice(0, 12)), 8, 2_500);
@@ -531,7 +552,7 @@ async function main() {
     previousSource: previous?.Source || null,
     previousUrl: previous?.Deployment || null,
     verifiedAssetHashes: hashes,
-    verifiedViewports: ["1440x1000", "390x844"],
+    verifiedViewports: ["1920x1080", "1440x1000", "1280x720", "390x844"],
   };
   console.log("\n[release] DEPLOYMENT VERIFIED");
   console.log(JSON.stringify(report, null, 2));

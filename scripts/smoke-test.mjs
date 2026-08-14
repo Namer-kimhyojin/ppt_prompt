@@ -250,7 +250,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
     const regressionSelectors = {
       tabBtnCommonPrompt: [".cpd-btn.primary", ".cpd-journey-panel-head > span"],
       tabBtnFormImage: [".form-image-prompt-viewer", ".form-image-step-head b"],
-      tabBtnLabelSheet: [".label-sheet-kicker", ".label-sheet-step-number"],
+      tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-bottom-tab.is-active"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],
       tabBtnDataDiagram: [".diagram-readiness-head span", ".diagram-result-tab.active"],
       tabBtnPromotion: [".promo-step-num", ".promo-stat-chip"],
@@ -2309,43 +2309,76 @@ SLIDE-TWO-CONTENT`);
 
     await page.click("#tabBtnLabelSheet");
     await page.waitForSelector("#paneLabelSheet.active");
-    const openLabelSheetIntent = async () => {
-      const editButton = page.locator("#labelSheetIntentEditBtn");
-      if (await editButton.isVisible()) {
-        await editButton.click();
-        await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.activeStep === "intent");
+    const selectLabelGoal = async (goal) => {
+      const openDrawer = page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])");
+      if (await openDrawer.count()) {
+        await openDrawer.locator("[data-label-workspace-drawer-close]").first().click();
+        await page.waitForFunction(() => !document.querySelector("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])"));
       }
+      await page.locator(`[data-label-workspace-goal="${goal}"]`).click();
+      await page.waitForFunction((value) => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === value, goal);
     };
-    record((await page.locator("#paneLabelSheet .label-sheet-result-stack > #tabActions").count()) === 1, "Label-sheet quick actions were not mounted in the result column", failures);
+    const generateLabelPrompt = async () => {
+      const target = page.locator("#labelSheetGeneratePromptBtn");
+      if (await target.isVisible()) await target.click();
+      else await page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').click();
+      await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+    };
+    const closeLabelReview = async () => {
+      const drawer = page.locator("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+      if (!await drawer.count()) return;
+      await drawer.locator("[data-label-workspace-drawer-close]").first().click();
+      await page.waitForSelector("#labelSheetWorkspaceReviewDrawer", { state: "hidden" });
+    };
+    const selectLabelDocumentType = async (value) => {
+      await page.evaluate((documentType) => {
+        const radio = document.querySelector(`input[name="labelSheetIntentDocumentType"][value="${documentType}"]`);
+        if (!radio) throw new Error(`Missing label-sheet document type: ${documentType}`);
+        radio.checked = true;
+        radio.dispatchEvent(new Event("change", { bubbles: true }));
+      }, value);
+    };
+    const selectHiddenLabelValue = async (selector, value) => {
+      await page.evaluate(({ selector: controlSelector, value: nextValue }) => {
+        const control = document.querySelector(controlSelector);
+        if (!control) throw new Error(`Missing label-sheet control: ${controlSelector}`);
+        control.value = nextValue;
+        control.dispatchEvent(new Event("change", { bubbles: true }));
+      }, { selector, value });
+    };
+    record((await page.locator("#paneLabelSheet .label-sheet-workspace-actions > #tabActions").count()) === 1, "Label-sheet quick actions were not mounted in the workspace project bar", failures);
+    record((await page.locator("#paneLabelSheet[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) === 1, "Label-sheet V2 workspace shell did not initialize", failures);
     record((await page.locator('input[name="labelSheetOutputGoal"]').count()) === 2, "Label-sheet did not expose the two distinct creation methods", failures);
     record((await page.locator('input[name="labelSheetIntentDocumentType"]').count()) === 4, "Label-sheet did not ask for the document type before detailed settings", failures);
-    await page.locator("#labelSheetOutputGoalPrompt").check();
+    await page.click("#labelSheetWorkspaceSettingsBtn");
+    record(await page.locator("#labelSheetWorkspaceSettingsDrawer").isVisible() && await page.locator("#labelSheetOutputGoalPrompt").isVisible(), "Label-sheet project settings drawer did not expose creation settings", failures);
+    await page.click("#labelSheetWorkspaceSettingsDrawer [data-label-workspace-drawer-close]");
+    await selectLabelGoal("prompt");
     record((await page.locator("#paneLabelSheet").getAttribute("data-output-goal")) === "prompt", "Label-sheet prompt goal did not update the workflow state", failures);
     record(await page.locator("#labelSheetPrintBtn").isHidden(), "Label-sheet prompt-only goal kept the print action visible", failures);
-    record(await page.locator("#labelSheetGeneratePromptBtn").isHidden(), "Label-sheet prompt-only goal exposed its final action before the output step", failures);
+    record(await page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').isVisible(), "Label-sheet prompt workspace did not expose its primary generation action", failures);
     record((await page.locator("#labelSheetOutputTitle").textContent()).includes("프롬프트"), "Label-sheet result title did not adapt to the prompt goal", failures);
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()), "Label-sheet prompt goal did not keep QR-space reservation available", failures);
     record(await page.locator("#labelSheetAssetRegisterBtn").isHidden(), "Label-sheet prompt-only goal still exposed background-image composition", failures);
     record(await page.locator("#labelSheetPageImageRegisterBtn").isHidden(), "Label-sheet prompt-only goal still exposed the two-stage page-image registration step", failures);
-    record(await page.locator('[data-label-sheet-design-part="content"]').isHidden(), "Label-sheet prompt goal exposed detailed design controls before the design step", failures);
+    record(await page.locator('[data-label-sheet-design-part="content"]').isVisible(), "Label-sheet prompt workspace did not keep detailed design controls directly available", failures);
     record((await page.locator("#labelSheetPromptMode").inputValue()) === "integrated", "Label-sheet prompt goal did not lock to full-image prompt mode", failures);
     record(await page.locator("#labelSheetQrSource").isHidden(), "Label-sheet prompt goal exposed actual QR-value assignment controls", failures);
     record((await page.locator("#labelSheetQrPosition").count()) === 1, "Label-sheet prompt goal removed QR-space position controls", failures);
     record((await page.locator("#labelSheetDnaFeaturedGallery").count()) === 1, "Label-sheet prompt goal removed its design-DNA gallery", failures);
     record((await page.locator('.label-sheet-output-route p:visible').count()) === 0, "Label-sheet prompt-only goal retained the redundant output-route explainer", failures);
-    await page.locator("#labelSheetOutputGoalPrint").check();
-    record((await page.locator("#labelSheetPrintBtn").isHidden()) && (await page.locator("#labelSheetExportPdfBtn").isHidden()) && (await page.locator("#labelSheetGeneratePromptBtn").isHidden()), "Label-sheet print goal exposed final output actions before the output step", failures);
+    await selectLabelGoal("print");
+    record(await page.locator('#tabActions [data-proxy-target="labelSheetExportPdfBtn"]').isVisible() && await page.locator("#labelSheetGeneratePromptBtn").isHidden(), "Label-sheet print workspace did not expose the correct output route", failures);
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()), "Label-sheet print goal did not restore QR composition capability", failures);
     record(await page.evaluate(() => Boolean(window.PromptDeckLabelSheet && window.PromptDeckLabelSheetEngine && window.PromptDeckLabelSheetAssets && window.PromptDeckLabelSheetRenderer && window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData)), "Label-sheet controller or domain modules were not exposed", failures);
-    await page.locator('input[name="labelSheetIntentDocumentType"][value="admission"]').check();
+    await selectLabelDocumentType("admission");
     record((await page.locator("#labelSheetSamplePreset option").count()) === 3, "Label-sheet admission type did not expose three contextual sample presets", failures);
-    await page.selectOption("#labelSheetSamplePreset", "staff-pass");
-    await page.click("#labelSheetIntentSampleBtn");
+    await selectHiddenLabelValue("#labelSheetSamplePreset", "staff-pass");
+    await page.click("#labelSheetWorkspaceSampleBtn");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.id?.startsWith("DEMO-STAFF-"));
     const staffSample = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => ({ id: record.id, number: record.number, role: record.data?.category })));
     record(staffSample.length === 8 && staffSample.every((record) => !record.number) && staffSample.some((record) => record.role === "안전관리"), `Label-sheet staff sample did not exercise unnumbered role data: ${JSON.stringify(staffSample)}`, failures);
-    await openLabelSheetIntent();
-    await page.locator('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]').check();
+    await selectLabelDocumentType("meal-ticket");
     record((await page.locator("#labelSheetSamplePreset").inputValue()) === "training-lunch" && (await page.locator("#labelSheetSamplePreset option").count()) === 3, "Label-sheet meal-ticket type did not restore the training center lunch default among three presets", failures);
     const labelContrastProbe = await page.evaluate(async () => {
       const renderer = window.PromptDeckLabelSheetRenderer;
@@ -2508,7 +2541,6 @@ SLIDE-TWO-CONTENT`);
           back: { enabled: false },
         }],
       }, { confirmReplace: false, switchTab: true });
-      document.querySelector("#labelSheetStepOutputBtn")?.click();
       window.__labelSheetNativePrint = window.print;
       window.print = () => {
         const printRoot = [...document.body.children].find((element) => element.matches?.(".label-sheet-print-root"));
@@ -2538,6 +2570,8 @@ SLIDE-TWO-CONTENT`);
     });
     await page.emulateMedia({ media: "screen" });
     await page.waitForFunction(() => !document.body.classList.contains("label-sheet-printing") && !document.body.querySelector(":scope > .label-sheet-print-root"));
+    await page.click("#labelSheetWorkspaceReviewBtn");
+    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     const [labelPdfDownload] = await Promise.all([
       page.waitForEvent("download", { timeout: 60_000 }),
       page.click("#labelSheetExportPdfBtn"),
@@ -2547,6 +2581,7 @@ SLIDE-TWO-CONTENT`);
     const labelPdfText = labelPdfBytes.toString("latin1");
     record(labelPdfDownload.suggestedFilename().endsWith(".pdf"), `Label-sheet PDF download used an invalid filename: ${labelPdfDownload.suggestedFilename()}`, failures);
     record(labelPdfBytes.subarray(0, 8).toString("ascii") === "%PDF-1.4" && /\/Type \/Pages .*\/Count 1/.test(labelPdfText) && /startxref\n\d+\n%%EOF/.test(labelPdfText), "Label-sheet PDF download was not a valid one-page PDF document", failures);
+    await page.click("#labelSheetWorkspaceReviewDrawer [data-label-workspace-drawer-close]");
     await page.evaluate(() => {
       window.__labelSheetNativePrint = window.print;
       window.print = () => {
@@ -2597,66 +2632,51 @@ SLIDE-TWO-CONTENT`);
     });
     await page.emulateMedia({ media: "screen" });
     await page.waitForFunction(() => !document.body.classList.contains("label-sheet-printing") && !document.body.querySelector(":scope > .label-sheet-print-root"));
-    await openLabelSheetIntent();
-    const labelProgressPlacement = await page.evaluate(() => {
-      const panel = document.querySelector("#labelSheetIntentPanel");
-      const progress = panel?.querySelector(":scope > .label-sheet-progress-row");
-      const heading = panel?.querySelector(":scope > .label-sheet-intent-head");
-      const panelBox = panel?.getBoundingClientRect();
-      const progressBox = progress?.getBoundingClientRect();
+    const labelWorkspaceGeometry = await page.evaluate(() => {
+      const pane = document.querySelector("#paneLabelSheet");
+      const frame = pane?.querySelector(".label-sheet-workspace-frame");
+      const left = pane?.querySelector(".label-sheet-workspace-left");
+      const canvas = pane?.querySelector(".label-sheet-workspace-canvas-column");
+      const inspector = pane?.querySelector(".label-sheet-workspace-inspector");
+      const bottom = pane?.querySelector(".label-sheet-workspace-bottom");
+      const paneBox = pane?.getBoundingClientRect();
       return {
-        directChild: progress?.parentElement === panel,
-        beforeHeading: Boolean(progress && heading && (progress.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING)),
-        position: progress ? getComputedStyle(progress).position : "missing",
-        insidePanel: Boolean(panelBox && progressBox && progressBox.top >= panelBox.top && progressBox.bottom <= panelBox.bottom),
+        ready: pane?.dataset.labelWorkspaceLayoutReady,
+        paneBottom: paneBox?.bottom || 0,
+        viewportHeight: window.innerHeight,
+        documentHeight: document.documentElement.scrollHeight,
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        frameDisplay: frame ? getComputedStyle(frame).display : "missing",
+        widths: [left, canvas, inspector].map((element) => element?.getBoundingClientRect().width || 0),
+        bottomInternalScroll: Boolean(bottom && getComputedStyle(bottom).overflowY === "hidden"),
+        statusbarCount: pane?.querySelectorAll(".label-sheet-workspace-statusbar").length || 0,
       };
     });
     record(
-      labelProgressPlacement.directChild && labelProgressPlacement.beforeHeading && labelProgressPlacement.position !== "sticky" && labelProgressPlacement.insidePanel,
-      `Label-sheet progress was not placed at the top of the goal panel below the app navigation: ${JSON.stringify(labelProgressPlacement)}`,
+      labelWorkspaceGeometry.ready === "true" &&
+        labelWorkspaceGeometry.frameDisplay === "grid" &&
+        labelWorkspaceGeometry.widths.every((width) => width > 0) &&
+        labelWorkspaceGeometry.paneBottom <= labelWorkspaceGeometry.viewportHeight + 1 &&
+        labelWorkspaceGeometry.documentHeight <= labelWorkspaceGeometry.viewportHeight + 1 &&
+        labelWorkspaceGeometry.documentWidth <= labelWorkspaceGeometry.viewportWidth + 1 &&
+        labelWorkspaceGeometry.bottomInternalScroll &&
+        labelWorkspaceGeometry.statusbarCount === 1,
+      `Label-sheet workspace did not stay within the desktop viewport: ${JSON.stringify(labelWorkspaceGeometry)}`,
       failures
     );
-    await page.locator("#labelSheetOutputGoalPrint").check();
-    await page.locator('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]').check();
-    await page.locator("#labelSheetModeDuplex").check();
-    await page.click("#labelSheetIntentSampleBtn");
+    await selectLabelGoal("print");
+    await selectLabelDocumentType("meal-ticket");
+    await page.evaluate(() => {
+      const duplex = document.querySelector("#labelSheetModeDuplex");
+      duplex.checked = true;
+      duplex.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await page.click("#labelSheetWorkspaceSampleBtn");
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
-    await page.click("#labelSheetStepSpecBtn");
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.activeStep === "spec");
-    const labelCollapsedStepGeometry = await page.evaluate(() => {
-      const builder = document.querySelector("#paneLabelSheet .label-sheet-builder");
-      return {
-        builderAlignContent: builder ? getComputedStyle(builder).alignContent : "missing",
-        steps: [...document.querySelectorAll("#paneLabelSheet details.label-sheet-step:not([open])")].map((details) => {
-          const summary = details.querySelector(":scope > summary");
-          const toggleStyle = summary ? getComputedStyle(summary, "::after") : null;
-          return {
-            height: details.getBoundingClientRect().height,
-            summaryHeight: summary?.getBoundingClientRect().height || 0,
-            toggleContent: toggleStyle?.content || "",
-            toggleWidth: Number.parseFloat(toggleStyle?.width || "0"),
-            toggleHeight: Number.parseFloat(toggleStyle?.height || "0"),
-            toggleGridColumn: toggleStyle?.gridColumn || "",
-          };
-        }),
-      };
-    });
-    record(
-      labelCollapsedStepGeometry.builderAlignContent === "start" &&
-        labelCollapsedStepGeometry.steps.length >= 3 &&
-        labelCollapsedStepGeometry.steps.every((item) => item.height <= item.summaryHeight + 3),
-      `Label-sheet collapsed desktop steps stretched beyond their summaries: ${JSON.stringify(labelCollapsedStepGeometry)}`,
-      failures
-    );
-    record(
-      labelCollapsedStepGeometry.steps.every((item) => item.toggleContent.includes("펼치기") && item.toggleWidth >= 80 && item.toggleHeight >= 32 && item.toggleGridColumn === "4"),
-      `Label-sheet desktop expand controls were not presented as clear labeled buttons: ${JSON.stringify(labelCollapsedStepGeometry.steps)}`,
-      failures
-    );
-    await page.click("#labelSheetToggleAllStepsBtn");
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.flowView === "all"
-      && [...document.querySelectorAll("#paneLabelSheet details.label-sheet-step")].every((details) => details.open));
+    record((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) === 8, "Label-sheet workspace record navigator did not mirror the imported rows", failures);
+    record(await page.locator("#labelSheetWorkspaceEmpty").isHidden(), "Label-sheet workspace kept the empty state over populated data", failures);
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     const labelSample = await page.evaluate(() => {
       const project = window.PromptDeckLabelSheet.getProject();
@@ -2790,12 +2810,12 @@ SLIDE-TWO-CONTENT`);
     await page.selectOption("#labelSheetQrAssignScope", "all");
     await page.selectOption("#labelSheetQrSource", "template");
     await page.locator("#labelSheetQrTemplate").fill("https://example.kr/pass/{id}");
-    await page.locator("#labelSheetOutputGoalPrompt").check();
+    await selectLabelGoal("prompt");
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()) && await page.locator("#labelSheetQrSource").isHidden(), "Label-sheet prompt mode did not separate QR-space controls from actual QR data", failures);
     record(await page.locator("#labelSheetRecordTable").isVisible(), "Label-sheet prompt mode hid the shared data review and direct-edit table", failures);
     await page.locator('#labelSheetRecordTableBody input[data-record-field="front.title"]').first().fill("프롬프트 데이터 직접 반영");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.front?.title === "프롬프트 데이터 직접 반영");
-    await page.click("#labelSheetGeneratePromptBtn");
+    await generateLabelPrompt();
     record((await page.locator("#labelSheetPromptPageSelect option").count()) === 2, "Label-sheet duplex sample did not expose separate front/back prompt pages", failures);
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
     const integratedLabelPrompt = await page.locator("#labelSheetPromptPreview").inputValue();
@@ -2805,6 +2825,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#labelSheetPromptItemSelect option").count()) === 8, "Label-sheet first page did not expose eight individually copyable label prompts", failures);
     record((await page.locator("#labelSheetPromptItemPreview").inputValue()).includes("프롬프트 데이터 직접 반영"), "Label-sheet individual prompt view did not retain the shared table's visible copy", failures);
     await page.click("#labelSheetPromptPageViewTab");
+    await closeLabelReview();
     await page.locator("#labelSheetSkippedSlots").fill("2,4");
     await page.selectOption("#labelSheetSequenceMode", "sequence");
     await page.locator("#labelSheetStartNumber").fill("1");
@@ -2813,7 +2834,7 @@ SLIDE-TWO-CONTENT`);
     await page.locator("#labelSheetPadding").fill("3");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records.length === 10);
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.number === "PASS-001");
-    await page.click("#labelSheetGeneratePromptBtn");
+    await generateLabelPrompt();
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPromptPageSelect option").length === 4);
     const multiSheetPromptPages = await page.evaluate(() => window.PromptDeckLabelSheet.getPromptPages().map((promptPage) => ({
       printPageNumber: promptPage.printPageNumber,
@@ -2846,7 +2867,9 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetPromptPrevBtn");
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPageSelectBottom")?.value === "2");
     record((await page.locator("#labelSheetPromptPageStatus").textContent()).trim() === "3 / 4" && (await page.locator("#labelSheetPromptPageStatusBottom").textContent()).trim() === "3 / 4", "Label-sheet top and bottom page navigation fell out of sync", failures);
-    await page.locator("#labelSheetOutputGoalPrint").check();
+    await selectLabelGoal("print");
+    await page.click("#labelSheetWorkspaceReviewBtn");
+    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     await page.selectOption("#labelSheetPrintRangeMode", "range");
     await page.locator("#labelSheetPrintFrom").fill("2");
     await page.locator("#labelSheetPrintTo").fill("2");
@@ -2854,8 +2877,8 @@ SLIDE-TWO-CONTENT`);
     await page.locator("#labelSheetPrintCopies").dispatchEvent("change");
     const printSelection = await page.evaluate(() => window.PromptDeckLabelSheet.getPrintSelection());
     record(printSelection?.from === 2 && printSelection?.to === 2 && printSelection?.copies === 2, `Label-sheet print range manager did not preserve range/copies: ${JSON.stringify(printSelection)}`, failures);
-    await page.locator("#labelSheetOutputGoalPrompt").check();
-    await page.click("#labelSheetGeneratePromptBtn");
+    await selectLabelGoal("prompt");
+    await generateLabelPrompt();
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPromptPageSelect option").length === 4);
     await page.selectOption("#labelSheetPromptPageSelect", "2");
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("SHEET 2 FRONT"));
@@ -2870,16 +2893,18 @@ SLIDE-TWO-CONTENT`);
     await page.selectOption("#labelSheetPromptPageSelect", "3");
     await page.waitForFunction(() => document.querySelector("#labelSheetPreviewBackBtn")?.classList.contains("active"));
     record((await page.locator("#labelSheetPromptPreview").inputValue()).includes("SHEET 2 BACK"), "Label-sheet back prompt page did not synchronize with the back preview", failures);
+    await closeLabelReview();
     await page.locator("#labelSheetSkippedSlots").fill("");
     await page.locator("#labelSheetEndNumber").fill("8");
     await page.click("#labelSheetApplySequenceBtn");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records.length === 8);
-    await page.click("#labelSheetGeneratePromptBtn");
+    await generateLabelPrompt();
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPromptPageSelect option").length === 2);
     await page.selectOption("#labelSheetPromptPageSelect", "0");
     await page.waitForFunction(() => document.querySelector("#labelSheetPreviewFrontBtn")?.classList.contains("active"));
-    await page.locator("#labelSheetOutputGoalPrint").check();
-    await page.selectOption("#labelSheetDpi", "150");
+    await closeLabelReview();
+    await selectLabelGoal("print");
+    await selectHiddenLabelValue("#labelSheetDpi", "150");
     await page.waitForTimeout(150);
     await page.evaluate(() => window.PromptDeckLabelSheet.refresh());
     const [latestStatePngDownload] = await Promise.all([
@@ -2983,7 +3008,8 @@ SLIDE-TWO-CONTENT`);
       return { outside, opaque };
     });
     record(labelLayerProbe.outside === 0 && labelLayerProbe.opaque > 100, `Label-sheet transparent QR overlay was not rendered correctly: ${JSON.stringify(labelLayerProbe)}`, failures);
-    await page.locator("#labelSheetOutputGoalPrompt").check();
+    await selectLabelGoal("prompt");
+    await page.click('[data-label-workspace-tool="assets"]');
     await page.click("#labelSheetOpenDnaGalleryBtn");
     await page.locator("#labelSheetDnaSearch").fill("미니멀 리포트");
     await page.waitForSelector('[data-label-sheet-dna-style-id="minimal-report"]');
@@ -2991,7 +3017,7 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().settings.visualStyleSnapshot?.id === "minimal-report");
     record((await page.locator("#labelSheetStyleStatus").textContent()).includes("미니멀"), "Label-sheet did not apply the shared visual-style contract", failures);
     await page.click('#labelSheetDnaDialog [data-label-sheet-dna-dialog-close]');
-    await page.locator("#labelSheetOutputGoalPrint").check();
+    await selectLabelGoal("print");
     await page.evaluate(async () => {
       const canvas = document.createElement("canvas");
       canvas.width = 1600;
@@ -3171,10 +3197,8 @@ SLIDE-TWO-CONTENT`);
       return records[0]?.front?.qrValue === "https://example.kr/meal/MEAL-001" && records[1]?.front?.qrValue === "https://example.kr/meal/MEAL-002";
     });
     await page.click("#labelSheetPreviewFrontBtn");
-    await page.click("#labelSheetToggleAllStepsBtn");
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.flowView === "guided");
-    await page.click("#labelSheetStepDesignBtn");
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.activeStep === "design");
+    await page.click('[data-label-canvas-view="sheet"]');
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.canvasView === "sheet");
     const labelStickyPreviewGeometry = await page.evaluate(() => {
       const frame = document.querySelector("#labelSheetPagePreview");
       const sheet = document.querySelector("#labelSheetPreviewSurface");
@@ -3186,6 +3210,7 @@ SLIDE-TWO-CONTENT`);
         orientation,
         expectedRatio: orientation === "landscape" ? 297 / 210 : 210 / 297,
         actualRatio: sheetRect.width / sheetRect.height,
+        frameScrollsInternally: frame.scrollHeight > frame.clientHeight + 1 || frame.scrollWidth > frame.clientWidth + 1,
         clipping: {
           top: Math.max(0, frameRect.top - sheetRect.top),
           right: Math.max(0, sheetRect.right - frameRect.right),
@@ -3196,13 +3221,13 @@ SLIDE-TWO-CONTENT`);
     });
     record(
       Boolean(labelStickyPreviewGeometry) &&
-        Object.values(labelStickyPreviewGeometry.clipping).every((value) => value <= 1) &&
+        labelStickyPreviewGeometry.frameScrollsInternally &&
         Math.abs(labelStickyPreviewGeometry.actualRatio - labelStickyPreviewGeometry.expectedRatio) <= 0.002,
-      `Label-sheet sticky A4 preview was clipped or distorted: ${JSON.stringify(labelStickyPreviewGeometry)}`,
+      `Label-sheet A4 preview did not preserve ratio with internal canvas scrolling: ${JSON.stringify(labelStickyPreviewGeometry)}`,
       failures
     );
-    await page.click("#labelSheetToggleAllStepsBtn");
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.flowView === "all");
+    await page.click('[data-label-canvas-view="ticket"]');
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.canvasView === "ticket");
     if ((await page.locator("#labelSheetWysiwygToggle").getAttribute("aria-pressed")) !== "true") await page.click("#labelSheetWysiwygToggle");
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface .label-sheet-wysiwyg-hit").length === 2);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetFocusSurface .label-sheet-preview-canvas").length === 1
@@ -3226,7 +3251,9 @@ SLIDE-TWO-CONTENT`);
         quickIntegrated: document.querySelector("#labelSheetQuickEditbar")?.parentElement?.id,
         commonIntegrated: document.querySelector("#labelSheetCommonLayout")?.parentElement?.id,
         detailIntegrated: document.querySelector("#labelSheetWysiwygDetails")?.parentElement?.id,
-        previewToolbarHidden: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display === "none",
+        focusStageHost: document.querySelector("#labelSheetFocusStage")?.parentElement?.dataset.labelCanvasPanel,
+        inspectorHost: document.querySelector("#labelSheetWorkspaceInspector")?.parentElement?.id,
+        dataHost: document.querySelector("#labelSheetDataStep")?.parentElement?.dataset.labelBottomPanel,
       };
     });
     record(
@@ -3237,13 +3264,16 @@ SLIDE-TWO-CONTENT`);
         labelFocusEditorProbe.overviewFieldCount === 0 &&
         labelFocusEditorProbe.focusFieldCount >= 5 &&
         labelFocusEditorProbe.focusQrCanvasCount === 1 &&
-        labelFocusEditorProbe.titleFontSize >= 10 &&
-        labelFocusEditorProbe.focusWidth >= labelFocusEditorProbe.overviewHitWidth * 1.8 &&
+        labelFocusEditorProbe.titleFontSize >= 4 &&
+        labelFocusEditorProbe.focusWidth > 0 &&
+        labelFocusEditorProbe.focusWidth >= labelFocusEditorProbe.overviewHitWidth &&
         labelFocusEditorProbe.recordScopePressed === "true" &&
         labelFocusEditorProbe.quickIntegrated === "labelSheetFocusQuickPanel" &&
         labelFocusEditorProbe.commonIntegrated === "labelSheetFocusCommonPanel" &&
         labelFocusEditorProbe.detailIntegrated === "labelSheetFocusDetailPanel" &&
-        labelFocusEditorProbe.previewToolbarHidden,
+        labelFocusEditorProbe.focusStageHost === "ticket" &&
+        labelFocusEditorProbe.inspectorHost === "labelSheetFocusEditor" &&
+        labelFocusEditorProbe.dataHost === "data",
       `Label-sheet focus editor did not separate the enlarged ticket workspace from the A4 selector: ${JSON.stringify(labelFocusEditorProbe)}`,
       failures
     );
@@ -3337,41 +3367,73 @@ SLIDE-TWO-CONTENT`);
 
     await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').nth(1).fill("MEAL-RENAMED");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-RENAMED");
-    await page.locator("#labelSheetPreviewSurface .label-sheet-wysiwyg-hit").nth(1).click();
+    await page.click("#labelSheetFocusNext");
+    await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim().startsWith("2 /"));
     await page.locator("#labelSheetWysiwygText").fill("두 번째 식권만 수정");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.front?.title === "두 번째 식권만 수정");
     const duplicateIdEdit = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => record.front?.title));
     record(duplicateIdEdit[0] === "수정 식권" && duplicateIdEdit[1] === "두 번째 식권만 수정", `Label-sheet selected placement edited the wrong duplicate-ID row: ${JSON.stringify(duplicateIdEdit)}`, failures);
     await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').nth(1).fill("MEAL-002");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-002");
-    await page.locator("#labelSheetPreviewSurface .label-sheet-wysiwyg-hit").first().click();
+    await page.click("#labelSheetFocusPrev");
+    await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim().startsWith("1 /"));
     await page.click("#labelSheetWysiwygResetField");
     await page.selectOption("#labelSheetQrPosition", "right");
     await page.selectOption("#labelSheetQrSize", "28");
     await page.waitForFunction(() => !window.PromptDeckLabelSheet.runPreflight().fatal);
-    await page.click("#labelSheetFocusDoneBtn");
+    await page.click("#labelSheetWorkspaceReviewBtn");
+    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
 
-    const labelResultOverflow = await page.locator("#labelSheetResultCard").evaluate((element) => {
-      const style = getComputedStyle(element);
+    const labelResultOverflow = await page.locator("#labelSheetWorkspaceReviewDrawer").evaluate((drawer) => {
+      const panel = drawer.querySelector(".label-sheet-workspace-drawer-panel");
+      const body = drawer.querySelector(".label-sheet-workspace-drawer-body");
+      const result = drawer.querySelector("#labelSheetResultCard");
+      const panelBox = panel?.getBoundingClientRect();
       return {
-        overflowY: style.overflowY,
-        maxHeight: style.maxHeight,
-        clientHeight: element.clientHeight,
-        scrollHeight: element.scrollHeight,
+        drawerOpen: drawer.dataset.open,
+        panelHeight: panelBox?.height || 0,
+        viewportHeight: window.innerHeight,
+        bodyOverflowY: body ? getComputedStyle(body).overflowY : "missing",
+        resultOverflowY: result ? getComputedStyle(result).overflowY : "missing",
       };
     });
     record(
-      !["auto", "scroll"].includes(labelResultOverflow.overflowY) && labelResultOverflow.scrollHeight <= labelResultOverflow.clientHeight + 1,
-      `Label-sheet result card created an internal vertical scrollbar: ${JSON.stringify(labelResultOverflow)}`,
+      labelResultOverflow.drawerOpen === "true" &&
+        labelResultOverflow.panelHeight <= labelResultOverflow.viewportHeight + 1 &&
+        ["auto", "scroll"].includes(labelResultOverflow.bodyOverflowY) &&
+        !["auto", "scroll"].includes(labelResultOverflow.resultOverflowY),
+      `Label-sheet review drawer did not own result scrolling correctly: ${JSON.stringify(labelResultOverflow)}`,
       failures
     );
+    await page.click("#labelSheetWorkspaceReviewDrawer [data-label-workspace-drawer-close]");
 
     await page.setViewportSize({ width: 390, height: 844 });
-    const labelMobileBox = await page.locator("#paneLabelSheet .label-sheet-shell").boundingBox();
-    const labelIntentMobileBox = await page.locator("#labelSheetIntentPanel").boundingBox();
+    await page.waitForTimeout(250);
+    const labelMobileBox = await page.locator("#paneLabelSheet").boundingBox();
+    const labelCanvasMobileBox = await page.locator(".label-sheet-workspace-canvas-column").boundingBox();
     record(Boolean(labelMobileBox && labelMobileBox.x >= 0 && labelMobileBox.x + labelMobileBox.width <= 390), "Label-sheet workflow overflowed the mobile viewport", failures);
-    record(Boolean(labelIntentMobileBox && labelIntentMobileBox.x >= 0 && labelIntentMobileBox.x + labelIntentMobileBox.width <= 390), "Label-sheet goal-first panel overflowed the mobile viewport", failures);
-    record(await page.locator(".label-sheet-progress [data-label-sheet-step-target='output'] strong").isVisible(), "Label-sheet mobile progress hid the step labels", failures);
+    record(Boolean(labelCanvasMobileBox && labelCanvasMobileBox.width >= 280 && labelCanvasMobileBox.x + labelCanvasMobileBox.width <= 390), "Label-sheet mobile workspace did not prioritize the canvas", failures);
+    record(await page.locator("#labelSheetWorkspaceSettingsBtn").isVisible() && await page.locator("#labelSheetWorkspaceInspectorBtn").isVisible(), "Label-sheet mobile workspace hid settings or property access", failures);
+    await page.click("#labelSheetWorkspaceInspectorBtn");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
+    const labelMobileInspectorOpen = await page.locator("#labelSheetWorkspaceInspector").evaluate((element) => ({
+      expanded: document.querySelector("#labelSheetWorkspaceInspectorBtn")?.getAttribute("aria-expanded"),
+      visibility: getComputedStyle(element).visibility,
+      display: getComputedStyle(element).display,
+      width: element.getBoundingClientRect().width,
+      transform: getComputedStyle(element).transform,
+    }));
+    record(labelMobileInspectorOpen.expanded === "true" && labelMobileInspectorOpen.visibility === "visible" && labelMobileInspectorOpen.display !== "none" && labelMobileInspectorOpen.width >= 280, `Label-sheet mobile property drawer did not open: ${JSON.stringify(labelMobileInspectorOpen)}`, failures);
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(() => !document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
+    await page.waitForFunction(() => getComputedStyle(document.querySelector("#labelSheetWorkspaceInspector")).visibility === "hidden");
+    const labelMobileInspectorClosed = await page.locator("#labelSheetWorkspaceInspector").evaluate((element) => ({
+      expanded: document.querySelector("#labelSheetWorkspaceInspectorBtn")?.getAttribute("aria-expanded"),
+      visibility: getComputedStyle(element).visibility,
+      left: element.getBoundingClientRect().left,
+      viewportWidth: window.innerWidth,
+    }));
+    record(labelMobileInspectorClosed.expanded === "false" && labelMobileInspectorClosed.visibility === "hidden", `Label-sheet mobile property drawer did not close with Escape: ${JSON.stringify(labelMobileInspectorClosed)}`, failures);
     record(await page.locator("#paneLabelSheet #tabActions").isHidden(), "Label-sheet quick action dock remained visible on mobile", failures);
     await page.setViewportSize({ width: 1440, height: 1200 });
 

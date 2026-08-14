@@ -99,7 +99,7 @@
       pane: document.getElementById("paneLabelSheet"),
       group: "special",
       actions: "labelSheet",
-      actionHost: ".label-sheet-result-stack",
+      actionHost: ".label-sheet-workspace-actions",
       stickyActionPanel: false,
     },
     qrGenerator: {
@@ -320,27 +320,12 @@
     if (!mobileTabActions) return;
     const labelSheetPane = document.getElementById("paneLabelSheet");
     const labelSheetGoal = labelSheetPane?.dataset.outputGoal || "print";
-    const labelSheetStep = labelSheetPane?.dataset.activeStep || "intent";
-    const labelSheetStepActions = {
-      intent: { label: "다음: 용지 규격", targetId: "labelSheetIntentContinueBtn", className: "btn primary" },
-      spec: { label: "다음: 데이터 입력", targetId: "labelSheetStepDataBtn", className: "btn primary" },
-      data: {
-        label: labelSheetGoal === "prompt" ? "다음: 프롬프트 설계" : "다음: 화면 편집",
-        targetId: "labelSheetStepDesignBtn",
-        className: "btn primary",
-      },
-      design: {
-        label: labelSheetGoal === "prompt" ? "다음: 페이지별 결과" : "다음: 검토·출력",
-        targetId: "labelSheetStepOutputBtn",
-        className: "btn primary",
-      },
-      output: labelSheetGoal === "prompt"
-        ? { label: "전체 프롬프트 생성", targetId: "labelSheetGeneratePromptBtn", className: "btn primary" }
-        : { label: "PDF 파일 저장", targetId: "labelSheetExportPdfBtn", className: "btn primary" },
-    };
-    const targetId = actionKey === "labelSheet" ? labelSheetStepActions[labelSheetStep]?.targetId : mobilePrimaryTargets[actionKey];
+    const labelSheetWorkspaceAction = labelSheetGoal === "prompt"
+      ? { label: "전체 프롬프트 생성", targetId: "labelSheetGeneratePromptBtn", className: "btn primary" }
+      : { label: "검토·내보내기", targetId: "labelSheetWorkspaceReviewBtn", className: "btn primary" };
+    const targetId = actionKey === "labelSheet" ? labelSheetWorkspaceAction.targetId : mobilePrimaryTargets[actionKey];
     const action = actionKey === "labelSheet"
-      ? labelSheetStepActions[labelSheetStep]
+      ? labelSheetWorkspaceAction
       : (actionSets[actionKey] || []).find((item) => item.targetId === targetId);
     if (!action) {
       mobileTabActions.replaceChildren();
@@ -504,10 +489,6 @@
     if (activeTabKey !== "labelSheet") return;
     renderHeaderActions("labelSheet", "labelSheet");
     renderMobileActions("labelSheet");
-  });
-
-  window.addEventListener("promptdeck:label-sheet-step-change", () => {
-    if (activeTabKey === "labelSheet") renderMobileActions("labelSheet");
   });
 
   let revealResizeFrame = 0;

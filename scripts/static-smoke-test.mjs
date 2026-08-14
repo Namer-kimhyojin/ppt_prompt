@@ -120,17 +120,24 @@ async function verifyViewport(label, viewport) {
   if (!labelTabVisible) failures.push(`${label}: 라벨·티켓 제작 탭이 보이지 않습니다.`);
   if (labelTabVisible) {
     await page.locator("#tabBtnLabelSheet").click();
-    if ((await page.locator("#labelSheetIntentPanel > .label-sheet-progress-row").count()) !== 1) failures.push(`${label}: 제작 단계가 목표 패널 상단에 배치되지 않았습니다.`);
-    if ((await page.locator("#labelSheetIntentPanel > .label-sheet-progress-row").evaluate((element) => getComputedStyle(element).position)) === "sticky") failures.push(`${label}: 제작 단계가 앱 메뉴 위에 고정됩니다.`);
-    await page.locator("#labelSheetOutputGoalPrompt").check();
-    await page.locator('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]').check();
-    await page.locator("#labelSheetModeDuplex").check();
-    await page.locator("#labelSheetIntentSampleBtn").click();
+    if ((await page.locator("#paneLabelSheet[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V2 작업공간이 초기화되지 않았습니다.`);
+    if ((await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-frame + .label-sheet-workspace-bottom").count()) !== 1) failures.push(`${label}: 프로젝트 바·캔버스·데이터 시트 순서가 깨졌습니다.`);
+    await page.evaluate(() => {
+      const goal = document.querySelector("#labelSheetOutputGoalPrompt");
+      const type = document.querySelector('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]');
+      const duplex = document.querySelector("#labelSheetModeDuplex");
+      goal.checked = true;
+      goal.dispatchEvent(new Event("change", { bubbles: true }));
+      type.checked = true;
+      type.dispatchEvent(new Event("change", { bubbles: true }));
+      duplex.checked = true;
+      duplex.dispatchEvent(new Event("change", { bubbles: true }));
+      document.querySelector("#labelSheetIntentSampleBtn")?.click();
+    });
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
-    await page.locator("#labelSheetToggleAllStepsBtn").click();
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.flowView === "all"
-      && [...document.querySelectorAll("#paneLabelSheet details.label-sheet-step")].every((details) => details.open));
+    if ((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) !== 8) failures.push(`${label}: 레코드 탐색기가 데이터 8건을 반영하지 못했습니다.`);
+    if (viewport.width <= 720) await page.locator("#labelSheetWorkspaceInspectorBtn").click();
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.assetStore.list().filter((asset) => asset.filename.startsWith("기본-")).length >= 6, null, { timeout: 60_000 });
     if (!(await page.evaluate(() => Boolean(window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData && window.QRGeneratorCore)))) failures.push(`${label}: 라벨 패키지·표 데이터·QR 공용 모듈이 누락되었습니다.`);
@@ -144,8 +151,12 @@ async function verifyViewport(label, viewport) {
     if ((await page.locator("#labelSheetAssetList .label-sheet-asset-card").count()) < 6) failures.push(`${label}: 정적판 기본 배경 6종이 보관함에 등록되지 않았습니다.`);
     if (await visible("#labelSheetPageImageRegisterBtn")) failures.push(`${label}: 프롬프트 설계에 A4 배경 합성 절차가 노출됩니다.`);
     if (await visible("#labelSheetSavePackageBtn") || await visible("#labelSheetExportLayersBtn")) failures.push(`${label}: 프롬프트 설계에 완성물 패키지 기능이 노출됩니다.`);
-    if (!(await visible("#labelSheetGeneratePromptBtn"))) failures.push(`${label}: 프롬프트 설계 핵심 생성 버튼이 숨겨졌습니다.`);
-    await page.locator("#labelSheetGeneratePromptBtn").click();
+    const promptActionSelector = viewport.width <= 720
+      ? '#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]'
+      : '#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]';
+    if (!(await visible(promptActionSelector))) failures.push(`${label}: 프롬프트 설계 핵심 생성 버튼이 숨겨졌습니다.`);
+    await page.locator(promptActionSelector).click();
+    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
     const prompt = await page.locator("#labelSheetPromptPreview").inputValue();
     if (!prompt.includes("A4 FULL IMAGE PAGE") || !prompt.includes("샘플교육센터 교육생 식권") || !prompt.includes("DEMO-MEAL-001")) failures.push(`${label}: 정적판 실제 문구 포함 전체 이미지 프롬프트가 생성되지 않았습니다.`);
