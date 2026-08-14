@@ -137,6 +137,14 @@ async function verifyViewport(label, viewport) {
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
     if ((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) !== 8) failures.push(`${label}: 레코드 탐색기가 데이터 8건을 반영하지 못했습니다.`);
+    if (viewport.width > 860) {
+      await page.locator('[data-label-bottom-tab="data"]').click();
+      await page.waitForFunction(() => {
+        const pane = document.querySelector("#paneLabelSheet");
+        const panel = document.querySelector('[data-label-bottom-panel="data"]');
+        return !pane?.classList.contains("is-bottom-collapsed") && panel && !panel.hidden;
+      });
+    }
     if (viewport.width <= 720) await page.locator("#labelSheetWorkspaceInspectorBtn").click();
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.assetStore.list().filter((asset) => asset.filename.startsWith("기본-")).length >= 6, null, { timeout: 60_000 });
