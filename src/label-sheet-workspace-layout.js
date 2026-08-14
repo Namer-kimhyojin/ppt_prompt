@@ -400,16 +400,18 @@
       const available = Math.max(240, viewportHeight - viewportTop - bodyPaddingBottom);
       pane.style.setProperty("--label-workspace-available-height", `${Math.round(available)}px`);
     };
+    const scheduleSync = () => window.requestAnimationFrame(() => window.requestAnimationFrame(sync));
     const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(sync) : null;
     [document.querySelector(".app-header"), document.querySelector(".app-tabs-bar"), $("mobileTabActions")]
       .filter(Boolean)
       .forEach((element) => resizeObserver?.observe(element));
     new MutationObserver(sync).observe(pane, { attributes: true, attributeFilter: ["class"] });
     new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class", "style"] });
+    pane.addEventListener("promptdeck:label-workspace-change", scheduleSync);
     window.addEventListener("resize", sync, { passive: true });
     window.visualViewport?.addEventListener("resize", sync, { passive: true });
     window.visualViewport?.addEventListener("scroll", sync, { passive: true });
-    window.requestAnimationFrame(sync);
+    scheduleSync();
   }
 
   function createDrawer(id, title, description) {
