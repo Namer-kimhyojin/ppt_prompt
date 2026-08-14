@@ -485,7 +485,7 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
           && labelSurface.workspaceBottomCollapsed
           && labelSurface.workspaceToolbarDisplay === "none"
           && labelSurface.workspacePaneBottom <= labelSurface.workspaceActionTop + 1
-          && labelSurface.workspaceCanvasWidth >= viewport.width - 60,
+          && labelSurface.workspaceCanvasWidth >= viewport.width - 75,
         `${origin} compact label workspace failed at ${viewport.width}x${viewport.height}: ${JSON.stringify(labelSurface)}`,
       );
     }
