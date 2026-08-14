@@ -142,7 +142,10 @@ async function verifyViewport(label, viewport) {
     await page.waitForFunction(() => window.PromptDeckLabelSheet.assetStore.list().filter((asset) => asset.filename.startsWith("기본-")).length >= 6, null, { timeout: 60_000 });
     if (!(await page.evaluate(() => Boolean(window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData && window.QRGeneratorCore)))) failures.push(`${label}: 라벨 패키지·표 데이터·QR 공용 모듈이 누락되었습니다.`);
     if (!(await page.evaluate(() => typeof window.QRGeneratorCore?.getCurrentValue === "function"))) failures.push(`${label}: QR 생성기의 현재 값을 라벨에 전달하는 연결이 누락되었습니다.`);
-    if ((await page.locator("#labelSheetRecordTable thead th").count()) !== 18 || !(await visible("#labelSheetRecordTable"))) failures.push(`${label}: 프롬프트 모드의 원본 데이터 검토·직접 편집 표가 누락되었습니다.`);
+    if (
+      (await page.locator("#labelSheetRecordTable thead th").count()) !== 18
+      || (viewport.width > 860 && !(await visible("#labelSheetRecordTable")))
+    ) failures.push(`${label}: 프롬프트 모드의 원본 데이터 검토·직접 편집 표가 누락되었습니다.`);
     if (await visible("#labelSheetQrAssignBtn") || await visible("#labelSheetQrUseCurrentBtn")) failures.push(`${label}: 프롬프트 설계에 실제 QR 값 배정 기능이 노출됩니다.`);
     if (!(await visible("#labelSheetQrResolvedPreview"))) failures.push(`${label}: 프롬프트 설계의 QR 예약 상태 확인이 숨겨졌습니다.`);
     if (await visible("#labelSheetGenerateMissingBtn")) failures.push(`${label}: 프롬프트 설계에서 라벨 AI 배경 생성이 노출됩니다.`);
@@ -187,9 +190,76 @@ async function verifyViewport(label, viewport) {
   await page.close();
 }
 
+async function verifyCompactLabelViewport(label, viewport) {
+  const page = await browser.newPage({ viewport });
+  const pageErrors = [];
+  page.on("pageerror", (error) => pageErrors.push(error.stack || error.message));
+  await page.goto(origin, { waitUntil: "load" });
+  await page.waitForFunction(() => Boolean(window.PromptDeckTabs));
+  await page.evaluate(() => window.PromptDeckTabs.switchTab("labelSheet"));
+  await page.waitForSelector("#paneLabelSheet[data-label-workspace-controller-ready='true']");
+  await page.waitForTimeout(250);
+  const layout = await page.evaluate(() => {
+    const pane = document.querySelector("#paneLabelSheet");
+    const paneBox = pane?.getBoundingClientRect();
+    const canvasBox = document.querySelector(".label-sheet-workspace-canvas-column")?.getBoundingClientRect();
+    const mobileAction = document.querySelector("#mobileTabActions");
+    const mobileActionStyle = mobileAction ? getComputedStyle(mobileAction) : null;
+    const mobileActionBox = mobileAction?.getBoundingClientRect();
+    return {
+      documentHeight: document.documentElement.scrollHeight,
+      viewportHeight: window.innerHeight,
+      headerDisplay: getComputedStyle(document.querySelector(".app-header")).display,
+      paneBottom: paneBox?.bottom || 0,
+      actionTop: mobileActionStyle?.display === "none" ? window.innerHeight : mobileActionBox?.top || window.innerHeight,
+      canvasWidth: canvasBox?.width || 0,
+      bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
+      toolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
+      toolPanelVisibility: getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility,
+      inspectorAccess: getComputedStyle(document.querySelector("#labelSheetWorkspaceInspectorBtn")).display,
+    };
+  });
+  if (
+    layout.documentHeight > layout.viewportHeight + 1
+    || layout.headerDisplay !== "none"
+    || layout.paneBottom > layout.actionTop + 1
+    || layout.canvasWidth < viewport.width - 75
+    || !layout.bottomCollapsed
+    || layout.toolbarDisplay !== "none"
+    || layout.toolPanelVisibility !== "hidden"
+    || layout.inspectorAccess === "none"
+  ) {
+    failures.push(`${label}: 라벨·티켓 컴팩트 작업공간 배치가 깨졌습니다. ${JSON.stringify(layout)}`);
+  }
+  await page.locator('[data-label-workspace-tool="records"]').click();
+  await page.waitForFunction(() => {
+    const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
+    const box = panel?.getBoundingClientRect();
+    return document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open")
+      && getComputedStyle(panel).visibility === "visible"
+      && box.left >= 51
+      && box.right <= window.innerWidth + 1;
+  });
+  await page.locator("#labelSheetWorkspaceToolPanelClose").click();
+  await page.waitForFunction(() => getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility === "hidden");
+  await page.locator("#labelSheetWorkspaceInspectorBtn").click();
+  await page.waitForFunction(() => {
+    const inspector = document.querySelector("#labelSheetWorkspaceInspector");
+    const box = inspector?.getBoundingClientRect();
+    return document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open")
+      && getComputedStyle(inspector).visibility === "visible"
+      && box.left >= 51
+      && box.right <= window.innerWidth + 1;
+  });
+  if (pageErrors.length) failures.push(`${label}: 페이지 오류: ${pageErrors.join(" | ")}`);
+  await page.close();
+}
+
 try {
   await verifyViewport("desktop", { width: 1440, height: 1000 });
   await verifyViewport("mobile", { width: 390, height: 844 });
+  await verifyCompactLabelViewport("compact phone", { width: 375, height: 667 });
+  await verifyCompactLabelViewport("compact landscape", { width: 844, height: 390 });
 
   const indexResponse = await fetch(`${origin}/`);
   const indexHtml = await indexResponse.text();

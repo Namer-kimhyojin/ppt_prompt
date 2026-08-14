@@ -2675,6 +2675,11 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetWorkspaceSampleBtn");
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
+    await page.click('[data-label-bottom-tab="data"]');
+    await page.waitForFunction(() => {
+      const table = document.querySelector("#labelSheetRecordTable");
+      return table && getComputedStyle(table).display !== "none" && table.getClientRects().length > 0;
+    });
     record((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) === 8, "Label-sheet workspace record navigator did not mirror the imported rows", failures);
     record(await page.locator("#labelSheetWorkspaceEmpty").isHidden(), "Label-sheet workspace kept the empty state over populated data", failures);
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
@@ -3411,9 +3416,55 @@ SLIDE-TWO-CONTENT`);
     await page.waitForTimeout(250);
     const labelMobileBox = await page.locator("#paneLabelSheet").boundingBox();
     const labelCanvasMobileBox = await page.locator(".label-sheet-workspace-canvas-column").boundingBox();
+    const labelMobileLayout = await page.evaluate(() => {
+      const pane = document.querySelector("#paneLabelSheet");
+      const action = document.querySelector("#mobileTabActions");
+      const paneBox = pane?.getBoundingClientRect();
+      const actionBox = action?.getBoundingClientRect();
+      return {
+        documentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1,
+        headerDisplay: getComputedStyle(document.querySelector(".app-header")).display,
+        paneBottom: paneBox?.bottom || 0,
+        actionTop: actionBox?.top || window.innerHeight,
+        bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
+        toolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
+        toolPanelVisibility: getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility,
+      };
+    });
     record(Boolean(labelMobileBox && labelMobileBox.x >= 0 && labelMobileBox.x + labelMobileBox.width <= 390), "Label-sheet workflow overflowed the mobile viewport", failures);
     record(Boolean(labelCanvasMobileBox && labelCanvasMobileBox.width >= 280 && labelCanvasMobileBox.x + labelCanvasMobileBox.width <= 390), "Label-sheet mobile workspace did not prioritize the canvas", failures);
+    record(
+      !labelMobileLayout.documentOverflow
+        && labelMobileLayout.headerDisplay === "none"
+        && labelMobileLayout.paneBottom <= labelMobileLayout.actionTop + 1
+        && labelMobileLayout.bottomCollapsed
+        && labelMobileLayout.toolbarDisplay === "none"
+        && labelMobileLayout.toolPanelVisibility === "hidden",
+      `Label-sheet mobile viewport still overlapped or wasted canvas space: ${JSON.stringify(labelMobileLayout)}`,
+      failures
+    );
     record(await page.locator("#labelSheetWorkspaceSettingsBtn").isVisible() && await page.locator("#labelSheetWorkspaceInspectorBtn").isVisible(), "Label-sheet mobile workspace hid settings or property access", failures);
+    await page.click('[data-label-workspace-tool="records"]');
+    await page.waitForFunction(() => {
+      const root = document.querySelector("#paneLabelSheet");
+      const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
+      const box = panel?.getBoundingClientRect();
+      return root?.classList.contains("is-mobile-tool-panel-open")
+        && getComputedStyle(panel).visibility === "visible"
+        && box.left >= 51
+        && box.right <= window.innerWidth + 1;
+    });
+    const labelMobileRecordCounts = await page.evaluate(() => ({
+      drawer: document.querySelectorAll("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").length,
+      project: window.PromptDeckLabelSheet.getProject().records.length,
+    }));
+    record(
+      labelMobileRecordCounts.drawer > 0 && labelMobileRecordCounts.drawer === labelMobileRecordCounts.project,
+      `Label-sheet mobile record drawer did not mirror the current records: ${JSON.stringify(labelMobileRecordCounts)}`,
+      failures
+    );
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(() => !document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open"));
     await page.click("#labelSheetWorkspaceInspectorBtn");
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
     const labelMobileInspectorOpen = await page.locator("#labelSheetWorkspaceInspector").evaluate((element) => ({
@@ -3435,6 +3486,50 @@ SLIDE-TWO-CONTENT`);
     }));
     record(labelMobileInspectorClosed.expanded === "false" && labelMobileInspectorClosed.visibility === "hidden", `Label-sheet mobile property drawer did not close with Escape: ${JSON.stringify(labelMobileInspectorClosed)}`, failures);
     record(await page.locator("#paneLabelSheet #tabActions").isHidden(), "Label-sheet quick action dock remained visible on mobile", failures);
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForTimeout(250);
+    const labelSmallMobileLayout = await page.evaluate(() => {
+      const pane = document.querySelector("#paneLabelSheet")?.getBoundingClientRect();
+      const action = document.querySelector("#mobileTabActions")?.getBoundingClientRect();
+      const canvas = document.querySelector(".label-sheet-workspace-canvas-column")?.getBoundingClientRect();
+      return {
+        documentHeight: document.documentElement.scrollHeight,
+        viewportHeight: window.innerHeight,
+        paneBottom: pane?.bottom || 0,
+        actionTop: action?.top || window.innerHeight,
+        canvasWidth: canvas?.width || 0,
+      };
+    });
+    record(
+      labelSmallMobileLayout.documentHeight <= labelSmallMobileLayout.viewportHeight + 1
+        && labelSmallMobileLayout.paneBottom <= labelSmallMobileLayout.actionTop + 1
+        && labelSmallMobileLayout.canvasWidth >= 280,
+      `Label-sheet compact phone viewport overflowed: ${JSON.stringify(labelSmallMobileLayout)}`,
+      failures
+    );
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(250);
+    const labelLandscapeLayout = await page.evaluate(() => {
+      const pane = document.querySelector("#paneLabelSheet");
+      const canvas = document.querySelector(".label-sheet-workspace-canvas-column")?.getBoundingClientRect();
+      return {
+        documentHeight: document.documentElement.scrollHeight,
+        viewportHeight: window.innerHeight,
+        headerDisplay: getComputedStyle(document.querySelector(".app-header")).display,
+        inspectorAccess: getComputedStyle(document.querySelector("#labelSheetWorkspaceInspectorBtn")).display,
+        bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
+        canvasWidth: canvas?.width || 0,
+      };
+    });
+    record(
+      labelLandscapeLayout.documentHeight <= labelLandscapeLayout.viewportHeight + 1
+        && labelLandscapeLayout.headerDisplay === "none"
+        && labelLandscapeLayout.inspectorAccess !== "none"
+        && labelLandscapeLayout.bottomCollapsed
+        && labelLandscapeLayout.canvasWidth >= 700,
+      `Label-sheet compact landscape viewport overflowed: ${JSON.stringify(labelLandscapeLayout)}`,
+      failures
+    );
     await page.setViewportSize({ width: 1440, height: 1200 });
 
     await page.click("#tabBtnMapPrompt");
@@ -3637,6 +3732,8 @@ SLIDE-TWO-CONTENT`);
     const qrBatchBridgeValues = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.slice(-2).map((record) => record.front?.qrValue));
     record(qrBatchBridgeValues[0] === "https://example.com" && qrBatchBridgeValues[1] === "https://openai.com", `QR batch-to-label bridge lost row payloads: ${JSON.stringify(qrBatchBridgeValues)}`, failures);
     record(await page.locator("#qrBatchModal").isHidden(), "QR batch modal did not close after sending records to the label studio", failures);
+    await page.click('[data-label-bottom-tab="data"]');
+    await page.waitForFunction(() => document.querySelector("#labelSheetRecordTable")?.getClientRects().length > 0);
     await page.selectOption("#labelSheetQrAssignScope", "selected");
     await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').last().check();
     await page.click("#labelSheetQrUseCurrentBtn");

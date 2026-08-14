@@ -363,10 +363,15 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
     });
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
-    const promptAction = viewport.width <= 720
-      ? page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]')
-      : page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
-    await promptAction.click();
+    if (viewport.width <= 720) {
+      await page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').click();
+    } else if (viewport.width <= 1099) {
+      await page.locator("#labelSheetWorkspaceReviewBtn").click();
+      await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+      await page.locator("#labelSheetGeneratePromptBtn").click();
+    } else {
+      await page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').click();
+    }
     await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
     const labelSurface = await page.evaluate(() => {
@@ -412,6 +417,14 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
         workspaceReady: document.querySelector("#paneLabelSheet")?.dataset.labelWorkspaceLayoutReady === "true",
         workspaceRecordCount: document.querySelectorAll("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").length,
         workspaceDocumentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1,
+        workspaceHeaderDisplay: getComputedStyle(document.querySelector(".app-header")).display,
+        workspaceBottomCollapsed: document.querySelector("#paneLabelSheet")?.classList.contains("is-bottom-collapsed"),
+        workspaceToolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
+        workspacePaneBottom: document.querySelector("#paneLabelSheet")?.getBoundingClientRect().bottom || 0,
+        workspaceActionTop: getComputedStyle(document.querySelector("#mobileTabActions")).display === "none"
+          ? window.innerHeight
+          : document.querySelector("#mobileTabActions")?.getBoundingClientRect().top || window.innerHeight,
+        workspaceCanvasWidth: document.querySelector(".label-sheet-workspace-canvas-column")?.getBoundingClientRect().width || 0,
         shellOverflow: Boolean(shell && shell.scrollWidth > shell.clientWidth + 1),
         pageOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
       };
@@ -451,6 +464,16 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
       `${origin} label full-image prompt separation contract failed`,
     );
     assert(!labelSurface.shellOverflow && !labelSurface.pageOverflow, `${origin} label surface overflowed ${viewport.width}px viewport`);
+    if (viewport.width <= 720 || (viewport.width <= 1024 && viewport.height <= 600)) {
+      assert(
+        labelSurface.workspaceHeaderDisplay === "none"
+          && labelSurface.workspaceBottomCollapsed
+          && labelSurface.workspaceToolbarDisplay === "none"
+          && labelSurface.workspacePaneBottom <= labelSurface.workspaceActionTop + 1
+          && labelSurface.workspaceCanvasWidth >= viewport.width - 60,
+        `${origin} compact label workspace failed at ${viewport.width}x${viewport.height}: ${JSON.stringify(labelSurface)}`,
+      );
+    }
     await page.waitForTimeout(350);
     assert(consoleErrors.length === 0, `${origin} console errors: ${consoleErrors.join(" | ")}`);
     assert(pageErrors.length === 0, `${origin} page errors: ${pageErrors.join(" | ")}`);
@@ -470,7 +493,7 @@ async function verifyBrowsers(origins, head) {
   }
   try {
     for (const origin of origins) {
-      for (const viewport of [{ width: 1920, height: 1080 }, { width: 1440, height: 1000 }, { width: 1280, height: 720 }, { width: 390, height: 844 }]) {
+      for (const viewport of [{ width: 1920, height: 1080 }, { width: 1440, height: 1000 }, { width: 1280, height: 720 }, { width: 390, height: 844 }, { width: 375, height: 667 }, { width: 844, height: 390 }]) {
         const label = `browser ${origin} at ${viewport.width}x${viewport.height}`;
         console.log(`[release] Verifying ${label}`);
         await retry(label, () => verifyBrowserSurface(browser, origin, viewport, head.slice(0, 12)), 8, 2_500);
@@ -552,7 +575,7 @@ async function main() {
     previousSource: previous?.Source || null,
     previousUrl: previous?.Deployment || null,
     verifiedAssetHashes: hashes,
-    verifiedViewports: ["1920x1080", "1440x1000", "1280x720", "390x844"],
+    verifiedViewports: ["1920x1080", "1440x1000", "1280x720", "390x844", "375x667", "844x390"],
   };
   console.log("\n[release] DEPLOYMENT VERIFIED");
   console.log(JSON.stringify(report, null, 2));

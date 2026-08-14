@@ -921,11 +921,11 @@
   }
 }
 
-/* 좁은 화면은 기능 회귀를 막기 위한 안전 배치이며 모바일 재설계 범위는 아니다. */
+/* 좁은 화면에서는 작업대를 뷰포트 안에 맞추고 내부 패널만 스크롤한다. */
 @media (max-width: 860px) {
   #paneLabelSheet.label-sheet-workspace-v2 {
     --label-workspace-right-width: min(300px, 42vw);
-    min-height: 520px;
+    min-height: 0;
   }
 
   #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-statusbar > :not(:first-child),
@@ -1304,6 +1304,22 @@
   background: color-mix(in srgb, var(--surface) 95%, transparent);
 }
 
+#paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-canvas-header {
+  grid-row: 1;
+}
+
+#paneLabelSheet.label-sheet-workspace-v2 #labelSheetPreviewToolbar {
+  grid-row: 2;
+}
+
+#paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-canvas-panel {
+  grid-row: 3;
+}
+
+#paneLabelSheet.label-sheet-workspace-v2 #labelSheetFocusStatus {
+  grid-row: 4;
+}
+
 #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-canvas-meta {
   display: flex;
   min-width: 0;
@@ -1333,6 +1349,10 @@
   .label-sheet-workspace-mobile-inspector-toggle,
   .label-sheet-workspace-mobile-inspector-close
 ) {
+  display: none;
+}
+
+#paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-mobile-tool-header {
   display: none;
 }
 
@@ -1748,12 +1768,13 @@ body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .promptdeck-legal-fo
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 860px) {
   #paneLabelSheet.label-sheet-workspace-v2 {
     --label-workspace-left-width: 52px;
     --label-workspace-toolrail-width: 52px;
     --label-workspace-right-width: 0px;
     --label-workspace-bottom-height: 130px;
+    min-height: 0;
   }
 
   #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-topbar {
@@ -1804,6 +1825,82 @@ body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .promptdeck-legal-fo
     grid-template-areas: "workspace-left workspace-stage";
   }
 
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-left {
+    grid-template-columns: var(--label-workspace-toolrail-width);
+    overflow: visible;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-toolrail {
+    position: relative;
+    z-index: 34;
+    padding-inline: 5px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-tool-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-left-toggle {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-panel-host {
+    position: absolute;
+    z-index: 33;
+    inset: 0 0 0 var(--label-workspace-toolrail-width);
+    display: grid;
+    width: auto;
+    height: auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    visibility: hidden;
+    transform: translateX(-104%);
+    border-right: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: 18px 0 36px color-mix(in srgb, var(--ink) 18%, transparent);
+    transition: transform var(--transition), visibility 0s linear var(--transition);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2.is-mobile-tool-panel-open .label-sheet-workspace-panel-host {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform var(--transition), visibility 0s;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-mobile-tool-header {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-alt);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-mobile-tool-close {
+    min-height: 34px;
+    padding: 5px 9px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-panel-host > .label-sheet-workspace-panel {
+    grid-row: 2;
+    height: 100%;
+  }
+
   #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-canvas-header {
     min-height: 42px;
     padding: 4px 6px;
@@ -1820,7 +1917,7 @@ body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .promptdeck-legal-fo
   }
 
   #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-workspace-canvas-meta,
-  #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-preview-toolbar,
+  #paneLabelSheet.label-sheet-workspace-v2 #labelSheetPreviewToolbar,
   #paneLabelSheet.label-sheet-workspace-v2 #labelSheetFocusStatus {
     display: none !important;
   }
@@ -1858,6 +1955,30 @@ body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .promptdeck-legal-fo
 
   #paneLabelSheet.label-sheet-workspace-v2 .label-sheet-focus-targets {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  #paneLabelSheet.label-sheet-workspace-v2 #labelSheetWorkspaceReviewBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 720px), (max-height: 600px) and (max-width: 1024px) {
+  body:has(#paneLabelSheet.label-sheet-workspace-v2.active) {
+    overflow-y: hidden;
+  }
+
+  body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .app-header {
+    display: none;
+  }
+
+  body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .app-tabs-bar {
+    top: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v2 {
+    min-height: 0;
   }
 }
 

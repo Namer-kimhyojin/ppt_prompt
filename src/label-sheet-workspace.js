@@ -51,6 +51,8 @@
 
     const toolButtons = Array.from(root.querySelectorAll("[data-label-workspace-tool]"));
     const toolPanels = Array.from(root.querySelectorAll("[data-label-workspace-panel]"));
+    const mobileToolPanel = root.querySelector("#labelSheetWorkspaceToolPanel");
+    const mobileToolPanelClose = root.querySelector("#labelSheetWorkspaceToolPanelClose");
     const canvasButtons = Array.from(root.querySelectorAll("[data-label-canvas-view]"));
     const bottomButtons = Array.from(root.querySelectorAll("[data-label-bottom-tab]"));
     const bottomPanels = Array.from(root.querySelectorAll("[data-label-bottom-panel]"));
@@ -62,6 +64,9 @@
     const reviewDrawer = root.querySelector("#labelSheetWorkspaceReviewDrawer");
     const drawers = [settingsDrawer, reviewDrawer].filter(Boolean);
     const statusOutputs = Array.from(root.querySelectorAll("[data-label-workspace-status]"));
+    const mobileToolQuery = window.matchMedia("(max-width: 860px)");
+    const compactWorkspaceQuery = window.matchMedia("(max-width: 720px), (max-height: 600px) and (max-width: 1024px)");
+    let compactWorkspaceWasActive = compactWorkspaceQuery.matches;
 
     const saved = readSavedState();
     const state = {
@@ -84,7 +89,9 @@
         "labelBottomTab"
       ),
       leftCollapsed: typeof saved.leftCollapsed === "boolean" ? saved.leftCollapsed : false,
-      bottomCollapsed: typeof saved.bottomCollapsed === "boolean" ? saved.bottomCollapsed : false,
+      bottomCollapsed: compactWorkspaceQuery.matches
+        ? true
+        : typeof saved.bottomCollapsed === "boolean" ? saved.bottomCollapsed : false,
       sizes: isPlainObject(saved.sizes) ? saved.sizes : {},
       activeDrawer: null,
       drawerTrigger: null,
@@ -139,6 +146,25 @@
       if (options?.focus) focusButton(toolButtons, "labelWorkspaceTool", value);
       if (options?.persist !== false) persist();
       if (options?.emit !== false) emit("tool", value, options);
+    }
+
+    function setMobileToolPanelOpen(open, options) {
+      const nextOpen = Boolean(open) && mobileToolQuery.matches;
+      root.classList.toggle("is-mobile-tool-panel-open", nextOpen);
+      if (mobileToolPanel) {
+        if (mobileToolQuery.matches) mobileToolPanel.setAttribute("aria-hidden", String(!nextOpen));
+        else mobileToolPanel.removeAttribute("aria-hidden");
+      }
+      toolButtons.forEach((button) => {
+        if (mobileToolQuery.matches) button.setAttribute("aria-expanded", String(nextOpen && button.dataset.labelWorkspaceTool === state.activeTool));
+        else button.removeAttribute("aria-expanded");
+      });
+      if (nextOpen && options?.focusPanel) {
+        const activePanel = toolPanels.find((panel) => panel.dataset.labelWorkspacePanel === state.activeTool);
+        (activePanel?.querySelector(FOCUSABLE_SELECTOR) || mobileToolPanelClose)?.focus({ preventScroll: true });
+      } else if (!nextOpen && options?.restoreFocus) {
+        focusButton(toolButtons, "labelWorkspaceTool", state.activeTool);
+      }
     }
 
     function activateCanvasView(value, options) {
@@ -241,7 +267,14 @@
     setupDrawerSemantics(reviewButton, reviewDrawer, "review");
 
     toolButtons.forEach((button) => {
-      button.addEventListener("click", () => activateTool(button.dataset.labelWorkspaceTool, { source: "pointer" }));
+      button.addEventListener("click", () => {
+        const value = button.dataset.labelWorkspaceTool;
+        const closeCurrent = mobileToolQuery.matches
+          && root.classList.contains("is-mobile-tool-panel-open")
+          && state.activeTool === value;
+        activateTool(value, { source: "pointer" });
+        if (mobileToolQuery.matches) setMobileToolPanelOpen(!closeCurrent, { focusPanel: !closeCurrent });
+      });
     });
     canvasButtons.forEach((button) => {
       button.addEventListener("click", () => activateCanvasView(button.dataset.labelCanvasView, { source: "pointer" }));
@@ -256,6 +289,7 @@
 
     leftToggle?.addEventListener("click", () => setLeftCollapsed(!state.leftCollapsed, { source: "pointer" }));
     bottomToggle?.addEventListener("click", () => setBottomCollapsed(!state.bottomCollapsed, { source: "pointer" }));
+    mobileToolPanelClose?.addEventListener("click", () => setMobileToolPanelOpen(false, { restoreFocus: true }));
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
 
@@ -283,6 +317,11 @@
       closeDrawer({ source: "outside" });
     });
     document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && root.classList.contains("is-mobile-tool-panel-open")) {
+        event.preventDefault();
+        setMobileToolPanelOpen(false, { restoreFocus: true });
+        return;
+      }
       if (!state.activeDrawer) return;
       if (event.key === "Escape") {
         event.preventDefault();
@@ -300,7 +339,16 @@
     if (state.bottomTab) activateBottomTab(state.bottomTab, { persist: false, emit: false });
     setLeftCollapsed(state.leftCollapsed, { persist: false, emit: false });
     setBottomCollapsed(state.bottomCollapsed, { persist: false, emit: false });
+    setMobileToolPanelOpen(false);
     drawers.forEach((drawer) => setDrawerOpen(drawer, false));
+    window.addEventListener("resize", () => {
+      if (!mobileToolQuery.matches) setMobileToolPanelOpen(false);
+      const compactWorkspaceIsActive = compactWorkspaceQuery.matches;
+      if (compactWorkspaceIsActive && !compactWorkspaceWasActive) {
+        setBottomCollapsed(true, { source: "responsive" });
+      }
+      compactWorkspaceWasActive = compactWorkspaceIsActive;
+    }, { passive: true });
     persist();
     emit("ready", "v2", { source: "initialization" });
   }

@@ -158,6 +158,13 @@
     toolrail.append(leftToggle);
 
     const panelHost = node("div", "label-sheet-workspace-panel-host");
+    panelHost.id = "labelSheetWorkspaceToolPanel";
+    const mobileToolHeader = node("div", "label-sheet-workspace-mobile-tool-header");
+    const mobileToolTitle = node("strong", "", "작업 도구");
+    const mobileToolClose = button("캔버스로 돌아가기", "label-sheet-workspace-mobile-tool-close");
+    mobileToolClose.id = "labelSheetWorkspaceToolPanelClose";
+    mobileToolClose.setAttribute("aria-label", "작업 도구 패널 닫기");
+    append(mobileToolHeader, mobileToolTitle, mobileToolClose);
     const projectPanel = node("section", "label-sheet-workspace-panel is-active");
     projectPanel.dataset.labelWorkspacePanel = "project";
     append(projectPanel, heading("빠른 시작", "프로젝트", "순서 없이 데이터와 디자인을 바로 시작할 수 있습니다."));
@@ -215,7 +222,7 @@
     append(assetsPanel, heading("디자인 자산", "배경·DNA", "배경을 등록하거나 이미지 프롬프트의 시각 규칙을 선택합니다."));
     backgroundStep.open = true;
     assetsPanel.append(backgroundStep);
-    append(panelHost, projectPanel, recordsPanel, layersPanel, assetsPanel);
+    append(panelHost, mobileToolHeader, projectPanel, recordsPanel, layersPanel, assetsPanel);
     append(left, toolrail, panelHost);
 
     const leftResizer = node("div", "label-sheet-workspace-resizer");
@@ -376,7 +383,7 @@
       }
     });
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 720) pane.classList.remove("is-mobile-inspector-open");
+      if (window.innerWidth > 860) pane.classList.remove("is-mobile-inspector-open");
     }, { passive: true });
 
     bindWorkspaceSync({ projectSummary, recordList, emptyState, bottomStatus, specSummary, goalSwitch, canvasViews });
@@ -387,9 +394,10 @@
   function bindWorkspaceViewport() {
     const sync = () => {
       if (!pane.classList.contains("active")) return;
-      const documentTop = pane.getBoundingClientRect().top + window.scrollY;
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const viewportTop = Math.max(0, pane.getBoundingClientRect().top);
       const bodyPaddingBottom = Number.parseFloat(window.getComputedStyle(document.body).paddingBottom) || 0;
-      const available = Math.max(320, window.innerHeight - documentTop - bodyPaddingBottom);
+      const available = Math.max(240, viewportHeight - viewportTop - bodyPaddingBottom);
       pane.style.setProperty("--label-workspace-available-height", `${Math.round(available)}px`);
     };
     const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(sync) : null;
@@ -399,6 +407,8 @@
     new MutationObserver(sync).observe(pane, { attributes: true, attributeFilter: ["class"] });
     new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class", "style"] });
     window.addEventListener("resize", sync, { passive: true });
+    window.visualViewport?.addEventListener("resize", sync, { passive: true });
+    window.visualViewport?.addEventListener("scroll", sync, { passive: true });
     window.requestAnimationFrame(sync);
   }
 
