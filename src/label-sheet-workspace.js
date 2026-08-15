@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "promptdeck_label_sheet_workspace_v2";
+  const STORAGE_KEY = "promptdeck_label_sheet_workspace_v3";
   const CHANGE_EVENT = "promptdeck:label-workspace-change";
   const ROOT_SELECTOR = "#paneLabelSheet.label-sheet-workspace-v2";
   const FOCUSABLE_SELECTOR = [
@@ -53,6 +53,8 @@
     const toolPanels = Array.from(root.querySelectorAll("[data-label-workspace-panel]"));
     const mobileToolPanel = root.querySelector("#labelSheetWorkspaceToolPanel");
     const mobileToolPanelClose = root.querySelector("#labelSheetWorkspaceToolPanelClose");
+    const mobileInspector = root.querySelector("#labelSheetWorkspaceInspector");
+    const mobileInspectorClose = root.querySelector(".label-sheet-workspace-mobile-inspector-close");
     const canvasButtons = Array.from(root.querySelectorAll("[data-label-canvas-view]"));
     const bottomButtons = Array.from(root.querySelectorAll("[data-label-bottom-tab]"));
     const bottomPanels = Array.from(root.querySelectorAll("[data-label-bottom-panel]"));
@@ -60,9 +62,15 @@
     const bottomToggle = root.querySelector("#labelSheetWorkspaceBottomToggle");
     const settingsButton = root.querySelector("#labelSheetWorkspaceSettingsBtn");
     const reviewButton = root.querySelector("#labelSheetWorkspaceReviewBtn");
+    const commonButton = root.querySelector("#labelSheetWorkspaceCommonBtn");
+    const detailButton = root.querySelector("#labelSheetWorkspaceDetailBtn");
+    const openDetailedEditButton = root.querySelector("#labelSheetOpenDetailedEditBtn");
     const settingsDrawer = root.querySelector("#labelSheetWorkspaceSettingsDrawer");
     const reviewDrawer = root.querySelector("#labelSheetWorkspaceReviewDrawer");
-    const drawers = [settingsDrawer, reviewDrawer].filter(Boolean);
+    const detailDrawer = root.querySelector("#labelSheetWorkspaceDetailDrawer");
+    const drawers = [settingsDrawer, reviewDrawer, detailDrawer].filter(Boolean);
+    const menuTriggers = Array.from(root.querySelectorAll("[data-label-workspace-menu-trigger]"));
+    const menus = Array.from(root.querySelectorAll("[data-label-workspace-menu]"));
     const statusOutputs = Array.from(root.querySelectorAll("[data-label-workspace-status]"));
     const mobileToolQuery = window.matchMedia("(max-width: 860px)");
     const compactWorkspaceQuery = window.matchMedia("(max-width: 720px), (max-height: 600px) and (max-width: 1024px)");
@@ -91,10 +99,12 @@
       leftCollapsed: typeof saved.leftCollapsed === "boolean" ? saved.leftCollapsed : false,
       bottomCollapsed: compactWorkspaceQuery.matches
         ? true
-        : typeof saved.bottomCollapsed === "boolean" ? saved.bottomCollapsed : false,
+        : typeof saved.bottomCollapsed === "boolean" ? saved.bottomCollapsed : true,
       sizes: isPlainObject(saved.sizes) ? saved.sizes : {},
       activeDrawer: null,
       drawerTrigger: null,
+      activeMenu: null,
+      menuTrigger: null,
     };
 
     function snapshot() {
@@ -121,7 +131,7 @@
 
     function persist() {
       const value = {
-        version: 2,
+        version: 3,
         activeTool: state.activeTool,
         canvasView: state.canvasView,
         bottomTab: state.bottomTab,
@@ -150,10 +160,18 @@
 
     function setMobileToolPanelOpen(open, options) {
       const nextOpen = Boolean(open) && mobileToolQuery.matches;
+      if (nextOpen && root.classList.contains("is-mobile-inspector-open")) {
+        mobileInspectorClose?.click();
+      }
       root.classList.toggle("is-mobile-tool-panel-open", nextOpen);
       if (mobileToolPanel) {
-        if (mobileToolQuery.matches) mobileToolPanel.setAttribute("aria-hidden", String(!nextOpen));
-        else mobileToolPanel.removeAttribute("aria-hidden");
+        if (mobileToolQuery.matches) {
+          mobileToolPanel.setAttribute("aria-hidden", String(!nextOpen));
+          mobileToolPanel.inert = !nextOpen;
+        } else {
+          mobileToolPanel.removeAttribute("aria-hidden");
+          mobileToolPanel.inert = false;
+        }
       }
       toolButtons.forEach((button) => {
         if (mobileToolQuery.matches) button.setAttribute("aria-expanded", String(nextOpen && button.dataset.labelWorkspaceTool === state.activeTool));
@@ -201,6 +219,7 @@
       if (leftToggle) {
         leftToggle.setAttribute("aria-expanded", String(!state.leftCollapsed));
         leftToggle.setAttribute("aria-pressed", String(state.leftCollapsed));
+        leftToggle.textContent = state.leftCollapsed ? "도크 펼치기" : "도크 접기";
       }
       if (options?.persist !== false) persist();
       if (options?.emit !== false) emit("left-panel", root.dataset.leftPanel, options);
@@ -225,6 +244,13 @@
 
     function openDrawer(kind, drawer, trigger, options) {
       if (!drawer) return;
+      closeMenu({ restoreFocus: false });
+      if (root.classList.contains("is-mobile-tool-panel-open")) {
+        setMobileToolPanelOpen(false, { restoreFocus: false });
+      }
+      if (root.classList.contains("is-mobile-inspector-open")) {
+        mobileInspectorClose?.click();
+      }
       if (state.activeDrawer && state.activeDrawer !== drawer) {
         closeDrawer({ restoreFocus: false, emit: false });
       }
@@ -234,6 +260,9 @@
       drawers.forEach((item) => setDrawerOpen(item, item === drawer));
       settingsButton?.setAttribute("aria-expanded", String(drawer === settingsDrawer));
       reviewButton?.setAttribute("aria-expanded", String(drawer === reviewDrawer));
+      commonButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
+      detailButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
+      openDetailedEditButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
       updateStatus(statusOutputs, "drawer", `${controlLabel([trigger].filter(Boolean), "labelWorkspaceDrawer", kind) || kind} 열림`);
 
       window.requestAnimationFrame(() => {
@@ -248,12 +277,16 @@
       const drawer = state.activeDrawer;
       if (!drawer) return;
       const trigger = state.drawerTrigger;
-      const kind = drawer === settingsDrawer ? "settings" : drawer === reviewDrawer ? "review" : "drawer";
+      const kind = drawer === settingsDrawer ? "settings" : drawer === reviewDrawer ? "review" : drawer === detailDrawer ? "detail" : "drawer";
       setDrawerOpen(drawer, false);
       state.activeDrawer = null;
       state.drawerTrigger = null;
       settingsButton?.setAttribute("aria-expanded", "false");
       reviewButton?.setAttribute("aria-expanded", "false");
+      commonButton?.setAttribute("aria-expanded", "false");
+      detailButton?.setAttribute("aria-expanded", "false");
+      openDetailedEditButton?.setAttribute("aria-expanded", "false");
+      if (drawer === detailDrawer) root.querySelector('[data-label-sheet-focus-tool="quick"]')?.click();
       updateStatus(statusOutputs, "drawer", "닫힘");
       if (options?.restoreFocus !== false && trigger?.isConnected) {
         trigger.focus({ preventScroll: true });
@@ -261,10 +294,39 @@
       if (options?.emit !== false) emit("drawer", `${kind}:closed`, options);
     }
 
+    function openMenu(menu, trigger, options = {}) {
+      if (!menu || !trigger) return;
+      if (state.activeMenu && state.activeMenu !== menu) closeMenu({ restoreFocus: false });
+      state.activeMenu = menu;
+      state.menuTrigger = trigger;
+      menus.forEach((item) => {
+        const open = item === menu;
+        item.hidden = !open;
+        item.setAttribute("aria-hidden", String(!open));
+      });
+      menuTriggers.forEach((item) => item.setAttribute("aria-expanded", String(item === trigger)));
+      if (options.focusFirst) menu.querySelector('[role="menuitem"]:not([disabled])')?.focus({ preventScroll: true });
+    }
+
+    function closeMenu(options = {}) {
+      const trigger = state.menuTrigger;
+      menus.forEach((menu) => {
+        menu.hidden = true;
+        menu.setAttribute("aria-hidden", "true");
+      });
+      menuTriggers.forEach((item) => item.setAttribute("aria-expanded", "false"));
+      state.activeMenu = null;
+      state.menuTrigger = null;
+      if (options.restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+    }
+
     setupTabSemantics(toolButtons, toolPanels, "labelWorkspaceTool", "labelWorkspacePanel", "tool");
     setupTabSemantics(bottomButtons, bottomPanels, "labelBottomTab", "labelBottomPanel", "bottom");
     setupDrawerSemantics(settingsButton, settingsDrawer, "settings");
     setupDrawerSemantics(reviewButton, reviewDrawer, "review");
+    setupDrawerSemantics(commonButton, detailDrawer, "detail");
+    setupDrawerSemantics(detailButton, detailDrawer, "detail");
+    setupDrawerSemantics(openDetailedEditButton, detailDrawer, "detail");
 
     toolButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -292,6 +354,76 @@
     mobileToolPanelClose?.addEventListener("click", () => setMobileToolPanelOpen(false, { restoreFocus: true }));
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
+    commonButton?.addEventListener("click", () => openFocusDrawer("common", commonButton));
+    detailButton?.addEventListener("click", () => openFocusDrawer("detail", detailButton));
+    openDetailedEditButton?.addEventListener("click", () => openFocusDrawer("detail", openDetailedEditButton));
+
+    function openFocusDrawer(panel, trigger) {
+      root.querySelector(`[data-label-sheet-focus-tool="${panel}"]`)?.click();
+      if (state.activeDrawer !== detailDrawer) openDrawer("detail", detailDrawer, trigger, { source: "pointer" });
+    }
+
+    menuTriggers.forEach((trigger, index) => {
+      const menu = menus.find((item) => item.dataset.labelWorkspaceMenu === trigger.dataset.labelWorkspaceMenuTrigger);
+      trigger.addEventListener("click", () => {
+        if (state.activeMenu === menu) closeMenu({ restoreFocus: false });
+        else openMenu(menu, trigger);
+      });
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          openMenu(menu, trigger, { focusFirst: true });
+          return;
+        }
+        if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+        event.preventDefault();
+        const direction = event.key === "ArrowLeft" ? -1 : 1;
+        menuTriggers[(index + direction + menuTriggers.length) % menuTriggers.length]?.focus({ preventScroll: true });
+      });
+    });
+
+    menus.forEach((menu) => {
+      const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
+      menu.addEventListener("keydown", (event) => {
+        const current = items.indexOf(document.activeElement);
+        if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          let next = current;
+          if (event.key === "Home") next = 0;
+          else if (event.key === "End") next = items.length - 1;
+          else if (event.key === "ArrowDown") next = (Math.max(0, current) + 1) % items.length;
+          else next = (current - 1 + items.length) % items.length;
+          items[next]?.focus({ preventScroll: true });
+        }
+      });
+      menu.addEventListener("click", () => closeMenu({ restoreFocus: false }));
+    });
+
+    root.querySelectorAll("[data-label-workspace-bottom-command]").forEach((control) => {
+      control.addEventListener("click", () => {
+        const command = control.dataset.labelWorkspaceBottomCommand;
+        if (["mapping", "validation"].includes(command)) {
+          activateBottomTab(command, { expand: true, source: "menu" });
+          return;
+        }
+        activateBottomTab("data", { expand: true, source: "menu" });
+        const tabId = command === "paste" ? "labelSheetDataPasteTab" : command === "csv" ? "labelSheetDataCsvTab" : "labelSheetDataDirectTab";
+        root.querySelector(`#${tabId}`)?.click();
+        window.requestAnimationFrame(() => root.querySelector(`#${tabId}`)?.focus({ preventScroll: true }));
+      });
+    });
+    root.querySelectorAll("[data-label-workspace-canvas-command]").forEach((control) => {
+      control.addEventListener("click", () => activateCanvasView(control.dataset.labelWorkspaceCanvasCommand, { source: "menu" }));
+    });
+    root.querySelectorAll("[data-label-workspace-layer-command]").forEach((control) => {
+      control.addEventListener("click", () => root.querySelector(`[data-label-sheet-focus-target="${control.dataset.labelWorkspaceLayerCommand}"]`)?.click());
+    });
+    root.querySelectorAll("[data-label-workspace-toggle-command]").forEach((control) => {
+      control.addEventListener("click", () => {
+        if (control.dataset.labelWorkspaceToggleCommand === "left") setLeftCollapsed(!state.leftCollapsed, { source: "menu" });
+        else root.querySelector("#labelSheetFocusShortcutHelpBtn")?.click();
+      });
+    });
 
     function toggleDrawer(kind, drawer, trigger) {
       if (state.activeDrawer === drawer) closeDrawer({ source: "trigger" });
@@ -312,14 +444,31 @@
     });
 
     document.addEventListener("pointerdown", (event) => {
+      if (state.activeMenu && !state.activeMenu.contains(event.target) && !state.menuTrigger?.contains(event.target)) {
+        closeMenu({ restoreFocus: false });
+      }
       const drawer = state.activeDrawer;
       if (!drawer || drawer.contains(event.target) || state.drawerTrigger?.contains(event.target)) return;
       closeDrawer({ source: "outside" });
     });
     document.addEventListener("keydown", (event) => {
+      if (state.activeMenu && event.key === "Escape") {
+        event.preventDefault();
+        closeMenu({ restoreFocus: true });
+        return;
+      }
+      if (state.activeMenu && event.key === "Tab") closeMenu({ restoreFocus: false });
       if (event.key === "Escape" && root.classList.contains("is-mobile-tool-panel-open")) {
         event.preventDefault();
         setMobileToolPanelOpen(false, { restoreFocus: true });
+        return;
+      }
+      if (event.key === "Tab" && root.classList.contains("is-mobile-tool-panel-open") && mobileToolPanel) {
+        keepFocusInDrawer(event, mobileToolPanel);
+        return;
+      }
+      if (event.key === "Tab" && root.classList.contains("is-mobile-inspector-open") && mobileInspector) {
+        keepFocusInDrawer(event, mobileInspector);
         return;
       }
       if (!state.activeDrawer) return;
@@ -341,16 +490,20 @@
     setBottomCollapsed(state.bottomCollapsed, { persist: false, emit: false });
     setMobileToolPanelOpen(false);
     drawers.forEach((drawer) => setDrawerOpen(drawer, false));
-    window.addEventListener("resize", () => {
-      if (!mobileToolQuery.matches) setMobileToolPanelOpen(false);
+    const syncResponsivePanels = () => {
+      if (!mobileToolQuery.matches || !root.classList.contains("is-mobile-tool-panel-open")) {
+        setMobileToolPanelOpen(false);
+      }
       const compactWorkspaceIsActive = compactWorkspaceQuery.matches;
       if (compactWorkspaceIsActive && !compactWorkspaceWasActive) {
         setBottomCollapsed(true, { source: "responsive" });
       }
       compactWorkspaceWasActive = compactWorkspaceIsActive;
-    }, { passive: true });
+    };
+    window.addEventListener("resize", syncResponsivePanels, { passive: true });
+    mobileToolQuery.addEventListener?.("change", syncResponsivePanels);
     persist();
-    emit("ready", "v2", { source: "initialization" });
+    emit("ready", "v3", { source: "initialization" });
   }
 
   function chooseInitialValue(savedValue, rootValue, buttons, dataKey) {
@@ -457,7 +610,11 @@
   }
 
   function keepFocusInDrawer(event, drawer) {
-    const focusable = Array.from(drawer.querySelectorAll(FOCUSABLE_SELECTOR)).filter((element) => !element.hidden && element.getAttribute("aria-hidden") !== "true");
+    const focusable = Array.from(drawer.querySelectorAll(FOCUSABLE_SELECTOR)).filter((element) => {
+      if (element.hidden || element.closest("[hidden], [aria-hidden='true'], [inert]")) return false;
+      const style = window.getComputedStyle(element);
+      return style.display !== "none" && style.visibility !== "hidden" && element.getClientRects().length > 0;
+    });
     if (!focusable.length) {
       event.preventDefault();
       drawer.focus({ preventScroll: true });

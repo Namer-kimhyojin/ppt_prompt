@@ -35,6 +35,44 @@
     });
     return control;
   };
+  const createMenu = (label, name, items) => {
+    const wrapper = node("div", "label-sheet-workspace-menu");
+    const trigger = button(label, "label-sheet-workspace-menu-trigger");
+    const menu = node("div", "label-sheet-workspace-menu-popup");
+    wrapper.setAttribute("role", "none");
+    trigger.dataset.labelWorkspaceMenuTrigger = name;
+    trigger.setAttribute("role", "menuitem");
+    trigger.setAttribute("aria-haspopup", "menu");
+    trigger.setAttribute("aria-expanded", "false");
+    menu.dataset.labelWorkspaceMenu = name;
+    menu.id = `labelSheetWorkspace${name[0].toUpperCase()}${name.slice(1)}Menu`;
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-label", `${label} 메뉴`);
+    menu.hidden = true;
+    trigger.setAttribute("aria-controls", menu.id);
+    items.forEach((definition) => {
+      if (definition.separator) {
+        const separator = node("div", "label-sheet-workspace-menu-separator");
+        separator.setAttribute("role", "separator");
+        menu.append(separator);
+        return;
+      }
+      const control = button("", "label-sheet-workspace-menu-item");
+      control.setAttribute("role", "menuitem");
+      control.tabIndex = -1;
+      if (definition.id) control.id = definition.id;
+      if (definition.targetId) proxyClick(control, definition.targetId);
+      Object.entries(definition.dataset || {}).forEach(([key, value]) => {
+        control.dataset[key] = value;
+      });
+      const copy = node("span", "", definition.label);
+      append(control, copy);
+      if (definition.shortcut) control.append(node("kbd", "", definition.shortcut));
+      menu.append(control);
+    });
+    append(wrapper, trigger, menu);
+    return { wrapper, trigger, menu };
+  };
 
   function buildWorkspace() {
     const hero = pane.querySelector(".label-sheet-hero");
@@ -57,6 +95,13 @@
     const focusScope = focusEditor?.querySelector(".label-sheet-focus-scope");
     const focusNavigation = focusEditor?.querySelector(".label-sheet-focus-navigation-grid");
     const focusTooldeck = focusEditor?.querySelector(".label-sheet-focus-tooldeck");
+    const focusToolTabs = focusTooldeck?.querySelector(".label-sheet-focus-tool-tabs");
+    const focusTargets = focusTooldeck?.querySelector(".label-sheet-focus-targets");
+    const focusShortcutActions = focusTooldeck?.querySelector(".label-sheet-focus-shortcut-actions");
+    const focusShortcutHelp = $("labelSheetFocusShortcutHelp");
+    const focusQuickPanel = $("labelSheetFocusQuickPanel");
+    const focusCommonPanel = $("labelSheetFocusCommonPanel");
+    const focusDetailPanel = $("labelSheetFocusDetailPanel");
     const focusStage = $("labelSheetFocusStage");
     const focusStatus = $("labelSheetFocusStatus");
 
@@ -76,9 +121,9 @@
       throw new Error("라벨·티켓 V2에 필요한 기존 편집 노드를 찾지 못했습니다.");
     }
 
-    pane.classList.add("label-sheet-workspace-v2");
-    pane.dataset.workspaceTool = "project";
-    pane.dataset.activeTool = "project";
+    pane.classList.add("label-sheet-workspace-v2", "label-sheet-workspace-v3");
+    pane.dataset.workspaceTool = "layers";
+    pane.dataset.activeTool = "layers";
     pane.dataset.canvasView = pane.dataset.outputGoal === "prompt" ? "sheet" : "ticket";
     pane.dataset.bottomTab = "data";
 
@@ -92,6 +137,40 @@
     append(brand, mark, brandCopy);
 
     const topbarCenter = node("div", "label-sheet-workspace-topbar-center");
+    const menuBar = node("nav", "label-sheet-workspace-menubar");
+    menuBar.setAttribute("role", "menubar");
+    menuBar.setAttribute("aria-label", "라벨 편집기 메뉴");
+    const projectMenu = createMenu("프로젝트", "project", [
+      { label: "품목·규격 설정…", targetId: "labelSheetWorkspaceSettingsBtn", shortcut: "Alt+P" },
+      { label: "샘플로 시작", targetId: "labelSheetIntentSampleBtn" },
+      { separator: true },
+      { label: "프로젝트 ZIP 저장", targetId: "labelSheetSavePackageBtn" },
+    ]);
+    const dataMenu = createMenu("데이터", "data", [
+      { label: "데이터 편집기 열기…", dataset: { labelWorkspaceBottomCommand: "data" }, shortcut: "Alt+D" },
+      { label: "표 붙여넣기", dataset: { labelWorkspaceBottomCommand: "paste" } },
+      { label: "CSV 가져오기", dataset: { labelWorkspaceBottomCommand: "csv" } },
+      { separator: true },
+      { label: "열 매핑", dataset: { labelWorkspaceBottomCommand: "mapping" } },
+      { label: "검증 결과", dataset: { labelWorkspaceBottomCommand: "validation" } },
+    ]);
+    const editMenu = createMenu("편집", "edit", [
+      { label: "전체 콘텐츠 선택", dataset: { labelWorkspaceLayerCommand: "content" }, shortcut: "1" },
+      { label: "제목 선택", dataset: { labelWorkspaceLayerCommand: "title" }, shortcut: "3" },
+      { label: "본문 선택", dataset: { labelWorkspaceLayerCommand: "body" }, shortcut: "5" },
+      { label: "QR 선택", dataset: { labelWorkspaceLayerCommand: "qr" }, shortcut: "7" },
+      { separator: true },
+      { label: "공통 레이아웃…", targetId: "labelSheetWorkspaceCommonBtn" },
+      { label: "문구·QR 및 세부 설정…", targetId: "labelSheetWorkspaceDetailBtn" },
+    ]);
+    const viewMenu = createMenu("보기", "view", [
+      { label: "개별 티켓 캔버스", dataset: { labelWorkspaceCanvasCommand: "ticket" } },
+      { label: "A4 시트 캔버스", dataset: { labelWorkspaceCanvasCommand: "sheet" } },
+      { separator: true },
+      { label: "도구 패널 접기/펼치기", dataset: { labelWorkspaceToggleCommand: "left" } },
+      { label: "단축키 보기", dataset: { labelWorkspaceToggleCommand: "shortcuts" }, shortcut: "?" },
+    ]);
+    append(menuBar, projectMenu.wrapper, dataMenu.wrapper, editMenu.wrapper, viewMenu.wrapper);
     const goalSwitch = node("div", "label-sheet-workspace-goal-switch");
     goalSwitch.setAttribute("role", "group");
     goalSwitch.setAttribute("aria-label", "제작 방식");
@@ -113,7 +192,7 @@
     const specSummary = button("규격 확인", "label-sheet-workspace-spec-summary");
     specSummary.id = "labelSheetWorkspaceSpecSummary";
     specSummary.title = "용지, 배치, 면 설정 열기";
-    append(topbarCenter, goalSwitch, specSummary);
+    append(topbarCenter, menuBar, goalSwitch, specSummary);
 
     const topbarActions = node("div", "label-sheet-workspace-topbar-actions");
     const settingsButton = button("프로젝트 설정");
@@ -134,18 +213,18 @@
     const toolrail = node("nav", "label-sheet-workspace-toolrail");
     toolrail.setAttribute("aria-label", "작업 도구 선택");
     const toolDefinitions = [
-      ["project", "프로젝트", "설정과 시작", "◫"],
-      ["records", "레코드", "티켓 목록", "≡"],
-      ["layers", "레이어", "출력 항목", "◉"],
-      ["assets", "자산", "배경 이미지", "◇"],
+      ["project", "시작", "설정과 시작", "시작"],
+      ["records", "목록", "티켓 목록", "목록"],
+      ["layers", "항목", "출력 항목", "항목"],
+      ["assets", "배경", "배경 이미지", "배경"],
     ];
     toolDefinitions.forEach(([value, label, title, icon], index) => {
       const control = button("", "label-sheet-workspace-tool");
       control.dataset.labelWorkspaceTool = value;
       control.title = title;
       control.setAttribute("aria-label", label);
-      control.classList.toggle("is-active", index === 0);
-      control.setAttribute("aria-selected", String(index === 0));
+      control.classList.toggle("is-active", index === 2);
+      control.setAttribute("aria-selected", String(index === 2));
       const iconElement = node("span", "label-sheet-workspace-tool-icon", icon);
       iconElement.setAttribute("aria-hidden", "true");
       append(control, iconElement, node("span", "label-sheet-workspace-tool-label", label));
@@ -180,9 +259,8 @@
     append(startActions, sampleButton, dataButton, blankButton);
     const projectTips = node("div", "label-sheet-workspace-tip-list");
     [
-      "데이터를 수정하면 캔버스가 즉시 갱신됩니다.",
-      "규격과 양면 설정은 언제든 변경할 수 있습니다.",
-      "오류는 검증 패널에서 해당 항목으로 바로 확인합니다.",
+      "데이터와 규격은 상단 메뉴에서 필요할 때만 엽니다.",
+      "선택한 항목의 빠른 속성만 오른쪽에 표시됩니다.",
     ].forEach((copy) => projectTips.append(node("p", "", copy)));
     append(projectPanel, projectSummary, startActions, projectTips);
 
@@ -253,6 +331,11 @@
     append(canvasHeader, canvasViews, canvasMeta, inspectorButton);
 
     const canvasColumn = node("div", "label-sheet-workspace-canvas-column");
+    const contextToolbar = node("section", "label-sheet-workspace-context-toolbar");
+    contextToolbar.setAttribute("aria-label", "선택 항목 빠른 도구");
+    const contextToolbarHead = node("div", "label-sheet-workspace-context-heading");
+    append(contextToolbarHead, node("strong", "", "선택 항목"), node("span", "", "캔버스에서 항목을 고른 뒤 바로 조정하세요."));
+    append(contextToolbar, contextToolbarHead, focusTargets, focusShortcutActions, focusShortcutHelp);
     const ticketCanvas = node("section", "label-sheet-workspace-canvas-panel label-sheet-workspace-ticket-canvas");
     ticketCanvas.dataset.labelCanvasPanel = "ticket";
     const sheetCanvas = node("section", "label-sheet-workspace-canvas-panel label-sheet-workspace-sheet-canvas");
@@ -262,12 +345,12 @@
 
     const emptyState = node("div", "label-sheet-workspace-empty");
     emptyState.id = "labelSheetWorkspaceEmpty";
-    append(emptyState, node("span", "label-sheet-workspace-empty-icon", "＋"), node("strong", "", "첫 티켓을 만들어 보세요"), node("p", "", "샘플을 채우거나 표·CSV 데이터를 가져오면 바로 편집할 수 있습니다."));
+    append(emptyState, node("strong", "", "첫 티켓을 만들어 보세요"), node("p", "", "샘플을 채우거나 표·CSV 데이터를 가져오면 바로 편집할 수 있습니다."));
     const emptyActions = node("div", "label-sheet-workspace-empty-actions");
     append(emptyActions, proxyClick(button("샘플 채우기", "btn primary"), "labelSheetIntentSampleBtn"), proxyClick(button("데이터 열기", "btn secondary"), "labelSheetWorkspaceDataBtn"));
     emptyState.append(emptyActions);
     ticketCanvas.append(emptyState);
-    append(canvasColumn, canvasHeader, previewToolbar, ticketCanvas, sheetCanvas, focusStatus);
+    append(canvasColumn, canvasHeader, contextToolbar, previewToolbar, ticketCanvas, sheetCanvas, focusStatus);
 
     const inspector = node("aside", "label-sheet-workspace-inspector");
     inspector.id = "labelSheetWorkspaceInspector";
@@ -282,9 +365,16 @@
     rightResizer.setAttribute("role", "separator");
     rightResizer.setAttribute("aria-label", "속성 패널 너비 조절");
     rightResizer.tabIndex = 0;
-    append(inspector, rightResizer, inspectorHeader, focusHead, focusScope, focusNavigation, focusTooldeck);
+    const inspectorActions = node("div", "label-sheet-workspace-inspector-actions");
+    const commonButton = button("공통 레이아웃", "btn secondary");
+    commonButton.id = "labelSheetWorkspaceCommonBtn";
+    commonButton.dataset.labelWorkspaceFocusTool = "common";
+    const detailButton = button("문구·QR 및 세부 설정", "btn secondary");
+    detailButton.id = "labelSheetWorkspaceDetailBtn";
+    detailButton.dataset.labelWorkspaceFocusTool = "detail";
+    append(inspectorActions, commonButton, detailButton);
+    append(inspector, rightResizer, inspectorHeader, focusHead, focusScope, focusNavigation, focusQuickPanel, inspectorActions);
     contentStep.open = true;
-    inspector.append(contentStep);
     focusEditor.classList.add("label-sheet-workspace-editor");
     focusEditor.hidden = false;
     focusEditor.replaceChildren(canvasColumn, inspector);
@@ -345,6 +435,18 @@
     reviewDone.dataset.labelWorkspaceDrawerClose = "";
     reviewDrawer.footer.append(reviewDone);
 
+    const detailDrawer = createDrawer("labelSheetWorkspaceDetailDrawer", "선택 항목 세부 편집", "고급 레이아웃, 프리셋, 면별 문구와 QR 설정은 필요할 때만 조정합니다.");
+    const detailGrid = node("div", "label-sheet-workspace-detail-grid");
+    const layoutDetail = node("section", "label-sheet-workspace-detail-section");
+    append(layoutDetail, heading("LAYOUT", "레이아웃과 프리셋", "현재 선택 항목 또는 현재 면 공통 배치를 조정합니다."), focusToolTabs, focusCommonPanel, focusDetailPanel);
+    const contentDetail = node("section", "label-sheet-workspace-detail-section label-sheet-workspace-content-detail");
+    append(contentDetail, heading("CONTENT", "문구와 QR", "면별 출력 문구와 QR 합성 방식을 설정합니다."), contentStep);
+    append(detailGrid, layoutDetail, contentDetail);
+    detailDrawer.body.append(detailGrid);
+    const detailDone = button("편집기로 돌아가기", "btn primary");
+    detailDone.dataset.labelWorkspaceDrawerClose = "";
+    detailDrawer.footer.append(detailDone);
+
     if (resultCard.contains(previewToolbar)) previewToolbar.remove();
     if (resultCard.contains(focusEditor)) focusEditor.remove();
     if (resultCard.contains(pagePreview)) pagePreview.remove();
@@ -352,7 +454,7 @@
     if (dnaDialog?.parentElement) dnaDialog.remove();
     hero?.remove();
 
-    shell.replaceChildren(topbar, frame, bottom, statusbar, settingsDrawer.drawer, reviewDrawer.drawer);
+    shell.replaceChildren(topbar, frame, bottom, statusbar, settingsDrawer.drawer, reviewDrawer.drawer, detailDrawer.drawer);
     if (dnaDialog) shell.append(dnaDialog);
 
     bindWorkspaceViewport();
@@ -363,11 +465,23 @@
       if (pane.classList.contains("is-bottom-collapsed")) bottomToggle.click();
       $("labelSheetDataDirectTab")?.focus({ preventScroll: true });
     });
-    const setMobileInspector = (open) => {
-      pane.classList.toggle("is-mobile-inspector-open", open);
-      inspectorButton.setAttribute("aria-expanded", String(open));
-      if (open) inspectorCloseButton.focus({ preventScroll: true });
-      else inspectorButton.focus({ preventScroll: true });
+    const mobileInspectorQuery = window.matchMedia("(max-width: 860px)");
+    const setMobileInspector = (open, options = {}) => {
+      const nextOpen = Boolean(open) && mobileInspectorQuery.matches;
+      if (nextOpen && pane.classList.contains("is-mobile-tool-panel-open")) {
+        pane.querySelector("#labelSheetWorkspaceToolPanelClose")?.click();
+      }
+      pane.classList.toggle("is-mobile-inspector-open", nextOpen);
+      inspectorButton.setAttribute("aria-expanded", String(nextOpen));
+      if (mobileInspectorQuery.matches) {
+        inspector.setAttribute("aria-hidden", String(!nextOpen));
+        inspector.inert = !nextOpen;
+      } else {
+        inspector.removeAttribute("aria-hidden");
+        inspector.inert = false;
+      }
+      if (nextOpen && options.focus !== false) inspectorCloseButton.focus({ preventScroll: true });
+      else if (!nextOpen && options.restoreFocus !== false) inspectorButton.focus({ preventScroll: true });
     };
     inspectorButton.addEventListener("click", () => setMobileInspector(!pane.classList.contains("is-mobile-inspector-open")));
     inspectorCloseButton.addEventListener("click", () => setMobileInspector(false));
@@ -382,9 +496,14 @@
         setMobileInspector(false);
       }
     });
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 860) pane.classList.remove("is-mobile-inspector-open");
-    }, { passive: true });
+    const syncMobileInspector = () => {
+      if (!mobileInspectorQuery.matches || !pane.classList.contains("is-mobile-inspector-open")) {
+        setMobileInspector(false, { focus: false, restoreFocus: false });
+      }
+    };
+    window.addEventListener("resize", syncMobileInspector, { passive: true });
+    mobileInspectorQuery.addEventListener?.("change", syncMobileInspector);
+    setMobileInspector(false, { focus: false, restoreFocus: false });
 
     bindWorkspaceSync({ projectSummary, recordList, emptyState, bottomStatus, specSummary, goalSwitch, canvasViews });
     pane.dataset.labelWorkspaceLayoutReady = "true";

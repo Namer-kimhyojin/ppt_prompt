@@ -134,8 +134,9 @@ async function verifyViewport(label, viewport) {
   if (labelTabVisible) {
     await page.locator("#tabBtnLabelSheet").click();
     await expectOnlyPane("paneLabelSheet", "라벨·티켓 전환");
-    if ((await page.locator("#paneLabelSheet[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V2 작업공간이 초기화되지 않았습니다.`);
+    if ((await page.locator("#paneLabelSheet.label-sheet-workspace-v3[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V3 작업공간이 초기화되지 않았습니다.`);
     if ((await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-frame + .label-sheet-workspace-bottom").count()) !== 1) failures.push(`${label}: 프로젝트 바·캔버스·데이터 시트 순서가 깨졌습니다.`);
+    if ((await page.locator("#paneLabelSheet [data-label-workspace-menu-trigger]").count()) !== 4 || (await page.locator("#labelSheetWorkspaceDetailDrawer").count()) !== 1) failures.push(`${label}: 맞춤형 메뉴 또는 세부 편집 모달이 누락되었습니다.`);
     await page.evaluate(() => {
       const goal = document.querySelector("#labelSheetOutputGoalPrompt");
       const type = document.querySelector('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]');
@@ -160,6 +161,8 @@ async function verifyViewport(label, viewport) {
       });
     }
     if (viewport.width <= 720) await page.locator("#labelSheetWorkspaceInspectorBtn").click();
+    await page.locator("#labelSheetWorkspaceDetailBtn").click();
+    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer:not([hidden])");
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.assetStore.list().filter((asset) => asset.filename.startsWith("기본-")).length >= 6, null, { timeout: 60_000 });
     if (!(await page.evaluate(() => Boolean(window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData && window.QRGeneratorCore)))) failures.push(`${label}: 라벨 패키지·표 데이터·QR 공용 모듈이 누락되었습니다.`);
@@ -176,6 +179,8 @@ async function verifyViewport(label, viewport) {
     if ((await page.locator("#labelSheetAssetList .label-sheet-asset-card").count()) < 6) failures.push(`${label}: 정적판 기본 배경 6종이 보관함에 등록되지 않았습니다.`);
     if (await visible("#labelSheetPageImageRegisterBtn")) failures.push(`${label}: 프롬프트 설계에 A4 배경 합성 절차가 노출됩니다.`);
     if (await visible("#labelSheetSavePackageBtn") || await visible("#labelSheetExportLayersBtn")) failures.push(`${label}: 프롬프트 설계에 완성물 패키지 기능이 노출됩니다.`);
+    await page.locator("#labelSheetWorkspaceDetailDrawer [data-label-workspace-drawer-close]").first().click();
+    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer", { state: "hidden" });
     const promptActionSelector = viewport.width <= 720
       ? '#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]'
       : '#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]';
@@ -239,7 +244,12 @@ async function verifyCompactLabelViewport(label, viewport) {
       bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
       toolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
       toolPanelVisibility: getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility,
+      toolPanelAriaHidden: document.querySelector("#labelSheetWorkspaceToolPanel")?.getAttribute("aria-hidden"),
+      toolPanelInert: document.querySelector("#labelSheetWorkspaceToolPanel")?.inert,
       inspectorAccess: getComputedStyle(document.querySelector("#labelSheetWorkspaceInspectorBtn")).display,
+      inspectorAriaHidden: document.querySelector("#labelSheetWorkspaceInspector")?.getAttribute("aria-hidden"),
+      inspectorInert: document.querySelector("#labelSheetWorkspaceInspector")?.inert,
+      inspectorButtonHeight: document.querySelector("#labelSheetWorkspaceInspectorBtn")?.getBoundingClientRect().height || 0,
     };
   });
   if (
@@ -250,7 +260,12 @@ async function verifyCompactLabelViewport(label, viewport) {
     || !layout.bottomCollapsed
     || layout.toolbarDisplay !== "none"
     || layout.toolPanelVisibility !== "hidden"
+    || layout.toolPanelAriaHidden !== "true"
+    || !layout.toolPanelInert
     || layout.inspectorAccess === "none"
+    || layout.inspectorAriaHidden !== "true"
+    || !layout.inspectorInert
+    || layout.inspectorButtonHeight < 44
   ) {
     failures.push(`${label}: 라벨·티켓 컴팩트 작업공간 배치가 깨졌습니다. ${JSON.stringify(layout)}`);
   }
@@ -263,16 +278,62 @@ async function verifyCompactLabelViewport(label, viewport) {
       && box.left >= 51
       && box.right <= window.innerWidth + 1;
   });
+  const openToolState = await page.evaluate(() => ({
+    ariaHidden: document.querySelector("#labelSheetWorkspaceToolPanel")?.getAttribute("aria-hidden"),
+    inert: document.querySelector("#labelSheetWorkspaceToolPanel")?.inert,
+  }));
+  if (openToolState.ariaHidden !== "false" || openToolState.inert) failures.push(`${label}: 열린 도구 패널이 탐색 대상에서 제외되었습니다.`);
+  await page.evaluate(() => {
+    const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
+    const controls = [...panel.querySelectorAll("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])")]
+      .filter((element) => !element.closest("[hidden], [aria-hidden='true'], [inert]") && element.getClientRects().length > 0);
+    controls.at(-1)?.focus();
+  });
+  await page.keyboard.press("Tab");
+  if (!(await page.evaluate(() => document.querySelector("#labelSheetWorkspaceToolPanel")?.contains(document.activeElement)))) {
+    failures.push(`${label}: 도구 패널의 키보드 초점이 화면 뒤로 이탈했습니다.`);
+  }
   await page.locator("#labelSheetWorkspaceToolPanelClose").click();
-  await page.waitForFunction(() => getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility === "hidden");
+  await page.waitForFunction(() => {
+    const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
+    return getComputedStyle(panel).visibility === "hidden" && panel.inert && panel.getAttribute("aria-hidden") === "true";
+  });
   await page.locator("#labelSheetWorkspaceInspectorBtn").click();
   await page.waitForFunction(() => {
     const inspector = document.querySelector("#labelSheetWorkspaceInspector");
     const box = inspector?.getBoundingClientRect();
     return document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open")
       && getComputedStyle(inspector).visibility === "visible"
+      && !inspector.inert
+      && inspector.getAttribute("aria-hidden") === "false"
       && box.left >= 51
       && box.right <= window.innerWidth + 1;
+  });
+  await page.evaluate(() => {
+    const panel = document.querySelector("#labelSheetWorkspaceInspector");
+    const controls = [...panel.querySelectorAll("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])")]
+      .filter((element) => !element.closest("[hidden], [aria-hidden='true'], [inert]") && element.getClientRects().length > 0);
+    controls.at(-1)?.focus();
+  });
+  await page.keyboard.press("Tab");
+  if (!(await page.evaluate(() => document.querySelector("#labelSheetWorkspaceInspector")?.contains(document.activeElement)))) {
+    failures.push(`${label}: 속성 패널의 키보드 초점이 화면 뒤로 이탈했습니다.`);
+  }
+  await page.locator('[data-label-workspace-tool="records"]').click();
+  await page.waitForFunction(() => {
+    const pane = document.querySelector("#paneLabelSheet");
+    return pane?.classList.contains("is-mobile-tool-panel-open")
+      && !pane.classList.contains("is-mobile-inspector-open")
+      && document.querySelector("#labelSheetWorkspaceInspector")?.inert;
+  });
+  await page.locator("#labelSheetWorkspaceToolPanelClose").click();
+  await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceToolPanel")?.inert);
+  await page.locator("#labelSheetWorkspaceInspectorBtn").click();
+  await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
+  await page.locator("#labelSheetWorkspaceInspector .label-sheet-workspace-mobile-inspector-close").click();
+  await page.waitForFunction(() => {
+    const inspector = document.querySelector("#labelSheetWorkspaceInspector");
+    return getComputedStyle(inspector).visibility === "hidden" && inspector.inert && inspector.getAttribute("aria-hidden") === "true";
   });
   if (pageErrors.length) failures.push(`${label}: 페이지 오류: ${pageErrors.join(" | ")}`);
   await page.close();

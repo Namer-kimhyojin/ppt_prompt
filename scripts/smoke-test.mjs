@@ -2346,6 +2346,17 @@ SLIDE-TWO-CONTENT`);
       await drawer.locator("[data-label-workspace-drawer-close]").first().click();
       await page.waitForSelector("#labelSheetWorkspaceReviewDrawer", { state: "hidden" });
     };
+    const openLabelDetail = async () => {
+      if (await page.locator("#labelSheetWorkspaceDetailDrawer:not([hidden])").count()) return;
+      await page.click("#labelSheetWorkspaceDetailBtn");
+      await page.waitForSelector("#labelSheetWorkspaceDetailDrawer:not([hidden])");
+    };
+    const closeLabelDetail = async () => {
+      const drawer = page.locator("#labelSheetWorkspaceDetailDrawer:not([hidden])");
+      if (!await drawer.count()) return;
+      await drawer.locator("[data-label-workspace-drawer-close]").first().click();
+      await page.waitForSelector("#labelSheetWorkspaceDetailDrawer", { state: "hidden" });
+    };
     const selectLabelDocumentType = async (value) => {
       await page.evaluate((documentType) => {
         const radio = document.querySelector(`input[name="labelSheetIntentDocumentType"][value="${documentType}"]`);
@@ -2377,7 +2388,7 @@ SLIDE-TWO-CONTENT`);
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()), "Label-sheet prompt goal did not keep QR-space reservation available", failures);
     record(await page.locator("#labelSheetAssetRegisterBtn").isHidden(), "Label-sheet prompt-only goal still exposed background-image composition", failures);
     record(await page.locator("#labelSheetPageImageRegisterBtn").isHidden(), "Label-sheet prompt-only goal still exposed the two-stage page-image registration step", failures);
-    record(await page.locator('[data-label-sheet-design-part="content"]').isVisible(), "Label-sheet prompt workspace did not keep detailed design controls directly available", failures);
+    record(await page.locator('[data-label-sheet-design-part="content"]').isHidden() && (await page.locator("#labelSheetWorkspaceDetailDrawer [data-label-sheet-design-part='content']").count()) === 1, "Label-sheet prompt workspace did not move detailed design controls into the focused editor dialog", failures);
     record((await page.locator("#labelSheetPromptMode").inputValue()) === "integrated", "Label-sheet prompt goal did not lock to full-image prompt mode", failures);
     record(await page.locator("#labelSheetQrSource").isHidden(), "Label-sheet prompt goal exposed actual QR-value assignment controls", failures);
     record((await page.locator("#labelSheetQrPosition").count()) === 1, "Label-sheet prompt goal removed QR-space position controls", failures);
@@ -2390,6 +2401,7 @@ SLIDE-TWO-CONTENT`);
     await selectLabelDocumentType("admission");
     record((await page.locator("#labelSheetSamplePreset option").count()) === 3, "Label-sheet admission type did not expose three contextual sample presets", failures);
     await selectHiddenLabelValue("#labelSheetSamplePreset", "staff-pass");
+    await page.click('[data-label-workspace-tool="project"]');
     await page.click("#labelSheetWorkspaceSampleBtn");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.id?.startsWith("DEMO-STAFF-"));
     const staffSample = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => ({ id: record.id, number: record.number, role: record.data?.category })));
@@ -2688,6 +2700,7 @@ SLIDE-TWO-CONTENT`);
       duplex.checked = true;
       duplex.dispatchEvent(new Event("change", { bubbles: true }));
     });
+    await page.click('[data-label-workspace-tool="project"]');
     await page.click("#labelSheetWorkspaceSampleBtn");
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
@@ -2698,6 +2711,7 @@ SLIDE-TWO-CONTENT`);
     });
     record((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) === 8, "Label-sheet workspace record navigator did not mirror the imported rows", failures);
     record(await page.locator("#labelSheetWorkspaceEmpty").isHidden(), "Label-sheet workspace kept the empty state over populated data", failures);
+    await openLabelDetail();
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     const labelSample = await page.evaluate(() => {
       const project = window.PromptDeckLabelSheet.getProject();
@@ -2805,12 +2819,18 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => document.querySelector("#labelSheetQrSource")?.value === "template");
     await page.waitForFunction(() => document.querySelector("#labelSheetQrResolvedPreview")?.textContent.includes("https://example.kr/check/DEMO-MEAL-001?name=%"));
     await page.selectOption("#labelSheetQrAssignScope", "selected");
-    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().check();
+    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().evaluate((input) => {
+      input.checked = true;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.click("#labelSheetQrAssignBtn");
     await page.waitForFunction(() => document.querySelector("#labelSheetQrSource")?.value === "record");
     const selectedQrAssignmentValues = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => record.front?.qrValue));
     record(selectedQrAssignmentValues.length === 8 && selectedQrAssignmentValues.every(Boolean), "Selected QR assignment discarded dynamic values from unselected labels", failures);
-    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().uncheck();
+    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().evaluate((input) => {
+      input.checked = false;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.selectOption("#labelSheetQrSource", "template");
     await page.selectOption("#labelSheetQrAssignScope", "all");
     await page.click("#labelSheetQrAssignBtn");
@@ -2818,16 +2838,26 @@ SLIDE-TWO-CONTENT`);
     const assignedQrValues = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => record.front?.qrValue));
     record(assignedQrValues.length === 8 && assignedQrValues.every((qrValue) => qrValue.startsWith("https://example.kr/check/DEMO-MEAL-") && qrValue.includes("?name=%")), "Label-sheet QR template was not materialized into per-record values", failures);
     await page.selectOption("#labelSheetQrAssignScope", "selected");
-    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().check();
+    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().evaluate((input) => {
+      input.checked = true;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.click("#labelSheetQrClearBtn");
     await page.waitForFunction(() => {
       const records = window.PromptDeckLabelSheet.getProject().records;
       return records[0]?.front?.qrValue === "" && records[1]?.front?.qrValue?.startsWith("https://example.kr/check/DEMO-MEAL-");
     });
-    await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').first().fill("https://example.kr/manual/first");
+    await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').first().evaluate((input) => {
+      input.value = "https://example.kr/manual/first";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.front?.qrValue === "https://example.kr/manual/first");
     record((await page.locator("#labelSheetQrSource").inputValue()) === "record", "Editing a per-record QR value did not activate direct assignment mode", failures);
-    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().uncheck();
+    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first().evaluate((input) => {
+      input.checked = false;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.selectOption("#labelSheetQrAssignScope", "all");
     await page.selectOption("#labelSheetQrSource", "template");
     await page.locator("#labelSheetQrTemplate").fill("https://example.kr/pass/{id}");
@@ -2984,7 +3014,9 @@ SLIDE-TWO-CONTENT`);
     record(!latestStateExportEvents.some((event) => event.type === "qr"), `Label-sheet immediate QR-off change was not used by PNG export: ${JSON.stringify(latestStateExportEvents.slice(0, 20))}`, failures);
     record(!latestStateExportTextCalls.some((call) => /^PASS-\d+/.test(call.text)), `Label-sheet immediate no-number change was not used by PNG export: ${JSON.stringify(latestStateExportTextCalls.slice(0, 12))}`, failures);
     record(latestStateExportStart >= 0, `Label-sheet immediate vertical/right layout was not used by PNG export: ${JSON.stringify(latestStateOutputProbe.textCalls.slice(0, 12))}`, failures);
+    await openLabelDetail();
     await page.check("#labelSheetQrEnabled");
+    await closeLabelDetail();
     await page.selectOption("#labelSheetSequenceMode", "sequence");
     await page.evaluate(() => {
       const orientation = document.querySelector("#labelSheetContentOrientation");
@@ -3207,10 +3239,12 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => !window.PromptDeckLabelSheet.runPreflight().fatal);
     record(await page.locator("#labelSheetExportPngBtn").isEnabled(), "Label-sheet PNG export stayed disabled after valid pasted data", failures);
 
+    await openLabelDetail();
     await page.check("#labelSheetQrEnabled");
     await page.selectOption("#labelSheetQrPosition", "center");
     await page.selectOption("#labelSheetQrSize", "40");
     await page.selectOption("#labelSheetQrLayoutMode", "adaptive");
+    await closeLabelDetail();
     await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').first().fill("https://example.kr/meal/MEAL-001");
     await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').nth(1).fill("https://example.kr/meal/MEAL-002");
     await page.waitForFunction(() => {
@@ -3335,10 +3369,11 @@ SLIDE-TWO-CONTENT`);
       failures
     );
     await page.click("#labelSheetFocusScopeRecord");
-    await page.click("#labelSheetFocusCommonTab");
-    record(await page.locator("#labelSheetFocusCommonPanel").isVisible() && await page.locator("#labelSheetCommonLayout").isVisible(), "Label-sheet common layout was not available inside the enlarged editor", failures);
+    await page.click("#labelSheetWorkspaceCommonBtn");
+    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer:not([hidden])");
+    record(await page.locator("#labelSheetFocusCommonPanel").isVisible() && await page.locator("#labelSheetCommonLayout").isVisible(), "Label-sheet common layout was not available inside the detail dialog", failures);
     await page.click("#labelSheetFocusDetailTab");
-    record(await page.locator("#labelSheetFocusDetailPanel").isVisible() && await page.locator("#labelSheetWysiwygDetails").evaluate((element) => element.open), "Label-sheet detailed preset editor was not available inside the enlarged editor", failures);
+    record(await page.locator("#labelSheetFocusDetailPanel").isVisible() && await page.locator("#labelSheetWysiwygDetails").evaluate((element) => element.open), "Label-sheet detailed preset editor was not available inside the detail dialog", failures);
     await page.locator("#labelSheetWysiwygY").fill("40");
     await page.locator("#labelSheetWysiwygY").dispatchEvent("change");
     await page.waitForFunction(() => document.querySelector("#labelSheetQuickWidthValue")?.textContent.includes("→"));
@@ -3347,6 +3382,8 @@ SLIDE-TWO-CONTENT`);
     await page.locator("#labelSheetWysiwygWidth").fill("62");
     await page.locator("#labelSheetWysiwygWidth").dispatchEvent("change");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().settings.recordTextLayouts?.["record:MEAL-001"]?.front?.withQr?.title?.widthPercent === 62);
+    await page.click("#labelSheetWorkspaceDetailDrawer [data-label-workspace-drawer-close]");
+    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer", { state: "hidden" });
     const firstRecordSelection = page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first();
     await firstRecordSelection.check();
     await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').first().fill("MEAL-RENAMED");
@@ -3367,6 +3404,7 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetFocusScopeGlobal");
     await page.waitForFunction(() => document.querySelector("#labelSheetFocusScopeGlobal")?.getAttribute("aria-pressed") === "true"
       && document.querySelector("#labelSheetQuickScope")?.value === "global");
+    await openLabelDetail();
     await page.locator("#labelSheetWysiwygWidth").fill("74");
     await page.locator("#labelSheetWysiwygWidth").dispatchEvent("change");
     await page.waitForFunction(() => {
@@ -3374,6 +3412,7 @@ SLIDE-TWO-CONTENT`);
       return settings.textLayouts?.front?.withQr?.title?.widthPercent === 74 &&
         !settings.recordTextLayouts?.["record:MEAL-RENAMED"]?.front?.withQr;
     });
+    await closeLabelDetail();
     await page.click("#labelSheetFocusScopeRecord");
     await page.waitForFunction(() => document.querySelector("#labelSheetWysiwygWidth")?.value === "74"
       && document.querySelector("#labelSheetWysiwygStatus")?.textContent.includes("공통값 상속"));
@@ -3392,17 +3431,21 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-RENAMED");
     await page.click("#labelSheetFocusNext");
     await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim().startsWith("2 /"));
+    await openLabelDetail();
     await page.locator("#labelSheetWysiwygText").fill("두 번째 식권만 수정");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.front?.title === "두 번째 식권만 수정");
+    await closeLabelDetail();
     const duplicateIdEdit = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => record.front?.title));
     record(duplicateIdEdit[0] === "수정 식권" && duplicateIdEdit[1] === "두 번째 식권만 수정", `Label-sheet selected placement edited the wrong duplicate-ID row: ${JSON.stringify(duplicateIdEdit)}`, failures);
     await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').nth(1).fill("MEAL-002");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-002");
     await page.click("#labelSheetFocusPrev");
     await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim().startsWith("1 /"));
+    await openLabelDetail();
     await page.click("#labelSheetWysiwygResetField");
     await page.selectOption("#labelSheetQrPosition", "right");
     await page.selectOption("#labelSheetQrSize", "28");
+    await closeLabelDetail();
     await page.waitForFunction(() => !window.PromptDeckLabelSheet.runPreflight().fatal);
     await page.click("#labelSheetWorkspaceReviewBtn");
     await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
@@ -3752,12 +3795,17 @@ SLIDE-TWO-CONTENT`);
     record(await page.locator("#qrBatchModal").isHidden(), "QR batch modal did not close after sending records to the label studio", failures);
     await page.click('[data-label-bottom-tab="data"]');
     await page.waitForFunction(() => document.querySelector("#labelSheetRecordTable")?.getClientRects().length > 0);
+    await openLabelDetail();
     await page.selectOption("#labelSheetQrAssignScope", "selected");
-    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').last().check();
+    await page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').last().evaluate((input) => {
+      input.checked = true;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.click("#labelSheetQrUseCurrentBtn");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records.at(-1)?.front?.qrValue === "https://example.com/current-label-qr");
     const qrCurrentBridgeValues = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.slice(-2).map((record) => record.front?.qrValue));
     record(qrCurrentBridgeValues[0] === "https://example.com" && qrCurrentBridgeValues[1] === "https://example.com/current-label-qr", `QR current-value assignment changed the wrong labels: ${JSON.stringify(qrCurrentBridgeValues)}`, failures);
+    await closeLabelDetail();
 
     const typographyTabIds = [
       "tabBtnDesigner", "tabBtnCommonPrompt", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnMapPrompt",
