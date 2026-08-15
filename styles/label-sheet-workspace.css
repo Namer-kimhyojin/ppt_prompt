@@ -2824,8 +2824,8 @@ body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .promptdeck-legal-fo
   padding-inline: 5px;
   place-items: center;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
-  color: var(--accent-strong);
+  background: var(--surface-soft);
+  color: var(--ink);
   font-size: 11px;
   font-weight: 900;
 }
@@ -3317,8 +3317,8 @@ body.label-sheet-modal-open #mobileTabActions {
   justify-content: center;
   padding: 0 5px;
   border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent-strong);
+  background: var(--surface-soft);
+  color: var(--ink);
   font-size: 11px;
   font-weight: 900;
 }
