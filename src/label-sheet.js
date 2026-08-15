@@ -4480,6 +4480,15 @@
       const sizePercent = Number(field.dataset.sizePercent) || 8;
       field.style.fontSize = `${Math.max(5, base * sizePercent / 100 * scale)}px`;
       field.style.fontWeight = field.dataset.fontWeight || "400";
+      if (field.dataset.automaticHeight === "true") {
+        field.style.height = "auto";
+        const measuredHeight = field.getBoundingClientRect().height;
+        const contentHeight = Math.max(1, contentBox.getBoundingClientRect().height);
+        const maximumHeight = Number(field.dataset.automaticHeightMaximum) || 34;
+        const fittedHeight = clamp(measuredHeight / contentHeight * 100, 7, maximumHeight);
+        field.style.height = `${fittedHeight}%`;
+        field.dataset.displayHeightPercent = String(fittedHeight);
+      }
       if (field.dataset.inheritColor !== "true") return;
       const profile = sampleWysiwygFieldContrast(canvas, field);
       const fallbackLight = currentWorkingProject?.settings?.textContrast === "light";
@@ -4636,6 +4645,8 @@
           field.dataset.displayYPercent = String(displayGeometry.yPercent);
           field.dataset.displayWidthPercent = String(displayGeometry.widthPercent);
           field.dataset.displayHeightPercent = String(displayGeometry.heightPercent);
+          field.dataset.automaticHeight = String(config.heightPercent === null);
+          field.dataset.automaticHeightMaximum = String(displayGeometry.heightPercent);
           field.dataset.sizePercent = String(config.sizePercent);
           field.dataset.fontWeight = String(config.weight);
           field.dataset.inheritColor = String(config.color === "inherit");
@@ -4966,8 +4977,8 @@
   function normalizeIssues(result, working) {
     const promptOnly = normalizeOutputGoal(working.settings?.outputGoal) === "prompt";
     const irrelevantForBackgroundPrompt = (issue) => promptOnly && /^(BACKGROUND|QR|TEXT|ASSET)/.test(issue.code || "");
-    const errors = result.errors.filter((issue) => !irrelevantForBackgroundPrompt(issue)).map((issue) => ({ level: "error", message: issue.message, code: issue.code }));
-    const warnings = result.warnings.filter((issue) => !irrelevantForBackgroundPrompt(issue)).map((issue) => ({ level: "warning", message: issue.message, code: issue.code }));
+    const errors = result.errors.filter((issue) => !irrelevantForBackgroundPrompt(issue)).map((issue) => ({ ...issue, level: "error" }));
+    const warnings = result.warnings.filter((issue) => !irrelevantForBackgroundPrompt(issue)).map((issue) => ({ ...issue, level: "warning" }));
     const usedAssets = new Map();
     const qrValues = new Map();
     const qrEmptyTokens = new Map();
@@ -5088,6 +5099,61 @@
     });
   }
 
+  function resolvePreflightIssueTarget(issue, working) {
+    const code = cleanText(issue?.code);
+    const message = cleanText(issue?.message);
+    const path = cleanText(issue?.path);
+    const pathMatch = path.match(/^records\[(\d+)\](?:\.(front|back))?(?:\.([a-zA-Z]+))?/u);
+    let recordIndex = pathMatch ? Number(pathMatch[1]) : -1;
+    if (!Number.isInteger(recordIndex) || recordIndex < 0 || recordIndex >= working.records.length) {
+      recordIndex = working.records.findIndex((record) => message === record.id || message.startsWith(`${record.id} `) || message.startsWith(`${record.id}:`));
+    }
+    const recordId = recordIndex >= 0 ? working.records[recordIndex]?.id || "" : "";
+    const side = pathMatch?.[2] || (/뒷면| back(?:\s|$)/iu.test(message) ? "back" : "front");
+    const pathField = pathMatch?.[3] || "";
+    const dataField = pathMatch
+      ? path.replace(/^records\[\d+\]\.?/u, "").replace(/\.background(?:AssetId|File)$/u, "").replace(/\.qrValue$/u, ".qrValue")
+      : "";
+    const field = code.startsWith("QR_")
+      ? "qr"
+      : /하단 문구|footer/iu.test(message) || pathField === "footer"
+        ? "footer"
+        : /부제|subtitle/iu.test(message) || pathField === "subtitle"
+          ? "subtitle"
+          : /제목|title/iu.test(message) || pathField === "title"
+            ? "title"
+            : /연번|번호|number/iu.test(message) || pathField === "number"
+              ? "number"
+              : /본문|세로로 겹/iu.test(message) || pathField === "body"
+                ? "body"
+                : "title";
+    const route = code === "NO_RECORDS"
+      ? "data"
+      : /^(DUPLICATE_|UPDATE_|UNCLOSED_QUOTE)/u.test(code)
+        ? "data"
+        : /^(BACKGROUND_|ASSET_|LOW_RESOLUTION|MISSING_BACKGROUNDS)/u.test(code)
+          ? "assets"
+          : /^(QR_|TEXT_)/u.test(code)
+            ? code.startsWith("QR_") ? "advanced" : "canvas"
+            : /^(INVALID_|PAGE_|GRID_|NEGATIVE_|LOW_DPI|VERY_HIGH_DPI|HIGH_CELL_COUNT|BLEED_|DUPLEX_)/u.test(code)
+              ? "settings"
+              : recordIndex >= 0 ? "canvas" : "validation";
+    return { code, route, recordIndex, recordId, side, field, path, dataField };
+  }
+
+  function focusPreflightIssue(issue, working) {
+    const target = resolvePreflightIssueTarget(issue, working);
+    window.dispatchEvent(new CustomEvent("promptdeck:label-sheet-focus-issue", {
+      detail: { ...target, level: issue.level, message: issue.message },
+    }));
+    setStatus(
+      target.route === "canvas" || target.route === "advanced"
+        ? `${target.recordId || "선택 티켓"}의 ${WYSIWYG_FIELD_LABELS[target.field] || "편집 항목"} 위치로 이동했습니다.`
+        : "문제를 해결할 수 있는 설정 화면으로 이동했습니다.",
+      issue.level === "error" ? "error" : "warning"
+    );
+  }
+
   function runPreflight(options = {}) {
     const snapshot = options.working && options.models
       ? { working: options.working, models: options.models }
@@ -5108,9 +5174,21 @@
         container.appendChild(item);
       } else {
         issues.slice(0, 12).forEach((issue) => {
-          const item = document.createElement("div");
+          const item = document.createElement("button");
+          item.type = "button";
           item.className = `label-sheet-preflight-item is-${issue.level}`;
-          item.textContent = `${issue.level === "error" ? "오류" : "주의"} · ${issue.message}`;
+          item.dataset.issueCode = issue.code || "";
+          const badge = document.createElement("span");
+          badge.className = "label-sheet-preflight-badge";
+          badge.textContent = issue.level === "error" ? "오류" : "주의";
+          const message = document.createElement("span");
+          message.className = "label-sheet-preflight-message";
+          message.textContent = issue.message;
+          const action = document.createElement("span");
+          action.className = "label-sheet-preflight-action";
+          action.textContent = "수정";
+          item.append(badge, message, action);
+          item.addEventListener("click", () => focusPreflightIssue(issue, working));
           container.appendChild(item);
         });
       }
@@ -6418,7 +6496,7 @@
     const profiles = {
       label: {
         presetId: "training-material", sequenceMode: "none", prefix: "", padding: 0, duplex: false, qr: false, qrCoverage: "none", idPrefix: "DEMO-LABEL",
-        frontTitle: "배터리 교육 교재 분류 라벨", frontSubtitle: "샘플교육센터", frontBody: "과정명 · 교재 구분", frontFooter: "교육운영팀",
+        frontTitle: "배터리 교재", frontSubtitle: "샘플교육센터", frontBody: "과정명 · 교재 구분", frontFooter: "교육운영팀",
         backTitle: "", backSubtitle: "", backBody: "", backFooter: "",
         backgroundPrompt: "샘플교육센터 교육 교재 분류 라벨, 밝은 아이보리 바탕과 배터리 블루 포인트, 단정한 정보 영역, 글자·숫자·로고·QR 없음",
         frontAsset: "기본-배터리-아이스블루.webp", backAsset: "기본-배터리-아이스블루.webp",

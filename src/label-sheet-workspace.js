@@ -3,9 +3,11 @@
   "use strict";
 
   const STORAGE_KEY = "promptdeck_label_sheet_workspace_v3";
+  const RECOVERY_KEY = "promptdeck_label_sheet_recovery_v1";
   const CHANGE_EVENT = "promptdeck:label-workspace-change";
   const ROOT_SELECTOR = "#paneLabelSheet.label-sheet-workspace-v2";
   const HISTORY_LIMIT = 30;
+  const RECOVERY_LIMIT = 5;
   const WORKSPACE_PRESET_LABELS = Object.freeze({
     design: "제작 작업공간",
     data: "데이터 작업공간",
@@ -60,6 +62,10 @@
     const toolPanels = Array.from(root.querySelectorAll("[data-label-workspace-panel]"));
     const mobileToolPanel = root.querySelector("#labelSheetWorkspaceToolPanel");
     const mobileToolPanelClose = root.querySelector("#labelSheetWorkspaceToolPanelClose");
+    const mobileToolTabs = Array.from(root.querySelectorAll("[data-label-workspace-mobile-tool]"));
+    const workspaceToolsButton = root.querySelector("#labelSheetWorkspaceToolsBtn");
+    const appNavButton = root.querySelector("#labelSheetWorkspaceAppNavBtn");
+    const appTabsBar = document.querySelector(".app-tabs-bar");
     const mobileInspector = root.querySelector("#labelSheetWorkspaceInspector");
     const mobileInspectorClose = root.querySelector(".label-sheet-workspace-mobile-inspector-close");
     const canvasButtons = Array.from(root.querySelectorAll("[data-label-canvas-view]"));
@@ -83,6 +89,18 @@
     const settingsDrawer = root.querySelector("#labelSheetWorkspaceSettingsDrawer");
     const reviewDrawer = root.querySelector("#labelSheetWorkspaceReviewDrawer");
     const detailDrawer = root.querySelector("#labelSheetWorkspaceDetailDrawer");
+    const fineTuneButton = root.querySelector("#labelSheetWorkspaceFineTuneBtn");
+    const contextTargetPicker = root.querySelector("#labelSheetWorkspaceContextTargetPicker");
+    const recoveryMenu = root.querySelector("#labelSheetWorkspaceRecoveryMenu");
+    const recoveryCard = root.querySelector("#labelSheetWorkspaceRecoveryCard");
+    const recoveryList = root.querySelector("#labelSheetWorkspaceRecoveryList");
+    const undoToast = root.querySelector("#labelSheetWorkspaceUndoToast");
+    const undoToastMessage = root.querySelector("#labelSheetWorkspaceUndoToastMessage");
+    const undoToastAction = root.querySelector("#labelSheetWorkspaceUndoToastAction");
+    const undoToastClose = root.querySelector("#labelSheetWorkspaceUndoToastClose");
+    const detailViewButtons = Array.from(root.querySelectorAll("[data-label-workspace-detail-view]"));
+    const detailViewPanels = Array.from(root.querySelectorAll("[data-label-workspace-detail-panel]"));
+    const qrAdvanced = root.querySelector("#labelSheetQrAdvanced");
     const drawers = [settingsDrawer, reviewDrawer, detailDrawer].filter(Boolean);
     const menuTriggers = Array.from(root.querySelectorAll("[data-label-workspace-menu-trigger]"));
     const menus = Array.from(root.querySelectorAll("[data-label-workspace-menu]"));
@@ -90,6 +108,9 @@
     const mobileToolQuery = window.matchMedia("(max-width: 860px)");
     const compactWorkspaceQuery = window.matchMedia("(max-width: 720px), (max-height: 600px) and (max-width: 1024px)");
     let compactWorkspaceWasActive = compactWorkspaceQuery.matches;
+    const modalBackground = Array.from(root.querySelector(".label-sheet-shell")?.children || [])
+      .filter((element) => !element.matches(".label-sheet-workspace-drawer, .label-sheet-workspace-command-palette"));
+    const modalBackgroundState = new Map();
 
     const saved = readSavedState();
     const state = {
@@ -124,6 +145,7 @@
       menuTrigger: null,
       commandPaletteOpen: false,
       commandPaletteTrigger: null,
+      detailView: "content",
     };
     const projectHistory = {
       entries: [],
@@ -131,6 +153,8 @@
       timer: 0,
       applying: false,
     };
+    let undoToastTimer = 0;
+    let undoToastDirection = -1;
 
     function snapshot() {
       return {
@@ -181,6 +205,12 @@
       root.dataset.activeTool = value;
       root.dataset.workspaceTool = value;
       updateTabGroup(toolButtons, toolPanels, "labelWorkspaceTool", "labelWorkspacePanel", value, "tool");
+      mobileToolTabs.forEach((button) => {
+        const active = button.dataset.labelWorkspaceMobileTool === value;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
+      });
       updateStatus(statusOutputs, "tool", controlLabel(toolButtons, "labelWorkspaceTool", value));
       if (options?.focus) focusButton(toolButtons, "labelWorkspaceTool", value);
       if (options?.persist !== false) persist();
@@ -193,6 +223,7 @@
         mobileInspectorClose?.click();
       }
       root.classList.toggle("is-mobile-tool-panel-open", nextOpen);
+      workspaceToolsButton?.setAttribute("aria-expanded", String(nextOpen));
       if (mobileToolPanel) {
         if (mobileToolQuery.matches) {
           mobileToolPanel.setAttribute("aria-hidden", String(!nextOpen));
@@ -210,7 +241,7 @@
         const activePanel = toolPanels.find((panel) => panel.dataset.labelWorkspacePanel === state.activeTool);
         (activePanel?.querySelector(FOCUSABLE_SELECTOR) || mobileToolPanelClose)?.focus({ preventScroll: true });
       } else if (!nextOpen && options?.restoreFocus) {
-        focusButton(toolButtons, "labelWorkspaceTool", state.activeTool);
+        (workspaceToolsButton || toolButtons.find((button) => button.dataset.labelWorkspaceTool === state.activeTool))?.focus({ preventScroll: true });
       }
     }
 
@@ -325,6 +356,70 @@
       emit("workspace-preset", name, { source: options.source || "preset" });
     }
 
+    function activateDetailView(value, options = {}) {
+      if (!detailViewButtons.some((button) => button.dataset.labelWorkspaceDetailView === value)) return;
+      state.detailView = value;
+      if (detailDrawer) detailDrawer.dataset.detailView = value;
+      detailViewButtons.forEach((button) => {
+        const active = button.dataset.labelWorkspaceDetailView === value;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
+      });
+      detailViewPanels.forEach((panel) => {
+        panel.setAttribute("aria-hidden", String(panel.dataset.labelWorkspaceDetailPanel !== value && mobileToolQuery.matches));
+      });
+      if (options.focus) detailViewButtons.find((button) => button.dataset.labelWorkspaceDetailView === value)?.focus({ preventScroll: true });
+    }
+
+    function setWorkspaceModalState(open, activeDrawer = null) {
+      root.classList.toggle("is-drawer-open", open);
+      document.body.classList.toggle("label-sheet-modal-open", open);
+      if (open) setAppNavOpen(false);
+      modalBackground.forEach((element) => {
+        if (open) {
+          if (!modalBackgroundState.has(element)) {
+            modalBackgroundState.set(element, {
+              inert: element.inert,
+              hadAriaHidden: element.hasAttribute("aria-hidden"),
+              ariaHidden: element.getAttribute("aria-hidden"),
+            });
+          }
+          element.inert = true;
+          element.setAttribute("aria-hidden", "true");
+        } else {
+          const previous = modalBackgroundState.get(element);
+          element.inert = previous?.inert || false;
+          if (previous?.hadAriaHidden) element.setAttribute("aria-hidden", previous.ariaHidden);
+          else element.removeAttribute("aria-hidden");
+          modalBackgroundState.delete(element);
+        }
+      });
+      drawers.forEach((drawer) => {
+        drawer.inert = open && drawer !== activeDrawer;
+      });
+    }
+
+    function isVisibleTrigger(element) {
+      if (!element?.isConnected || element.disabled || element.closest("[hidden], [aria-hidden='true'], [inert]")) return false;
+      const style = window.getComputedStyle(element);
+      return style.display !== "none" && style.visibility !== "hidden" && element.getClientRects().length > 0;
+    }
+
+    function resolveDrawerTrigger(kind, requested, activeElement = document.activeElement) {
+      const mobileReviewTrigger = document.querySelector(
+        '#mobileTabActions [data-proxy-target="labelSheetWorkspaceReviewBtn"], #mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]'
+      );
+      const fallbacks = kind === "review"
+        ? mobileToolQuery.matches
+          ? [mobileReviewTrigger, requested, activeElement, reviewButton]
+          : [requested, activeElement, reviewButton, mobileReviewTrigger]
+        : kind === "detail"
+          ? [fineTuneButton, detailButton, commonButton]
+          : [settingsButton];
+      return fallbacks.find(isVisibleTrigger) || requested || activeElement || null;
+    }
+
     function openDrawer(kind, drawer, trigger, options) {
       if (!drawer) return;
       closeMenu({ restoreFocus: false });
@@ -339,8 +434,9 @@
       }
 
       state.activeDrawer = drawer;
-      state.drawerTrigger = trigger || null;
+      state.drawerTrigger = resolveDrawerTrigger(kind, trigger);
       drawers.forEach((item) => setDrawerOpen(item, item === drawer));
+      setWorkspaceModalState(true, drawer);
       settingsButton?.setAttribute("aria-expanded", String(drawer === settingsDrawer));
       reviewButton?.setAttribute("aria-expanded", String(drawer === reviewDrawer));
       commonButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
@@ -362,6 +458,7 @@
       const trigger = state.drawerTrigger;
       const kind = drawer === settingsDrawer ? "settings" : drawer === reviewDrawer ? "review" : drawer === detailDrawer ? "detail" : "drawer";
       setDrawerOpen(drawer, false);
+      setWorkspaceModalState(false);
       state.activeDrawer = null;
       state.drawerTrigger = null;
       settingsButton?.setAttribute("aria-expanded", "false");
@@ -371,8 +468,9 @@
       openDetailedEditButton?.setAttribute("aria-expanded", "false");
       if (drawer === detailDrawer) root.querySelector('[data-label-sheet-focus-tool="quick"]')?.click();
       updateStatus(statusOutputs, "drawer", "닫힘");
-      if (options?.restoreFocus !== false && trigger?.isConnected) {
-        trigger.focus({ preventScroll: true });
+      if (options?.restoreFocus !== false) {
+        const focusTarget = resolveDrawerTrigger(kind, trigger);
+        window.requestAnimationFrame(() => focusTarget?.focus?.({ preventScroll: true }));
       }
       if (options?.emit !== false) emit("drawer", `${kind}:closed`, options);
     }
@@ -416,6 +514,122 @@
       }
     }
 
+    function readRecoverySnapshots() {
+      try {
+        const parsed = JSON.parse(window.localStorage.getItem(RECOVERY_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed.filter((entry) => entry?.value && entry?.key).slice(0, RECOVERY_LIMIT) : [];
+      } catch (_error) {
+        return [];
+      }
+    }
+
+    function writeRecoverySnapshots(entries) {
+      try {
+        window.localStorage.setItem(RECOVERY_KEY, JSON.stringify(entries.slice(0, RECOVERY_LIMIT)));
+        return true;
+      } catch (_error) {
+        return false;
+      }
+    }
+
+    function recoveryTimeLabel(savedAt) {
+      const value = new Date(savedAt);
+      if (Number.isNaN(value.getTime())) return "저장 시각 없음";
+      return new Intl.DateTimeFormat("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(value);
+    }
+
+    function renderRecoverySnapshots() {
+      if (!recoveryList) return;
+      const entries = readRecoverySnapshots();
+      recoveryList.replaceChildren();
+      if (!entries.length) {
+        const empty = document.createElement("p");
+        empty.className = "label-sheet-workspace-recovery-empty";
+        empty.textContent = "복구할 자동 저장본이 아직 없습니다.";
+        recoveryList.append(empty);
+        return;
+      }
+      entries.forEach((entry, index) => {
+        const row = document.createElement("div");
+        row.className = "label-sheet-workspace-recovery-row";
+        const copy = document.createElement("span");
+        const title = document.createElement("strong");
+        const meta = document.createElement("small");
+        title.textContent = entry.name || `자동 저장 ${index + 1}`;
+        meta.textContent = `${recoveryTimeLabel(entry.savedAt)} · 데이터 ${Number(entry.recordCount) || 0}건`;
+        copy.append(title, meta);
+        const restore = document.createElement("button");
+        restore.type = "button";
+        restore.className = "btn secondary label-sheet-compact-btn";
+        restore.textContent = index === 0 ? "현재본 복원" : "이 상태 복원";
+        restore.addEventListener("click", async () => {
+          const api = window.PromptDeckLabelSheet;
+          if (typeof api?.replaceProject !== "function") return;
+          try {
+            await api.replaceProject(entry.value, {
+              source: "workspace-recovery",
+              message: `${recoveryTimeLabel(entry.savedAt)} 자동 저장 상태를 복원했습니다.`,
+            });
+            captureProjectHistory({ force: true });
+            showUndoToast("자동 저장 상태를 복원했습니다.", -1, "실행 취소");
+            closeDrawer({ restoreFocus: true, source: "recovery" });
+          } catch (error) {
+            const status = root.querySelector("#labelSheetStatus");
+            if (status) {
+              status.textContent = error.message || "자동 저장 상태를 복원하지 못했습니다.";
+              status.dataset.tone = "error";
+            }
+          }
+        });
+        row.append(copy, restore);
+        recoveryList.append(row);
+      });
+    }
+
+    function persistRecoverySnapshot(snapshotValue) {
+      if (!snapshotValue?.value || !snapshotValue.key) return;
+      const entries = readRecoverySnapshots();
+      if (entries[0]?.key === snapshotValue.key) return;
+      entries.unshift({
+        key: snapshotValue.key,
+        value: snapshotValue.value,
+        savedAt: new Date().toISOString(),
+        name: snapshotValue.value.name || "라벨·티켓 프로젝트",
+        recordCount: Array.isArray(snapshotValue.value.records) ? snapshotValue.value.records.length : 0,
+      });
+      if (writeRecoverySnapshots(entries)) renderRecoverySnapshots();
+    }
+
+    function hideUndoToast() {
+      window.clearTimeout(undoToastTimer);
+      if (undoToast) undoToast.hidden = true;
+    }
+
+    function showUndoToast(message, direction = -1, actionLabel = "실행 취소") {
+      if (!undoToast || state.activeDrawer) return;
+      window.clearTimeout(undoToastTimer);
+      undoToastDirection = direction;
+      if (undoToastMessage) undoToastMessage.textContent = message;
+      if (undoToastAction) {
+        undoToastAction.textContent = actionLabel;
+        undoToastAction.disabled = direction < 0 ? projectHistory.index <= 0 : projectHistory.index >= projectHistory.entries.length - 1;
+      }
+      undoToast.hidden = false;
+      undoToastTimer = window.setTimeout(hideUndoToast, 5200);
+    }
+
+    function setAppNavOpen(open, options = {}) {
+      const nextOpen = Boolean(open) && mobileToolQuery.matches && root.classList.contains("active");
+      document.body.classList.toggle("label-workspace-app-nav-open", nextOpen);
+      appNavButton?.setAttribute("aria-expanded", String(nextOpen));
+      if (!nextOpen && options.restoreFocus) appNavButton?.focus({ preventScroll: true });
+    }
+
     function updateHistoryUi() {
       const canUndo = projectHistory.index > 0 && !projectHistory.applying;
       const canRedo = projectHistory.index >= 0 && projectHistory.index < projectHistory.entries.length - 1 && !projectHistory.applying;
@@ -440,7 +654,9 @@
       projectHistory.entries.push(snapshotValue);
       if (projectHistory.entries.length > HISTORY_LIMIT) projectHistory.entries.shift();
       projectHistory.index = projectHistory.entries.length - 1;
+      persistRecoverySnapshot(snapshotValue);
       updateHistoryUi();
+      if (current && !options.force) showUndoToast("변경사항을 자동 저장했습니다.", -1, "실행 취소");
     }
 
     function scheduleProjectHistoryCapture(delay = 420) {
@@ -465,6 +681,11 @@
           message: `${action}로 이전 프로젝트 상태를 복원했습니다.`,
         });
         projectHistory.index = nextIndex;
+        showUndoToast(
+          direction < 0 ? "이전 상태로 복원했습니다." : "변경사항을 다시 적용했습니다.",
+          direction < 0 ? 1 : -1,
+          direction < 0 ? "다시 실행" : "실행 취소"
+        );
       } catch (error) {
         const status = root.querySelector("#labelSheetStatus");
         if (status) {
@@ -586,6 +807,7 @@
     setupDrawerSemantics(commonButton, detailDrawer, "detail");
     setupDrawerSemantics(detailButton, detailDrawer, "detail");
     setupDrawerSemantics(openDetailedEditButton, detailDrawer, "detail");
+    setupDrawerSemantics(fineTuneButton, detailDrawer, "detail");
 
     toolButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -597,6 +819,9 @@
         if (mobileToolQuery.matches) setMobileToolPanelOpen(!closeCurrent, { focusPanel: !closeCurrent });
       });
     });
+    mobileToolTabs.forEach((button) => {
+      button.addEventListener("click", () => activateTool(button.dataset.labelWorkspaceMobileTool, { source: "mobile-tools" }));
+    });
     canvasButtons.forEach((button) => {
       button.addEventListener("click", () => activateCanvasView(button.dataset.labelCanvasView, { source: "pointer" }));
     });
@@ -607,6 +832,8 @@
     bindRovingKeys(toolButtons, "labelWorkspaceTool", (value) => activateTool(value, { focus: true, source: "keyboard" }));
     bindRovingKeys(canvasButtons, "labelCanvasView", (value) => activateCanvasView(value, { focus: true, source: "keyboard" }));
     bindRovingKeys(bottomButtons, "labelBottomTab", (value) => activateBottomTab(value, { expand: true, focus: true, source: "keyboard" }));
+    bindRovingKeys(mobileToolTabs, "labelWorkspaceMobileTool", (value) => activateTool(value, { focus: false, source: "keyboard" }));
+    bindRovingKeys(detailViewButtons, "labelWorkspaceDetailView", (value) => activateDetailView(value, { focus: true }));
 
     leftToggle?.addEventListener("click", () => setLeftCollapsed(!state.leftCollapsed, { source: "pointer" }));
     bottomToggle?.addEventListener("click", () => setBottomCollapsed(!state.bottomCollapsed, { source: "pointer" }));
@@ -640,14 +867,27 @@
       items[next]?.focus({ preventScroll: true });
     });
     mobileToolPanelClose?.addEventListener("click", () => setMobileToolPanelOpen(false, { restoreFocus: true }));
+    workspaceToolsButton?.addEventListener("click", () => setMobileToolPanelOpen(!root.classList.contains("is-mobile-tool-panel-open"), { focusPanel: true }));
+    appNavButton?.addEventListener("click", () => setAppNavOpen(!document.body.classList.contains("label-workspace-app-nav-open")));
+    appTabsBar?.addEventListener("click", (event) => {
+      if (event.target.closest("button, [role='tab']")) setAppNavOpen(false);
+    });
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
-    commonButton?.addEventListener("click", () => openFocusDrawer("common", commonButton));
-    detailButton?.addEventListener("click", () => openFocusDrawer("detail", detailButton));
-    openDetailedEditButton?.addEventListener("click", () => openFocusDrawer("detail", openDetailedEditButton));
+    commonButton?.addEventListener("click", () => openFocusDrawer("common", commonButton, "layout"));
+    detailButton?.addEventListener("click", () => openFocusDrawer("detail", detailButton, "content"));
+    openDetailedEditButton?.addEventListener("click", () => openFocusDrawer("detail", openDetailedEditButton, "content"));
+    fineTuneButton?.addEventListener("click", () => openFocusDrawer("detail", fineTuneButton, "layout"));
+    detailViewButtons.forEach((button) => {
+      button.addEventListener("click", () => activateDetailView(button.dataset.labelWorkspaceDetailView));
+    });
+    qrAdvanced?.addEventListener("toggle", () => {
+      if (qrAdvanced.open && state.activeDrawer === detailDrawer && mobileToolQuery.matches) activateDetailView("advanced");
+    });
 
-    function openFocusDrawer(panel, trigger) {
+    function openFocusDrawer(panel, trigger, detailView = "content") {
       root.querySelector(`[data-label-sheet-focus-tool="${panel}"]`)?.click();
+      activateDetailView(detailView);
       if (state.activeDrawer !== detailDrawer) openDrawer("detail", detailDrawer, trigger, { source: "pointer" });
     }
 
@@ -709,6 +949,20 @@
     root.querySelectorAll("[data-label-workspace-history-command]").forEach((control) => {
       control.addEventListener("click", () => moveProjectHistory(control.dataset.labelWorkspaceHistoryCommand === "undo" ? -1 : 1));
     });
+    recoveryMenu?.addEventListener("click", () => {
+      renderRecoverySnapshots();
+      openDrawer("settings", settingsDrawer, settingsButton, { source: "recovery-menu" });
+      window.setTimeout(() => {
+        recoveryCard?.scrollIntoView({ block: "start" });
+        recoveryList?.querySelector("button")?.focus({ preventScroll: true });
+      }, 80);
+    });
+    undoToastAction?.addEventListener("click", () => {
+      const direction = undoToastDirection;
+      hideUndoToast();
+      void moveProjectHistory(direction);
+    });
+    undoToastClose?.addEventListener("click", hideUndoToast);
     root.querySelectorAll("[data-label-workspace-preset]").forEach((control) => {
       control.setAttribute("role", "menuitemradio");
       control.addEventListener("click", () => applyWorkspacePreset(control.dataset.labelWorkspacePreset, { source: "menu" }));
@@ -749,8 +1003,34 @@
     });
     window.addEventListener("promptdeck:label-sheet-project-change", () => scheduleProjectHistoryCapture(260));
     window.addEventListener("promptdeck:label-sheet-goal-change", () => scheduleProjectHistoryCapture(80));
+    window.addEventListener("promptdeck:label-sheet-focus-issue", (event) => {
+      const detail = event.detail || {};
+      if (detail.route === "settings") {
+        openDrawer("settings", settingsDrawer, settingsButton, { source: "preflight" });
+        return;
+      }
+      if (detail.route === "assets") {
+        activateTool("assets", { source: "preflight" });
+        setLeftCollapsed(false, { source: "preflight" });
+        if (mobileToolQuery.matches) setMobileToolPanelOpen(true, { restoreFocus: false });
+        return;
+      }
+      if (detail.route === "data") {
+        activateBottomTab("data", { expand: true, source: "preflight" });
+        return;
+      }
+      activateCanvasView("ticket", { source: "preflight" });
+      if (mobileToolQuery.matches) setBottomCollapsed(true, { source: "preflight" });
+      if (detail.route === "advanced") {
+        activateDetailView("advanced");
+        openDrawer("detail", detailDrawer, fineTuneButton, { source: "preflight" });
+      }
+    });
 
     document.addEventListener("pointerdown", (event) => {
+      if (contextTargetPicker?.open && !contextTargetPicker.contains(event.target)) {
+        contextTargetPicker.open = false;
+      }
       if (state.activeMenu && !state.activeMenu.contains(event.target) && !state.menuTrigger?.contains(event.target)) {
         closeMenu({ restoreFocus: false });
       }
@@ -806,6 +1086,17 @@
         return;
       }
       if (state.activeMenu && event.key === "Tab") closeMenu({ restoreFocus: false });
+      if (contextTargetPicker?.open && event.key === "Escape") {
+        event.preventDefault();
+        contextTargetPicker.open = false;
+        contextTargetPicker.querySelector("summary")?.focus({ preventScroll: true });
+        return;
+      }
+      if (event.key === "Escape" && document.body.classList.contains("label-workspace-app-nav-open")) {
+        event.preventDefault();
+        setAppNavOpen(false, { restoreFocus: true });
+        return;
+      }
       if (event.key === "Escape" && root.classList.contains("is-mobile-tool-panel-open")) {
         event.preventDefault();
         setMobileToolPanelOpen(false, { restoreFocus: true });
@@ -839,11 +1130,17 @@
     setRightCollapsed(state.rightCollapsed, { source: "initialization", persist: false, emit: false });
     setBottomCollapsed(state.bottomCollapsed, { source: "initialization", persist: false, emit: false });
     setMobileToolPanelOpen(false);
+    activateDetailView(state.detailView);
     drawers.forEach((drawer) => setDrawerOpen(drawer, false));
     const syncResponsivePanels = () => {
+      if (!root.classList.contains("active") && state.activeDrawer) {
+        closeDrawer({ restoreFocus: false, source: "tab-change" });
+      }
       if (!mobileToolQuery.matches || !root.classList.contains("is-mobile-tool-panel-open")) {
         setMobileToolPanelOpen(false);
       }
+      if (!mobileToolQuery.matches || !root.classList.contains("active")) setAppNavOpen(false);
+      activateDetailView(state.detailView);
       setRightCollapsed(state.rightCollapsed, { source: "responsive", persist: false, emit: false });
       const compactWorkspaceIsActive = compactWorkspaceQuery.matches;
       if (compactWorkspaceIsActive && !compactWorkspaceWasActive) {
@@ -853,7 +1150,9 @@
     };
     window.addEventListener("resize", syncResponsivePanels, { passive: true });
     mobileToolQuery.addEventListener?.("change", syncResponsivePanels);
+    new MutationObserver(syncResponsivePanels).observe(root, { attributes: true, attributeFilter: ["class"] });
     persist();
+    renderRecoverySnapshots();
     window.setTimeout(() => captureProjectHistory({ force: true }), 700);
     updateHistoryUi();
     emit("ready", "v4", { source: "initialization" });

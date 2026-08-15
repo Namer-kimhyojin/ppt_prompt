@@ -139,6 +139,12 @@ async function verifyViewport(label, viewport) {
     if ((await page.locator("#paneLabelSheet [data-label-workspace-menu-trigger]").count()) !== 4 || (await page.locator("#labelSheetWorkspaceDetailDrawer").count()) !== 1) failures.push(`${label}: 맞춤형 메뉴 또는 세부 편집 모달이 누락되었습니다.`);
     if ((await page.locator("[data-label-workspace-history-command]").count()) !== 4 || (await page.locator("[data-label-workspace-preset]").count()) !== 3) failures.push(`${label}: 데스크톱 편집 기록 또는 작업공간 프리셋이 누락되었습니다.`);
     if ((await page.locator(".label-sheet-workspace-context-toolbar [data-label-sheet-nudge]").count()) !== 0 || (await page.locator("#labelSheetWorkspaceDetailDrawer .label-sheet-workspace-precision-tools [data-label-sheet-nudge]").count()) !== 4) failures.push(`${label}: 저빈도 정밀 도구가 핵심 캔버스에서 상세 편집으로 이동하지 않았습니다.`);
+    if ((await page.locator("#labelSheetWorkspaceContextTargetPicker").count()) !== 1 || (await page.locator(".label-sheet-workspace-context-actions > button").count()) !== 3) failures.push(`${label}: 선택 항목 맞춤형 빠른 도구가 단순화되지 않았습니다.`);
+    await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").click();
+    if (!(await page.locator('#labelSheetWorkspaceContextTargetPicker [data-label-sheet-focus-target="body"]').isVisible())) failures.push(`${label}: 편집 항목 선택 메뉴가 열리지 않았습니다.`);
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(() => !document.querySelector("#labelSheetWorkspaceContextTargetPicker")?.open);
+    if ((await page.locator("#labelSheetWorkspaceRecoveryMenu").count()) !== 1 || (await page.locator("#labelSheetWorkspaceUndoToast").count()) !== 1) failures.push(`${label}: 자동 저장 복구 또는 실행 취소 안내가 누락되었습니다.`);
     await page.keyboard.press("Control+K");
     await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
     await page.locator("#labelSheetWorkspaceCommandSearch").fill("집중");
@@ -179,6 +185,9 @@ async function verifyViewport(label, viewport) {
     await page.locator("#labelSheetWorkspaceCommandSearch").fill("직접 제작 모드");
     await page.locator(".label-sheet-workspace-command-item:not([disabled])").click();
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "print");
+    await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").click();
+    await page.locator('#labelSheetWorkspaceContextTargetPicker [data-label-sheet-focus-target="body"]').click();
+    await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceContextTargetLabel")?.textContent?.trim() === "본문" && !document.querySelector("#labelSheetWorkspaceContextTargetPicker")?.open);
     await page.waitForFunction(() => !document.querySelector("#labelSheetWorkspaceUndoBtn")?.disabled);
     await page.keyboard.press("Control+Z");
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "prompt");
@@ -238,6 +247,13 @@ async function verifyViewport(label, viewport) {
     if ((await page.locator("#labelSheetPromptItemSelect option").count()) !== 8) failures.push(`${label}: 정적판 첫 페이지의 개별 라벨 프롬프트가 분리되지 않았습니다.`);
     if (!(await visible("#labelSheetCopyAllPromptsBtn")) || !(await visible("#labelSheetCopyItemPromptBtn"))) failures.push(`${label}: 정적판 전체 페이지·개별 프롬프트 복사 기능이 숨겨졌습니다.`);
   }
+  if (await page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])").count()) {
+    await page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden]) [data-label-workspace-drawer-close]").first().click();
+    await page.waitForFunction(() => !document.querySelector("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])"));
+  }
+  if (viewport.width <= 860 && await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) {
+    await page.locator("#labelSheetWorkspaceAppNavBtn").click();
+  }
   if (!(await visible("#tabBtnQrGenerator")) && await specialGroupFilter.isVisible()) {
     await specialGroupFilter.click();
   }
@@ -286,6 +302,8 @@ async function verifyCompactLabelViewport(label, viewport) {
       inspectorAriaHidden: document.querySelector("#labelSheetWorkspaceInspector")?.getAttribute("aria-hidden"),
       inspectorInert: document.querySelector("#labelSheetWorkspaceInspector")?.inert,
       inspectorButtonHeight: document.querySelector("#labelSheetWorkspaceInspectorBtn")?.getBoundingClientRect().height || 0,
+      toolsButtonHeight: document.querySelector("#labelSheetWorkspaceToolsBtn")?.getBoundingClientRect().height || 0,
+      tabsBarDisplay: getComputedStyle(document.querySelector(".app-tabs-bar")).display,
     };
   });
   if (
@@ -302,16 +320,19 @@ async function verifyCompactLabelViewport(label, viewport) {
     || layout.inspectorAriaHidden !== "true"
     || !layout.inspectorInert
     || layout.inspectorButtonHeight < 44
+    || layout.toolsButtonHeight < 44
+    || layout.tabsBarDisplay !== "none"
   ) {
     failures.push(`${label}: 라벨·티켓 컴팩트 작업공간 배치가 깨졌습니다. ${JSON.stringify(layout)}`);
   }
-  await page.locator('[data-label-workspace-tool="records"]').click();
+  await page.locator("#labelSheetWorkspaceToolsBtn").click();
+  await page.locator('[data-label-workspace-mobile-tool="records"]').click();
   await page.waitForFunction(() => {
     const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
     const box = panel?.getBoundingClientRect();
     return document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open")
       && getComputedStyle(panel).visibility === "visible"
-      && box.left >= 51
+      && box.left >= 0
       && box.right <= window.innerWidth + 1;
   });
   const openToolState = await page.evaluate(() => ({
@@ -342,7 +363,7 @@ async function verifyCompactLabelViewport(label, viewport) {
       && getComputedStyle(inspector).visibility === "visible"
       && !inspector.inert
       && inspector.getAttribute("aria-hidden") === "false"
-      && box.left >= 51
+      && box.left >= 0
       && box.right <= window.innerWidth + 1;
   });
   await page.evaluate(() => {
@@ -355,7 +376,8 @@ async function verifyCompactLabelViewport(label, viewport) {
   if (!(await page.evaluate(() => document.querySelector("#labelSheetWorkspaceInspector")?.contains(document.activeElement)))) {
     failures.push(`${label}: 속성 패널의 키보드 초점이 화면 뒤로 이탈했습니다.`);
   }
-  await page.locator('[data-label-workspace-tool="records"]').click();
+  await page.locator("#labelSheetWorkspaceToolsBtn").click();
+  await page.locator('[data-label-workspace-mobile-tool="records"]').click();
   await page.waitForFunction(() => {
     const pane = document.querySelector("#paneLabelSheet");
     return pane?.classList.contains("is-mobile-tool-panel-open")
