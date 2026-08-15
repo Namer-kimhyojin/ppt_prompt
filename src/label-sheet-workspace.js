@@ -870,7 +870,7 @@
     workspaceToolsButton?.addEventListener("click", () => setMobileToolPanelOpen(!root.classList.contains("is-mobile-tool-panel-open"), { focusPanel: true }));
     appNavButton?.addEventListener("click", () => setAppNavOpen(!document.body.classList.contains("label-workspace-app-nav-open")));
     appTabsBar?.addEventListener("click", (event) => {
-      if (event.target.closest("button, [role='tab']")) setAppNavOpen(false);
+      if (event.target.closest("[role='tab'], .app-tab-btn")) setAppNavOpen(false);
     });
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
