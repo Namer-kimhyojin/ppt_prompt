@@ -3355,6 +3355,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]').evaluate((element) => element.style.textAlign)) === "right", "Label-sheet focus editor did not apply alignment immediately", failures);
     await page.click('[data-label-sheet-focus-align="center"]');
     await closeLabelDetail();
+    await page.click("#labelSheetWorkspaceContextTargetPicker > summary");
     await page.click('[data-label-sheet-focus-target="subtitle"]');
     record((await page.locator('[data-label-sheet-focus-target="subtitle"]').getAttribute("aria-pressed")) === "true" && (await page.locator("#labelSheetQuickTarget").inputValue()) === "subtitle", "Label-sheet integrated target shortcuts did not synchronize the selected field", failures);
     const focusSubtitleSizeBefore = Number(await page.locator("#labelSheetQuickSize").inputValue());
