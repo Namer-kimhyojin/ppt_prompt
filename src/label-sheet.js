@@ -4955,6 +4955,9 @@
       if (message) setStatus(message);
       scheduleRefresh();
       queueSave();
+      window.dispatchEvent(new CustomEvent("promptdeck:label-sheet-project-change", {
+        detail: { source: options.source || "controls" },
+      }));
     } catch (error) {
       setStatus(error.message || "설정값을 확인해 주세요.", "error");
     }
@@ -6694,6 +6697,41 @@
     return { ok: true, ...result, registeredAssets: Object.fromEntries(registeredAssets) };
   }
 
+  async function replaceProjectSnapshot(snapshot, options = {}) {
+    if (generationRunning) throw new Error("배경 생성 큐를 중지한 뒤 실행 취소 또는 다시 실행을 사용해 주세요.");
+    const loaded = ENGINE.deserializeProject(deepClone(snapshot));
+    project = loaded;
+    draftRecords = [];
+    draftRawRecords = [];
+    draftHeaders = [];
+    draftActive = false;
+    undoRecords = null;
+    selectedRecordIds.clear();
+    selectedAssetId = "";
+    previewSide = options.previewSide === "back" && project.spec.duplex.enabled ? "back" : "front";
+    currentPageIndex = 0;
+    wysiwygPlacementIndex = 0;
+    wysiwygField = "title";
+    wysiwygScope = "record";
+    invalidatePromptBundle();
+    fillPresetOptions();
+    fillVisualStyleOptions();
+    setSpecControls(project.spec);
+    setSettingsControls();
+    setProductControlsLocked(selectedPreset()?.editable === false);
+    syncAssetReferences();
+    renderAssets();
+    renderRecordTable();
+    saveProject();
+    await refreshOutput();
+    const message = cleanText(options.message) || `${project.name || "라벨·티켓"} 프로젝트 상태를 복원했습니다.`;
+    setStatus(message, "success");
+    window.dispatchEvent(new CustomEvent("promptdeck:label-sheet-project-replaced", {
+      detail: { source: cleanText(options.source) || "api", recordCount: project.records.length },
+    }));
+    return ENGINE.toSerializableProject(effectiveProject());
+  }
+
   async function loadTablePayload(text, options = {}) {
     const parsed = TABLE_DATA?.parseLabelTable
       ? TABLE_DATA.parseLabelTable(text, { delimiter: options.delimiter || "auto", header: options.header || "auto" })
@@ -7302,6 +7340,10 @@
 
   const labelSheetApi = Object.freeze({
     getProject: () => ENGINE.toSerializableProject(effectiveProject()),
+    getProjectSnapshot: () => {
+      syncProjectFromControls();
+      return ENGINE.toSerializableProject(project);
+    },
     getPagination: () => currentPagination,
     getPromptBundle: () => lastPromptBundle,
     getPromptPages: () => deepClone(lastPromptBundle?.pagePrompts || []),
@@ -7309,6 +7351,7 @@
     getLayoutPresets: () => deepClone(layoutPresets),
     assetStore,
     refresh: refreshOutput,
+    replaceProject: replaceProjectSnapshot,
     runPreflight: () => runPreflight({ announce: false }),
     assignQrValues: (options = {}) => assignQrValues(options),
     clearQrValues: (options = {}) => clearAssignedQrValues(options),

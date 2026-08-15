@@ -5,6 +5,13 @@
   const STORAGE_KEY = "promptdeck_label_sheet_workspace_v3";
   const CHANGE_EVENT = "promptdeck:label-workspace-change";
   const ROOT_SELECTOR = "#paneLabelSheet.label-sheet-workspace-v2";
+  const HISTORY_LIMIT = 30;
+  const WORKSPACE_PRESET_LABELS = Object.freeze({
+    design: "제작 작업공간",
+    data: "데이터 작업공간",
+    focus: "집중 작업공간",
+    custom: "사용자 작업공간",
+  });
   const FOCUSABLE_SELECTOR = [
     "a[href]",
     "button:not([disabled])",
@@ -60,6 +67,14 @@
     const bottomPanels = Array.from(root.querySelectorAll("[data-label-bottom-panel]"));
     const leftToggle = root.querySelector("#labelSheetWorkspaceLeftToggle");
     const bottomToggle = root.querySelector("#labelSheetWorkspaceBottomToggle");
+    const commandButton = root.querySelector("#labelSheetWorkspaceCommandBtn");
+    const commandPalette = root.querySelector("#labelSheetWorkspaceCommandPalette");
+    const commandSearch = root.querySelector("#labelSheetWorkspaceCommandSearch");
+    const commandList = root.querySelector("#labelSheetWorkspaceCommandList");
+    const commandEmpty = root.querySelector("#labelSheetWorkspaceCommandEmpty");
+    const commandClose = root.querySelector("#labelSheetWorkspaceCommandClose");
+    const historyStatus = root.querySelector("#labelSheetWorkspaceHistoryState");
+    const workspaceStatus = root.querySelector("#labelSheetWorkspacePresetState");
     const settingsButton = root.querySelector("#labelSheetWorkspaceSettingsBtn");
     const reviewButton = root.querySelector("#labelSheetWorkspaceReviewBtn");
     const commonButton = root.querySelector("#labelSheetWorkspaceCommonBtn");
@@ -97,14 +112,24 @@
         "labelBottomTab"
       ),
       leftCollapsed: typeof saved.leftCollapsed === "boolean" ? saved.leftCollapsed : false,
+      rightCollapsed: typeof saved.rightCollapsed === "boolean" ? saved.rightCollapsed : false,
       bottomCollapsed: compactWorkspaceQuery.matches
         ? true
         : typeof saved.bottomCollapsed === "boolean" ? saved.bottomCollapsed : true,
+      workspacePreset: WORKSPACE_PRESET_LABELS[saved.workspacePreset] ? saved.workspacePreset : "design",
       sizes: isPlainObject(saved.sizes) ? saved.sizes : {},
       activeDrawer: null,
       drawerTrigger: null,
       activeMenu: null,
       menuTrigger: null,
+      commandPaletteOpen: false,
+      commandPaletteTrigger: null,
+    };
+    const projectHistory = {
+      entries: [],
+      index: -1,
+      timer: 0,
+      applying: false,
     };
 
     function snapshot() {
@@ -113,7 +138,9 @@
         canvasView: state.canvasView || "",
         bottomTab: state.bottomTab || "",
         leftCollapsed: state.leftCollapsed,
+        rightCollapsed: state.rightCollapsed,
         bottomCollapsed: state.bottomCollapsed,
+        workspacePreset: state.workspacePreset,
         activeDrawer: state.activeDrawer || "",
         sizes: { ...state.sizes },
       };
@@ -131,12 +158,14 @@
 
     function persist() {
       const value = {
-        version: 3,
+        version: 4,
         activeTool: state.activeTool,
         canvasView: state.canvasView,
         bottomTab: state.bottomTab,
         leftCollapsed: state.leftCollapsed,
+        rightCollapsed: state.rightCollapsed,
         bottomCollapsed: state.bottomCollapsed,
+        workspacePreset: state.workspacePreset,
         sizes: state.sizes,
       };
       try {
@@ -214,6 +243,7 @@
 
     function setLeftCollapsed(collapsed, options) {
       state.leftCollapsed = Boolean(collapsed);
+      if (!["preset", "initialization", "responsive"].includes(options?.source)) setWorkspacePresetName("custom");
       root.classList.toggle("is-left-collapsed", state.leftCollapsed);
       root.dataset.leftPanel = state.leftCollapsed ? "collapsed" : "expanded";
       if (leftToggle) {
@@ -225,13 +255,31 @@
       if (options?.emit !== false) emit("left-panel", root.dataset.leftPanel, options);
     }
 
+    function setRightCollapsed(collapsed, options) {
+      state.rightCollapsed = Boolean(collapsed);
+      if (!["preset", "initialization", "responsive"].includes(options?.source)) setWorkspacePresetName("custom");
+      root.classList.toggle("is-right-collapsed", state.rightCollapsed);
+      root.dataset.rightPanel = state.rightCollapsed ? "collapsed" : "expanded";
+      if (!mobileToolQuery.matches && mobileInspector) {
+        mobileInspector.setAttribute("aria-hidden", String(state.rightCollapsed));
+        mobileInspector.inert = state.rightCollapsed;
+      }
+      if (state.rightCollapsed && mobileInspector?.contains(document.activeElement)) {
+        commandButton?.focus({ preventScroll: true });
+      }
+      if (options?.persist !== false) persist();
+      if (options?.emit !== false) emit("right-panel", root.dataset.rightPanel, options);
+    }
+
     function setBottomCollapsed(collapsed, options) {
       state.bottomCollapsed = Boolean(collapsed);
+      if (!["preset", "initialization", "responsive"].includes(options?.source)) setWorkspacePresetName("custom");
       root.classList.toggle("is-bottom-collapsed", state.bottomCollapsed);
       root.dataset.bottomPanel = state.bottomCollapsed ? "collapsed" : "expanded";
       if (bottomToggle) {
         bottomToggle.setAttribute("aria-expanded", String(!state.bottomCollapsed));
         bottomToggle.setAttribute("aria-pressed", String(state.bottomCollapsed));
+        bottomToggle.textContent = state.bottomCollapsed ? "펼치기" : "접기";
       }
       bottomPanels.forEach((panel) => {
         const active = panel.dataset.labelBottomPanel === state.bottomTab;
@@ -240,6 +288,41 @@
       });
       if (options?.persist !== false) persist();
       if (options?.emit !== false) emit("bottom-panel", root.dataset.bottomPanel, options);
+    }
+
+    function setWorkspacePresetName(name) {
+      state.workspacePreset = WORKSPACE_PRESET_LABELS[name] ? name : "custom";
+      root.dataset.workspacePreset = state.workspacePreset;
+      if (workspaceStatus) workspaceStatus.textContent = WORKSPACE_PRESET_LABELS[state.workspacePreset];
+      root.querySelectorAll("[data-label-workspace-preset]").forEach((control) => {
+        const active = control.dataset.labelWorkspacePreset === state.workspacePreset;
+        control.classList.toggle("is-active", active);
+        control.setAttribute("aria-checked", String(active));
+      });
+    }
+
+    function applyWorkspacePreset(name, options = {}) {
+      if (!WORKSPACE_PRESET_LABELS[name] || name === "custom") return;
+      setWorkspacePresetName(name);
+      if (name === "design") {
+        setLeftCollapsed(false, { source: "preset", emit: false, persist: false });
+        setRightCollapsed(false, { source: "preset", emit: false, persist: false });
+        setBottomCollapsed(true, { source: "preset", emit: false, persist: false });
+        activateTool("layers", { source: "preset", emit: false, persist: false });
+        if (root.dataset.outputGoal !== "prompt") activateCanvasView("ticket", { source: "preset", emit: false, persist: false });
+      } else if (name === "data") {
+        setLeftCollapsed(false, { source: "preset", emit: false, persist: false });
+        setRightCollapsed(true, { source: "preset", emit: false, persist: false });
+        setBottomCollapsed(false, { source: "preset", emit: false, persist: false });
+        activateTool("records", { source: "preset", emit: false, persist: false });
+        activateBottomTab("data", { source: "preset", emit: false, persist: false });
+      } else {
+        setLeftCollapsed(true, { source: "preset", emit: false, persist: false });
+        setRightCollapsed(true, { source: "preset", emit: false, persist: false });
+        setBottomCollapsed(true, { source: "preset", emit: false, persist: false });
+      }
+      persist();
+      emit("workspace-preset", name, { source: options.source || "preset" });
     }
 
     function openDrawer(kind, drawer, trigger, options) {
@@ -320,6 +403,182 @@
       if (options.restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
     }
 
+    function normalizedProjectSnapshot() {
+      const api = window.PromptDeckLabelSheet;
+      const reader = typeof api?.getProjectSnapshot === "function" ? api.getProjectSnapshot : api?.getProject;
+      if (typeof reader !== "function") return null;
+      try {
+        const value = JSON.parse(JSON.stringify(reader()));
+        delete value.updatedAt;
+        return { value, key: JSON.stringify(value) };
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    function updateHistoryUi() {
+      const canUndo = projectHistory.index > 0 && !projectHistory.applying;
+      const canRedo = projectHistory.index >= 0 && projectHistory.index < projectHistory.entries.length - 1 && !projectHistory.applying;
+      root.querySelectorAll('[data-label-workspace-history-command="undo"]').forEach((control) => { control.disabled = !canUndo; });
+      root.querySelectorAll('[data-label-workspace-history-command="redo"]').forEach((control) => { control.disabled = !canRedo; });
+      if (historyStatus) {
+        const undoCount = Math.max(0, projectHistory.index);
+        const redoCount = Math.max(0, projectHistory.entries.length - projectHistory.index - 1);
+        historyStatus.textContent = projectHistory.applying ? "상태 복원 중…" : `취소 ${undoCount} · 다시 ${redoCount}`;
+      }
+    }
+
+    function captureProjectHistory(options = {}) {
+      if (projectHistory.applying) return;
+      const snapshotValue = normalizedProjectSnapshot();
+      if (!snapshotValue) return;
+      const current = projectHistory.entries[projectHistory.index];
+      if (!options.force && current?.key === snapshotValue.key) return;
+      if (projectHistory.index < projectHistory.entries.length - 1) {
+        projectHistory.entries.splice(projectHistory.index + 1);
+      }
+      projectHistory.entries.push(snapshotValue);
+      if (projectHistory.entries.length > HISTORY_LIMIT) projectHistory.entries.shift();
+      projectHistory.index = projectHistory.entries.length - 1;
+      updateHistoryUi();
+    }
+
+    function scheduleProjectHistoryCapture(delay = 420) {
+      if (projectHistory.applying) return;
+      window.clearTimeout(projectHistory.timer);
+      projectHistory.timer = window.setTimeout(() => captureProjectHistory(), delay);
+    }
+
+    async function moveProjectHistory(direction) {
+      if (projectHistory.applying) return;
+      captureProjectHistory();
+      const nextIndex = projectHistory.index + direction;
+      if (nextIndex < 0 || nextIndex >= projectHistory.entries.length) return;
+      const api = window.PromptDeckLabelSheet;
+      if (typeof api?.replaceProject !== "function") return;
+      projectHistory.applying = true;
+      updateHistoryUi();
+      try {
+        const action = direction < 0 ? "실행 취소" : "다시 실행";
+        await api.replaceProject(projectHistory.entries[nextIndex].value, {
+          source: "workspace-history",
+          message: `${action}로 이전 프로젝트 상태를 복원했습니다.`,
+        });
+        projectHistory.index = nextIndex;
+      } catch (error) {
+        const status = root.querySelector("#labelSheetStatus");
+        if (status) {
+          status.textContent = error.message || "프로젝트 상태를 복원하지 못했습니다.";
+          status.dataset.tone = "error";
+        }
+      } finally {
+        projectHistory.applying = false;
+        updateHistoryUi();
+      }
+    }
+
+    function toggleRightPanel(options = {}) {
+      if (mobileToolQuery.matches) {
+        root.querySelector("#labelSheetWorkspaceInspectorBtn")?.click();
+        return;
+      }
+      setRightCollapsed(!state.rightCollapsed, options);
+    }
+
+    const paletteCommands = [
+      { id: "undo", category: "편집", title: "실행 취소", keywords: "이전 복원 되돌리기", shortcut: "Ctrl+Z", enabled: () => projectHistory.index > 0, run: () => moveProjectHistory(-1) },
+      { id: "redo", category: "편집", title: "다시 실행", keywords: "다음 복구", shortcut: "Ctrl+Shift+Z", enabled: () => projectHistory.index < projectHistory.entries.length - 1, run: () => moveProjectHistory(1) },
+      { id: "settings", category: "프로젝트", title: "프로젝트 설정 열기", keywords: "품목 규격 용지 양면", shortcut: "Alt+P", run: () => settingsButton?.click() },
+      { id: "data", category: "데이터", title: "데이터 편집기 열기", keywords: "표 csv 레코드 목록", shortcut: "Alt+D", run: () => applyWorkspacePreset("data", { source: "command" }) },
+      { id: "detail", category: "편집", title: "선택 항목 세부 편집", keywords: "문구 qr 레이아웃 프리셋 정밀", run: () => detailButton?.click() },
+      { id: "review", category: "프로젝트", title: "검토·내보내기", keywords: "검증 png pdf 인쇄 프롬프트", run: () => reviewButton?.click() },
+      { id: "goal-print", category: "제작 방식", title: "직접 제작 모드", keywords: "출력 인쇄 png pdf", run: () => root.querySelector('[data-label-workspace-goal="print"]')?.click() },
+      { id: "goal-prompt", category: "제작 방식", title: "AI 프롬프트 모드", keywords: "생성 이미지 배경", run: () => root.querySelector('[data-label-workspace-goal="prompt"]')?.click() },
+      { id: "view-ticket", category: "보기", title: "개별 티켓 캔버스", keywords: "확대 단일", run: () => activateCanvasView("ticket", { source: "command" }) },
+      { id: "view-sheet", category: "보기", title: "A4 시트 캔버스", keywords: "전체 페이지 배치", run: () => activateCanvasView("sheet", { source: "command" }) },
+      { id: "workspace-design", category: "작업공간", title: "제작 작업공간", keywords: "기본 디자인 속성", shortcut: "Alt+1", run: () => applyWorkspacePreset("design", { source: "command" }) },
+      { id: "workspace-data", category: "작업공간", title: "데이터 작업공간", keywords: "표 목록 매핑", shortcut: "Alt+2", run: () => applyWorkspacePreset("data", { source: "command" }) },
+      { id: "workspace-focus", category: "작업공간", title: "집중 작업공간", keywords: "캔버스 전체 숨기기", shortcut: "Alt+3", run: () => applyWorkspacePreset("focus", { source: "command" }) },
+      { id: "toggle-left", category: "보기", title: "도구 패널 접기·펼치기", keywords: "왼쪽 도크", run: () => setLeftCollapsed(!state.leftCollapsed, { source: "command" }) },
+      { id: "toggle-right", category: "보기", title: "속성 패널 접기·펼치기", keywords: "오른쪽 인스펙터", run: () => toggleRightPanel({ source: "command" }) },
+      { id: "toggle-bottom", category: "보기", title: "데이터 시트 접기·펼치기", keywords: "아래 도크 표", run: () => setBottomCollapsed(!state.bottomCollapsed, { source: "command" }) },
+      { id: "save-package", category: "프로젝트", title: "프로젝트 ZIP 저장", keywords: "백업 내보내기 파일", run: () => root.querySelector("#labelSheetSavePackageBtn")?.click() },
+    ];
+
+    function filteredPaletteCommands() {
+      const query = String(commandSearch?.value || "").trim().toLocaleLowerCase();
+      if (!query) return paletteCommands;
+      const terms = query.split(/\s+/).filter(Boolean);
+      return paletteCommands.filter((command) => {
+        const haystack = `${command.category} ${command.title} ${command.keywords || ""}`.toLocaleLowerCase();
+        return terms.every((term) => haystack.includes(term));
+      });
+    }
+
+    function renderCommandPalette() {
+      if (!commandList) return;
+      const commands = filteredPaletteCommands();
+      const fragment = document.createDocumentFragment();
+      commands.forEach((command, index) => {
+        const control = document.createElement("button");
+        control.type = "button";
+        control.className = "label-sheet-workspace-command-item";
+        control.dataset.labelWorkspaceCommand = command.id;
+        control.setAttribute("role", "menuitem");
+        control.disabled = command.enabled ? !command.enabled() : false;
+        control.tabIndex = index === 0 && !control.disabled ? 0 : -1;
+        const copy = document.createElement("span");
+        const category = document.createElement("small");
+        const title = document.createElement("strong");
+        category.textContent = command.category;
+        title.textContent = command.title;
+        copy.append(category, title);
+        control.append(copy);
+        if (command.shortcut) {
+          const shortcut = document.createElement("kbd");
+          shortcut.textContent = command.shortcut;
+          control.append(shortcut);
+        }
+        control.addEventListener("click", () => executePaletteCommand(command));
+        fragment.append(control);
+      });
+      commandList.replaceChildren(fragment);
+      if (commandEmpty) commandEmpty.hidden = commands.length > 0;
+    }
+
+    function openCommandPalette(trigger = commandButton) {
+      if (!commandPalette || !commandSearch) return;
+      closeMenu({ restoreFocus: false });
+      if (state.activeDrawer) closeDrawer({ restoreFocus: false, emit: false });
+      state.commandPaletteOpen = true;
+      state.commandPaletteTrigger = trigger || document.activeElement;
+      commandPalette.hidden = false;
+      commandPalette.setAttribute("aria-hidden", "false");
+      root.classList.add("is-command-palette-open");
+      commandSearch.value = "";
+      renderCommandPalette();
+      window.requestAnimationFrame(() => commandSearch.focus({ preventScroll: true }));
+      emit("command-palette", "open", { source: "command" });
+    }
+
+    function closeCommandPalette(options = {}) {
+      if (!state.commandPaletteOpen || !commandPalette) return;
+      const trigger = state.commandPaletteTrigger;
+      state.commandPaletteOpen = false;
+      state.commandPaletteTrigger = null;
+      commandPalette.hidden = true;
+      commandPalette.setAttribute("aria-hidden", "true");
+      root.classList.remove("is-command-palette-open");
+      if (options.restoreFocus !== false && trigger?.isConnected) trigger.focus({ preventScroll: true });
+      if (options.emit !== false) emit("command-palette", "closed", { source: options.source || "command" });
+    }
+
+    function executePaletteCommand(command) {
+      if (!command || (command.enabled && !command.enabled())) return;
+      closeCommandPalette({ restoreFocus: false, source: "execute" });
+      Promise.resolve(command.run()).catch(() => {});
+    }
+
     setupTabSemantics(toolButtons, toolPanels, "labelWorkspaceTool", "labelWorkspacePanel", "tool");
     setupTabSemantics(bottomButtons, bottomPanels, "labelBottomTab", "labelBottomPanel", "bottom");
     setupDrawerSemantics(settingsButton, settingsDrawer, "settings");
@@ -351,6 +610,35 @@
 
     leftToggle?.addEventListener("click", () => setLeftCollapsed(!state.leftCollapsed, { source: "pointer" }));
     bottomToggle?.addEventListener("click", () => setBottomCollapsed(!state.bottomCollapsed, { source: "pointer" }));
+    commandButton?.addEventListener("click", () => openCommandPalette(commandButton));
+    commandClose?.addEventListener("click", () => closeCommandPalette({ source: "pointer" }));
+    commandPalette?.addEventListener("click", (event) => {
+      if (event.target === commandPalette) closeCommandPalette({ source: "backdrop" });
+    });
+    commandSearch?.addEventListener("input", renderCommandPalette);
+    commandSearch?.addEventListener("keydown", (event) => {
+      const items = Array.from(commandList?.querySelectorAll(".label-sheet-workspace-command-item:not([disabled])") || []);
+      if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) return;
+      event.preventDefault();
+      if (!items.length) return;
+      if (event.key === "Enter") {
+        items[0].click();
+        return;
+      }
+      (event.key === "ArrowDown" ? items[0] : items[items.length - 1]).focus({ preventScroll: true });
+    });
+    commandList?.addEventListener("keydown", (event) => {
+      const items = Array.from(commandList.querySelectorAll(".label-sheet-workspace-command-item:not([disabled])"));
+      const current = items.indexOf(document.activeElement);
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let next = current;
+      if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = items.length - 1;
+      else if (event.key === "ArrowDown") next = (Math.max(0, current) + 1) % items.length;
+      else next = (current - 1 + items.length) % items.length;
+      items[next]?.focus({ preventScroll: true });
+    });
     mobileToolPanelClose?.addEventListener("click", () => setMobileToolPanelOpen(false, { restoreFocus: true }));
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
@@ -383,8 +671,8 @@
     });
 
     menus.forEach((menu) => {
-      const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
       menu.addEventListener("keydown", (event) => {
+        const items = Array.from(menu.querySelectorAll('[role="menuitem"]:not([disabled])'));
         const current = items.indexOf(document.activeElement);
         if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
           event.preventDefault();
@@ -418,9 +706,19 @@
     root.querySelectorAll("[data-label-workspace-layer-command]").forEach((control) => {
       control.addEventListener("click", () => root.querySelector(`[data-label-sheet-focus-target="${control.dataset.labelWorkspaceLayerCommand}"]`)?.click());
     });
+    root.querySelectorAll("[data-label-workspace-history-command]").forEach((control) => {
+      control.addEventListener("click", () => moveProjectHistory(control.dataset.labelWorkspaceHistoryCommand === "undo" ? -1 : 1));
+    });
+    root.querySelectorAll("[data-label-workspace-preset]").forEach((control) => {
+      control.setAttribute("role", "menuitemradio");
+      control.addEventListener("click", () => applyWorkspacePreset(control.dataset.labelWorkspacePreset, { source: "menu" }));
+    });
     root.querySelectorAll("[data-label-workspace-toggle-command]").forEach((control) => {
       control.addEventListener("click", () => {
-        if (control.dataset.labelWorkspaceToggleCommand === "left") setLeftCollapsed(!state.leftCollapsed, { source: "menu" });
+        const command = control.dataset.labelWorkspaceToggleCommand;
+        if (command === "left") setLeftCollapsed(!state.leftCollapsed, { source: "menu" });
+        else if (command === "right") toggleRightPanel({ source: "menu" });
+        else if (command === "bottom") setBottomCollapsed(!state.bottomCollapsed, { source: "menu" });
         else root.querySelector("#labelSheetFocusShortcutHelpBtn")?.click();
       });
     });
@@ -443,6 +741,15 @@
       });
     });
 
+    ["input", "change", "click", "pointerup"].forEach((eventName) => {
+      root.addEventListener(eventName, () => scheduleProjectHistoryCapture(eventName === "input" ? 520 : 320));
+    });
+    window.addEventListener("promptdeck:label-sheet-project-replaced", (event) => {
+      if (event.detail?.source !== "workspace-history") scheduleProjectHistoryCapture(80);
+    });
+    window.addEventListener("promptdeck:label-sheet-project-change", () => scheduleProjectHistoryCapture(260));
+    window.addEventListener("promptdeck:label-sheet-goal-change", () => scheduleProjectHistoryCapture(80));
+
     document.addEventListener("pointerdown", (event) => {
       if (state.activeMenu && !state.activeMenu.contains(event.target) && !state.menuTrigger?.contains(event.target)) {
         closeMenu({ restoreFocus: false });
@@ -452,6 +759,47 @@
       closeDrawer({ source: "outside" });
     });
     document.addEventListener("keydown", (event) => {
+      if (!root.classList.contains("active") || root.hidden) return;
+      if (state.commandPaletteOpen) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeCommandPalette({ source: "escape" });
+        } else if (event.key === "Tab" && commandPalette) {
+          keepFocusInDrawer(event, commandPalette);
+        }
+        return;
+      }
+      const modifier = event.ctrlKey || event.metaKey;
+      if (modifier && event.key.toLocaleLowerCase() === "k") {
+        event.preventDefault();
+        openCommandPalette(document.activeElement);
+        return;
+      }
+      if (modifier && event.key.toLocaleLowerCase() === "z" && !isEditableTarget(event.target)) {
+        event.preventDefault();
+        moveProjectHistory(event.shiftKey ? 1 : -1);
+        return;
+      }
+      if (modifier && event.key.toLocaleLowerCase() === "y" && !isEditableTarget(event.target)) {
+        event.preventDefault();
+        moveProjectHistory(1);
+        return;
+      }
+      if (event.altKey && !modifier && ["1", "2", "3"].includes(event.key)) {
+        event.preventDefault();
+        applyWorkspacePreset(({ "1": "design", "2": "data", "3": "focus" })[event.key], { source: "keyboard" });
+        return;
+      }
+      if (event.altKey && !modifier && event.key.toLocaleLowerCase() === "p") {
+        event.preventDefault();
+        settingsButton?.click();
+        return;
+      }
+      if (event.altKey && !modifier && event.key.toLocaleLowerCase() === "d") {
+        event.preventDefault();
+        applyWorkspacePreset("data", { source: "keyboard" });
+        return;
+      }
       if (state.activeMenu && event.key === "Escape") {
         event.preventDefault();
         closeMenu({ restoreFocus: true });
@@ -486,14 +834,17 @@
     if (state.activeTool) activateTool(state.activeTool, { persist: false, emit: false });
     if (state.canvasView) activateCanvasView(state.canvasView, { persist: false, emit: false });
     if (state.bottomTab) activateBottomTab(state.bottomTab, { persist: false, emit: false });
-    setLeftCollapsed(state.leftCollapsed, { persist: false, emit: false });
-    setBottomCollapsed(state.bottomCollapsed, { persist: false, emit: false });
+    setWorkspacePresetName(state.workspacePreset);
+    setLeftCollapsed(state.leftCollapsed, { source: "initialization", persist: false, emit: false });
+    setRightCollapsed(state.rightCollapsed, { source: "initialization", persist: false, emit: false });
+    setBottomCollapsed(state.bottomCollapsed, { source: "initialization", persist: false, emit: false });
     setMobileToolPanelOpen(false);
     drawers.forEach((drawer) => setDrawerOpen(drawer, false));
     const syncResponsivePanels = () => {
       if (!mobileToolQuery.matches || !root.classList.contains("is-mobile-tool-panel-open")) {
         setMobileToolPanelOpen(false);
       }
+      setRightCollapsed(state.rightCollapsed, { source: "responsive", persist: false, emit: false });
       const compactWorkspaceIsActive = compactWorkspaceQuery.matches;
       if (compactWorkspaceIsActive && !compactWorkspaceWasActive) {
         setBottomCollapsed(true, { source: "responsive" });
@@ -503,7 +854,9 @@
     window.addEventListener("resize", syncResponsivePanels, { passive: true });
     mobileToolQuery.addEventListener?.("change", syncResponsivePanels);
     persist();
-    emit("ready", "v3", { source: "initialization" });
+    window.setTimeout(() => captureProjectHistory({ force: true }), 700);
+    updateHistoryUi();
+    emit("ready", "v4", { source: "initialization" });
   }
 
   function chooseInitialValue(savedValue, rootValue, buttons, dataKey) {
@@ -512,6 +865,10 @@
     if (values.includes(rootValue)) return rootValue;
     const selected = buttons.find((button) => button.classList.contains("is-active") || button.getAttribute("aria-selected") === "true" || button.getAttribute("aria-pressed") === "true");
     return selected?.dataset[dataKey] || values[0] || "";
+  }
+
+  function isEditableTarget(target) {
+    return Boolean(target?.closest?.("input, textarea, select, [contenteditable='true']"));
   }
 
   function hasDataValue(elements, dataKey, value) {

@@ -134,9 +134,32 @@ async function verifyViewport(label, viewport) {
   if (labelTabVisible) {
     await page.locator("#tabBtnLabelSheet").click();
     await expectOnlyPane("paneLabelSheet", "라벨·티켓 전환");
-    if ((await page.locator("#paneLabelSheet.label-sheet-workspace-v3[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V3 작업공간이 초기화되지 않았습니다.`);
+    if ((await page.locator("#paneLabelSheet.label-sheet-workspace-v4[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V4 작업공간이 초기화되지 않았습니다.`);
     if ((await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-frame + .label-sheet-workspace-bottom").count()) !== 1) failures.push(`${label}: 프로젝트 바·캔버스·데이터 시트 순서가 깨졌습니다.`);
     if ((await page.locator("#paneLabelSheet [data-label-workspace-menu-trigger]").count()) !== 4 || (await page.locator("#labelSheetWorkspaceDetailDrawer").count()) !== 1) failures.push(`${label}: 맞춤형 메뉴 또는 세부 편집 모달이 누락되었습니다.`);
+    if ((await page.locator("[data-label-workspace-history-command]").count()) !== 4 || (await page.locator("[data-label-workspace-preset]").count()) !== 3) failures.push(`${label}: 데스크톱 편집 기록 또는 작업공간 프리셋이 누락되었습니다.`);
+    if ((await page.locator(".label-sheet-workspace-context-toolbar [data-label-sheet-nudge]").count()) !== 0 || (await page.locator("#labelSheetWorkspaceDetailDrawer .label-sheet-workspace-precision-tools [data-label-sheet-nudge]").count()) !== 4) failures.push(`${label}: 저빈도 정밀 도구가 핵심 캔버스에서 상세 편집으로 이동하지 않았습니다.`);
+    await page.keyboard.press("Control+K");
+    await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
+    await page.locator("#labelSheetWorkspaceCommandSearch").fill("집중");
+    if ((await page.locator(".label-sheet-workspace-command-item").count()) !== 1 || !(await page.locator(".label-sheet-workspace-command-item").innerText()).includes("집중 작업공간")) failures.push(`${label}: 명령 팔레트가 작업 목적을 검색하지 못했습니다.`);
+    await page.locator(".label-sheet-workspace-command-item").click();
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.workspacePreset === "focus");
+    if (viewport.width > 860 && (await visible("#labelSheetWorkspaceInspector"))) failures.push(`${label}: 집중 작업공간에서 속성 패널이 남아 있습니다.`);
+    await page.keyboard.press("Alt+1");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.workspacePreset === "design");
+    if (viewport.width > 860) {
+      await page.emulateMedia({ media: "print" });
+      await page.waitForTimeout(60);
+      await page.emulateMedia({ media: "screen" });
+      await page.waitForTimeout(180);
+      const workspaceAfterPrint = await page.locator("#paneLabelSheet").evaluate((pane) => ({
+        bottom: pane.getBoundingClientRect().bottom,
+        viewportHeight: window.innerHeight,
+        availableHeight: getComputedStyle(pane).getPropertyValue("--label-workspace-available-height").trim(),
+      }));
+      if (workspaceAfterPrint.bottom > workspaceAfterPrint.viewportHeight + 1) failures.push(`${label}: 인쇄 미디어 전환 후 라벨 작업공간 높이가 뷰포트를 벗어났습니다. ${JSON.stringify(workspaceAfterPrint)}`);
+    }
     await page.evaluate(() => {
       const goal = document.querySelector("#labelSheetOutputGoalPrompt");
       const type = document.querySelector('input[name="labelSheetIntentDocumentType"][value="meal-ticket"]');
@@ -151,6 +174,19 @@ async function verifyViewport(label, viewport) {
     });
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
+    await page.waitForTimeout(850);
+    await page.keyboard.press("Control+K");
+    await page.locator("#labelSheetWorkspaceCommandSearch").fill("직접 제작 모드");
+    await page.locator(".label-sheet-workspace-command-item:not([disabled])").click();
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "print");
+    await page.waitForFunction(() => !document.querySelector("#labelSheetWorkspaceUndoBtn")?.disabled);
+    await page.keyboard.press("Control+Z");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "prompt");
+    await page.waitForFunction(() => !document.querySelector("#labelSheetWorkspaceRedoBtn")?.disabled);
+    await page.keyboard.press("Control+Shift+Z");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "print");
+    await page.keyboard.press("Control+Z");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "prompt");
     if ((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) !== 8) failures.push(`${label}: 레코드 탐색기가 데이터 8건을 반영하지 못했습니다.`);
     if (viewport.width > 860) {
       await page.locator('[data-label-bottom-tab="data"]').click();
