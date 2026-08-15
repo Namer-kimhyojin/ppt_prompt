@@ -4054,7 +4054,11 @@ SLIDE-TWO-CONTENT`);
       for (const tabId of typographyTabIds) {
         if (viewport.width <= 720) {
           const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deck");
-          await page.click(`[data-tab-group-filter="${group}"]`);
+          const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
+          if (!(await groupFilter.isVisible()) && await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) {
+            await page.click("#labelSheetWorkspaceAppNavBtn");
+          }
+          await groupFilter.click();
         }
         await page.click(`#${tabId}`);
         const paneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
