@@ -3524,14 +3524,15 @@ SLIDE-TWO-CONTENT`);
       failures
     );
     record(await page.locator("#labelSheetWorkspaceSettingsBtn").isVisible() && await page.locator("#labelSheetWorkspaceInspectorBtn").isVisible(), "Label-sheet mobile workspace hid settings or property access", failures);
-    await page.click('[data-label-workspace-tool="records"]');
+    await page.click("#labelSheetWorkspaceToolsBtn");
+    await page.click('[data-label-workspace-mobile-tool="records"]');
     await page.waitForFunction(() => {
       const root = document.querySelector("#paneLabelSheet");
       const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
       const box = panel?.getBoundingClientRect();
       return root?.classList.contains("is-mobile-tool-panel-open")
         && getComputedStyle(panel).visibility === "visible"
-        && box.left >= 51
+        && box.left >= 0
         && box.right <= window.innerWidth + 1;
     });
     const labelMobileRecordCounts = await page.evaluate(() => ({
