@@ -3760,21 +3760,11 @@
     if (previewToolbar) previewToolbar.classList.toggle("is-editing-hidden", wysiwygEnabled);
     if (!wysiwygEnabled) return;
     const context = activeWysiwygLayout(false);
-    if (!context.placement) {
-      setElementStatus("labelSheetQuickStatus", "편집할 라벨 데이터가 없습니다.", "warning");
-      setElementStatus("labelSheetFocusStatus", "편집할 티켓 데이터를 먼저 입력해 주세요.", "warning");
-      return;
-    }
-    if (wysiwygField === "qr" && context.variant !== "withQr") wysiwygField = "title";
+    if (context.placement && wysiwygField === "qr" && context.variant !== "withQr") wysiwygField = "title";
     const isQr = wysiwygField === "qr";
     const isContent = wysiwygField === "content";
     const isText = !isQr && !isContent;
     const uprightText = isText && value("labelSheetContentOrientation") === "vertical-upright";
-    const config = isQr
-      ? resolvedWysiwygQrLayout(context)
-      : isContent
-        ? resolvedWysiwygContentLayout(context)
-        : (context.layout?.[wysiwygField] || normalizeTextFieldLayout(null, wysiwygField));
     [
       ["labelSheetWysiwygAlignLabel", uprightText ? "세로축 정렬" : "문구 정렬"],
       ["labelSheetWysiwygMaxLinesLabel", uprightText ? "최대 열 수" : "최대 줄 수"],
@@ -3803,6 +3793,16 @@
         focusButton.setAttribute("aria-label", `${label} 정렬`);
       });
     });
+    if (!context.placement) {
+      setElementStatus("labelSheetQuickStatus", "편집할 라벨 데이터가 없습니다.", "warning");
+      setElementStatus("labelSheetFocusStatus", "편집할 티켓 데이터를 먼저 입력해 주세요.", "warning");
+      return;
+    }
+    const config = isQr
+      ? resolvedWysiwygQrLayout(context)
+      : isContent
+        ? resolvedWysiwygContentLayout(context)
+        : (context.layout?.[wysiwygField] || normalizeTextFieldLayout(null, wysiwygField));
     ["labelSheetWysiwygField", "labelSheetQuickTarget"].forEach((id) => {
       const option = $(id)?.querySelector('option[value="qr"]');
       if (option) option.disabled = context.variant !== "withQr";
@@ -7078,6 +7078,7 @@
       "labelSheetBackTitle", "labelSheetBackSubtitle", "labelSheetBackBody", "labelSheetBackFooter",
       "labelSheetBackgroundPrompt", "labelSheetContentOrientation", "labelSheetTextAlign", "labelSheetTextVerticalAlign", "labelSheetTextContrast",
     ].forEach((id) => listen(id, "input", () => onProjectControlsChanged()));
+    listen("labelSheetContentOrientation", "change", syncWysiwygControls);
     pane.addEventListener("focusin", (event) => {
       const input = event.target.closest?.("[data-label-sheet-output-template]");
       if (input) activeOutputTemplateInput = input;
