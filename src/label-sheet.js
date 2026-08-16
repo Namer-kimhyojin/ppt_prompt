@@ -2330,8 +2330,20 @@
     const panel = $("labelSheetDataMappingPanel");
     if (!panel) return;
     const visible = draftActive && draftHeaders.length > 0;
-    panel.hidden = !visible;
+    const emptyState = $("labelSheetDataMappingEmpty");
+    const activeState = $("labelSheetDataMappingActive");
+    if (emptyState) emptyState.hidden = visible;
+    if (activeState) activeState.hidden = !visible;
+    const currentCount = (project.records || []).filter((record) => !record.data?.excluded).length;
+    if ($("labelSheetDataMappingCurrentStatus")) {
+      $("labelSheetDataMappingCurrentStatus").textContent = currentCount
+        ? `현재 ${currentCount}건은 이미 출력 항목으로 정리되어 있습니다. 값 수정은 데이터 탭에서 바로 진행할 수 있습니다.`
+        : "아직 등록된 데이터가 없습니다. 표를 붙여넣거나 CSV·TSV 파일을 선택해 시작하세요.";
+    }
     if (!visible) return;
+    if ($("labelSheetDataMappingImportSummary")) {
+      $("labelSheetDataMappingImportSummary").textContent = `${draftRecords.length}행 · 원본 열 ${draftHeaders.length}개를 검토 중입니다. 자동 연결 결과를 확인하고 필요한 항목만 바꾸세요.`;
+    }
     pane.querySelectorAll("[data-label-sheet-map]").forEach((select) => {
       const fieldKey = select.dataset.labelSheetMap;
       const selected = draftMapping[fieldKey] || "";
@@ -2356,6 +2368,34 @@
       `${summary.count}개 항목 연결 · ${summary.text}`,
       summary.count ? "success" : "warning"
     );
+  }
+
+  function activateDataWorkspace() {
+    pane.querySelector('[data-label-bottom-tab="data"]')?.click();
+  }
+
+  function openDataMappingSource(source) {
+    activateDataWorkspace();
+    const isCsv = source === "csv";
+    $(isCsv ? "labelSheetDataCsvTab" : "labelSheetDataPasteTab")?.click();
+    window.requestAnimationFrame(() => {
+      if (isCsv) {
+        $("labelSheetCsvInput")?.click();
+        return;
+      }
+      const input = $("labelSheetPasteInput");
+      input?.scrollIntoView({ behavior: "smooth", block: "center" });
+      input?.focus({ preventScroll: true });
+    });
+  }
+
+  function reviewMappedData() {
+    activateDataWorkspace();
+    window.requestAnimationFrame(() => {
+      const button = $("labelSheetImportCommitBtn");
+      button?.scrollIntoView({ behavior: "smooth", block: "center" });
+      button?.focus({ preventScroll: true });
+    });
   }
 
   function applyDraftMapping(options = {}) {
@@ -2898,8 +2938,19 @@
       setImportStatus(parsed.errors[0]?.message || "가져올 행을 찾지 못했습니다.", "error");
       return;
     }
-    draftRawRecords = parsed.objects.map((record) => ({ ...record }));
-    draftHeaders = Array.from(parsed.headers || Object.keys(draftRawRecords[0] || {}));
+    const sourceHeaders = parsed.hasHeader && parsed.originalHeaders?.length === parsed.headers?.length
+      ? parsed.originalHeaders
+      : parsed.headers;
+    const headerCounts = new Map();
+    draftHeaders = Array.from(sourceHeaders || []).map((header, index) => {
+      const base = cleanText(header) || cleanText(parsed.headers?.[index]) || `column_${index + 1}`;
+      const count = (headerCounts.get(base) || 0) + 1;
+      headerCounts.set(base, count);
+      return count === 1 ? base : `${base}_${count}`;
+    });
+    draftRawRecords = Array.isArray(parsed.rows) && draftHeaders.length
+      ? parsed.rows.map((row) => Object.fromEntries(draftHeaders.map((header, index) => [header, row[index] ?? ""])))
+      : parsed.objects.map((record) => ({ ...record }));
     draftMapping = DATA_MAPPING.suggest(draftHeaders, {
       current: project.settings?.dataMapping,
       duplex: project.spec.duplex.enabled,
@@ -7217,7 +7268,10 @@
     listen("labelSheetPasteApplyBtn", "click", () => reviewImportText(value("labelSheetPasteInput"), "붙여넣기"));
     listen("labelSheetCsvInput", "change", (event) => readCsvFile(event.target.files?.[0]));
     listen("labelSheetCsvSampleBtn", "click", downloadSampleCsv);
+    listen("labelSheetDataMappingPasteBtn", "click", () => openDataMappingSource("paste"));
+    listen("labelSheetDataMappingCsvBtn", "click", () => openDataMappingSource("csv"));
     listen("labelSheetDataMappingAutoBtn", "click", autoMapDraft);
+    listen("labelSheetDataMappingReviewBtn", "click", reviewMappedData);
     $("labelSheetDataMappingControls")?.closest(".label-sheet-data-mapping")?.addEventListener("change", (event) => {
       const select = event.target.closest("[data-label-sheet-map]");
       if (!select || !draftActive) return;

@@ -2401,6 +2401,53 @@ SLIDE-TWO-CONTENT`);
       failures
     );
     record(await page.evaluate(() => typeof window.PromptDeckLabelSheet?.getProjectSnapshot === "function" && typeof window.PromptDeckLabelSheet?.replaceProject === "function"), "Label-sheet project history API was not exposed", failures);
+    await page.click(labelEntryState.count > 0 ? "#labelSheetWorkspaceDataModeBtn" : "#labelSheetWorkspaceDataBtn");
+    await page.waitForSelector("#labelSheetWorkspaceDataDrawer:not([hidden])");
+    await page.click('[data-label-bottom-tab="mapping"]');
+    await page.waitForSelector('#labelSheetDataMappingEmpty:not([hidden])');
+    const labelMappingEmptyState = await page.evaluate(() => ({
+      activeHidden: document.querySelector("#labelSheetDataMappingActive")?.hidden,
+      pasteVisible: Boolean(document.querySelector("#labelSheetDataMappingPasteBtn")?.getClientRects().length),
+      csvVisible: Boolean(document.querySelector("#labelSheetDataMappingCsvBtn")?.getClientRects().length),
+      status: document.querySelector("#labelSheetDataMappingCurrentStatus")?.textContent?.trim() || "",
+    }));
+    record(
+      labelMappingEmptyState.activeHidden && labelMappingEmptyState.pasteVisible && labelMappingEmptyState.csvVisible && /현재|아직/u.test(labelMappingEmptyState.status),
+      `Label-sheet mapping empty state did not explain a usable next step: ${JSON.stringify(labelMappingEmptyState)}`,
+      failures
+    );
+    await page.click("#labelSheetDataMappingPasteBtn");
+    await page.waitForFunction(() => document.querySelector('[data-label-bottom-tab="data"]')?.getAttribute("aria-selected") === "true");
+    await page.waitForFunction(() => document.activeElement?.id === "labelSheetPasteInput");
+    await page.locator("#labelSheetPasteInput").fill("관리번호\t성명\t소속\t품명\tURL\nMAP-001\t김배터리\t교육센터\t안내 라벨\thttps://example.kr/MAP-001");
+    await page.click("#labelSheetPasteApplyBtn");
+    await page.click('[data-label-bottom-tab="mapping"]');
+    await page.waitForSelector("#labelSheetDataMappingActive:not([hidden])");
+    const labelMappingActiveState = await page.evaluate(() => ({
+      emptyHidden: document.querySelector("#labelSheetDataMappingEmpty")?.hidden,
+      summary: document.querySelector("#labelSheetDataMappingImportSummary")?.textContent?.trim() || "",
+      id: document.querySelector("#labelSheetMapId")?.value,
+      name: document.querySelector("#labelSheetMapName")?.value,
+      title: document.querySelector("#labelSheetMapFrontTitle")?.value,
+      qr: document.querySelector("#labelSheetMapFrontQr")?.value,
+    }));
+    record(
+      labelMappingActiveState.emptyHidden
+        && labelMappingActiveState.summary.includes("1행")
+        && labelMappingActiveState.id === "관리번호"
+        && labelMappingActiveState.name === "성명"
+        && labelMappingActiveState.title === "품명"
+        && labelMappingActiveState.qr === "URL",
+      `Label-sheet mapping review did not surface the automatic column links: ${JSON.stringify(labelMappingActiveState)}`,
+      failures
+    );
+    await page.click("#labelSheetDataMappingReviewBtn");
+    await page.waitForFunction(() => document.querySelector('[data-label-bottom-tab="data"]')?.getAttribute("aria-selected") === "true");
+    await page.waitForFunction(() => document.activeElement?.id === "labelSheetImportCommitBtn");
+    record(!(await page.locator("#labelSheetImportCommitBtn").isDisabled()), "Label-sheet mapped data review did not expose an enabled commit action", failures);
+    await page.click("#labelSheetImportUndoBtn");
+    await page.locator("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]").first().click();
+    await page.waitForSelector("#labelSheetWorkspaceDataDrawer", { state: "hidden" });
     await page.keyboard.press("Control+K");
     await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
     await page.locator("#labelSheetWorkspaceCommandSearch").fill("레이아웃 편집으로 돌아가기");

@@ -882,13 +882,141 @@
 }
 
 #paneLabelSheet .label-sheet-data-mapping {
-  padding: 12px;
+  padding: clamp(14px, 2vw, 24px);
   border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
   background: color-mix(in srgb, var(--accent-soft) 24%, var(--surface));
 }
 
 #paneLabelSheet .label-sheet-data-mapping[hidden] {
   display: none;
+}
+
+#paneLabelSheet .label-sheet-mapping-empty,
+#paneLabelSheet .label-sheet-mapping-active {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+#paneLabelSheet .label-sheet-mapping-empty[hidden],
+#paneLabelSheet .label-sheet-mapping-active[hidden] {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-mapping-empty {
+  min-height: 260px;
+  align-content: center;
+}
+
+#paneLabelSheet .label-sheet-mapping-empty-copy {
+  display: grid;
+  max-width: 720px;
+  gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-mapping-state {
+  width: max-content;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+}
+
+#paneLabelSheet .label-sheet-mapping-empty-copy > strong {
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.25;
+}
+
+#paneLabelSheet .label-sheet-mapping-empty-copy > p,
+#paneLabelSheet .label-sheet-mapping-current {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#paneLabelSheet .label-sheet-mapping-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#paneLabelSheet .label-sheet-mapping-steps li {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+}
+
+#paneLabelSheet .label-sheet-mapping-steps li > span {
+  display: grid;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+#paneLabelSheet .label-sheet-mapping-steps li > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+#paneLabelSheet .label-sheet-mapping-steps strong,
+#paneLabelSheet .label-sheet-mapping-next strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+#paneLabelSheet .label-sheet-mapping-steps small,
+#paneLabelSheet .label-sheet-mapping-next small {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-mapping-current {
+  padding: 10px 12px;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+}
+
+#paneLabelSheet .label-sheet-mapping-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#paneLabelSheet .label-sheet-mapping-next {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+#paneLabelSheet .label-sheet-mapping-next > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
 }
 
 #paneLabelSheet .label-sheet-mapping-grid {
@@ -2253,6 +2381,44 @@
 }
 
 @media (max-width: 720px) {
+  #paneLabelSheet .label-sheet-data-mapping {
+    padding: 16px;
+  }
+
+  #paneLabelSheet .label-sheet-mapping-empty {
+    min-height: 0;
+    align-content: start;
+  }
+
+  #paneLabelSheet .label-sheet-mapping-empty-copy {
+    order: 1;
+  }
+
+  #paneLabelSheet .label-sheet-mapping-empty-actions {
+    order: 2;
+  }
+
+  #paneLabelSheet .label-sheet-mapping-current {
+    order: 3;
+  }
+
+  #paneLabelSheet .label-sheet-mapping-steps {
+    order: 4;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-mapping-empty-actions,
+  #paneLabelSheet .label-sheet-mapping-next {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v7 .label-sheet-data-mapping .label-sheet-mapping-empty-actions .btn,
+  #paneLabelSheet.label-sheet-workspace-v7 .label-sheet-data-mapping .label-sheet-mapping-next .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
   #paneLabelSheet .label-sheet-spreadsheet-tools {
     grid-template-columns: minmax(0, 1fr);
   }

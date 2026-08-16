@@ -70,7 +70,7 @@
   <link rel="stylesheet" href="styles/data-diagram.css?v=3" />
   <link rel="stylesheet" href="styles/slide-document.css" />
   <link rel="stylesheet" href="styles/form-image.css?v=3" />
-  <link rel="stylesheet" href="styles/label-sheet.css?v=20" />
+  <link rel="stylesheet" href="styles/label-sheet.css?v=23" />
   <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=10" />
   <link rel="stylesheet" href="styles/qr-generator.css?v=4" />
   <link rel="stylesheet" href="styles/theme.css?v=dark-aa-20260804" />
@@ -1996,33 +1996,61 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                     <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetImportUndoBtn" disabled>가져오기 취소</button>
                   </div>
                 </div>
-                <section class="label-sheet-data-mapping" id="labelSheetDataMappingPanel" aria-labelledby="labelSheetDataMappingTitle" hidden>
-                  <div class="label-sheet-subhead">
-                    <div><strong id="labelSheetDataMappingTitle">가져온 열을 출력 내용에 연결</strong><small>자동 연결 결과를 확인하고 필요하면 각 출력 항목에 사용할 열을 직접 바꾸세요. 변경 내용은 아래 표와 미리보기에 바로 반영됩니다.</small></div>
-                    <button type="button" class="btn secondary label-sheet-compact-btn" id="labelSheetDataMappingAutoBtn">자동 연결</button>
-                  </div>
-                  <div class="label-sheet-mapping-grid" id="labelSheetDataMappingControls">
-                    <label class="label-sheet-field" for="labelSheetMapId"><span>라벨 ID</span><select id="labelSheetMapId" data-label-sheet-map="id"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapNumber"><span>연번</span><select id="labelSheetMapNumber" data-label-sheet-map="number"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapName"><span>이름</span><select id="labelSheetMapName" data-label-sheet-map="data.name"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapCategory"><span>구분·소속</span><select id="labelSheetMapCategory" data-label-sheet-map="data.category"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapFrontTitle"><span>앞면 제목</span><select id="labelSheetMapFrontTitle" data-label-sheet-map="front.title"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapFrontSubtitle"><span>앞면 부제</span><select id="labelSheetMapFrontSubtitle" data-label-sheet-map="front.subtitle"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapFrontBody"><span>앞면 본문</span><select id="labelSheetMapFrontBody" data-label-sheet-map="front.body"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapFrontFooter"><span>앞면 하단</span><select id="labelSheetMapFrontFooter" data-label-sheet-map="front.footer"></select></label>
-                    <label class="label-sheet-field" for="labelSheetMapFrontQr"><span>앞면 QR 값</span><select id="labelSheetMapFrontQr" data-label-sheet-map="front.qrValue"></select></label>
-                  </div>
-                  <details class="label-sheet-mapping-back" id="labelSheetDataMappingBack">
-                    <summary>양면 출력용 뒷면 열 연결</summary>
-                    <div class="label-sheet-mapping-grid">
-                      <label class="label-sheet-field" for="labelSheetMapBackTitle"><span>뒷면 제목</span><select id="labelSheetMapBackTitle" data-label-sheet-map="back.title"></select></label>
-                      <label class="label-sheet-field" for="labelSheetMapBackSubtitle"><span>뒷면 부제</span><select id="labelSheetMapBackSubtitle" data-label-sheet-map="back.subtitle"></select></label>
-                      <label class="label-sheet-field" for="labelSheetMapBackBody"><span>뒷면 본문</span><select id="labelSheetMapBackBody" data-label-sheet-map="back.body"></select></label>
-                      <label class="label-sheet-field" for="labelSheetMapBackFooter"><span>뒷면 하단</span><select id="labelSheetMapBackFooter" data-label-sheet-map="back.footer"></select></label>
-                      <label class="label-sheet-field" for="labelSheetMapBackQr"><span>뒷면 QR 값</span><select id="labelSheetMapBackQr" data-label-sheet-map="back.qrValue"></select></label>
+                <section class="label-sheet-data-mapping" id="labelSheetDataMappingPanel" aria-label="열 매핑">
+                  <div class="label-sheet-mapping-empty" id="labelSheetDataMappingEmpty">
+                    <div class="label-sheet-mapping-empty-copy">
+                      <span class="label-sheet-mapping-state">매핑 준비</span>
+                      <strong id="labelSheetDataMappingTitle">연결할 원본 열이 아직 없습니다</strong>
+                      <p>매핑은 새로 가져온 Excel·Sheets·CSV의 열을 라벨 ID, 이름, 앞면 문구와 QR 값에 연결할 때 사용합니다.</p>
                     </div>
-                  </details>
-                  <p class="label-sheet-inline-status" id="labelSheetDataMappingStatus" role="status" aria-live="polite">데이터를 검토하면 자동 연결 결과가 표시됩니다.</p>
+                    <ol class="label-sheet-mapping-steps" aria-label="열 매핑 사용 순서">
+                      <li><span>1</span><div><strong>데이터 가져오기</strong><small>표를 붙여넣거나 CSV·TSV 파일을 선택합니다.</small></div></li>
+                      <li><span>2</span><div><strong>자동 연결 확인</strong><small>열 이름을 읽어 출력 항목에 먼저 연결합니다.</small></div></li>
+                      <li><span>3</span><div><strong>목록에 반영</strong><small>표와 미리보기를 확인한 뒤 현재 프로젝트에 적용합니다.</small></div></li>
+                    </ol>
+                    <p class="label-sheet-mapping-current" id="labelSheetDataMappingCurrentStatus">현재 데이터는 이미 출력 항목으로 정리되어 있습니다.</p>
+                    <div class="label-sheet-mapping-empty-actions">
+                      <button type="button" class="btn primary" id="labelSheetDataMappingPasteBtn">표 붙여넣기 시작</button>
+                      <button type="button" class="btn secondary" id="labelSheetDataMappingCsvBtn">CSV·TSV 파일 선택</button>
+                    </div>
+                  </div>
+                  <div class="label-sheet-mapping-active" id="labelSheetDataMappingActive" hidden>
+                    <div class="label-sheet-subhead">
+                      <div><strong>가져온 열을 출력 내용에 연결</strong><small id="labelSheetDataMappingImportSummary">자동 연결 결과를 확인하고 필요한 항목만 바꾸세요. 변경 내용은 검토 표와 미리보기에 바로 반영됩니다.</small></div>
+                      <button type="button" class="btn secondary label-sheet-compact-btn" id="labelSheetDataMappingAutoBtn">자동으로 다시 연결</button>
+                    </div>
+                    <div class="label-sheet-mapping-grid" id="labelSheetDataMappingControls">
+                      <label class="label-sheet-field" for="labelSheetMapId"><span>라벨 ID</span><select id="labelSheetMapId" data-label-sheet-map="id"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapNumber"><span>연번</span><select id="labelSheetMapNumber" data-label-sheet-map="number"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapName"><span>이름</span><select id="labelSheetMapName" data-label-sheet-map="data.name"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapCategory"><span>구분·소속</span><select id="labelSheetMapCategory" data-label-sheet-map="data.category"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapFrontTitle"><span>앞면 제목</span><select id="labelSheetMapFrontTitle" data-label-sheet-map="front.title"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapFrontQr"><span>앞면 QR 값</span><select id="labelSheetMapFrontQr" data-label-sheet-map="front.qrValue"></select></label>
+                    </div>
+                    <details class="label-sheet-mapping-back" id="labelSheetDataMappingExtra">
+                      <summary>추가 문구 열 연결</summary>
+                      <div class="label-sheet-mapping-grid">
+                        <label class="label-sheet-field" for="labelSheetMapFrontSubtitle"><span>앞면 부제</span><select id="labelSheetMapFrontSubtitle" data-label-sheet-map="front.subtitle"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapFrontBody"><span>앞면 본문</span><select id="labelSheetMapFrontBody" data-label-sheet-map="front.body"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapFrontFooter"><span>앞면 하단</span><select id="labelSheetMapFrontFooter" data-label-sheet-map="front.footer"></select></label>
+                      </div>
+                    </details>
+                    <details class="label-sheet-mapping-back" id="labelSheetDataMappingBack">
+                      <summary>양면 출력용 뒷면 열 연결</summary>
+                      <div class="label-sheet-mapping-grid">
+                        <label class="label-sheet-field" for="labelSheetMapBackTitle"><span>뒷면 제목</span><select id="labelSheetMapBackTitle" data-label-sheet-map="back.title"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapBackSubtitle"><span>뒷면 부제</span><select id="labelSheetMapBackSubtitle" data-label-sheet-map="back.subtitle"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapBackBody"><span>뒷면 본문</span><select id="labelSheetMapBackBody" data-label-sheet-map="back.body"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapBackFooter"><span>뒷면 하단</span><select id="labelSheetMapBackFooter" data-label-sheet-map="back.footer"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapBackQr"><span>뒷면 QR 값</span><select id="labelSheetMapBackQr" data-label-sheet-map="back.qrValue"></select></label>
+                      </div>
+                    </details>
+                    <p class="label-sheet-inline-status" id="labelSheetDataMappingStatus" role="status" aria-live="polite">가져온 열의 자동 연결 결과를 확인해 주세요.</p>
+                    <div class="label-sheet-mapping-next">
+                      <div><strong>연결이 끝났나요?</strong><small>검토 표에서 실제 값을 확인한 뒤 프로젝트 목록에 반영하세요.</small></div>
+                      <button type="button" class="btn primary" id="labelSheetDataMappingReviewBtn">데이터 확인·반영</button>
+                    </div>
+                  </div>
                 </section>
                 <section class="label-sheet-spreadsheet-tools" aria-labelledby="labelSheetSpreadsheetTitle">
                   <div class="label-sheet-spreadsheet-copy">
@@ -5943,13 +5971,13 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/qr-generator.js?v=3"></script>
   <script src="src/zip-writer.js"></script>
   <script src="src/label-sheet-presets.js?v=1"></script>
-  <script src="src/label-sheet-engine.js?v=6"></script>
+  <script src="src/label-sheet-engine.js?v=7"></script>
   <script src="src/tabular-data.js?v=1"></script>
   <script src="src/label-sheet-data-mapping.js?v=1"></script>
   <script src="src/label-sheet-assets.js?v=2"></script>
   <script src="src/label-sheet-renderer.js?v=9"></script>
   <script src="src/label-sheet-package.js?v=1"></script>
-  <script src="src/label-sheet.js?v=26"></script>
+  <script src="src/label-sheet.js?v=27"></script>
   <script src="src/label-sheet-workspace-layout.js?v=10"></script>
   <script src="src/label-sheet-workspace.js?v=9"></script>
   <script src="src/qr-batch.js?v=2"></script>
