@@ -4523,25 +4523,25 @@ body.label-sheet-modal-open #paneLabelSheet .label-sheet-workspace-undo-toast {
   overflow: hidden;
 }
 
+#paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview {
+  container-type: size;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview .label-sheet-a4-sheet {
+  width: auto;
+  height: min(calc(100cqh - 20px), calc((100cqw - 20px) * 297 / 210));
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview .label-sheet-a4-sheet.is-landscape {
+  width: auto;
+  height: min(calc(100cqh - 20px), calc((100cqw - 20px) * 210 / 297));
+}
+
 @media (min-width: 861px) {
   #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="ticket"] #labelSheetPreviewToolbar {
     display: none !important;
-  }
-
-  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview {
-    container-type: size;
-  }
-
-  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview .label-sheet-a4-sheet {
-    width: auto;
-    height: min(calc(100cqh - 20px), calc((100cqw - 20px) * 297 / 210));
-    max-width: calc(100% - 20px);
-    max-height: calc(100% - 20px);
-  }
-
-  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview .label-sheet-a4-sheet.is-landscape {
-    width: auto;
-    height: min(calc(100cqh - 20px), calc((100cqw - 20px) * 210 / 297));
   }
 
   #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-ticket-canvas .label-sheet-focus-surface {

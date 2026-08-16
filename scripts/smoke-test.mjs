@@ -3629,7 +3629,7 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetFocusFrontBtn");
     await page.click('[data-label-canvas-view="sheet"]');
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.canvasView === "sheet");
-    const labelStickyPreviewGeometry = await page.evaluate(() => {
+    const readLabelSheetPageGeometry = () => page.evaluate(() => {
       const frame = document.querySelector("#labelSheetPagePreview");
       const sheet = document.querySelector("#labelSheetPreviewSurface");
       if (!frame || !sheet) return null;
@@ -3649,13 +3649,45 @@ SLIDE-TWO-CONTENT`);
         },
       };
     });
+    const labelStickyPreviewGeometry = await readLabelSheetPageGeometry();
     record(
       Boolean(labelStickyPreviewGeometry) &&
         Math.abs(labelStickyPreviewGeometry.actualRatio - labelStickyPreviewGeometry.expectedRatio) <= 0.002 &&
+        !labelStickyPreviewGeometry.frameScrollsInternally &&
         Object.values(labelStickyPreviewGeometry.clipping).every((value) => value <= 1),
       `Label-sheet A4 preview did not preserve ratio inside the two-panel canvas: ${JSON.stringify(labelStickyPreviewGeometry)}`,
       failures
     );
+    const originalLabelSheetOrientation = labelStickyPreviewGeometry?.orientation || "portrait";
+    await page.evaluate(() => {
+      const control = document.querySelector("#labelSheetOrientation");
+      control.value = "portrait";
+      control.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().spec.page.orientation === "portrait");
+    for (const viewport of [{ width: 390, height: 844 }, { width: 628, height: 1100 }]) {
+      await page.setViewportSize(viewport);
+      await page.waitForTimeout(100);
+      const mobilePageGeometry = await readLabelSheetPageGeometry();
+      record(
+        Boolean(mobilePageGeometry) &&
+          mobilePageGeometry.orientation === "portrait" &&
+          Math.abs(mobilePageGeometry.actualRatio - mobilePageGeometry.expectedRatio) <= 0.002 &&
+          !mobilePageGeometry.frameScrollsInternally &&
+          Object.values(mobilePageGeometry.clipping).every((value) => value <= 1),
+        `Label-sheet portrait A4 preview was clipped at ${viewport.width}x${viewport.height}: ${JSON.stringify(mobilePageGeometry)}`,
+        failures
+      );
+    }
+    await page.setViewportSize({ width: 1440, height: 1200 });
+    if (originalLabelSheetOrientation !== "portrait") {
+      await page.evaluate((orientation) => {
+        const control = document.querySelector("#labelSheetOrientation");
+        control.value = orientation;
+        control.dispatchEvent(new Event("change", { bubbles: true }));
+      }, originalLabelSheetOrientation);
+      await page.waitForFunction((orientation) => window.PromptDeckLabelSheet.getProject().spec.page.orientation === orientation, originalLabelSheetOrientation);
+    }
     await page.click('[data-label-canvas-view="ticket"]');
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.canvasView === "ticket");
     if ((await page.locator("#labelSheetWysiwygToggle").getAttribute("aria-pressed")) !== "true") await page.click("#labelSheetWysiwygToggle");
