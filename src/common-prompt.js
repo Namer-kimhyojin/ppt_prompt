@@ -1842,24 +1842,31 @@
   }
 
   const RESOURCE_META = [
-    ["photo", "실사 이미지", "현장·시설·제품·사람의 실제 맥락이 설득에 도움이 될 때"],
-    ["layeredComposite", "다중 레이어 이미지 합성", "사진·데이터·주석을 하나의 장면으로 결합할 때"],
-    ["icons", "아이콘·픽토그램", "범주·절차·수량을 빠르게 식별하게 할 때"],
-    ["gradients", "그라데이션 효과", "공간 깊이·방향·영역 전환을 분명하게 할 때"],
-    ["threeD", "3D 개체", "제품·설비·소재의 구조와 작동을 보여줄 때"],
-    ["illustration", "일러스트레이션", "추상 개념이나 미래 상태를 직관적으로 설명할 때"],
-    ["dataVisualization", "데이터 시각화", "비교·추이·비중·분포를 정확히 전달할 때"],
-    ["diagramInfographic", "다이어그램·인포그래픽", "과정·인과·구조·관계를 의미 중심으로 설명할 때"],
-    ["typographicFocal", "타이포그래피 중심 표현", "핵심 문장이나 주요 수치 자체를 시각적 초점으로 만들 때"],
+    ["photo", "실사 이미지", "현장·시설·제품·사람의 실제 맥락이 설득에 도움이 될 때", { titleEn: "photography", guidanceKo: "실사는 명세와 직접 연결된 자연색 맥락 장면으로 사용하고 실제 사례·성과처럼 꾸미지 않는다", guidanceEn: "use natural-color photography directly tied to the brief and never present a fabricated scene as factual evidence" }],
+    ["layeredComposite", "다중 레이어 이미지 합성", "사진·데이터·주석을 하나의 장면으로 결합할 때", { titleEn: "multi-layer image composition", guidanceKo: "다중 레이어는 배경 맥락·핵심 증거·정밀 주석에 서로 다른 의미 역할을 부여한다", guidanceEn: "assign distinct semantic roles to contextual background, key evidence, and precise annotation layers" }],
+    ["icons", "아이콘·픽토그램", "범주·절차·수량을 빠르게 식별하게 할 때", { titleEn: "icons and pictograms", guidanceKo: "아이콘·픽토그램은 한 계열의 단순한 형태로 범주·단계·상태만 구분하고 문구·수치를 대체하지 않는다", guidanceEn: "use one consistent, simple icon family only to distinguish categories, steps, or states, never to replace wording or figures" }],
+    ["gradients", "그라데이션 효과", "공간 깊이·방향·영역 전환을 분명하게 할 때", { titleEn: "gradient effects", guidanceKo: "그라데이션은 방향·깊이·영역 전환을 설명하는 국부 범위에만 사용하고 화면 전체를 흐리거나 물들이지 않는다", guidanceEn: "use gradients locally to explain direction, depth, or zone transitions without tinting or softening the full canvas" }],
+    ["threeD", "3D 개체", "제품·설비·소재의 구조와 작동을 보여줄 때", { titleEn: "3D objects", guidanceKo: "3D는 실제 구조·재질·작동을 설명하는 절제된 주 대상에만 사용하고 장난감·게임맵처럼 과장하지 않는다", guidanceEn: "reserve restrained 3D for a primary subject whose real structure, material, or operation must be explained; avoid toy-like exaggeration" }],
+    ["illustration", "일러스트레이션", "추상 개념이나 미래 상태를 직관적으로 설명할 때", { titleEn: "illustration", guidanceKo: "일러스트는 추상 개념을 설명하는 일관된 시각 은유로 사용하고 사실 사진이나 증거처럼 보이게 하지 않는다", guidanceEn: "use illustration as a consistent visual metaphor for abstract concepts, never as documentary photography or factual evidence" }],
+    ["dataVisualization", "데이터 시각화", "비교·추이·비중·분포를 정확히 전달할 때", { titleEn: "data visualization", guidanceKo: "데이터 시각화는 값·축·단위·비례·범례와 데이터 귀속을 정확히 보존한다", guidanceEn: "preserve values, axes, units, proportions, legends, and data ownership exactly in every data visualization" }],
+    ["diagramInfographic", "다이어그램·인포그래픽", "과정·인과·구조·관계를 의미 중심으로 설명할 때", { titleEn: "diagrams and infographics", guidanceKo: "다이어그램·인포그래픽은 노드·연결·방향·그룹의 의미 구조를 보존하고 장식 화살표나 동일 상자 반복으로 축소하지 않는다", guidanceEn: "preserve semantic nodes, connections, direction, and grouping instead of reducing diagrams to decorative arrows or repeated equal boxes" }],
+    ["typographicFocal", "타이포그래피 중심 표현", "핵심 문장이나 주요 수치 자체를 시각적 초점으로 만들 때", { titleEn: "typographic focal expression", guidanceKo: "타이포그래피 중심 표현은 정확한 핵심 문장·수치 하나를 지배적 초점으로 만들고 작은 글자나 중복 문구에 의존하지 않는다", guidanceEn: "make one exact key statement or figure the dominant focal anchor without relying on tiny type or duplicated wording" }],
+  ];
+
+  const RESOURCE_PRESETS = [
+    ["photoEditorial", "실사 + 정보 레이어", "자연스러운 실사를 주 장면으로 두고 데이터·주석을 편집 레이어로 결합", { photo: "allow", layeredComposite: "allow" }],
+    ["dataNarrative", "데이터 + 다이어그램", "정확한 수치와 관계 구조를 한 논증 안에서 연결", { dataVisualization: "allow", diagramInfographic: "allow" }],
+    ["pictogramExplanation", "아이콘 + 설명 그래픽", "일관된 픽토그램과 다이어그램·일러스트로 개념과 절차를 설명", { icons: "allow", diagramInfographic: "allow", illustration: "allow" }],
+    ["automatic", "전체 AI 판단", "개별 제외도 해제하고 모든 자원의 사용 여부를 내용에 맞춰 다시 판단", null],
   ];
 
   function currentResourcePolicy() {
     const allowed = [];
     const excluded = [];
     const automatic = [];
-    RESOURCE_META.forEach(([key, title]) => {
+    RESOURCE_META.forEach(([key, title, , meta = {}]) => {
       const mode = get(`resources.${key}`);
-      const item = { key, title };
+      const item = { key, title, titleEn: meta.titleEn || title, guidanceKo: meta.guidanceKo || "", guidanceEn: meta.guidanceEn || "", mode };
       if (mode === "allow") allowed.push(item);
       else if (mode === "exclude") excluded.push(item);
       else automatic.push(item);
@@ -1868,19 +1875,101 @@
       allowed,
       excluded,
       automatic,
+      usable: [...allowed, ...automatic],
       excludes(key) { return excluded.some((item) => item.key === key); },
     };
+  }
+
+  function currentResourceCombinationContracts(resourcePolicy = currentResourcePolicy()) {
+    const preferred = new Set(resourcePolicy.allowed.map((item) => item.key));
+    const excluded = new Set(resourcePolicy.excluded.map((item) => item.key));
+    const contracts = [];
+    const add = (id, ko, en) => contracts.push({ id, ko, en });
+    if (preferred.has("photo") && preferred.has("layeredComposite")) add(
+      "photoEditorialLayering",
+      "실사 한 장을 주 맥락 레이어로 두고 데이터·다이어그램·주석을 정밀한 2D 편집 레이어로 연결한다. 피사체 간 원근·스케일·조명·그림자·색온도를 자연스럽게 맞추고 떠다니는 유리 패널·홀로그램·무관한 사진 콜라주를 피한다",
+      "Use one believable photograph as the primary context layer and connect data, diagrams, and annotations as precise 2D editorial layers. Match perspective, scale, lighting, shadows, and color temperature; avoid floating glass panels, holograms, and unrelated photo collage",
+    );
+    if (preferred.has("layeredComposite") && excluded.has("photo")) add(
+      "nonPhotoLayering",
+      "실사를 제외한 다중 레이어는 데이터·다이어그램·타이포그래피·주석과 색면만으로 구성하고 사진처럼 보이는 허위 장면을 만들지 않는다",
+      "When photography is excluded, build multi-layer compositions only from data, diagrams, typography, annotations, and color fields; do not fabricate photo-like scenes",
+    );
+    if (preferred.has("dataVisualization") && preferred.has("diagramInfographic")) add(
+      "dataDiagram",
+      "데이터 마크는 정확한 수치와 귀속을 담당하고 다이어그램 연결은 과정·인과·구조만 설명하도록 역할을 분리한다",
+      "Keep data marks responsible for exact values and ownership while diagram connections explain only process, causality, or structure",
+    );
+    if (preferred.has("icons") && preferred.has("diagramInfographic")) add(
+      "iconDiagram",
+      "픽토그램은 다이어그램의 노드·단계 식별을 돕는 보조 표식으로만 사용하고 연결 의미나 텍스트 라벨을 대신하지 않는다",
+      "Use pictograms only as supporting identifiers for diagram nodes or steps; never let them replace connection meaning or text labels",
+    );
+    if (preferred.has("threeD") && preferred.has("layeredComposite")) add(
+      "technical3dLayering",
+      "3D 주 대상은 하나로 제한하고 구조선·수치·라벨은 원근에 맞는 정밀한 2D 주석 레이어로 결합한다",
+      "Limit the composition to one primary 3D subject and combine structural lines, figures, and labels as precise 2D annotation layers aligned to its perspective",
+    );
+    if (preferred.has("photo") && preferred.has("illustration")) add(
+      "photoIllustration",
+      "사진과 일러스트를 함께 쓸 때는 하나를 주 매체로 정하고 다른 하나는 설명 보조로 제한해 사람·제품의 표현 방식이 뒤섞이지 않게 한다",
+      "When photography and illustration coexist, choose one primary medium and keep the other explanatory so people and products do not mix incompatible rendering styles",
+    );
+    if (preferred.has("typographicFocal") && (preferred.has("photo") || preferred.has("layeredComposite"))) add(
+      "visualTypography",
+      "핵심 문장·수치는 복잡한 이미지 위에 얹지 말고 여백·크롭·국부 보호면으로 독립된 읽기 영역을 확보한다",
+      "Keep focal wording and figures off visually busy imagery; secure an independent reading zone through negative space, crop, or a localized protective surface",
+    );
+    return contracts;
+  }
+
+  function resourcePolicyPromptLines(ko, resourcePolicy = currentResourcePolicy(), { compact = false } = {}) {
+    const names = (items) => items.map((item) => ko ? item.title : item.titleEn).join(ko ? " · " : ", ");
+    const lines = [];
+    if (resourcePolicy.allowed.length) lines.push(ko
+      ? `우선 활용 자원: ${names(resourcePolicy.allowed)}. 모든 페이지에 반복하지 말고 핵심 주장과 증거 관계에 도움이 되는 페이지에서 먼저 검토한다.`
+      : `Priority resources: ${names(resourcePolicy.allowed)}. Do not repeat them on every page; consider them first only where they strengthen the key claim and evidence relationship.`);
+    else lines.push(ko ? "공통으로 우선할 시각 자원은 없다." : "No visual resource is prioritized deck-wide.");
+    if (resourcePolicy.automatic.length) lines.push(ko
+      ? `AI 판단 자원: ${names(resourcePolicy.automatic)}. 개별 명세가 실제로 필요로 할 때만 선택한다.`
+      : `Automatic resources: ${names(resourcePolicy.automatic)}. Select them only when the individual specification genuinely requires them.`);
+    if (resourcePolicy.excluded.length) lines.push(ko
+      ? `사용 금지 자원: ${names(resourcePolicy.excluded)}. 이후의 자동 구성 지시도 이 제외 정책을 덮어쓰지 않는다.`
+      : `Excluded resources: ${names(resourcePolicy.excluded)}. No later automatic-composition instruction may override this exclusion.`);
+    const guidedResources = compact ? resourcePolicy.allowed : resourcePolicy.usable;
+    if (guidedResources.length) {
+      const guidance = guidedResources.map((item) => ko ? item.guidanceKo : item.guidanceEn).filter(Boolean);
+      if (guidance.length) lines.push(ko ? `자원별 실행 원칙: ${guidance.join("; ")}.` : `Resource execution rules: ${guidance.join("; ")}.`);
+    }
+    currentResourceCombinationContracts(resourcePolicy).forEach((contract) => lines.push(ko ? `조합 원칙: ${contract.ko}.` : `Combination rule: ${contract.en}.`));
+    return lines;
   }
 
   function resourcePolicyControl([key, title, help]) {
     const path = `resources.${key}`;
     const current = get(path) || "auto";
-    const choices = [["auto", "AI가 판단"], ["allow", "활용 가능"], ["exclude", "사용하지 않음"]];
-    return `<fieldset class="cpd-resource-card"><legend><strong>${escapeHtml(title)}</strong><small>${escapeHtml(help)}</small></legend><div>${choices.map(([value, labelText]) => `<label><input type="radio" name="${path}" data-path="${path}" value="${value}"${current === value ? " checked" : ""}><span>${labelText}</span></label>`).join("")}</div></fieldset>`;
+    const choices = [["auto", "AI 판단"], ["allow", "우선 활용"], ["exclude", "사용 안 함"]];
+    return `<fieldset class="cpd-resource-policy-card"><legend><strong>${escapeHtml(title)}</strong><small>${escapeHtml(help)}</small></legend><div>${choices.map(([value, labelText]) => `<label><input type="radio" name="${path}" data-path="${path}" value="${value}"${current === value ? " checked" : ""}><span>${labelText}</span></label>`).join("")}</div></fieldset>`;
+  }
+
+  function renderResourcePresets() {
+    return `<div class="cpd-resource-preset-wrap"><div class="cpd-resource-preset-head"><strong>추천 조합</strong><small>추천 조합은 필요한 자원만 우선 활용으로 바꾸고, 전체 AI 판단은 모든 선택을 초기화합니다.</small></div><div class="cpd-resource-preset-grid" aria-label="시각 자원 추천 조합">${RESOURCE_PRESETS.map(([id, title, help]) => `<button type="button" data-resource-preset="${id}"><strong>${escapeHtml(title)}</strong><small>${escapeHtml(help)}</small></button>`).join("")}</div></div>`;
+  }
+
+  function applyResourcePreset(id) {
+    const preset = RESOURCE_PRESETS.find(([presetId]) => presetId === id);
+    if (!preset) return;
+    recordHistory();
+    const [, title, , values] = preset;
+    if (!values) RESOURCE_META.forEach(([key]) => { state.resources[key] = "auto"; });
+    else Object.entries(values).forEach(([key, value]) => { state.resources[key] = value; });
+    state.journey.reviewedStages = [...new Set([...(get("journey.reviewedStages") || []), "resources"])];
+    refresh({ full: true });
+    toast(`‘${title}’ 조합을 적용했습니다.`);
   }
 
   function renderResourcesJourney() {
-    return `${panel("시각 자원의 활용 범위", "‘AI가 판단’은 프롬프트에 별도 언급을 추가하지 않습니다. ‘활용 가능’은 내용에 도움이 될 때 쓸 수 있게 하고, ‘사용하지 않음’만 하나의 제외 문장으로 모읍니다.", `<div class="cpd-resource-grid">${RESOURCE_META.map(resourcePolicyControl).join("")}</div><div class="cpd-inline-note"><strong>기본 구성 요소</strong> 선, 면, 카드, 섹션, 블록과 여백은 별도 허용 없이도 정보 전달에 필요한 만큼 사용할 수 있습니다.</div>`)}${panel("필수 출력 품질", "선택 수와 관계없이 모든 이미지에 적용됩니다.", `<div class="cpd-quality-summary"><span>정확한 문구·수치·단위</span><span>선명한 한글 글리프</span><span>발표 거리 가독성</span><span>픽셀 단위의 깨끗한 가장자리</span><span>전면 블러 없이 국부 효과만 사용</span></div>`)}`;
+    return `${panel("시각 자원의 활용 범위", "‘AI 판단’은 사용 여부를 내용에 맡기고, ‘우선 활용’은 적합한 페이지의 첫 후보로 검토하며, ‘사용 안 함’은 최종 프롬프트까지 유지되는 금지 조건입니다.", `${renderResourcePresets()}<div class="cpd-resource-grid">${RESOURCE_META.map(resourcePolicyControl).join("")}</div><div class="cpd-inline-note"><strong>사용 여부와 품질 원칙은 별개입니다.</strong> AI 판단 자원도 실제로 선택되면 아래 자원별 정확성·일관성 규칙을 따릅니다. 선, 면, 카드, 섹션, 블록과 여백은 정보 전달에 필요한 만큼 사용할 수 있습니다.</div>`)}${panel("필수 출력 품질", "선택 수와 관계없이 모든 이미지에 적용됩니다.", `<div class="cpd-quality-summary"><span>정확한 문구·수치·단위</span><span>선명한 한글 글리프</span><span>발표 거리 가독성</span><span>픽셀 단위의 깨끗한 가장자리</span><span>전면 블러 없이 국부 효과만 사용</span></div>`)}`;
   }
 
   function renderJourneyStage(index) {
@@ -4397,8 +4486,7 @@
 
   function fitFiveStagePromptToLimit(text, limit, ko, model, resourcePolicy = currentResourcePolicy(), outputMode = "standard") {
     if (text.length <= limit) return text;
-    const allowed = resourcePolicy.allowed.map((item) => item.title);
-    const excluded = resourcePolicy.excluded.map((item) => item.title);
+    const resourceLines = resourcePolicyPromptLines(ko, resourcePolicy, { compact: true });
     const modelLabel = model === "gpt_image" ? "GPT Image" : model === "gemini" ? "Gemini" : (ko ? "공통 이미지 모델" : "model-neutral image generation");
     const styleLabel = (path, labels) => labels[Math.max(1, Math.min(5, Number(get(path)) || 3)) - 1];
     const style = ko
@@ -4415,9 +4503,6 @@
     const emphasis = ko
       ? label("typography.emphasis", { reading: "읽기 우선", balanced: "읽기와 핵심 강조의 균형", strong: "제목·핵심 수치 강한 강조" })
       : ({ reading: "reading first", balanced: "balanced reading and focal emphasis", strong: "strong headline and key-figure emphasis" })[get("typography.emphasis")];
-    const resourceLine = ko
-      ? `${allowed.length ? `활용 가능=${allowed.join("·")}` : "활용 가능 자원=별도 우선 없음"}${excluded.length ? `; 사용 금지=${excluded.join("·")}` : ""}. AI 판단 항목은 별도 강제하지 않는다.`
-      : `${allowed.length ? `Available=${allowed.join(", ")}` : "No preferred common resource"}${excluded.length ? `; Exclude=${excluded.join(", ")}` : ""}. Automatic items receive no separate directive.`;
     const modeProfile = ({
       standard: {
         title: ko ? "## 슬라이드 이미지 공통 시각 사양" : "## COMMON SLIDE IMAGE VISUAL SPECIFICATION",
@@ -4457,7 +4542,7 @@
     const title = modeProfile.title;
     const mandatory = [
       ...modeProfile.contracts,
-      resourceLine,
+      ...resourceLines,
       ko
         ? "개별 명세의 문구·사실·수치·단위·관계를 정확히 보존하고 없는 내용을 만들지 않는다. 설명문·외부 목업·워터마크 없이 완성 슬라이드 이미지 한 장만 출력한다."
         : "Preserve supplied wording, facts, figures, units, and relationships exactly; invent nothing. Output one finished slide image without prose, mockups, or watermarks.",
@@ -4480,7 +4565,7 @@
     if (required.length <= limit) return required;
     const closing = modeProfile.contracts.map((item) => `\n- ${item}`).join("") + `\n- ${mandatory[mandatory.length - 1]}`;
     const availableLength = Math.max(120, limit - closing.length);
-    return `${title}\n- ${resourceLine.slice(0, Math.max(80, availableLength - title.length - 4)).trim()}${closing}`.slice(0, limit);
+    return `${title}\n- ${resourceLines.join(" ").slice(0, Math.max(80, availableLength - title.length - 4)).trim()}${closing}`.slice(0, limit);
   }
 
   function compactPromptValue(value, max = 180) {
@@ -4625,8 +4710,7 @@
         styleValue("visualStyle.expression", ["minimal and rigorously ordered", "restrained visual presence", "balanced order and emphasis", "clear focal contrast", "bold and memorable"]),
       ];
     const resourcePolicy = currentResourcePolicy();
-    const allowed = resourcePolicy.allowed.map((item) => item.title);
-    const excluded = resourcePolicy.excluded.map((item) => item.title);
+    const resourceLines = resourcePolicyPromptLines(ko, resourcePolicy);
     const baseBackground = get("colors.baseCanvas") === "white" ? (ko ? "흰색" : "white") : get("colors.background");
     const emphasis = ko
       ? label("typography.emphasis", { reading: "본문과 설명의 편안한 읽기 우선", balanced: "본문 가독성과 핵심 강조의 균형", strong: "제목·핵심 문장·주요 수치의 강한 존재감" })
@@ -4662,8 +4746,7 @@
         `${emphasis}. 한글 가독성을 우선하고, 제공된 문구·수치·단위·날짜를 정확히 보존한다. 핵심 지표와 성과는 정보 위계상 먼저 인지되게 한다.`,
       ]],
       ["AVAILABLE IMAGE AND GRAPHIC ELEMENTS", [
-        allowed.length ? `${allowed.join(", ")}은 개별 슬라이드의 의미 전달력이 높아질 때 활용할 수 있다. 선택된 자원을 모든 페이지에 반복할 필요는 없다.` : "특정 시각 자원을 공통으로 우선하지 않는다. 개별 슬라이드 내용에 가장 적합한 표현만 선택한다.",
-        excluded.length ? `다음 자원은 사용하지 않는다: ${excluded.join(", ")}.` : "",
+        ...resourceLines,
         "선·면·카드·섹션·블록과 여백은 정보 관계와 읽기 흐름을 명확하게 하는 범위에서 자유롭게 사용할 수 있다.",
       ]],
       ["CONTENT-BASED COMPOSITION", [
@@ -4680,14 +4763,14 @@
       ["OVERALL VISUAL STYLE", [`Overall character: ${style.join("; ")}. Combine these qualities into one coherent visual language.`, slideStylePromptLine(false)]],
       ["COLOR PALETTE AND BACKGROUND", [`Palette ${paletteTitle()}: Primary ${get("colors.primary")}, Secondary ${get("colors.secondary")}, Accent ${get("colors.accent")}, Background ${get("colors.background")}, Surface ${get("colors.surface")}, Text ${get("colors.textPrimary")}.`, `Use ${baseBackground} as the base canvas.${get("colors.baseCanvas") === "white" ? " Continue using palette colors for headings, shapes, annotations, emphasis, and zoned surfaces." : " Use tonal derivatives to distinguish zones."}${resourcePolicy.excludes("photo") ? "" : " Preserve local photographic color and avoid a single-hue wash."}`]],
       ["TYPOGRAPHY AND INFORMATION EMPHASIS", [`${emphasis}. Preserve supplied wording, figures, units, and dates exactly, render Korean legibly, and make key metrics and outcomes visible first in the hierarchy.`]],
-      ["AVAILABLE IMAGE AND GRAPHIC ELEMENTS", [allowed.length ? `${allowed.join(", ")} may be used when they improve communication; they are not mandatory on every slide.` : "Do not prioritize a common visual medium; select only what best serves each slide.", excluded.length ? `Do not use: ${excluded.join(", ")}.` : "", "Lines, planes, cards, sections, blocks, and whitespace may be used whenever they clarify information relationships and reading flow."]],
+      ["AVAILABLE IMAGE AND GRAPHIC ELEMENTS", [...resourceLines, "Lines, planes, cards, sections, blocks, and whitespace may be used whenever they clarify information relationships and reading flow."]],
       ["CONTENT-BASED COMPOSITION", ["First interpret the supplied topic, purpose, exact content and data, evidence relationships, information hierarchy, and focal priority.", "Choose the layout, reading order, spatial hierarchy, object scale, spacing, whitespace, and visual medium separately for each slide based on its content and information density. Increase focal visual presence when content is sparse."]],
       ["ESSENTIAL OUTPUT REQUIREMENTS", ["Do not invent facts, figures, wording, or labels, and avoid unnecessary text duplication.", "Keep text, figures, and shape edges pixel-crisp at final size. Avoid full-canvas blur; use local effects only in small background areas when useful."]],
     ];
     const compactSections = [
       ["EXECUTION", [sections[0][1][0], sections[0][1][1], sections[1][1][0], sections[1][1][1], sections[1][1][2]]],
       ["VISUAL SYSTEM", [...sections[2][1].filter(Boolean), sections[3][1][0], sections[4][1][0]]],
-      ["COMPOSITION", [sections[5][1][0], sections[5][1][1], sections[6][1][1]]],
+      ["COMPOSITION", [...sections[5][1].filter(Boolean), sections[6][1][1]]],
       ["ACCURACY AND FINISH", [sections[1][1][3], sections[7][1][0], sections[7][1][1]]],
     ];
     const styleLockSections = [
@@ -5487,10 +5570,20 @@
         },
         skillPresetContract,
         visualResources: {
+          policyVersion: "2.0",
           ...clone(state.resources),
           allowed: resourcePolicy.allowed.map((item) => item.key),
           excluded: resourcePolicy.excluded.map((item) => item.key),
           automatic: resourcePolicy.automatic.map((item) => item.key),
+          entries: RESOURCE_META.map(([key, title, , meta = {}]) => ({
+            key,
+            mode: state.resources[key],
+            titleKo: title,
+            titleEn: meta.titleEn || title,
+            guidanceKo: meta.guidanceKo || "",
+            guidanceEn: meta.guidanceEn || "",
+          })),
+          combinationContracts: currentResourceCombinationContracts(resourcePolicy),
         },
         contentBasedComposition: true,
         lowContentFocalPresence: true,
@@ -5965,6 +6058,8 @@
     }
     const quickRandom = event.target.closest("[data-quick-random]");
     if (quickRandom) { applyQuickRandom(quickRandom.dataset.quickRandom); return; }
+    const resourcePreset = event.target.closest("[data-resource-preset]");
+    if (resourcePreset) { applyResourcePreset(resourcePreset.dataset.resourcePreset); return; }
     const userPresetApply = event.target.closest("[data-user-preset-apply]");
     if (userPresetApply) { applyUserPreset(userPresetApply.dataset.userPresetApply); return; }
     const userPresetOverwrite = event.target.closest("[data-user-preset-overwrite]");

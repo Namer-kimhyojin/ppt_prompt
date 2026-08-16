@@ -49,6 +49,17 @@
         guided: { rank: 1, labelKo: "읽기 방향 가이드", labelEn: "guided composition", shortKo: "가이드", className: "is-guided" },
         locked: { rank: 0, labelKo: "구성 고정", labelEn: "composition locked", shortKo: "고정", className: "is-locked" },
       };
+      const VISUAL_RESOURCE_LABELS = {
+        photo: { ko: "실사 이미지", en: "photography" },
+        layeredComposite: { ko: "다중 레이어 이미지 합성", en: "multi-layer image composition" },
+        icons: { ko: "아이콘·픽토그램", en: "icons and pictograms" },
+        gradients: { ko: "그라데이션 효과", en: "gradient effects" },
+        threeD: { ko: "3D 개체", en: "3D objects" },
+        illustration: { ko: "일러스트레이션", en: "illustration" },
+        dataVisualization: { ko: "데이터 시각화", en: "data visualization" },
+        diagramInfographic: { ko: "다이어그램·인포그래픽", en: "diagrams and infographics" },
+        typographicFocal: { ko: "타이포그래피 중심 표현", en: "typographic focal expression" },
+      };
 
       const genState = {
         latestOutput: "",
@@ -3357,6 +3368,75 @@ ${detailLines.join("\n")}${detailLines.length ? "\n" : ""}- 렌더링 전에 노
 - 〔화면 비표시〕 섹션은 판단 근거일 뿐이다. 섹션 제목·필드명·판단 이유·Markdown 문법을 화면에 출력하지 않는다.`;
       }
 
+      function resolveVisualResourcePolicy() {
+        const raw = genState.commonDesignPackage?.settings?.visualResources;
+        if (!raw || typeof raw !== "object") return null;
+        const allowed = new Set(Array.isArray(raw.allowed) ? raw.allowed : []);
+        const excluded = new Set(Array.isArray(raw.excluded) ? raw.excluded : []);
+        const automatic = new Set(Array.isArray(raw.automatic) ? raw.automatic : []);
+        const payloadEntries = new Map((Array.isArray(raw.entries) ? raw.entries : []).map((entry) => [entry?.key, entry]));
+        const entries = Object.entries(VISUAL_RESOURCE_LABELS).map(([key, fallback]) => {
+          const payload = payloadEntries.get(key) || {};
+          let mode = allowed.has(key) ? "allow" : excluded.has(key) ? "exclude" : automatic.has(key) ? "auto" : raw[key];
+          if (!["auto", "allow", "exclude"].includes(mode)) mode = ["auto", "allow", "exclude"].includes(payload.mode) ? payload.mode : "auto";
+          return {
+            key,
+            mode,
+            titleKo: payload.titleKo || fallback.ko,
+            titleEn: payload.titleEn || fallback.en,
+            guidanceKo: String(payload.guidanceKo || "").trim(),
+            guidanceEn: String(payload.guidanceEn || "").trim(),
+          };
+        });
+        return {
+          entries,
+          allowed: entries.filter((entry) => entry.mode === "allow"),
+          excluded: entries.filter((entry) => entry.mode === "exclude"),
+          automatic: entries.filter((entry) => entry.mode === "auto"),
+          usable: entries.filter((entry) => entry.mode !== "exclude"),
+          combinationContracts: (Array.isArray(raw.combinationContracts) ? raw.combinationContracts : []).filter((contract) => contract && typeof contract === "object"),
+        };
+      }
+
+      function buildVisualResourceDirectorLines(lang, individualSpecialDesign) {
+        const policy = resolveVisualResourcePolicy();
+        if (individualSpecialDesign) {
+          const lines = [lang === "en"
+            ? "Actively consider only the visual resources named in the individual brief; omit any resource that does not strengthen persuasion."
+            : "개별 의미 브리프에 지정된 시각 자원만 적극 검토하고 설득력을 높이지 않는 자원은 생략한다."];
+          if (!policy) return lines;
+          const names = (items) => items.map((item) => lang === "en" ? item.titleEn : item.titleKo).join(lang === "en" ? ", " : " · ");
+          if (policy.excluded.length) lines.push(lang === "en"
+            ? `Excluded resources: ${names(policy.excluded)}. This prohibition remains final for special slides and no individual brief may override it.`
+            : `사용 금지 자원: ${names(policy.excluded)}. 이 금지는 특수 슬라이드에서도 최종 조건이며 개별 의미 브리프가 덮어쓸 수 없다.`);
+          const guidance = policy.usable.map((item) => lang === "en" ? item.guidanceEn : item.guidanceKo).filter(Boolean);
+          if (guidance.length) lines.push(lang === "en" ? `For any permitted resource named in the brief: ${guidance.join("; ")}.` : `브리프에 지정된 허용 자원을 사용할 때: ${guidance.join("; ")}.`);
+          return lines;
+        }
+        if (!policy) return [lang === "en"
+          ? "Actively consider available photography, data visualization, diagrams, pictograms, infographics, maps, illustration, technical 3D, multi-layer, typography, background, and palette resources; omit any resource that does not strengthen persuasion."
+          : "활용 가능한 사진·데이터 시각화·다이어그램·픽토그램·인포그래픽·지도·일러스트·기술 3D·다중 레이어·타이포그래피·배경·색상 자원을 적극 검토하되 설득력을 높이지 않는 자원은 생략한다."];
+        const names = (items) => items.map((item) => lang === "en" ? item.titleEn : item.titleKo).join(lang === "en" ? ", " : " · ");
+        const lines = [];
+        if (policy.allowed.length) lines.push(lang === "en"
+          ? `Priority resources: ${names(policy.allowed)}. Consider these first only when they strengthen the key claim and evidence relationship.`
+          : `우선 활용 자원: ${names(policy.allowed)}. 핵심 주장과 증거 관계를 강화하는 페이지에서 먼저 검토한다.`);
+        else lines.push(lang === "en" ? "No common visual resource is prioritized." : "공통으로 우선할 시각 자원은 없다.");
+        if (policy.automatic.length) lines.push(lang === "en"
+          ? `Automatic candidates: ${names(policy.automatic)}. Use them only when the individual brief genuinely requires them.`
+          : `AI 판단 자원: ${names(policy.automatic)}. 개별 의미 브리프가 실제로 필요로 할 때만 선택한다.`);
+        if (policy.excluded.length) lines.push(lang === "en"
+          ? `Excluded resources: ${names(policy.excluded)}. This prohibition is final and no later automatic-composition instruction may override it.`
+          : `사용 금지 자원: ${names(policy.excluded)}. 이 금지는 최종 조건이며 이후 자동 구성 지시가 덮어쓰지 않는다.`);
+        const guidance = policy.usable.map((item) => lang === "en" ? item.guidanceEn : item.guidanceKo).filter(Boolean);
+        if (guidance.length) lines.push(lang === "en" ? `When a resource is used: ${guidance.join("; ")}.` : `자원을 사용할 때: ${guidance.join("; ")}.`);
+        policy.combinationContracts.forEach((contract) => {
+          const text = String(lang === "en" ? contract.en : contract.ko).trim();
+          if (text) lines.push(lang === "en" ? `Combination rule: ${text}.` : `조합 원칙: ${text}.`);
+        });
+        return lines;
+      }
+
       function buildVisualDirectorDirective(record, lang, individualSpecialDesign = false, autonomy = deriveCompositionAutonomy(record)) {
         if (!normalizePlannerEnhancements(genState.plannerEnhancements).visualDirector || !isSlideRecord(record)) return "";
         const screenSpec = String(record?.screenSpec || "");
@@ -3372,11 +3452,12 @@ ${detailLines.join("\n")}${detailLines.length ? "\n" : ""}- 렌더링 전에 노
           : autonomy.key === "guided"
             ? "Keep only semantic groups, primary reading direction, and emphasis order as guidance. Silently compare 2–3 materially different treatments across spatial structure, medium, and visual metaphor. Treat macro-layout wording as intent, not coordinates."
             : "Lock only meaning, wording, figures, relationships, and the reason for emphasis. Silently compare 2–3 materially different treatments across spatial structure, medium, and visual metaphor. Any macro-layout suggestion is optional unless a composition lock is explicit.";
+        const resourceLines = buildVisualResourceDirectorLines(lang, individualSpecialDesign).map((line) => `- ${line}`).join("\n");
         if (lang === "en") {
           return `## AI VISUAL DIRECTOR
 - Composition autonomy: ${autonomy.labelEn}. ${autonomy.reasonEn}.
 - Before rendering, interpret ${hasPurpose ? "the supplied audience question, perception change, persuasion purpose, barrier, evidence role, and desired judgment" : "the minimum audience question and judgment directly supported by the content"}. ${taskEn}
-- Actively consider ${individualSpecialDesign ? "the visual resources named in the individual brief" : "the available photography, data visualization, diagram, pictogram, infographic, map, illustration, technical 3D, multi-layer, typography, background, and palette resources"}; omit any resource that does not strengthen persuasion.
+${resourceLines}
 - Choose exactly one approach by five tests: 3-second comprehension, evidence-to-conclusion fit, cognitive load, factual honesty, and projected legibility.
 - Preserve the declared focal target and reason for emphasis; then resolve exact scale, spacing, negative space, crop, depth, overlap, layers, and local contrast. Integrate evidence serving one argument rather than repeating equal cards or disconnected shapes.
 - Keep text, figures, and shape edges pixel-crisp without full-canvas blur or haze. Keep the comparison and production reasoning invisible; output only the complete slide.`;
@@ -3384,7 +3465,7 @@ ${detailLines.join("\n")}${detailLines.length ? "\n" : ""}- 렌더링 전에 노
         return `## AI 비주얼 디렉터
 - 구성 위임 수준: ${autonomy.labelKo}. ${autonomy.reasonKo}.
 - 렌더링 전에 ${hasPurpose ? "제공된 청중 질문·인식 변화·슬라이드 목적·핵심 장벽·근거 역할·목표 판단" : "제공된 콘텐츠가 직접 뒷받침하는 최소한의 청중 질문과 판단"}을 해석한다. ${taskKo}
-- ${individualSpecialDesign ? "개별 의미 브리프에 지정된 시각 자원" : "활용 가능한 사진·데이터 시각화·다이어그램·픽토그램·인포그래픽·지도·일러스트·기술 3D·다중 레이어·타이포그래피·배경·색상 자원"}을 적극 검토하되 설득력을 높이는 것만 선택하고, 설득력을 높이지 않는 자원은 생략한다.
+${resourceLines}
 - 3초 이해도, 증거와 결론의 적합성, 인지 부담, 사실성, 발표 거리 가독성의 다섯 기준으로 한 가지 접근만 선택한다.
 - 지정된 핵심 강조 대상과 이유를 보존한 뒤 정확한 크기·간격·여백·크롭·깊이·중첩·레이어·국부 대비를 완성한다. 같은 논증의 근거는 하나의 시각군으로 통합해 동일 카드 반복이나 단절된 단순 도형 집합을 피한다.
 - 글자·수치·도형의 가장자리는 픽셀 단위로 선명하게 유지하고 전면 블러·안개 처리를 사용하지 않는다. 비교 과정과 제작 판단은 화면에 노출하지 않고 완성된 슬라이드만 출력한다.`;
