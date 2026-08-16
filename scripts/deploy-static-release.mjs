@@ -423,10 +423,12 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
     });
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
-    if (viewport.width <= 720) {
-      await page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').click();
-    } else if (viewport.width <= 1099) {
-      await page.locator("#labelSheetWorkspaceReviewBtn").click();
+    const mobilePromptAction = page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
+    const workspaceReviewAction = page.locator("#labelSheetWorkspaceReviewBtn");
+    if (await mobilePromptAction.isVisible()) {
+      await mobilePromptAction.click();
+    } else if (await workspaceReviewAction.isVisible()) {
+      await workspaceReviewAction.click();
       await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
       await page.locator("#labelSheetGeneratePromptBtn").click();
     } else {
