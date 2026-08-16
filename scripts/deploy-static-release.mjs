@@ -425,14 +425,22 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
     const mobilePromptAction = page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
     const workspaceReviewAction = page.locator("#labelSheetWorkspaceReviewBtn");
+    const desktopPromptAction = page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
     if (await mobilePromptAction.isVisible()) {
       await mobilePromptAction.click();
     } else if (await workspaceReviewAction.isVisible()) {
       await workspaceReviewAction.click();
       await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
       await page.locator("#labelSheetGeneratePromptBtn").click();
+    } else if (await desktopPromptAction.isVisible()) {
+      await desktopPromptAction.click();
     } else {
-      await page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').click();
+      await page.keyboard.press("Control+K");
+      await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
+      await page.locator("#labelSheetWorkspaceCommandSearch").fill("검토·내보내기");
+      await page.locator(".label-sheet-workspace-command-item").click();
+      await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+      await page.locator("#labelSheetGeneratePromptBtn").click();
     }
     await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
