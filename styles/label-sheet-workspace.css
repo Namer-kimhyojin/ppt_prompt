@@ -4581,6 +4581,13 @@ body.label-sheet-modal-open #paneLabelSheet .label-sheet-workspace-undo-toast {
     --label-workspace-flowbar-height: 46px;
   }
 
+  #paneLabelSheet.label-sheet-workspace-v9 :is(
+    .label-sheet-workspace-panel-host,
+    .label-sheet-workspace-inspector
+  ) {
+    inset: calc(var(--label-workspace-topbar-height) + var(--label-workspace-flowbar-height)) 0 calc(106px + env(safe-area-inset-bottom)) 0;
+  }
+
   #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flowbar {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
