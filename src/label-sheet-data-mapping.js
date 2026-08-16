@@ -127,7 +127,7 @@
       count: matched.length,
       total: FIELD_DEFINITIONS.length,
       matched: matched.map((field) => ({ key: field.key, label: field.label, header: mapping[field.key], target: field.target })),
-      text: matched.length ? matched.map((item) => `${item.header}→${item.label}`).join(" · ") : "연결된 열 없음",
+      text: matched.length ? matched.map((item) => `${mapping[item.key]}→${item.label}`).join(" · ") : "연결된 열 없음",
     };
   }
 

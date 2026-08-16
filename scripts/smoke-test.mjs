@@ -3410,6 +3410,10 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetImportCommitBtn");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records.length === 2);
     record((await page.locator("#labelSheetImportStatus").textContent()).includes("추가 2건"), "Label-sheet paste commit did not report the replace result", failures);
+    await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceDataDrawer")?.dataset.open === "false");
+    await page.click("#labelSheetWorkspaceDataModeBtn");
+    await page.waitForSelector("#labelSheetWorkspaceDataDrawer[data-open='true']");
+    await page.click("#labelSheetDataPasteTab");
     await page.selectOption("#labelSheetPasteMode", "update");
     await page.locator("#labelSheetPasteInput").fill([
       "label_id\tfront_title",
@@ -3438,6 +3442,9 @@ SLIDE-TWO-CONTENT`);
       failures
     );
     record((await page.locator("#labelSheetImportStatus").textContent()).includes("업데이트 1건"), "Label-sheet update-by-ID did not report the updated row", failures);
+    await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceDataDrawer")?.dataset.open === "false");
+    await page.click("#labelSheetWorkspaceDataModeBtn");
+    await page.waitForSelector("#labelSheetWorkspaceDataDrawer[data-open='true']");
     const spreadsheetTitleCell = page.locator('#labelSheetRecordTableBody input[data-record-field="front.title"]').first();
     await spreadsheetTitleCell.focus();
     await spreadsheetTitleCell.evaluate((element) => {
@@ -3499,7 +3506,7 @@ SLIDE-TWO-CONTENT`);
       const records = window.PromptDeckLabelSheet.getProject().records;
       return records[0]?.front?.qrValue === "https://example.kr/meal/MEAL-001" && records[1]?.front?.qrValue === "https://example.kr/meal/MEAL-002";
     });
-    await page.click("#labelSheetPreviewFrontBtn");
+    await page.click("#labelSheetFocusFrontBtn");
     await page.click('[data-label-canvas-view="sheet"]');
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.canvasView === "sheet");
     const labelStickyPreviewGeometry = await page.evaluate(() => {

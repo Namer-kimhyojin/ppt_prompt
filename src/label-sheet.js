@@ -2982,6 +2982,21 @@
       return;
     }
     project.records = result.records;
+    const hasFrontQr = project.records.some((record) => cleanText(record.front?.qrValue));
+    const hasBackQr = project.spec.duplex.enabled && project.records.some((record) => cleanText(record.back?.qrValue));
+    if (hasFrontQr || hasBackQr) {
+      const side = hasFrontQr && hasBackQr ? "both" : hasBackQr ? "back" : "front";
+      project.settings.qr = normalizeQrSettings({
+        ...(project.settings.qr || {}),
+        enabled: true,
+        source: "record",
+        side,
+      });
+      if ($("labelSheetQrEnabled")) $("labelSheetQrEnabled").checked = true;
+      setControl("labelSheetQrSource", "record");
+      setControl("labelSheetQrSide", side);
+      updateQrControlState();
+    }
     reconcileSelectedRecordIds();
     project.settings.dataMapping = deepClone(draftMapping);
     draftRecords = [];
@@ -2989,7 +3004,8 @@
     draftHeaders = [];
     draftActive = false;
     renderRecordTable();
-    setImportStatus(`목록 반영 완료 · 추가 ${result.added}건 · 업데이트 ${result.updated}건 · 건너뜀 ${result.skipped}건`, result.warnings.length ? "warning" : "success");
+    const qrNotice = hasFrontQr || hasBackQr ? " · QR 표시 켬" : "";
+    setImportStatus(`데이터 적용 완료 · 추가 ${result.added}건 · 업데이트 ${result.updated}건 · 건너뜀 ${result.skipped}건${qrNotice}`, result.warnings.length ? "warning" : "success");
     onProjectControlsChanged("가져온 데이터를 반영했습니다.", { rerenderTable: false });
   }
 

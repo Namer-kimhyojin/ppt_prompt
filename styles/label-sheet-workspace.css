@@ -4339,3 +4339,307 @@ body.label-sheet-modal-open #paneLabelSheet .label-sheet-workspace-undo-toast {
     font-size: 11px;
   }
 }
+
+/* V9 — 목표에서 출력까지 이어지는 5단계 제작 흐름 */
+#paneLabelSheet.label-sheet-workspace-v9 {
+  --label-workspace-flowbar-height: 48px;
+  grid-template-rows:
+    var(--label-workspace-topbar-height)
+    var(--label-workspace-flowbar-height)
+    minmax(0, 1fr)
+    var(--label-workspace-statusbar-height);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flowbar {
+  z-index: 18;
+  display: grid;
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 2;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 12px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-list {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  gap: 0 7px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-soft);
+  text-align: left;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step:not(:disabled) {
+  cursor: pointer;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-number {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step strong,
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step strong {
+  align-self: end;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step small {
+  align-self: start;
+  color: var(--ink-muted);
+  font-size: 10px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step[data-state="done"] .label-sheet-workspace-flow-number {
+  border-color: color-mix(in srgb, var(--success) 56%, var(--line));
+  background: color-mix(in srgb, var(--success) 14%, var(--surface));
+  color: var(--success);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step[data-state="attention"] .label-sheet-workspace-flow-number {
+  border-color: color-mix(in srgb, var(--status-warning) 54%, var(--line));
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step:is(.is-active, [aria-current="step"]) {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step:is(.is-active, [aria-current="step"]) .label-sheet-workspace-flow-number {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step:disabled {
+  opacity: 0.46;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-current {
+  max-width: 250px;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-entry,
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-frame {
+  grid-row: 3;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-statusbar {
+  grid-row: 4;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-entry-panel {
+  width: min(860px, 100%);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-entry-panel .label-sheet-workspace-section-heading strong,
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-entry-panel .label-sheet-workspace-project-summary,
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-entry-panel .label-sheet-workspace-tip-list p {
+  word-break: keep-all;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-drawer-footer {
+  gap: 8px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-drawer-footer .btn {
+  min-width: 148px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-intent-card :is(strong, small),
+#paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-field > span {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-intent-grid-output {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-intent-card {
+  min-height: 66px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-intent-card-compact {
+  min-height: 62px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-ticket-canvas .label-sheet-focus-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+}
+
+@media (min-width: 861px) {
+  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="ticket"] #labelSheetPreviewToolbar {
+    display: none !important;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview {
+    container-type: size;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview .label-sheet-a4-sheet {
+    width: auto;
+    height: min(calc(100cqh - 20px), calc((100cqw - 20px) * 297 / 210));
+    max-width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9[data-canvas-view="sheet"] .label-sheet-page-preview .label-sheet-a4-sheet.is-landscape {
+    width: auto;
+    height: min(calc(100cqh - 20px), calc((100cqw - 20px) * 210 / 297));
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-ticket-canvas .label-sheet-focus-surface {
+    width: auto;
+    max-width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    max-height: 520px;
+  }
+}
+
+@media (min-width: 1100px) {
+  #paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-workspace-drawer-panel {
+    width: min(1180px, 100%);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-workspace-drawer-body {
+    grid-template-columns: minmax(390px, 0.9fr) minmax(520px, 1.1fr);
+  }
+}
+
+@media (max-width: 1099px) and (min-width: 861px) {
+  #paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-workspace-drawer-panel {
+    width: min(820px, 100%);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer .label-sheet-workspace-drawer-body {
+    display: block;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 #labelSheetWorkspaceSettingsDrawer #labelSheetSpecStep {
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 860px) {
+  #paneLabelSheet.label-sheet-workspace-v9 {
+    --label-workspace-flowbar-height: 46px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flowbar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 4px 5px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-list {
+    gap: 2px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step {
+    min-height: 38px;
+    grid-template-columns: 20px minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    gap: 4px;
+    padding: 3px 4px;
+    text-align: center;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-number {
+    width: 20px;
+    height: 20px;
+    grid-row: 1;
+    font-size: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step strong {
+    align-self: center;
+    font-size: 11px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step small,
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-current {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-ticket-canvas .label-sheet-focus-surface {
+    width: calc(100% - 12px);
+    max-width: 560px;
+    height: auto;
+    max-height: calc(100% - 12px);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-drawer-footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-drawer-footer .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v9 .label-sheet-workspace-flow-number {
+    display: none;
+  }
+}

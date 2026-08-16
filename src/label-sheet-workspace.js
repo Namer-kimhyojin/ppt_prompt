@@ -85,6 +85,11 @@
     const layoutModeButton = root.querySelector("#labelSheetWorkspaceLayoutModeBtn");
     const dataModeButton = root.querySelector("#labelSheetWorkspaceDataModeBtn");
     const reviewButton = root.querySelector("#labelSheetWorkspaceReviewBtn");
+    const flowButtons = Array.from(root.querySelectorAll("[data-label-workspace-flow-step]"));
+    const flowCurrent = root.querySelector("#labelSheetWorkspaceFlowCurrent");
+    const settingsNextButton = root.querySelector("#labelSheetWorkspaceSettingsNextBtn");
+    const dataNextButton = root.querySelector("#labelSheetWorkspaceDataNextBtn");
+    const importCommitButton = root.querySelector("#labelSheetImportCommitBtn");
     const commonButton = root.querySelector("#labelSheetWorkspaceCommonBtn");
     const detailButton = root.querySelector("#labelSheetWorkspaceDetailBtn");
     const openDetailedEditButton = root.querySelector("#labelSheetOpenDetailedEditBtn");
@@ -151,6 +156,9 @@
       commandPaletteOpen: false,
       commandPaletteTrigger: null,
       detailView: "content",
+      activeStep: ["intent", "spec", "data", "design", "output"].includes(saved.activeStep)
+        ? saved.activeStep
+        : "intent",
     };
     const projectHistory = {
       entries: [],
@@ -171,6 +179,7 @@
         bottomCollapsed: state.bottomCollapsed,
         workspacePreset: state.workspacePreset,
         activeDrawer: state.activeDrawer || "",
+        activeStep: state.activeStep,
         sizes: { ...state.sizes },
       };
     }
@@ -195,6 +204,7 @@
         rightCollapsed: state.rightCollapsed,
         bottomCollapsed: state.bottomCollapsed,
         workspacePreset: state.workspacePreset,
+        activeStep: state.activeStep,
         sizes: state.sizes,
       };
       try {
@@ -292,6 +302,27 @@
         control.setAttribute("aria-pressed", String(active));
       });
       if (workspaceStatus) workspaceStatus.textContent = mode === "data" ? "데이터 편집" : "레이아웃 편집";
+    }
+
+    function setFlowStep(value, options = {}) {
+      const step = ["intent", "spec", "data", "design", "output"].includes(value) ? value : "design";
+      const labels = {
+        intent: "1단계 · 만들 결과물을 정하세요",
+        spec: "2단계 · 용지와 라벨 규격을 확인하세요",
+        data: "3단계 · 출력 데이터를 연결하세요",
+        design: "4단계 · 라벨 화면을 편집하세요",
+        output: "5단계 · 오류를 확인하고 저장하세요",
+      };
+      state.activeStep = step;
+      root.dataset.activeWorkspaceStep = step;
+      flowButtons.forEach((control) => {
+        const active = control.dataset.labelWorkspaceFlowStep === step;
+        control.classList.toggle("is-active", active);
+        control.setAttribute("aria-current", active ? "step" : "false");
+      });
+      if (flowCurrent) flowCurrent.textContent = labels[step];
+      if (options.persist !== false) persist();
+      if (options.emit !== false) emit("flow-step", step, options);
     }
 
     function setLeftCollapsed(collapsed, options) {
@@ -474,8 +505,17 @@
       if (drawer === dataDrawer) {
         setBottomCollapsed(false, { source: "data-drawer", emit: false, persist: false });
         setWorkMode("data");
+        setFlowStep("data", { source: options?.source || "drawer", emit: false });
+      } else if (drawer === settingsDrawer) {
+        const requestedStep = options?.flowStep || trigger?.dataset?.labelWorkspaceFlowStep;
+        setWorkMode("layout");
+        setFlowStep(requestedStep === "spec" ? "spec" : "intent", { source: options?.source || "drawer", emit: false });
+      } else if (drawer === reviewDrawer) {
+        setWorkMode("layout");
+        setFlowStep("output", { source: options?.source || "drawer", emit: false });
       } else {
         setWorkMode("layout");
+        setFlowStep("design", { source: options?.source || "drawer", emit: false });
       }
       updateStatus(statusOutputs, "drawer", `${controlLabel([trigger].filter(Boolean), "labelWorkspaceDrawer", kind) || kind} 열림`);
 
@@ -511,6 +551,11 @@
       openDetailedEditButton?.setAttribute("aria-expanded", "false");
       dataModeButton?.setAttribute("aria-expanded", "false");
       setWorkMode("layout");
+      const recordCount = root.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length;
+      setFlowStep(recordCount ? "design" : kind === "settings" ? state.activeStep : "data", {
+        source: options?.source || "drawer-close",
+        emit: false,
+      });
       if (drawer === detailDrawer) root.querySelector('[data-label-sheet-focus-tool="quick"]')?.click();
       updateStatus(statusOutputs, "drawer", "닫힘");
       if (options?.restoreFocus !== false) {
@@ -947,13 +992,59 @@
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
     layoutModeButton?.addEventListener("click", () => {
       if (state.activeDrawer === dataDrawer) closeDrawer({ source: "mode-switch" });
-      else setWorkMode("layout");
+      else {
+        setWorkMode("layout");
+        setFlowStep("design", { source: "mode-switch" });
+      }
     });
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
     commonButton?.addEventListener("click", () => openFocusDrawer("common", commonButton, "layout"));
     detailButton?.addEventListener("click", () => openFocusDrawer("detail", detailButton, "content"));
     openDetailedEditButton?.addEventListener("click", () => openFocusDrawer("detail", openDetailedEditButton, "content"));
     fineTuneButton?.addEventListener("click", () => openFocusDrawer("detail", fineTuneButton, "layout"));
+    flowButtons.forEach((control) => {
+      control.addEventListener("click", () => {
+        const step = control.dataset.labelWorkspaceFlowStep;
+        if (step === "intent" || step === "spec") {
+          openDrawer("settings", settingsDrawer, control, { source: "flow", flowStep: step });
+          window.setTimeout(() => {
+            const target = root.querySelector(step === "intent" ? "#labelSheetIntentPanel" : "#labelSheetSpecStep");
+            target?.scrollIntoView({ block: "start", inline: "nearest" });
+          }, 80);
+          return;
+        }
+        if (step === "data") {
+          openDrawer("data", dataDrawer, control, { source: "flow" });
+          return;
+        }
+        if (step === "output") {
+          openDrawer("review", reviewDrawer, control, { source: "flow" });
+          return;
+        }
+        if (state.activeDrawer) closeDrawer({ restoreFocus: false, source: "flow" });
+        setWorkMode("layout");
+        setFlowStep("design", { source: "flow" });
+        activateCanvasView("ticket", { source: "flow" });
+      });
+    });
+    settingsNextButton?.addEventListener("click", () => {
+      openDrawer("data", dataDrawer, settingsNextButton, { source: "settings-next" });
+    });
+    dataNextButton?.addEventListener("click", () => {
+      if (dataNextButton.disabled) return;
+      closeDrawer({ restoreFocus: false, source: "data-next" });
+      setFlowStep("design", { source: "data-next" });
+      activateCanvasView("ticket", { source: "data-next" });
+    });
+    importCommitButton?.addEventListener("click", () => {
+      window.setTimeout(() => {
+        const hasRecords = root.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length > 0;
+        if (!hasRecords || !importCommitButton.disabled || state.activeDrawer !== dataDrawer) return;
+        closeDrawer({ restoreFocus: false, source: "data-applied" });
+        setFlowStep("design", { source: "data-applied" });
+        activateCanvasView("ticket", { source: "data-applied" });
+      }, 120);
+    });
     detailViewButtons.forEach((button) => {
       button.addEventListener("click", () => activateDetailView(button.dataset.labelWorkspaceDetailView));
     });
@@ -1081,6 +1172,15 @@
     });
     window.addEventListener("promptdeck:label-sheet-project-replaced", (event) => {
       if (event.detail?.source !== "workspace-history") scheduleProjectHistoryCapture(80);
+    });
+    window.addEventListener("promptdeck:label-workspace-record-count", (event) => {
+      const count = Math.max(0, Number(event.detail?.count) || 0);
+      if (state.activeDrawer) return;
+      if (count > 0 && ["intent", "spec", "data"].includes(state.activeStep)) {
+        setFlowStep("design", { source: "record-sync" });
+      } else if (count === 0 && ["design", "output"].includes(state.activeStep)) {
+        setFlowStep("intent", { source: "record-sync" });
+      }
     });
     window.addEventListener("promptdeck:label-sheet-project-change", () => scheduleProjectHistoryCapture(260));
     window.addEventListener("promptdeck:label-sheet-goal-change", () => scheduleProjectHistoryCapture(80));
@@ -1216,6 +1316,11 @@
     setBottomCollapsed(state.bottomCollapsed, { source: "initialization", persist: false, emit: false });
     setMobileToolPanelOpen(false);
     setWorkMode("layout");
+    setFlowStep(root.querySelector("#labelSheetRecordTableBody tr[data-record-id]") ? "design" : "intent", {
+      source: "initialization",
+      persist: false,
+      emit: false,
+    });
     activateDetailView(state.detailView);
     drawers.forEach((drawer) => setDrawerOpen(drawer, false));
     const syncResponsivePanels = () => {

@@ -71,7 +71,7 @@
   <link rel="stylesheet" href="styles/slide-document.css" />
   <link rel="stylesheet" href="styles/form-image.css?v=3" />
   <link rel="stylesheet" href="styles/label-sheet.css?v=23" />
-  <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=10" />
+  <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=12" />
   <link rel="stylesheet" href="styles/qr-generator.css?v=4" />
   <link rel="stylesheet" href="styles/theme.css?v=dark-aa-20260804" />
   <link rel="stylesheet" href="styles/ui-system.css?v=3" />
@@ -1992,7 +1992,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <div class="label-sheet-subhead">
                   <div><strong>공통 데이터 검토·직접 편집</strong><small>완성물과 프롬프트가 같은 데이터 표를 사용합니다. 셀을 수정하면 미리보기와 페이지·라벨별 프롬프트에 즉시 반영됩니다.</small></div>
                   <div class="label-sheet-inline-actions">
-                    <button type="button" class="btn secondary label-sheet-compact-btn" id="labelSheetImportCommitBtn">목록에 반영</button>
+                    <button type="button" class="btn primary label-sheet-compact-btn" id="labelSheetImportCommitBtn">데이터 적용</button>
                     <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetImportUndoBtn" disabled>가져오기 취소</button>
                   </div>
                 </div>
@@ -2006,7 +2006,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                     <ol class="label-sheet-mapping-steps" aria-label="열 매핑 사용 순서">
                       <li><span>1</span><div><strong>데이터 가져오기</strong><small>표를 붙여넣거나 CSV·TSV 파일을 선택합니다.</small></div></li>
                       <li><span>2</span><div><strong>자동 연결 확인</strong><small>열 이름을 읽어 출력 항목에 먼저 연결합니다.</small></div></li>
-                      <li><span>3</span><div><strong>목록에 반영</strong><small>표와 미리보기를 확인한 뒤 현재 프로젝트에 적용합니다.</small></div></li>
+                      <li><span>3</span><div><strong>데이터 적용</strong><small>표와 미리보기를 확인한 뒤 현재 프로젝트에 적용합니다.</small></div></li>
                     </ol>
                     <p class="label-sheet-mapping-current" id="labelSheetDataMappingCurrentStatus">현재 데이터는 이미 출력 항목으로 정리되어 있습니다.</p>
                     <div class="label-sheet-mapping-empty-actions">
@@ -2048,7 +2048,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                     <p class="label-sheet-inline-status" id="labelSheetDataMappingStatus" role="status" aria-live="polite">가져온 열의 자동 연결 결과를 확인해 주세요.</p>
                     <div class="label-sheet-mapping-next">
                       <div><strong>연결이 끝났나요?</strong><small>검토 표에서 실제 값을 확인한 뒤 프로젝트 목록에 반영하세요.</small></div>
-                      <button type="button" class="btn primary" id="labelSheetDataMappingReviewBtn">데이터 확인·반영</button>
+                      <button type="button" class="btn primary" id="labelSheetDataMappingReviewBtn">검토표 확인</button>
                     </div>
                   </div>
                 </section>
@@ -5973,13 +5973,13 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/label-sheet-presets.js?v=1"></script>
   <script src="src/label-sheet-engine.js?v=7"></script>
   <script src="src/tabular-data.js?v=1"></script>
-  <script src="src/label-sheet-data-mapping.js?v=1"></script>
+  <script src="src/label-sheet-data-mapping.js?v=2"></script>
   <script src="src/label-sheet-assets.js?v=2"></script>
   <script src="src/label-sheet-renderer.js?v=9"></script>
   <script src="src/label-sheet-package.js?v=1"></script>
-  <script src="src/label-sheet.js?v=27"></script>
-  <script src="src/label-sheet-workspace-layout.js?v=10"></script>
-  <script src="src/label-sheet-workspace.js?v=9"></script>
+  <script src="src/label-sheet.js?v=28"></script>
+  <script src="src/label-sheet-workspace-layout.js?v=12"></script>
+  <script src="src/label-sheet-workspace.js?v=11"></script>
   <script src="src/qr-batch.js?v=2"></script>
   <script src="src/legal-links.js"></script>
 </body>

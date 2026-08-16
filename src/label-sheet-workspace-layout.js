@@ -121,7 +121,7 @@
       throw new Error("라벨·티켓 V2에 필요한 기존 편집 노드를 찾지 못했습니다.");
     }
 
-    pane.classList.add("label-sheet-workspace-v2", "label-sheet-workspace-v3", "label-sheet-workspace-v4", "label-sheet-workspace-v6", "label-sheet-workspace-v7");
+    pane.classList.add("label-sheet-workspace-v2", "label-sheet-workspace-v3", "label-sheet-workspace-v4", "label-sheet-workspace-v6", "label-sheet-workspace-v7", "label-sheet-workspace-v9");
     pane.dataset.workspaceTool = "layers";
     pane.dataset.activeTool = "layers";
     pane.dataset.canvasView = pane.dataset.outputGoal === "prompt" ? "sheet" : "ticket";
@@ -251,6 +251,36 @@
     append(topbarActions, workspaceToolsButton, historyActions, commandButton, actionHost, settingsButton, reviewButton);
     append(topbar, brand, topbarCenter, topbarActions);
 
+    const flowBar = node("nav", "label-sheet-workspace-flowbar");
+    flowBar.setAttribute("aria-label", "라벨 제작 5단계");
+    const flowList = node("ol", "label-sheet-workspace-flow-list");
+    const flowDefinitions = [
+      ["intent", "1", "목표", "결과물 선택"],
+      ["spec", "2", "규격", "용지·크기"],
+      ["data", "3", "데이터", "가져오기·매핑"],
+      ["design", "4", "디자인", "화면 편집"],
+      ["output", "5", "출력", "검토·저장"],
+    ];
+    flowDefinitions.forEach(([value, number, label, description], index) => {
+      const item = node("li", "label-sheet-workspace-flow-item");
+      const control = button("", "label-sheet-workspace-flow-step");
+      control.dataset.labelWorkspaceFlowStep = value;
+      control.setAttribute("aria-current", index === 0 ? "step" : "false");
+      control.setAttribute("aria-label", `${number}단계 ${label} · ${description}`);
+      append(
+        control,
+        node("span", "label-sheet-workspace-flow-number", number),
+        node("strong", "", label),
+        node("small", "", description)
+      );
+      item.append(control);
+      flowList.append(item);
+    });
+    const flowCurrent = node("output", "label-sheet-workspace-flow-current", "1단계 · 목표를 정하세요");
+    flowCurrent.id = "labelSheetWorkspaceFlowCurrent";
+    flowCurrent.setAttribute("aria-live", "polite");
+    append(flowBar, flowList, flowCurrent);
+
     const frame = node("div", "label-sheet-workspace-frame");
     const left = node("aside", "label-sheet-workspace-left");
     left.dataset.labelWorkspaceRegion = "left";
@@ -312,25 +342,25 @@
     entry.setAttribute("aria-labelledby", "labelSheetWorkspaceEntryTitle");
     const projectPanel = node("section", "label-sheet-workspace-panel label-sheet-workspace-entry-panel is-active");
     projectPanel.dataset.labelWorkspacePanel = "project";
-    const entryHeading = heading("새 라벨 프로젝트", "출력할 라벨의 기본 틀을 먼저 정해 주세요", "규격을 정하고 데이터를 연결하면 전문 편집 작업대로 바로 이동합니다.");
+    const entryHeading = heading("새 라벨 프로젝트", "어떤 라벨을 완성할까요?", "목표와 출력 틀을 정한 뒤 데이터를 연결하면 편집 작업대로 이어집니다.");
     entryHeading.querySelector("strong").id = "labelSheetWorkspaceEntryTitle";
     projectPanel.append(entryHeading);
     const projectSummary = node("div", "label-sheet-workspace-project-summary");
     projectSummary.id = "labelSheetWorkspaceProjectSummary";
     append(projectSummary, node("strong", "", workspaceMode?.textContent || "새 라벨 프로젝트"), node("span", "", "설정한 규격과 입력 데이터는 자동 저장되어 다음 방문에도 이어집니다."));
     const startActions = node("div", "label-sheet-workspace-start-actions");
-    const setupStartButton = proxyClick(button("1. 출력 틀 설정", "btn primary"), "labelSheetWorkspaceSettingsBtn");
+    const setupStartButton = proxyClick(button("목표와 출력 틀 정하기", "btn primary"), "labelSheetWorkspaceSettingsBtn");
     setupStartButton.id = "labelSheetWorkspaceSetupStartBtn";
-    const dataButton = button("2. 데이터 가져오기", "btn secondary");
+    const dataButton = button("데이터부터 가져오기", "btn secondary");
     dataButton.id = "labelSheetWorkspaceDataBtn";
     dataButton.dataset.labelWorkspaceBottomCommand = "data";
-    const sampleButton = proxyClick(button("3. 샘플로 둘러보기", "btn ghost"), "labelSheetIntentSampleBtn");
+    const sampleButton = proxyClick(button("샘플 프로젝트 열기", "btn ghost"), "labelSheetIntentSampleBtn");
     sampleButton.id = "labelSheetWorkspaceSampleBtn";
     append(startActions, setupStartButton, dataButton, sampleButton);
     const projectTips = node("div", "label-sheet-workspace-tip-list");
     [
-      "출력 레이아웃과 데이터는 서로 다른 작업 화면에서 관리합니다.",
-      "편집을 시작하면 선택한 항목의 핵심 속성만 오른쪽에 표시됩니다.",
+      "권장 순서: 목표 → 규격 → 데이터 → 디자인 → 출력",
+      "완료한 작업은 자동 저장되며, 세부 설정은 필요할 때만 열립니다.",
     ].forEach((copy) => projectTips.append(node("p", "", copy)));
     append(projectPanel, projectSummary, startActions, projectTips);
     entry.append(projectPanel);
@@ -560,9 +590,11 @@
     append(recoveryCard, heading("RECOVERY", "최근 자동 저장", "최근 편집 상태를 선택해 프로젝트 전체를 복원합니다."), recoveryList);
     settingsDrawer.body.append(intentPanel, specStep, recoveryCard);
     specStep.open = true;
-    const settingsDone = button("설정 닫기", "btn primary");
+    const settingsDone = button("작업대로 돌아가기", "btn secondary");
     settingsDone.dataset.labelWorkspaceDrawerClose = "";
-    settingsDrawer.footer.append(settingsDone);
+    const settingsNext = button("다음 · 데이터 연결", "btn primary");
+    settingsNext.id = "labelSheetWorkspaceSettingsNextBtn";
+    append(settingsDrawer.footer, settingsDone, settingsNext);
 
     const dataDrawer = createDrawer("labelSheetWorkspaceDataDrawer", "데이터 편집", "레코드 입력, CSV 가져오기, 열 매핑과 검증을 한 작업 화면에서 관리합니다.");
     const dataWorkspace = node("div", "label-sheet-workspace-data-workspace");
@@ -574,7 +606,8 @@
     dataEditorPane.append(bottom);
     append(dataWorkspace, dataRecordPane, dataEditorPane);
     dataDrawer.body.append(dataWorkspace);
-    const dataDone = button("레이아웃 편집으로 돌아가기", "btn primary");
+    const dataDone = button("다음 · 디자인 편집", "btn primary");
+    dataDone.id = "labelSheetWorkspaceDataNextBtn";
     dataDone.dataset.labelWorkspaceDrawerClose = "";
     dataDrawer.footer.append(dataDone);
 
@@ -599,7 +632,7 @@
       .forEach((section) => reviewAdvancedBody.append(section));
     append(reviewAdvanced, reviewAdvancedSummary, reviewAdvancedBody);
     resultCard.append(reviewAdvanced);
-    const reviewDone = button("작업대로 돌아가기", "btn secondary");
+    const reviewDone = button("디자인으로 돌아가기", "btn secondary");
     reviewDone.dataset.labelWorkspaceDrawerClose = "";
     reviewDrawer.footer.append(reviewDone);
 
@@ -701,7 +734,7 @@
     if (dnaDialog?.parentElement) dnaDialog.remove();
     hero?.remove();
 
-    shell.replaceChildren(topbar, entry, frame, statusbar, left, panelHost, settingsDrawer.drawer, dataDrawer.drawer, assetsDrawer.drawer, reviewDrawer.drawer, detailDrawer.drawer, commandPalette, undoToast);
+    shell.replaceChildren(topbar, flowBar, entry, frame, statusbar, left, panelHost, settingsDrawer.drawer, dataDrawer.drawer, assetsDrawer.drawer, reviewDrawer.drawer, detailDrawer.drawer, commandPalette, undoToast);
     if (dnaDialog) shell.append(dnaDialog);
 
     bindWorkspaceViewport();
@@ -752,9 +785,9 @@
     reviewModeQuery.addEventListener?.("change", syncReviewAdvanced);
     syncReviewAdvanced();
 
-    bindWorkspaceSync({ entry, frame, statusbar, projectSummary, recordList, emptyState, bottomStatus, specSummary, goalSwitch, canvasViews, preflightCard });
+    bindWorkspaceSync({ entry, frame, statusbar, projectSummary, recordList, emptyState, bottomStatus, specSummary, goalSwitch, canvasViews, preflightCard, flowBar });
     pane.dataset.labelWorkspaceLayoutReady = "true";
-    window.dispatchEvent(new CustomEvent("promptdeck:label-workspace-layout-ready", { detail: { version: 7 } }));
+    window.dispatchEvent(new CustomEvent("promptdeck:label-workspace-layout-ready", { detail: { version: 9 } }));
   }
 
   function bindWorkspaceViewport() {
@@ -813,6 +846,25 @@
     const tableBody = $("labelSheetRecordTableBody");
     const modeOutput = $("labelSheetWorkspaceMode");
     const preflight = context.preflightCard?.querySelector("#labelSheetPreflight");
+    const updateFlowReadiness = (count = 0) => {
+      const cell = $("labelSheetCellSize")?.textContent?.trim();
+      const specReady = Boolean(cell && cell !== "—");
+      const draftPending = Boolean($("labelSheetImportCommitBtn") && !$("labelSheetImportCommitBtn").disabled);
+      const dataReady = count > 0 && !draftPending;
+      const issueCount = Array.from(preflight?.querySelectorAll(".label-sheet-preflight-item:not(.is-success)") || []).length;
+      const states = {
+        intent: "done",
+        spec: specReady ? "done" : "attention",
+        data: dataReady ? "done" : "attention",
+        design: dataReady ? "ready" : "locked",
+        output: dataReady ? (issueCount ? "attention" : "ready") : "locked",
+      };
+      context.flowBar?.querySelectorAll("[data-label-workspace-flow-step]").forEach((control) => {
+        const value = control.dataset.labelWorkspaceFlowStep;
+        control.dataset.state = states[value] || "ready";
+        control.disabled = states[value] === "locked";
+      });
+    };
     const updateGoal = () => {
       const goal = pane.dataset.outputGoal === "prompt" ? "prompt" : "print";
       context.goalSwitch.querySelectorAll("[data-label-workspace-goal]").forEach((control) => {
@@ -845,8 +897,18 @@
       const cell = $("labelSheetCellSize")?.textContent?.trim();
       const capacity = $("labelSheetCapacity")?.textContent?.trim();
       context.specSummary.textContent = cell && cell !== "—" ? `${cell} · ${capacity || "규격"}` : "규격 확인";
+      const dataNext = $("labelSheetWorkspaceDataNextBtn");
+      if (dataNext) {
+        const draftPending = Boolean($("labelSheetImportCommitBtn") && !$("labelSheetImportCommitBtn").disabled);
+        dataNext.disabled = !hasRecords || draftPending;
+        dataNext.textContent = draftPending
+          ? "검토한 데이터를 적용해 주세요"
+          : hasRecords ? "다음 · 디자인 편집" : "데이터를 먼저 적용해 주세요";
+      }
+      updateFlowReadiness(count);
       renderRecordList(records, context.recordList);
       syncLayerSelection();
+      window.dispatchEvent(new CustomEvent("promptdeck:label-workspace-record-count", { detail: { count } }));
     };
     const updateValidation = () => {
       const issues = Array.from(preflight?.querySelectorAll(".label-sheet-preflight-item:not(.is-success)") || []);
@@ -862,6 +924,7 @@
         tab.dataset.tone = errors ? "error" : issues.length ? "warning" : "success";
         tab.setAttribute("aria-label", issues.length ? `검증 문제 ${issues.length}건` : "검증 완료");
       }
+      updateFlowReadiness(Array.from(tableBody?.querySelectorAll("tr[data-record-id]") || []).length);
     };
 
     new MutationObserver(updateGoal).observe(pane, { attributes: true, attributeFilter: ["data-output-goal"] });
