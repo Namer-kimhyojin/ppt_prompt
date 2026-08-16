@@ -1976,6 +1976,17 @@
   opacity: 0.64;
 }
 
+#paneLabelSheet .label-sheet-wysiwyg-field.is-placeholder {
+  font-style: italic;
+  opacity: 0.58;
+}
+
+#paneLabelSheet .label-sheet-wysiwyg-field.has-text-overflow {
+  border-color: var(--status-error);
+  background: color-mix(in srgb, var(--status-error) 12%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--status-error) 18%, transparent);
+}
+
 #paneLabelSheet .label-sheet-wysiwyg-resize-handle {
   position: absolute;
   z-index: 8;
@@ -1992,14 +2003,14 @@
 
 #paneLabelSheet .label-sheet-wysiwyg-resize-handle.is-width {
   top: 50%;
-  right: -8px;
+  right: 0;
   cursor: ew-resize;
   transform: translateY(-50%);
 }
 
 #paneLabelSheet .label-sheet-wysiwyg-resize-handle.is-corner {
-  right: -8px;
-  bottom: -8px;
+  right: 0;
+  bottom: 0;
   cursor: nwse-resize;
 }
 

@@ -82,16 +82,21 @@
     const historyStatus = root.querySelector("#labelSheetWorkspaceHistoryState");
     const workspaceStatus = root.querySelector("#labelSheetWorkspacePresetState");
     const settingsButton = root.querySelector("#labelSheetWorkspaceSettingsBtn");
+    const layoutModeButton = root.querySelector("#labelSheetWorkspaceLayoutModeBtn");
+    const dataModeButton = root.querySelector("#labelSheetWorkspaceDataModeBtn");
     const reviewButton = root.querySelector("#labelSheetWorkspaceReviewBtn");
     const commonButton = root.querySelector("#labelSheetWorkspaceCommonBtn");
     const detailButton = root.querySelector("#labelSheetWorkspaceDetailBtn");
     const openDetailedEditButton = root.querySelector("#labelSheetOpenDetailedEditBtn");
     const settingsDrawer = root.querySelector("#labelSheetWorkspaceSettingsDrawer");
+    const dataDrawer = root.querySelector("#labelSheetWorkspaceDataDrawer");
+    const assetsDrawer = root.querySelector("#labelSheetWorkspaceAssetsDrawer");
     const reviewDrawer = root.querySelector("#labelSheetWorkspaceReviewDrawer");
     const detailDrawer = root.querySelector("#labelSheetWorkspaceDetailDrawer");
     const fineTuneButton = root.querySelector("#labelSheetWorkspaceFineTuneBtn");
     const contextTargetPicker = root.querySelector("#labelSheetWorkspaceContextTargetPicker");
     const recoveryMenu = root.querySelector("#labelSheetWorkspaceRecoveryMenu");
+    const assetsMenu = root.querySelector("#labelSheetWorkspaceAssetsMenu");
     const recoveryCard = root.querySelector("#labelSheetWorkspaceRecoveryCard");
     const recoveryList = root.querySelector("#labelSheetWorkspaceRecoveryList");
     const undoToast = root.querySelector("#labelSheetWorkspaceUndoToast");
@@ -101,7 +106,7 @@
     const detailViewButtons = Array.from(root.querySelectorAll("[data-label-workspace-detail-view]"));
     const detailViewPanels = Array.from(root.querySelectorAll("[data-label-workspace-detail-panel]"));
     const qrAdvanced = root.querySelector("#labelSheetQrAdvanced");
-    const drawers = [settingsDrawer, reviewDrawer, detailDrawer].filter(Boolean);
+    const drawers = [settingsDrawer, dataDrawer, assetsDrawer, reviewDrawer, detailDrawer].filter(Boolean);
     const menuTriggers = Array.from(root.querySelectorAll("[data-label-workspace-menu-trigger]"));
     const menus = Array.from(root.querySelectorAll("[data-label-workspace-menu]"));
     const statusOutputs = Array.from(root.querySelectorAll("[data-label-workspace-status]"));
@@ -222,6 +227,12 @@
       if (nextOpen && root.classList.contains("is-mobile-inspector-open")) {
         mobileInspectorClose?.click();
       }
+      if (nextOpen) {
+        const activePanel = toolPanels.find((panel) => panel.dataset.labelWorkspacePanel === state.activeTool);
+        if (!activePanel || !mobileToolPanel?.contains(activePanel)) {
+          activateTool("project", { source: "mobile-tools", persist: false, emit: false });
+        }
+      }
       root.classList.toggle("is-mobile-tool-panel-open", nextOpen);
       workspaceToolsButton?.setAttribute("aria-expanded", String(nextOpen));
       if (mobileToolPanel) {
@@ -238,7 +249,7 @@
         else button.removeAttribute("aria-expanded");
       });
       if (nextOpen && options?.focusPanel) {
-        const activePanel = toolPanels.find((panel) => panel.dataset.labelWorkspacePanel === state.activeTool);
+        const activePanel = toolPanels.find((panel) => panel.dataset.labelWorkspacePanel === state.activeTool && mobileToolPanel?.contains(panel));
         (activePanel?.querySelector(FOCUSABLE_SELECTOR) || mobileToolPanelClose)?.focus({ preventScroll: true });
       } else if (!nextOpen && options?.restoreFocus) {
         (workspaceToolsButton || toolButtons.find((button) => button.dataset.labelWorkspaceTool === state.activeTool))?.focus({ preventScroll: true });
@@ -270,6 +281,17 @@
       if (options?.focus) focusButton(bottomButtons, "labelBottomTab", value);
       if (options?.persist !== false) persist();
       if (options?.emit !== false) emit("bottom-tab", value, options);
+    }
+
+    function setWorkMode(value) {
+      const mode = value === "data" ? "data" : "layout";
+      root.dataset.workMode = mode;
+      [layoutModeButton, dataModeButton].filter(Boolean).forEach((control) => {
+        const active = control.dataset.labelWorkspaceMode === mode;
+        control.classList.toggle("is-active", active);
+        control.setAttribute("aria-pressed", String(active));
+      });
+      if (workspaceStatus) workspaceStatus.textContent = mode === "data" ? "데이터 편집" : "레이아웃 편집";
     }
 
     function setLeftCollapsed(collapsed, options) {
@@ -324,7 +346,9 @@
     function setWorkspacePresetName(name) {
       state.workspacePreset = WORKSPACE_PRESET_LABELS[name] ? name : "custom";
       root.dataset.workspacePreset = state.workspacePreset;
-      if (workspaceStatus) workspaceStatus.textContent = WORKSPACE_PRESET_LABELS[state.workspacePreset];
+      if (workspaceStatus && !root.classList.contains("label-sheet-workspace-v6")) {
+        workspaceStatus.textContent = WORKSPACE_PRESET_LABELS[state.workspacePreset];
+      }
       root.querySelectorAll("[data-label-workspace-preset]").forEach((control) => {
         const active = control.dataset.labelWorkspacePreset === state.workspacePreset;
         control.classList.toggle("is-active", active);
@@ -416,7 +440,11 @@
           : [requested, activeElement, reviewButton, mobileReviewTrigger]
         : kind === "detail"
           ? [fineTuneButton, detailButton, commonButton]
-          : [settingsButton];
+          : kind === "data"
+          ? [requested, dataModeButton, workspaceToolsButton]
+          : kind === "assets"
+            ? [requested, workspaceToolsButton, assetsMenu, activeElement, settingsButton]
+            : [requested, workspaceToolsButton, settingsButton];
       return fallbacks.find(isVisibleTrigger) || requested || activeElement || null;
     }
 
@@ -442,6 +470,13 @@
       commonButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
       detailButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
       openDetailedEditButton?.setAttribute("aria-expanded", String(drawer === detailDrawer));
+      dataModeButton?.setAttribute("aria-expanded", String(drawer === dataDrawer));
+      if (drawer === dataDrawer) {
+        setBottomCollapsed(false, { source: "data-drawer", emit: false, persist: false });
+        setWorkMode("data");
+      } else {
+        setWorkMode("layout");
+      }
       updateStatus(statusOutputs, "drawer", `${controlLabel([trigger].filter(Boolean), "labelWorkspaceDrawer", kind) || kind} 열림`);
 
       window.requestAnimationFrame(() => {
@@ -456,7 +491,15 @@
       const drawer = state.activeDrawer;
       if (!drawer) return;
       const trigger = state.drawerTrigger;
-      const kind = drawer === settingsDrawer ? "settings" : drawer === reviewDrawer ? "review" : drawer === detailDrawer ? "detail" : "drawer";
+      const kind = drawer === settingsDrawer
+        ? "settings"
+        : drawer === dataDrawer
+          ? "data"
+          : drawer === assetsDrawer
+            ? "assets"
+            : drawer === reviewDrawer
+              ? "review"
+              : drawer === detailDrawer ? "detail" : "drawer";
       setDrawerOpen(drawer, false);
       setWorkspaceModalState(false);
       state.activeDrawer = null;
@@ -466,6 +509,8 @@
       commonButton?.setAttribute("aria-expanded", "false");
       detailButton?.setAttribute("aria-expanded", "false");
       openDetailedEditButton?.setAttribute("aria-expanded", "false");
+      dataModeButton?.setAttribute("aria-expanded", "false");
+      setWorkMode("layout");
       if (drawer === detailDrawer) root.querySelector('[data-label-sheet-focus-tool="quick"]')?.click();
       updateStatus(statusOutputs, "drawer", "닫힘");
       if (options?.restoreFocus !== false) {
@@ -710,19 +755,17 @@
       { id: "undo", category: "편집", title: "실행 취소", keywords: "이전 복원 되돌리기", shortcut: "Ctrl+Z", enabled: () => projectHistory.index > 0, run: () => moveProjectHistory(-1) },
       { id: "redo", category: "편집", title: "다시 실행", keywords: "다음 복구", shortcut: "Ctrl+Shift+Z", enabled: () => projectHistory.index < projectHistory.entries.length - 1, run: () => moveProjectHistory(1) },
       { id: "settings", category: "프로젝트", title: "프로젝트 설정 열기", keywords: "품목 규격 용지 양면", shortcut: "Alt+P", run: () => settingsButton?.click() },
-      { id: "data", category: "데이터", title: "데이터 편집기 열기", keywords: "표 csv 레코드 목록", shortcut: "Alt+D", run: () => applyWorkspacePreset("data", { source: "command" }) },
+      { id: "data", category: "데이터", title: "데이터 편집기 열기", keywords: "표 csv 레코드 목록", shortcut: "Alt+D", run: () => openDrawer("data", dataDrawer, dataModeButton, { source: "command" }) },
+      { id: "assets", category: "레이아웃", title: "배경·디자인 자산", keywords: "배경 이미지 dna", run: () => openDrawer("assets", assetsDrawer, assetsMenu, { source: "command" }) },
       { id: "detail", category: "편집", title: "선택 항목 세부 편집", keywords: "문구 qr 레이아웃 프리셋 정밀", run: () => detailButton?.click() },
       { id: "review", category: "프로젝트", title: "검토·내보내기", keywords: "검증 png pdf 인쇄 프롬프트", run: () => reviewButton?.click() },
       { id: "goal-print", category: "제작 방식", title: "직접 제작 모드", keywords: "출력 인쇄 png pdf", run: () => root.querySelector('[data-label-workspace-goal="print"]')?.click() },
       { id: "goal-prompt", category: "제작 방식", title: "AI 프롬프트 모드", keywords: "생성 이미지 배경", run: () => root.querySelector('[data-label-workspace-goal="prompt"]')?.click() },
       { id: "view-ticket", category: "보기", title: "개별 티켓 캔버스", keywords: "확대 단일", run: () => activateCanvasView("ticket", { source: "command" }) },
       { id: "view-sheet", category: "보기", title: "A4 시트 캔버스", keywords: "전체 페이지 배치", run: () => activateCanvasView("sheet", { source: "command" }) },
-      { id: "workspace-design", category: "작업공간", title: "제작 작업공간", keywords: "기본 디자인 속성", shortcut: "Alt+1", run: () => applyWorkspacePreset("design", { source: "command" }) },
-      { id: "workspace-data", category: "작업공간", title: "데이터 작업공간", keywords: "표 목록 매핑", shortcut: "Alt+2", run: () => applyWorkspacePreset("data", { source: "command" }) },
-      { id: "workspace-focus", category: "작업공간", title: "집중 작업공간", keywords: "캔버스 전체 숨기기", shortcut: "Alt+3", run: () => applyWorkspacePreset("focus", { source: "command" }) },
-      { id: "toggle-left", category: "보기", title: "도구 패널 접기·펼치기", keywords: "왼쪽 도크", run: () => setLeftCollapsed(!state.leftCollapsed, { source: "command" }) },
+      { id: "workspace-design", category: "작업 모드", title: "레이아웃 편집으로 돌아가기", keywords: "캔버스 디자인 속성", run: () => state.activeDrawer ? closeDrawer({ source: "command" }) : setWorkMode("layout") },
+      { id: "workspace-data", category: "작업 모드", title: "데이터 편집 열기", keywords: "표 목록 매핑", shortcut: "Alt+D", run: () => openDrawer("data", dataDrawer, dataModeButton, { source: "command" }) },
       { id: "toggle-right", category: "보기", title: "속성 패널 접기·펼치기", keywords: "오른쪽 인스펙터", run: () => toggleRightPanel({ source: "command" }) },
-      { id: "toggle-bottom", category: "보기", title: "데이터 시트 접기·펼치기", keywords: "아래 도크 표", run: () => setBottomCollapsed(!state.bottomCollapsed, { source: "command" }) },
       { id: "save-package", category: "프로젝트", title: "프로젝트 ZIP 저장", keywords: "백업 내보내기 파일", run: () => root.querySelector("#labelSheetSavePackageBtn")?.click() },
     ];
 
@@ -803,6 +846,8 @@
     setupTabSemantics(toolButtons, toolPanels, "labelWorkspaceTool", "labelWorkspacePanel", "tool");
     setupTabSemantics(bottomButtons, bottomPanels, "labelBottomTab", "labelBottomPanel", "bottom");
     setupDrawerSemantics(settingsButton, settingsDrawer, "settings");
+    setupDrawerSemantics(dataModeButton, dataDrawer, "data");
+    setupDrawerSemantics(assetsMenu, assetsDrawer, "assets");
     setupDrawerSemantics(reviewButton, reviewDrawer, "review");
     setupDrawerSemantics(commonButton, detailDrawer, "detail");
     setupDrawerSemantics(detailButton, detailDrawer, "detail");
@@ -819,8 +864,20 @@
         if (mobileToolQuery.matches) setMobileToolPanelOpen(!closeCurrent, { focusPanel: !closeCurrent });
       });
     });
+    const activateMobileTool = (button, source = "mobile-tools") => {
+      const value = button?.dataset.labelWorkspaceMobileTool;
+      if (value === "records") {
+        openDrawer("data", dataDrawer, button, { source });
+        return;
+      }
+      if (value === "assets") {
+        openDrawer("assets", assetsDrawer, button, { source });
+        return;
+      }
+      activateTool(value, { source });
+    };
     mobileToolTabs.forEach((button) => {
-      button.addEventListener("click", () => activateTool(button.dataset.labelWorkspaceMobileTool, { source: "mobile-tools" }));
+      button.addEventListener("click", () => activateMobileTool(button));
     });
     canvasButtons.forEach((button) => {
       button.addEventListener("click", () => activateCanvasView(button.dataset.labelCanvasView, { source: "pointer" }));
@@ -832,7 +889,9 @@
     bindRovingKeys(toolButtons, "labelWorkspaceTool", (value) => activateTool(value, { focus: true, source: "keyboard" }));
     bindRovingKeys(canvasButtons, "labelCanvasView", (value) => activateCanvasView(value, { focus: true, source: "keyboard" }));
     bindRovingKeys(bottomButtons, "labelBottomTab", (value) => activateBottomTab(value, { expand: true, focus: true, source: "keyboard" }));
-    bindRovingKeys(mobileToolTabs, "labelWorkspaceMobileTool", (value) => activateTool(value, { focus: false, source: "keyboard" }));
+    bindRovingKeys(mobileToolTabs, "labelWorkspaceMobileTool", (value) => {
+      activateMobileTool(mobileToolTabs.find((button) => button.dataset.labelWorkspaceMobileTool === value), "keyboard");
+    });
     bindRovingKeys(detailViewButtons, "labelWorkspaceDetailView", (value) => activateDetailView(value, { focus: true }));
 
     leftToggle?.addEventListener("click", () => setLeftCollapsed(!state.leftCollapsed, { source: "pointer" }));
@@ -873,6 +932,10 @@
       if (event.target.closest("[role='tab'], .app-tab-btn")) setAppNavOpen(false);
     });
     settingsButton?.addEventListener("click", () => toggleDrawer("settings", settingsDrawer, settingsButton));
+    layoutModeButton?.addEventListener("click", () => {
+      if (state.activeDrawer === dataDrawer) closeDrawer({ source: "mode-switch" });
+      else setWorkMode("layout");
+    });
     reviewButton?.addEventListener("click", () => toggleDrawer("review", reviewDrawer, reviewButton));
     commonButton?.addEventListener("click", () => openFocusDrawer("common", commonButton, "layout"));
     detailButton?.addEventListener("click", () => openFocusDrawer("detail", detailButton, "content"));
@@ -930,6 +993,7 @@
     root.querySelectorAll("[data-label-workspace-bottom-command]").forEach((control) => {
       control.addEventListener("click", () => {
         const command = control.dataset.labelWorkspaceBottomCommand;
+        if (state.activeDrawer !== dataDrawer) openDrawer("data", dataDrawer, control, { source: "data-command" });
         if (["mapping", "validation"].includes(command)) {
           activateBottomTab(command, { expand: true, source: "menu" });
           return;
@@ -940,6 +1004,7 @@
         window.requestAnimationFrame(() => root.querySelector(`#${tabId}`)?.focus({ preventScroll: true }));
       });
     });
+    assetsMenu?.addEventListener("click", () => openDrawer("assets", assetsDrawer, assetsMenu, { source: "menu" }));
     root.querySelectorAll("[data-label-workspace-canvas-command]").forEach((control) => {
       control.addEventListener("click", () => activateCanvasView(control.dataset.labelWorkspaceCanvasCommand, { source: "menu" }));
     });
@@ -1010,12 +1075,11 @@
         return;
       }
       if (detail.route === "assets") {
-        activateTool("assets", { source: "preflight" });
-        setLeftCollapsed(false, { source: "preflight" });
-        if (mobileToolQuery.matches) setMobileToolPanelOpen(true, { restoreFocus: false });
+        openDrawer("assets", assetsDrawer, assetsMenu, { source: "preflight" });
         return;
       }
       if (detail.route === "data") {
+        openDrawer("data", dataDrawer, dataModeButton, { source: "preflight" });
         activateBottomTab("data", { expand: true, source: "preflight" });
         return;
       }
@@ -1067,7 +1131,12 @@
       }
       if (event.altKey && !modifier && ["1", "2", "3"].includes(event.key)) {
         event.preventDefault();
-        applyWorkspacePreset(({ "1": "design", "2": "data", "3": "focus" })[event.key], { source: "keyboard" });
+        if (event.key === "2") openDrawer("data", dataDrawer, dataModeButton, { source: "keyboard" });
+        else if (state.activeDrawer) closeDrawer({ source: "keyboard" });
+        else {
+          setRightCollapsed(event.key === "3", { source: "keyboard" });
+          setWorkMode("layout");
+        }
         return;
       }
       if (event.altKey && !modifier && event.key.toLocaleLowerCase() === "p") {
@@ -1077,7 +1146,7 @@
       }
       if (event.altKey && !modifier && event.key.toLocaleLowerCase() === "d") {
         event.preventDefault();
-        applyWorkspacePreset("data", { source: "keyboard" });
+        openDrawer("data", dataDrawer, dataModeButton, { source: "keyboard" });
         return;
       }
       if (state.activeMenu && event.key === "Escape") {
@@ -1127,9 +1196,10 @@
     if (state.bottomTab) activateBottomTab(state.bottomTab, { persist: false, emit: false });
     setWorkspacePresetName(state.workspacePreset);
     setLeftCollapsed(state.leftCollapsed, { source: "initialization", persist: false, emit: false });
-    setRightCollapsed(state.rightCollapsed, { source: "initialization", persist: false, emit: false });
+    setRightCollapsed(false, { source: "initialization", persist: false, emit: false });
     setBottomCollapsed(state.bottomCollapsed, { source: "initialization", persist: false, emit: false });
     setMobileToolPanelOpen(false);
+    setWorkMode("layout");
     activateDetailView(state.detailView);
     drawers.forEach((drawer) => setDrawerOpen(drawer, false));
     const syncResponsivePanels = () => {
@@ -1155,7 +1225,7 @@
     renderRecoverySnapshots();
     window.setTimeout(() => captureProjectHistory({ force: true }), 700);
     updateHistoryUi();
-    emit("ready", "v4", { source: "initialization" });
+    emit("ready", "v6", { source: "initialization" });
   }
 
   function chooseInitialValue(savedValue, rootValue, buttons, dataKey) {

@@ -121,7 +121,7 @@
       throw new Error("라벨·티켓 V2에 필요한 기존 편집 노드를 찾지 못했습니다.");
     }
 
-    pane.classList.add("label-sheet-workspace-v2", "label-sheet-workspace-v3", "label-sheet-workspace-v4");
+    pane.classList.add("label-sheet-workspace-v2", "label-sheet-workspace-v3", "label-sheet-workspace-v4", "label-sheet-workspace-v6", "label-sheet-workspace-v7");
     pane.dataset.workspaceTool = "layers";
     pane.dataset.activeTool = "layers";
     pane.dataset.canvasView = pane.dataset.outputGoal === "prompt" ? "sheet" : "ticket";
@@ -129,7 +129,7 @@
 
     const topbar = node("header", "label-sheet-workspace-topbar");
     const brand = node("div", "label-sheet-workspace-brand");
-    const mark = button("전체", "label-sheet-workspace-mark label-sheet-workspace-app-nav");
+    const mark = button("앱", "label-sheet-workspace-mark label-sheet-workspace-app-nav");
     mark.id = "labelSheetWorkspaceAppNavBtn";
     mark.setAttribute("aria-label", "다른 PromptDeck 도구 열기");
     mark.setAttribute("aria-expanded", "false");
@@ -143,7 +143,7 @@
     menuBar.setAttribute("role", "menubar");
     menuBar.setAttribute("aria-label", "라벨 편집기 메뉴");
     const projectMenu = createMenu("프로젝트", "project", [
-      { label: "품목·규격 설정…", targetId: "labelSheetWorkspaceSettingsBtn", shortcut: "Alt+P" },
+      { label: "새 작업·출력 틀 설정…", targetId: "labelSheetWorkspaceSettingsBtn", shortcut: "Alt+P" },
       { label: "샘플로 시작", targetId: "labelSheetIntentSampleBtn" },
       { label: "최근 자동 저장 복구…", id: "labelSheetWorkspaceRecoveryMenu", dataset: { labelWorkspaceRecoveryCommand: "open" } },
       { separator: true },
@@ -157,7 +157,7 @@
       { label: "열 매핑", dataset: { labelWorkspaceBottomCommand: "mapping" } },
       { label: "검증 결과", dataset: { labelWorkspaceBottomCommand: "validation" } },
     ]);
-    const editMenu = createMenu("편집", "edit", [
+    const editMenu = createMenu("레이아웃", "edit", [
       { label: "실행 취소", id: "labelSheetWorkspaceUndoMenu", dataset: { labelWorkspaceHistoryCommand: "undo" }, shortcut: "Ctrl+Z" },
       { label: "다시 실행", id: "labelSheetWorkspaceRedoMenu", dataset: { labelWorkspaceHistoryCommand: "redo" }, shortcut: "Ctrl+Shift+Z" },
       { separator: true },
@@ -166,23 +166,30 @@
       { label: "본문 선택", dataset: { labelWorkspaceLayerCommand: "body" }, shortcut: "5" },
       { label: "QR 선택", dataset: { labelWorkspaceLayerCommand: "qr" }, shortcut: "7" },
       { separator: true },
+      { label: "배경·디자인 자산…", id: "labelSheetWorkspaceAssetsMenu", dataset: { labelWorkspaceDrawerCommand: "assets" } },
       { label: "공통 레이아웃…", targetId: "labelSheetWorkspaceCommonBtn" },
       { label: "문구·QR 및 세부 설정…", targetId: "labelSheetWorkspaceDetailBtn" },
     ]);
     const viewMenu = createMenu("보기", "view", [
       { label: "개별 티켓 캔버스", dataset: { labelWorkspaceCanvasCommand: "ticket" } },
       { label: "A4 시트 캔버스", dataset: { labelWorkspaceCanvasCommand: "sheet" } },
-      { separator: true },
-      { label: "제작 작업공간", dataset: { labelWorkspacePreset: "design" }, shortcut: "Alt+1" },
-      { label: "데이터 작업공간", dataset: { labelWorkspacePreset: "data" }, shortcut: "Alt+2" },
-      { label: "집중 작업공간", dataset: { labelWorkspacePreset: "focus" }, shortcut: "Alt+3" },
-      { separator: true },
-      { label: "도구 패널 접기/펼치기", dataset: { labelWorkspaceToggleCommand: "left" } },
       { label: "속성 패널 접기/펼치기", dataset: { labelWorkspaceToggleCommand: "right" } },
-      { label: "데이터 시트 접기/펼치기", dataset: { labelWorkspaceToggleCommand: "bottom" } },
       { label: "단축키 보기", dataset: { labelWorkspaceToggleCommand: "shortcuts" }, shortcut: "?" },
     ]);
     append(menuBar, projectMenu.wrapper, dataMenu.wrapper, editMenu.wrapper, viewMenu.wrapper);
+    const workModeSwitch = node("div", "label-sheet-workspace-work-mode");
+    workModeSwitch.setAttribute("role", "group");
+    workModeSwitch.setAttribute("aria-label", "작업 모드");
+    const layoutModeButton = button("레이아웃 편집", "label-sheet-workspace-mode-button is-active");
+    layoutModeButton.id = "labelSheetWorkspaceLayoutModeBtn";
+    layoutModeButton.dataset.labelWorkspaceMode = "layout";
+    layoutModeButton.setAttribute("aria-pressed", "true");
+    const dataModeButton = button("데이터 편집", "label-sheet-workspace-mode-button");
+    dataModeButton.id = "labelSheetWorkspaceDataModeBtn";
+    dataModeButton.dataset.labelWorkspaceMode = "data";
+    dataModeButton.dataset.labelWorkspaceBottomCommand = "data";
+    dataModeButton.setAttribute("aria-pressed", "false");
+    append(workModeSwitch, layoutModeButton, dataModeButton);
     const goalSwitch = node("div", "label-sheet-workspace-goal-switch");
     goalSwitch.setAttribute("role", "group");
     goalSwitch.setAttribute("aria-label", "제작 방식");
@@ -204,7 +211,7 @@
     const specSummary = button("규격 확인", "label-sheet-workspace-spec-summary");
     specSummary.id = "labelSheetWorkspaceSpecSummary";
     specSummary.title = "용지, 배치, 면 설정 열기";
-    append(topbarCenter, menuBar, goalSwitch, specSummary);
+    append(topbarCenter, menuBar, workModeSwitch, goalSwitch, specSummary);
 
     const topbarActions = node("div", "label-sheet-workspace-topbar-actions");
     const historyActions = node("div", "label-sheet-workspace-history-actions");
@@ -224,20 +231,21 @@
     const commandButton = button("명령 찾기", "label-sheet-workspace-command-button");
     commandButton.id = "labelSheetWorkspaceCommandBtn";
     commandButton.title = "명령 찾기 (Ctrl+K)";
-    const settingsButton = button("설정");
+    const workspaceToolsButton = button("작업", "label-sheet-workspace-tools-button");
+    workspaceToolsButton.id = "labelSheetWorkspaceToolsBtn";
+    workspaceToolsButton.setAttribute("aria-label", "작업 메뉴 열기");
+    workspaceToolsButton.setAttribute("aria-controls", "labelSheetWorkspaceToolPanel");
+    workspaceToolsButton.setAttribute("aria-expanded", "false");
+    const settingsButton = button("출력 설정");
     settingsButton.id = "labelSheetWorkspaceSettingsBtn";
     settingsButton.title = "프로젝트 설정";
     settingsButton.dataset.labelWorkspaceDrawer = "settings";
-    const workspaceToolsButton = button("도구", "label-sheet-workspace-tools-button");
-    workspaceToolsButton.id = "labelSheetWorkspaceToolsBtn";
-    workspaceToolsButton.setAttribute("aria-controls", "labelSheetWorkspaceToolPanel");
-    workspaceToolsButton.setAttribute("aria-expanded", "false");
     const reviewButton = button("검토·내보내기", "btn primary label-sheet-compact-btn");
     reviewButton.id = "labelSheetWorkspaceReviewBtn";
     reviewButton.dataset.labelWorkspaceDrawer = "review";
     const actionHost = node("div", "label-sheet-workspace-actions");
     if (tabActions) actionHost.append(tabActions);
-    append(topbarActions, historyActions, commandButton, actionHost, workspaceToolsButton, settingsButton, reviewButton);
+    append(topbarActions, workspaceToolsButton, historyActions, commandButton, actionHost, settingsButton, reviewButton);
     append(topbar, brand, topbarCenter, topbarActions);
 
     const frame = node("div", "label-sheet-workspace-frame");
@@ -247,8 +255,8 @@
     const toolrail = node("nav", "label-sheet-workspace-toolrail");
     toolrail.setAttribute("aria-label", "작업 도구 선택");
     const toolDefinitions = [
-      ["project", "시작", "설정과 시작", "시작"],
-      ["records", "목록", "티켓 목록", "목록"],
+      ["project", "프로젝트", "설정과 시작", "시작"],
+      ["records", "데이터", "티켓 목록", "목록"],
       ["layers", "항목", "출력 항목", "항목"],
       ["assets", "배경", "배경 이미지", "배경"],
     ];
@@ -272,9 +280,13 @@
 
     const panelHost = node("div", "label-sheet-workspace-panel-host");
     panelHost.id = "labelSheetWorkspaceToolPanel";
+    panelHost.setAttribute("role", "dialog");
+    panelHost.setAttribute("aria-modal", "true");
+    panelHost.setAttribute("aria-labelledby", "labelSheetWorkspaceToolPanelTitle");
     const mobileToolHeader = node("div", "label-sheet-workspace-mobile-tool-header");
     const mobileToolTop = node("div", "label-sheet-workspace-mobile-tool-top");
     const mobileToolTitle = node("strong", "", "작업 도구");
+    mobileToolTitle.id = "labelSheetWorkspaceToolPanelTitle";
     const mobileToolClose = button("캔버스로 돌아가기", "label-sheet-workspace-mobile-tool-close");
     mobileToolClose.id = "labelSheetWorkspaceToolPanelClose";
     mobileToolClose.setAttribute("aria-label", "작업 도구 패널 닫기");
@@ -291,27 +303,54 @@
       mobileToolTabs.append(control);
     });
     append(mobileToolHeader, mobileToolTop, mobileToolTabs);
-    const projectPanel = node("section", "label-sheet-workspace-panel is-active");
+    const entry = node("section", "label-sheet-workspace-entry");
+    entry.id = "labelSheetWorkspaceEntry";
+    entry.hidden = true;
+    entry.setAttribute("aria-labelledby", "labelSheetWorkspaceEntryTitle");
+    const projectPanel = node("section", "label-sheet-workspace-panel label-sheet-workspace-entry-panel is-active");
     projectPanel.dataset.labelWorkspacePanel = "project";
-    append(projectPanel, heading("빠른 시작", "프로젝트", "순서 없이 데이터와 디자인을 바로 시작할 수 있습니다."));
+    const entryHeading = heading("새 라벨 프로젝트", "출력할 라벨의 기본 틀을 먼저 정해 주세요", "규격을 정하고 데이터를 연결하면 전문 편집 작업대로 바로 이동합니다.");
+    entryHeading.querySelector("strong").id = "labelSheetWorkspaceEntryTitle";
+    projectPanel.append(entryHeading);
     const projectSummary = node("div", "label-sheet-workspace-project-summary");
     projectSummary.id = "labelSheetWorkspaceProjectSummary";
-    append(projectSummary, node("strong", "", workspaceMode?.textContent || "새 라벨 프로젝트"), node("span", "", "규격과 데이터를 선택하면 즉시 캔버스에 반영됩니다."));
+    append(projectSummary, node("strong", "", workspaceMode?.textContent || "새 라벨 프로젝트"), node("span", "", "설정한 규격과 입력 데이터는 자동 저장되어 다음 방문에도 이어집니다."));
     const startActions = node("div", "label-sheet-workspace-start-actions");
-    const sampleButton = proxyClick(button("샘플로 시작", "btn primary"), "labelSheetIntentSampleBtn");
-    sampleButton.id = "labelSheetWorkspaceSampleBtn";
-    const dataButton = button("데이터 가져오기", "btn secondary");
+    const setupStartButton = proxyClick(button("1. 출력 틀 설정", "btn primary"), "labelSheetWorkspaceSettingsBtn");
+    setupStartButton.id = "labelSheetWorkspaceSetupStartBtn";
+    const dataButton = button("2. 데이터 가져오기", "btn secondary");
     dataButton.id = "labelSheetWorkspaceDataBtn";
-    const blankButton = proxyClick(button("빈 프로젝트", "btn ghost"), "labelSheetResetBtn");
-    append(startActions, sampleButton, dataButton, blankButton);
+    dataButton.dataset.labelWorkspaceBottomCommand = "data";
+    const sampleButton = proxyClick(button("3. 샘플로 둘러보기", "btn ghost"), "labelSheetIntentSampleBtn");
+    sampleButton.id = "labelSheetWorkspaceSampleBtn";
+    append(startActions, setupStartButton, dataButton, sampleButton);
     const projectTips = node("div", "label-sheet-workspace-tip-list");
     [
-      "데이터와 규격은 상단 메뉴에서 필요할 때만 엽니다.",
-      "선택한 항목의 빠른 속성만 오른쪽에 표시됩니다.",
+      "출력 레이아웃과 데이터는 서로 다른 작업 화면에서 관리합니다.",
+      "편집을 시작하면 선택한 항목의 핵심 속성만 오른쪽에 표시됩니다.",
     ].forEach((copy) => projectTips.append(node("p", "", copy)));
     append(projectPanel, projectSummary, startActions, projectTips);
+    entry.append(projectPanel);
 
-    const recordsPanel = node("section", "label-sheet-workspace-panel");
+    const mobileProjectPanel = projectPanel.cloneNode(true);
+    const mobileEntryTitle = mobileProjectPanel.querySelector("#labelSheetWorkspaceEntryTitle");
+    const mobileProjectSummary = mobileProjectPanel.querySelector("#labelSheetWorkspaceProjectSummary");
+    const mobileSetupStartButton = mobileProjectPanel.querySelector("#labelSheetWorkspaceSetupStartBtn");
+    const mobileDataButton = mobileProjectPanel.querySelector("#labelSheetWorkspaceDataBtn");
+    const mobileSampleButton = mobileProjectPanel.querySelector("#labelSheetWorkspaceSampleBtn");
+    mobileEntryTitle?.removeAttribute("id");
+    if (mobileProjectSummary) mobileProjectSummary.id = "labelSheetWorkspaceProjectSummaryMobile";
+    if (mobileSetupStartButton) {
+      mobileSetupStartButton.id = "labelSheetWorkspaceSetupStartBtnMobile";
+      proxyClick(mobileSetupStartButton, "labelSheetWorkspaceSettingsBtn");
+    }
+    if (mobileDataButton) mobileDataButton.id = "labelSheetWorkspaceDataBtnMobile";
+    if (mobileSampleButton) {
+      mobileSampleButton.id = "labelSheetWorkspaceSampleBtnMobile";
+      proxyClick(mobileSampleButton, "labelSheetIntentSampleBtn");
+    }
+
+    const recordsPanel = node("section", "label-sheet-workspace-panel is-active");
     recordsPanel.dataset.labelWorkspacePanel = "records";
     const recordHeading = heading("현재 데이터", "레코드", "티켓을 선택하면 캔버스의 편집 대상이 함께 바뀝니다.");
     const recordList = node("div", "label-sheet-workspace-record-list");
@@ -342,12 +381,12 @@
     });
     append(layersPanel, layerList);
 
-    const assetsPanel = node("section", "label-sheet-workspace-panel label-sheet-workspace-assets-panel");
+    const assetsPanel = node("section", "label-sheet-workspace-panel label-sheet-workspace-assets-panel is-active");
     assetsPanel.dataset.labelWorkspacePanel = "assets";
     append(assetsPanel, heading("디자인 자산", "배경·DNA", "배경을 등록하거나 이미지 프롬프트의 시각 규칙을 선택합니다."));
     backgroundStep.open = true;
     assetsPanel.append(backgroundStep);
-    append(panelHost, mobileToolHeader, projectPanel, recordsPanel, layersPanel, assetsPanel);
+    append(panelHost, mobileToolHeader, mobileProjectPanel, recordsPanel, layersPanel, assetsPanel);
     append(left, toolrail, panelHost);
 
     const leftResizer = node("div", "label-sheet-workspace-resizer");
@@ -447,7 +486,7 @@
     focusEditor.hidden = false;
     focusEditor.replaceChildren(canvasColumn, inspector);
     append(stage, focusEditor);
-    append(frame, left, leftResizer, stage);
+    append(frame, stage);
 
     const bottom = node("section", "label-sheet-workspace-bottom");
     bottom.dataset.labelWorkspaceRegion = "bottom";
@@ -505,11 +544,11 @@
     saveState.id = "labelSheetWorkspaceSaveState";
     const historyState = node("span", "label-sheet-workspace-history-state", "편집 기록 준비");
     historyState.id = "labelSheetWorkspaceHistoryState";
-    const workspaceState = node("span", "label-sheet-workspace-preset-state", "제작 작업공간");
+    const workspaceState = node("span", "label-sheet-workspace-preset-state", "레이아웃 편집");
     workspaceState.id = "labelSheetWorkspacePresetState";
-    append(statusbar, saveState, historyState, workspaceState, $("labelSheetStatus"), node("span", "label-sheet-workspace-shortcut-note", "Ctrl+K 명령 · Ctrl+Z 취소 · Alt+1~3 작업공간"));
+    append(statusbar, saveState, historyState, workspaceState, $("labelSheetStatus"), node("span", "label-sheet-workspace-shortcut-note", "Ctrl+K 명령 · Ctrl+Z 취소 · Alt+D 데이터"));
 
-    const settingsDrawer = createDrawer("labelSheetWorkspaceSettingsDrawer", "프로젝트 설정", "품목, 제작 방식, 규격과 양면 설정은 언제든 변경할 수 있습니다.");
+    const settingsDrawer = createDrawer("labelSheetWorkspaceSettingsDrawer", "출력 레이아웃 설정", "품목, 제작 방식, 용지 규격과 양면 배치를 데이터와 분리해 설정합니다.");
     const recoveryCard = node("section", "label-sheet-workspace-recovery-card");
     recoveryCard.id = "labelSheetWorkspaceRecoveryCard";
     const recoveryList = node("div", "label-sheet-workspace-recovery-list");
@@ -521,6 +560,26 @@
     const settingsDone = button("설정 닫기", "btn primary");
     settingsDone.dataset.labelWorkspaceDrawerClose = "";
     settingsDrawer.footer.append(settingsDone);
+
+    const dataDrawer = createDrawer("labelSheetWorkspaceDataDrawer", "데이터 편집", "레코드 입력, CSV 가져오기, 열 매핑과 검증을 한 작업 화면에서 관리합니다.");
+    const dataWorkspace = node("div", "label-sheet-workspace-data-workspace");
+    const dataRecordPane = node("aside", "label-sheet-workspace-data-records");
+    dataRecordPane.setAttribute("aria-label", "현재 레코드 목록");
+    dataRecordPane.append(recordsPanel);
+    const dataEditorPane = node("section", "label-sheet-workspace-data-editor");
+    dataEditorPane.setAttribute("aria-label", "데이터 입력과 매핑");
+    dataEditorPane.append(bottom);
+    append(dataWorkspace, dataRecordPane, dataEditorPane);
+    dataDrawer.body.append(dataWorkspace);
+    const dataDone = button("레이아웃 편집으로 돌아가기", "btn primary");
+    dataDone.dataset.labelWorkspaceDrawerClose = "";
+    dataDrawer.footer.append(dataDone);
+
+    const assetsDrawer = createDrawer("labelSheetWorkspaceAssetsDrawer", "배경·디자인 자산", "배경 이미지와 디자인 DNA는 필요할 때만 열어 조정합니다.");
+    assetsDrawer.body.append(assetsPanel);
+    const assetsDone = button("적용하고 돌아가기", "btn primary");
+    assetsDone.dataset.labelWorkspaceDrawerClose = "";
+    assetsDrawer.footer.append(assetsDone);
 
     const reviewDrawer = createDrawer("labelSheetWorkspaceReviewDrawer", "검토·내보내기", "오류를 확인한 뒤 PNG·PDF·인쇄 또는 프롬프트 결과를 내보냅니다.");
     reviewDrawer.body.append(resultCard);
@@ -639,17 +698,12 @@
     if (dnaDialog?.parentElement) dnaDialog.remove();
     hero?.remove();
 
-    shell.replaceChildren(topbar, frame, bottom, statusbar, settingsDrawer.drawer, reviewDrawer.drawer, detailDrawer.drawer, commandPalette, undoToast);
+    shell.replaceChildren(topbar, entry, frame, statusbar, left, panelHost, settingsDrawer.drawer, dataDrawer.drawer, assetsDrawer.drawer, reviewDrawer.drawer, detailDrawer.drawer, commandPalette, undoToast);
     if (dnaDialog) shell.append(dnaDialog);
 
     bindWorkspaceViewport();
 
     specSummary.addEventListener("click", () => settingsButton.click());
-    dataButton.addEventListener("click", () => {
-      pane.querySelector('[data-label-bottom-tab="data"]')?.click();
-      if (pane.classList.contains("is-bottom-collapsed")) bottomToggle.click();
-      $("labelSheetDataDirectTab")?.focus({ preventScroll: true });
-    });
     const mobileInspectorQuery = window.matchMedia("(max-width: 860px)");
     const setMobileInspector = (open, options = {}) => {
       const nextOpen = Boolean(open) && mobileInspectorQuery.matches;
@@ -695,9 +749,9 @@
     reviewModeQuery.addEventListener?.("change", syncReviewAdvanced);
     syncReviewAdvanced();
 
-    bindWorkspaceSync({ projectSummary, recordList, emptyState, bottomStatus, specSummary, goalSwitch, canvasViews, preflightCard });
+    bindWorkspaceSync({ entry, frame, statusbar, projectSummary, recordList, emptyState, bottomStatus, specSummary, goalSwitch, canvasViews, preflightCard });
     pane.dataset.labelWorkspaceLayoutReady = "true";
-    window.dispatchEvent(new CustomEvent("promptdeck:label-workspace-layout-ready", { detail: { version: 4 } }));
+    window.dispatchEvent(new CustomEvent("promptdeck:label-workspace-layout-ready", { detail: { version: 7 } }));
   }
 
   function bindWorkspaceViewport() {
@@ -770,6 +824,11 @@
     const updateSummary = () => {
       const records = tableBody ? Array.from(tableBody.querySelectorAll("tr[data-record-id]")) : [];
       const count = records.length;
+      const hasRecords = count > 0;
+      context.entry.hidden = hasRecords;
+      context.frame.hidden = !hasRecords;
+      context.statusbar.hidden = !hasRecords;
+      pane.dataset.projectState = hasRecords ? "editing" : "empty";
       context.emptyState.hidden = count > 0;
       context.bottomStatus.textContent = `데이터 ${count}건`;
       const countOutput = $("labelSheetWorkspaceDataCount");
@@ -777,8 +836,9 @@
         countOutput.textContent = String(count);
         countOutput.setAttribute("aria-label", `데이터 ${count}건`);
       }
-      const strong = context.projectSummary.querySelector("strong");
-      if (strong) strong.textContent = modeOutput?.textContent || `${count}건 프로젝트`;
+      pane.querySelectorAll(".label-sheet-workspace-project-summary strong").forEach((strong) => {
+        strong.textContent = modeOutput?.textContent || `${count}건 프로젝트`;
+      });
       const cell = $("labelSheetCellSize")?.textContent?.trim();
       const capacity = $("labelSheetCapacity")?.textContent?.trim();
       context.specSummary.textContent = cell && cell !== "—" ? `${cell} · ${capacity || "규격"}` : "규격 확인";

@@ -250,7 +250,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
     const regressionSelectors = {
       tabBtnCommonPrompt: [".cpd-btn.primary", ".cpd-journey-panel-head > span"],
       tabBtnFormImage: [".form-image-prompt-viewer", ".form-image-step-head b"],
-      tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-bottom-tab.is-active"],
+      tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-mode-button.is-active"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],
       tabBtnDataDiagram: [".diagram-readiness-head span", ".diagram-result-tab.active"],
       tabBtnPromotion: [".promo-step-num", ".promo-stat-chip"],
@@ -1374,12 +1374,82 @@ async function runSmokeTest() {
       await page.click('[data-journey-stage="3"]');
       record((await page.locator('#cpdJourneyPanel [data-choice-path="typography.emphasis"]').count()) === 1, "Typography stage omitted the result-focused emphasis slider", failures);
       await page.click('[data-journey-stage="4"]');
-      record((await page.locator('#cpdJourneyPanel .cpd-resource-card').count()) === 9 && (await page.locator('#cpdJourneyPanel .cpd-resource-card input').count()) === 27, "Visual resource stage did not expose nine tri-state resources", failures);
+      record((await page.locator('#cpdJourneyPanel .cpd-resource-policy-card').count()) === 9 && (await page.locator('#cpdJourneyPanel .cpd-resource-policy-card input').count()) === 27, "Visual resource stage did not expose nine tri-state resources", failures);
+      record((await page.locator('#cpdJourneyPanel [data-resource-preset]').count()) === 4, "Visual resource stage omitted the four quick combination presets", failures);
+      const resourceModeLabels = [...new Set((await page.locator('#cpdJourneyPanel .cpd-resource-policy-card label span').allTextContents()).map((text) => text.trim()))];
+      record(["AI 판단", "우선 활용", "사용 안 함"].every((label) => resourceModeLabels.includes(label)), `Visual resource modes were not expressed as clear decisions (${JSON.stringify(resourceModeLabels)})`, failures);
       record((await page.locator('#cpdJourneyPanel [data-path="composition.layoutFreedom"]').count()) === 0, "Removed layout-freedom question was still visible", failures);
+
+      const visualResourceGuidanceCases = [
+        ["photo", "자연색 맥락 장면"],
+        ["layeredComposite", "배경 맥락·핵심 증거·정밀 주석"],
+        ["icons", "한 계열의 단순한 형태"],
+        ["gradients", "국부 범위"],
+        ["threeD", "장난감·게임맵"],
+        ["illustration", "일관된 시각 은유"],
+        ["dataVisualization", "값·축·단위·비례·범례"],
+        ["diagramInfographic", "노드·연결·방향·그룹"],
+        ["typographicFocal", "정확한 핵심 문장·수치 하나"],
+      ];
+      for (const [resourceKey, expectedGuidance] of visualResourceGuidanceCases) {
+        await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+        await page.locator(`#cpdJourneyPanel [data-path="resources.${resourceKey}"][value="allow"]`).check();
+        const resourcePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
+        record(resourcePrompt.includes("우선 활용 자원:") && resourcePrompt.includes(expectedGuidance), `Visual resource ${resourceKey} omitted its execution guidance`, failures);
+      }
+
+      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+      await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
+      let resourcePresetState = await page.evaluate(() => window.PromptDeckCommonPrompt.getState().resources);
+      let resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
+      record(resourcePresetState.photo === "allow" && resourcePresetState.layeredComposite === "allow", "Photo-editorial preset did not prioritize photography and multi-layer composition", failures);
+      record(resourcePresetPrompt.includes("원근·스케일·조명·그림자·색온도") && resourcePresetPrompt.includes("떠다니는 유리 패널"), "Photo-editorial preset omitted believable compositing constraints", failures);
+
+      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+      await page.locator('#cpdJourneyPanel [data-path="resources.photo"][value="exclude"]').check();
+      await page.locator('#cpdJourneyPanel [data-path="resources.layeredComposite"][value="allow"]').check();
+      resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
+      record(resourcePresetPrompt.includes("실사를 제외한 다중 레이어") && resourcePresetPrompt.includes("사용 금지 자원: 실사 이미지"), "Non-photo layering did not preserve the photography exclusion", failures);
+
+      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+      await page.click('#cpdJourneyPanel [data-resource-preset="dataNarrative"]');
+      resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
+      record(resourcePresetPrompt.includes("데이터 마크는 정확한 수치와 귀속") && resourcePresetPrompt.includes("다이어그램 연결"), "Data-narrative preset omitted the data/diagram ownership contract", failures);
+
+      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+      await page.click('#cpdJourneyPanel [data-resource-preset="pictogramExplanation"]');
+      resourcePresetState = await page.evaluate(() => window.PromptDeckCommonPrompt.getState().resources);
+      resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
+      record(resourcePresetState.icons === "allow" && resourcePresetState.diagramInfographic === "allow" && resourcePresetState.illustration === "allow", "Pictogram-explanation preset did not prioritize all three explanatory media", failures);
+      record(resourcePresetPrompt.includes("픽토그램은 다이어그램의 노드·단계 식별") && resourcePresetPrompt.includes("텍스트 라벨을 대신하지 않는다"), "Pictogram-explanation preset omitted semantic icon boundaries", failures);
+
+      for (const viewport of [{ width: 390, height: 844 }, { width: 628, height: 1100 }]) {
+        await page.setViewportSize(viewport);
+        const resourceLayout = await page.locator('#cpdJourneyPanel .cpd-resource-policy-card').first().evaluate((card) => {
+          const cardRect = card.getBoundingClientRect();
+          const controlGroup = card.querySelector(":scope > div");
+          const controlRect = controlGroup.getBoundingClientRect();
+          const controls = [...controlGroup.querySelectorAll("span")].map((element) => element.getBoundingClientRect());
+          return {
+            left: cardRect.left,
+            right: cardRect.right,
+            viewportWidth: document.documentElement.clientWidth,
+            controlWidthRatio: controlRect.width / cardRect.width,
+            controlRows: new Set(controls.map((rect) => Math.round(rect.top))).size,
+            minimumControlHeight: Math.min(...controls.map((rect) => rect.height)),
+            overflowX: card.scrollWidth - card.clientWidth,
+          };
+        });
+        record(resourceLayout.left >= 0 && resourceLayout.right <= resourceLayout.viewportWidth && resourceLayout.controlWidthRatio >= 0.88 && resourceLayout.controlRows === 1 && resourceLayout.minimumControlHeight >= 44 && resourceLayout.overflowX <= 1, `Visual resource controls broke at ${viewport.width}px (${JSON.stringify(resourceLayout)})`, failures);
+      }
+      await page.setViewportSize({ width: 1440, height: 1200 });
+
+      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+      await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
       await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
       const fiveStagePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
       record(fiveStagePrompt.startsWith("## SLIDE IMAGE VISUAL SPECIFICATION") && fiveStagePrompt.includes("### OUTPUT SIZE AND RESERVED AREAS") && fiveStagePrompt.includes("### CONTENT-BASED COMPOSITION"), "Generated prompt did not use the general five-stage image-specification structure", failures);
-      record(fiveStagePrompt.includes("데이터 시각화") && fiveStagePrompt.includes("흰색") && fiveStagePrompt.length <= 2400, `Five-stage prompt omitted selected settings or exceeded 2,400 characters (${fiveStagePrompt.length})`, failures);
+      record(fiveStagePrompt.includes("데이터 시각화") && fiveStagePrompt.includes("값·축·단위·비례·범례") && fiveStagePrompt.includes("흰색") && fiveStagePrompt.length <= 2400, `Five-stage prompt omitted selected settings or exceeded 2,400 characters (${fiveStagePrompt.length})`, failures);
       record(!fiveStagePrompt.includes("디자인 DNA") && !fiveStagePrompt.includes("AI 자유도") && !fiveStagePrompt.includes("MECE") && !fiveStagePrompt.includes("발표 시간"), "Generated prompt leaked internal jargon or removed presentation-time metadata", failures);
       await page.click('.cpd-summary [data-action="output-settings"]');
       const outputModeLengths = {};
@@ -1427,6 +1497,10 @@ async function runSmokeTest() {
       await page.click('#cpdQuickSetupDialog [data-quick-random="resources"]');
       record((await page.evaluate(() => JSON.stringify(window.PromptDeckCommonPrompt.getState().frame))) === frameBeforeRandom, "Random visual-resource setup changed protected frame geometry", failures);
       await page.click('#cpdQuickSetupDialog .cpd-dialog-close[data-action="close-quick-setup-modal"]');
+      await page.click('[data-journey-stage="4"]');
+      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
+      await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
+      await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
       if (false) {
       record((await page.locator("#cpdAccordion .cpd-journey-step").count()) === 7, "Common prompt did not render the seven-stage MECE journey", failures);
       record((await page.locator("#cpdQuickSetup").count()) === 1 && await page.locator("#cpdQuickSetup").isVisible(), "Question-reducing quick setup was not visible", failures);
@@ -1642,6 +1716,11 @@ async function runSmokeTest() {
       failures
     );
     record(linkedPromptPackage?.designPackage?.schemaVersion === 11 && Boolean(linkedPromptPackage?.designPackage?.settings?.visualResources) && Boolean(linkedPromptPackage?.designPackage?.settings?.frame), "Common Prompt did not send the five-stage visual package schema", failures);
+    const linkedVisualResources = linkedPromptPackage?.designPackage?.settings?.visualResources;
+    record(linkedVisualResources?.policyVersion === "2.0" && linkedVisualResources?.entries?.length === 9, "Common Prompt did not send the complete visual-resource policy", failures);
+    record(["photo", "layeredComposite", "dataVisualization"].every((key) => linkedVisualResources?.allowed?.includes(key)) && linkedVisualResources?.automatic?.length === 6 && linkedVisualResources?.excluded?.length === 0, "Common Prompt did not preserve priority, automatic, and excluded resource modes", failures);
+    record(linkedVisualResources?.entries?.every((entry) => entry.key && entry.mode && entry.titleKo && entry.titleEn && entry.guidanceKo && entry.guidanceEn), "Visual-resource package omitted bilingual execution guidance", failures);
+    record(linkedVisualResources?.combinationContracts?.some((contract) => contract.id === "photoEditorialLayering" && contract.ko.includes("원근·스케일·조명·그림자·색온도")), "Visual-resource package omitted the believable photo-layering contract", failures);
     record(!Object.hasOwn(linkedPromptPackage?.designPackage?.project || {}, "audienceRole") && !Object.hasOwn(linkedPromptPackage?.designPackage?.project || {}, "secondsPerSlide"), "Common Prompt package retained presentation content or timing metadata", failures);
     const linkedSkillPresetContract = linkedPromptPackage?.designPackage?.settings?.skillPresetContract;
     record(
@@ -1682,7 +1761,48 @@ async function runSmokeTest() {
     record(linkedRecord?.targetModel === "gpt_image" && linkedRecord?.generationPath === "full_slide", "Generator record did not carry model and generation-path metadata", failures);
     const optionalPhotoSlidePrompt = await page.locator("#genOutput").textContent();
     record(optionalPhotoSlidePrompt.includes("## AI 비주얼 디렉터"), "Generator did not add the AI visual-director directive", failures);
-    record(!optionalPhotoSlidePrompt.includes("슬라이드별 실사 합성 요구사항") && optionalPhotoSlidePrompt.includes("설득력을 높이지 않는 자원은 생략"), "Generator still forced a slide-specific photo role", failures);
+    record(!optionalPhotoSlidePrompt.includes("슬라이드별 실사 합성 요구사항") && optionalPhotoSlidePrompt.includes("우선 활용 자원: 실사 이미지 · 다중 레이어 이미지 합성 · 데이터 시각화"), "Generator did not preserve prioritized resources without forcing a slide-specific photo role", failures);
+    record(optionalPhotoSlidePrompt.includes("조합 원칙:") && optionalPhotoSlidePrompt.includes("원근·스케일·조명·그림자·색온도") && optionalPhotoSlidePrompt.includes("떠다니는 유리 패널"), "Generator omitted the believable photo/editorial-layer combination contract", failures);
+    record(!optionalPhotoSlidePrompt.includes("활용 가능한 사진·데이터 시각화·다이어그램"), "Structured visual-resource policy fell back to the conflicting legacy all-resource directive", failures);
+
+    const excludedResourcePromptPackage = JSON.parse(JSON.stringify(linkedPromptPackage));
+    const excludedResourcePolicy = excludedResourcePromptPackage.designPackage.settings.visualResources;
+    const allResourceKeys = excludedResourcePolicy.entries.map((entry) => entry.key);
+    excludedResourcePolicy.allowed = [];
+    excludedResourcePolicy.excluded = ["photo", "layeredComposite"];
+    excludedResourcePolicy.automatic = allResourceKeys.filter((key) => !excludedResourcePolicy.excluded.includes(key));
+    excludedResourcePolicy.entries = excludedResourcePolicy.entries.map((entry) => ({
+      ...entry,
+      mode: excludedResourcePolicy.excluded.includes(entry.key) ? "exclude" : "auto",
+    }));
+    allResourceKeys.forEach((key) => { excludedResourcePolicy[key] = excludedResourcePolicy.excluded.includes(key) ? "exclude" : "auto"; });
+    excludedResourcePolicy.combinationContracts = [];
+    excludedResourcePromptPackage.text = `## 슬라이드 이미지 공통 시각 사양
+
+### 시각 자원 정책
+사용 금지 자원: 실사 이미지 · 다중 레이어 이미지 합성. 이후 자동 구성 지시도 이 제외 정책을 덮어쓰지 않는다.`;
+    excludedResourcePromptPackage.lang = "ko";
+    await page.evaluate((promptPackage) => window.PromptDeckSlidePromptGenerator.setCommonPrompt(promptPackage), excludedResourcePromptPackage);
+    await page.locator("#genMdInput").fill(`## 슬라이드 01. 정책 추진 방향
+### 본문
+추상적인 정책 개념과 추진 원칙을 설명합니다.`);
+    await page.click("#genGenerateBtn");
+    await page.waitForFunction(() => document.querySelector("#genResultBadge")?.textContent === "1 prompts");
+    const excludedResourceSlidePrompt = await page.locator("#genOutput").textContent();
+    record(excludedResourceSlidePrompt.includes("사용 금지 자원: 실사 이미지 · 다중 레이어 이미지 합성") && excludedResourceSlidePrompt.includes("금지는 최종 조건"), "Generator did not preserve hard visual-resource exclusions", failures);
+    record(!excludedResourceSlidePrompt.includes("활용 가능한 사진·데이터 시각화·다이어그램"), "Excluded resources were reintroduced by the legacy visual-director directive", failures);
+
+    await page.locator("#genMdInput").fill(`## 슬라이드 01. 프로젝트 표지
+### 표현 방식 〔화면 비표시〕
+- 페이지 유형: 표지
+- 시각 자원: 실사 이미지와 다중 레이어 이미지 합성
+### 콘텐츠 〔화면 표시〕
+- 제목: 프로젝트 표지`);
+    await page.click("#genGenerateBtn");
+    await page.waitForFunction(() => document.querySelector("#genResultBadge")?.textContent === "1 prompts");
+    const excludedSpecialSlidePrompt = await page.locator("#genOutput").textContent();
+    record(excludedSpecialSlidePrompt.includes("사용 금지 자원: 실사 이미지 · 다중 레이어 이미지 합성") && excludedSpecialSlidePrompt.includes("개별 의미 브리프가 덮어쓸 수 없다"), "Special-slide individual design overrode a final resource exclusion", failures);
+    await page.evaluate((promptPackage) => window.PromptDeckSlidePromptGenerator.setCommonPrompt(promptPackage), linkedPromptPackage);
 
     const commonDesignMarker = optionalPhotoCommonPrompt
       .split(/\r?\n/)
@@ -2348,6 +2468,11 @@ SLIDE-TWO-CONTENT`);
     };
     const openLabelDetail = async () => {
       if (await page.locator("#labelSheetWorkspaceDetailDrawer:not([hidden])").count()) return;
+      const openDrawer = page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])");
+      if (await openDrawer.count()) {
+        await openDrawer.locator("[data-label-workspace-drawer-close]").first().click();
+        await page.waitForFunction(() => !document.querySelector("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])"));
+      }
       await page.click("#labelSheetWorkspaceDetailBtn");
       await page.waitForSelector("#labelSheetWorkspaceDetailDrawer:not([hidden])");
     };
@@ -2374,24 +2499,67 @@ SLIDE-TWO-CONTENT`);
       }, { selector, value });
     };
     record((await page.locator("#paneLabelSheet .label-sheet-workspace-actions > #tabActions").count()) === 1, "Label-sheet quick actions were not mounted in the workspace project bar", failures);
-    record((await page.locator("#paneLabelSheet.label-sheet-workspace-v4[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) === 1, "Label-sheet V4 workspace shell did not initialize", failures);
-    record((await page.locator("[data-label-workspace-history-command]").count()) === 4 && (await page.locator("[data-label-workspace-preset]").count()) === 3, "Label-sheet desktop history or workspace presets were not exposed", failures);
+    record((await page.locator("#paneLabelSheet.label-sheet-workspace-v7[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) === 1, "Label-sheet V7 workspace shell did not initialize", failures);
+    record((await page.locator("[data-label-workspace-history-command]").count()) === 4 && (await page.locator("[data-label-workspace-mode]").count()) === 2, "Label-sheet desktop history or layout/data modes were not exposed", failures);
     record((await page.locator(".label-sheet-workspace-context-toolbar [data-label-sheet-nudge]").count()) === 0 && (await page.locator("#labelSheetWorkspaceDetailDrawer .label-sheet-workspace-precision-tools [data-label-sheet-nudge]").count()) === 4, "Label-sheet low-frequency precision tools were not moved into the detail dialog", failures);
+    const labelEntryState = await page.evaluate(() => {
+      const count = window.PromptDeckLabelSheet?.getProject()?.records?.length || 0;
+      const entry = document.querySelector("#labelSheetWorkspaceEntry");
+      const frame = document.querySelector("#paneLabelSheet .label-sheet-workspace-frame");
+      const buttons = Array.from(entry?.querySelectorAll("button") || []).filter((control) => control.getClientRects().length > 0);
+      return {
+        count,
+        entryVisible: Boolean(entry && getComputedStyle(entry).display !== "none" && entry.getClientRects().length),
+        frameHidden: Boolean(frame && getComputedStyle(frame).display === "none"),
+        projectState: document.querySelector("#paneLabelSheet")?.dataset.projectState,
+        buttonOverflow: buttons.some((control) => control.scrollWidth > control.clientWidth + 1 || control.scrollHeight > control.clientHeight + 1),
+      };
+    });
+    record(
+      labelEntryState.count > 0 || (labelEntryState.entryVisible && labelEntryState.frameHidden && labelEntryState.projectState === "empty" && !labelEntryState.buttonOverflow),
+      `Label-sheet empty project did not expose the guided entry screen cleanly: ${JSON.stringify(labelEntryState)}`,
+      failures
+    );
     record(await page.evaluate(() => typeof window.PromptDeckLabelSheet?.getProjectSnapshot === "function" && typeof window.PromptDeckLabelSheet?.replaceProject === "function"), "Label-sheet project history API was not exposed", failures);
     await page.keyboard.press("Control+K");
     await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
-    await page.locator("#labelSheetWorkspaceCommandSearch").fill("데이터 작업공간");
+    await page.locator("#labelSheetWorkspaceCommandSearch").fill("레이아웃 편집으로 돌아가기");
     record((await page.locator(".label-sheet-workspace-command-item").count()) === 1, "Label-sheet command palette did not filter commands", failures);
     await page.keyboard.press("Escape");
     await page.waitForSelector("#labelSheetWorkspaceCommandPalette", { state: "hidden" });
     await page.keyboard.press("Alt+3");
-    record((await page.locator("#paneLabelSheet").getAttribute("data-workspace-preset")) === "focus", "Label-sheet focus workspace shortcut did not collapse secondary docks", failures);
+    record((await page.locator("#paneLabelSheet").getAttribute("data-right-panel")) === "collapsed", "Label-sheet focus shortcut did not collapse the property panel", failures);
     await page.keyboard.press("Alt+1");
-    record((await page.locator("#paneLabelSheet").getAttribute("data-workspace-preset")) === "design", "Label-sheet design workspace shortcut did not restore the core editing layout", failures);
+    record((await page.locator("#paneLabelSheet").getAttribute("data-right-panel")) === "expanded", "Label-sheet layout shortcut did not restore the two-panel editing layout", failures);
     record((await page.locator('input[name="labelSheetOutputGoal"]').count()) === 2, "Label-sheet did not expose the two distinct creation methods", failures);
     record((await page.locator('input[name="labelSheetIntentDocumentType"]').count()) === 4, "Label-sheet did not ask for the document type before detailed settings", failures);
     await page.click("#labelSheetWorkspaceSettingsBtn");
     record(await page.locator("#labelSheetWorkspaceSettingsDrawer").isVisible() && await page.locator("#labelSheetOutputGoalPrompt").isVisible(), "Label-sheet project settings drawer did not expose creation settings", failures);
+    const labelSettingsGeometry = await page.evaluate(() => {
+      const drawer = document.querySelector("#labelSheetWorkspaceSettingsDrawer");
+      const panel = drawer?.querySelector(".label-sheet-workspace-drawer-panel");
+      const body = drawer?.querySelector(".label-sheet-workspace-drawer-body");
+      const intent = document.querySelector("#labelSheetIntentPanel");
+      const spec = document.querySelector("#labelSheetSpecStep");
+      const drawerBox = drawer?.getBoundingClientRect();
+      const panelBox = panel?.getBoundingClientRect();
+      const intentBox = intent?.getBoundingClientRect();
+      const specBox = spec?.getBoundingClientRect();
+      return {
+        panelWidth: panelBox?.width || 0,
+        panelCenterDelta: panelBox && drawerBox ? Math.abs((panelBox.left + panelBox.width / 2) - (drawerBox.left + drawerBox.width / 2)) : 999,
+        bodyDisplay: body ? getComputedStyle(body).display : "missing",
+        separatedColumns: Boolean(intentBox && specBox && intentBox.right < specBox.left),
+      };
+    });
+    record(
+      labelSettingsGeometry.panelWidth >= 900 &&
+        labelSettingsGeometry.panelCenterDelta <= 3 &&
+        labelSettingsGeometry.bodyDisplay === "grid" &&
+        labelSettingsGeometry.separatedColumns,
+      `Label-sheet desktop output settings were not organized as a centered two-column task modal: ${JSON.stringify(labelSettingsGeometry)}`,
+      failures
+    );
     await page.click("#labelSheetWorkspaceSettingsDrawer [data-label-workspace-drawer-close]");
     await selectLabelGoal("prompt");
     record((await page.locator("#paneLabelSheet").getAttribute("data-output-goal")) === "prompt", "Label-sheet prompt goal did not update the workflow state", failures);
@@ -2414,8 +2582,9 @@ SLIDE-TWO-CONTENT`);
     await selectLabelDocumentType("admission");
     record((await page.locator("#labelSheetSamplePreset option").count()) === 3, "Label-sheet admission type did not expose three contextual sample presets", failures);
     await selectHiddenLabelValue("#labelSheetSamplePreset", "staff-pass");
-    await page.click('[data-label-workspace-tool="project"]');
-    await page.click("#labelSheetWorkspaceSampleBtn");
+    await page.click("#labelSheetWorkspaceSettingsBtn");
+    await page.click("#labelSheetIntentSampleBtn");
+    await page.click("#labelSheetWorkspaceSettingsDrawer [data-label-workspace-drawer-close]");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.id?.startsWith("DEMO-STAFF-"));
     const staffSample = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => ({ id: record.id, number: record.number, role: record.data?.category })));
     record(staffSample.length === 8 && staffSample.every((record) => !record.number) && staffSample.some((record) => record.role === "안전관리"), `Label-sheet staff sample did not exercise unnumbered role data: ${JSON.stringify(staffSample)}`, failures);
@@ -2676,32 +2845,59 @@ SLIDE-TWO-CONTENT`);
     const labelWorkspaceGeometry = await page.evaluate(() => {
       const pane = document.querySelector("#paneLabelSheet");
       const frame = pane?.querySelector(".label-sheet-workspace-frame");
-      const left = pane?.querySelector(".label-sheet-workspace-left");
       const canvas = pane?.querySelector(".label-sheet-workspace-canvas-column");
       const inspector = pane?.querySelector(".label-sheet-workspace-inspector");
-      const bottom = pane?.querySelector(".label-sheet-workspace-bottom");
+      const left = pane?.querySelector(".label-sheet-workspace-left");
+      const toolPanel = pane?.querySelector("#labelSheetWorkspaceToolPanel");
+      const topbar = pane?.querySelector(".label-sheet-workspace-topbar");
       const paneBox = pane?.getBoundingClientRect();
+      const requiredTopbarControls = [
+        ".label-sheet-workspace-menubar",
+        ".label-sheet-workspace-work-mode",
+        ".label-sheet-workspace-goal-switch",
+        ".label-sheet-workspace-spec-summary",
+        ".label-sheet-workspace-history-actions",
+        ".label-sheet-workspace-command-button",
+      ].map((selector) => pane?.querySelector(selector));
+      const visibleButtons = Array.from(topbar?.querySelectorAll("button") || [])
+        .filter((control) => control.getClientRects().length && getComputedStyle(control).visibility !== "hidden");
       return {
         ready: pane?.dataset.labelWorkspaceLayoutReady,
+        classReady: pane?.classList.contains("label-sheet-workspace-v7"),
         paneBottom: paneBox?.bottom || 0,
         viewportHeight: window.innerHeight,
         documentHeight: document.documentElement.scrollHeight,
         documentWidth: document.documentElement.scrollWidth,
         viewportWidth: document.documentElement.clientWidth,
+        topbarDisplay: topbar ? getComputedStyle(topbar).display : "missing",
+        topbarHeight: topbar?.getBoundingClientRect().height || 0,
+        topbarControlsVisible: requiredTopbarControls.every((control) => control && control.getClientRects().length && getComputedStyle(control).display !== "none"),
+        clippedTopbarButtons: visibleButtons.filter((control) => control.scrollWidth > control.clientWidth + 1 || control.scrollHeight > control.clientHeight + 1).map((control) => control.id || control.textContent?.trim()),
         frameDisplay: frame ? getComputedStyle(frame).display : "missing",
-        widths: [left, canvas, inspector].map((element) => element?.getBoundingClientRect().width || 0),
-        bottomInternalScroll: Boolean(bottom && getComputedStyle(bottom).overflowY === "hidden"),
+        frameChildren: frame?.children.length || 0,
+        leftCount: pane?.querySelectorAll(".label-sheet-workspace-left").length || 0,
+        leftDisplay: left ? getComputedStyle(left).display : "missing",
+        toolPanelDisplay: toolPanel ? getComputedStyle(toolPanel).display : "missing",
+        widths: [canvas, inspector].map((element) => element?.getBoundingClientRect().width || 0),
         statusbarCount: pane?.querySelectorAll(".label-sheet-workspace-statusbar").length || 0,
       };
     });
     record(
       labelWorkspaceGeometry.ready === "true" &&
+        labelWorkspaceGeometry.classReady &&
+        labelWorkspaceGeometry.topbarDisplay === "grid" &&
+        labelWorkspaceGeometry.topbarHeight >= 80 &&
+        labelWorkspaceGeometry.topbarControlsVisible &&
+        labelWorkspaceGeometry.clippedTopbarButtons.length === 0 &&
         labelWorkspaceGeometry.frameDisplay === "grid" &&
+        labelWorkspaceGeometry.frameChildren === 1 &&
+        labelWorkspaceGeometry.leftCount === 1 &&
+        labelWorkspaceGeometry.leftDisplay === "none" &&
+        labelWorkspaceGeometry.toolPanelDisplay === "none" &&
         labelWorkspaceGeometry.widths.every((width) => width > 0) &&
         labelWorkspaceGeometry.paneBottom <= labelWorkspaceGeometry.viewportHeight + 1 &&
         labelWorkspaceGeometry.documentHeight <= labelWorkspaceGeometry.viewportHeight + 1 &&
         labelWorkspaceGeometry.documentWidth <= labelWorkspaceGeometry.viewportWidth + 1 &&
-        labelWorkspaceGeometry.bottomInternalScroll &&
         labelWorkspaceGeometry.statusbarCount === 1,
       `Label-sheet workspace did not stay within the desktop viewport: ${JSON.stringify(labelWorkspaceGeometry)}`,
       failures
@@ -2713,18 +2909,59 @@ SLIDE-TWO-CONTENT`);
       duplex.checked = true;
       duplex.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    await page.click('[data-label-workspace-tool="project"]');
-    await page.click("#labelSheetWorkspaceSampleBtn");
+    await page.click("#labelSheetWorkspaceSettingsBtn");
+    await page.click("#labelSheetIntentSampleBtn");
+    await page.click("#labelSheetWorkspaceSettingsDrawer [data-label-workspace-drawer-close]");
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     await page.click('[data-label-bottom-tab="data"]');
     await page.waitForFunction(() => {
       const table = document.querySelector("#labelSheetRecordTable");
       return table && getComputedStyle(table).display !== "none" && table.getClientRects().length > 0;
     });
+    const labelDataGeometry = await page.evaluate(() => {
+      const drawer = document.querySelector("#labelSheetWorkspaceDataDrawer");
+      const panel = drawer?.querySelector(".label-sheet-workspace-drawer-panel");
+      const records = drawer?.querySelector(".label-sheet-workspace-data-records");
+      const editor = drawer?.querySelector(".label-sheet-workspace-data-editor");
+      const drawerBox = drawer?.getBoundingClientRect();
+      const panelBox = panel?.getBoundingClientRect();
+      const recordsBox = records?.getBoundingClientRect();
+      const editorBox = editor?.getBoundingClientRect();
+      return {
+        panelWidth: panelBox?.width || 0,
+        panelCenterDelta: panelBox && drawerBox ? Math.abs((panelBox.left + panelBox.width / 2) - (drawerBox.left + drawerBox.width / 2)) : 999,
+        recordsWidth: recordsBox?.width || 0,
+        editorWidth: editorBox?.width || 0,
+        separatedColumns: Boolean(recordsBox && editorBox && recordsBox.right <= editorBox.left + 1),
+      };
+    });
+    record(
+      labelDataGeometry.panelWidth >= 1200 &&
+        labelDataGeometry.panelCenterDelta <= 3 &&
+        labelDataGeometry.recordsWidth >= 280 &&
+        labelDataGeometry.editorWidth > labelDataGeometry.recordsWidth &&
+        labelDataGeometry.separatedColumns,
+      `Label-sheet desktop data editor did not use the wide two-pane workspace: ${JSON.stringify(labelDataGeometry)}`,
+      failures
+    );
     record((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) === 8, "Label-sheet workspace record navigator did not mirror the imported rows", failures);
     record(await page.locator("#labelSheetWorkspaceEmpty").isHidden(), "Label-sheet workspace kept the empty state over populated data", failures);
+    await page.click("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]");
     await openLabelDetail();
+    const labelDetailGeometry = await page.evaluate(() => {
+      const drawer = document.querySelector("#labelSheetWorkspaceDetailDrawer");
+      const grid = drawer?.querySelector(".label-sheet-workspace-detail-grid");
+      const advanced = drawer?.querySelector(".label-sheet-workspace-advanced-detail");
+      const gridBox = grid?.getBoundingClientRect();
+      const advancedBox = advanced?.getBoundingClientRect();
+      return {
+        panelWidth: drawer?.querySelector(".label-sheet-workspace-drawer-panel")?.getBoundingClientRect().width || 0,
+        advancedWidthRatio: gridBox && advancedBox && gridBox.width ? advancedBox.width / gridBox.width : 0,
+      };
+    });
+    record(labelDetailGeometry.panelWidth >= 1000 && labelDetailGeometry.advancedWidthRatio >= 0.95, `Label-sheet advanced detail settings did not span the desktop modal width: ${JSON.stringify(labelDetailGeometry)}`, failures);
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     const labelSample = await page.evaluate(() => {
       const project = window.PromptDeckLabelSheet.getProject();
@@ -2876,9 +3113,11 @@ SLIDE-TWO-CONTENT`);
     await page.locator("#labelSheetQrTemplate").fill("https://example.kr/pass/{id}");
     await selectLabelGoal("prompt");
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()) && await page.locator("#labelSheetQrSource").isHidden(), "Label-sheet prompt mode did not separate QR-space controls from actual QR data", failures);
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     record(await page.locator("#labelSheetRecordTable").isVisible(), "Label-sheet prompt mode hid the shared data review and direct-edit table", failures);
     await page.locator('#labelSheetRecordTableBody input[data-record-field="front.title"]').first().fill("프롬프트 데이터 직접 반영");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.front?.title === "프롬프트 데이터 직접 반영");
+    await page.click("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]");
     await generateLabelPrompt();
     record((await page.locator("#labelSheetPromptPageSelect option").count()) === 2, "Label-sheet duplex sample did not expose separate front/back prompt pages", failures);
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
@@ -2890,6 +3129,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#labelSheetPromptItemPreview").inputValue()).includes("프롬프트 데이터 직접 반영"), "Label-sheet individual prompt view did not retain the shared table's visible copy", failures);
     await page.click("#labelSheetPromptPageViewTab");
     await closeLabelReview();
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     await page.locator("#labelSheetSkippedSlots").fill("2,4");
     await page.selectOption("#labelSheetSequenceMode", "sequence");
     await page.locator("#labelSheetStartNumber").fill("1");
@@ -2898,6 +3138,7 @@ SLIDE-TWO-CONTENT`);
     await page.locator("#labelSheetPadding").fill("3");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records.length === 10);
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.number === "PASS-001");
+    await page.click("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]");
     await generateLabelPrompt();
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPromptPageSelect option").length === 4);
     const multiSheetPromptPages = await page.evaluate(() => window.PromptDeckLabelSheet.getPromptPages().map((promptPage) => ({
@@ -2958,10 +3199,12 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => document.querySelector("#labelSheetPreviewBackBtn")?.classList.contains("active"));
     record((await page.locator("#labelSheetPromptPreview").inputValue()).includes("SHEET 2 BACK"), "Label-sheet back prompt page did not synchronize with the back preview", failures);
     await closeLabelReview();
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     await page.locator("#labelSheetSkippedSlots").fill("");
     await page.locator("#labelSheetEndNumber").fill("8");
     await page.click("#labelSheetApplySequenceBtn");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records.length === 8);
+    await page.click("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]");
     await generateLabelPrompt();
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPromptPageSelect option").length === 2);
     await page.selectOption("#labelSheetPromptPageSelect", "0");
@@ -3030,7 +3273,9 @@ SLIDE-TWO-CONTENT`);
     await openLabelDetail();
     await page.check("#labelSheetQrEnabled");
     await closeLabelDetail();
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     await page.selectOption("#labelSheetSequenceMode", "sequence");
+    await page.click("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]");
     await page.evaluate(() => {
       const orientation = document.querySelector("#labelSheetContentOrientation");
       const align = document.querySelector("#labelSheetTextAlign");
@@ -3075,7 +3320,9 @@ SLIDE-TWO-CONTENT`);
     });
     record(labelLayerProbe.outside === 0 && labelLayerProbe.opaque > 100, `Label-sheet transparent QR overlay was not rendered correctly: ${JSON.stringify(labelLayerProbe)}`, failures);
     await selectLabelGoal("prompt");
-    await page.click('[data-label-workspace-tool="assets"]');
+    await page.click('[data-label-workspace-menu-trigger="edit"]');
+    await page.click("#labelSheetWorkspaceAssetsMenu");
+    await page.waitForSelector("#labelSheetWorkspaceAssetsDrawer:not([hidden])");
     await page.click("#labelSheetOpenDnaGalleryBtn");
     await page.locator("#labelSheetDnaSearch").fill("미니멀 리포트");
     await page.waitForSelector('[data-label-sheet-dna-style-id="minimal-report"]');
@@ -3083,7 +3330,11 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().settings.visualStyleSnapshot?.id === "minimal-report");
     record((await page.locator("#labelSheetStyleStatus").textContent()).includes("미니멀"), "Label-sheet did not apply the shared visual-style contract", failures);
     await page.click('#labelSheetDnaDialog [data-label-sheet-dna-dialog-close]');
+    await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceAssetsDrawer")?.dataset.open === "true");
     await selectLabelGoal("print");
+    await page.click('[data-label-workspace-menu-trigger="edit"]');
+    await page.click("#labelSheetWorkspaceAssetsMenu");
+    await page.waitForSelector("#labelSheetWorkspaceAssetsDrawer:not([hidden])");
     await page.evaluate(async () => {
       const canvas = document.createElement("canvas");
       canvas.width = 1600;
@@ -3139,6 +3390,7 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => document.querySelector("#labelSheetAssetStatus")?.textContent.includes("배경 8건"), null, { timeout: 60_000 });
     record(await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.every((record) => Boolean(record.front?.backgroundAssetId))), "Label-sheet assignment status completed without retaining every front background ID", failures);
     record((await page.locator("#labelSheetAssetStatus").textContent()).includes("배경 8건"), "Label-sheet uploaded background was not assigned across the sample records", failures);
+    await page.click("#labelSheetWorkspaceAssetsDrawer [data-label-workspace-drawer-close]");
     await page.click("#labelSheetPreviewBackBtn");
     await page.waitForFunction(() => document.querySelector("#labelSheetPreviewSurface canvas")?.getAttribute("aria-label")?.includes("뒷면"));
     record((await page.locator("#labelSheetDuplexStepState").textContent()).includes("양면"), "Label-sheet back preview did not keep the duplex state", failures);
@@ -3171,6 +3423,7 @@ SLIDE-TWO-CONTENT`);
       return { records: parsed.project.records.length, assets: parsed.assets.length, schema: parsed.manifest.schema };
     });
     record(labelPackageProbe.records === 9 && labelPackageProbe.assets >= 1 && labelPackageProbe.schema === "promptdeck-label-sheet-package/1.0", `Label-sheet project ZIP round-trip failed: ${JSON.stringify(labelPackageProbe)}`, failures);
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     await page.click("#labelSheetDataPasteTab");
     await page.locator("#labelSheetPasteInput").fill([
       "label_id\tnumber\tfront_title\tname\tback_title",
@@ -3252,14 +3505,21 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => !window.PromptDeckLabelSheet.runPreflight().fatal);
     record(await page.locator("#labelSheetExportPngBtn").isEnabled(), "Label-sheet PNG export stayed disabled after valid pasted data", failures);
 
+    await page.click("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]");
     await openLabelDetail();
     await page.check("#labelSheetQrEnabled");
     await page.selectOption("#labelSheetQrPosition", "center");
     await page.selectOption("#labelSheetQrSize", "40");
     await page.selectOption("#labelSheetQrLayoutMode", "adaptive");
     await closeLabelDetail();
-    await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').first().fill("https://example.kr/meal/MEAL-001");
-    await page.locator('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]').nth(1).fill("https://example.kr/meal/MEAL-002");
+    await page.evaluate(() => {
+      const inputs = document.querySelectorAll('#labelSheetRecordTableBody input[data-record-field="front.qrValue"]');
+      ["https://example.kr/meal/MEAL-001", "https://example.kr/meal/MEAL-002"].forEach((value, index) => {
+        inputs[index].value = value;
+        inputs[index].dispatchEvent(new Event("input", { bubbles: true }));
+        inputs[index].dispatchEvent(new Event("change", { bubbles: true }));
+      });
+    });
     await page.waitForFunction(() => {
       const records = window.PromptDeckLabelSheet.getProject().records;
       return records[0]?.front?.qrValue === "https://example.kr/meal/MEAL-001" && records[1]?.front?.qrValue === "https://example.kr/meal/MEAL-002";
@@ -3289,9 +3549,9 @@ SLIDE-TWO-CONTENT`);
     });
     record(
       Boolean(labelStickyPreviewGeometry) &&
-        labelStickyPreviewGeometry.frameScrollsInternally &&
-        Math.abs(labelStickyPreviewGeometry.actualRatio - labelStickyPreviewGeometry.expectedRatio) <= 0.002,
-      `Label-sheet A4 preview did not preserve ratio with internal canvas scrolling: ${JSON.stringify(labelStickyPreviewGeometry)}`,
+        Math.abs(labelStickyPreviewGeometry.actualRatio - labelStickyPreviewGeometry.expectedRatio) <= 0.002 &&
+        Object.values(labelStickyPreviewGeometry.clipping).every((value) => value <= 1),
+      `Label-sheet A4 preview did not preserve ratio inside the two-panel canvas: ${JSON.stringify(labelStickyPreviewGeometry)}`,
       failures
     );
     await page.click('[data-label-canvas-view="ticket"]');
@@ -3404,8 +3664,15 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetWorkspaceDetailDrawer [data-label-workspace-drawer-close]");
     await page.waitForSelector("#labelSheetWorkspaceDetailDrawer", { state: "hidden" });
     const firstRecordSelection = page.locator('#labelSheetRecordTableBody input[data-record-select="true"]').first();
-    await firstRecordSelection.check();
-    await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').first().fill("MEAL-RENAMED");
+    await page.evaluate(() => {
+      const selected = document.querySelector('#labelSheetRecordTableBody input[data-record-select="true"]');
+      selected.checked = true;
+      selected.dispatchEvent(new Event("change", { bubbles: true }));
+      const id = document.querySelector('#labelSheetRecordTableBody input[data-record-field="id"]');
+      id.value = "MEAL-RENAMED";
+      id.dispatchEvent(new Event("input", { bubbles: true }));
+      id.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.waitForFunction(() => {
       const project = window.PromptDeckLabelSheet.getProject();
       return project.records[0]?.id === "MEAL-RENAMED" &&
@@ -3446,7 +3713,12 @@ SLIDE-TWO-CONTENT`);
     );
     await page.click("#labelSheetFocusPrev");
 
-    await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').nth(1).fill("MEAL-RENAMED");
+    await page.evaluate(() => {
+      const id = document.querySelectorAll('#labelSheetRecordTableBody input[data-record-field="id"]')[1];
+      id.value = "MEAL-RENAMED";
+      id.dispatchEvent(new Event("input", { bubbles: true }));
+      id.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-RENAMED");
     await page.click("#labelSheetFocusNext");
     await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim().startsWith("2 /"));
@@ -3456,7 +3728,12 @@ SLIDE-TWO-CONTENT`);
     await closeLabelDetail();
     const duplicateIdEdit = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.map((record) => record.front?.title));
     record(duplicateIdEdit[0] === "수정 식권" && duplicateIdEdit[1] === "두 번째 식권만 수정", `Label-sheet selected placement edited the wrong duplicate-ID row: ${JSON.stringify(duplicateIdEdit)}`, failures);
-    await page.locator('#labelSheetRecordTableBody input[data-record-field="id"]').nth(1).fill("MEAL-002");
+    await page.evaluate(() => {
+      const id = document.querySelectorAll('#labelSheetRecordTableBody input[data-record-field="id"]')[1];
+      id.value = "MEAL-002";
+      id.dispatchEvent(new Event("input", { bubbles: true }));
+      id.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[1]?.id === "MEAL-002");
     await page.click("#labelSheetFocusPrev");
     await page.waitForFunction(() => document.querySelector("#labelSheetFocusPosition")?.textContent.trim().startsWith("1 /"));
@@ -3499,16 +3776,29 @@ SLIDE-TWO-CONTENT`);
     const labelMobileLayout = await page.evaluate(() => {
       const pane = document.querySelector("#paneLabelSheet");
       const action = document.querySelector("#mobileTabActions");
+      const topbar = pane?.querySelector(".label-sheet-workspace-topbar");
+      const toolButton = pane?.querySelector("#labelSheetWorkspaceToolsBtn");
+      const toolPanel = pane?.querySelector("#labelSheetWorkspaceToolPanel");
+      const left = pane?.querySelector(".label-sheet-workspace-left");
       const paneBox = pane?.getBoundingClientRect();
       const actionBox = action?.getBoundingClientRect();
+      const visibleTopbarButtons = Array.from(topbar?.querySelectorAll("button") || [])
+        .filter((control) => control.getClientRects().length && getComputedStyle(control).visibility !== "hidden");
       return {
         documentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1,
         headerDisplay: getComputedStyle(document.querySelector(".app-header")).display,
         paneBottom: paneBox?.bottom || 0,
         actionTop: actionBox?.top || window.innerHeight,
-        bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
         toolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
-        toolPanelVisibility: getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility,
+        leftPanelCount: pane?.querySelectorAll(".label-sheet-workspace-left").length || 0,
+        leftPanelDisplay: left ? getComputedStyle(left).display : "missing",
+        toolPanelPresent: Boolean(toolPanel),
+        toolPanelVisibility: toolPanel ? getComputedStyle(toolPanel).visibility : "missing",
+        toolButtonVisible: Boolean(toolButton?.getClientRects().length),
+        smallTopbarButtons: visibleTopbarButtons.filter((control) => {
+          const box = control.getBoundingClientRect();
+          return box.width < 44 || box.height < 44;
+        }).map((control) => control.id || control.textContent?.trim()),
       };
     });
     record(Boolean(labelMobileBox && labelMobileBox.x >= 0 && labelMobileBox.x + labelMobileBox.width <= 390), "Label-sheet workflow overflowed the mobile viewport", failures);
@@ -3517,20 +3807,112 @@ SLIDE-TWO-CONTENT`);
       !labelMobileLayout.documentOverflow
         && labelMobileLayout.headerDisplay === "none"
         && labelMobileLayout.paneBottom <= labelMobileLayout.actionTop + 1
-        && labelMobileLayout.bottomCollapsed
         && labelMobileLayout.toolbarDisplay === "none"
-        && labelMobileLayout.toolPanelVisibility === "hidden",
+        && labelMobileLayout.leftPanelCount === 1
+        && labelMobileLayout.leftPanelDisplay === "none"
+        && labelMobileLayout.toolPanelPresent
+        && labelMobileLayout.toolPanelVisibility === "hidden"
+        && labelMobileLayout.toolButtonVisible
+        && labelMobileLayout.smallTopbarButtons.length === 0,
       `Label-sheet mobile viewport still overlapped or wasted canvas space: ${JSON.stringify(labelMobileLayout)}`,
       failures
     );
-    record(await page.locator("#labelSheetWorkspaceSettingsBtn").isVisible() && await page.locator("#labelSheetWorkspaceInspectorBtn").isVisible(), "Label-sheet mobile workspace hid settings or property access", failures);
+    record(
+      await page.locator("#labelSheetWorkspaceDataModeBtn").isVisible()
+        && await page.locator("#labelSheetWorkspaceInspectorBtn").isVisible()
+        && await page.locator("#labelSheetWorkspaceToolsBtn").isVisible(),
+      "Label-sheet mobile workspace hid data, property, or project access",
+      failures
+    );
     await page.click("#labelSheetWorkspaceToolsBtn");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open"));
+    await page.click('[data-label-workspace-mobile-tool="project"]');
+    const labelMobileToolPanel = await page.evaluate(() => {
+      const pane = document.querySelector("#paneLabelSheet");
+      const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
+      const panelBox = panel?.getBoundingClientRect();
+      const activePanels = Array.from(panel?.querySelectorAll("[data-label-workspace-panel]") || [])
+        .filter((element) => !element.hidden && getComputedStyle(element).display !== "none");
+      const visibleControls = Array.from(panel?.querySelectorAll("button, a, input, select, textarea") || [])
+        .filter((control) => {
+          const box = control.getBoundingClientRect();
+          const style = getComputedStyle(control);
+          return box.width > 0 && box.height > 0 && style.display !== "none" && style.visibility !== "hidden";
+        });
+      return {
+        expanded: document.querySelector("#labelSheetWorkspaceToolsBtn")?.getAttribute("aria-expanded"),
+        visibility: panel ? getComputedStyle(panel).visibility : "missing",
+        width: panelBox?.width || 0,
+        viewportWidth: window.innerWidth,
+        activePanels: activePanels.map((element) => element.dataset.labelWorkspacePanel),
+        selectedTool: panel?.querySelector('[data-label-workspace-mobile-tool][aria-selected="true"]')?.dataset.labelWorkspaceMobileTool,
+        smallControls: visibleControls.filter((control) => {
+          const box = control.getBoundingClientRect();
+          return box.width < 44 || box.height < 44;
+        }).map((control) => control.id || control.textContent?.trim()),
+        documentOverflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        paneOpen: pane?.classList.contains("is-mobile-tool-panel-open"),
+      };
+    });
+    record(
+      labelMobileToolPanel.expanded === "true"
+        && labelMobileToolPanel.paneOpen
+        && labelMobileToolPanel.visibility === "visible"
+        && labelMobileToolPanel.width >= 320
+        && labelMobileToolPanel.width <= labelMobileToolPanel.viewportWidth + 1
+        && labelMobileToolPanel.activePanels.length === 1
+        && labelMobileToolPanel.activePanels[0] === "project"
+        && labelMobileToolPanel.selectedTool === "project"
+        && labelMobileToolPanel.smallControls.length === 0
+        && !labelMobileToolPanel.documentOverflowX,
+      `Label-sheet mobile project menu was not a clear touch-first entry point: ${JSON.stringify(labelMobileToolPanel)}`,
+      failures
+    );
+    await page.click("#labelSheetWorkspaceSetupStartBtnMobile");
+    await page.waitForSelector("#labelSheetWorkspaceSettingsDrawer:not([hidden])");
+    const labelMobileSettings = await page.evaluate(() => {
+      const drawer = document.querySelector("#labelSheetWorkspaceSettingsDrawer");
+      const panel = drawer?.querySelector(".label-sheet-workspace-drawer-panel");
+      const box = panel?.getBoundingClientRect();
+      const smallControls = Array.from(panel?.querySelectorAll("button, a, input, select, textarea") || [])
+        .filter((control) => {
+          const rect = control.getBoundingClientRect();
+          const style = getComputedStyle(control);
+          if (!rect.width || !rect.height || style.display === "none" || style.visibility === "hidden") return false;
+          if (control.matches('input[type="checkbox"], input[type="radio"], input[type="range"]')) return false;
+          return rect.width < 44 || rect.height < 44;
+        }).map((control) => control.id || control.textContent?.trim());
+      return {
+        open: drawer?.dataset.open,
+        width: box?.width || 0,
+        height: box?.height || 0,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+        toolPanelOpen: document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open"),
+        overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        smallControls,
+      };
+    });
+    record(
+      labelMobileSettings.open === "true"
+        && labelMobileSettings.width >= 320
+        && labelMobileSettings.width <= labelMobileSettings.viewportWidth + 1
+        && labelMobileSettings.height <= labelMobileSettings.viewportHeight + 1
+        && !labelMobileSettings.toolPanelOpen
+        && !labelMobileSettings.overflowX
+        && labelMobileSettings.smallControls.length === 0,
+      `Label-sheet mobile output settings did not open as a focused, touch-safe screen: ${JSON.stringify(labelMobileSettings)}`,
+      failures
+    );
+    await page.keyboard.press("Escape");
+    await page.waitForSelector("#labelSheetWorkspaceSettingsDrawer", { state: "hidden" });
+    await page.click("#labelSheetWorkspaceToolsBtn");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open"));
     await page.click('[data-label-workspace-mobile-tool="records"]');
     await page.waitForFunction(() => {
-      const root = document.querySelector("#paneLabelSheet");
-      const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
+      const panel = document.querySelector("#labelSheetWorkspaceDataDrawer .label-sheet-workspace-drawer-panel");
       const box = panel?.getBoundingClientRect();
-      return root?.classList.contains("is-mobile-tool-panel-open")
+      return document.querySelector("#labelSheetWorkspaceDataDrawer")?.dataset.open === "true"
         && getComputedStyle(panel).visibility === "visible"
         && box.left >= 0
         && box.right <= window.innerWidth + 1;
@@ -3545,7 +3927,7 @@ SLIDE-TWO-CONTENT`);
       failures
     );
     await page.keyboard.press("Escape");
-    await page.waitForFunction(() => !document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-tool-panel-open"));
+    await page.waitForSelector("#labelSheetWorkspaceDataDrawer", { state: "hidden" });
     await page.click("#labelSheetWorkspaceInspectorBtn");
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
     const labelMobileInspectorOpen = await page.locator("#labelSheetWorkspaceInspector").evaluate((element) => ({
@@ -3554,8 +3936,24 @@ SLIDE-TWO-CONTENT`);
       display: getComputedStyle(element).display,
       width: element.getBoundingClientRect().width,
       transform: getComputedStyle(element).transform,
+      smallControls: Array.from(element.querySelectorAll("button, a, input, select, textarea"))
+        .filter((control) => {
+          const box = control.getBoundingClientRect();
+          const style = getComputedStyle(control);
+          if (!box.width || !box.height || style.display === "none" || style.visibility === "hidden") return false;
+          if (control.matches('input[type="checkbox"], input[type="radio"], input[type="range"]')) return false;
+          return box.width < 44 || box.height < 44;
+        }).map((control) => control.id || control.textContent?.trim()),
     }));
-    record(labelMobileInspectorOpen.expanded === "true" && labelMobileInspectorOpen.visibility === "visible" && labelMobileInspectorOpen.display !== "none" && labelMobileInspectorOpen.width >= 280, `Label-sheet mobile property drawer did not open: ${JSON.stringify(labelMobileInspectorOpen)}`, failures);
+    record(
+      labelMobileInspectorOpen.expanded === "true"
+        && labelMobileInspectorOpen.visibility === "visible"
+        && labelMobileInspectorOpen.display !== "none"
+        && labelMobileInspectorOpen.width >= 280
+        && labelMobileInspectorOpen.smallControls.length === 0,
+      `Label-sheet mobile property drawer did not open with touch-safe controls: ${JSON.stringify(labelMobileInspectorOpen)}`,
+      failures
+    );
     await page.keyboard.press("Escape");
     await page.waitForFunction(() => !document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
     await page.waitForFunction(() => getComputedStyle(document.querySelector("#labelSheetWorkspaceInspector")).visibility === "hidden");
@@ -3598,7 +3996,6 @@ SLIDE-TWO-CONTENT`);
         viewportHeight: window.innerHeight,
         headerDisplay: getComputedStyle(document.querySelector(".app-header")).display,
         inspectorAccess: getComputedStyle(document.querySelector("#labelSheetWorkspaceInspectorBtn")).display,
-        bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
         canvasWidth: canvas?.width || 0,
       };
     });
@@ -3606,7 +4003,6 @@ SLIDE-TWO-CONTENT`);
       labelLandscapeLayout.documentHeight <= labelLandscapeLayout.viewportHeight + 1
         && labelLandscapeLayout.headerDisplay === "none"
         && labelLandscapeLayout.inspectorAccess !== "none"
-        && labelLandscapeLayout.bottomCollapsed
         && labelLandscapeLayout.canvasWidth >= 700,
       `Label-sheet compact landscape viewport overflowed: ${JSON.stringify(labelLandscapeLayout)}`,
       failures
@@ -3813,7 +4209,7 @@ SLIDE-TWO-CONTENT`);
     const qrBatchBridgeValues = await page.evaluate(() => window.PromptDeckLabelSheet.getProject().records.slice(-2).map((record) => record.front?.qrValue));
     record(qrBatchBridgeValues[0] === "https://example.com" && qrBatchBridgeValues[1] === "https://openai.com", `QR batch-to-label bridge lost row payloads: ${JSON.stringify(qrBatchBridgeValues)}`, failures);
     record(await page.locator("#qrBatchModal").isHidden(), "QR batch modal did not close after sending records to the label studio", failures);
-    await page.click('[data-label-bottom-tab="data"]');
+    await page.click("#labelSheetWorkspaceDataModeBtn");
     await page.waitForFunction(() => document.querySelector("#labelSheetRecordTable")?.getClientRects().length > 0);
     await openLabelDetail();
     await page.selectOption("#labelSheetQrAssignScope", "selected");

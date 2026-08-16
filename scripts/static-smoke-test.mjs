@@ -134,26 +134,34 @@ async function verifyViewport(label, viewport) {
   if (labelTabVisible) {
     await page.locator("#tabBtnLabelSheet").click();
     await expectOnlyPane("paneLabelSheet", "라벨·티켓 전환");
-    if ((await page.locator("#paneLabelSheet.label-sheet-workspace-v4[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V4 작업공간이 초기화되지 않았습니다.`);
-    if ((await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-frame + .label-sheet-workspace-bottom").count()) !== 1) failures.push(`${label}: 프로젝트 바·캔버스·데이터 시트 순서가 깨졌습니다.`);
+    if ((await page.locator("#paneLabelSheet.label-sheet-workspace-v7[data-label-workspace-layout-ready='true'] .label-sheet-workspace-frame").count()) !== 1) failures.push(`${label}: 라벨·티켓 V7 작업공간이 초기화되지 않았습니다.`);
+    if (
+      (await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-entry + .label-sheet-workspace-frame").count()) !== 1
+      || (await page.locator("#labelSheetWorkspaceDataDrawer .label-sheet-workspace-bottom").count()) !== 1
+    ) failures.push(`${label}: 프로젝트 진입점·캔버스·데이터 작업 화면 구조가 깨졌습니다.`);
     if ((await page.locator("#paneLabelSheet [data-label-workspace-menu-trigger]").count()) !== 4 || (await page.locator("#labelSheetWorkspaceDetailDrawer").count()) !== 1) failures.push(`${label}: 맞춤형 메뉴 또는 세부 편집 모달이 누락되었습니다.`);
-    if ((await page.locator("[data-label-workspace-history-command]").count()) !== 4 || (await page.locator("[data-label-workspace-preset]").count()) !== 3) failures.push(`${label}: 데스크톱 편집 기록 또는 작업공간 프리셋이 누락되었습니다.`);
+    if (
+      (await page.locator("[data-label-workspace-history-command]").count()) !== 4
+      || (await page.locator("#labelSheetWorkspaceToolsBtn").count()) !== 1
+      || (await page.locator(".label-sheet-workspace-mode-button").count()) !== 2
+    ) failures.push(`${label}: 편집 기록, 작업 메뉴 또는 레이아웃·데이터 모드가 누락되었습니다.`);
     if ((await page.locator(".label-sheet-workspace-context-toolbar [data-label-sheet-nudge]").count()) !== 0 || (await page.locator("#labelSheetWorkspaceDetailDrawer .label-sheet-workspace-precision-tools [data-label-sheet-nudge]").count()) !== 4) failures.push(`${label}: 저빈도 정밀 도구가 핵심 캔버스에서 상세 편집으로 이동하지 않았습니다.`);
     if ((await page.locator("#labelSheetWorkspaceContextTargetPicker").count()) !== 1 || (await page.locator(".label-sheet-workspace-context-actions > button").count()) !== 3) failures.push(`${label}: 선택 항목 맞춤형 빠른 도구가 단순화되지 않았습니다.`);
-    await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").click();
-    if (!(await page.locator('#labelSheetWorkspaceContextTargetPicker [data-label-sheet-focus-target="body"]').isVisible())) failures.push(`${label}: 편집 항목 선택 메뉴가 열리지 않았습니다.`);
-    await page.keyboard.press("Escape");
-    await page.waitForFunction(() => !document.querySelector("#labelSheetWorkspaceContextTargetPicker")?.open);
+    if (await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").isVisible()) {
+      await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").click();
+      if (!(await page.locator('#labelSheetWorkspaceContextTargetPicker [data-label-sheet-focus-target="body"]').isVisible())) failures.push(`${label}: 편집 항목 선택 메뉴가 열리지 않았습니다.`);
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(() => !document.querySelector("#labelSheetWorkspaceContextTargetPicker")?.open);
+    }
     if ((await page.locator("#labelSheetWorkspaceRecoveryMenu").count()) !== 1 || (await page.locator("#labelSheetWorkspaceUndoToast").count()) !== 1) failures.push(`${label}: 자동 저장 복구 또는 실행 취소 안내가 누락되었습니다.`);
     await page.keyboard.press("Control+K");
     await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
-    await page.locator("#labelSheetWorkspaceCommandSearch").fill("집중");
-    if ((await page.locator(".label-sheet-workspace-command-item").count()) !== 1 || !(await page.locator(".label-sheet-workspace-command-item").innerText()).includes("집중 작업공간")) failures.push(`${label}: 명령 팔레트가 작업 목적을 검색하지 못했습니다.`);
-    await page.locator(".label-sheet-workspace-command-item").click();
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.workspacePreset === "focus");
-    if (viewport.width > 860 && (await visible("#labelSheetWorkspaceInspector"))) failures.push(`${label}: 집중 작업공간에서 속성 패널이 남아 있습니다.`);
+    await page.locator("#labelSheetWorkspaceCommandSearch").fill("프로젝트 설정");
+    if ((await page.locator(".label-sheet-workspace-command-item").count()) !== 1 || !(await page.locator(".label-sheet-workspace-command-item").innerText()).includes("프로젝트 설정 열기")) failures.push(`${label}: 명령 팔레트가 작업 목적을 검색하지 못했습니다.`);
+    await page.keyboard.press("Escape");
+    await page.waitForSelector("#labelSheetWorkspaceCommandPalette", { state: "hidden" });
     await page.keyboard.press("Alt+1");
-    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.workspacePreset === "design");
+    await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.workMode === "layout");
     if (viewport.width > 860) {
       await page.emulateMedia({ media: "print" });
       await page.waitForTimeout(60);
@@ -198,12 +206,16 @@ async function verifyViewport(label, viewport) {
     await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.dataset.outputGoal === "prompt");
     if ((await page.locator("#labelSheetWorkspaceRecordList .label-sheet-workspace-record").count()) !== 8) failures.push(`${label}: 레코드 탐색기가 데이터 8건을 반영하지 못했습니다.`);
     if (viewport.width > 860) {
+      await page.locator("#labelSheetWorkspaceDataModeBtn").click();
+      await page.waitForSelector("#labelSheetWorkspaceDataDrawer:not([hidden])");
       await page.locator('[data-label-bottom-tab="data"]').click();
       await page.waitForFunction(() => {
         const pane = document.querySelector("#paneLabelSheet");
         const panel = document.querySelector('[data-label-bottom-panel="data"]');
         return !pane?.classList.contains("is-bottom-collapsed") && panel && !panel.hidden;
       });
+      await page.locator("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]").first().click();
+      await page.waitForSelector("#labelSheetWorkspaceDataDrawer", { state: "hidden" });
     }
     if (viewport.width <= 720) await page.locator("#labelSheetWorkspaceInspectorBtn").click();
     await page.locator("#labelSheetWorkspaceDetailBtn").click();
@@ -214,7 +226,7 @@ async function verifyViewport(label, viewport) {
     if (!(await page.evaluate(() => typeof window.QRGeneratorCore?.getCurrentValue === "function"))) failures.push(`${label}: QR 생성기의 현재 값을 라벨에 전달하는 연결이 누락되었습니다.`);
     if (
       (await page.locator("#labelSheetRecordTable thead th").count()) !== 18
-      || (viewport.width > 860 && !(await visible("#labelSheetRecordTable")))
+      || !(await visible("#labelSheetWorkspaceDataModeBtn"))
     ) failures.push(`${label}: 프롬프트 모드의 원본 데이터 검토·직접 편집 표가 누락되었습니다.`);
     if (await visible("#labelSheetQrAssignBtn") || await visible("#labelSheetQrUseCurrentBtn")) failures.push(`${label}: 프롬프트 설계에 실제 QR 값 배정 기능이 노출됩니다.`);
     if (!(await visible("#labelSheetQrResolvedPreview"))) failures.push(`${label}: 프롬프트 설계의 QR 예약 상태 확인이 숨겨졌습니다.`);
@@ -283,6 +295,8 @@ async function verifyCompactLabelViewport(label, viewport) {
     const pane = document.querySelector("#paneLabelSheet");
     const paneBox = pane?.getBoundingClientRect();
     const canvasBox = document.querySelector(".label-sheet-workspace-canvas-column")?.getBoundingClientRect();
+    const entry = document.querySelector("#labelSheetWorkspaceEntry");
+    const entryBox = entry?.getBoundingClientRect();
     const mobileAction = document.querySelector("#mobileTabActions");
     const mobileActionStyle = mobileAction ? getComputedStyle(mobileAction) : null;
     const mobileActionBox = mobileAction?.getBoundingClientRect();
@@ -293,6 +307,10 @@ async function verifyCompactLabelViewport(label, viewport) {
       paneBottom: paneBox?.bottom || 0,
       actionTop: mobileActionStyle?.display === "none" ? window.innerHeight : mobileActionBox?.top || window.innerHeight,
       canvasWidth: canvasBox?.width || 0,
+      entryVisible: Boolean(entry && !entry.hidden && entryBox?.width),
+      entryWidth: entryBox?.width || 0,
+      setupButtonHeight: document.querySelector("#labelSheetWorkspaceSetupStartBtn")?.getBoundingClientRect().height || 0,
+      sampleButtonHeight: document.querySelector("#labelSheetWorkspaceSampleBtn")?.getBoundingClientRect().height || 0,
       bottomCollapsed: pane?.classList.contains("is-bottom-collapsed"),
       toolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
       toolPanelVisibility: getComputedStyle(document.querySelector("#labelSheetWorkspaceToolPanel")).visibility,
@@ -310,7 +328,9 @@ async function verifyCompactLabelViewport(label, viewport) {
     layout.documentHeight > layout.viewportHeight + 1
     || layout.headerDisplay !== "none"
     || layout.paneBottom > layout.actionTop + 1
-    || layout.canvasWidth < viewport.width - 75
+    || (layout.entryVisible
+      ? layout.entryWidth < viewport.width - 32 || layout.setupButtonHeight < 44 || layout.sampleButtonHeight < 44
+      : layout.canvasWidth < viewport.width - 75 || layout.inspectorButtonHeight < 44)
     || !layout.bottomCollapsed
     || layout.toolbarDisplay !== "none"
     || layout.toolPanelVisibility !== "hidden"
@@ -319,14 +339,13 @@ async function verifyCompactLabelViewport(label, viewport) {
     || layout.inspectorAccess === "none"
     || layout.inspectorAriaHidden !== "true"
     || !layout.inspectorInert
-    || layout.inspectorButtonHeight < 44
     || layout.toolsButtonHeight < 44
     || layout.tabsBarDisplay !== "none"
   ) {
     failures.push(`${label}: 라벨·티켓 컴팩트 작업공간 배치가 깨졌습니다. ${JSON.stringify(layout)}`);
   }
   await page.locator("#labelSheetWorkspaceToolsBtn").click();
-  await page.locator('[data-label-workspace-mobile-tool="records"]').click();
+  await page.locator('[data-label-workspace-mobile-tool="project"]').click();
   await page.waitForFunction(() => {
     const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
     const box = panel?.getBoundingClientRect();
@@ -350,6 +369,9 @@ async function verifyCompactLabelViewport(label, viewport) {
   if (!(await page.evaluate(() => document.querySelector("#labelSheetWorkspaceToolPanel")?.contains(document.activeElement)))) {
     failures.push(`${label}: 도구 패널의 키보드 초점이 화면 뒤로 이탈했습니다.`);
   }
+  await page.locator("#labelSheetWorkspaceSampleBtnMobile").click();
+  await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length >= 1);
+  await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceEntry")?.hidden === true);
   await page.locator("#labelSheetWorkspaceToolPanelClose").click();
   await page.waitForFunction(() => {
     const panel = document.querySelector("#labelSheetWorkspaceToolPanel");
@@ -380,12 +402,14 @@ async function verifyCompactLabelViewport(label, viewport) {
   await page.locator('[data-label-workspace-mobile-tool="records"]').click();
   await page.waitForFunction(() => {
     const pane = document.querySelector("#paneLabelSheet");
-    return pane?.classList.contains("is-mobile-tool-panel-open")
+    const drawer = document.querySelector("#labelSheetWorkspaceDataDrawer");
+    return drawer?.dataset.open === "true"
+      && !pane?.classList.contains("is-mobile-tool-panel-open")
       && !pane.classList.contains("is-mobile-inspector-open")
       && document.querySelector("#labelSheetWorkspaceInspector")?.inert;
   });
-  await page.locator("#labelSheetWorkspaceToolPanelClose").click();
-  await page.waitForFunction(() => document.querySelector("#labelSheetWorkspaceToolPanel")?.inert);
+  await page.locator("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]").first().click();
+  await page.waitForSelector("#labelSheetWorkspaceDataDrawer", { state: "hidden" });
   await page.locator("#labelSheetWorkspaceInspectorBtn").click();
   await page.waitForFunction(() => document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
   await page.locator("#labelSheetWorkspaceInspector .label-sheet-workspace-mobile-inspector-close").click();

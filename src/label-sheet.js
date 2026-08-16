@@ -11,6 +11,8 @@
   const PREVIEW_DPI = 72;
   const FOCUS_PREVIEW_DPI = 144;
   const GENERATION_DELAY_MS = 3500;
+  const WYSIWYG_TEXT_LINE_HEIGHT = 1.25;
+  const WYSIWYG_AUTO_HEIGHT_MIN_PERCENT = 7;
   const ENGINE = window.PromptDeckLabelSheetEngine;
   const PRESETS = window.PromptDeckLabelSheetPresets;
   const ASSETS = window.PromptDeckLabelSheetAssets;
@@ -90,6 +92,8 @@
   let trackedAssetReferences = new Map();
   let previewAbortController = null;
   let focusPreviewAbortController = null;
+  let focusOverlayResizeObserver = null;
+  let focusOverlayFinalizeFrame = 0;
   let focusRenderVersion = 0;
   let pendingPageImageFile = null;
   let lastPreparedPrintRange = null;
@@ -1137,7 +1141,15 @@
   function openDnaDialog() {
     const dialog = $("labelSheetDnaDialog");
     if (!dialog || !VISUAL_STYLES) return;
+    const assetsDrawer = $("labelSheetWorkspaceAssetsDrawer");
+    const assetsDrawerWasOpen = assetsDrawer?.dataset.open === "true" || assetsDrawer?.hasAttribute("open");
     dnaStyleBrowser.returnFocus = document.activeElement;
+    if (assetsDrawerWasOpen) {
+      dialog.dataset.restoreWorkspaceAssets = "true";
+      assetsDrawer.querySelector("[data-label-workspace-drawer-close]")?.click();
+    } else {
+      delete dialog.dataset.restoreWorkspaceAssets;
+    }
     dnaStyleBrowser.visible = DNA_STYLE_BATCH_SIZE;
     if (dialog.parentElement !== document.body) document.body.appendChild(dialog);
     dialog.hidden = false;
@@ -1150,12 +1162,18 @@
   function closeDnaDialog() {
     const dialog = $("labelSheetDnaDialog");
     if (!dialog || dialog.hidden) return;
+    const restoreWorkspaceAssets = dialog.dataset.restoreWorkspaceAssets === "true";
+    delete dialog.dataset.restoreWorkspaceAssets;
     dialog.hidden = true;
     document.body.classList.remove("label-sheet-dna-dialog-open", "diagram-style-dialog-open");
     $("labelSheetOpenDnaGalleryBtn")?.setAttribute("aria-expanded", "false");
     const returnFocus = dnaStyleBrowser.returnFocus;
     dnaStyleBrowser.returnFocus = null;
-    if (returnFocus instanceof HTMLElement && returnFocus.isConnected) returnFocus.focus();
+    if (restoreWorkspaceAssets && $("paneLabelSheet")?.classList.contains("active")) {
+      window.setTimeout(() => $("labelSheetWorkspaceAssetsMenu")?.click(), 0);
+    } else if (returnFocus instanceof HTMLElement && returnFocus.isConnected) {
+      returnFocus.focus();
+    }
   }
 
   function updateQrControlState(goalInput = selectedRadioValue("labelSheetOutputGoal", project.settings?.outputGoal)) {
@@ -3539,7 +3557,13 @@
   }
 
   function automaticFieldHeightPercent(config) {
-    return clamp(Number(config?.sizePercent) * Math.min(Number(config?.maxLines) || 1, 3) * 1.22, 7, 34);
+    const sizePercent = Math.max(0, Number(config?.sizePercent) || 0);
+    const lineCount = Math.max(1, Number(config?.maxLines) || 1);
+    // The output renderer uses a 1.25 line-height for custom fields. Keep the
+    // editor's initial collision box large enough for every permitted line;
+    // finalizeWysiwygOverlayVisuals() replaces this estimate with the actual
+    // browser-measured height once the font and width are applied.
+    return clamp(sizePercent * lineCount * WYSIWYG_TEXT_LINE_HEIGHT + 2, WYSIWYG_AUTO_HEIGHT_MIN_PERCENT, 100);
   }
 
   function setFocusToolPanel(panelInput, options = {}) {
@@ -3806,12 +3830,15 @@
     if (!isQr) {
       setControl("labelSheetWysiwygWidth", rounded(config.widthPercent));
       setControl("labelSheetQuickWidth", rounded(config.widthPercent));
-      const effectiveHeight = isContent ? config.heightPercent : (config.heightPercent ?? automaticFieldHeightPercent(config));
-      setControl("labelSheetWysiwygHeight", rounded(effectiveHeight));
-      setControl("labelSheetQuickHeight", rounded(effectiveHeight));
       const renderedField = isText
         ? $("labelSheetFocusSurface")?.querySelector(`.label-sheet-wysiwyg-field.is-active[data-wysiwyg-field="${wysiwygField}"]`)
         : null;
+      const renderedHeight = Number(renderedField?.dataset.displayHeightPercent);
+      const effectiveHeight = isContent
+        ? config.heightPercent
+        : config.heightPercent ?? (Number.isFinite(renderedHeight) ? renderedHeight : automaticFieldHeightPercent(config));
+      setControl("labelSheetWysiwygHeight", rounded(effectiveHeight));
+      setControl("labelSheetQuickHeight", rounded(effectiveHeight));
       const renderedWidth = Number(renderedField?.dataset.displayWidthPercent);
       const autoWrapped = Boolean(renderedField?.classList.contains("is-auto-wrapped") && Number.isFinite(renderedWidth));
       const widthLabel = autoWrapped && Math.abs(renderedWidth - config.widthPercent) >= 0.1
@@ -4473,21 +4500,41 @@
     const overlay = surface?.querySelector(".label-sheet-wysiwyg-overlay.is-focus-editor");
     const contentBox = overlay?.querySelector(".label-sheet-wysiwyg-content");
     if (!overlay || !contentBox) return;
-    const base = Math.max(8, Math.min(contentBox.offsetWidth || 0, contentBox.offsetHeight || 0));
+    const contentWidth = contentBox.offsetWidth || 0;
+    const contentHeightPx = contentBox.offsetHeight || 0;
+    if (contentWidth < 16 || contentHeightPx < 16) return;
+    const base = Math.max(8, Math.min(contentWidth, contentHeightPx));
     const scale = wysiwygOverlayFontScale(placement, sideData);
     const canvas = surface.querySelector("canvas");
     overlay.querySelectorAll(".label-sheet-wysiwyg-field").forEach((field) => {
-      const sizePercent = Number(field.dataset.sizePercent) || 8;
+      const configuredSizePercent = Number(field.dataset.sizePercent) || 8;
+      const sizePercent = field.dataset.placeholder === "true"
+        ? Math.min(configuredSizePercent, 7)
+        : configuredSizePercent;
       field.style.fontSize = `${Math.max(5, base * sizePercent / 100 * scale)}px`;
       field.style.fontWeight = field.dataset.fontWeight || "400";
       if (field.dataset.automaticHeight === "true") {
+        const handles = Array.from(field.querySelectorAll(".label-sheet-wysiwyg-resize-handle"));
+        handles.forEach((handle) => { handle.style.display = "none"; });
         field.style.height = "auto";
-        const measuredHeight = field.getBoundingClientRect().height;
+        const measuredHeight = field.getBoundingClientRect().height + 1;
         const contentHeight = Math.max(1, contentBox.getBoundingClientRect().height);
-        const maximumHeight = Number(field.dataset.automaticHeightMaximum) || 34;
-        const fittedHeight = clamp(measuredHeight / contentHeight * 100, 7, maximumHeight);
+        const yPercent = clamp(Number(field.dataset.displayYPercent) || 0, 0, 100);
+        const maximumHeight = Math.max(0.1, 100 - yPercent);
+        const measuredHeightPercent = measuredHeight / contentHeight * 100;
+        const fittedHeight = clamp(measuredHeightPercent, WYSIWYG_AUTO_HEIGHT_MIN_PERCENT, maximumHeight);
         field.style.height = `${fittedHeight}%`;
         field.dataset.displayHeightPercent = String(fittedHeight);
+        const overflowsAvailableSpace = measuredHeightPercent > maximumHeight + 0.1;
+        field.dataset.textOverflow = String(overflowsAvailableSpace);
+        field.classList.toggle("has-text-overflow", overflowsAvailableSpace);
+        if (overflowsAvailableSpace) field.title = `${field.title} · 출력 영역 높이 초과`;
+        handles.forEach((handle) => { handle.style.removeProperty("display"); });
+        if (field.classList.contains("is-active")) {
+          setControl("labelSheetWysiwygHeight", rounded(fittedHeight));
+          setControl("labelSheetQuickHeight", rounded(fittedHeight));
+          if ($("labelSheetQuickHeightValue")) $("labelSheetQuickHeightValue").textContent = `${rounded(fittedHeight)}%`;
+        }
       }
       if (field.dataset.inheritColor !== "true") return;
       const profile = sampleWysiwygFieldContrast(canvas, field);
@@ -4497,6 +4544,26 @@
       field.style.setProperty("--wysiwyg-preview-color", color);
       field.style.setProperty("--wysiwyg-preview-shadow", `0 0 1px ${outline}, 0 1px 2px ${outline}`);
     });
+  }
+
+  function observeWysiwygOverlaySize(surface, overlay, placement, sideData) {
+    focusOverlayResizeObserver?.disconnect();
+    focusOverlayResizeObserver = null;
+    if (focusOverlayFinalizeFrame) window.cancelAnimationFrame(focusOverlayFinalizeFrame);
+    const contentBox = overlay?.querySelector(".label-sheet-wysiwyg-content");
+    if (!surface || !contentBox) return;
+    const finalize = () => {
+      if (focusOverlayFinalizeFrame) window.cancelAnimationFrame(focusOverlayFinalizeFrame);
+      focusOverlayFinalizeFrame = window.requestAnimationFrame(() => {
+        focusOverlayFinalizeFrame = 0;
+        if (surface.contains(overlay)) finalizeWysiwygOverlayVisuals(surface, placement, sideData);
+      });
+    };
+    if (typeof window.ResizeObserver === "function") {
+      focusOverlayResizeObserver = new ResizeObserver(finalize);
+      focusOverlayResizeObserver.observe(contentBox);
+    }
+    finalize();
   }
 
   function appendWysiwygQrPreview(qrBox, value, placement, sideData) {
@@ -4624,18 +4691,26 @@
         const qrConfig = sideData.qrEnabled && cleanText(sideData.qrValue)
           ? resolvedWysiwygQrLayout(layoutContext)
           : null;
+        const outputText = {
+          number: sideData.number || placement.record?.number || "",
+          title: sideData.title || "",
+          subtitle: sideData.subtitle || "",
+          body: sideData.body || "",
+          footer: sideData.footer || "",
+        };
         const previewText = {
-          number: sideData.number || placement.record?.number || "연번 없음",
-          title: sideData.title || "제목",
-          subtitle: sideData.subtitle || "부제",
-          body: sideData.body || "본문",
-          footer: sideData.footer || "하단 문구",
+          number: outputText.number || "연번 없음",
+          title: outputText.title || "제목",
+          subtitle: outputText.subtitle || "부제",
+          body: outputText.body || "본문",
+          footer: outputText.footer || "하단 문구",
         };
         WYSIWYG_FIELD_KEYS.forEach((fieldName) => {
           const config = normalizeTextFieldLayout(layout[fieldName], fieldName);
           const displayGeometry = overlayFieldGeometry(config, contentConfig, qrConfig, textBox, rect);
           const field = document.createElement("div");
-          field.className = `label-sheet-wysiwyg-field${fieldName === wysiwygField ? " is-active" : ""}${config.visible === false ? " is-hidden-field" : ""}${displayGeometry.autoWrapped ? " is-auto-wrapped" : ""}`;
+          const placeholder = !cleanText(outputText[fieldName]);
+          field.className = `label-sheet-wysiwyg-field${fieldName === wysiwygField ? " is-active" : ""}${config.visible === false ? " is-hidden-field" : ""}${displayGeometry.autoWrapped ? " is-auto-wrapped" : ""}${placeholder ? " is-placeholder" : ""}`;
           field.setAttribute("role", "button");
           field.setAttribute("aria-label", `${WYSIWYG_FIELD_LABELS[fieldName]} 위치 이동`);
           field.title = `${WYSIWYG_FIELD_LABELS[fieldName]} · 끌어서 이동${displayGeometry.autoWrapped ? " · QR을 피해 자동 감싸기" : ""}${config.visible === false ? " · 출력 숨김" : ""}`;
@@ -4646,7 +4721,7 @@
           field.dataset.displayWidthPercent = String(displayGeometry.widthPercent);
           field.dataset.displayHeightPercent = String(displayGeometry.heightPercent);
           field.dataset.automaticHeight = String(config.heightPercent === null);
-          field.dataset.automaticHeightMaximum = String(displayGeometry.heightPercent);
+          field.dataset.placeholder = String(placeholder);
           field.dataset.sizePercent = String(config.sizePercent);
           field.dataset.fontWeight = String(config.weight);
           field.dataset.inheritColor = String(config.color === "inherit");
@@ -4729,9 +4804,7 @@
     if (focusMode) {
       const focusPlacement = page.placements[0];
       const focusSideData = focusPlacement?.record?.[previewSide] || {};
-      window.requestAnimationFrame(() => {
-        if (surface.contains(overlay)) finalizeWysiwygOverlayVisuals(surface, focusPlacement, focusSideData);
-      });
+      observeWysiwygOverlaySize(surface, overlay, focusPlacement, focusSideData);
     }
     syncWysiwygControls();
   }
@@ -4739,6 +4812,10 @@
   function focusPreviewPlaceholder(title, message) {
     const surface = $("labelSheetFocusSurface");
     if (!surface) return;
+    focusOverlayResizeObserver?.disconnect();
+    focusOverlayResizeObserver = null;
+    if (focusOverlayFinalizeFrame) window.cancelAnimationFrame(focusOverlayFinalizeFrame);
+    focusOverlayFinalizeFrame = 0;
     surface.className = "label-sheet-focus-surface";
     delete surface.dataset.editorLayer;
     surface.style.removeProperty("aspect-ratio");
