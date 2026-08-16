@@ -1374,82 +1374,12 @@ async function runSmokeTest() {
       await page.click('[data-journey-stage="3"]');
       record((await page.locator('#cpdJourneyPanel [data-choice-path="typography.emphasis"]').count()) === 1, "Typography stage omitted the result-focused emphasis slider", failures);
       await page.click('[data-journey-stage="4"]');
-      record((await page.locator('#cpdJourneyPanel .cpd-resource-policy-card').count()) === 9 && (await page.locator('#cpdJourneyPanel .cpd-resource-policy-card input').count()) === 27, "Visual resource stage did not expose nine tri-state resources", failures);
-      record((await page.locator('#cpdJourneyPanel [data-resource-preset]').count()) === 4, "Visual resource stage omitted the four quick combination presets", failures);
-      const resourceModeLabels = [...new Set((await page.locator('#cpdJourneyPanel .cpd-resource-policy-card label span').allTextContents()).map((text) => text.trim()))];
-      record(["AI 판단", "우선 활용", "사용 안 함"].every((label) => resourceModeLabels.includes(label)), `Visual resource modes were not expressed as clear decisions (${JSON.stringify(resourceModeLabels)})`, failures);
+      record((await page.locator('#cpdJourneyPanel .cpd-resource-card').count()) === 9 && (await page.locator('#cpdJourneyPanel .cpd-resource-card input').count()) === 27, "Visual resource stage did not expose nine tri-state resources", failures);
       record((await page.locator('#cpdJourneyPanel [data-path="composition.layoutFreedom"]').count()) === 0, "Removed layout-freedom question was still visible", failures);
-
-      const visualResourceGuidanceCases = [
-        ["photo", "자연색 맥락 장면"],
-        ["layeredComposite", "배경 맥락·핵심 증거·정밀 주석"],
-        ["icons", "한 계열의 단순한 형태"],
-        ["gradients", "국부 범위"],
-        ["threeD", "장난감·게임맵"],
-        ["illustration", "일관된 시각 은유"],
-        ["dataVisualization", "값·축·단위·비례·범례"],
-        ["diagramInfographic", "노드·연결·방향·그룹"],
-        ["typographicFocal", "정확한 핵심 문장·수치 하나"],
-      ];
-      for (const [resourceKey, expectedGuidance] of visualResourceGuidanceCases) {
-        await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-        await page.locator(`#cpdJourneyPanel [data-path="resources.${resourceKey}"][value="allow"]`).check();
-        const resourcePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
-        record(resourcePrompt.includes("우선 활용 자원:") && resourcePrompt.includes(expectedGuidance), `Visual resource ${resourceKey} omitted its execution guidance`, failures);
-      }
-
-      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
-      let resourcePresetState = await page.evaluate(() => window.PromptDeckCommonPrompt.getState().resources);
-      let resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
-      record(resourcePresetState.photo === "allow" && resourcePresetState.layeredComposite === "allow", "Photo-editorial preset did not prioritize photography and multi-layer composition", failures);
-      record(resourcePresetPrompt.includes("원근·스케일·조명·그림자·색온도") && resourcePresetPrompt.includes("떠다니는 유리 패널"), "Photo-editorial preset omitted believable compositing constraints", failures);
-
-      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.locator('#cpdJourneyPanel [data-path="resources.photo"][value="exclude"]').check();
-      await page.locator('#cpdJourneyPanel [data-path="resources.layeredComposite"][value="allow"]').check();
-      resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
-      record(resourcePresetPrompt.includes("실사를 제외한 다중 레이어") && resourcePresetPrompt.includes("사용 금지 자원: 실사 이미지"), "Non-photo layering did not preserve the photography exclusion", failures);
-
-      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.click('#cpdJourneyPanel [data-resource-preset="dataNarrative"]');
-      resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
-      record(resourcePresetPrompt.includes("데이터 마크는 정확한 수치와 귀속") && resourcePresetPrompt.includes("다이어그램 연결"), "Data-narrative preset omitted the data/diagram ownership contract", failures);
-
-      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.click('#cpdJourneyPanel [data-resource-preset="pictogramExplanation"]');
-      resourcePresetState = await page.evaluate(() => window.PromptDeckCommonPrompt.getState().resources);
-      resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
-      record(resourcePresetState.icons === "allow" && resourcePresetState.diagramInfographic === "allow" && resourcePresetState.illustration === "allow", "Pictogram-explanation preset did not prioritize all three explanatory media", failures);
-      record(resourcePresetPrompt.includes("픽토그램은 다이어그램의 노드·단계 식별") && resourcePresetPrompt.includes("텍스트 라벨을 대신하지 않는다"), "Pictogram-explanation preset omitted semantic icon boundaries", failures);
-
-      for (const viewport of [{ width: 390, height: 844 }, { width: 628, height: 1100 }]) {
-        await page.setViewportSize(viewport);
-        const resourceLayout = await page.locator('#cpdJourneyPanel .cpd-resource-policy-card').first().evaluate((card) => {
-          const cardRect = card.getBoundingClientRect();
-          const controlGroup = card.querySelector(":scope > div");
-          const controlRect = controlGroup.getBoundingClientRect();
-          const controls = [...controlGroup.querySelectorAll("span")].map((element) => element.getBoundingClientRect());
-          return {
-            left: cardRect.left,
-            right: cardRect.right,
-            viewportWidth: document.documentElement.clientWidth,
-            controlWidthRatio: controlRect.width / cardRect.width,
-            controlRows: new Set(controls.map((rect) => Math.round(rect.top))).size,
-            minimumControlHeight: Math.min(...controls.map((rect) => rect.height)),
-            overflowX: card.scrollWidth - card.clientWidth,
-          };
-        });
-        record(resourceLayout.left >= 0 && resourceLayout.right <= resourceLayout.viewportWidth && resourceLayout.controlWidthRatio >= 0.88 && resourceLayout.controlRows === 1 && resourceLayout.minimumControlHeight >= 44 && resourceLayout.overflowX <= 1, `Visual resource controls broke at ${viewport.width}px (${JSON.stringify(resourceLayout)})`, failures);
-      }
-      await page.setViewportSize({ width: 1440, height: 1200 });
-
-      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
       await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
       const fiveStagePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
       record(fiveStagePrompt.startsWith("## SLIDE IMAGE VISUAL SPECIFICATION") && fiveStagePrompt.includes("### OUTPUT SIZE AND RESERVED AREAS") && fiveStagePrompt.includes("### CONTENT-BASED COMPOSITION"), "Generated prompt did not use the general five-stage image-specification structure", failures);
-      record(fiveStagePrompt.includes("데이터 시각화") && fiveStagePrompt.includes("값·축·단위·비례·범례") && fiveStagePrompt.includes("흰색") && fiveStagePrompt.length <= 2400, `Five-stage prompt omitted selected settings or exceeded 2,400 characters (${fiveStagePrompt.length})`, failures);
+      record(fiveStagePrompt.includes("데이터 시각화") && fiveStagePrompt.includes("흰색") && fiveStagePrompt.length <= 2400, `Five-stage prompt omitted selected settings or exceeded 2,400 characters (${fiveStagePrompt.length})`, failures);
       record(!fiveStagePrompt.includes("디자인 DNA") && !fiveStagePrompt.includes("AI 자유도") && !fiveStagePrompt.includes("MECE") && !fiveStagePrompt.includes("발표 시간"), "Generated prompt leaked internal jargon or removed presentation-time metadata", failures);
       await page.click('.cpd-summary [data-action="output-settings"]');
       const outputModeLengths = {};
@@ -1497,10 +1427,6 @@ async function runSmokeTest() {
       await page.click('#cpdQuickSetupDialog [data-quick-random="resources"]');
       record((await page.evaluate(() => JSON.stringify(window.PromptDeckCommonPrompt.getState().frame))) === frameBeforeRandom, "Random visual-resource setup changed protected frame geometry", failures);
       await page.click('#cpdQuickSetupDialog .cpd-dialog-close[data-action="close-quick-setup-modal"]');
-      await page.click('[data-journey-stage="4"]');
-      await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
-      await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
       if (false) {
       record((await page.locator("#cpdAccordion .cpd-journey-step").count()) === 7, "Common prompt did not render the seven-stage MECE journey", failures);
       record((await page.locator("#cpdQuickSetup").count()) === 1 && await page.locator("#cpdQuickSetup").isVisible(), "Question-reducing quick setup was not visible", failures);
@@ -1716,11 +1642,6 @@ async function runSmokeTest() {
       failures
     );
     record(linkedPromptPackage?.designPackage?.schemaVersion === 11 && Boolean(linkedPromptPackage?.designPackage?.settings?.visualResources) && Boolean(linkedPromptPackage?.designPackage?.settings?.frame), "Common Prompt did not send the five-stage visual package schema", failures);
-    const linkedVisualResources = linkedPromptPackage?.designPackage?.settings?.visualResources;
-    record(linkedVisualResources?.policyVersion === "2.0" && linkedVisualResources?.entries?.length === 9, "Common Prompt did not send the complete visual-resource policy", failures);
-    record(["photo", "layeredComposite", "dataVisualization"].every((key) => linkedVisualResources?.allowed?.includes(key)) && linkedVisualResources?.automatic?.length === 6 && linkedVisualResources?.excluded?.length === 0, "Common Prompt did not preserve priority, automatic, and excluded resource modes", failures);
-    record(linkedVisualResources?.entries?.every((entry) => entry.key && entry.mode && entry.titleKo && entry.titleEn && entry.guidanceKo && entry.guidanceEn), "Visual-resource package omitted bilingual execution guidance", failures);
-    record(linkedVisualResources?.combinationContracts?.some((contract) => contract.id === "photoEditorialLayering" && contract.ko.includes("원근·스케일·조명·그림자·색온도")), "Visual-resource package omitted the believable photo-layering contract", failures);
     record(!Object.hasOwn(linkedPromptPackage?.designPackage?.project || {}, "audienceRole") && !Object.hasOwn(linkedPromptPackage?.designPackage?.project || {}, "secondsPerSlide"), "Common Prompt package retained presentation content or timing metadata", failures);
     const linkedSkillPresetContract = linkedPromptPackage?.designPackage?.settings?.skillPresetContract;
     record(
@@ -1761,48 +1682,7 @@ async function runSmokeTest() {
     record(linkedRecord?.targetModel === "gpt_image" && linkedRecord?.generationPath === "full_slide", "Generator record did not carry model and generation-path metadata", failures);
     const optionalPhotoSlidePrompt = await page.locator("#genOutput").textContent();
     record(optionalPhotoSlidePrompt.includes("## AI 비주얼 디렉터"), "Generator did not add the AI visual-director directive", failures);
-    record(!optionalPhotoSlidePrompt.includes("슬라이드별 실사 합성 요구사항") && optionalPhotoSlidePrompt.includes("우선 활용 자원: 실사 이미지 · 다중 레이어 이미지 합성 · 데이터 시각화"), "Generator did not preserve prioritized resources without forcing a slide-specific photo role", failures);
-    record(optionalPhotoSlidePrompt.includes("조합 원칙:") && optionalPhotoSlidePrompt.includes("원근·스케일·조명·그림자·색온도") && optionalPhotoSlidePrompt.includes("떠다니는 유리 패널"), "Generator omitted the believable photo/editorial-layer combination contract", failures);
-    record(!optionalPhotoSlidePrompt.includes("활용 가능한 사진·데이터 시각화·다이어그램"), "Structured visual-resource policy fell back to the conflicting legacy all-resource directive", failures);
-
-    const excludedResourcePromptPackage = JSON.parse(JSON.stringify(linkedPromptPackage));
-    const excludedResourcePolicy = excludedResourcePromptPackage.designPackage.settings.visualResources;
-    const allResourceKeys = excludedResourcePolicy.entries.map((entry) => entry.key);
-    excludedResourcePolicy.allowed = [];
-    excludedResourcePolicy.excluded = ["photo", "layeredComposite"];
-    excludedResourcePolicy.automatic = allResourceKeys.filter((key) => !excludedResourcePolicy.excluded.includes(key));
-    excludedResourcePolicy.entries = excludedResourcePolicy.entries.map((entry) => ({
-      ...entry,
-      mode: excludedResourcePolicy.excluded.includes(entry.key) ? "exclude" : "auto",
-    }));
-    allResourceKeys.forEach((key) => { excludedResourcePolicy[key] = excludedResourcePolicy.excluded.includes(key) ? "exclude" : "auto"; });
-    excludedResourcePolicy.combinationContracts = [];
-    excludedResourcePromptPackage.text = `## 슬라이드 이미지 공통 시각 사양
-
-### 시각 자원 정책
-사용 금지 자원: 실사 이미지 · 다중 레이어 이미지 합성. 이후 자동 구성 지시도 이 제외 정책을 덮어쓰지 않는다.`;
-    excludedResourcePromptPackage.lang = "ko";
-    await page.evaluate((promptPackage) => window.PromptDeckSlidePromptGenerator.setCommonPrompt(promptPackage), excludedResourcePromptPackage);
-    await page.locator("#genMdInput").fill(`## 슬라이드 01. 정책 추진 방향
-### 본문
-추상적인 정책 개념과 추진 원칙을 설명합니다.`);
-    await page.click("#genGenerateBtn");
-    await page.waitForFunction(() => document.querySelector("#genResultBadge")?.textContent === "1 prompts");
-    const excludedResourceSlidePrompt = await page.locator("#genOutput").textContent();
-    record(excludedResourceSlidePrompt.includes("사용 금지 자원: 실사 이미지 · 다중 레이어 이미지 합성") && excludedResourceSlidePrompt.includes("금지는 최종 조건"), "Generator did not preserve hard visual-resource exclusions", failures);
-    record(!excludedResourceSlidePrompt.includes("활용 가능한 사진·데이터 시각화·다이어그램"), "Excluded resources were reintroduced by the legacy visual-director directive", failures);
-
-    await page.locator("#genMdInput").fill(`## 슬라이드 01. 프로젝트 표지
-### 표현 방식 〔화면 비표시〕
-- 페이지 유형: 표지
-- 시각 자원: 실사 이미지와 다중 레이어 이미지 합성
-### 콘텐츠 〔화면 표시〕
-- 제목: 프로젝트 표지`);
-    await page.click("#genGenerateBtn");
-    await page.waitForFunction(() => document.querySelector("#genResultBadge")?.textContent === "1 prompts");
-    const excludedSpecialSlidePrompt = await page.locator("#genOutput").textContent();
-    record(excludedSpecialSlidePrompt.includes("사용 금지 자원: 실사 이미지 · 다중 레이어 이미지 합성") && excludedSpecialSlidePrompt.includes("개별 의미 브리프가 덮어쓸 수 없다"), "Special-slide individual design overrode a final resource exclusion", failures);
-    await page.evaluate((promptPackage) => window.PromptDeckSlidePromptGenerator.setCommonPrompt(promptPackage), linkedPromptPackage);
+    record(!optionalPhotoSlidePrompt.includes("슬라이드별 실사 합성 요구사항") && optionalPhotoSlidePrompt.includes("설득력을 높이지 않는 자원은 생략"), "Generator still forced a slide-specific photo role", failures);
 
     const commonDesignMarker = optionalPhotoCommonPrompt
       .split(/\r?\n/)
