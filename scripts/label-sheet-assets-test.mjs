@@ -204,6 +204,22 @@ assert.deepEqual(
   "horizontal text must retain the physical content box"
 );
 
+const verticalUpright = Renderer.layoutVerticalUprightText("가나다라마바사", {
+  width: 25,
+  height: 36,
+  size: 10,
+  maxColumns: 2,
+});
+assert.deepEqual(verticalUpright.columns, ["가나다", "라마…"], "upright Korean text must flow top-to-bottom and then right-to-left");
+assert.equal(verticalUpright.truncated, true, "upright text must report content that exceeds its column budget");
+const verticalManualBreak = Renderer.layoutVerticalUprightText("세로\n쓰기", {
+  width: 40,
+  height: 80,
+  size: 10,
+  maxColumns: 2,
+});
+assert.deepEqual(verticalManualBreak.columns, ["세로", "쓰기"], "manual line breaks must start a new vertical column");
+
 const mirrored = Renderer.transformRectForSide(
   { xMm: 10, yMm: 20, widthMm: 30, heightMm: 40 },
   { widthMm: 210, heightMm: 297 },
@@ -291,6 +307,19 @@ assert.equal(customLayout.metrics.custom, true);
 assert.equal(customLayout.fits, true);
 assert.ok(customLayout.metrics.fields.find((field) => field.field === "title").x > 0);
 assert.equal(customLayout.metrics.fields.some((field) => field.field === "body"), false, "hidden fields must not reserve output space");
+const verticalUprightLayout = Renderer.analyzeLabelLayout({
+  widthMm: 70,
+  heightMm: 40,
+  side: "front",
+  record: {
+    front: { title: "세로쓰기" },
+    style: { safeAreaMm: 2, writingMode: "vertical-upright" },
+  },
+}, { dpi: 72, context: measuringContext });
+assert.equal(verticalUprightLayout.metrics.custom, true, "upright writing must use deterministic per-field layout even before manual editing");
+assert.equal(verticalUprightLayout.metrics.rotation, 0, "upright writing must not rotate the canvas");
+assert.equal(verticalUprightLayout.metrics.writingMode, "vertical-upright");
+assert.equal(verticalUprightLayout.metrics.fields.find((field) => field.field === "title").verticalUpright, true);
 const forcedBreakLayout = Renderer.analyzeLabelLayout({
   widthMm: 70,
   heightMm: 40,

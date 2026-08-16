@@ -2407,6 +2407,21 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator(".label-sheet-workspace-command-item").count()) === 1, "Label-sheet command palette did not filter commands", failures);
     await page.keyboard.press("Escape");
     await page.waitForSelector("#labelSheetWorkspaceCommandPalette", { state: "hidden" });
+    record((await page.locator("[data-label-workspace-orientation-command]").count()) === 2, "Label-sheet layout menu did not expose paper and text direction shortcuts", failures);
+    record(await page.evaluate(() => ["auto", "landscape", "vertical-upright", "portrait"].every((value) => document.querySelector(`#labelSheetContentOrientation option[value="${value}"]`))), "Label-sheet text direction options are incomplete", failures);
+    await page.keyboard.press("Control+K");
+    await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
+    await page.locator("#labelSheetWorkspaceCommandSearch").fill("문구 방향 설정");
+    record((await page.locator(".label-sheet-workspace-command-item").count()) === 1, "Label-sheet text direction command was not discoverable", failures);
+    await page.locator(".label-sheet-workspace-command-item").click();
+    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer:not([hidden])");
+    await page.waitForFunction(() => document.activeElement?.id === "labelSheetContentOrientation");
+    await page.selectOption("#labelSheetContentOrientation", "vertical-upright");
+    await page.waitForFunction(() => document.querySelector("#labelSheetQuickWidthLabel")?.textContent === "세로 길이");
+    record((await page.locator("#labelSheetQuickAlignGroup button").allTextContents()).join("|") === "위쪽|가운데|아래쪽", "Label-sheet upright writing did not relabel alignment for the vertical axis", failures);
+    record((await page.locator("#labelSheetWysiwygMaxLinesLabel").textContent()).trim() === "최대 열 수", "Label-sheet upright writing did not expose column terminology", failures);
+    await page.selectOption("#labelSheetContentOrientation", "auto");
+    await page.click("#labelSheetWorkspaceDetailDrawer [data-label-workspace-drawer-close]");
     await page.keyboard.press("Alt+3");
     record((await page.locator("#paneLabelSheet").getAttribute("data-right-panel")) === "collapsed", "Label-sheet focus shortcut did not collapse the property panel", failures);
     await page.keyboard.press("Alt+1");
@@ -3199,6 +3214,39 @@ SLIDE-TWO-CONTENT`);
       return { outside, opaque };
     });
     record(labelLayerProbe.outside === 0 && labelLayerProbe.opaque > 100, `Label-sheet transparent QR overlay was not rendered correctly: ${JSON.stringify(labelLayerProbe)}`, failures);
+    const uprightTextProbe = await page.evaluate(async () => {
+      const calls = [];
+      const originalFillText = CanvasRenderingContext2D.prototype.fillText;
+      CanvasRenderingContext2D.prototype.fillText = function (text, x, y, maxWidth) {
+        const matrix = this.getTransform();
+        calls.push({ text: String(text), x, y, transform: [matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f] });
+        return maxWidth === undefined ? originalFillText.call(this, text, x, y) : originalFillText.call(this, text, x, y, maxWidth);
+      };
+      try {
+        await window.PromptDeckLabelSheetRenderer.composePageCanvas({
+          paper: { widthMm: 210, heightMm: 297, orientation: "portrait" },
+          side: "front",
+          placements: [{
+            xMm: 10,
+            yMm: 10,
+            widthMm: 70,
+            heightMm: 40,
+            side: "front",
+            record: {
+              id: "VERTICAL-UPRIGHT-PROBE",
+              front: { enabled: true, title: "세로쓰기", textOrientation: "vertical-upright" },
+              style: { safeAreaMm: 2, writingMode: "vertical-upright", color: "#111827" },
+            },
+          }],
+        }, { dpi: 72, preferDomCanvas: true, showCutLines: false, showSafeArea: false });
+      } finally {
+        CanvasRenderingContext2D.prototype.fillText = originalFillText;
+      }
+      return calls.filter((call) => ["세", "로", "쓰", "기"].includes(call.text));
+    });
+    record(uprightTextProbe.length >= 4, `Label-sheet upright vertical text was not drawn glyph-by-glyph: ${JSON.stringify(uprightTextProbe)}`, failures);
+    record(uprightTextProbe.every((call) => Math.abs(call.transform[1]) < 0.001 && Math.abs(call.transform[2]) < 0.001), `Label-sheet upright vertical text unexpectedly rotated the canvas: ${JSON.stringify(uprightTextProbe)}`, failures);
+    record(new Set(uprightTextProbe.map((call) => Math.round(call.x * 100) / 100)).size === 1 && uprightTextProbe[0]?.y < uprightTextProbe.at(-1)?.y, `Label-sheet upright text did not flow top-to-bottom in one right-side column: ${JSON.stringify(uprightTextProbe)}`, failures);
     await selectLabelGoal("prompt");
     await page.click('[data-label-workspace-menu-trigger="edit"]');
     await page.click("#labelSheetWorkspaceAssetsMenu");
@@ -3660,8 +3708,13 @@ SLIDE-TWO-CONTENT`);
       const toolButton = pane?.querySelector("#labelSheetWorkspaceToolsBtn");
       const toolPanel = pane?.querySelector("#labelSheetWorkspaceToolPanel");
       const left = pane?.querySelector(".label-sheet-workspace-left");
+      const focusSurface = pane?.querySelector("#labelSheetFocusSurface");
       const paneBox = pane?.getBoundingClientRect();
       const actionBox = action?.getBoundingClientRect();
+      const focusBox = focusSurface?.getBoundingClientRect();
+      const [focusAspectWidth, focusAspectHeight] = String(focusSurface?.style.aspectRatio || "")
+        .split("/")
+        .map((part) => Number(part.trim()));
       const visibleTopbarButtons = Array.from(topbar?.querySelectorAll("button") || [])
         .filter((control) => control.getClientRects().length && getComputedStyle(control).visibility !== "hidden");
       return {
@@ -3675,6 +3728,8 @@ SLIDE-TWO-CONTENT`);
         toolPanelPresent: Boolean(toolPanel),
         toolPanelVisibility: toolPanel ? getComputedStyle(toolPanel).visibility : "missing",
         toolButtonVisible: Boolean(toolButton?.getClientRects().length),
+        focusActualRatio: focusBox?.width && focusBox?.height ? focusBox.width / focusBox.height : 0,
+        focusExpectedRatio: focusAspectWidth > 0 && focusAspectHeight > 0 ? focusAspectWidth / focusAspectHeight : 0,
         smallTopbarButtons: visibleTopbarButtons.filter((control) => {
           const box = control.getBoundingClientRect();
           return box.width < 44 || box.height < 44;
@@ -3693,6 +3748,8 @@ SLIDE-TWO-CONTENT`);
         && labelMobileLayout.toolPanelPresent
         && labelMobileLayout.toolPanelVisibility === "hidden"
         && labelMobileLayout.toolButtonVisible
+        && labelMobileLayout.focusExpectedRatio > 0
+        && Math.abs(labelMobileLayout.focusActualRatio - labelMobileLayout.focusExpectedRatio) <= 0.002
         && labelMobileLayout.smallTopbarButtons.length === 0,
       `Label-sheet mobile viewport still overlapped or wasted canvas space: ${JSON.stringify(labelMobileLayout)}`,
       failures

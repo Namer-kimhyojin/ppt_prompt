@@ -476,7 +476,7 @@
   }
 
   function normalizeTextOrientation(value) {
-    return ["horizontal", "vertical"].includes(value) ? value : "auto";
+    return ["horizontal", "vertical", "vertical-upright"].includes(value) ? value : "auto";
   }
 
   function normalizeFocalPoint(value) {

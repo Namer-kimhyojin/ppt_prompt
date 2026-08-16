@@ -504,6 +504,56 @@
     return { lines, truncated };
   }
 
+  function layoutVerticalUprightText(value, options = {}) {
+    const size = Math.max(6, Number(options.size) || 12);
+    const width = Math.max(1, Number(options.width) || size);
+    const height = Math.max(1, Number(options.height) || size);
+    const rowAdvance = Math.max(1, Number(options.rowAdvance) || size * 1.18);
+    const columnAdvance = Math.max(1, Number(options.columnAdvance) || size * 1.22);
+    const rowsPerColumn = Math.max(1, Math.floor(height / rowAdvance));
+    const availableColumns = Math.max(1, Math.floor(width / columnAdvance));
+    const maxColumns = Math.max(1, Math.min(availableColumns, Math.trunc(Number(options.maxColumns) || availableColumns)));
+    const columns = [];
+    const paragraphs = splitParagraphs(value);
+    let truncated = false;
+
+    outer: for (let paragraphIndex = 0; paragraphIndex < paragraphs.length; paragraphIndex += 1) {
+      const glyphs = Array.from(paragraphs[paragraphIndex]);
+      if (!glyphs.length) {
+        if (columns.length < maxColumns) columns.push("");
+        else if (paragraphIndex < paragraphs.length - 1) truncated = true;
+        if (truncated) break;
+        continue;
+      }
+      for (let offset = 0; offset < glyphs.length; offset += rowsPerColumn) {
+        if (columns.length >= maxColumns) {
+          truncated = true;
+          break outer;
+        }
+        columns.push(glyphs.slice(offset, offset + rowsPerColumn).join(""));
+      }
+    }
+
+    if (truncated && columns.length) {
+      const lastIndex = columns.length - 1;
+      const glyphs = Array.from(columns[lastIndex]);
+      if (glyphs.length) glyphs[glyphs.length - 1] = "…";
+      else glyphs.push("…");
+      columns[lastIndex] = glyphs.join("");
+    }
+    const longestColumn = columns.reduce((maximum, column) => Math.max(maximum, Array.from(column).length), 0);
+    return {
+      columns,
+      truncated,
+      rowsPerColumn,
+      maxColumns,
+      rowAdvance,
+      columnAdvance,
+      contentWidth: Math.min(width, columns.length * columnAdvance),
+      contentHeight: Math.min(height, Math.max(rowAdvance, longestColumn * rowAdvance)),
+    };
+  }
+
   function wrapLines(context, value, maxWidth, maxLines) {
     return analyzeWrappedLines(context, value, maxWidth, maxLines).lines;
   }
@@ -521,6 +571,38 @@
       context.restore();
     }
     context.fillText(text, drawX, y);
+  }
+
+  function drawVerticalUprightText(context, field, options = {}) {
+    const layout = field.verticalLayout;
+    if (!layout?.columns?.length) return;
+    const contentHeight = Math.min(field.height, layout.contentHeight);
+    const freeHeight = Math.max(0, field.height - contentHeight);
+    const startY = field.align === "center"
+      ? field.y + freeHeight / 2
+      : field.align === "right"
+        ? field.y + freeHeight
+        : field.y;
+    context.save();
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    layout.columns.forEach((column, columnIndex) => {
+      const drawX = field.x + field.width - layout.columnAdvance * (columnIndex + 0.5);
+      Array.from(column).forEach((glyph, rowIndex) => {
+        const drawY = startY + layout.rowAdvance * (rowIndex + 0.5);
+        if (options.strokeStyle && Number(options.strokeWidth) > 0) {
+          context.save();
+          context.strokeStyle = options.strokeStyle;
+          context.lineWidth = Number(options.strokeWidth);
+          context.lineJoin = "round";
+          context.miterLimit = 2;
+          context.strokeText(glyph, drawX, drawY);
+          context.restore();
+        }
+        context.fillText(glyph, drawX, drawY);
+      });
+    });
+    context.restore();
   }
 
   function drawWrappedText(context, text, box, options = {}) {
@@ -672,6 +754,7 @@
           rotation: oriented.rotation,
           physicalWidth: layout.width,
           physicalHeight: layout.height,
+          writingMode: style.writingMode === "vertical-upright" ? "vertical-upright" : "horizontal",
           custom: true,
           autoWrappedFields: customMetrics.autoWrappedFields,
           group: customMetrics.group,
@@ -683,6 +766,7 @@
             height: field.height,
             lineCount: field.lines.length,
             color: field.color,
+            verticalUpright: Boolean(field.verticalLayout),
           })),
         },
       };
@@ -951,7 +1035,8 @@
   }
 
   function buildCustomTextMetrics(context, text, style, box, options = {}) {
-    const layout = normalizeCustomTextFields(style.textFields);
+    const verticalUpright = style.writingMode === "vertical-upright";
+    const layout = normalizeCustomTextFields(style.textFields || (verticalUpright ? {} : null));
     if (!layout) return null;
     const group = normalizeCustomTextGroup(style.textGroup);
     const groupBox = {
@@ -970,15 +1055,67 @@
       const value = String(text[fieldName] ?? "");
       const config = layout[fieldName];
       if (config.visible === false || !value.trim()) return;
-      const preferredWidth = Math.max(1, groupBox.width * config.widthPercent / 100);
-      const preferredX = groupBox.x + groupBox.width * config.xPercent / 100;
-      const y = groupBox.y + groupBox.height * config.yPercent / 100;
       const size = Math.max(5, base * config.sizePercent / 100 * scale);
       const lineHeight = size * 1.25;
       const family = config.fontFamily === "inherit" ? style.fontFamily : config.fontFamily;
       setFont(context, size, config.weight, family);
-      const previewWrap = analyzeWrappedLines(context, value, preferredWidth, config.maxLines);
+      if (verticalUpright) {
+        const columnAdvance = size * 1.22;
+        const fieldHeight = Math.max(lineHeight, groupBox.height * config.widthPercent / 100);
+        const y = groupBox.y + groupBox.height * config.xPercent / 100;
+        const rightEdge = groupBox.x + groupBox.width * (100 - config.yPercent) / 100;
+        const availableWidth = Math.max(columnAdvance, rightEdge - groupBox.x);
+        const fixedWidth = config.heightPercent === null ? null : Math.max(columnAdvance, groupBox.width * config.heightPercent / 100);
+        const preview = layoutVerticalUprightText(value, {
+          width: fixedWidth ?? availableWidth,
+          height: fieldHeight,
+          size,
+          maxColumns: config.maxLines,
+        });
+        const fieldWidth = Math.min(availableWidth, fixedWidth ?? preview.contentWidth);
+        const preferredRect = {
+          x: Math.max(groupBox.x, rightEdge - fieldWidth),
+          y,
+          width: fieldWidth,
+          height: fieldHeight,
+        };
+        const adjusted = options.mode === "adaptive" && config.avoidQr !== false
+          ? qrAwareFieldRect(preferredRect, options.qrRect, groupBox, Math.max(0, Number(options.gap) || 0))
+          : { ...preferredRect, wrapped: false };
+        const wrapped = layoutVerticalUprightText(value, {
+          width: Math.max(1, adjusted.width),
+          height: fieldHeight,
+          size,
+          maxColumns: config.maxLines,
+        });
+        const overflow = adjusted.x < groupBox.x - 0.5 || y + fieldHeight > groupBox.y + groupBox.height + 0.5;
+        if (adjusted.wrapped) autoWrappedFields.push(fieldName);
+        if (wrapped.truncated) truncatedFields.push(fieldName);
+        if (overflow) overflowFields.push(fieldName);
+        fields.push({
+          field: fieldName,
+          value,
+          lines: wrapped.columns,
+          x: adjusted.x,
+          y,
+          width: adjusted.width,
+          height: fieldHeight,
+          size,
+          lineHeight,
+          family,
+          color: config.color,
+          align: config.align,
+          weight: config.weight,
+          autoWrapped: adjusted.wrapped,
+          verticalLayout: wrapped,
+        });
+        return;
+      }
+      const preferredWidth = Math.max(1, groupBox.width * config.widthPercent / 100);
+      const preferredX = groupBox.x + groupBox.width * config.xPercent / 100;
+      const y = groupBox.y + groupBox.height * config.yPercent / 100;
       const fixedHeight = config.heightPercent === null ? null : Math.max(1, groupBox.height * config.heightPercent / 100);
+      const previewWrap = analyzeWrappedLines(context, value, preferredWidth, config.maxLines);
       const collisionHeight = fixedHeight ?? previewWrap.lines.length * lineHeight;
       const preferredRect = { x: preferredX, y, width: preferredWidth, height: collisionHeight };
       const adjusted = options.mode === "adaptive" && config.avoidQr !== false
@@ -1006,6 +1143,7 @@
         align: config.align,
         weight: config.weight,
         autoWrapped: adjusted.wrapped,
+        verticalLayout: null,
       });
     });
     const bounds = fields.length ? {
@@ -1156,7 +1294,8 @@
       customMetrics.fields.forEach((field) => {
         setFont(context, field.size, field.weight, field.family);
         context.fillStyle = field.color === "inherit" ? color : field.color;
-        field.lines.forEach((line, index) => drawTextLine(context, line, field.x, field.y + index * field.lineHeight, field.width, field.align, lineOptions));
+        if (field.verticalLayout) drawVerticalUprightText(context, field, lineOptions);
+        else field.lines.forEach((line, index) => drawTextLine(context, line, field.x, field.y + index * field.lineHeight, field.width, field.align, lineOptions));
       });
       context.restore();
       return;
@@ -1704,6 +1843,7 @@
     resolveQrContrast,
     resolveQrLayout: qrLayout,
     resolveOrientedBox,
+    layoutVerticalUprightText,
     normalizeCustomTextFields,
     resolveBackTransform,
     transformRectForSide,

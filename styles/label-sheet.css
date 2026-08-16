@@ -1933,6 +1933,17 @@
   white-space: pre-line;
 }
 
+#paneLabelSheet .label-sheet-wysiwyg-field.is-vertical-upright {
+  display: block;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  line-break: strict;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: pre-wrap;
+  letter-spacing: 0.04em;
+}
+
 #paneLabelSheet .label-sheet-wysiwyg-overlay.is-focus-editor .label-sheet-wysiwyg-field {
   box-sizing: border-box;
   align-items: flex-start;

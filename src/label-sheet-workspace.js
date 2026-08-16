@@ -751,10 +751,23 @@
       setRightCollapsed(!state.rightCollapsed, options);
     }
 
+    function openOrientationSetting(kind, trigger) {
+      const textDirection = kind === "text";
+      if (textDirection) openFocusDrawer("common", trigger || commonButton, "layout");
+      else if (state.activeDrawer !== settingsDrawer) openDrawer("settings", settingsDrawer, trigger || settingsButton, { source: "orientation-command" });
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+        const control = root.querySelector(textDirection ? "#labelSheetContentOrientation" : "#labelSheetOrientation");
+        control?.scrollIntoView({ block: "center", inline: "nearest" });
+        control?.focus({ preventScroll: true });
+      }));
+    }
+
     const paletteCommands = [
       { id: "undo", category: "편집", title: "실행 취소", keywords: "이전 복원 되돌리기", shortcut: "Ctrl+Z", enabled: () => projectHistory.index > 0, run: () => moveProjectHistory(-1) },
       { id: "redo", category: "편집", title: "다시 실행", keywords: "다음 복구", shortcut: "Ctrl+Shift+Z", enabled: () => projectHistory.index < projectHistory.entries.length - 1, run: () => moveProjectHistory(1) },
       { id: "settings", category: "프로젝트", title: "프로젝트 설정 열기", keywords: "품목 규격 용지 양면", shortcut: "Alt+P", run: () => settingsButton?.click() },
+      { id: "paper-orientation", category: "레이아웃", title: "용지 방향 설정", keywords: "A4 가로 세로 편집용지", run: () => openOrientationSetting("paper", commandButton) },
+      { id: "text-orientation", category: "레이아웃", title: "문구 방향 설정", keywords: "가로쓰기 세로쓰기 글자 세움 90도 회전", run: () => openOrientationSetting("text", commandButton) },
       { id: "data", category: "데이터", title: "데이터 편집기 열기", keywords: "표 csv 레코드 목록", shortcut: "Alt+D", run: () => openDrawer("data", dataDrawer, dataModeButton, { source: "command" }) },
       { id: "assets", category: "레이아웃", title: "배경·디자인 자산", keywords: "배경 이미지 dna", run: () => openDrawer("assets", assetsDrawer, assetsMenu, { source: "command" }) },
       { id: "detail", category: "편집", title: "선택 항목 세부 편집", keywords: "문구 qr 레이아웃 프리셋 정밀", run: () => detailButton?.click() },
@@ -1010,6 +1023,9 @@
     });
     root.querySelectorAll("[data-label-workspace-layer-command]").forEach((control) => {
       control.addEventListener("click", () => root.querySelector(`[data-label-sheet-focus-target="${control.dataset.labelWorkspaceLayerCommand}"]`)?.click());
+    });
+    root.querySelectorAll("[data-label-workspace-orientation-command]").forEach((control) => {
+      control.addEventListener("click", () => openOrientationSetting(control.dataset.labelWorkspaceOrientationCommand, control));
     });
     root.querySelectorAll("[data-label-workspace-history-command]").forEach((control) => {
       control.addEventListener("click", () => moveProjectHistory(control.dataset.labelWorkspaceHistoryCommand === "undo" ? -1 : 1));

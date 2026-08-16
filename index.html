@@ -70,8 +70,8 @@
   <link rel="stylesheet" href="styles/data-diagram.css?v=3" />
   <link rel="stylesheet" href="styles/slide-document.css" />
   <link rel="stylesheet" href="styles/form-image.css?v=3" />
-  <link rel="stylesheet" href="styles/label-sheet.css?v=19" />
-  <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=9" />
+  <link rel="stylesheet" href="styles/label-sheet.css?v=20" />
+  <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=10" />
   <link rel="stylesheet" href="styles/qr-generator.css?v=4" />
   <link rel="stylesheet" href="styles/theme.css?v=dark-aa-20260804" />
   <link rel="stylesheet" href="styles/ui-system.css?v=3" />
@@ -2257,7 +2257,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 </div>
                 <div class="label-sheet-form-grid label-sheet-grid-4 label-sheet-style-controls">
                   <label class="label-sheet-field label-sheet-legacy-document-type" for="labelSheetDocumentType"><span>작업 유형</span><select id="labelSheetDocumentType"><option value="label">일반 라벨</option><option value="ticket">일반 티켓</option><option value="admission">행사 출입표</option><option value="meal-ticket">식권</option></select></label>
-                  <label class="label-sheet-field" for="labelSheetContentOrientation"><span>문구 방향</span><select id="labelSheetContentOrientation"><option value="auto">라벨 비율에 맞춰 자동</option><option value="landscape">가로형</option><option value="portrait">세로형</option></select><small>세로형은 문구 영역을 90° 회전한 뒤 선택한 정렬을 다시 계산합니다.</small></label>
+                  <label class="label-sheet-field" for="labelSheetContentOrientation"><span>문구 방향</span><select id="labelSheetContentOrientation"><option value="auto">라벨 비율에 맞춰 자동</option><option value="landscape">가로쓰기</option><option value="vertical-upright">세로쓰기 · 글자 세움</option><option value="portrait">90° 회전 배치 · 기존 방식</option></select><small>세로쓰기는 글자를 세워 위→아래, 오른쪽→왼쪽으로 배치합니다. 회전 배치는 문구 영역 전체를 90° 돌립니다.</small></label>
                   <label class="label-sheet-field" for="labelSheetTextAlign"><span>가로 정렬</span><select id="labelSheetTextAlign"><option value="center">가운데</option><option value="left">왼쪽</option><option value="right">오른쪽</option></select></label>
                   <label class="label-sheet-field" for="labelSheetTextVerticalAlign"><span>세로 배치</span><select id="labelSheetTextVerticalAlign"><option value="top">위쪽</option><option value="center">가운데</option><option value="bottom">아래쪽</option></select></label>
                   <label class="label-sheet-field" for="labelSheetTextScale"><span>전체 글자 크기 <output id="labelSheetTextScaleValue">100%</output></span><input id="labelSheetTextScale" type="range" min="70" max="160" step="5" value="100" /></label>
@@ -2319,19 +2319,19 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <label class="label-sheet-wysiwyg-check" for="labelSheetWysiwygVisible" data-wysiwyg-text-only><input id="labelSheetWysiwygVisible" type="checkbox" checked /><span><strong>출력에 표시</strong><small>끄면 자리도 출력하지 않음</small></span></label>
                 <label class="label-sheet-field" for="labelSheetWysiwygFont" data-wysiwyg-text-only><span>글꼴</span><select id="labelSheetWysiwygFont"><option value="inherit">디자인 DNA 글꼴</option><option value="Pretendard, Noto Sans KR, Malgun Gothic, sans-serif">프리텐다드·고딕</option><option value="Noto Sans KR, Malgun Gothic, sans-serif">Noto Sans KR</option><option value="Malgun Gothic, sans-serif">맑은 고딕</option><option value="Nanum Gothic, Malgun Gothic, sans-serif">나눔고딕</option><option value="Nanum Myeongjo, Batang, serif">나눔명조·명조</option><option value="Batang, serif">바탕·명조</option><option value="monospace">고정폭</option></select></label>
                 <label class="label-sheet-field" for="labelSheetWysiwygSize" data-wysiwyg-size-only><span><span id="labelSheetWysiwygSizeLabel">글자 크기</span> <output id="labelSheetWysiwygSizeValue">15%</output></span><input id="labelSheetWysiwygSize" type="range" min="3" max="30" step="0.5" value="15" /></label>
-                <label class="label-sheet-field" for="labelSheetWysiwygAlign" data-wysiwyg-text-only><span>문구 정렬</span><select id="labelSheetWysiwygAlign"><option value="left">왼쪽</option><option value="center" selected>가운데</option><option value="right">오른쪽</option></select></label>
-                <label class="label-sheet-field" for="labelSheetWysiwygMaxLines" data-wysiwyg-text-only><span>최대 줄 수</span><select id="labelSheetWysiwygMaxLines"><option value="1">1줄</option><option value="2" selected>2줄</option><option value="3">3줄</option><option value="4">4줄</option><option value="5">5줄</option><option value="6">6줄</option><option value="7">7줄</option><option value="8">8줄</option></select></label>
+                <label class="label-sheet-field" for="labelSheetWysiwygAlign" data-wysiwyg-text-only><span id="labelSheetWysiwygAlignLabel">문구 정렬</span><select id="labelSheetWysiwygAlign"><option value="left">왼쪽</option><option value="center" selected>가운데</option><option value="right">오른쪽</option></select></label>
+                <label class="label-sheet-field" for="labelSheetWysiwygMaxLines" data-wysiwyg-text-only><span id="labelSheetWysiwygMaxLinesLabel">최대 줄 수</span><select id="labelSheetWysiwygMaxLines"><option value="1">1줄</option><option value="2" selected>2줄</option><option value="3">3줄</option><option value="4">4줄</option><option value="5">5줄</option><option value="6">6줄</option><option value="7">7줄</option><option value="8">8줄</option></select></label>
                 <label class="label-sheet-field" for="labelSheetWysiwygColorMode" data-wysiwyg-text-only><span>글자 색상</span><select id="labelSheetWysiwygColorMode"><option value="inherit" selected>자동 대비·DNA 색상</option><option value="custom">직접 선택</option></select></label>
                 <label class="label-sheet-field label-sheet-color-field" for="labelSheetWysiwygColor" data-wysiwyg-text-only><span>직접 색상</span><input id="labelSheetWysiwygColor" type="color" value="#111827" disabled /></label>
-                <label class="label-sheet-field" for="labelSheetWysiwygWidth" data-wysiwyg-box-only><span>영역 너비 (%)</span><input id="labelSheetWysiwygWidth" type="number" min="5" max="100" step="0.5" value="90" /></label>
-                <label class="label-sheet-field" for="labelSheetWysiwygHeight" data-wysiwyg-box-only><span>영역 높이 (%)</span><input id="labelSheetWysiwygHeight" type="number" min="5" max="100" step="0.5" value="20" /></label>
-                <label class="label-sheet-wysiwyg-check" for="labelSheetWysiwygAutoHeight" data-wysiwyg-text-box-only><input id="labelSheetWysiwygAutoHeight" type="checkbox" checked /><span><strong>내용에 맞춰 높이</strong><small>끄면 지정한 높이에서 자름을 검사</small></span></label>
+                <label class="label-sheet-field" for="labelSheetWysiwygWidth" data-wysiwyg-box-only><span id="labelSheetWysiwygWidthLabel">영역 너비 (%)</span><input id="labelSheetWysiwygWidth" type="number" min="5" max="100" step="0.5" value="90" /></label>
+                <label class="label-sheet-field" for="labelSheetWysiwygHeight" data-wysiwyg-box-only><span id="labelSheetWysiwygHeightLabel">영역 높이 (%)</span><input id="labelSheetWysiwygHeight" type="number" min="5" max="100" step="0.5" value="20" /></label>
+                <label class="label-sheet-wysiwyg-check" for="labelSheetWysiwygAutoHeight" data-wysiwyg-text-box-only><input id="labelSheetWysiwygAutoHeight" type="checkbox" checked /><span><strong id="labelSheetWysiwygAutoHeightLabel">내용에 맞춰 높이</strong><small id="labelSheetWysiwygAutoHeightHint">끄면 지정한 높이에서 자름을 검사</small></span></label>
                 <label class="label-sheet-wysiwyg-check" for="labelSheetWysiwygAvoidQr" data-wysiwyg-text-box-only><input id="labelSheetWysiwygAvoidQr" type="checkbox" checked /><span><strong>QR 자동 회피</strong><small>자동 감싸기에서 이 항목만 적용</small></span></label>
                 <label class="label-sheet-field" for="labelSheetWysiwygQrMode" data-wysiwyg-qr-only><span>QR 배치 방식</span><select id="labelSheetWysiwygQrMode"><option value="adaptive">자동 감싸기</option><option value="reserved">고정 여백</option><option value="overlay">자유 겹침</option></select></label>
                 <label class="label-sheet-field" for="labelSheetWysiwygQrGap" data-wysiwyg-qr-only><span>QR 주변 여백 (%)</span><input id="labelSheetWysiwygQrGap" type="number" min="0" max="12" step="0.5" value="2" /></label>
                 <label class="label-sheet-field" for="labelSheetWysiwygQrLayer" data-wysiwyg-qr-only><span>QR 레이어</span><select id="labelSheetWysiwygQrLayer"><option value="front">문구 위</option><option value="behind">문구 아래</option></select></label>
-                <label class="label-sheet-field" for="labelSheetWysiwygX"><span>가로 위치 X (%)</span><input id="labelSheetWysiwygX" type="number" min="0" max="100" step="0.5" value="5" /></label>
-                <label class="label-sheet-field" for="labelSheetWysiwygY"><span>세로 위치 Y (%)</span><input id="labelSheetWysiwygY" type="number" min="0" max="96" step="0.5" value="18" /></label>
+                <label class="label-sheet-field" for="labelSheetWysiwygX"><span id="labelSheetWysiwygXLabel">가로 위치 X (%)</span><input id="labelSheetWysiwygX" type="number" min="0" max="100" step="0.5" value="5" /></label>
+                <label class="label-sheet-field" for="labelSheetWysiwygY"><span id="labelSheetWysiwygYLabel">세로 위치 Y (%)</span><input id="labelSheetWysiwygY" type="number" min="0" max="96" step="0.5" value="18" /></label>
                 <div class="label-sheet-inline-actions label-sheet-wysiwyg-actions">
                   <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetWysiwygResetField">선택 항목 초기화</button>
                   <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetWysiwygResetLayout">이 라벨 레이아웃 초기화</button>
@@ -2374,10 +2374,10 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <label class="label-sheet-field label-sheet-quick-target-control" for="labelSheetQuickTarget"><span>편집 항목</span><select id="labelSheetQuickTarget"><option value="content">전체 콘텐츠</option><option value="number">연번</option><option value="title" selected>제목</option><option value="subtitle">부제</option><option value="body">본문</option><option value="footer">하단 문구</option><option value="qr">QR 영역</option></select></label>
                 <label class="label-sheet-field" for="labelSheetQuickFont" data-wysiwyg-text-only><span>글꼴</span><select id="labelSheetQuickFont"><option value="inherit">DNA 글꼴</option><option value="Pretendard, Noto Sans KR, Malgun Gothic, sans-serif">프리텐다드·고딕</option><option value="Noto Sans KR, Malgun Gothic, sans-serif">Noto Sans KR</option><option value="Malgun Gothic, sans-serif">맑은 고딕</option><option value="Nanum Gothic, Malgun Gothic, sans-serif">나눔고딕</option><option value="Nanum Myeongjo, Batang, serif">나눔명조·명조</option><option value="Batang, serif">바탕·명조</option><option value="monospace">고정폭</option></select></label>
                 <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickSize" data-wysiwyg-size-only><span>크기 <output id="labelSheetQuickSizeValue">15%</output></span><input id="labelSheetQuickSize" type="range" min="3" max="30" step="0.5" value="15" /></label>
-                <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickWidth" data-wysiwyg-box-only><span>너비 <output id="labelSheetQuickWidthValue">90%</output></span><input id="labelSheetQuickWidth" type="range" min="5" max="100" step="0.5" value="90" /></label>
-                <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickHeight" data-wysiwyg-box-only><span>높이 <output id="labelSheetQuickHeightValue">20%</output></span><input id="labelSheetQuickHeight" type="range" min="5" max="100" step="0.5" value="20" /></label>
-                <div class="label-sheet-field label-sheet-quick-align" data-wysiwyg-text-only><span>정렬</span><div role="group" aria-label="문구 정렬"><button type="button" id="labelSheetQuickAlignLeft" aria-pressed="false">왼쪽</button><button type="button" id="labelSheetQuickAlignCenter" aria-pressed="true">가운데</button><button type="button" id="labelSheetQuickAlignRight" aria-pressed="false">오른쪽</button></div></div>
-                <label class="label-sheet-wysiwyg-check" for="labelSheetQuickAutoHeight" data-wysiwyg-text-box-only><input id="labelSheetQuickAutoHeight" type="checkbox" checked /><span><strong>자동 높이</strong><small>문구 줄 수에 맞춤</small></span></label>
+                <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickWidth" data-wysiwyg-box-only><span><span id="labelSheetQuickWidthLabel">너비</span> <output id="labelSheetQuickWidthValue">90%</output></span><input id="labelSheetQuickWidth" type="range" min="5" max="100" step="0.5" value="90" /></label>
+                <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickHeight" data-wysiwyg-box-only><span><span id="labelSheetQuickHeightLabel">높이</span> <output id="labelSheetQuickHeightValue">20%</output></span><input id="labelSheetQuickHeight" type="range" min="5" max="100" step="0.5" value="20" /></label>
+                <div class="label-sheet-field label-sheet-quick-align" data-wysiwyg-text-only><span>정렬</span><div id="labelSheetQuickAlignGroup" role="group" aria-label="문구 정렬"><button type="button" id="labelSheetQuickAlignLeft" aria-pressed="false">왼쪽</button><button type="button" id="labelSheetQuickAlignCenter" aria-pressed="true">가운데</button><button type="button" id="labelSheetQuickAlignRight" aria-pressed="false">오른쪽</button></div></div>
+                <label class="label-sheet-wysiwyg-check" for="labelSheetQuickAutoHeight" data-wysiwyg-text-box-only><input id="labelSheetQuickAutoHeight" type="checkbox" checked /><span><strong id="labelSheetQuickAutoHeightLabel">자동 높이</strong><small id="labelSheetQuickAutoHeightHint">문구 줄 수에 맞춤</small></span></label>
                 <label class="label-sheet-wysiwyg-check" for="labelSheetQuickAvoidQr" data-wysiwyg-text-box-only><input id="labelSheetQuickAvoidQr" type="checkbox" checked /><span><strong>QR 회피</strong><small>겹치는 항목만 감싸기</small></span></label>
                 <label class="label-sheet-field" for="labelSheetQuickQrMode" data-wysiwyg-qr-only><span>QR 배치</span><select id="labelSheetQuickQrMode"><option value="adaptive">자동 감싸기</option><option value="reserved">고정 여백</option><option value="overlay">자유 겹침</option></select></label>
                 <label class="label-sheet-field" for="labelSheetQuickQrLayer" data-wysiwyg-qr-only><span>QR 레이어</span><select id="labelSheetQuickQrLayer"><option value="front">문구 위</option><option value="behind">문구 아래</option></select></label>
@@ -5947,11 +5947,11 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/tabular-data.js?v=1"></script>
   <script src="src/label-sheet-data-mapping.js?v=1"></script>
   <script src="src/label-sheet-assets.js?v=2"></script>
-  <script src="src/label-sheet-renderer.js?v=8"></script>
+  <script src="src/label-sheet-renderer.js?v=9"></script>
   <script src="src/label-sheet-package.js?v=1"></script>
-  <script src="src/label-sheet.js?v=25"></script>
-  <script src="src/label-sheet-workspace-layout.js?v=9"></script>
-  <script src="src/label-sheet-workspace.js?v=8"></script>
+  <script src="src/label-sheet.js?v=26"></script>
+  <script src="src/label-sheet-workspace-layout.js?v=10"></script>
+  <script src="src/label-sheet-workspace.js?v=9"></script>
   <script src="src/qr-batch.js?v=2"></script>
   <script src="src/legal-links.js"></script>
 </body>

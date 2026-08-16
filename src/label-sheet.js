@@ -1519,6 +1519,7 @@
   function contentOrientation(spec, requestedInput = project.settings?.contentOrientation) {
     const requested = cleanText(requestedInput) || "auto";
     if (requested === "landscape") return "horizontal";
+    if (requested === "vertical-upright") return "vertical-upright";
     if (requested === "portrait") return "vertical";
     return spec.grid.labelHeightMm > spec.grid.labelWidthMm * 1.2 ? "vertical" : "horizontal";
   }
@@ -2037,6 +2038,7 @@
       verticalAlign: settings.textVerticalAlign,
       fontScalePercent: settings.textScalePercent,
       rotation: orientation === "vertical" ? 90 : 0,
+      writingMode: orientation === "vertical-upright" ? "vertical-upright" : "horizontal",
       contrastMode: contrast,
       autoContrast: contrast === "auto",
       color: contrast === "light" ? "#ffffff" : contrast === "dark" ? "#111827" : visualDesign.text,
@@ -2044,7 +2046,7 @@
       overlayColor: contrast === "light" ? "#111827" : "#ffffff",
       backgroundColor: visualDesign.background,
       accentColor: visualDesign.accent,
-      accentEdge: orientation === "vertical" ? "left" : "top",
+      accentEdge: orientation === "horizontal" ? "top" : "left",
       borderColor: visualDesign.border,
       fontFamily: visualDesign.fontFamily,
       qr: deepClone(qr),
@@ -3767,11 +3769,40 @@
     const isQr = wysiwygField === "qr";
     const isContent = wysiwygField === "content";
     const isText = !isQr && !isContent;
+    const uprightText = isText && value("labelSheetContentOrientation") === "vertical-upright";
     const config = isQr
       ? resolvedWysiwygQrLayout(context)
       : isContent
         ? resolvedWysiwygContentLayout(context)
         : (context.layout?.[wysiwygField] || normalizeTextFieldLayout(null, wysiwygField));
+    [
+      ["labelSheetWysiwygAlignLabel", uprightText ? "세로축 정렬" : "문구 정렬"],
+      ["labelSheetWysiwygMaxLinesLabel", uprightText ? "최대 열 수" : "최대 줄 수"],
+      ["labelSheetWysiwygWidthLabel", uprightText ? "세로 길이 (%)" : "영역 너비 (%)"],
+      ["labelSheetWysiwygHeightLabel", uprightText ? "열 너비 (%)" : "영역 높이 (%)"],
+      ["labelSheetWysiwygAutoHeightLabel", uprightText ? "내용에 맞춰 열 너비" : "내용에 맞춰 높이"],
+      ["labelSheetWysiwygAutoHeightHint", uprightText ? "끄면 지정한 열 너비에서 자름을 검사" : "끄면 지정한 높이에서 자름을 검사"],
+      ["labelSheetWysiwygXLabel", uprightText ? "위쪽 위치 (%)" : "가로 위치 X (%)"],
+      ["labelSheetWysiwygYLabel", uprightText ? "오른쪽 기준 열 위치 (%)" : "세로 위치 Y (%)"],
+      ["labelSheetQuickWidthLabel", uprightText ? "세로 길이" : "너비"],
+      ["labelSheetQuickHeightLabel", uprightText ? "열 너비" : "높이"],
+      ["labelSheetQuickAutoHeightLabel", uprightText ? "자동 열 너비" : "자동 높이"],
+      ["labelSheetQuickAutoHeightHint", uprightText ? "문구 열 수에 맞춤" : "문구 줄 수에 맞춤"],
+    ].forEach(([id, label]) => { if ($(id)) $(id).textContent = label; });
+    const axisLabels = uprightText
+      ? { left: "위쪽", center: "가운데", right: "아래쪽" }
+      : { left: "왼쪽", center: "가운데", right: "오른쪽" };
+    $("labelSheetWysiwygAlign")?.querySelectorAll("option").forEach((option) => { option.textContent = axisLabels[option.value] || option.textContent; });
+    $("labelSheetWysiwygMaxLines")?.querySelectorAll("option").forEach((option) => { option.textContent = `${option.value}${uprightText ? "열" : "줄"}`; });
+    if ($("labelSheetQuickAlignGroup")) $("labelSheetQuickAlignGroup").setAttribute("aria-label", uprightText ? "세로축 문구 정렬" : "문구 정렬");
+    Object.entries(axisLabels).forEach(([align, label]) => {
+      const button = $(`labelSheetQuickAlign${align[0].toUpperCase()}${align.slice(1)}`);
+      if (button) button.textContent = label;
+      pane.querySelectorAll(`[data-label-sheet-focus-align="${align}"]`).forEach((focusButton) => {
+        Array.from(focusButton.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE).forEach((node) => { node.textContent = label; });
+        focusButton.setAttribute("aria-label", `${label} 정렬`);
+      });
+    });
     ["labelSheetWysiwygField", "labelSheetQuickTarget"].forEach((id) => {
       const option = $(id)?.querySelector('option[value="qr"]');
       if (option) option.disabled = context.variant !== "withQr";
@@ -3834,12 +3865,14 @@
         ? $("labelSheetFocusSurface")?.querySelector(`.label-sheet-wysiwyg-field.is-active[data-wysiwyg-field="${wysiwygField}"]`)
         : null;
       const renderedHeight = Number(renderedField?.dataset.displayHeightPercent);
+      const renderedWidth = Number(renderedField?.dataset.displayWidthPercent);
       const effectiveHeight = isContent
         ? config.heightPercent
-        : config.heightPercent ?? (Number.isFinite(renderedHeight) ? renderedHeight : automaticFieldHeightPercent(config));
+        : config.heightPercent ?? (uprightText && Number.isFinite(renderedWidth)
+          ? renderedWidth
+          : Number.isFinite(renderedHeight) ? renderedHeight : automaticFieldHeightPercent(config));
       setControl("labelSheetWysiwygHeight", rounded(effectiveHeight));
       setControl("labelSheetQuickHeight", rounded(effectiveHeight));
-      const renderedWidth = Number(renderedField?.dataset.displayWidthPercent);
       const autoWrapped = Boolean(renderedField?.classList.contains("is-auto-wrapped") && Number.isFinite(renderedWidth));
       const widthLabel = autoWrapped && Math.abs(renderedWidth - config.widthPercent) >= 0.1
         ? `${rounded(config.widthPercent)}% → ${rounded(renderedWidth)}%`
@@ -4181,6 +4214,30 @@
     return geometry;
   }
 
+  function verticalOverlayFieldGeometry(config, textValue, contentConfig, textBox, fontScale = 1) {
+    const groupWidth = Math.max(0.1, textBox.width * contentConfig.widthPercent / 100);
+    const groupHeight = Math.max(0.1, textBox.height * contentConfig.heightPercent / 100);
+    const base = Math.max(0.1, Math.min(groupWidth, groupHeight));
+    const size = Math.max(0.1, base * config.sizePercent / 100 * fontScale);
+    const heightPercent = config.widthPercent;
+    const height = Math.max(size * 1.25, groupHeight * heightPercent / 100);
+    const rowsPerColumn = Math.max(1, Math.floor(height / (size * 1.18)));
+    const columns = String(textValue ?? "").replace(/\r\n?/g, "\n").split("\n").reduce((total, paragraph) => (
+      total + Math.max(1, Math.ceil(Array.from(paragraph).length / rowsPerColumn))
+    ), 0);
+    const visibleColumns = Math.max(1, Math.min(config.maxLines, columns));
+    const widthPercent = config.heightPercent === null
+      ? clamp(visibleColumns * size * 1.22 / groupWidth * 100, 5, 100)
+      : clamp(config.heightPercent, 5, 100);
+    return {
+      xPercent: clamp(100 - config.yPercent - widthPercent, 0, Math.max(0, 100 - widthPercent)),
+      yPercent: clamp(config.xPercent, 0, Math.max(0, 100 - heightPercent)),
+      widthPercent,
+      heightPercent,
+      autoWrapped: false,
+    };
+  }
+
   function beginWysiwygGroupDrag(event, element, space) {
     if (event.target.closest(".label-sheet-wysiwyg-resize-handle")) return;
     event.preventDefault();
@@ -4246,21 +4303,23 @@
     const measuredHeight = clamp(element.offsetHeight / Math.max(1, space.offsetHeight) * 100, 5, 100);
     const displayWidthPercent = Number(element.dataset.displayWidthPercent ?? config.widthPercent);
     const displayHeightPercent = Number(element.dataset.displayHeightPercent ?? (config.heightPercent ?? measuredHeight));
+    const verticalUpright = !isContent && space.dataset.writingMode === "vertical-upright";
     const state = {
       pointerId,
       startClientX: event.clientX,
       startClientY: event.clientY,
       startWidthPercent: config.widthPercent,
-      startHeightPercent: isContent ? config.heightPercent : (config.heightPercent ?? measuredHeight),
+      startHeightPercent: isContent ? config.heightPercent : (config.heightPercent ?? (verticalUpright ? displayWidthPercent : measuredHeight)),
       startDisplayWidthPercent: displayWidthPercent,
       startDisplayHeightPercent: displayHeightPercent,
       widthPercent: config.widthPercent,
-      heightPercent: isContent ? config.heightPercent : (config.heightPercent ?? measuredHeight),
+      heightPercent: isContent ? config.heightPercent : (config.heightPercent ?? (verticalUpright ? displayWidthPercent : measuredHeight)),
       displayWidthPercent,
       displayHeightPercent,
       xPercent: config.xPercent,
       yPercent: config.yPercent,
       rotation: Number(space.dataset.rotation) || 0,
+      verticalUpright,
     };
     wysiwygDrag = state;
     element.setPointerCapture?.(pointerId);
@@ -4272,12 +4331,14 @@
       const width = Math.max(1, space.offsetWidth);
       const height = Math.max(1, space.offsetHeight);
       if (axis === "both" || axis === "x") {
-        state.widthPercent = clamp(state.startWidthPercent + rotated.x / width * 100, isContent ? 10 : 5, Math.max(isContent ? 10 : 5, 100 - state.xPercent));
+        if (state.verticalUpright) state.heightPercent = clamp(state.startHeightPercent + rotated.x / width * 100, 5, 100);
+        else state.widthPercent = clamp(state.startWidthPercent + rotated.x / width * 100, isContent ? 10 : 5, Math.max(isContent ? 10 : 5, 100 - state.xPercent));
         state.displayWidthPercent = clamp(state.startDisplayWidthPercent + rotated.x / width * 100, isContent ? 10 : 5, Math.max(isContent ? 10 : 5, 100 - state.xPercent));
         element.style.width = `${state.displayWidthPercent}%`;
       }
       if (axis === "both" || axis === "y") {
-        state.heightPercent = clamp(state.startHeightPercent + rotated.y / height * 100, isContent ? 10 : 5, Math.max(isContent ? 10 : 5, 100 - state.yPercent));
+        if (state.verticalUpright) state.widthPercent = clamp(state.startWidthPercent + rotated.y / height * 100, 5, 100);
+        else state.heightPercent = clamp(state.startHeightPercent + rotated.y / height * 100, isContent ? 10 : 5, Math.max(isContent ? 10 : 5, 100 - state.yPercent));
         state.displayHeightPercent = clamp(state.startDisplayHeightPercent + rotated.y / height * 100, isContent ? 10 : 5, Math.max(isContent ? 10 : 5, 100 - state.yPercent));
         element.style.height = `${state.displayHeightPercent}%`;
       }
@@ -4374,6 +4435,7 @@
       displayXPercent: Number(element.dataset.displayXPercent ?? config.xPercent),
       displayYPercent: Number(element.dataset.displayYPercent ?? config.yPercent),
       widthPercent: config.widthPercent,
+      verticalUpright: space.dataset.writingMode === "vertical-upright",
     };
     element.setPointerCapture?.(pointerId);
     syncWysiwygControls();
@@ -4383,8 +4445,13 @@
       const rotated = rotatedDragDelta(moveEvent.clientX - wysiwygDrag.startClientX, moveEvent.clientY - wysiwygDrag.startClientY, wysiwygDrag.rotation);
       const width = Math.max(1, space.offsetWidth);
       const height = Math.max(1, space.offsetHeight);
-      wysiwygDrag.xPercent = clamp(wysiwygDrag.startXPercent + rotated.x / width * 100, 0, Math.max(0, 100 - wysiwygDrag.widthPercent));
-      wysiwygDrag.yPercent = clamp(wysiwygDrag.startYPercent + rotated.y / height * 100, 0, 96);
+      if (wysiwygDrag.verticalUpright) {
+        wysiwygDrag.xPercent = clamp(wysiwygDrag.startXPercent + rotated.y / height * 100, 0, Math.max(0, 100 - wysiwygDrag.widthPercent));
+        wysiwygDrag.yPercent = clamp(wysiwygDrag.startYPercent - rotated.x / width * 100, 0, 96);
+      } else {
+        wysiwygDrag.xPercent = clamp(wysiwygDrag.startXPercent + rotated.x / width * 100, 0, Math.max(0, 100 - wysiwygDrag.widthPercent));
+        wysiwygDrag.yPercent = clamp(wysiwygDrag.startYPercent + rotated.y / height * 100, 0, 96);
+      }
       wysiwygDrag.displayXPercent = wysiwygDrag.startDisplayXPercent + rotated.x / width * 100;
       wysiwygDrag.displayYPercent = wysiwygDrag.startDisplayYPercent + rotated.y / height * 100;
       element.style.left = `${wysiwygDrag.displayXPercent}%`;
@@ -4650,10 +4717,14 @@
       if (!selectionOnly && index === activeIndex) {
         const layoutContext = activeWysiwygLayout(false);
         const layout = layoutContext.layout || createDefaultTextFieldLayout(layoutContext.variant);
+        const sideData = placement.record?.[previewSide] || {};
         const textBox = wysiwygTextBoxMm(working, placement);
+        const verticalUpright = placement.record?.style?.writingMode === "vertical-upright"
+          || sideData.textOrientation === "vertical-upright";
         const space = document.createElement("div");
         space.className = "label-sheet-wysiwyg-space";
         space.dataset.rotation = String(textBox.rotation);
+        space.dataset.writingMode = verticalUpright ? "vertical-upright" : "horizontal";
         space.style.left = `${textBox.x / rect.widthMm * 100}%`;
         space.style.top = `${textBox.y / rect.heightMm * 100}%`;
         space.style.width = `${textBox.width / rect.widthMm * 100}%`;
@@ -4687,7 +4758,6 @@
         contentResize.setAttribute("aria-hidden", "true");
         contentResize.addEventListener("pointerdown", (event) => beginWysiwygResize(event, contentBox, space, "content", "both"));
         contentBox.appendChild(contentResize);
-        const sideData = placement.record?.[previewSide] || {};
         const qrConfig = sideData.qrEnabled && cleanText(sideData.qrValue)
           ? resolvedWysiwygQrLayout(layoutContext)
           : null;
@@ -4707,10 +4777,12 @@
         };
         WYSIWYG_FIELD_KEYS.forEach((fieldName) => {
           const config = normalizeTextFieldLayout(layout[fieldName], fieldName);
-          const displayGeometry = overlayFieldGeometry(config, contentConfig, qrConfig, textBox, rect);
+          const displayGeometry = verticalUpright
+            ? verticalOverlayFieldGeometry(config, previewText[fieldName], contentConfig, textBox, wysiwygOverlayFontScale(placement, sideData))
+            : overlayFieldGeometry(config, contentConfig, qrConfig, textBox, rect);
           const field = document.createElement("div");
           const placeholder = !cleanText(outputText[fieldName]);
-          field.className = `label-sheet-wysiwyg-field${fieldName === wysiwygField ? " is-active" : ""}${config.visible === false ? " is-hidden-field" : ""}${displayGeometry.autoWrapped ? " is-auto-wrapped" : ""}${placeholder ? " is-placeholder" : ""}`;
+          field.className = `label-sheet-wysiwyg-field${verticalUpright ? " is-vertical-upright" : ""}${fieldName === wysiwygField ? " is-active" : ""}${config.visible === false ? " is-hidden-field" : ""}${displayGeometry.autoWrapped ? " is-auto-wrapped" : ""}${placeholder ? " is-placeholder" : ""}`;
           field.setAttribute("role", "button");
           field.setAttribute("aria-label", `${WYSIWYG_FIELD_LABELS[fieldName]} 위치 이동`);
           field.title = `${WYSIWYG_FIELD_LABELS[fieldName]} · 끌어서 이동${displayGeometry.autoWrapped ? " · QR을 피해 자동 감싸기" : ""}${config.visible === false ? " · 출력 숨김" : ""}`;
@@ -4720,7 +4792,7 @@
           field.dataset.displayYPercent = String(displayGeometry.yPercent);
           field.dataset.displayWidthPercent = String(displayGeometry.widthPercent);
           field.dataset.displayHeightPercent = String(displayGeometry.heightPercent);
-          field.dataset.automaticHeight = String(config.heightPercent === null);
+          field.dataset.automaticHeight = String(!verticalUpright && config.heightPercent === null);
           field.dataset.placeholder = String(placeholder);
           field.dataset.sizePercent = String(config.sizePercent);
           field.dataset.fontWeight = String(config.weight);
@@ -4731,6 +4803,10 @@
           field.style.height = `${displayGeometry.heightPercent}%`;
           field.style.textAlign = config.align;
           field.style.justifyContent = config.align === "right" ? "flex-end" : config.align === "center" ? "center" : "flex-start";
+          if (verticalUpright) {
+            field.style.writingMode = "vertical-rl";
+            field.style.textOrientation = "upright";
+          }
           field.style.fontFamily = config.fontFamily === "inherit"
             ? placement.record?.style?.fontFamily || placement.style?.fontFamily || "inherit"
             : config.fontFamily;

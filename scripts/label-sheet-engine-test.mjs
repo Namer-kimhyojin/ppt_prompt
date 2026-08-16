@@ -521,5 +521,13 @@ test("serialization excludes runtime blobs and object URLs", () => {
   assert.equal(engine.createDefaultProject({ settings: { outputGoal: "invalid" } }).settings.outputGoal, "print");
 });
 
+test("upright vertical text orientation survives project normalization", () => {
+  const project = engine.createDefaultProject({
+    records: [{ label_id: "VERTICAL", front: { title: "세로쓰기", textOrientation: "vertical-upright" } }],
+  });
+  assert.equal(project.records[0].front.textOrientation, "vertical-upright");
+  assert.equal(engine.toSerializableProject(project).records[0].front.textOrientation, "vertical-upright");
+});
+
 console.log(`label-sheet-engine: ${passed.length} tests passed`);
 passed.forEach((name) => console.log(`  ✓ ${name}`));

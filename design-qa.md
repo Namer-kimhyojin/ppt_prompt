@@ -58,6 +58,88 @@ final result: passed
 
 ---
 
+# 라벨 문구·용지 방향 지원 확인 (2026-08-16)
+
+- Viewports: desktop 1706×960, mobile 390×844
+- Modes checked: 가로쓰기, 세로쓰기·글자 세움, 기존 90° 회전 배치, A4 세로·가로 용지
+- Entry points: `레이아웃 → 용지 방향 설정…`, `레이아웃 → 문구 방향 설정…`, `Ctrl+K` 명령 찾기
+
+## Findings
+
+- 정통 세로쓰기는 글자 자체를 회전하지 않고 위→아래, 오른쪽→왼쪽 열 순서로 배치한다.
+- 기존 `portrait` 값은 90° 회전 배치로 유지해 저장된 프로젝트와 출력 호환성을 보존한다.
+- 세로쓰기 전환 시 기존 가로 레이아웃 좌표를 세로 조판용 열 좌표로 재해석해 연번·제목·부제·본문·하단 문구의 겹침을 줄인다.
+- 확대 편집 DOM과 캔버스 출력이 같은 방향 모델을 사용한다. PNG·PDF·인쇄는 공통 renderer 경로를 공유한다.
+- 모바일 390px에서 라벨 작업대 `scrollWidth === clientWidth`, 표시 버튼 텍스트 넘침 0건, 모든 문구 필드에 `writing-mode: vertical-rl`과 `text-orientation: upright`가 적용됐다.
+- 방향 메뉴는 해당 모달을 열고 `labelSheetOrientation` 또는 `labelSheetContentOrientation`으로 포커스를 직접 이동한다.
+
+## Validation
+
+- `label-sheet-assets-test.mjs`: 통과
+- `label-sheet-engine-test.mjs`: 19개 통과
+- 전체 smoke에서 라벨 방향·출력·모바일 검사는 통과했다.
+- 전체 smoke의 잔여 실패 2건은 이번 범위 밖의 `src/common-prompt.js`, `src/generator.js` 기존 작업 상태와 관련된 비주얼 리소스 9상태 및 사진 역할 검사다.
+
+final result: passed for label direction scope
+
+---
+
+# 모바일 라벨 가로·세로 비율 유지 Design QA
+
+- Source visual truth: `D:\00. Dev_Folder\Promptdeck\.codex-remote-attachments\01a002d3-32cc-7ee0-b739-d364607767a5\4916bad5-2351-4ddb-b559-91ad7b000628\1-Photo-1.jpg`
+- Implementation screenshot: `C:\Users\aplus\.codex\visualizations\2026\08\15\01a002d3-32cc-7ee0-b739-d364607767a5\label-aspect-mobile-after.png`
+- Focused comparison: `C:\Users\aplus\.codex\visualizations\2026\08\15\01a002d3-32cc-7ee0-b739-d364607767a5\label-aspect-before-after.png`
+- Viewport: requested 390×844; in-app browser CSS viewport 520×1125 at devicePixelRatio 0.75; CDP output normalized to 390×844 pixels
+- Source pixels: 628×1280; implementation pixels: 390×844
+- State: light theme, 라벨·티켓 제작 > 레이아웃 편집 > 개별 티켓 > 앞면, 94×67.75mm · 8칸
+
+## Full-view comparison evidence
+
+사용자 첨부 화면과 수정 후 모바일 전체 화면을 각각 열어 확인했다. 수정 전에는 실제 규격이 94×67.75mm인데도 편집 캔버스가 작업대 높이 전체를 차지해 화면 표시 비율이 약 0.80으로 세로로 늘어났다. 수정 후에는 모바일 작업대 안에서 가로 폭을 기준으로 축소되어 실측 465.33×335.38 CSS px, 비율 1.3875로 표시된다.
+
+## Focused region comparison evidence
+
+`label-aspect-before-after.png`에 수정 전·후 라벨 영역을 한 화면에 배치해 외곽 테두리, 안전영역, 배경 이미지, 제목·부제·본문·하단 문구의 상대 위치를 비교했다. 수정 후 라벨 외곽선과 내부 편집 상자가 실제 94÷67.75=1.38745 비율에 맞고, 배경 및 텍스트가 함께 같은 비율로 복원된다.
+
+## Findings
+
+- No actionable P0, P1, or P2 findings remain.
+- Fonts and typography: 기존 글꼴, 굵기, 줄높이, 줄바꿈 설정을 변경하지 않았다. 비율 복원 후 글자가 세로로 늘어나지 않고 원래 상대 크기로 표시된다.
+- Spacing and layout rhythm: 라벨 캔버스는 가로형 최대 720px, 세로형 최대 420px 범위에서 화면 폭에 맞춰 축소된다. 작업대의 남는 공간은 중앙 정렬 여백으로 유지한다.
+- Colors and tokens: 배경, 테두리, 선택선, 강조색 토큰을 변경하지 않았다.
+- Image quality and asset fidelity: 사용자 데이터와 기존 배경 이미지를 그대로 사용했으며 새 이미지나 대체 그래픽을 추가하지 않았다. 배경은 라벨과 함께 균일하게 축소된다.
+- Copy and content: 버튼 및 라벨 문구를 변경하지 않았고 텍스트 잘림이나 버튼 뒤틀림이 없다.
+- Responsive behavior: 390×844, 375×667, 844×390 및 데스크톱에서 실제 비율과 화면 비율 오차가 0.00006 이하이며 가로 넘침이 없다.
+- Accessibility and interaction: 기존 선택·이동·크기 조절, 모바일 속성/작업 메뉴, 하단 검토·내보내기 액션을 유지했다.
+
+## Comparison history
+
+### Pass 1 — blocked
+
+- [P1] 모바일 개별 티켓 캔버스가 `height: 100%`로 작업대 전체 높이를 사용하면서 `max-width: 100%`에 의해 가로 폭만 제한되어, 실제 규격과 다른 세로형 화면으로 왜곡됐다.
+- Fix: 캔버스 높이를 자동 계산하고 가로형·세로형 최대 폭을 분리해 인라인 `aspect-ratio`가 실제 크기를 결정하도록 수정했다.
+
+### Pass 2 — passed
+
+- Post-fix visual evidence: 모바일 465.33×335.38px, 데스크톱 720×518.92px로 모두 1.3875 비율을 유지한다.
+- No remaining P0/P1/P2 visual differences.
+
+## Primary interactions tested
+
+- 모바일 개별 티켓/앞면 편집 화면 표시
+- 390×844 및 375×667 세로 화면
+- 844×390 가로 화면
+- 데스크톱 개별 티켓 편집 화면
+- 화면 폭 변경 후 라벨 비율 유지
+
+## Console errors checked
+
+- 수정 후 라벨 편집 화면의 console error/warning 없음.
+
+final result: passed
+
+---
+
 # 라벨 진행 단계 위치 Design QA
 
 - Source visual truth: `%USERPROFILE%\AppData\Local\Temp\codex-clipboard-a21e77ff-6d4e-47da-a439-44f5d02228da.png`
