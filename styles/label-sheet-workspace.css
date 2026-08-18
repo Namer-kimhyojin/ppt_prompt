@@ -4650,3 +4650,974 @@ body.label-sheet-modal-open #paneLabelSheet .label-sheet-workspace-undo-toast {
     display: none;
   }
 }
+
+/* V10 — 데스크톱 밀도와 시각 계층을 정돈한 캔버스 중심 작업대 */
+@media (min-width: 1100px) {
+  #paneLabelSheet.label-sheet-workspace-v10 {
+    --label-workspace-topbar-height: 72px;
+    --label-workspace-flowbar-height: 42px;
+    --label-workspace-right-width: clamp(326px, 21vw, 368px);
+    --label-workspace-statusbar-height: 28px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar {
+    grid-template-rows: 28px 32px;
+    gap-block: 2px;
+    padding-block: 4px;
+    box-shadow: 0 3px 12px color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-center,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-actions {
+    grid-template-rows: 28px 32px;
+    gap-block: 2px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar :is(button, .btn) {
+    min-height: 30px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-mark {
+    min-width: 40px;
+    height: 40px;
+    padding-inline: 8px;
+    border-radius: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-history-button,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-command-button,
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetWorkspaceSettingsBtn,
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetWorkspaceReviewBtn {
+    padding-inline: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flowbar {
+    gap: 8px;
+    padding: 3px 12px;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--ink) 4%, transparent);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flow-list {
+    gap: 3px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flow-step {
+    min-height: 34px;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 0 6px;
+    padding: 2px 7px;
+    border-radius: 7px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flow-number {
+    width: 22px;
+    height: 22px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flow-step small {
+    font-size: 9px;
+  }
+
+  /* 보기 전환과 선택 항목 빠른 도구를 한 줄로 합쳐 캔버스 높이를 확보한다. */
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-canvas-column {
+    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-rows: 44px auto minmax(0, 1fr) auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-canvas-header {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 44px;
+    padding: 4px 6px 4px 10px;
+    border-right: 1px solid var(--line);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-context-toolbar {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    padding: 4px 10px 4px 8px;
+    overflow: visible;
+    border-bottom: 1px solid var(--line);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-context-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-context-target-picker {
+    flex: 0 1 230px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-context-target-summary {
+    min-height: 34px;
+    padding-block: 4px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-context-action,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-fine-tune {
+    min-height: 34px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-canvas-meta {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetPreviewToolbar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-canvas-panel {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetFocusStatus {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-ticket-canvas .label-sheet-focus-stage {
+    padding: 18px clamp(18px, 3vw, 44px);
+    background: color-mix(in srgb, var(--surface-soft) 94%, #dbe4f0);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-ticket-canvas .label-sheet-focus-surface {
+    filter: drop-shadow(0 14px 22px color-mix(in srgb, var(--ink) 14%, transparent));
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-inspector-heading {
+    padding: 8px 12px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-inspector-heading .label-sheet-workspace-section-heading {
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 8px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-inspector-heading .label-sheet-workspace-section-heading > small {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-inspector-heading .label-sheet-workspace-eyebrow {
+    font-size: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-editor-head,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-scope,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-navigation-grid {
+    padding: 6px 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-head-actions {
+    gap: 5px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetFocusRecordLabel {
+    min-width: 0;
+    padding: 5px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-face-toggle button,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-head-actions .btn {
+    min-height: 32px;
+    padding: 4px 8px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-scope {
+    gap: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-scope button {
+    min-height: 40px;
+    padding: 6px 9px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-navigation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-navigation {
+    grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-focus-navigation .btn {
+    min-width: 0;
+    min-height: 34px;
+    padding-inline: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-inspector-actions {
+    padding: 8px 10px 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetWorkspaceSettingsDrawer .label-sheet-workspace-drawer-panel {
+    animation: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-undo-toast {
+    right: auto;
+    bottom: calc(var(--label-workspace-statusbar-height) + 14px);
+    left: 20px;
+  }
+}
+
+@media (min-width: 1600px) {
+  #paneLabelSheet.label-sheet-workspace-v10 {
+    --label-workspace-topbar-height: 56px;
+    --label-workspace-right-width: clamp(340px, 19vw, 366px);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar {
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 10px;
+    padding: 5px 12px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-brand,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-center,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-actions,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-menubar,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-work-mode,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-goal-switch,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-spec-summary,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-history-actions,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-command-button,
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetWorkspaceSettingsBtn,
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetWorkspaceReviewBtn {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-center,
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-actions {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-center {
+    justify-content: flex-start;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-topbar-actions {
+    justify-content: flex-end;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-brand-copy {
+    max-width: 126px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-spec-summary {
+    width: auto;
+    min-width: 150px;
+    max-width: 190px;
+  }
+
+  /* 규격 요약이 설정 진입점을 겸하므로 넓은 화면에서는 별도 설정 버튼을 반복하지 않는다. */
+  #paneLabelSheet.label-sheet-workspace-v10 #labelSheetWorkspaceSettingsBtn {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flowbar {
+    padding-inline: 16px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v10 .label-sheet-workspace-flow-current {
+    display: none;
+  }
+}
+
+/* V11 — 상단 명령, 캔버스 도구, 상세 속성, 하단 단계, 상태를 역할별로 분리한다. */
+#paneLabelSheet.label-sheet-workspace-v11 {
+  --label-workspace-topbar-height: 54px;
+  --label-workspace-flowbar-height: 46px;
+  --label-workspace-statusbar-height: 30px;
+  --label-workspace-bottom-dock-height: calc(var(--label-workspace-flowbar-height) + var(--label-workspace-statusbar-height));
+  grid-template-rows:
+    var(--label-workspace-topbar-height)
+    minmax(0, 1fr)
+    var(--label-workspace-flowbar-height)
+    var(--label-workspace-statusbar-height);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar {
+  z-index: 40;
+  grid-row: 1;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-entry,
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-frame {
+  grid-row: 2;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flowbar {
+  z-index: 24;
+  grid-row: 3;
+  gap: 10px;
+  padding: 4px 12px;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 0;
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  box-shadow: 0 -8px 22px color-mix(in srgb, var(--ink) 7%, transparent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step {
+  min-height: 36px;
+  border-radius: 8px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step:is(.is-active, [aria-current="step"]) {
+  border-color: color-mix(in srgb, var(--accent) 44%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 82%, var(--surface));
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-current {
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-statusbar {
+  z-index: 26;
+  display: grid;
+  min-height: var(--label-workspace-statusbar-height);
+  grid-row: 4;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-alt) 94%, var(--surface));
+  box-shadow: none;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 :is(
+  .label-sheet-workspace-status-primary,
+  .label-sheet-workspace-status-context,
+  .label-sheet-workspace-status-shortcuts
+) {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-context {
+  border-inline: 1px solid var(--line);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-statusbar :is(
+  .label-sheet-workspace-save-state,
+  .label-sheet-workspace-history-state,
+  .label-sheet-workspace-preset-state,
+  #labelSheetFocusStatus,
+  #labelSheetStatus,
+  .label-sheet-workspace-shortcut-note
+) {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-context #labelSheetFocusStatus {
+  flex: 1 1 auto;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-context #labelSheetStatus {
+  max-width: 36%;
+  flex: 0 1 auto;
+  padding-left: 8px;
+  border-left: 1px solid var(--line);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-save-state::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: 999px;
+  background: var(--success);
+  content: "";
+  vertical-align: 1px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-label {
+  flex: 0 0 auto;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-header,
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-toolbar {
+  z-index: 6;
+  background: var(--surface);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-toolbar {
+  background: color-mix(in srgb, var(--accent-soft) 24%, var(--surface));
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector {
+  z-index: 10;
+  border-left: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: -10px 0 26px color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-heading {
+  border-bottom: 2px solid color-mix(in srgb, var(--accent) 38%, var(--line));
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-actions {
+  border-top: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-drawer {
+  z-index: 300;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-command-palette {
+  z-index: 340;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-undo-toast {
+  z-index: 360;
+}
+
+@media (min-width: 861px) {
+  #paneLabelSheet.label-sheet-workspace-v11 {
+    --label-workspace-right-width: clamp(326px, 21vw, 372px);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    grid-template-rows: minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--line-strong);
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-center,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-actions,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-menubar,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-work-mode,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-goal-switch,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-spec-summary,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-history-actions,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-command-button,
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceReviewBtn {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand {
+    display: flex;
+    align-self: center;
+    gap: 7px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mark {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy {
+    display: grid;
+    max-width: 100px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy .label-sheet-workspace-eyebrow,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy #labelSheetWorkspaceMode {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-center,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-actions {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-center {
+    justify-content: flex-start;
+    overflow: visible;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-actions {
+    justify-content: flex-end;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-menubar {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 1px;
+    padding: 2px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface-alt);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-menu-trigger,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mode-button,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-segment,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-spec-summary,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-history-button,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-command-button,
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceReviewBtn {
+    min-height: 34px;
+    padding: 5px 9px;
+    white-space: nowrap;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-work-mode,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-goal-switch {
+    flex: 0 0 auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-spec-summary {
+    width: auto;
+    min-width: 146px;
+    max-width: 184px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-actions,
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceSettingsBtn,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-tools-button {
+    display: none !important;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceReviewBtn {
+    display: inline-flex;
+    min-width: 112px;
+    justify-content: center;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-list {
+    gap: 4px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step :is(strong, small) {
+    font-size: 12px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-column {
+    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-rows: 48px auto minmax(0, 1fr);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-header {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 48px;
+    gap: 8px;
+    padding: 5px 8px 5px 10px;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-toolbar {
+    display: grid;
+    min-width: 0;
+    grid-column: 2;
+    grid-row: 1;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 10px;
+    padding: 5px 10px;
+    overflow: visible;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-heading {
+    position: static;
+    display: grid;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0 10px 0 0;
+    overflow: visible;
+    align-content: center;
+    border-right: 1px solid var(--line);
+    clip: auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-heading span {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-target-picker {
+    flex: 0 1 230px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-target-summary,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-action,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-fine-tune {
+    min-height: 36px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-meta {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetPreviewToolbar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-panel {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-ticket-canvas .label-sheet-focus-stage {
+    padding: 18px clamp(18px, 3vw, 44px);
+    background: color-mix(in srgb, var(--surface-soft) 94%, #dbe4f0);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-ticket-canvas .label-sheet-focus-surface {
+    filter: drop-shadow(0 14px 22px color-mix(in srgb, var(--ink) 14%, transparent));
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1399px) {
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-goal-switch {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-spec-summary {
+    min-width: 130px;
+    max-width: 152px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-command-button {
+    padding-inline: 7px;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1099px) {
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-menubar,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-command-button {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  #paneLabelSheet.label-sheet-workspace-v11 {
+    --label-workspace-topbar-height: 52px;
+    --label-workspace-flowbar-height: calc(62px + env(safe-area-inset-bottom));
+    --label-workspace-statusbar-height: 26px;
+    --label-workspace-right-width: 0px;
+    grid-template-rows:
+      var(--label-workspace-topbar-height)
+      minmax(0, 1fr)
+      var(--label-workspace-statusbar-height)
+      var(--label-workspace-flowbar-height);
+  }
+
+  body:has(#paneLabelSheet.label-sheet-workspace-v11.active) {
+    padding-bottom: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 8px;
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--line-strong);
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--ink) 7%, transparent);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand {
+    display: contents;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mark {
+    display: inline-flex;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy {
+    display: grid;
+    min-width: 0;
+    align-content: center;
+    justify-items: start;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy .label-sheet-workspace-eyebrow,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy #labelSheetWorkspaceMode {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-brand-copy h2 {
+    font-size: 14px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-center,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-history-actions,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-command-button,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-actions,
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceSettingsBtn,
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceReviewBtn {
+    display: none !important;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar-actions {
+    display: flex;
+    min-width: 44px;
+    justify-content: flex-end;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-topbar .label-sheet-workspace-tools-button {
+    display: inline-flex !important;
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-entry,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-frame {
+    grid-row: 2;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-statusbar {
+    grid-row: 3;
+    grid-template-columns: max-content minmax(0, 1fr);
+    border-top-color: var(--line-strong);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-primary,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-context {
+    padding-inline: 8px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-context {
+    border-right: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-history-state,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-preset-state,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-context #labelSheetStatus,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-status-shortcuts {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-statusbar :is(.label-sheet-workspace-save-state, #labelSheetFocusStatus) {
+    font-size: 12px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flowbar {
+    grid-row: 4;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line-strong);
+    background: color-mix(in srgb, var(--surface) 98%, transparent);
+    box-shadow: 0 -10px 24px color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-list {
+    gap: 2px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step {
+    min-height: 52px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 20px 18px;
+    justify-items: center;
+    gap: 2px;
+    padding: 4px 2px 3px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    text-align: center;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-number {
+    display: inline-grid;
+    width: 20px;
+    height: 20px;
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 10px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step strong {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: center;
+    font-size: 11px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step small,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-current {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-column {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 48px 48px auto minmax(0, 1fr);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-header {
+    display: grid;
+    min-height: 48px;
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 6px;
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-label,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-meta {
+    display: none;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-switch {
+    min-width: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-switch .label-sheet-workspace-segment {
+    min-width: 0;
+    min-height: 40px;
+    flex: 1 1 50%;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mobile-inspector-toggle {
+    display: inline-flex;
+    width: 44px;
+    min-width: 44px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-toolbar {
+    display: block;
+    min-width: 0;
+    grid-column: 1;
+    grid-row: 2;
+    padding: 4px 6px;
+    overflow: visible;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-controls {
+    display: flex;
+    width: 100%;
+    gap: 4px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-target-picker {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-target-summary,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-action,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-fine-tune {
+    min-height: 40px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetPreviewToolbar {
+    grid-row: 3;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-panel {
+    grid-row: 4;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 :is(
+    .label-sheet-workspace-panel-host,
+    .label-sheet-workspace-inspector
+  ) {
+    z-index: 120;
+    inset: var(--label-workspace-topbar-height) 0 var(--label-workspace-bottom-dock-height) 0;
+    border-top: 1px solid var(--line-strong);
+    box-shadow: 0 -12px 32px color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-heading,
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mobile-tool-header {
+    min-height: 58px;
+    padding: 8px 10px;
+    border-bottom: 2px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-actions {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-undo-toast {
+    right: 8px;
+    bottom: calc(var(--label-workspace-bottom-dock-height) + 8px);
+    left: 8px;
+  }
+}
+
+@media (max-width: 380px) {
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-flow-step strong {
+    font-size: 9px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-action {
+    min-width: 40px;
+    padding-inline: 5px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-fine-tune {
+    min-width: 66px;
+    padding-inline: 6px;
+  }
+}

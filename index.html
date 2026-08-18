@@ -56,7 +56,7 @@
       document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
     })();
   </script>
-  <link rel="stylesheet" href="styles/base.css?v=2" />
+  <link rel="stylesheet" href="styles/base.css?v=3" />
   <link rel="stylesheet" href="styles/adsense.css?v=1" />
   <link rel="stylesheet" href="styles/admin-access.css?v=1" />
   <link rel="stylesheet" href="styles/designer.css" />
@@ -71,7 +71,7 @@
   <link rel="stylesheet" href="styles/slide-document.css" />
   <link rel="stylesheet" href="styles/form-image.css?v=3" />
   <link rel="stylesheet" href="styles/label-sheet.css?v=23" />
-  <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=12" />
+  <link rel="stylesheet" href="styles/label-sheet-workspace.css?v=15" />
   <link rel="stylesheet" href="styles/qr-generator.css?v=4" />
   <link rel="stylesheet" href="styles/theme.css?v=dark-aa-20260804" />
   <link rel="stylesheet" href="styles/ui-system.css?v=3" />
@@ -85,6 +85,7 @@
       <div class="brand-copy">
         <h1 class="brand-title">PromptDeck</h1>
         <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스</p>
+        <span class="mobile-active-tool" id="mobileActiveTool" aria-live="polite">공통 프롬프트</span>
       </div>
     </div>
     <div class="header-user-bar" id="userBar" style="display:none">
@@ -102,6 +103,10 @@
         <span>로그아웃</span>
       </button>
     </div>
+    <button type="button" class="app-tool-menu-btn" id="appToolMenuBtn" aria-label="PromptDeck 작업 도구 열기" aria-controls="appToolNavigation" aria-expanded="false">
+      <span aria-hidden="true">도구</span>
+      <span class="sr-only">PromptDeck 작업 도구 열기</span>
+    </button>
     <button type="button" class="theme-toggle" id="themeToggleBtn" aria-label="다크 모드로 전환" aria-pressed="false" title="테마 전환">
       <span class="theme-toggle-icon" aria-hidden="true">☾</span>
       <span class="theme-toggle-text" aria-hidden="true">다크</span>
@@ -115,7 +120,7 @@
     </div>
   </section>
 
-  <div class="app-tabs-bar">
+  <div class="app-tabs-bar" id="appToolNavigation">
     <div class="app-tab-group-switcher" role="group" aria-label="작업군 선택">
       <button type="button" class="app-tab-group-switch active" data-tab-group-filter="deck" aria-pressed="true">슬라이드</button>
       <button type="button" class="app-tab-group-switch" data-tab-group-filter="special" aria-pressed="false">업무 이미지</button>
@@ -5924,7 +5929,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/skill-preset-contract.js?v=1"></script>
   <script src="app.js?v=5"></script>
   <script src="src/promptdeck-api-globals.js"></script>
-  <script src="src/tabs.js?v=10"></script>
+  <script src="src/tabs.js?v=12"></script>
   <script src="src/theme.js?v=2"></script>
   <script src="src/generator.js?v=7"></script>
   <script src="src/promotion-data.js?v=2"></script>
@@ -5978,7 +5983,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/label-sheet-renderer.js?v=9"></script>
   <script src="src/label-sheet-package.js?v=1"></script>
   <script src="src/label-sheet.js?v=28"></script>
-  <script src="src/label-sheet-workspace-layout.js?v=12"></script>
+  <script src="src/label-sheet-workspace-layout.js?v=15"></script>
   <script src="src/label-sheet-workspace.js?v=11"></script>
   <script src="src/qr-batch.js?v=2"></script>
   <script src="src/legal-links.js"></script>

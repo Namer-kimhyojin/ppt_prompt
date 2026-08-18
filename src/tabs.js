@@ -116,6 +116,8 @@
   const mobileTabActions = document.getElementById("mobileTabActions");
   const tabList = document.querySelector(".app-tabs");
   const groupFilters = Array.from(document.querySelectorAll("[data-tab-group-filter]"));
+  const appToolMenuButton = document.getElementById("appToolMenuBtn");
+  const mobileActiveTool = document.getElementById("mobileActiveTool");
   const ACTIVE_TAB_STORAGE_KEY = "promptdeck.activeTab.v1";
   const DEFAULT_TAB_KEY = "commonPrompt";
   const defaultTabsByGroup = {
@@ -318,6 +320,12 @@
 
   function renderMobileActions(actionKey) {
     if (!mobileTabActions) return;
+    if (actionKey === "labelSheet") {
+      mobileTabActions.replaceChildren();
+      mobileTabActions.hidden = true;
+      document.body.classList.remove("has-mobile-tab-actions");
+      return;
+    }
     const labelSheetPane = document.getElementById("paneLabelSheet");
     const labelSheetGoal = labelSheetPane?.dataset.outputGoal || "print";
     const labelSheetWorkspaceAction = labelSheetGoal === "prompt"
@@ -396,6 +404,25 @@
     });
   }
 
+  function setMobileToolNavigation(open, options = {}) {
+    const nextOpen = Boolean(open) && window.matchMedia("(max-width: 720px)").matches;
+    document.body.classList.toggle("app-tool-nav-open", nextOpen);
+    appToolMenuButton?.setAttribute("aria-expanded", String(nextOpen));
+    if (nextOpen) {
+      window.requestAnimationFrame(() => {
+        const activeGroup = groupFilters.find((button) => button.getAttribute("aria-pressed") === "true");
+        (activeGroup || tabs[activeTabKey]?.button)?.focus({ preventScroll: true });
+      });
+    } else if (options.restoreFocus) {
+      appToolMenuButton?.focus({ preventScroll: true });
+    }
+  }
+
+  function syncMobileShellLabel(tabKey) {
+    if (!mobileActiveTool) return;
+    mobileActiveTool.textContent = tabs[tabKey]?.button?.textContent?.trim() || "작업 도구";
+  }
+
   function revealActiveTab(tabKey, immediate = false) {
     const button = tabs[tabKey]?.button;
     if (!tabList || !button) return;
@@ -439,6 +466,8 @@
     }
     renderHeaderActions(tabs[nextTab]?.actions || "designer", nextTab);
     renderMobileActions(tabs[nextTab]?.actions || "designer");
+    syncMobileShellLabel(nextTab);
+    setMobileToolNavigation(false);
   }
 
   Object.keys(tabs).forEach((key) => {
@@ -449,12 +478,20 @@
   groupFilters.forEach((button) => {
     button.addEventListener("click", () => {
       const groupKey = button.dataset.tabGroupFilter;
+      if (document.body.classList.contains("app-tool-nav-open")) {
+        updateGroupNavigation(groupKey);
+        return;
+      }
       const availableTabs = getAvailableTabKeys(groupKey);
       const currentTabInGroup = getTabGroup(activeTabKey) === groupKey && availableTabs.includes(activeTabKey) ? activeTabKey : null;
       const configuredDefault = defaultTabsByGroup[groupKey];
       const nextTab = currentTabInGroup || (availableTabs.includes(configuredDefault) ? configuredDefault : availableTabs[0]);
       if (nextTab) switchTab(nextTab);
     });
+  });
+
+  appToolMenuButton?.addEventListener("click", () => {
+    setMobileToolNavigation(!document.body.classList.contains("app-tool-nav-open"));
   });
 
   document.getElementById("legacyGoCommonBtn")?.addEventListener("click", () => switchTab(DEFAULT_TAB_KEY));
@@ -483,6 +520,9 @@
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     tabActions?.querySelectorAll("details[open]").forEach((details) => { details.open = false; });
+    if (document.body.classList.contains("app-tool-nav-open")) {
+      setMobileToolNavigation(false, { restoreFocus: true });
+    }
   });
 
   window.addEventListener("promptdeck:label-sheet-goal-change", () => {
@@ -496,7 +536,10 @@
     window.cancelAnimationFrame(revealResizeFrame);
     revealResizeFrame = window.requestAnimationFrame(() => revealActiveTab(activeTabKey, true));
   };
-  window.addEventListener("resize", revealActiveTabAfterResize, { passive: true });
+  window.addEventListener("resize", () => {
+    revealActiveTabAfterResize();
+    if (!window.matchMedia("(max-width: 720px)").matches) setMobileToolNavigation(false);
+  }, { passive: true });
 
   const slideDocumentPane = tabs.slideDocument.pane;
   if (slideDocumentPane) {

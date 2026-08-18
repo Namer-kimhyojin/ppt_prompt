@@ -250,7 +250,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
     const regressionSelectors = {
       tabBtnCommonPrompt: [".cpd-btn.primary", ".cpd-journey-panel-head > span"],
       tabBtnFormImage: [".form-image-prompt-viewer", ".form-image-step-head b"],
-      tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-mode-button.is-active"],
+      tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-flow-step[aria-current='step']"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],
       tabBtnDataDiagram: [".diagram-readiness-head span", ".diagram-result-tab.active"],
       tabBtnPromotion: [".promo-step-num", ".promo-stat-chip"],
@@ -1013,8 +1013,9 @@ async function runSmokeTest() {
     );
 
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.click("#appToolMenuBtn");
+    await page.waitForFunction(() => document.body.classList.contains("app-tool-nav-open"));
     await page.click('[data-tab-group-filter="special"]');
-    await page.waitForSelector("#paneFormImage.active");
     record((await page.locator('.app-tabs[data-active-group="special"] .app-tab-group[data-tab-group="special"]:visible').count()) === 1, "Mobile task-group switcher did not reveal the selected tool group", failures);
     record((await page.locator('.app-tabs .app-tab-group:visible').count()) === 1, "Mobile navigation displayed more than one tool group at a time", failures);
     const mobileNavigation = await page.evaluate(() => {
@@ -1024,28 +1025,33 @@ async function runSmokeTest() {
       const detailRow = document.querySelector('.app-tabs[data-active-group="special"] .app-tab-group-buttons');
       return {
         headerPosition: getComputedStyle(document.querySelector(".app-header")).position,
+        headerHeight: document.querySelector(".app-header").getBoundingClientRect().height,
         tabBarPosition: getComputedStyle(document.querySelector(".app-tabs-bar")).position,
         tabBarTop: getComputedStyle(document.querySelector(".app-tabs-bar")).top,
-        tabBarHeight: document.querySelector(".app-tabs-bar").getBoundingClientRect().height,
+        toolButtonHeight: document.querySelector("#appToolMenuBtn").getBoundingClientRect().height,
         switchMinHeight: Math.min(...switches.map((element) => element.getBoundingClientRect().height)),
         switchWidthSpread: Math.max(...switchWidths) - Math.min(...switchWidths),
         detailMinHeight: Math.min(...detailTabs.map((element) => element.getBoundingClientRect().height)),
         detailDisplay: getComputedStyle(detailRow).display,
-        detailRowHeight: detailRow.getBoundingClientRect().height,
-        detailScrollable: detailRow.scrollWidth > detailRow.clientWidth,
+        drawerOpen: document.body.classList.contains("app-tool-nav-open"),
       };
     });
-    record(mobileNavigation.headerPosition === "static" && mobileNavigation.tabBarPosition === "sticky" && mobileNavigation.tabBarTop === "0px", "Mobile header and sticky task navigation did not use the compact scroll behavior", failures);
-    record(mobileNavigation.switchMinHeight >= 44 && mobileNavigation.detailMinHeight >= 44, "Mobile purpose or detail tabs were smaller than the 44px touch target", failures);
-    record(mobileNavigation.switchWidthSpread <= 1 && mobileNavigation.detailDisplay === "flex" && mobileNavigation.detailScrollable, "Mobile purpose/detail navigation did not use a balanced group switcher and one-row scroller", failures);
-    record(mobileNavigation.tabBarHeight <= 110 && mobileNavigation.detailRowHeight <= 48, `Mobile task navigation consumed too much vertical space (${Math.round(mobileNavigation.tabBarHeight)}px)`, failures);
+    record(mobileNavigation.headerPosition === "sticky" && mobileNavigation.headerHeight <= 58 && mobileNavigation.tabBarPosition === "fixed" && mobileNavigation.tabBarTop === "56px", "Mobile app bar and tool drawer did not use the compact app-shell geometry", failures);
+    record(mobileNavigation.toolButtonHeight >= 44 && mobileNavigation.switchMinHeight >= 44 && mobileNavigation.detailMinHeight >= 44, "Mobile app-shell controls were smaller than the 44px touch target", failures);
+    record(mobileNavigation.switchWidthSpread <= 1 && mobileNavigation.detailDisplay === "grid" && mobileNavigation.drawerOpen, "Mobile tool navigation did not use a balanced switcher and two-column drawer", failures);
+    await page.click("#tabBtnFormImage");
+    await page.waitForSelector("#paneFormImage.active");
+    record(!(await page.evaluate(() => document.body.classList.contains("app-tool-nav-open"))), "Mobile tool drawer did not close after selecting a tool", failures);
+    record((await page.locator("#mobileActiveTool").textContent()).trim() === "양식 이미지", "Mobile app bar did not announce the active tool", failures);
     record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="formImageCopyPromptBtn"]').isVisible(), "Mobile primary action did not follow the active business-image tool", failures);
 
+    await page.click("#appToolMenuBtn");
     await page.click("#tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
     record(await page.locator("#promotionCopyPromptBtn").isHidden(), "Promotion result duplicated its copy action inside the mobile output card", failures);
     record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="promotionCopyPromptBtn"]').isVisible(), "Promotion mobile copy action was not kept in the global action bar", failures);
 
+    await page.click("#appToolMenuBtn");
     await page.click('[data-tab-group-filter="visual"]');
     await page.click("#tabBtnPhotoTransform");
     await page.waitForSelector("#panePhotoTransform.active");
@@ -1054,7 +1060,9 @@ async function runSmokeTest() {
     record(await page.locator("#photoTransformGalleryMore:not([hidden])").isVisible(), "Photo style gallery did not expose progressive loading on mobile", failures);
     await page.click("#photoTransformGalleryMoreBtn");
     record((await page.locator("#photoTransformGallery .pt-style-card").count()) === 36, "Photo style gallery did not append the next mobile page", failures);
+    await page.click("#appToolMenuBtn");
     await page.click('[data-tab-group-filter="deck"]');
+    await page.click("#tabBtnCommonPrompt");
     await page.waitForSelector("#paneCommonPrompt.active");
     record(await page.locator("#mobileTabActions").isHidden(), "Global mobile action bar conflicted with the common-prompt journey bar", failures);
     const mobileBriefOverflow = await page.locator("#cpdAccordionBody0 .cpd-brief-quick-grid").evaluate((element) => element.scrollWidth - element.clientWidth);
@@ -2456,8 +2464,11 @@ SLIDE-TWO-CONTENT`);
     };
     const generateLabelPrompt = async () => {
       const target = page.locator("#labelSheetGeneratePromptBtn");
-      if (await target.isVisible()) await target.click();
-      else await page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').click();
+      if (!(await target.isVisible())) {
+        await page.locator('[data-label-workspace-flow-step="output"]').click();
+        await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+      }
+      await target.click();
       await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
     };
     const closeLabelReview = async () => {
@@ -2595,7 +2606,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#paneLabelSheet").getAttribute("data-right-panel")) === "expanded", "Label-sheet layout shortcut did not restore the two-panel editing layout", failures);
     record((await page.locator('input[name="labelSheetOutputGoal"]').count()) === 2, "Label-sheet did not expose the two distinct creation methods", failures);
     record((await page.locator('input[name="labelSheetIntentDocumentType"]').count()) === 4, "Label-sheet did not ask for the document type before detailed settings", failures);
-    await page.click("#labelSheetWorkspaceSettingsBtn");
+    await page.click("#labelSheetWorkspaceSpecSummary");
     record(await page.locator("#labelSheetWorkspaceSettingsDrawer").isVisible() && await page.locator("#labelSheetOutputGoalPrompt").isVisible(), "Label-sheet project settings drawer did not expose creation settings", failures);
     const labelSettingsGeometry = await page.evaluate(() => {
       const drawer = document.querySelector("#labelSheetWorkspaceSettingsDrawer");
@@ -2626,7 +2637,7 @@ SLIDE-TWO-CONTENT`);
     await selectLabelGoal("prompt");
     record((await page.locator("#paneLabelSheet").getAttribute("data-output-goal")) === "prompt", "Label-sheet prompt goal did not update the workflow state", failures);
     record(await page.locator("#labelSheetPrintBtn").isHidden(), "Label-sheet prompt-only goal kept the print action visible", failures);
-    record(await page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]').isVisible(), "Label-sheet prompt workspace did not expose its primary generation action", failures);
+    record(await page.locator('[data-label-workspace-flow-step="output"]').isVisible() && (await page.locator('[data-label-workspace-flow-step="output"] strong').textContent()).trim() === "생성", "Label-sheet prompt workspace did not expose its primary generation action", failures);
     record((await page.locator("#labelSheetOutputTitle").textContent()).includes("프롬프트"), "Label-sheet result title did not adapt to the prompt goal", failures);
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()), "Label-sheet prompt goal did not keep QR-space reservation available", failures);
     record(await page.locator("#labelSheetAssetRegisterBtn").isHidden(), "Label-sheet prompt-only goal still exposed background-image composition", failures);
@@ -2638,13 +2649,13 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#labelSheetDnaFeaturedGallery").count()) === 1, "Label-sheet prompt goal removed its design-DNA gallery", failures);
     record((await page.locator('.label-sheet-output-route p:visible').count()) === 0, "Label-sheet prompt-only goal retained the redundant output-route explainer", failures);
     await selectLabelGoal("print");
-    record(await page.locator('#tabActions [data-proxy-target="labelSheetExportPdfBtn"]').isVisible() && await page.locator("#labelSheetGeneratePromptBtn").isHidden(), "Label-sheet print workspace did not expose the correct output route", failures);
+    record(await page.locator('[data-label-workspace-flow-step="output"]').isVisible() && (await page.locator('[data-label-workspace-flow-step="output"] strong').textContent()).trim() === "출력" && await page.locator("#labelSheetGeneratePromptBtn").isHidden(), "Label-sheet print workspace did not expose the correct output route", failures);
     record(!(await page.locator("#labelSheetQrEnabled").isDisabled()), "Label-sheet print goal did not restore QR composition capability", failures);
     record(await page.evaluate(() => Boolean(window.PromptDeckLabelSheet && window.PromptDeckLabelSheetEngine && window.PromptDeckLabelSheetAssets && window.PromptDeckLabelSheetRenderer && window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData)), "Label-sheet controller or domain modules were not exposed", failures);
     await selectLabelDocumentType("admission");
     record((await page.locator("#labelSheetSamplePreset option").count()) === 3, "Label-sheet admission type did not expose three contextual sample presets", failures);
     await selectHiddenLabelValue("#labelSheetSamplePreset", "staff-pass");
-    await page.click("#labelSheetWorkspaceSettingsBtn");
+    await page.click("#labelSheetWorkspaceSpecSummary");
     await page.click("#labelSheetIntentSampleBtn");
     await page.click("#labelSheetWorkspaceSettingsDrawer [data-label-workspace-drawer-close]");
     await page.waitForFunction(() => window.PromptDeckLabelSheet.getProject().records[0]?.id?.startsWith("DEMO-STAFF-"));
@@ -2925,7 +2936,7 @@ SLIDE-TWO-CONTENT`);
         .filter((control) => control.getClientRects().length && getComputedStyle(control).visibility !== "hidden");
       return {
         ready: pane?.dataset.labelWorkspaceLayoutReady,
-        classReady: pane?.classList.contains("label-sheet-workspace-v7"),
+        classReady: pane?.classList.contains("label-sheet-workspace-v11"),
         paneBottom: paneBox?.bottom || 0,
         viewportHeight: window.innerHeight,
         documentHeight: document.documentElement.scrollHeight,
@@ -2948,7 +2959,8 @@ SLIDE-TWO-CONTENT`);
       labelWorkspaceGeometry.ready === "true" &&
         labelWorkspaceGeometry.classReady &&
         labelWorkspaceGeometry.topbarDisplay === "grid" &&
-        labelWorkspaceGeometry.topbarHeight >= 80 &&
+        labelWorkspaceGeometry.topbarHeight >= 50 &&
+        labelWorkspaceGeometry.topbarHeight <= 58 &&
         labelWorkspaceGeometry.topbarControlsVisible &&
         labelWorkspaceGeometry.clippedTopbarButtons.length === 0 &&
         labelWorkspaceGeometry.frameDisplay === "grid" &&
@@ -2971,7 +2983,7 @@ SLIDE-TWO-CONTENT`);
       duplex.checked = true;
       duplex.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    await page.click("#labelSheetWorkspaceSettingsBtn");
+    await page.click("#labelSheetWorkspaceSpecSummary");
     await page.click("#labelSheetIntentSampleBtn");
     await page.click("#labelSheetWorkspaceSettingsDrawer [data-label-workspace-drawer-close]");
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
@@ -3916,7 +3928,8 @@ SLIDE-TWO-CONTENT`);
       const left = pane?.querySelector(".label-sheet-workspace-left");
       const focusSurface = pane?.querySelector("#labelSheetFocusSurface");
       const paneBox = pane?.getBoundingClientRect();
-      const actionBox = action?.getBoundingClientRect();
+      const workflowBox = pane?.querySelector(".label-sheet-workspace-flowbar")?.getBoundingClientRect();
+      const statusbarBox = pane?.querySelector(".label-sheet-workspace-statusbar")?.getBoundingClientRect();
       const focusBox = focusSurface?.getBoundingClientRect();
       const [focusAspectWidth, focusAspectHeight] = String(focusSurface?.style.aspectRatio || "")
         .split("/")
@@ -3925,9 +3938,14 @@ SLIDE-TWO-CONTENT`);
         .filter((control) => control.getClientRects().length && getComputedStyle(control).visibility !== "hidden");
       return {
         documentOverflow: document.documentElement.scrollHeight > window.innerHeight + 1,
+        viewportHeight: window.innerHeight,
         headerDisplay: getComputedStyle(document.querySelector(".app-header")).display,
         paneBottom: paneBox?.bottom || 0,
-        actionTop: actionBox?.top || window.innerHeight,
+        mobileActionHidden: Boolean(action?.hidden) && getComputedStyle(action).display === "none",
+        workflowTop: workflowBox?.top || 0,
+        workflowBottom: workflowBox?.bottom || 0,
+        statusbarTop: statusbarBox?.top || 0,
+        statusbarBottom: statusbarBox?.bottom || 0,
         toolbarDisplay: getComputedStyle(document.querySelector("#labelSheetPreviewToolbar")).display,
         leftPanelCount: pane?.querySelectorAll(".label-sheet-workspace-left").length || 0,
         leftPanelDisplay: left ? getComputedStyle(left).display : "missing",
@@ -3947,7 +3965,10 @@ SLIDE-TWO-CONTENT`);
     record(
       !labelMobileLayout.documentOverflow
         && labelMobileLayout.headerDisplay === "none"
-        && labelMobileLayout.paneBottom <= labelMobileLayout.actionTop + 1
+        && labelMobileLayout.paneBottom <= labelMobileLayout.viewportHeight + 1
+        && labelMobileLayout.mobileActionHidden
+        && labelMobileLayout.statusbarBottom <= labelMobileLayout.workflowTop + 1
+        && labelMobileLayout.workflowBottom <= labelMobileLayout.paneBottom + 1
         && labelMobileLayout.toolbarDisplay === "none"
         && labelMobileLayout.leftPanelCount === 1
         && labelMobileLayout.leftPanelDisplay === "none"
@@ -3961,7 +3982,7 @@ SLIDE-TWO-CONTENT`);
       failures
     );
     record(
-      await page.locator("#labelSheetWorkspaceDataModeBtn").isVisible()
+      await page.locator('[data-label-workspace-flow-step="data"]').isVisible()
         && await page.locator("#labelSheetWorkspaceInspectorBtn").isVisible()
         && await page.locator("#labelSheetWorkspaceToolsBtn").isVisible(),
       "Label-sheet mobile workspace hid data, property, or project access",
@@ -4112,19 +4133,20 @@ SLIDE-TWO-CONTENT`);
     await page.waitForTimeout(250);
     const labelSmallMobileLayout = await page.evaluate(() => {
       const pane = document.querySelector("#paneLabelSheet")?.getBoundingClientRect();
-      const action = document.querySelector("#mobileTabActions")?.getBoundingClientRect();
+      const action = document.querySelector("#mobileTabActions");
       const canvas = document.querySelector(".label-sheet-workspace-canvas-column")?.getBoundingClientRect();
       return {
         documentHeight: document.documentElement.scrollHeight,
         viewportHeight: window.innerHeight,
         paneBottom: pane?.bottom || 0,
-        actionTop: action?.top || window.innerHeight,
+        mobileActionHidden: Boolean(action?.hidden) && getComputedStyle(action).display === "none",
         canvasWidth: canvas?.width || 0,
       };
     });
     record(
       labelSmallMobileLayout.documentHeight <= labelSmallMobileLayout.viewportHeight + 1
-        && labelSmallMobileLayout.paneBottom <= labelSmallMobileLayout.actionTop + 1
+        && labelSmallMobileLayout.paneBottom <= labelSmallMobileLayout.viewportHeight + 1
+        && labelSmallMobileLayout.mobileActionHidden
         && labelSmallMobileLayout.canvasWidth >= 280,
       `Label-sheet compact phone viewport overflowed: ${JSON.stringify(labelSmallMobileLayout)}`,
       failures
@@ -4377,6 +4399,8 @@ SLIDE-TWO-CONTENT`);
       record((await page.locator(".tab-pane.active").count()) === 1, `${tabId} left more than one top-level pane active`, failures);
       if (["tabBtnPromotionPlanner", "tabBtnPhotoTransform"].includes(tabId)) {
         record(await page.locator("#tabActions").isHidden(), `${tabId} unexpectedly displayed an empty quick-action dock`, failures);
+      } else if (tabId === "tabBtnLabelSheet") {
+        record(await page.locator("#tabActions").isHidden() && (await page.locator("#paneLabelSheet [data-label-workspace-flow-step]").count()) === 5, `${tabId} did not replace the duplicate quick-action dock with its five-step workflow`, failures);
       } else {
         record(!(await page.locator("#tabActions").isHidden()) && (await page.locator(`#${controlledPaneId} #tabActions`).count()) === 1, `${tabId} quick actions were not mounted inside the active pane`, failures);
         const missingProxyTargets = await page.locator("#tabActions [data-proxy-target]").evaluateAll((buttons) => buttons
@@ -4536,9 +4560,11 @@ SLIDE-TWO-CONTENT`);
         if (viewport.width <= 720) {
           const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deck");
           const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
-          if (!(await groupFilter.isVisible()) && await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) {
-            await page.click("#labelSheetWorkspaceAppNavBtn");
+          if (!(await groupFilter.isVisible())) {
+            if (await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) await page.click("#labelSheetWorkspaceAppNavBtn");
+            else await page.click("#appToolMenuBtn");
           }
+          await groupFilter.waitFor({ state: "visible" });
           await groupFilter.click();
         }
         await page.click(`#${tabId}`);
@@ -4594,9 +4620,11 @@ SLIDE-TWO-CONTENT`);
         if (viewport.width <= 720) {
           const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deck");
           const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
-          if (!(await groupFilter.isVisible()) && await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) {
-            await page.click("#labelSheetWorkspaceAppNavBtn");
+          if (!(await groupFilter.isVisible())) {
+            if (await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) await page.click("#labelSheetWorkspaceAppNavBtn");
+            else await page.click("#appToolMenuBtn");
           }
+          await groupFilter.waitFor({ state: "visible" });
           await groupFilter.click();
         }
         await page.click(`#${tabId}`);
