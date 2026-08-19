@@ -102,7 +102,7 @@
   let currentWorkingProject = null;
   let wysiwygEnabled = pane.classList.contains("label-sheet-workspace-v2");
   let wysiwygField = "title";
-  let wysiwygScope = "record";
+  let wysiwygScope = "global";
   let wysiwygPlacementIndex = 0;
   let wysiwygDrag = null;
   let focusBackgroundMuted = true;
@@ -474,6 +474,13 @@
     ]),
   });
   const FLOW_STEP_KEYS = Object.freeze(["intent", "spec", "data", "design", "output"]);
+  const FLOW_STATE_LABELS = Object.freeze({
+    incomplete: "미완료",
+    current: "현재 단계",
+    complete: "완료",
+    warning: "확인 필요",
+    blocked: "선행 단계 필요",
+  });
   let flowActiveStep = "intent";
   let flowShowAll = false;
   let flowNavigationBusy = false;
@@ -543,8 +550,9 @@
       currentPageIndex = 0;
     }
     if ($("labelSheetContentBackTab")) {
-      $("labelSheetContentBackTab").disabled = !duplex;
-      $("labelSheetContentBackTab").setAttribute("aria-disabled", String(!duplex));
+      $("labelSheetContentBackTab").disabled = false;
+      $("labelSheetContentBackTab").setAttribute("aria-disabled", "false");
+      $("labelSheetContentBackTab").title = duplex ? "뒷면 내용 편집" : "뒷면을 만들고 양면 제작으로 전환";
     }
     if (!duplex && $("labelSheetContentBackTab")?.classList.contains("active")) {
       activateSubTab("labelSheetContentFrontTab", "labelSheetFrontContentPanel", ".label-sheet-content-tabs [role=tab]", ".label-sheet-content-panel");
@@ -643,28 +651,47 @@
     flowActiveStep = FLOW_STEP_KEYS.includes(activeStep) ? activeStep : "intent";
     const geometryValid = ENGINE.validateGeometry(project.spec).valid;
     const hasRecords = project.records.some((record) => !record.data?.excluded);
-    const completed = {
-      intent: true,
-      spec: geometryValid,
-      data: hasRecords,
-      design: hasRecords && Boolean(
+    const designComplete = hasRecords && Boolean(
         cleanText(project.settings?.frontTitle)
         || cleanText(project.settings?.frontBody)
         || cleanText(project.settings?.backgroundPrompt)
-        || project.records.some((record) => cleanText(record.front?.title) || cleanText(record.front?.backgroundAssetId)),
-      ),
-      output: false,
+        || project.records.some((record) => cleanText(record.front?.title) || cleanText(record.front?.backgroundAssetId))
+    );
+    const preflightIssues = pane.querySelectorAll("#labelSheetPreflight .label-sheet-preflight-item:not(.is-success)").length;
+    const readiness = {
+      intent: "complete",
+      spec: geometryValid ? "complete" : "warning",
+      data: hasRecords ? "complete" : "incomplete",
+      design: !geometryValid || !hasRecords ? "blocked" : designComplete ? "complete" : "warning",
+      output: !geometryValid || !hasRecords
+        ? "blocked"
+        : preflightIssues || !designComplete ? "warning" : "incomplete",
     };
+    const states = Object.fromEntries(FLOW_STEP_KEYS.map((step) => [
+      step,
+      step === flowActiveStep ? "current" : readiness[step],
+    ]));
+    const copy = flowStepCopy();
     pane.querySelectorAll("[data-label-sheet-progress]").forEach((item) => {
       const step = item.dataset.labelSheetProgress;
       const active = step === flowActiveStep;
+      const state = states[step] || "incomplete";
+      const readinessState = readiness[step] || "incomplete";
       item.classList.toggle("is-active", active);
-      item.classList.toggle("is-complete", Boolean(completed[step]));
+      item.classList.toggle("is-complete", readinessState === "complete");
+      item.classList.toggle("is-warning", readinessState === "warning");
+      item.classList.toggle("is-blocked", readinessState === "blocked");
+      item.dataset.state = state;
+      item.dataset.readiness = readinessState;
       const button = item.querySelector("button");
       if (button) {
+        button.dataset.state = state;
+        button.dataset.readiness = readinessState;
+        button.setAttribute("aria-label", `${copy[step]?.label || step} · ${FLOW_STATE_LABELS[state]}`);
         if (active) button.setAttribute("aria-current", "step");
         else button.removeAttribute("aria-current");
       }
+      pane.dataset[`flowState${step[0].toUpperCase()}${step.slice(1)}`] = state;
     });
     updateResultHeaderCopy();
     const stepChanged = pane.dataset.activeStep !== flowActiveStep;
@@ -673,6 +700,9 @@
     if (stepChanged) {
       window.dispatchEvent(new CustomEvent("promptdeck:label-sheet-step-change", { detail: { step: flowActiveStep } }));
     }
+    window.dispatchEvent(new CustomEvent("promptdeck:label-sheet-step-state-change", {
+      detail: { activeStep: flowActiveStep, states, readiness },
+    }));
   }
 
   function setFlowDetailsState(targetStep) {
@@ -784,7 +814,7 @@
     if ($("labelSheetPreflightDescription")) {
       $("labelSheetPreflightDescription").textContent = goal === "prompt"
         ? "페이지 수, 실제 문구, 연번과 QR 예약 공간을 점검합니다. QR 값 자체는 프롬프트에 포함하지 않습니다."
-        : "치명적 오류는 해결하기 전까지 PNG·PDF 출력을 막습니다.";
+        : "오류는 출력 전에 해결하고, 주의 항목은 시험 인쇄에서 확인하세요.";
     }
     const backgroundCopy = {
       print: ["배경 이미지 등록·맞춤", "출력에 사용할 실제 이미지를 등록하고 크기와 배정 범위를 맞춥니다."],
@@ -809,11 +839,15 @@
     if ($("labelSheetAssetStepState")) {
       $("labelSheetAssetStepState").textContent = goal === "prompt" ? "DNA 준비" : `${assetStore.list().length}개`;
     }
+    if ($("labelSheetRunPreflightBtn")) {
+      $("labelSheetRunPreflightBtn").textContent = goal === "prompt" ? "생성 준비 확인" : "다시 점검";
+    }
     updatePromptModeAvailability(goal);
     updateQrControlState(goal);
     updateSequenceControlState();
     updateIntentSummary();
     updateProgressState();
+    if (goal === "print") syncWysiwygControls();
     if (flowActiveStep === "design" && !flowShowAll) setFlowDetailsState("design");
     if (previous !== goal) window.dispatchEvent(new CustomEvent("promptdeck:label-sheet-goal-change", { detail: { goal } }));
     if (options.announce) setStatus(`${OUTPUT_GOALS[goal].label} 중심으로 화면을 정리했습니다.`, "success");
@@ -1580,14 +1614,15 @@
 
   function resolveVisualDesign(settings) {
     const snapshot = settings.visualStyleSnapshot;
+    const surfaceOverrides = settings.labelSurface && typeof settings.labelSurface === "object" ? settings.labelSurface : {};
     if (!snapshot) {
       return {
-        background: "#ffffff",
+        background: safeHex(surfaceOverrides.backgroundColor, "#ffffff"),
         surface: "#f8fafc",
         text: "#111827",
         secondaryText: "#475569",
         accent: "",
-        border: "",
+        border: safeHex(surfaceOverrides.borderColor, ""),
         fontFamily: resolveFontFamily(),
         stylePrompt: "",
       };
@@ -1596,12 +1631,12 @@
     const typography = snapshot.typography || {};
     const colors = Array.isArray(snapshot.colors) ? snapshot.colors : [];
     const dark = snapshot.mode === "dark" || palette.mode === "dark";
-    const background = safeHex(palette.background || colors[0], dark ? "#111827" : "#ffffff");
+    const background = safeHex(surfaceOverrides.backgroundColor || palette.background || colors[0], dark ? "#111827" : "#ffffff");
     const surface = safeHex(palette.surface || colors[1], dark ? "#1f2937" : "#f8fafc");
     const text = safeHex(palette.textPrimary || colors[4], dark ? "#f8fafc" : "#111827");
     const secondaryText = safeHex(palette.textSecondary || colors[2], dark ? "#dbeafe" : "#475569");
     const accent = safeHex(palette.accent || colors[3], dark ? "#22d3ee" : "#2563eb");
-    const border = safeHex(palette.border || colors[2], dark ? "#475569" : "#cbd5e1");
+    const border = safeHex(surfaceOverrides.borderColor || palette.border || colors[2], dark ? "#475569" : "#cbd5e1");
     const styleName = cleanText(snapshot.nameKo || snapshot.name || snapshot.id);
     const styleDirection = cleanText(snapshot.prompt?.en || snapshot.prompt?.ko || snapshot.prompt || snapshot.medium?.prompt);
     const stylePrompt = [
@@ -2030,6 +2065,9 @@
     const outputVisibility = normalizeOutputVisibility(settings.outputVisibility);
     const textLayouts = normalizeTextLayouts(settings.textLayouts);
     const recordTextLayouts = normalizeRecordTextLayouts(settings.recordTextLayouts);
+    const surfaceOverrides = settings.labelSurface && typeof settings.labelSurface === "object" ? settings.labelSurface : {};
+    const requestedBorderWidth = Number(surfaceOverrides.borderWidthMm);
+    const globalBorderWidth = Number.isFinite(requestedBorderWidth) ? clamp(requestedBorderWidth, 0, 2) : 0.25;
     const promptOnly = normalizeOutputGoal(settings.outputGoal) === "prompt";
     const showNumbers = settings.sequenceMode !== "none";
     const style = {
@@ -2047,7 +2085,8 @@
       backgroundColor: visualDesign.background,
       accentColor: visualDesign.accent,
       accentEdge: orientation === "horizontal" ? "top" : "left",
-      borderColor: visualDesign.border,
+      borderColor: globalBorderWidth > 0 ? visualDesign.border : "",
+      borderWidthMm: globalBorderWidth || 0,
       fontFamily: visualDesign.fontFamily,
       qr: deepClone(qr),
     };
@@ -2100,10 +2139,16 @@
           const recordFields = recordTextLayouts[recordLayoutKey(next.id)]?.[sideName]?.[variant];
           const customLayout = recordFields || textLayouts[sideName][variant] || (variant === "withQr" ? createDefaultTextFieldLayout(variant) : null);
           const normalizedLayout = customLayout ? normalizeTextFieldLayoutSet(customLayout) : null;
-          next[sideName].style = normalizedLayout ? {
+          const surfaceStyle = sourceRecord[sideName]?.surfaceStyle && typeof sourceRecord[sideName].surfaceStyle === "object"
+            ? deepClone(sourceRecord[sideName].surfaceStyle)
+            : {};
+          next[sideName].style = {
+            ...surfaceStyle,
+            ...(normalizedLayout ? {
             textFields: deepClone(textOnlyWysiwygFields(normalizedLayout)),
             textGroup: deepClone(normalizedLayout.content),
-          } : {};
+            } : {}),
+          };
           if (customLayout) {
             const qrLayout = normalizeQrFieldLayout(normalizedLayout.qr);
             const qrOverrides = Object.fromEntries(Object.entries(qrLayout).filter(([, value]) => value !== null));
@@ -2337,8 +2382,8 @@
     const currentCount = (project.records || []).filter((record) => !record.data?.excluded).length;
     if ($("labelSheetDataMappingCurrentStatus")) {
       $("labelSheetDataMappingCurrentStatus").textContent = currentCount
-        ? `현재 ${currentCount}건은 이미 출력 항목으로 정리되어 있습니다. 값 수정은 데이터 탭에서 바로 진행할 수 있습니다.`
-        : "아직 등록된 데이터가 없습니다. 표를 붙여넣거나 CSV·TSV 파일을 선택해 시작하세요.";
+        ? `현재 ${currentCount}건 연결 완료 · 값 수정은 데이터 탭에서 진행합니다.`
+        : "등록된 데이터가 없습니다 · 표 붙여넣기나 CSV·TSV 선택으로 시작하세요.";
     }
     if (!visible) return;
     if ($("labelSheetDataMappingImportSummary")) {
@@ -2919,6 +2964,20 @@
     } catch (error) {
       setImportStatus(error.message || "연속번호를 만들 수 없습니다.", "error");
     }
+  }
+
+  function fillDirectDataSample() {
+    setControl("labelSheetSequenceMode", "sequence");
+    setControl("labelSheetStartNumber", 1);
+    setControl("labelSheetEndNumber", 8);
+    setControl("labelSheetPrefix", "DEMO-");
+    setControl("labelSheetSuffix", "");
+    setControl("labelSheetPadding", 3);
+    setControl("labelSheetFirstSlot", 1);
+    setControl("labelSheetSkippedSlots", "");
+    updateSequenceControlState({ updateSummary: false });
+    applySequence({ replace: true, announce: false });
+    setImportStatus("예시 데이터 8건(DEMO-001~DEMO-008)을 입력했습니다. 목록과 미리보기에서 바로 확인할 수 있습니다.", "success");
   }
 
   function scheduleSequenceApply() {
@@ -3960,7 +4019,10 @@
       if ($("labelSheetQuickAvoidQr")) $("labelSheetQuickAvoidQr").checked = config.avoidQr !== false;
       setControl("labelSheetWysiwygColorMode", config.color === "inherit" ? "inherit" : "custom");
       setControl("labelSheetWysiwygColor", config.color === "inherit" ? "#111827" : config.color);
+      setControl("labelSheetQuickColorMode", config.color === "inherit" ? "inherit" : "custom");
+      setControl("labelSheetQuickColor", config.color === "inherit" ? "#111827" : config.color);
       if ($("labelSheetWysiwygColor")) $("labelSheetWysiwygColor").disabled = config.color === "inherit";
+      if ($("labelSheetQuickColor")) $("labelSheetQuickColor").disabled = config.color === "inherit";
       if ($("labelSheetWysiwygVisible")) $("labelSheetWysiwygVisible").checked = config.visible !== false;
     }
     if (isContent) {
@@ -3974,6 +4036,16 @@
       setControl("labelSheetWysiwygQrLayer", config.layer);
       setControl("labelSheetQuickQrLayer", config.layer);
     }
+    const labelSurface = selectedLabelSurface();
+    setControl("labelSheetQuickBackgroundColor", labelSurface.backgroundColor);
+    setControl("labelSheetQuickBorderColor", labelSurface.borderColor || "#cbd5e1");
+    setControl("labelSheetQuickBorderWidth", rounded(labelSurface.borderWidthMm));
+    const verticalHeight = isQr ? config.heightPercent : config.heightPercent ?? automaticFieldHeightPercent(config);
+    const verticalPosition = config.yPercent <= 1 ? "top" : config.yPercent >= 99 - verticalHeight ? "bottom" : "center";
+    ["top", "center", "bottom"].forEach((position) => {
+      const control = $(`labelSheetQuickVertical${position[0].toUpperCase()}${position.slice(1)}`);
+      if (control) control.setAttribute("aria-pressed", String(position === verticalPosition));
+    });
     const textInput = $("labelSheetWysiwygText");
     if (isText && textInput && document.activeElement !== textInput) textInput.value = activeWysiwygTextValue(context);
     if (!isContent && $("labelSheetWysiwygSizeValue")) $("labelSheetWysiwygSizeValue").textContent = `${rounded(config.sizePercent)}%`;
@@ -4054,6 +4126,64 @@
     syncWysiwygControls();
     renderWysiwygFocusOverlayNow();
     onProjectControlsChanged(message || `${WYSIWYG_FIELD_LABELS[wysiwygField]} 레이아웃을 수정했습니다.`, { rerenderTable: false });
+  }
+
+  function selectedLabelSurface() {
+    const surface = project.settings?.labelSurface && typeof project.settings.labelSurface === "object" ? project.settings.labelSurface : {};
+    const visual = resolveVisualDesign(project.settings || {});
+    const requestedWidth = Number(surface.borderWidthMm);
+    const fallback = {
+      backgroundColor: safeHex(surface.backgroundColor, visual.background || "#ffffff"),
+      borderColor: safeHex(surface.borderColor, visual.border || "#cbd5e1"),
+      borderWidthMm: Number.isFinite(requestedWidth) ? clamp(requestedWidth, 0, 2) : 0.25,
+    };
+    if (wysiwygScope !== "record") return fallback;
+    const record = activeWysiwygRecord();
+    const side = record?.[previewSide] && typeof record[previewSide] === "object" ? record[previewSide] : {};
+    const overrides = side.surfaceStyle && typeof side.surfaceStyle === "object" ? side.surfaceStyle : {};
+    const width = Number(overrides.borderWidthMm);
+    return {
+      backgroundColor: safeHex(side.backgroundColor, fallback.backgroundColor),
+      borderColor: safeHex(overrides.borderColor, fallback.borderColor),
+      borderWidthMm: Number.isFinite(width) ? clamp(width, 0, 2) : fallback.borderWidthMm,
+    };
+  }
+
+  function updateSelectedLabelSurface(property, nextValue, message) {
+    const colorProperty = property === "backgroundColor" || property === "borderColor";
+    const next = colorProperty ? safeHex(nextValue, property === "backgroundColor" ? "#ffffff" : "#cbd5e1") : clamp(Number(nextValue), 0, 2);
+    if (wysiwygScope === "record") {
+      const record = activeWysiwygRecord();
+      if (!record) return;
+      record[previewSide] = record[previewSide] && typeof record[previewSide] === "object" ? record[previewSide] : {};
+      if (property === "backgroundColor") record[previewSide].backgroundColor = next;
+      else {
+        const surface = record[previewSide].surfaceStyle && typeof record[previewSide].surfaceStyle === "object" ? record[previewSide].surfaceStyle : {};
+        record[previewSide].surfaceStyle = { ...surface, [property]: next };
+        if (property === "borderWidthMm" && next === 0) record[previewSide].surfaceStyle.borderColor = "";
+      }
+    } else {
+      const surface = project.settings.labelSurface && typeof project.settings.labelSurface === "object" ? project.settings.labelSurface : {};
+      project.settings.labelSurface = { ...surface, [property]: next };
+      if (property === "borderWidthMm" && next === 0) project.settings.labelSurface.borderColor = "";
+    }
+    syncWysiwygControls();
+    onProjectControlsChanged(message, { rerenderTable: false });
+  }
+
+  function setWysiwygVerticalPlacement(position) {
+    const context = activeWysiwygLayout(true);
+    if (!context.layout) return;
+    const config = wysiwygField === "qr"
+      ? resolvedWysiwygQrLayout(context)
+      : wysiwygField === "content"
+        ? normalizeContentFieldLayout(context.layout.content)
+        : normalizeTextFieldLayout(context.layout[wysiwygField], wysiwygField);
+    const height = wysiwygField === "qr"
+      ? config.heightPercent
+      : config.heightPercent ?? automaticFieldHeightPercent(config);
+    const nextY = position === "top" ? 0 : position === "bottom" ? Math.max(0, 100 - height) : Math.max(0, (100 - height) / 2);
+    updateWysiwygField("yPercent", nextY, `${WYSIWYG_FIELD_LABELS[wysiwygField]}을 ${position === "top" ? "위" : position === "bottom" ? "아래" : "가운데"}에 배치했습니다.`);
   }
 
   function updateWysiwygText(options = {}) {
@@ -5137,8 +5267,10 @@
     if ($("labelSheetFocusPageNext")) $("labelSheetFocusPageNext").disabled = currentPageIndex >= pages.length - 1;
     if ($("labelSheetDuplexStepState")) $("labelSheetDuplexStepState").textContent = working.spec.duplex.enabled ? `양면 · ${transformLabel(resolvedBackTransform(working.spec))}` : "단면";
     if ($("labelSheetDuplexSettings")) $("labelSheetDuplexSettings").hidden = !working.spec.duplex.enabled;
-    if ($("labelSheetPreviewBackBtn")) $("labelSheetPreviewBackBtn").disabled = !working.spec.duplex.enabled;
-    if ($("labelSheetFocusBackBtn")) $("labelSheetFocusBackBtn").disabled = !working.spec.duplex.enabled;
+    [$("labelSheetPreviewBackBtn"), $("labelSheetFocusBackBtn")].filter(Boolean).forEach((button) => {
+      button.disabled = false;
+      button.title = working.spec.duplex.enabled ? "뒷면 미리보기로 전환" : "뒷면을 만들고 양면 제작으로 전환";
+    });
     updatePrintJobControls(models.front.length);
 
     if (!pages.length) {
@@ -5312,7 +5444,7 @@
     }
     const unique = new Set();
     return [...errors, ...warnings].filter((issue) => {
-      const key = `${issue.level}:${issue.code}:${issue.message}`;
+      const key = `${issue.code}:${issue.message}`;
       if (unique.has(key)) return false;
       unique.add(key);
       return true;
@@ -5374,6 +5506,42 @@
     );
   }
 
+  function updatePromptReadiness(working, issues = []) {
+    const readiness = $("labelSheetPromptReadiness");
+    const status = $("labelSheetPromptReadinessStatus");
+    const button = $("labelSheetPromptReadinessBtn");
+    if (!readiness || !status || !button) return;
+    const promptOnly = normalizeOutputGoal(working.settings?.outputGoal) === "prompt";
+    readiness.hidden = !promptOnly;
+    if (!promptOnly) return;
+
+    const records = Array.from(working.records || []).filter((record) => !record.data?.excluded);
+    const hasVisibleCopy = records.some((record) => [
+      record.number,
+      record.front?.title,
+      record.front?.subtitle,
+      record.front?.body,
+      record.front?.footer,
+    ].some((entry) => cleanText(entry)));
+    const styleName = working.settings?.visualStyleSnapshot?.nameKo || working.settings?.visualStyleSnapshot?.name || "기본 스타일";
+    const errors = issues.filter((issue) => issue.level === "error").length;
+    const warnings = issues.filter((issue) => issue.level === "warning").length;
+    readiness.dataset.tone = errors ? "error" : warnings ? "warning" : records.length && hasVisibleCopy ? "success" : "";
+    status.textContent = `데이터 ${records.length}건 · 문구·연번 ${hasVisibleCopy ? "확인" : "확인 필요"} · 디자인 DNA ${styleName}`;
+    button.textContent = errors ? `오류 ${errors}건 수정` : warnings ? `주의 ${warnings}건 확인` : "검증 완료";
+  }
+
+  function openPromptValidation() {
+    const working = effectiveProject();
+    runPreflight({ working, announce: true });
+    const workspaceTrigger = document.querySelector('[data-label-workspace-bottom-command="validation"]');
+    if (workspaceTrigger) {
+      workspaceTrigger.click();
+      return;
+    }
+    scrollToFlowTarget($("labelSheetPreflight"));
+  }
+
   function runPreflight(options = {}) {
     const snapshot = options.working && options.models
       ? { working: options.working, models: options.models }
@@ -5384,6 +5552,11 @@
     const promptOnly = normalizeOutputGoal(working.settings?.outputGoal) === "prompt";
     const result = ENGINE.preflightProject(working, { requireBackgrounds: false });
     const issues = normalizeIssues(result, working);
+    const errorCount = issues.filter((issue) => issue.level === "error").length;
+    const warningCount = issues.filter((issue) => issue.level === "warning").length;
+    updatePromptReadiness(working, issues);
+    if ($("labelSheetPreflightErrorCount")) $("labelSheetPreflightErrorCount").textContent = String(errorCount);
+    if ($("labelSheetPreflightWarningCount")) $("labelSheetPreflightWarningCount").textContent = String(warningCount);
     const container = $("labelSheetPreflight");
     if (container) {
       container.replaceChildren();
@@ -5481,6 +5654,40 @@
     status.dataset.tone = "warning";
   }
 
+  function updatePromptExperienceSummary(pages = lastPromptBundle?.pagePrompts || []) {
+    const totalItems = pages.reduce((sum, page) => sum + promptItemsForPage(page).length, 0);
+    const styleName = project.settings?.visualStyleSnapshot?.nameKo || project.settings?.visualStyleSnapshot?.name || "기본 스타일";
+    const hasPages = pages.length > 0;
+    const pageTab = $("labelSheetPromptPageViewTab");
+    const itemTab = $("labelSheetPromptItemViewTab");
+    const actionHint = $("labelSheetPromptActionHint");
+    const dnaLock = $("labelSheetPromptDnaLock");
+    const copyAllButton = $("labelSheetCopyAllPromptsBtn");
+
+    if (dnaLock) dnaLock.textContent = `디자인 DNA · ${styleName}`;
+    if (pageTab) pageTab.textContent = hasPages ? `A4 페이지별 · ${pages.length}` : "A4 페이지별";
+    if (itemTab) itemTab.textContent = hasPages ? `개별 라벨별 · ${totalItems}` : "개별 라벨별";
+    if (copyAllButton) {
+      copyAllButton.disabled = !hasPages;
+      copyAllButton.textContent = hasPages ? `${pages.length}개 페이지 프롬프트 한 번에 복사` : "페이지 프롬프트 한 번에 복사";
+    }
+    if (!actionHint) return;
+    if (!hasPages) {
+      actionHint.textContent = "다음: 프롬프트를 생성하면 A4 페이지별 결과와 개별 라벨별 결과를 바로 확인할 수 있습니다.";
+      return;
+    }
+    actionHint.textContent = promptResultView === "item"
+      ? `추천: 현재 페이지의 개별 라벨 ${totalItems}개 중 필요한 항목만 복사해 이미지 생성에 사용하세요.`
+      : `추천: A4 페이지 프롬프트 ${pages.length}개를 순서대로 복사해 페이지 단위 이미지를 생성하세요.`;
+  }
+
+  function setPromptHandoffStatus(message = "") {
+    const status = $("labelSheetPromptHandoffStatus");
+    if (!status) return;
+    status.hidden = !message;
+    status.textContent = message;
+  }
+
   function confirmPromptDisclosure() {
     if (promptDisclosureAccepted) return true;
     promptDisclosureAccepted = window.confirm("전체 이미지 프롬프트에는 실제 라벨 문구와 번호가 포함됩니다. QR 값은 제외되지만, 외부 서비스로 복사하기 전에 개인정보와 민감정보를 확인했나요?");
@@ -5515,6 +5722,7 @@
       panels[key]?.classList.toggle("active", active);
       if (panels[key]) panels[key].hidden = !active;
     });
+    updatePromptExperienceSummary();
   }
 
   function renderPromptItem() {
@@ -5585,13 +5793,14 @@
       copyButtons.forEach((button) => { button.disabled = true; });
       copyNextButtons.forEach((button) => { button.disabled = true; });
       copyProgress.forEach((status) => { status.textContent = "복사 완료 0 / 0"; });
-      if ($("labelSheetCopyAllPromptsBtn")) $("labelSheetCopyAllPromptsBtn").disabled = true;
       if ($("labelSheetPromptPreview")) $("labelSheetPromptPreview").value = "";
       if ($("labelSheetPromptSplitSummary")) {
         $("labelSheetPromptSplitSummary").setAttribute("aria-label", "프롬프트 생성 전");
       }
       renderPromptItem();
       updatePromptPrivacyStatus();
+      updatePromptExperienceSummary(pages);
+      setPromptHandoffStatus();
       return "";
     }
 
@@ -5622,7 +5831,6 @@
     copyButtons.forEach((button) => { button.disabled = false; });
     copyNextButtons.forEach((button) => { button.disabled = currentPromptPageIndex >= pages.length - 1; });
     copyProgress.forEach((status) => { status.textContent = `복사 완료 ${copiedPromptPageIndices.size} / ${pages.length}`; });
-    if ($("labelSheetCopyAllPromptsBtn")) $("labelSheetCopyAllPromptsBtn").disabled = false;
     const output = promptForMode(page);
     if ($("labelSheetPromptPreview")) $("labelSheetPromptPreview").value = output;
     const totalItems = pages.reduce((sum, item) => sum + promptItemsForPage(item).length, 0);
@@ -5635,6 +5843,7 @@
     }
     renderPromptItem();
     updatePromptPrivacyStatus();
+    updatePromptExperienceSummary(pages);
     return output;
   }
 
@@ -5684,12 +5893,19 @@
       setStatus("프롬프트를 만들 라벨 데이터를 먼저 입력해 주세요.", "warning");
       return "";
     }
+    const preflight = runPreflight({ working, announce: false });
+    if (preflight.fatal) {
+      setStatus("오류를 수정한 뒤 프롬프트를 생성해 주세요. ‘검증 결과 보기’에서 바로 수정할 수 있습니다.", "error");
+      setOutputActionStatus(`프롬프트 생성 전 오류 ${preflight.issues.filter((issue) => issue.level === "error").length}건을 수정해 주세요.`, "error");
+      return "";
+    }
     lastPromptBundle = ENGINE.generatePromptBundle(working, { includeEmptySides: working.spec.duplex.enabled });
     copiedPromptPageIndices = new Set();
     promptDisclosureAccepted = false;
     const matchedIndex = lastPromptBundle.pagePrompts.findIndex((page) => page.sheetIndex === currentPageIndex && page.side === previewSide);
     currentPromptPageIndex = matchedIndex >= 0 ? matchedIndex : Math.min(currentPromptPageIndex, Math.max(0, lastPromptBundle.pagePrompts.length - 1));
     const output = renderPromptPage();
+    setPromptHandoffStatus("복사 후: 사용하는 이미지 생성 도구에 붙여넣고, 문구·연번과 QR 예약 공간이 그대로 유지됐는지 결과에서 확인하세요.");
     if (options.announce !== false) {
       const summary = lastPromptBundle.pagination;
       const itemCount = lastPromptBundle.individualPrompts?.length || 0;
@@ -5731,11 +5947,13 @@
       selectPromptPage(copiedIndex + 1);
       setStatus(`페이지 ${copiedIndex + 1} 프롬프트를 복사하고 ${copiedIndex + 2}페이지로 이동했습니다.`, "success");
       setOutputActionStatus(`복사 완료 ${copiedPromptPageIndices.size}/${pages.length} · ${copiedIndex + 2}페이지 선택`, "success");
+      setPromptHandoffStatus("복사 완료 · 이미지 생성 도구에 붙여넣은 뒤 다음 페이지도 같은 순서로 생성하세요.");
       return;
     }
     renderPromptPage();
     setStatus(`페이지 ${copiedIndex + 1} · 시트 ${page.sheetNumber} ${page.side === "back" ? "뒷면" : "앞면"} 프롬프트를 복사했습니다.`, "success");
     setOutputActionStatus(`복사 완료 ${copiedPromptPageIndices.size}/${pages.length}`, "success");
+    setPromptHandoffStatus("복사 완료 · 이미지 생성 도구에 붙여넣은 뒤 문구·연번이 정확한지 확인하세요.");
   }
 
   async function copyAllPrompts() {
@@ -5748,6 +5966,7 @@
     copiedPromptPageIndices = new Set(pages.map((_, index) => index));
     renderPromptPage();
     setStatus(`출력 순서대로 ${pages.length}페이지 프롬프트를 모두 복사했습니다.`, "success");
+    setPromptHandoffStatus(`${pages.length}개 페이지 복사 완료 · 이미지 생성 도구에서 페이지 순서를 유지해 생성하세요.`);
   }
 
   function selectPromptItem(index) {
@@ -5765,6 +5984,7 @@
     if (!item?.prompt || !confirmPromptDisclosure()) return;
     await writePromptClipboard(item.prompt);
     setStatus(`칸 ${item.slotNumber} · ${item.recordId} 개별 라벨 프롬프트를 복사했습니다.`, "success");
+    setPromptHandoffStatus("개별 라벨 프롬프트 복사 완료 · 이 라벨 한 장만 생성할 때 사용하세요.");
   }
 
   async function copyPageItems() {
@@ -5775,6 +5995,7 @@
     const output = items.map((item, index) => `### ITEM ${index + 1} · SLOT ${item.slotNumber} · ${item.recordId}\n${item.prompt}`).join("\n\n################################################################\n\n");
     await writePromptClipboard(output);
     setStatus(`현재 A4 페이지의 개별 라벨 프롬프트 ${items.length}개를 출력 순서대로 복사했습니다.`, "success");
+    setPromptHandoffStatus(`${items.length}개 개별 라벨 프롬프트 복사 완료 · 각 결과를 라벨별로 생성하세요.`);
   }
 
   async function registerPageImage() {
@@ -6680,10 +6901,7 @@
   }
 
   function selectPreviewSide(sideName) {
-    if (sideName === "back" && !project.spec.duplex.enabled) {
-      setStatus("뒷면 미리보기는 양면 출력을 선택하면 사용할 수 있습니다.", "warning");
-      return;
-    }
+    if (sideName === "back" && !ensureBackSide()) return;
     previewSide = sideName === "back" ? "back" : "front";
     currentPageIndex = 0;
     wysiwygPlacementIndex = 0;
@@ -6702,6 +6920,33 @@
     void refreshOutput().catch((error) => {
       setStatus(error.message || "선택한 면의 미리보기를 만들 수 없습니다.", "error");
     });
+  }
+
+  function ensureBackSide() {
+    if (checked("labelSheetModeDuplex") || project.spec.duplex.enabled) return true;
+    if (!window.confirm("뒷면을 생성할까요?\n앞면 문구를 바탕으로 수정 가능한 뒷면을 만들고 양면 제작으로 전환합니다.")) {
+      setStatus("뒷면 생성을 취소했습니다.", "warning");
+      return false;
+    }
+
+    OUTPUT_FIELD_KEYS.forEach((fieldName) => {
+      const field = `${fieldName.slice(0, 1).toUpperCase()}${fieldName.slice(1)}`;
+      setControl(`labelSheetBack${field}`, value(`labelSheetFront${field}`));
+      const frontVisibility = $(outputVisibilityControlId("front", fieldName));
+      const backVisibility = $(outputVisibilityControlId("back", fieldName));
+      if (frontVisibility && backVisibility) backVisibility.checked = frontVisibility.checked;
+    });
+    project.records.forEach((record) => {
+      const front = record.front || {};
+      const back = { ...(record.back || {}), enabled: true };
+      [...OUTPUT_FIELD_KEYS, "number"].forEach((fieldName) => {
+        if (!cleanText(back[fieldName])) back[fieldName] = front[fieldName] ?? record.number ?? "";
+      });
+      record.back = back;
+    });
+    setDuplexMode(true);
+    onProjectControlsChanged("뒷면을 만들고 양면 제작으로 전환했습니다. 앞면 문구를 복사했으니 뒷면에서 바로 수정할 수 있습니다.");
+    return true;
   }
 
   function applyDocumentTypeDefaults() {
@@ -6911,7 +7156,7 @@
     wysiwygEnabled = pane.classList.contains("label-sheet-workspace-v2");
     wysiwygPlacementIndex = 0;
     wysiwygField = "title";
-    wysiwygScope = "record";
+    wysiwygScope = "global";
     invalidatePromptBundle();
     fillPresetOptions();
     fillVisualStyleOptions();
@@ -7010,7 +7255,7 @@
     currentPageIndex = 0;
     wysiwygPlacementIndex = 0;
     wysiwygField = "title";
-    wysiwygScope = "record";
+    wysiwygScope = "global";
     invalidatePromptBundle();
     fillPresetOptions();
     fillVisualStyleOptions();
@@ -7072,6 +7317,11 @@
   }
 
   function bindEvents() {
+    window.addEventListener("promptdeck:label-workspace-step-request", (event) => {
+      const step = event.detail?.step;
+      if (!FLOW_STEP_KEYS.includes(step) || step === flowActiveStep) return;
+      activateFlowStep(step, { scroll: false });
+    });
     pane.querySelectorAll('input[name="labelSheetOutputGoal"]').forEach((radio) => {
       radio.addEventListener("change", (event) => {
         if (!event.target.checked) return;
@@ -7273,13 +7523,14 @@
       ["labelSheetContentBackTab", "labelSheetBackContentPanel"],
     ];
     contentTabs.forEach(([buttonId, panelId]) => listen(buttonId, "click", () => {
-      if (buttonId === "labelSheetContentBackTab" && !checked("labelSheetModeDuplex")) return;
+      if (buttonId === "labelSheetContentBackTab" && !ensureBackSide()) return;
       activateSubTab(buttonId, panelId, ".label-sheet-content-tabs [role=tab]", ".label-sheet-content-panel");
       const side = buttonId === "labelSheetContentBackTab" ? "back" : "front";
       if ($("labelSheetContentScopeStatus")) $("labelSheetContentScopeStatus").textContent = `${side === "front" ? "앞면" : "뒷면"} 개별 설정`;
       selectPreviewSide(side);
     }));
 
+    listen("labelSheetDataSampleBtn", "click", fillDirectDataSample);
     listen("labelSheetApplySequenceBtn", "click", () => applySequence({ announce: true }));
     listen("labelSheetPasteApplyBtn", "click", () => reviewImportText(value("labelSheetPasteInput"), "붙여넣기"));
     listen("labelSheetCsvInput", "change", (event) => readCsvFile(event.target.files?.[0]));
@@ -7519,6 +7770,19 @@
       updateWysiwygField("color", custom ? value("labelSheetWysiwygColor") || "#111827" : "inherit", custom ? `${WYSIWYG_FIELD_LABELS[wysiwygField]} 색상을 직접 지정합니다.` : `${WYSIWYG_FIELD_LABELS[wysiwygField]} 색상을 자동 대비로 되돌렸습니다.`);
     });
     listen("labelSheetWysiwygColor", "input", () => updateWysiwygField("color", value("labelSheetWysiwygColor"), `${WYSIWYG_FIELD_LABELS[wysiwygField]} 색상을 바꿨습니다.`));
+    listen("labelSheetQuickColorMode", "change", () => {
+      const custom = value("labelSheetQuickColorMode") === "custom";
+      updateWysiwygField("color", custom ? value("labelSheetQuickColor") || "#111827" : "inherit", custom ? `${WYSIWYG_FIELD_LABELS[wysiwygField]} 색상을 직접 지정합니다.` : `${WYSIWYG_FIELD_LABELS[wysiwygField]} 색상을 자동 대비로 되돌렸습니다.`);
+    });
+    listen("labelSheetQuickColor", "input", () => updateWysiwygField("color", value("labelSheetQuickColor"), `${WYSIWYG_FIELD_LABELS[wysiwygField]} 색상을 바꿨습니다.`));
+    [
+      ["labelSheetQuickBackgroundColor", "backgroundColor", "라벨 배경색을 바꿨습니다."],
+      ["labelSheetQuickBorderColor", "borderColor", "라벨 테두리색을 바꿨습니다."],
+    ].forEach(([id, property, message]) => listen(id, "input", () => updateSelectedLabelSurface(property, value(id), message)));
+    listen("labelSheetQuickBorderWidth", "change", () => updateSelectedLabelSurface("borderWidthMm", value("labelSheetQuickBorderWidth"), "라벨 테두리 굵기를 바꿨습니다."));
+    ["top", "center", "bottom"].forEach((position) => {
+      listen(`labelSheetQuickVertical${position[0].toUpperCase()}${position.slice(1)}`, "click", () => setWysiwygVerticalPlacement(position));
+    });
     listen("labelSheetWysiwygX", "change", () => updateWysiwygField("xPercent", numberValue("labelSheetWysiwygX", 0), `${WYSIWYG_FIELD_LABELS[wysiwygField]} 가로 위치를 바꿨습니다.`));
     listen("labelSheetWysiwygY", "change", () => updateWysiwygField("yPercent", numberValue("labelSheetWysiwygY", 0), `${WYSIWYG_FIELD_LABELS[wysiwygField]} 세로 위치를 바꿨습니다.`));
     listen("labelSheetWysiwygWidth", "change", () => updateWysiwygField("widthPercent", numberValue("labelSheetWysiwygWidth", 90), `${WYSIWYG_FIELD_LABELS[wysiwygField]} 문구 영역 너비를 바꿨습니다.`));
@@ -7545,6 +7809,7 @@
     listen("labelSheetFocusPagePrev", "click", () => movePreviewPage(-1));
     listen("labelSheetFocusPageNext", "click", () => movePreviewPage(1));
     listen("labelSheetRunPreflightBtn", "click", () => runPreflight({ announce: true }));
+    listen("labelSheetPromptReadinessBtn", "click", openPromptValidation);
     listen("labelSheetGeneratePromptBtn", "click", generatePrompts);
     listen("labelSheetPromptMode", "change", renderPromptPage);
     listen("labelSheetPromptPageSelect", "change", () => selectPromptPage(numberValue("labelSheetPromptPageSelect", 0)));
@@ -7626,7 +7891,7 @@
     syncProjectFromControls();
     await refreshOutput();
     if (pane.classList.contains("label-sheet-workspace-v2")) {
-      updateProgressState("design");
+      updateProgressState(project.records.some((record) => !record.data?.excluded) ? "design" : "intent");
       setFlowShowAll(true, { announce: false });
     } else {
       updateProgressState("intent");

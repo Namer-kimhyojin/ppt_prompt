@@ -58,6 +58,144 @@ final result: passed
 
 ---
 
+# 라벨 시작 카드·하단 단계 바 경계/가시성 Design QA
+
+- Source visual truth:
+  - `%USERPROFILE%\AppData\Local\Temp\codex-clipboard-1f8b577d-73bd-4ee4-b68b-8125c4c9349e.png` (886×478 px, 시작 카드)
+  - `%USERPROFILE%\AppData\Local\Temp\codex-clipboard-23c3ed01-face-40ae-9182-fd4dfc6c1aba.png` (1915×78 px, 하단 단계 바)
+- Browser-rendered implementation screenshot: `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-overflow-after-full.png` (2248×1280 px)
+- Combined comparison evidence: `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-overflow-comparison.png` (1915×760 px)
+- Viewport and density normalization: 인앱 브라우저 1706×960 CSS px, `devicePixelRatio 0.75`. 시작 카드는 구현 영역을 886×478 px로, 단계 바는 구현 영역을 1875×56 px로 정규화해 원본과 같은 비교 보드에 배치했다.
+- State: light theme, 라벨·티켓 제작, 데이터 0건, 새 프로젝트 시작 화면, 목표 현재/규격 완료/데이터 미완료/디자인·출력 잠김
+
+## Full-view comparison evidence
+
+두 사용자 캡처와 최종 브라우저 렌더링을 하나의 비교 이미지로 함께 열어 확인했다. 시작 카드의 체크 문자가 박스 왼쪽으로 튀어나오던 상태는 박스 내부의 녹색 상태선으로 바뀌었고, 하단 단계는 완료·현재·미완료·잠김 모두 독립된 테두리와 배경 면을 유지한다.
+
+## Focused region comparison evidence
+
+- 시작 안내 2개는 `scrollWidth === clientWidth`, `scrollHeight === clientHeight`, `::before content: none`이며 좌측 상태선이 박스 경계 안에 있다.
+- 단계 5개는 모두 실측 높이 약 42.7px, opacity 1, 가시적인 border/background를 유지했다. 잠긴 디자인·출력도 제목과 설명이 읽히며 현재 단계는 파란 강조 글자와 테두리를 유지했다.
+- 모바일 390×844 CSS px는 전체 스모크 테스트의 작업대/하단 단계/상태 바/44px 터치 타깃 검사를 통과했다. 첨부 원본이 데스크톱 상태이므로 별도 모바일 시각 비교 이미지는 만들지 않았다.
+
+## Findings
+
+- No actionable P0, P1, or P2 findings remain.
+- Fonts and typography: 기존 시스템 한글 폰트와 단계 제목/설명 위계를 유지하고, 잠긴 단계의 전체 opacity를 제거해 글자 대비만 정상화했다.
+- Spacing and layout rhythm: 데스크톱 단계 높이를 40px 이상으로 고정하고 하단 바 높이를 50px로 맞췄다. 시작 안내는 10×12px 내부 여백과 자동 줄바꿈으로 긴 문장이 박스 안에서 끝난다.
+- Colors and visual tokens: 새 색상 없이 기존 `surface-alt`, `line`, `line-strong`, `accent`, `status-success` 토큰만 사용했다. 완료는 옅은 성공 면, 현재는 파란 강조, 잠김은 중립 면으로 구분된다.
+- Image quality and assets: 이미지 자산이 없는 작업 UI이며 기존 체크 텍스트 글리프를 제거했다. 새 장식 자산이나 대체 아이콘은 추가하지 않았다.
+- Copy and content: 안내 문구와 5단계 명칭은 그대로 유지해 기능 의미와 작업 순서를 바꾸지 않았다.
+- Accessibility and interaction: 잠긴 단계는 실제 `disabled` 상태를 유지하되 시각 정보는 숨기지 않는다. 모바일 44px 터치 기준과 키보드/포커스 동작은 전체 회귀 검사에서 유지됐다.
+
+## Comparison history
+
+### Pass 1 — blocked
+
+- [P1] 안내 문장의 `✓` 의사 요소가 음수 여백으로 박스 왼쪽 경계를 침범했다.
+- [P1] 잠긴 단계에 `opacity: 0.46`이 적용되어 테두리·배경·제목·설명이 함께 희미해졌다.
+- [P2] 단계 바 기본 항목에 투명 테두리와 투명 배경을 사용해 현재 단계 외 항목이 눌리거나 함몰된 것처럼 보였다.
+- Fixes: 체크 글리프를 제거하고 박스 내부 성공 상태선으로 대체했다. 모든 단계에 중립 surface와 border를 부여하고, 잠김 opacity를 1로 복원했으며 현재/완료/잠김별 색상 위계를 분리했다.
+
+### Pass 2 — passed
+
+- Post-fix visual evidence: 결합 비교 이미지에서 안내 문구가 박스 안에 정렬되고, 5단계 모두 형태와 텍스트가 선명하게 유지된다.
+- Automated evidence: `npm run label:test` 통과, `npm run smoke:test` 통과, `node --check scripts/smoke-test.mjs` 통과, `git diff --check` 통과. 스모크에 안내 영역 넘침/의사 요소와 단계 높이·opacity·border·background·콘텐츠 경계 검사를 추가했다.
+
+## Primary interactions tested
+
+- 새 프로젝트 시작 화면 표시와 3개 시작 버튼 배치
+- 5단계 현재/완료/미완료/잠김 상태 렌더링
+- 데스크톱 1706×960 CSS px 전체 화면
+- 모바일 390×844 CSS px 하단 단계와 상태 바, 44px 터치 타깃
+
+## Console errors checked
+
+- 격리된 전체 스모크 브라우저에서 이번 변경으로 인한 콘솔 오류 없이 통과했다.
+- 인앱 브라우저에서는 시작 카드와 단계 상태 동기화, 새로고침 후 최종 렌더링을 확인했다.
+
+final result: passed
+
+---
+
+# 라벨 제작 P0 단계·상태·모바일 속성 편집 Design QA (2026-08-19)
+
+- Source visual truth: `C:\Users\aplus\AppData\Local\Temp\codex-clipboard-6d86012b-c9a3-4a9d-9454-bc802613726f.png` (1891×734 px)
+- Implementation screenshots:
+  - `C:\Users\aplus\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-p0\label-p0-final-desktop-full.png` (1900×734 px)
+  - `C:\Users\aplus\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-p0\label-p0-final-desktop-spec.png` (1425×892 px)
+  - `C:\Users\aplus\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-p0\label-p0-final-mobile.png` (375×844 px)
+- Combined comparison: `C:\Users\aplus\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-p0\desktop-before-after-comparison.png` (1900×1544 px)
+- Viewports: desktop 1900×734 CSS px and 1440×1000 CSS px; mobile requested 390×844 CSS px, in-app browser content capture 375×844 px
+- Density normalization: device scale factor 1. 데스크톱 기준 화면과 구현 전체 화면은 높이 734px을 유지한 채 한 비교 이미지에 세로로 결합했다. 모바일은 앱 화면 자체를 375×844px로 캡처했다.
+- State: light theme, 라벨·티켓 제작, 샘플 8건, 디자인 단계, 규격 설정 단계, 모바일 제목 속성 편집 시트
+
+## Full-view comparison evidence
+
+결합 비교 이미지에서 기존 화면의 열린 데이터 메뉴와 단계·작업·상태가 섞인 상단 밀도를 기준으로, 구현 화면은 작업 캔버스·우측 속성·하단 5단계·최하단 상태를 고정된 역할별 영역으로 분리했다. 현재 단계는 파란 강조, 완료는 초록, 확인 필요는 주황, 선행 단계 필요는 비활성 톤으로 일관되게 표현한다.
+
+## Focused region comparison evidence
+
+데스크톱 규격 캡처에서 `STEP 2 / 5`, `용지와 제품 규격`, `현재 · 완료`, 규격 필드, `다음 · 데이터 연결`이 하나의 작업 화면에만 표시됨을 확인했다. 모바일 캡처에서는 실제 티켓 미리보기가 y=155–225px, 속성 시트가 y=233–756px에 배치되어 미리보기와 편집기가 동시에 보이고, 하단 단계 바와 상태 바를 가리지 않는다.
+
+## Findings
+
+- No actionable P0, P1, or P2 findings remain.
+- Fonts and typography: 기존 PromptDeck의 Pretendard/시스템 산세리프 계열과 굵기 토큰을 재사용했다. 단계 제목 20px, 보조 설명 13px, 상태 배지 11px로 계층을 분리했고 모바일 단계명은 잘림 없이 유지된다.
+- Spacing and layout rhythm: 데스크톱 준비 화면은 최대 920px 단일 열 모달과 760px 작업 본문을 사용한다. 모바일 속성 시트는 화면의 62dvh만 사용하고, 실제 캔버스를 70px 높이 미니 미리보기로 상단에 고정한다.
+- Colors and visual tokens: 기존 `--surface`, `--line`, `--accent`, `--success`, `--status-warning` 토큰만 사용했다. 활성·완료·경고·차단 상태가 단계 바와 화면 상태 배지에서 같은 의미로 표시된다.
+- Image quality and asset fidelity: 새 장식 자산이나 대체 그래픽을 추가하지 않았다. 모바일 미니 미리보기는 별도 모조 이미지가 아니라 실제 `#labelSheetFocusSurface`를 같은 렌더러 상태로 축소 표시한다.
+- Copy and content: `제작 목표 선택`, `용지와 제품 규격`, `다음 · 규격 설정`, `다음 · 데이터 연결`, `현재 · 완료`처럼 현재 작업과 다음 행동을 직접 설명한다. 목표와 규격의 중복 제목·설명은 제거했다.
+- Accessibility and interaction: 숨긴 목표·규격 패널은 `hidden`, `inert`, `aria-hidden`이 함께 동기화된다. 현재 단계는 `aria-current="step"`, 단계 상태는 접근성 이름에 포함되고, 모바일 속성 시트는 Escape 닫기와 포커스 트랩을 유지한다.
+- Responsive behavior: 390×844, 375×667, 844×390과 데스크톱 회귀 시나리오가 통과했다. 모바일 속성 시트 높이는 뷰포트의 70% 이하이고 실제 미리보기가 시트 위에 남는다.
+
+## Comparison history
+
+### Pass 1 — blocked
+
+- [P1] 데스크톱 목표 화면에서 새 단계 헤더가 기존 2열 설정 그리드의 오른쪽 열로 밀려 목표 내용과 분리됐다.
+- [P1] 모바일 속성 패널이 화면 전체를 덮어 실제 티켓을 보지 못한 채 값을 조정해야 했다.
+- [P2] CSS로 숨긴 이전 단계의 텍스트가 보조기기 탐색 상태에 남을 수 있었다.
+- Fixes: 설정 모달을 920px 단일 열로 재구성하고, 모바일 속성 패널을 62dvh 하단 시트로 전환했으며, 실제 티켓을 70px 미니 미리보기로 고정했다. 단계 전환 시 `hidden`·`inert`·`aria-hidden`을 함께 적용했다.
+
+### Pass 2 — blocked
+
+- [P1] 단계별 보기 상태가 배경·디자인 자산 서랍 내부의 기존 상세 내용을 닫아 이미지 등록 버튼이 보이지 않았다.
+- Fix: 목표·규격만 전용 화면으로 분리하고, 작업대 밖 고급 서랍은 기존 전체 펼침 계약을 유지하도록 복원했다.
+
+### Pass 3 — passed
+
+- 목표→규격 전환, 상태 계약, 디자인 자산 등록, 모바일 미리보기+속성 시트, Escape 닫기와 터치 크기를 동일 회귀 시나리오에서 확인했다.
+- `npm run label:test`와 `npm run smoke:test`가 최종 통과했다.
+- No remaining P0/P1/P2 visual or interaction differences.
+
+## Primary interactions tested
+
+- 데스크톱 목표 전용 화면에서 규격 전용 화면으로 이동
+- 단계 바의 current/complete/warning/blocked/incomplete 상태 동기화
+- 데이터 적용 후 디자인 단계와 검토·출력 단계 이동
+- 배경·디자인 자산 서랍의 이미지 등록 흐름
+- 모바일 속성 시트 열기·닫기, 실제 캔버스 동시 확인, Escape 포커스 복귀
+- 390×844, 375×667, 844×390, 1440×1200 데스크톱 반응형 배치
+
+## Console errors checked
+
+- 전체 smoke의 새 브라우저 세션에서 수정 범위 관련 page error, script failure, failed response 없이 통과했다.
+- 단순 정적 로컬 서버의 `/api/*` 404와 브라우저에 남아 있던 잘못된 이미지 레코드 오류는 정적 미리보기 환경에서만 재현됐고, 새 smoke 세션과 변경 기능에는 영향을 주지 않았다.
+- Figma Starter MCP 호출 한도 때문에 node `3:5`의 실시간 재조회는 수행하지 못했다. 사용자 제공 기준 화면과 승인된 P0 요구사항, 동일 뷰포트 구현 캡처를 결합해 QA했다.
+
+## Implementation Checklist
+
+- [x] 목표·규격 화면과 다음 행동 분리
+- [x] 5단계 상태 계약과 접근성 이름 통합
+- [x] 모바일 62dvh 속성 시트와 실제 미니 미리보기
+- [x] 디자인 자산·출력·기존 편집 기능 회귀 방지
+- [x] 데스크톱·모바일 시각 비교 및 전체 smoke
+
+final result: passed
+
+---
+
 # 라벨 문구·용지 방향 지원 확인 (2026-08-16)
 
 - Viewports: desktop 1706×960, mobile 390×844
@@ -875,5 +1013,118 @@ final result: passed
 - 자유 겹침 및 QR 문구 아래 레이어
 - QR 없는 라벨의 전체 폭 사용
 - PNG, PDF, 인쇄 출력과 390px 모바일 레이아웃
+
+final result: passed
+
+---
+
+# 라벨 데이터 매핑·검증 텍스트/표 정돈 Design QA
+
+- Source visual truth:
+  - `%USERPROFILE%\AppData\Local\Temp\codex-clipboard-66a0ed87-9e81-4c1e-922e-5cf49eeca936.png` (1144×474 px, 매핑 빈 상태)
+  - `%USERPROFILE%\AppData\Local\Temp\codex-clipboard-aad926c9-cf96-4774-ba1b-c62d4178be78.png` (1158×306 px, 검증 오류·주의 상태)
+- Implementation screenshots:
+  - `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-text-table\mapping-implementation-focused.png` (1489×337 px)
+  - `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-text-table\validation-implementation-focused.png` (1489×264 px)
+  - `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-text-table\mapping-mobile-390.png` (520×1125 px, 390×844 CSS px)
+  - `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-text-table\validation-mobile-390.png` (520×1125 px, 390×844 CSS px)
+- Combined comparison evidence:
+  - `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-text-table\mapping-before-after.png`
+  - `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-text-table\validation-before-after.png`
+- Viewport and density normalization: 데스크톱 구현은 1706×960 CSS px, `devicePixelRatio 0.75`, 원본 브라우저 캡처 2275×1280 px에서 동일한 우측 작업 영역을 잘라 비교했다. 비교 이미지는 소스와 구현 영역을 각각 소스 너비 1144px/1158px로 정규화했다. 모바일은 390×844 CSS px를 520×1125 px로 캡처했다.
+- State: light theme, 라벨·티켓 제작 > 데이터 편집 > 데이터 0건 > 매핑/검증
+
+## Full-view comparison evidence
+
+두 소스 화면과 각 구현 캡처를 한 장의 before/after 비교 이미지로 함께 열어 확인했다. 매핑은 중복 상단 제목과 큰 빈 카드가 사라지고, 왼쪽의 다음 행동과 오른쪽의 3행 절차표로 압축됐다. 검증은 같은 `데이터 없음` 문장이 오류·주의로 중복되던 상태에서 오류 1건만 남고, `상태–확인 항목–조치` 열 구조와 오류·주의 요약으로 바뀌었다.
+
+## Focused region comparison evidence
+
+매핑 집중 영역에서 패널 높이는 약 207px, 가로 `scrollWidth === clientWidth`, 3개 절차 행은 약 48–49px로 확인됐다. 검증 집중 영역은 약 150px, 오류 행 40px(모바일 44px), 요약 수치 `오류 1 / 주의 0`과 실제 행 수가 일치했다. 모바일 390px에서는 두 패널 모두 가로 넘침이 없고 `표 붙여넣기`, `CSV·TSV 선택`이 각각 44px 터치 높이를 유지했다.
+
+## Findings
+
+- No actionable P0, P1, or P2 findings remain.
+- Fonts and typography: 기존 PromptDeck의 시스템 한글 폰트, 굵기, 11–13px 보조 텍스트 체계를 유지했다. 빈 상태 제목은 28px급에서 18–22px로 낮춰 도구 화면의 정보 밀도와 맞췄다.
+- Spacing and layout rhythm: 매핑의 260px 최소 높이와 3개 카드 중첩을 제거하고, 10px 행 간격·48px 절차 행·한 줄 상태 영역으로 수직 리듬을 정돈했다. 검증은 카드 안 카드 구조를 없애고 열 머리글과 행을 한 표면에 배치했다.
+- Colors and visual tokens: 기존 `accent`, `line`, `surface`, `danger`, `warning`, `success` 토큰만 재사용했다. 오류·주의는 옅은 행 배경, 왼쪽 상태선, 배지 색으로 구분해 본문 전체를 강한 색으로 물들이지 않았다.
+- Image quality and assets: 이번 화면은 데이터 도구 UI라 새 이미지 자산이 필요하지 않으며, 기존 아이콘·로고·배경 자산을 대체하거나 변형하지 않았다.
+- Copy and content: `원본 데이터를 먼저 불러오세요`, `가져오기–자동 연결–확인·적용`, `출력 전 검증`처럼 다음 행동 중심으로 축약했다. `NO_RECORDS`는 오류가 주의보다 우선하도록 코드·메시지 기준으로 중복 제거했다.
+- Accessibility and interaction: 매핑의 두 시작 버튼은 기존 동작을 유지하고, 검증 행은 전체가 클릭 가능한 버튼이며 키보드 포커스 링과 `수정` 조치를 유지한다. 오류·주의 건수는 실제 검증 DOM과 동기화된다.
+
+## Comparison history
+
+### Pass 1 — blocked
+
+- [P1] 검증에서 동일한 `NO_RECORDS` 메시지가 오류와 주의로 중복되어 문제 수가 2건으로 보였다.
+- [P2] 매핑 빈 상태가 최소 260px의 큰 카드와 중복 섹션 제목을 사용해 데이터 작업 화면의 절반 이상을 차지했다.
+- [P2] 검증 행은 표 열 구분 없이 넓은 색상 띠로 보여 상태·내용·조치를 빠르게 스캔하기 어려웠다.
+- Fixes: 중복 키를 `code + message`로 통합해 오류를 우선 유지했고, 외부 중복 제목을 제거했다. 매핑을 좌우 2열/모바일 1열 구조와 3행 절차표로 압축하고, 검증에 요약 배지·열 머리글·상태선·상태 배지를 추가했다.
+
+### Pass 2 — passed
+
+- Post-fix visual evidence: 두 before/after 비교 이미지에서 정보량, 높이, 상태 구분, 조치 열의 위계가 개선됐고 데스크톱·390px 모바일 모두 가로 넘침이 없다.
+- Automated evidence: `npm run label:test` 통과, `npm run smoke:test` 통과. 스모크 테스트에 매핑 높이/넘침/3단계, 검증 중복/요약/열 구조, 모바일 44px 행·버튼 검사를 추가했다.
+
+## Primary interactions tested
+
+- 데이터 편집 열기와 `데이터 / 매핑 / 검증` 탭 전환
+- 매핑의 `표 붙여넣기`, `CSV·TSV 선택`, 자동 연결, 검토표 이동
+- 검증 오류 행 선택과 문제 수정 화면 이동
+- 데스크톱 1706×960 CSS px, 모바일 390×844 CSS px 반응형 배치
+- 라이트/다크 테마와 전체 저장소 회귀 스모크
+
+## Console errors checked
+
+- 격리된 전체 스모크 브라우저에서는 이번 변경으로 인한 오류 없이 통과했다.
+- 사용자의 장기 실행 인앱 브라우저 프로필에는 기존 IndexedDB 배경 자산을 다시 읽는 과정에서 `LabelSheetAssetError: PNG, JPEG 또는 WebP 이미지만 등록할 수 있습니다.`가 남아 있다. 이번 텍스트/표 변경과 무관한 기존 저장 자산 상태이며 매핑·검증 동작과 비교 캡처에는 영향을 주지 않았다.
+
+## Follow-up polish
+
+- P3: 실제 데이터 열을 불러온 활성 매핑 상태에서도 동일한 표 밀도를 유지하도록 다음 데이터 대량 입력 작업에서 열 선택 영역을 추가 관찰할 수 있다.
+
+final result: passed
+
+---
+
+# 라벨 데이터 탭 숫자 배지 간격 Design QA
+
+- Source visual truth: `%USERPROFILE%\AppData\Local\Temp\codex-clipboard-2489bce9-d345-4796-a567-31617aeab78b.png` (765×193 px)
+- Browser-rendered implementation screenshot: `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-data-badge\data-badge-after.png`
+- Combined comparison evidence: `%USERPROFILE%\.codex\visualizations\2026\08\18\01a013e9-bd83-7091-a8fa-9254f724e36e\promptdeck-label-data-badge\data-badge-before-after.png` (1570×230 px)
+- Viewport: 1706×960 CSS px, `devicePixelRatio 0.75`; 데이터 편집 모달의 좌측 데이터 목록과 우측 `데이터 / 매핑 / 검증` 탭 상태
+
+## Findings
+
+- [P1] 수정 전에는 탭이 일반 버튼 흐름으로 렌더링돼 제목과 건수 배지 사이 간격이 0px였다. 좁은 화면에서 `데이터`와 `0`이 붙거나 겹쳐 보였다.
+- Fix: 탭을 수평 flex 정렬로 고정하고 6px 간격을 부여했다. 데이터·검증 배지는 축소되지 않도록 `flex: 0 0 auto`로 분리했다.
+- Fonts and typography: 기존 글꼴과 무게를 유지하고 숫자 배지를 20px 원형으로 유지했다.
+- Spacing and layout rhythm: 제목 오른쪽과 배지 왼쪽에 실측 6px 간격을 확보했고, 두 요소 모두 탭 테두리 내부에 남는다.
+- Colors and visual tokens: 기존 활성 파란색, 오류 빨간색, 중립 배지 색상을 변경하지 않았다.
+- Image quality and assets: 이미지 자산이 없는 도구 UI이며 새 자산을 추가하지 않았다.
+- Copy and content: `데이터`, `매핑`, `검증` 및 건수 표기는 그대로 유지했다.
+- Accessibility and interaction: 배지의 접근성 이름과 탭 선택 동작은 그대로 보존했다.
+
+## Comparison history
+
+### Pass 1 — blocked
+
+- 제목과 숫자 배지 사이 간격이 0px로, 사용자 캡처에서 숫자가 글자를 가리는 것처럼 보였다.
+
+### Pass 2 — passed
+
+- 최종 브라우저 렌더링에서 데이터·검증 배지가 각각 제목과 6px 떨어져 있고, 두 배지 모두 탭 내부에 완전히 포함된다.
+- `npm run label:test` 및 재실행한 `npm run smoke:test`가 통과했다. 스모크에는 배지 표시 상태의 display, gap, 겹침, 경계 포함 여부 검사를 추가했다.
+
+## Primary interactions tested
+
+- 데이터 편집 열기
+- `데이터 / 매핑 / 검증` 탭 전환
+- 데이터 0건 및 검증 문제 1건 배지 표시
+- 데스크톱 및 390×844 모바일 전체 회귀
+
+## Console errors checked
+
+- 재실행한 전체 스모크 브라우저에서 이번 변경으로 인한 콘솔 오류 없이 통과했다.
 
 final result: passed

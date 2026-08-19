@@ -310,6 +310,17 @@
   border-color: color-mix(in srgb, var(--status-success) 38%, var(--line));
 }
 
+#paneLabelSheet .label-sheet-progress li.is-warning:not(.is-active) {
+  border-color: color-mix(in srgb, var(--status-warning) 58%, var(--line));
+  background: color-mix(in srgb, var(--status-warning) 8%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-progress li.is-blocked:not(.is-active) {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--surface-alt) 74%, var(--surface));
+  color: var(--ink-muted);
+}
+
 #paneLabelSheet .label-sheet-progress button {
   display: flex;
   width: 100%;
@@ -904,14 +915,23 @@
 }
 
 #paneLabelSheet .label-sheet-mapping-empty {
-  min-height: 260px;
-  align-content: center;
+  min-height: 0;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(440px, 1.18fr);
+  grid-template-areas:
+    "copy steps"
+    "current steps"
+    "actions steps";
+  align-content: start;
+  align-items: start;
+  column-gap: 22px;
+  row-gap: 10px;
 }
 
 #paneLabelSheet .label-sheet-mapping-empty-copy {
   display: grid;
+  grid-area: copy;
   max-width: 720px;
-  gap: 7px;
+  gap: 5px;
 }
 
 #paneLabelSheet .label-sheet-mapping-state {
@@ -927,8 +947,8 @@
 
 #paneLabelSheet .label-sheet-mapping-empty-copy > strong {
   color: var(--ink);
-  font-size: clamp(20px, 2.2vw, 28px);
-  line-height: 1.25;
+  font-size: clamp(18px, 1.8vw, 22px);
+  line-height: 1.3;
 }
 
 #paneLabelSheet .label-sheet-mapping-empty-copy > p,
@@ -941,22 +961,30 @@
 
 #paneLabelSheet .label-sheet-mapping-steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-area: steps;
+  gap: 0;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
   list-style: none;
 }
 
 #paneLabelSheet .label-sheet-mapping-steps li {
-  display: flex;
+  display: grid;
   min-width: 0;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  grid-template-columns: 28px minmax(88px, 0.48fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+#paneLabelSheet .label-sheet-mapping-steps li:last-child {
+  border-bottom: 0;
 }
 
 #paneLabelSheet .label-sheet-mapping-steps li > span {
@@ -973,9 +1001,8 @@
 }
 
 #paneLabelSheet .label-sheet-mapping-steps li > div {
-  display: grid;
+  display: contents;
   min-width: 0;
-  gap: 3px;
 }
 
 #paneLabelSheet .label-sheet-mapping-steps strong,
@@ -988,17 +1015,20 @@
 #paneLabelSheet .label-sheet-mapping-next small {
   color: var(--ink-soft);
   font-size: 12px;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 #paneLabelSheet .label-sheet-mapping-current {
-  padding: 10px 12px;
+  grid-area: current;
+  padding: 8px 10px;
   border-left: 3px solid var(--accent);
   background: color-mix(in srgb, var(--surface) 72%, transparent);
+  line-height: 1.45;
 }
 
 #paneLabelSheet .label-sheet-mapping-empty-actions {
   display: flex;
+  grid-area: actions;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -2237,59 +2267,155 @@
 
 #paneLabelSheet .label-sheet-preflight {
   display: grid;
-  gap: 8px;
+  gap: 6px;
+}
+
+#paneLabelSheet .label-sheet-preflight-head {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+#paneLabelSheet .label-sheet-preflight-head .label-sheet-subhead {
+  min-width: 0;
+}
+
+#paneLabelSheet .label-sheet-preflight-summary {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+}
+
+#paneLabelSheet .label-sheet-preflight-summary > span {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#paneLabelSheet .label-sheet-preflight-summary > span[data-tone="error"] output {
+  color: var(--status-error);
+}
+
+#paneLabelSheet .label-sheet-preflight-summary > span[data-tone="warning"] output {
+  color: var(--status-warning);
+}
+
+#paneLabelSheet .label-sheet-preflight-columns,
+#paneLabelSheet .label-sheet-preflight-item {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 10px;
+}
+
+#paneLabelSheet .label-sheet-preflight-columns {
+  padding: 0 12px 5px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+#paneLabelSheet .label-sheet-preflight-columns span:last-child {
+  text-align: right;
 }
 
 #paneLabelSheet .label-sheet-preflight-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 9px 10px;
+  min-height: 40px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-left-width: 3px;
   border-radius: 8px;
   background: var(--surface);
-  color: var(--ink-soft);
+  color: var(--ink);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 #paneLabelSheet button.label-sheet-preflight-item {
   width: 100%;
-  justify-content: stretch;
-  border: 0;
   text-align: left;
   cursor: pointer;
 }
 
 #paneLabelSheet button.label-sheet-preflight-item:hover {
-  box-shadow: inset 0 0 0 1px currentColor;
+  border-color: color-mix(in srgb, currentColor 44%, var(--line));
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--ink) 7%, transparent);
+}
+
+#paneLabelSheet button.label-sheet-preflight-item:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
 }
 
 #paneLabelSheet .label-sheet-preflight-item .label-sheet-preflight-message {
   min-width: 0;
-  flex: 1 1 auto;
+}
+
+#paneLabelSheet .label-sheet-preflight-badge {
+  width: max-content;
+  min-width: 42px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 850;
 }
 
 #paneLabelSheet .label-sheet-preflight-item .label-sheet-preflight-action {
-  flex: 0 0 auto;
-  margin-left: auto;
   color: currentColor;
   font-weight: 850;
+  text-align: right;
   white-space: nowrap;
 }
 
 #paneLabelSheet .label-sheet-preflight-item.is-error {
-  background: var(--danger-soft);
-  color: var(--status-error);
+  border-left-color: var(--status-error);
+  background: color-mix(in srgb, var(--danger-soft) 52%, var(--surface));
+  color: var(--ink);
 }
 
 #paneLabelSheet .label-sheet-preflight-item.is-warning {
-  background: color-mix(in srgb, var(--status-warning) 10%, var(--surface));
-  color: var(--status-warning);
+  border-left-color: var(--status-warning);
+  background: color-mix(in srgb, var(--status-warning) 5%, var(--surface));
+  color: var(--ink);
 }
 
 #paneLabelSheet .label-sheet-preflight-item.is-success {
-  background: var(--success-soft);
+  display: block;
+  border-left-color: var(--status-success);
+  background: color-mix(in srgb, var(--success-soft) 52%, var(--surface));
   color: var(--status-success);
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-error .label-sheet-preflight-badge,
+#paneLabelSheet .label-sheet-preflight-item.is-error .label-sheet-preflight-action {
+  color: var(--status-error);
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-error .label-sheet-preflight-badge {
+  background: var(--danger-soft);
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-warning .label-sheet-preflight-badge,
+#paneLabelSheet .label-sheet-preflight-item.is-warning .label-sheet-preflight-action {
+  color: var(--status-warning);
+}
+
+#paneLabelSheet .label-sheet-preflight-item.is-warning .label-sheet-preflight-badge {
+  background: color-mix(in srgb, var(--status-warning) 12%, var(--surface));
 }
 
 #paneLabelSheet .label-sheet-result-actions {
@@ -2387,6 +2513,12 @@
 
   #paneLabelSheet .label-sheet-mapping-empty {
     min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "copy"
+      "actions"
+      "current"
+      "steps";
     align-content: start;
   }
 
@@ -2404,7 +2536,30 @@
 
   #paneLabelSheet .label-sheet-mapping-steps {
     order: 4;
-    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #paneLabelSheet .label-sheet-mapping-steps li {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 4px 10px;
+    padding: 9px 10px;
+  }
+
+  #paneLabelSheet .label-sheet-mapping-steps small {
+    grid-column: 2;
+  }
+
+  #paneLabelSheet .label-sheet-preflight-head {
+    display: grid;
+  }
+
+  #paneLabelSheet .label-sheet-preflight-summary {
+    justify-content: flex-start;
+  }
+
+  #paneLabelSheet .label-sheet-preflight-columns,
+  #paneLabelSheet .label-sheet-preflight-item {
+    grid-template-columns: 54px minmax(0, 1fr) 36px;
+    gap: 8px;
   }
 
   #paneLabelSheet .label-sheet-mapping-empty-actions,
@@ -2751,6 +2906,52 @@
   padding-inline: 10px;
 }
 
+#paneLabelSheet .label-sheet-prompt-readiness {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent-soft) 22%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-prompt-readiness[hidden] {
+  display: none;
+}
+
+#paneLabelSheet .label-sheet-prompt-readiness > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+#paneLabelSheet .label-sheet-prompt-readiness strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+#paneLabelSheet .label-sheet-prompt-readiness span {
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#paneLabelSheet .label-sheet-prompt-readiness[data-tone="error"] {
+  border-color: color-mix(in srgb, var(--status-error) 40%, var(--line));
+  background: color-mix(in srgb, var(--danger-soft) 48%, var(--surface));
+}
+
+#paneLabelSheet .label-sheet-prompt-readiness[data-tone="warning"] {
+  border-color: color-mix(in srgb, var(--status-warning) 40%, var(--line));
+  background: color-mix(in srgb, var(--status-warning) 8%, var(--surface));
+}
+
 #paneLabelSheet .label-sheet-action-dock-meta {
   display: flex;
   min-width: 0;
@@ -2816,6 +3017,62 @@ body.label-sheet-dna-dialog-open {
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 7px;
+}
+
+#paneLabelSheet .label-sheet-prompt-locks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+#paneLabelSheet .label-sheet-prompt-locks span {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 28px;
+  align-items: center;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-soft) 34%, var(--surface));
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+#paneLabelSheet .label-sheet-prompt-action-hint {
+  margin: 0;
+  padding: 9px 11px;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 20%, var(--surface));
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+#paneLabelSheet .label-sheet-prompt-use-guide,
+#paneLabelSheet .label-sheet-prompt-handoff {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#paneLabelSheet .label-sheet-prompt-use-guide {
+  padding: 0 2px;
+}
+
+#paneLabelSheet .label-sheet-prompt-use-guide strong {
+  color: var(--ink);
+}
+
+#paneLabelSheet .label-sheet-prompt-handoff {
+  padding: 9px 11px;
+  border: 1px solid color-mix(in srgb, var(--status-success) 26%, var(--line));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--success-soft) 48%, var(--surface));
 }
 
 #paneLabelSheet .label-sheet-prompt-split-summary > div {
@@ -3827,6 +4084,22 @@ body.label-sheet-dna-dialog-open {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  #paneLabelSheet .label-sheet-prompt-readiness {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-readiness .btn {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-readiness span {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
   #paneLabelSheet .label-sheet-action-dock {
     position: relative;
   }
@@ -3845,7 +4118,11 @@ body.label-sheet-dna-dialog-open {
   }
 
   #paneLabelSheet .label-sheet-prompt-split-summary {
-    grid-template-columns: minmax(0, 1fr);
+    display: none;
+  }
+
+  #paneLabelSheet .label-sheet-prompt-locks span {
+    max-width: 100%;
   }
 
   #paneLabelSheet .label-sheet-prompt-split-summary i {

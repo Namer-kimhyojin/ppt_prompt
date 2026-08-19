@@ -14,6 +14,7 @@ assert.equal(Assets.isSupportedRasterMime("image/jpg"), true);
 assert.equal(Assets.isSupportedRasterMime("image/webp; charset=binary"), true);
 assert.equal(Assets.isSupportedRasterMime("image/svg+xml"), false);
 assert.equal(Assets.isSupportedRasterMime("", "ticket.jpeg"), true);
+assert.equal(Assets.isSupportedRasterMime("application/octet-stream", "ticket.webp"), true, "generic static-server MIME must fall back to a supported filename extension");
 assert.equal(Assets.isSupportedRasterMime("", "ticket.svg"), false);
 
 assert.deepEqual(Assets.calculateTargetPixels(70, 40, 300), {

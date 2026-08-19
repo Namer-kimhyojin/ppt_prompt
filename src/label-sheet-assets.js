@@ -58,7 +58,10 @@
     if (supplied === "image/svg+xml" || extensionFromFilename(filename || input?.name) === "svg") {
       return "image/svg+xml";
     }
-    return supplied || inferred;
+    // Some local/static servers deliver WebP files as application/octet-stream.
+    // Prefer the trusted filename extension in that generic case so valid default
+    // backgrounds are not surfaced as a user-facing unsupported-image error.
+    return supplied === "application/octet-stream" ? inferred : supplied || inferred;
   }
 
   function isSupportedRasterMime(value, filename) {

@@ -1966,6 +1966,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   </label>
                 </div>
                 <div class="label-sheet-inline-actions">
+                  <button type="button" class="btn ghost" id="labelSheetDataSampleBtn" title="DEMO-001부터 DEMO-008까지 예시 데이터를 입력합니다.">샘플 데이터 입력</button>
                   <button type="button" class="btn secondary" id="labelSheetApplySequenceBtn">지금 다시 적용</button>
                   <span id="labelSheetSequenceSummary" role="status" aria-live="polite">1~24, 24건</span>
                 </div>
@@ -2004,19 +2005,19 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <section class="label-sheet-data-mapping" id="labelSheetDataMappingPanel" aria-label="열 매핑">
                   <div class="label-sheet-mapping-empty" id="labelSheetDataMappingEmpty">
                     <div class="label-sheet-mapping-empty-copy">
-                      <span class="label-sheet-mapping-state">매핑 준비</span>
-                      <strong id="labelSheetDataMappingTitle">연결할 원본 열이 아직 없습니다</strong>
-                      <p>매핑은 새로 가져온 Excel·Sheets·CSV의 열을 라벨 ID, 이름, 앞면 문구와 QR 값에 연결할 때 사용합니다.</p>
+                      <span class="label-sheet-mapping-state">열 매핑</span>
+                      <strong id="labelSheetDataMappingTitle">원본 데이터를 먼저 불러오세요</strong>
+                      <p>표의 열을 라벨 ID·이름·문구·QR 값에 연결합니다.</p>
                     </div>
                     <ol class="label-sheet-mapping-steps" aria-label="열 매핑 사용 순서">
-                      <li><span>1</span><div><strong>데이터 가져오기</strong><small>표를 붙여넣거나 CSV·TSV 파일을 선택합니다.</small></div></li>
-                      <li><span>2</span><div><strong>자동 연결 확인</strong><small>열 이름을 읽어 출력 항목에 먼저 연결합니다.</small></div></li>
-                      <li><span>3</span><div><strong>데이터 적용</strong><small>표와 미리보기를 확인한 뒤 현재 프로젝트에 적용합니다.</small></div></li>
+                      <li><span>1</span><div><strong>가져오기</strong><small>표 붙여넣기 또는 CSV·TSV 선택</small></div></li>
+                      <li><span>2</span><div><strong>자동 연결</strong><small>열 이름에 맞는 출력 항목 제안</small></div></li>
+                      <li><span>3</span><div><strong>확인·적용</strong><small>검토 표 확인 후 프로젝트 반영</small></div></li>
                     </ol>
                     <p class="label-sheet-mapping-current" id="labelSheetDataMappingCurrentStatus">현재 데이터는 이미 출력 항목으로 정리되어 있습니다.</p>
                     <div class="label-sheet-mapping-empty-actions">
-                      <button type="button" class="btn primary" id="labelSheetDataMappingPasteBtn">표 붙여넣기 시작</button>
-                      <button type="button" class="btn secondary" id="labelSheetDataMappingCsvBtn">CSV·TSV 파일 선택</button>
+                      <button type="button" class="btn primary" id="labelSheetDataMappingPasteBtn">표 붙여넣기</button>
+                      <button type="button" class="btn secondary" id="labelSheetDataMappingCsvBtn">CSV·TSV 선택</button>
                     </div>
                   </div>
                   <div class="label-sheet-mapping-active" id="labelSheetDataMappingActive" hidden>
@@ -2330,8 +2331,12 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <button type="button" class="btn secondary" id="labelSheetPrintBtn" disabled>인쇄창 열기</button>
               </div>
               <div class="label-sheet-action-dock-group" data-label-sheet-goal="prompt">
-                <button type="button" class="btn primary" id="labelSheetGeneratePromptBtn">전체 프롬프트 생성</button>
-                <button type="button" class="btn secondary" id="labelSheetCopyAllPromptsBtn" disabled>모든 페이지 복사</button>
+                <button type="button" class="btn primary" id="labelSheetGeneratePromptBtn">프롬프트 생성</button>
+                <button type="button" class="btn secondary" id="labelSheetCopyAllPromptsBtn" disabled>페이지 프롬프트 한 번에 복사</button>
+              </div>
+              <div class="label-sheet-prompt-readiness" data-label-sheet-goal="prompt" id="labelSheetPromptReadiness" aria-live="polite">
+                <div><strong>생성 준비</strong><span id="labelSheetPromptReadinessStatus">데이터와 규격을 확인하는 중입니다.</span></div>
+                <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetPromptReadinessBtn">검증 결과 보기</button>
               </div>
               <div class="label-sheet-action-dock-meta"><span id="labelSheetActionDockStatus">설정을 변경하면 결과가 즉시 갱신됩니다.</span><button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetRunPreflightBtn">다시 점검</button></div>
             </div>
@@ -2344,7 +2349,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               </div>
               <div class="label-sheet-wysiwyg-controls" id="labelSheetWysiwygControls" hidden>
                 <div class="label-sheet-wysiwyg-context label-sheet-wysiwyg-full">
-                  <label class="label-sheet-field" for="labelSheetWysiwygScope"><span>레이아웃 적용 범위</span><select id="labelSheetWysiwygScope"><option value="record" selected>선택한 라벨만</option><option value="global">현재 면·QR 유형 공통</option></select></label>
+                  <label class="label-sheet-field" for="labelSheetWysiwygScope"><span>레이아웃 적용 범위</span><select id="labelSheetWysiwygScope"><option value="global" selected>현재 면 공통 (기본)</option><option value="record">선택한 라벨만</option></select></label>
                   <div class="label-sheet-wysiwyg-record"><span>현재 라벨</span><output id="labelSheetWysiwygRecordLabel">선택 대기</output></div>
                 </div>
                   <label class="label-sheet-field label-sheet-wysiwyg-target-control" for="labelSheetWysiwygField"><span>편집할 항목</span><select id="labelSheetWysiwygField"><option value="content">전체 콘텐츠</option><option value="number">연번</option><option value="title" selected>제목</option><option value="subtitle">부제</option><option value="body">본문</option><option value="footer">하단 문구</option><option value="qr">QR 영역</option></select></label>
@@ -2403,18 +2408,28 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             <section class="label-sheet-quick-editor" id="labelSheetQuickEditbar" data-label-sheet-goal="print" aria-label="선택 라벨 빠른 편집" hidden>
               <div class="label-sheet-quick-editor-head"><div><strong>선택 라벨 바로 편집</strong><small>상자를 끌어 위치를 바꾸고, 여기서 서식을 즉시 조정합니다.</small></div><output id="labelSheetQuickRecordLabel">선택 대기</output></div>
               <div class="label-sheet-quick-editor-controls">
-                <label class="label-sheet-field label-sheet-quick-scope-control" for="labelSheetQuickScope"><span>적용 범위</span><select id="labelSheetQuickScope"><option value="record" selected>이 라벨만</option><option value="global">현재 면 공통</option></select></label>
+                <label class="label-sheet-field label-sheet-quick-scope-control" for="labelSheetQuickScope"><span>적용 범위</span><select id="labelSheetQuickScope"><option value="global" selected>현재 면 공통 (기본)</option><option value="record">이 라벨만</option></select></label>
                 <label class="label-sheet-field label-sheet-quick-target-control" for="labelSheetQuickTarget"><span>편집 항목</span><select id="labelSheetQuickTarget"><option value="content">전체 콘텐츠</option><option value="number">연번</option><option value="title" selected>제목</option><option value="subtitle">부제</option><option value="body">본문</option><option value="footer">하단 문구</option><option value="qr">QR 영역</option></select></label>
                 <label class="label-sheet-field" for="labelSheetQuickFont" data-wysiwyg-text-only><span>글꼴</span><select id="labelSheetQuickFont"><option value="inherit">DNA 글꼴</option><option value="Pretendard, Noto Sans KR, Malgun Gothic, sans-serif">프리텐다드·고딕</option><option value="Noto Sans KR, Malgun Gothic, sans-serif">Noto Sans KR</option><option value="Malgun Gothic, sans-serif">맑은 고딕</option><option value="Nanum Gothic, Malgun Gothic, sans-serif">나눔고딕</option><option value="Nanum Myeongjo, Batang, serif">나눔명조·명조</option><option value="Batang, serif">바탕·명조</option><option value="monospace">고정폭</option></select></label>
+                <label class="label-sheet-field" for="labelSheetQuickColorMode" data-wysiwyg-text-only><span>글자색</span><select id="labelSheetQuickColorMode"><option value="inherit" selected>자동 대비</option><option value="custom">직접 선택</option></select></label>
+                <label class="label-sheet-field label-sheet-color-field" for="labelSheetQuickColor" data-wysiwyg-text-only><span>직접 색상</span><input id="labelSheetQuickColor" type="color" value="#111827" disabled /></label>
                 <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickSize" data-wysiwyg-size-only><span>크기 <output id="labelSheetQuickSizeValue">15%</output></span><input id="labelSheetQuickSize" type="range" min="3" max="30" step="0.5" value="15" /></label>
                 <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickWidth" data-wysiwyg-box-only><span><span id="labelSheetQuickWidthLabel">너비</span> <output id="labelSheetQuickWidthValue">90%</output></span><input id="labelSheetQuickWidth" type="range" min="5" max="100" step="0.5" value="90" /></label>
                 <label class="label-sheet-field label-sheet-quick-size" for="labelSheetQuickHeight" data-wysiwyg-box-only><span><span id="labelSheetQuickHeightLabel">높이</span> <output id="labelSheetQuickHeightValue">20%</output></span><input id="labelSheetQuickHeight" type="range" min="5" max="100" step="0.5" value="20" /></label>
                 <div class="label-sheet-field label-sheet-quick-align" data-wysiwyg-text-only><span>정렬</span><div id="labelSheetQuickAlignGroup" role="group" aria-label="문구 정렬"><button type="button" id="labelSheetQuickAlignLeft" aria-pressed="false">왼쪽</button><button type="button" id="labelSheetQuickAlignCenter" aria-pressed="true">가운데</button><button type="button" id="labelSheetQuickAlignRight" aria-pressed="false">오른쪽</button></div></div>
+                <div class="label-sheet-field label-sheet-quick-vertical"><span>세로 배치</span><div id="labelSheetQuickVerticalGroup" role="group" aria-label="선택 항목 세로 배치"><button type="button" id="labelSheetQuickVerticalTop">위</button><button type="button" id="labelSheetQuickVerticalCenter">가운데</button><button type="button" id="labelSheetQuickVerticalBottom">아래</button></div></div>
                 <label class="label-sheet-wysiwyg-check" for="labelSheetQuickAutoHeight" data-wysiwyg-text-box-only><input id="labelSheetQuickAutoHeight" type="checkbox" checked /><span><strong id="labelSheetQuickAutoHeightLabel">자동 높이</strong><small id="labelSheetQuickAutoHeightHint">문구 줄 수에 맞춤</small></span></label>
                 <label class="label-sheet-wysiwyg-check" for="labelSheetQuickAvoidQr" data-wysiwyg-text-box-only><input id="labelSheetQuickAvoidQr" type="checkbox" checked /><span><strong>QR 회피</strong><small>겹치는 항목만 감싸기</small></span></label>
                 <label class="label-sheet-field" for="labelSheetQuickQrMode" data-wysiwyg-qr-only><span>QR 배치</span><select id="labelSheetQuickQrMode"><option value="adaptive">자동 감싸기</option><option value="reserved">고정 여백</option><option value="overlay">자유 겹침</option></select></label>
                 <label class="label-sheet-field" for="labelSheetQuickQrLayer" data-wysiwyg-qr-only><span>QR 레이어</span><select id="labelSheetQuickQrLayer"><option value="front">문구 위</option><option value="behind">문구 아래</option></select></label>
-                <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetOpenDetailedEditBtn">세부 편집·프리셋</button>
+                <section class="label-sheet-quick-surface-controls" aria-label="라벨과 티켓 표면 설정">
+                  <div><strong>티켓 표면</strong><small>적용 범위에 맞춰 배경·테두리를 바로 바꿉니다.</small></div>
+                  <label class="label-sheet-field label-sheet-color-field" for="labelSheetQuickBackgroundColor"><span>배경색</span><input id="labelSheetQuickBackgroundColor" type="color" value="#ffffff" /></label>
+                  <label class="label-sheet-field label-sheet-color-field" for="labelSheetQuickBorderColor"><span>테두리색</span><input id="labelSheetQuickBorderColor" type="color" value="#cbd5e1" /></label>
+                  <label class="label-sheet-field" for="labelSheetQuickBorderWidth"><span>테두리</span><select id="labelSheetQuickBorderWidth"><option value="0">없음</option><option value="0.25" selected>얇게</option><option value="0.5">보통</option><option value="1">굵게</option></select></label>
+                  <button type="button" class="btn secondary label-sheet-compact-btn" id="labelSheetWorkspaceAssetsBtn">배경 이미지</button>
+                </section>
+                <button type="button" class="btn ghost label-sheet-compact-btn" id="labelSheetOpenDetailedEditBtn">개별 배치·프리셋</button>
               </div>
               <p class="label-sheet-inline-status" id="labelSheetQuickStatus" role="status" aria-live="polite">미리보기에서 라벨과 편집 항목을 선택해 주세요.</p>
             </section>
@@ -2437,11 +2452,11 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 </div>
               </header>
               <div class="label-sheet-focus-scope" role="group" aria-label="레이아웃 적용 범위">
-                <button type="button" class="active" id="labelSheetFocusScopeRecord" aria-pressed="true">
-                  <strong>이 티켓만</strong><small>선택한 1개에만 적용</small>
+                <button type="button" class="active" id="labelSheetFocusScopeGlobal" aria-pressed="true">
+                  <strong>현재 면 공통</strong><small>현재 면의 라벨·티켓 전체에 적용</small>
                 </button>
-                <button type="button" id="labelSheetFocusScopeGlobal" aria-pressed="false">
-                  <strong>현재 면 공통</strong><small>같은 QR 유형 전체 적용 · 개별 레이아웃 덮어씀</small>
+                <button type="button" id="labelSheetFocusScopeRecord" aria-pressed="false">
+                  <strong>이 티켓만</strong><small>선택한 1개에만 적용</small>
                 </button>
               </div>
               <div class="label-sheet-focus-navigation-grid">
@@ -2517,7 +2532,14 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
             </dl>
 
             <section class="label-sheet-preflight-card" aria-labelledby="labelSheetPreflightTitle">
-              <div class="label-sheet-subhead"><div><strong id="labelSheetPreflightTitle">완료 전 점검</strong><small id="labelSheetPreflightDescription">치명적 오류는 해결하기 전까지 결과물 생성을 막습니다.</small></div></div>
+              <div class="label-sheet-preflight-head">
+                <div class="label-sheet-subhead"><div><strong id="labelSheetPreflightTitle">출력 전 검증</strong><small id="labelSheetPreflightDescription">오류는 출력 전에 해결하고, 주의 항목은 시험 인쇄에서 확인하세요.</small></div></div>
+                <div class="label-sheet-preflight-summary" aria-label="검증 결과 요약">
+                  <span data-tone="error">오류 <output id="labelSheetPreflightErrorCount">0</output></span>
+                  <span data-tone="warning">주의 <output id="labelSheetPreflightWarningCount">0</output></span>
+                </div>
+              </div>
+              <div class="label-sheet-preflight-columns" aria-hidden="true"><span>상태</span><span>확인 항목</span><span>조치</span></div>
               <div class="label-sheet-preflight" id="labelSheetPreflight" role="status" aria-live="polite"><p class="label-sheet-empty-state">규격과 데이터를 입력하면 배경 누락, 번호 중복, 문구 넘침과 양면 설정을 점검합니다.</p></div>
             </section>
 
@@ -2528,8 +2550,15 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               </div>
               <select id="labelSheetPromptMode" class="label-sheet-visually-hidden" tabindex="-1" aria-hidden="true"><option value="integrated" selected>전체 이미지 프롬프트</option></select>
               <p class="label-sheet-privacy-status" id="labelSheetPromptPrivacyStatus" role="status" aria-live="polite">실제 문구·번호가 포함됩니다. QR 이미지는 생성하지 않고 선택한 위치와 크기만큼 깨끗한 합성 공간을 남깁니다.</p>
+              <div class="label-sheet-prompt-locks" id="labelSheetPromptLocks" aria-label="프롬프트 보존 규칙">
+                <span>문구·연번 원문 유지</span>
+                <span>QR은 합성 공간 예약</span>
+                <span id="labelSheetPromptDnaLock">디자인 DNA · 기본 스타일</span>
+              </div>
+              <p class="label-sheet-prompt-action-hint" id="labelSheetPromptActionHint" role="status" aria-live="polite">다음: 프롬프트를 생성하면 A4 페이지별 결과와 개별 라벨별 결과를 바로 확인할 수 있습니다.</p>
+              <p class="label-sheet-prompt-use-guide"><strong>A4 페이지별</strong>은 인쇄용 한 장 이미지를 만들 때, <strong>개별 라벨별</strong>은 라벨마다 다른 이미지를 만들 때 사용합니다.</p>
               <div class="label-sheet-prompt-split-summary" id="labelSheetPromptSplitSummary" aria-live="polite">
-                <div><strong>1</strong><span>전체 프롬프트 생성</span></div><i aria-hidden="true">→</i><div><strong>2</strong><span>A4 페이지별 분리</span></div><i aria-hidden="true">→</i><div><strong>3</strong><span>라벨별 개별 복사</span></div>
+                <div><strong>1</strong><span>프롬프트 생성</span></div><i aria-hidden="true">→</i><div><strong>2</strong><span>A4 페이지별 확인</span></div><i aria-hidden="true">→</i><div><strong>3</strong><span>개별 라벨별 활용</span></div>
               </div>
               <div class="label-sheet-page-image-register" data-label-sheet-goal="both" aria-labelledby="labelSheetPageImageTitle">
                 <div class="label-sheet-subhead"><div><strong id="labelSheetPageImageTitle">선택 페이지 A4 배경 이미지</strong><small>외부 AI에서 만든 글자 없는 A4 이미지를 현재 출력 페이지·면에 등록합니다.</small></div></div>
@@ -2543,6 +2572,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                 <button type="button" class="active" id="labelSheetPromptPageViewTab" role="tab" aria-selected="true" aria-controls="labelSheetPromptPagePanel">A4 페이지별</button>
                 <button type="button" id="labelSheetPromptItemViewTab" role="tab" aria-selected="false" aria-controls="labelSheetPromptItemPanel">개별 라벨별</button>
               </div>
+              <p class="label-sheet-prompt-handoff" id="labelSheetPromptHandoffStatus" role="status" aria-live="polite" hidden></p>
               <section class="label-sheet-prompt-result-panel active" id="labelSheetPromptPagePanel" role="tabpanel" aria-labelledby="labelSheetPromptPageViewTab">
                 <div class="label-sheet-prompt-cycle-toolbar is-top" aria-label="상단 페이지별 프롬프트 작업">
                   <div class="label-sheet-prompt-navigation">
@@ -2554,8 +2584,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                     </div>
                   </div>
                   <div class="label-sheet-prompt-copy-actions">
-                    <button type="button" class="btn primary" id="labelSheetCopyPromptBtn" disabled>현재 페이지 복사</button>
-                    <button type="button" class="btn secondary" id="labelSheetCopyPromptNextBtn" disabled>복사 후 다음</button>
+                    <button type="button" class="btn primary" id="labelSheetCopyPromptBtn" disabled>현재 페이지 프롬프트 복사</button>
+                    <button type="button" class="btn secondary" id="labelSheetCopyPromptNextBtn" disabled>복사 후 다음 페이지</button>
                     <span class="label-sheet-prompt-copy-progress" id="labelSheetPromptCopyProgress" role="status" aria-live="polite">복사 완료 0 / 0</span>
                   </div>
                 </div>
@@ -2570,8 +2600,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                     </div>
                   </div>
                   <div class="label-sheet-prompt-copy-actions">
-                    <button type="button" class="btn primary" id="labelSheetCopyPromptBottomBtn" disabled>현재 페이지 복사</button>
-                    <button type="button" class="btn secondary" id="labelSheetCopyPromptNextBottomBtn" disabled>복사 후 다음</button>
+                    <button type="button" class="btn primary" id="labelSheetCopyPromptBottomBtn" disabled>현재 페이지 프롬프트 복사</button>
+                    <button type="button" class="btn secondary" id="labelSheetCopyPromptNextBottomBtn" disabled>복사 후 다음 페이지</button>
                     <span class="label-sheet-prompt-copy-progress" id="labelSheetPromptCopyProgressBottom" role="status" aria-live="polite">복사 완료 0 / 0</span>
                   </div>
                 </div>
