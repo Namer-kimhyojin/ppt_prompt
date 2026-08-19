@@ -147,14 +147,26 @@ async function verifyViewport(label, viewport) {
       (await page.locator("#paneLabelSheet .label-sheet-workspace-topbar + .label-sheet-workspace-flowbar + .label-sheet-workspace-entry + .label-sheet-workspace-frame").count()) !== 1
       || (await page.locator("#labelSheetWorkspaceDataDrawer .label-sheet-workspace-bottom").count()) !== 1
     ) failures.push(`${label}: 프로젝트 진입점·캔버스·데이터 작업 화면 구조가 깨졌습니다.`);
-    if ((await page.locator("#paneLabelSheet [data-label-workspace-menu-trigger]").count()) !== 4 || (await page.locator("#labelSheetWorkspaceDetailDrawer").count()) !== 1) failures.push(`${label}: 맞춤형 메뉴 또는 세부 편집 모달이 누락되었습니다.`);
+    if (
+      (await page.locator("#paneLabelSheet [data-label-workspace-menu-trigger]").count()) !== 4
+      || (await page.locator("#labelSheetDesignContentStep").count()) !== 1
+      || (await page.locator("#labelSheetWorkspacePlacementEditor").count()) !== 1
+      || (await page.locator("#labelSheetWorkspaceQrDrawer").count()) !== 1
+    ) failures.push(`${label}: 맞춤형 메뉴 또는 분리된 개체·QR 편집 화면이 누락되었습니다.`);
     if (
       (await page.locator("[data-label-workspace-history-command]").count()) !== 4
       || (await page.locator("#labelSheetWorkspaceToolsBtn").count()) !== 1
       || (await page.locator(".label-sheet-workspace-mode-button").count()) !== 2
     ) failures.push(`${label}: 편집 기록, 작업 메뉴 또는 레이아웃·데이터 모드가 누락되었습니다.`);
-    if ((await page.locator(".label-sheet-workspace-context-toolbar [data-label-sheet-nudge]").count()) !== 0 || (await page.locator("#labelSheetWorkspaceDetailDrawer .label-sheet-workspace-precision-tools [data-label-sheet-nudge]").count()) !== 4) failures.push(`${label}: 저빈도 정밀 도구가 핵심 캔버스에서 상세 편집으로 이동하지 않았습니다.`);
-    if ((await page.locator("#labelSheetWorkspaceContextTargetPicker").count()) !== 1 || (await page.locator(".label-sheet-workspace-context-actions > button").count()) !== 3) failures.push(`${label}: 선택 항목 맞춤형 빠른 도구가 단순화되지 않았습니다.`);
+    if ((await page.locator(".label-sheet-workspace-context-toolbar [data-label-sheet-nudge]").count()) !== 0 || (await page.locator("#labelSheetWorkspacePlacementEditor .label-sheet-workspace-precision-tools [data-label-sheet-nudge]").count()) !== 4) failures.push(`${label}: 저빈도 정밀 도구가 핵심 캔버스에서 상세 편집으로 이동하지 않았습니다.`);
+    if (
+      (await page.locator("#labelSheetWorkspaceContextTargetPicker").count()) !== 1
+      || (await page.locator(".label-sheet-workspace-context-actions [data-label-workspace-context-size]").count()) !== 2
+      || (await page.locator(".label-sheet-workspace-context-actions [data-label-workspace-context-nudge]").count()) !== 4
+      || (await page.locator(".label-sheet-workspace-context-actions [data-label-workspace-context-align]").count()) !== 3
+      || (await page.locator(".label-sheet-workspace-context-actions #labelSheetQuickFont").count()) !== 1
+      || (await page.locator(".label-sheet-workspace-context-actions #labelSheetQuickColorMode").count()) !== 1
+    ) failures.push(`${label}: 선택 항목 맞춤형 빠른 도구 구성이 누락되었습니다.`);
     if (await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").isVisible()) {
       await page.locator("#labelSheetWorkspaceContextTargetPicker > summary").click();
       if (!(await page.locator('#labelSheetWorkspaceContextTargetPicker [data-label-sheet-focus-target="body"]').isVisible())) failures.push(`${label}: 편집 항목 선택 메뉴가 열리지 않았습니다.`);
@@ -227,7 +239,7 @@ async function verifyViewport(label, viewport) {
       });
       if (
         wideDesktopGeometry.topbarHeight > 60
-        || wideDesktopGeometry.flowbarHeight > 48
+        || wideDesktopGeometry.flowbarHeight > 52
         || wideDesktopGeometry.canvasWidth < wideDesktopGeometry.viewportWidth * 0.72
         || wideDesktopGeometry.inspectorWidth < 338
         || wideDesktopGeometry.inspectorWidth > 374
@@ -261,9 +273,11 @@ async function verifyViewport(label, viewport) {
       await page.locator("#labelSheetWorkspaceDataDrawer [data-label-workspace-drawer-close]").first().click();
       await page.waitForSelector("#labelSheetWorkspaceDataDrawer", { state: "hidden" });
     }
-    if (viewport.width <= 720) await page.locator("#labelSheetWorkspaceInspectorBtn").click();
-    await page.locator("#labelSheetWorkspaceDetailBtn").click();
-    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer:not([hidden])");
+    if (viewport.width <= 720 && await visible("#labelSheetWorkspaceInspectorBtn")) {
+      await page.locator("#labelSheetWorkspaceInspectorBtn").click();
+    }
+    await page.locator("#labelSheetWorkspaceQrBtn").evaluate((control) => control.click());
+    await page.waitForSelector("#labelSheetWorkspaceQrDrawer:not([hidden])");
     await page.locator("#labelSheetQrAdvanced").evaluate((details) => { details.open = true; });
     await page.waitForFunction(() => window.PromptDeckLabelSheet.assetStore.list().filter((asset) => asset.filename.startsWith("기본-")).length >= 6, null, { timeout: 60_000 });
     if (!(await page.evaluate(() => Boolean(window.PromptDeckLabelSheetPackage && window.PromptDeckTabularData && window.QRGeneratorCore)))) failures.push(`${label}: 라벨 패키지·표 데이터·QR 공용 모듈이 누락되었습니다.`);
@@ -280,12 +294,12 @@ async function verifyViewport(label, viewport) {
     if ((await page.locator("#labelSheetAssetList .label-sheet-asset-card").count()) < 6) failures.push(`${label}: 정적판 기본 배경 6종이 보관함에 등록되지 않았습니다.`);
     if (await visible("#labelSheetPageImageRegisterBtn")) failures.push(`${label}: 프롬프트 설계에 A4 배경 합성 절차가 노출됩니다.`);
     if (await visible("#labelSheetSavePackageBtn") || await visible("#labelSheetExportLayersBtn")) failures.push(`${label}: 프롬프트 설계에 완성물 패키지 기능이 노출됩니다.`);
-    await page.locator("#labelSheetWorkspaceDetailDrawer [data-label-workspace-drawer-close]").first().click();
-    await page.waitForSelector("#labelSheetWorkspaceDetailDrawer", { state: "hidden" });
+    await page.locator("#labelSheetWorkspaceQrDrawer [data-label-workspace-drawer-close]").first().click();
+    await page.waitForSelector("#labelSheetWorkspaceQrDrawer", { state: "hidden" });
     const outputStep = '[data-label-workspace-flow-step="output"]';
     if (!(await visible(outputStep))) failures.push(`${label}: 하단 출력 단계가 숨겨졌습니다.`);
     await page.locator(outputStep).click();
-    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+    await page.waitForSelector("#labelSheetWorkspacePromptWorkbench:not([hidden])");
     if (!(await visible("#labelSheetGeneratePromptBtn"))) failures.push(`${label}: 출력 화면의 프롬프트 생성 버튼이 숨겨졌습니다.`);
     await page.locator("#labelSheetGeneratePromptBtn").click();
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));

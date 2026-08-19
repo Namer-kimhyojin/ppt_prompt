@@ -7506,6 +7506,21 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   }
 }
 
+@media (max-width: 860px) and (max-height: 500px) {
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector {
+    top: var(--label-workspace-topbar-height);
+    bottom: var(--label-workspace-bottom-dock-height);
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-heading {
+    border-radius: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-drawer-panel {
     animation: none !important;
