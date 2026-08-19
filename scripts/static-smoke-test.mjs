@@ -300,8 +300,8 @@ async function verifyViewport(label, viewport) {
     if (!(await visible(outputStep))) failures.push(`${label}: 하단 출력 단계가 숨겨졌습니다.`);
     await page.locator(outputStep).click();
     await page.waitForSelector("#labelSheetWorkspacePromptWorkbench:not([hidden])");
-    if (!(await visible("#labelSheetGeneratePromptBtn"))) failures.push(`${label}: 출력 화면의 프롬프트 생성 버튼이 숨겨졌습니다.`);
-    await page.locator("#labelSheetGeneratePromptBtn").click();
+    if (!(await visible("#labelSheetWorkspacePromptGenerateBtn"))) failures.push(`${label}: 출력 화면의 프롬프트 생성 버튼이 숨겨졌습니다.`);
+    await page.locator("#labelSheetWorkspacePromptGenerateBtn").click();
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
     const prompt = await page.locator("#labelSheetPromptPreview").inputValue();
     if (!prompt.includes("A4 FULL IMAGE PAGE") || !prompt.includes("샘플교육센터 교육생 식권") || !prompt.includes("DEMO-MEAL-001")) failures.push(`${label}: 정적판 실제 문구 포함 전체 이미지 프롬프트가 생성되지 않았습니다.`);

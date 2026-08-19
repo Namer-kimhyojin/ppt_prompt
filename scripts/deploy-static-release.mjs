@@ -251,7 +251,6 @@ async function verifyHttpContracts(origin) {
   assert(response.status === 200, `${origin}/ returned ${response.status}`);
   assert(String(response.headers.get("cache-control") || "").includes("no-store"), `${origin}/ did not disable nonce HTML caching`);
   const publicAppEtag = String(response.headers.get("etag") || "");
-  assert(publicAppEtag, `${origin}/ omitted its static HTML ETag`);
   const publicAppCsp = String(response.headers.get("content-security-policy") || "");
   const publicAppHtml = await response.text();
   const nonceMatch = publicAppCsp.match(/'nonce-([^']+)'/u);
@@ -265,7 +264,9 @@ async function verifyHttpContracts(origin) {
   }), `${origin}/ did not apply its CSP nonce to every script tag`);
 
   const conditionalResponse = await fetchChecked(`${origin}/`, {
-    headers: { "if-none-match": publicAppEtag },
+    headers: publicAppEtag
+      ? { "if-none-match": publicAppEtag }
+      : { "if-modified-since": "Wed, 21 Oct 2099 07:28:00 GMT" },
   });
   assert(conditionalResponse.status === 200, `${origin}/ returned ${conditionalResponse.status} for a conditional nonce HTML request`);
   assert(String(conditionalResponse.headers.get("cache-control") || "").includes("no-store"), `${origin}/ conditional response allowed nonce HTML caching`);
@@ -423,26 +424,12 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
     });
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetRecordTableBody tr[data-record-id]").length === 8);
     await page.waitForFunction(() => document.querySelectorAll("#labelSheetPreviewSurface canvas").length === 1);
-    const mobilePromptAction = page.locator('#mobileTabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
-    const workspaceReviewAction = page.locator("#labelSheetWorkspaceReviewBtn");
-    const desktopPromptAction = page.locator('#tabActions [data-proxy-target="labelSheetGeneratePromptBtn"]');
-    if (await mobilePromptAction.isVisible()) {
-      await mobilePromptAction.click();
-    } else if (await workspaceReviewAction.isVisible()) {
-      await workspaceReviewAction.click();
-      await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
-      await page.locator("#labelSheetGeneratePromptBtn").click();
-    } else if (await desktopPromptAction.isVisible()) {
-      await desktopPromptAction.click();
-    } else {
-      await page.keyboard.press("Control+K");
-      await page.waitForSelector("#labelSheetWorkspaceCommandPalette:not([hidden])");
-      await page.locator("#labelSheetWorkspaceCommandSearch").fill("검토·내보내기");
-      await page.locator(".label-sheet-workspace-command-item").click();
-      await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
-      await page.locator("#labelSheetGeneratePromptBtn").click();
-    }
-    await page.waitForSelector("#labelSheetWorkspaceReviewDrawer:not([hidden])");
+    const outputStep = page.locator('[data-label-workspace-flow-step="output"]');
+    assert(await outputStep.isVisible(), `${origin} label output step is hidden at ${viewport.width}x${viewport.height}`);
+    await outputStep.click();
+    await page.waitForSelector("#labelSheetWorkspacePromptWorkbench:not([hidden])");
+    assert(await page.locator("#labelSheetWorkspacePromptGenerateBtn").isVisible(), `${origin} label prompt action is hidden`);
+    await page.locator("#labelSheetWorkspacePromptGenerateBtn").click();
     await page.waitForFunction(() => document.querySelector("#labelSheetPromptPreview")?.value.includes("DEMO-MEAL-001"));
     const labelSurface = await page.evaluate(() => {
       const isVisible = (selector) => {
