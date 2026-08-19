@@ -3573,11 +3573,17 @@ SLIDE-TWO-CONTENT`);
       page.evaluate(() => {
         const probe = { qrCalls: 0, textCalls: [], events: [], busyImmediately: false };
         const originalQr = window.QRGeneratorCore.drawCustomQRCode;
-        const originalFillText = CanvasRenderingContext2D.prototype.fillText;
+        const contextPrototypes = [
+          window.CanvasRenderingContext2D?.prototype,
+          window.OffscreenCanvasRenderingContext2D?.prototype,
+        ].filter((prototype, index, entries) => prototype && entries.indexOf(prototype) === index);
+        const originalFillText = new Map(contextPrototypes.map((prototype) => [prototype, prototype.fillText]));
         window.__labelSheetLatestStateProbe = probe;
         window.__labelSheetLatestStateRestore = () => {
           window.QRGeneratorCore.drawCustomQRCode = originalQr;
-          CanvasRenderingContext2D.prototype.fillText = originalFillText;
+          originalFillText.forEach((fillText, prototype) => {
+            prototype.fillText = fillText;
+          });
           delete window.__labelSheetLatestStateRestore;
         };
         window.QRGeneratorCore.drawCustomQRCode = (...args) => {
@@ -3585,13 +3591,16 @@ SLIDE-TWO-CONTENT`);
           probe.events.push({ type: "qr" });
           return originalQr(...args);
         };
-        CanvasRenderingContext2D.prototype.fillText = function (text, x, y, maxWidth) {
-          const matrix = this.getTransform();
-          const call = { text: String(text), align: this.textAlign, transform: [matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f] };
-          probe.textCalls.push(call);
-          probe.events.push({ type: "text", ...call });
-          return maxWidth === undefined ? originalFillText.call(this, text, x, y) : originalFillText.call(this, text, x, y, maxWidth);
-        };
+        contextPrototypes.forEach((prototype) => {
+          const fillText = originalFillText.get(prototype);
+          prototype.fillText = function (text, x, y, maxWidth) {
+            const matrix = this.getTransform();
+            const call = { text: String(text), align: this.textAlign, transform: [matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f] };
+            probe.textCalls.push(call);
+            probe.events.push({ type: "text", ...call });
+            return maxWidth === undefined ? fillText.call(this, text, x, y) : fillText.call(this, text, x, y, maxWidth);
+          };
+        });
         const qrToggle = document.querySelector("#labelSheetQrEnabled");
         const sequenceMode = document.querySelector("#labelSheetSequenceMode");
         const orientation = document.querySelector("#labelSheetContentOrientation");

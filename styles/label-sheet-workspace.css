@@ -7050,6 +7050,11 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   width: 100%;
 }
 
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor #labelSheetFocusDetailPanel :is(input:not([type="checkbox"]):not([type="radio"]), select) {
+  min-height: 44px;
+  line-height: 1.25;
+}
+
 @media (min-width: 861px) {
   #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-canvas-column {
     grid-template-rows: 56px auto minmax(0, 1fr);
