@@ -203,6 +203,17 @@ body {
 }
 
 @media (max-width: 720px) {
+  /* Keep the 56px app bar vertically centered. Designer/UI-system overrides
+     previously made the 44px actions and brand copy overflow its bottom edge. */
+  .app-header {
+    padding: 6px 8px 6px 10px;
+  }
+
+  .brand-title {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
   #tabActions.tab-action-dock {
     display: none !important;
   }

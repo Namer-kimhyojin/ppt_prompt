@@ -1019,13 +1019,21 @@ async function runSmokeTest() {
     record((await page.locator('.app-tabs[data-active-group="special"] .app-tab-group[data-tab-group="special"]:visible').count()) === 1, "Mobile task-group switcher did not reveal the selected tool group", failures);
     record((await page.locator('.app-tabs .app-tab-group:visible').count()) === 1, "Mobile navigation displayed more than one tool group at a time", failures);
     const mobileNavigation = await page.evaluate(() => {
+      const header = document.querySelector(".app-header");
+      const headerRect = header.getBoundingClientRect();
+      const headerCenter = headerRect.top + (headerRect.height / 2);
+      const headerItems = [".brand-block", "#appToolMenuBtn", "#themeToggleBtn"]
+        .map((selector) => document.querySelector(selector)?.getBoundingClientRect())
+        .filter(Boolean);
       const switches = [...document.querySelectorAll("[data-tab-group-filter]")].filter((element) => element.getClientRects().length);
       const detailTabs = [...document.querySelectorAll('.app-tabs[data-active-group="special"] .app-tab-btn')].filter((element) => element.getClientRects().length);
       const switchWidths = switches.map((element) => element.getBoundingClientRect().width);
       const detailRow = document.querySelector('.app-tabs[data-active-group="special"] .app-tab-group-buttons');
       return {
         headerPosition: getComputedStyle(document.querySelector(".app-header")).position,
-        headerHeight: document.querySelector(".app-header").getBoundingClientRect().height,
+        headerHeight: headerRect.height,
+        headerItemsInside: headerItems.every((rect) => rect.top >= headerRect.top - 0.5 && rect.bottom <= headerRect.bottom + 0.5),
+        headerCenterSpread: Math.max(...headerItems.map((rect) => Math.abs((rect.top + (rect.height / 2)) - headerCenter))),
         tabBarPosition: getComputedStyle(document.querySelector(".app-tabs-bar")).position,
         tabBarTop: getComputedStyle(document.querySelector(".app-tabs-bar")).top,
         toolButtonHeight: document.querySelector("#appToolMenuBtn").getBoundingClientRect().height,
@@ -1037,6 +1045,7 @@ async function runSmokeTest() {
       };
     });
     record(mobileNavigation.headerPosition === "sticky" && mobileNavigation.headerHeight <= 58 && mobileNavigation.tabBarPosition === "fixed" && mobileNavigation.tabBarTop === "56px", "Mobile app bar and tool drawer did not use the compact app-shell geometry", failures);
+    record(mobileNavigation.headerItemsInside && mobileNavigation.headerCenterSpread <= 2, "Mobile app bar title or action controls were vertically misaligned", failures);
     record(mobileNavigation.toolButtonHeight >= 44 && mobileNavigation.switchMinHeight >= 44 && mobileNavigation.detailMinHeight >= 44, "Mobile app-shell controls were smaller than the 44px touch target", failures);
     record(mobileNavigation.switchWidthSpread <= 1 && mobileNavigation.detailDisplay === "grid" && mobileNavigation.drawerOpen, "Mobile tool navigation did not use a balanced switcher and two-column drawer", failures);
     await page.click("#tabBtnFormImage");

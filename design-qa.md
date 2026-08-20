@@ -58,6 +58,40 @@ final result: passed
 
 ---
 
+# 모바일 앱 헤더 세로 정렬 Design QA
+
+- Source visual truth: `D:\00. Dev_Folder\Promptdeck\.codex-remote-attachments\01a013e9-bd83-7091-a8fa-9254f724e36e\ae3705db-0f86-4aca-9e57-258ef9deca3c\1-Photo-1.jpg` (628×1280 px)
+- Browser-rendered implementation screenshot: `%USERPROFILE%\AppData\Local\Temp\promptdeck-mobile-header-after.png`
+- Viewports: 인앱 브라우저 모바일 브레이크포인트와 전체 스모크의 390×844 CSS px
+- State: 라이트 테마, 모바일 앱 헤더, 현재 도구 제목·도구 메뉴·테마 전환 버튼 표시
+
+## Findings
+
+- [P1] 수정 전 56px 헤더에 후순위 스타일의 상하 16px 패딩과 22px 제목이 적용되어, 44px 도구·테마 버튼의 하단이 헤더 경계보다 4px 내려갔다.
+- Fix: 최종 UI 시스템의 모바일 규칙에서 헤더 패딩을 `6px 8px 6px 10px`, 제목을 15px/1.2로 복원하고 스타일 캐시 버전을 갱신했다.
+- Spacing and layout rhythm: 브랜드 영역은 y=10–46px, 도구·테마 버튼은 y=6–50px로 56px 헤더 안에 완전히 포함되고 같은 중심선에 정렬된다.
+- Typography: 데스크톱 22px 제목은 유지하고 모바일에서만 기존 앱 셸 규격인 15px로 제한했다.
+- Accessibility and interaction: 도구·테마 버튼의 44px 터치 영역, 레이블, 테마 상태 및 도구 메뉴 동작은 유지했다.
+- Image quality and assets: 이미지 자산 변경은 없다.
+
+## Primary interactions tested
+
+- 모바일 도구 메뉴 열기와 작업군 전환
+- 현재 도구명 표시
+- 테마 전환 버튼의 44px 터치 영역
+- 헤더 내부 포함 여부와 중심선 편차 2px 이하
+- 문서 가로 오버플로 없음
+
+## Console and regression checks
+
+- `npm run static:test` 통과
+- `npm run smoke:test` 통과
+- 모바일 헤더 정렬 회귀 검사를 전체 스모크에 추가했다.
+
+final result: passed
+
+---
+
 # 라벨 시작 카드·하단 단계 바 경계/가시성 Design QA
 
 - Source visual truth:
