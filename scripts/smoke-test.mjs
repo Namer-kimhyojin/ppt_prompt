@@ -3247,6 +3247,10 @@ SLIDE-TWO-CONTENT`);
           top: box.top,
           right: box.right,
           bottom: box.bottom,
+          clientWidth: control.clientWidth,
+          scrollWidth: control.scrollWidth,
+          clientHeight: control.clientHeight,
+          scrollHeight: control.scrollHeight,
           visible: Boolean(box.width && box.height && paintedAtCenter && (control === paintedAtCenter || control.contains(paintedAtCenter) || paintedAtCenter.contains(control))),
           clipped: control.scrollWidth > control.clientWidth + 1 || control.scrollHeight > control.clientHeight + 1,
           contained: Boolean(inspectorBox && box.left >= inspectorBox.left - 1 && box.right <= inspectorBox.right + 1),
@@ -3260,7 +3264,13 @@ SLIDE-TWO-CONTENT`);
         editorWidth: editorBox?.width || 0,
         editorInsideInspector: Boolean(editorBox && inspectorBox && editorBox.left >= inspectorBox.left - 1 && editorBox.right <= inspectorBox.right + 1),
         controlsContained: controls.every((control) => control.contained),
-        controlsClipped: controls.filter((control) => control.clipped).map((control) => control.label),
+        controlsClipped: controls.filter((control) => control.clipped).map((control) => ({
+          label: control.label,
+          clientWidth: control.clientWidth,
+          scrollWidth: control.scrollWidth,
+          clientHeight: control.clientHeight,
+          scrollHeight: control.scrollHeight,
+        })),
         controlsOverlap: overlaps,
       };
     });

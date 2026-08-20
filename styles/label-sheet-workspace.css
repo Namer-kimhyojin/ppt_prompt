@@ -5971,6 +5971,10 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   gap: 10px;
 }
 
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor #labelSheetWysiwygControls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-workspace-precision-tools {
   display: grid;
   gap: 8px;
