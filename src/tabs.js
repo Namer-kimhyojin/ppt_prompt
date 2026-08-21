@@ -200,7 +200,7 @@
     qrGenerator: [
       { label: "QR코드 생성", targetId: "qrGeneratorGenerateBtn", className: "btn primary" },
       { label: "PNG 다운로드", targetId: "qrGeneratorDownloadPngBtn", className: "btn secondary" },
-      { label: "인쇄 미리보기", targetId: "qrGeneratorPrintBtn", className: "btn secondary" },
+      { label: "QR 라벨 출력", targetId: "qrGeneratorPrintBtn", className: "btn secondary" },
       { label: "샘플 채우기", targetId: "qrGeneratorSampleBtn", className: "btn secondary", placement: "more" },
       { label: "SVG 다운로드", targetId: "qrGeneratorDownloadSvgBtn", className: "btn secondary", placement: "more" },
       { label: "초기화", targetId: "qrGeneratorResetBtn", className: "btn ghost", placement: "more" },
@@ -324,6 +324,19 @@
       mobileTabActions.replaceChildren();
       mobileTabActions.hidden = true;
       document.body.classList.remove("has-mobile-tab-actions");
+      return;
+    }
+    if (actionKey === "qrGenerator") {
+      const actions = actionSets.qrGenerator
+        .filter((item) => ["qrGeneratorGenerateBtn", "qrGeneratorPrintBtn"].includes(item.targetId))
+        .map((item) => makeProxyAction({
+          ...item,
+          className: item.targetId === "qrGeneratorPrintBtn" ? "btn primary" : "btn secondary",
+        }));
+      mobileTabActions.replaceChildren(...actions);
+      mobileTabActions.hidden = actions.length === 0;
+      document.body.classList.toggle("has-mobile-tab-actions", actions.length > 0);
+      syncHeaderActionStates();
       return;
     }
     const labelSheetPane = document.getElementById("paneLabelSheet");

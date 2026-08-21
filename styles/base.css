@@ -493,6 +493,11 @@ button {
 
 .mobile-tab-actions {
   display: none;
+  gap: 8px;
+}
+
+.mobile-tab-actions > .btn {
+  flex: 1 1 0;
 }
 
 .tab-action-direct {
