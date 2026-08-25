@@ -841,7 +841,7 @@
             intro: "Create one complete, production-ready slide image using the Common Design System and Individual Slide Specification below.",
             heading: "EXECUTION ORDER AND SOURCE PRIORITY",
             rules: [
-              "Render only user-facing content: keep authoring labels, Markdown, codes, notes, and control metadata invisible, and place only enabled header/footer values—including the computed page number—in their designated slots.",
+              "Render only user-facing content: keep authoring labels, Markdown, codes, notes, and control metadata invisible; also keep layout guides, measurements, margins, rulers, arrows, and wireframes invisible. Never render labels such as Header, Footer, Body, Margin, or Safe Area from a reference or prompt. Place only enabled header/footer values—including the computed page number—in their designated slots.",
             ].map((text) => ({ enabled: true, text })),
           };
         }
@@ -851,7 +851,7 @@
           intro: "아래 공통 디자인 시스템과 개별 슬라이드 명세를 사용하여 완성도 높은 슬라이드 이미지 한 장을 생성합니다.",
           heading: "실행 순서 및 정보 우선순위",
           rules: [
-            "사용자 표시 콘텐츠만 렌더링하고 작성용 필드명·Markdown·코드·메모·제어 정보는 숨기며, 활성화된 헤더·푸터 값과 계산된 페이지 번호만 지정 슬롯에 표시합니다.",
+            "사용자 표시 콘텐츠만 렌더링하고 작성용 필드명·Markdown·코드·메모·제어 정보·레이아웃 가이드·치수·마진·눈금·화살표·와이어프레임은 숨깁니다. 참조 이미지나 프롬프트의 Header·Footer·Body·Margin·Safe Area 같은 영역명도 화면에 표시하지 않으며, 활성화된 헤더·푸터 값과 계산된 페이지 번호만 지정 슬롯에 표시합니다.",
           ].map((text) => ({ enabled: true, text })),
         };
       }

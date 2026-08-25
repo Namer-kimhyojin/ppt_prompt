@@ -4410,6 +4410,12 @@
       : REQUIRED_SCOPE;
   }
 
+  function nonDisplayLayoutDirective(ko) {
+    return ko
+      ? "Header·Footer·Body·Margin·Safe Area 등 제작 가이드(비율·치수·눈금·화살표·ID·메모)는 렌더링하지 않는다. 실제 헤더·푸터 값만 개별 명세에서 표시한다."
+      : "Do not render authoring guides such as Header, Footer, Body, Margin, Safe Area, measurements, rulers, arrows, IDs, or notes. Show only explicit header/footer values from the individual specification.";
+  }
+
   function modelPromptLines(ko, model) {
     if (model === "gpt_image") return ko ? [
       "GPT Image용 직접 렌더링 명령으로 실행하고 결과 설명 없이 완성된 슬라이드 이미지 한 장만 생성한다.",
@@ -4447,6 +4453,7 @@
     const items = [
       ko ? `범위=${scopeText(true)}` : `Scope=${scopeText(false)}`,
       ko ? `실행=${modelShort}; 완성 슬라이드 이미지 1장; 설명문 없음.` : `Execution=${modelShort}; one finished slide image; no explanation.`,
+      nonDisplayLayoutDirective(ko),
       isSectionEnabled("canvas") ? (ko ? `규격=${get("canvas.aspectRatio")}, ${get("canvas.width")}×${get("canvas.height")}px, 안전영역 ${get("canvas.safeArea.top")}/${get("canvas.safeArea.right")}/${get("canvas.safeArea.bottom")}/${get("canvas.safeArea.left")}%` : `Canvas=${get("canvas.aspectRatio")}, ${get("canvas.width")}×${get("canvas.height")} px, safe ${get("canvas.safeArea.top")}/${get("canvas.safeArea.right")}/${get("canvas.safeArea.bottom")}/${get("canvas.safeArea.left")}%`) : "",
       isSectionEnabled("direction") ? (ko ? `디자인 DNA=${effectiveDesignStatement()}` : `Design DNA=${effectiveDesignStatement()}`) : "",
       isSectionEnabled("composition") ? (ko ? `시각 문법=${compositionSummary()}; ${get("composition.variationRule")}; 설득 목적에 기여하는 자원만 AI가 선택` : `Visual grammar=${compositionSummary()}; ${get("composition.variationRule")}; the image model selects only resources that support persuasion`) : "",
@@ -4546,6 +4553,7 @@
       ko
         ? "개별 명세의 문구·사실·수치·단위·관계를 정확히 보존하고 없는 내용을 만들지 않는다. 설명문·외부 목업·워터마크 없이 완성 슬라이드 이미지 한 장만 출력한다."
         : "Preserve supplied wording, facts, figures, units, and relationships exactly; invent nothing. Output one finished slide image without prose, mockups, or watermarks.",
+      nonDisplayLayoutDirective(ko),
     ];
     const optionalCandidates = [
       ko ? `실행=${modelLabel}; 규격=${get("canvas.aspectRatio")} ${get("canvas.width")}×${get("canvas.height")}px.` : `Execution=${modelLabel}; canvas=${get("canvas.aspectRatio")} ${get("canvas.width")}×${get("canvas.height")} px.`,
@@ -4610,6 +4618,7 @@
         : (ko ? "개별 슬라이드 명세와 이 디자인 가이드를 결합해 완성된 전체 슬라이드 이미지 한 장을 생성한다." : "Combine the individual slide specification with this design guide to generate one complete full-slide image."),
       modelLines[0],
       modelLines[2],
+      nonDisplayLayoutDirective(ko),
       detailed ? (ko ? "우선순위는 개별 명세의 정확한 문구·수치·의미 → 3초 이해도와 가독성 → 디자인 가이드 순이다." : "Priority order: exact supplied wording, figures, and meaning → three-second comprehension and legibility → design guide.") : "",
     ]));
 
@@ -4729,7 +4738,8 @@
     const sections = ko ? [
       ["OUTPUT CONTRACT", [
         "개별 슬라이드 명세와 이 공통 시각 사양을 결합해 완성된 전체 슬라이드 이미지 한 장을 생성한다.",
-        `${modelExecution} 설명문·편집기 UI·외부 목업 없이 캔버스를 가득 채운다.`,
+        `${modelExecution} 설명·UI·목업 없이 전체 캔버스를 사용한다.`,
+        nonDisplayLayoutDirective(true),
       ]],
       ["OUTPUT SIZE AND RESERVED AREAS", [
         `${get("canvas.aspectRatio")} 비율, ${get("canvas.width")}×${get("canvas.height")}px, ${get("canvas.orientation") === "portrait" ? "세로" : "가로"} 이미지.`,
@@ -4751,21 +4761,21 @@
       ]],
       ["CONTENT-BASED COMPOSITION", [
         "개별 슬라이드가 제공하는 핵심 주제와 목적, 정확한 콘텐츠와 데이터, 증거 관계, 정보 위계와 강조 대상을 먼저 해석한다.",
-        "각 슬라이드의 내용과 정보 밀도에 따라 레이아웃, 읽기 순서, 공간 위계, 개체 크기, 간격, 여백과 시각 매체를 별도로 선택한다. 내용이 적을수록 핵심 장면·수치·문장의 시각적 존재감을 높인다.",
+        "내용과 정보 밀도에 따라 레이아웃·읽기 순서·위계·크기·간격·여백·매체를 선택한다. 내용이 적을수록 핵심 장면·수치·문장의 시각적 존재감을 높인다.",
       ]],
       ["ESSENTIAL OUTPUT REQUIREMENTS", [
-        "명세에 없는 사실·수치·문구·라벨을 만들지 않는다. 같은 문구를 불필요하게 반복하지 않는다.",
+        "명세 외 사실·수치·문구·라벨은 만들지 않고 중복을 피한다.",
         "최종 크기에서 텍스트·수치·도형의 가장자리를 픽셀 단위로 선명하게 유지하고, 전면 블러 없이 필요한 작은 배경 영역에만 국부 효과를 적용한다.",
       ]],
     ] : [
-      ["OUTPUT CONTRACT", ["Combine the individual slide specification with this common visual specification to create one complete full-slide image.", `${modelExecution} Fill the canvas without explanatory prose, editor UI, or presentation mockups.`]],
+      ["OUTPUT CONTRACT", ["Combine the individual slide specification with this common visual specification to create one complete full-slide image.", `${modelExecution} Use the full canvas without prose, UI, or mockups.`, nonDisplayLayoutDirective(false)]],
       ["OUTPUT SIZE AND RESERVED AREAS", [`${get("canvas.aspectRatio")}, ${get("canvas.width")}×${get("canvas.height")} px, ${get("canvas.orientation")}.`, `${headerHeight ? `Reserve the top ${headerHeight}% for header items: ${headerItems.join(", ") || "none"}` : "No header area"}. ${footerHeight ? `Reserve the bottom ${footerHeight}% for footer items: ${footerItems.join(", ") || "none"}` : "No footer area"}. Use exact values only from the individual specification.`, `Protect an outer body safe margin of ${safeMargin}% and keep content outside reserved header/footer areas. Let their color, alignment, surface, and styling follow the visual specification below.`, "Omit header and footer on cover, agenda, section-divider, and closing slides."]],
       ["OVERALL VISUAL STYLE", [`Overall character: ${style.join("; ")}. Combine these qualities into one coherent visual language.`, slideStylePromptLine(false)]],
       ["COLOR PALETTE AND BACKGROUND", [`Palette ${paletteTitle()}: Primary ${get("colors.primary")}, Secondary ${get("colors.secondary")}, Accent ${get("colors.accent")}, Background ${get("colors.background")}, Surface ${get("colors.surface")}, Text ${get("colors.textPrimary")}.`, `Use ${baseBackground} as the base canvas.${get("colors.baseCanvas") === "white" ? " Continue using palette colors for headings, shapes, annotations, emphasis, and zoned surfaces." : " Use tonal derivatives to distinguish zones."}${resourcePolicy.excludes("photo") ? "" : " Preserve local photographic color and avoid a single-hue wash."}`]],
       ["TYPOGRAPHY AND INFORMATION EMPHASIS", [`${emphasis}. Preserve supplied wording, figures, units, and dates exactly, render Korean legibly, and make key metrics and outcomes visible first in the hierarchy.`]],
       ["AVAILABLE IMAGE AND GRAPHIC ELEMENTS", [...resourceLines, "Lines, planes, cards, sections, blocks, and whitespace may be used whenever they clarify information relationships and reading flow."]],
-      ["CONTENT-BASED COMPOSITION", ["First interpret the supplied topic, purpose, exact content and data, evidence relationships, information hierarchy, and focal priority.", "Choose the layout, reading order, spatial hierarchy, object scale, spacing, whitespace, and visual medium separately for each slide based on its content and information density. Increase focal visual presence when content is sparse."]],
-      ["ESSENTIAL OUTPUT REQUIREMENTS", ["Do not invent facts, figures, wording, or labels, and avoid unnecessary text duplication.", "Keep text, figures, and shape edges pixel-crisp at final size. Avoid full-canvas blur; use local effects only in small background areas when useful."]],
+      ["CONTENT-BASED COMPOSITION", ["First interpret the supplied topic, purpose, exact content and data, evidence relationships, information hierarchy, and focal priority.", "Choose layout, reading order, hierarchy, scale, spacing, whitespace, and medium from each slide's content and density. Increase focal visual presence when content is sparse."]],
+      ["ESSENTIAL OUTPUT REQUIREMENTS", ["Do not invent facts, figures, wording, or labels; avoid unnecessary duplication.", "Keep text, figures, and shape edges pixel-crisp at final size. Avoid full-canvas blur; use local effects only in small background areas when useful."]],
     ];
     const compactSections = [
       ["EXECUTION", [sections[0][1][0], sections[0][1][1], sections[1][1][0], sections[1][1][1], sections[1][1][2]]],
@@ -5509,6 +5519,7 @@
           header: { heightPercent: Number(state.frame.headerHeightPercent) || 0, elements: commaItems(state.frame.headerElements) },
           footer: { heightPercent: Number(state.frame.footerHeightPercent) || 0, elements: commaItems(state.frame.footerElements) },
           bodySafeMarginPercent: Number(state.frame.bodySafeMarginPercent) || 0,
+          renderLayoutMetadata: false,
           omitOnSlideTypes: ["cover", "agenda", "section-divider", "closing"],
         },
         visualStyle: clone(state.visualStyle),

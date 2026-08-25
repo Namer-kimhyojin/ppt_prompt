@@ -1466,6 +1466,7 @@ async function runSmokeTest() {
       await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
       const fiveStagePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
       record(fiveStagePrompt.startsWith("## SLIDE IMAGE VISUAL SPECIFICATION") && fiveStagePrompt.includes("### OUTPUT SIZE AND RESERVED AREAS") && fiveStagePrompt.includes("### CONTENT-BASED COMPOSITION"), "Generated prompt did not use the general five-stage image-specification structure", failures);
+      record(fiveStagePrompt.includes("Header·Footer·Body·Margin·Safe Area 등 제작 가이드") && fiveStagePrompt.includes("렌더링하지 않는다") && fiveStagePrompt.includes("실제 헤더·푸터 값만 개별 명세에서 표시"), "Common prompt did not hide reference-image layout annotations from the rendered slide", failures);
       record(fiveStagePrompt.includes("데이터 시각화") && fiveStagePrompt.includes("값·축·단위·비례·범례") && fiveStagePrompt.includes("흰색") && fiveStagePrompt.length <= 2400, `Five-stage prompt omitted selected settings or exceeded 2,400 characters (${fiveStagePrompt.length})`, failures);
       record(!fiveStagePrompt.includes("디자인 DNA") && !fiveStagePrompt.includes("AI 자유도") && !fiveStagePrompt.includes("MECE") && !fiveStagePrompt.includes("발표 시간"), "Generated prompt leaked internal jargon or removed presentation-time metadata", failures);
       await page.click('.cpd-summary [data-action="output-settings"]');
@@ -2105,7 +2106,8 @@ SLIDE-TWO-CONTENT`);
     record(!firstGeneratorOutput.includes("REMOVE-THIS-SCRIPT"), "Presenter script section was not excluded from the slide prompt", failures);
     record(firstGeneratorOutput.includes("KEEP-THIS-EVIDENCE"), "A valid section after presenter notes was removed", failures);
     record(firstGeneratorOutput.includes("# FINAL SLIDE IMAGE GENERATION TASK"), "Generated prompt did not include the top-level slide image execution task", failures);
-    record(firstGeneratorOutput.includes("authoring labels, Markdown, codes, notes, and control metadata invisible"), "Generated prompt did not prohibit visible authoring metadata", failures);
+      record(firstGeneratorOutput.includes("authoring labels, Markdown, codes, notes, and control metadata invisible"), "Generated prompt did not prohibit visible authoring metadata", failures);
+      record(firstGeneratorOutput.includes("layout guides, measurements, margins, rulers, arrows, and wireframes invisible") && firstGeneratorOutput.includes("Never render labels such as Header, Footer, Body, Margin, or Safe Area"), "Generated prompt did not prohibit visible layout-guide annotations", failures);
     record(firstGeneratorOutput.includes("Render only user-facing content"), "Generated prompt did not separate authoring labels from visible content", failures);
     record(firstGeneratorOutput.includes("only enabled header/footer values") && firstGeneratorOutput.includes("computed page number"), "Generated prompt did not constrain deck metadata to enabled header/footer slots", failures);
     record(firstGeneratorOutput.includes("## COMMON DESIGN SYSTEM"), "Generated prompt did not include the common design system at H2", failures);
