@@ -16,6 +16,7 @@
     "security:test": "node scripts/security-smoke-test.mjs",
     "public:test": "node scripts/public-access-smoke-test.mjs",
     "build:static": "node scripts/build-static.mjs",
+    "seo:test": "node scripts/seo-smoke-test.mjs",
     "static:test": "node scripts/static-smoke-test.mjs",
     "pages:admin:test": "node scripts/pages-admin-smoke-test.mjs",
     "release:static": "node scripts/deploy-static-release.mjs",

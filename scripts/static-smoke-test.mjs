@@ -23,6 +23,7 @@ const mime = new Map([
   [".svg", "image/svg+xml"],
   [".txt", "text/plain; charset=utf-8"],
   [".webp", "image/webp"],
+  [".xml", "application/xml; charset=utf-8"],
 ]);
 
 const server = remoteOrigin ? null : http.createServer(async (request, response) => {
@@ -489,17 +490,51 @@ async function verifyCompactLabelViewport(label, viewport) {
   await page.close();
 }
 
+async function runPhase(label, task) {
+  const startedAt = Date.now();
+  console.log(`[static:test] ${label} started`);
+  await task();
+  console.log(`[static:test] ${label} passed (${Date.now() - startedAt}ms)`);
+}
+
 try {
-  await verifyViewport("wide desktop", { width: 1920, height: 800 });
-  await verifyViewport("desktop", { width: 1440, height: 1000 });
-  await verifyViewport("mobile", { width: 390, height: 844 });
-  await verifyCompactLabelViewport("compact phone", { width: 375, height: 667 });
-  await verifyCompactLabelViewport("compact landscape", { width: 844, height: 390 });
+  await runPhase("wide desktop", () => verifyViewport("wide desktop", { width: 1920, height: 800 }));
+  await runPhase("desktop", () => verifyViewport("desktop", { width: 1440, height: 1000 }));
+  await runPhase("mobile", () => verifyViewport("mobile", { width: 390, height: 844 }));
+  await runPhase("compact phone", () => verifyCompactLabelViewport("compact phone", { width: 375, height: 667 }));
+  await runPhase("compact landscape", () => verifyCompactLabelViewport("compact landscape", { width: 844, height: 390 }));
+  console.log("[static:test] static resource checks started");
 
   const indexResponse = await fetch(`${origin}/`);
   const indexHtml = await indexResponse.text();
   for (const script of excludedStaticScripts) {
     if (indexHtml.includes(script)) failures.push(`index.html: 제외된 스크립트가 참조됩니다: ${script}`);
+  }
+  for (const expectedMetadata of [
+    '<link rel="canonical" href="https://promptdeck.kr/"',
+    'property="og:title"',
+    'property="og:image" content="https://promptdeck.kr/assets/brand/promptdeck-social-card.png"',
+    'name="twitter:card" content="summary_large_image"',
+    'type="application/ld+json"',
+  ]) {
+    if (!indexHtml.includes(expectedMetadata)) failures.push(`index.html: 검색·공유 메타데이터가 누락되었습니다: ${expectedMetadata}`);
+  }
+
+  const socialCardResponse = await fetch(`${origin}/assets/brand/promptdeck-social-card.png`);
+  if (!socialCardResponse.ok || !String(socialCardResponse.headers.get("content-type") || "").includes("image/png")) {
+    failures.push("assets/brand/promptdeck-social-card.png: 공유 대표 이미지가 배포본에 포함되지 않았습니다.");
+  }
+
+  const sitemapResponse = await fetch(`${origin}/sitemap.xml`);
+  const sitemap = await sitemapResponse.text();
+  if (!sitemapResponse.ok || !sitemap.includes("<loc>https://promptdeck.kr/</loc>")) {
+    failures.push("sitemap.xml: 대표 공개 URL이 포함된 사이트맵이 배포되지 않았습니다.");
+  }
+
+  const robotsResponse = await fetch(`${origin}/robots.txt`);
+  const robots = await robotsResponse.text();
+  if (!robotsResponse.ok || !robots.includes("Sitemap: https://promptdeck.kr/sitemap.xml")) {
+    failures.push("robots.txt: 사이트맵 위치가 선언되지 않았습니다.");
   }
 
   for (const pageName of [
@@ -541,9 +576,19 @@ try {
     const response = await fetch(`${origin}${privatePath}`);
     if (response.status !== 404) failures.push(`${privatePath}: 배포본에 포함되었습니다.`);
   }
+  console.log("[static:test] static resource checks passed");
 } finally {
+  console.log("[static:test] browser shutdown started");
   await browser.close();
-  if (server) await new Promise((resolve) => server.close(resolve));
+  console.log("[static:test] browser shutdown passed");
+  if (server) {
+    await new Promise((resolve, reject) => {
+      server.close((error) => error ? reject(error) : resolve());
+      server.closeIdleConnections?.();
+      server.closeAllConnections?.();
+    });
+  }
+  console.log("[static:test] server shutdown passed");
 }
 
 if (failures.length) {

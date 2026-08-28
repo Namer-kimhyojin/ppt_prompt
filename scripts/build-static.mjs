@@ -219,7 +219,7 @@ for (const filename of ["privacy.html", "terms.html", "ai-policy.html", "copyrig
   await fs.writeFile(path.join(outputDir, filename), source, "utf8");
 }
 
-for (const filename of ["_headers", "_routes.json", "robots.txt", "ads.txt", "404.html"]) {
+for (const filename of ["_headers", "_routes.json", "robots.txt", "sitemap.xml", "ads.txt", "404.html"]) {
   await fs.copyFile(path.join(repoRoot, "static-pages", filename), path.join(outputDir, filename));
 }
 markProfile("write-generated-pages");

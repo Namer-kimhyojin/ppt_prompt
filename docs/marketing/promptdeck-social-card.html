@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 1200px; height: 630px; margin: 0; overflow: hidden; }
+    body {
+      position: relative;
+      color: #fff;
+      font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background: #07101f url("promptdeck-social-card-background.png") center / cover no-repeat;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5, 11, 25, .98) 0%, rgba(5, 11, 25, .92) 34%, rgba(5, 11, 25, .28) 67%, rgba(5, 11, 25, .08) 100%);
+    }
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 585px;
+      padding: 62px 0 0 68px;
+    }
+    .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 52px; }
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow: 0 14px 38px rgba(61, 77, 255, .32);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+    .brand strong { font-size: 29px; letter-spacing: -.04em; }
+    .eyebrow { margin: 0 0 17px; color: #8fc5ff; font-size: 18px; font-weight: 750; letter-spacing: .08em; }
+    h1 { margin: 0; font-size: 55px; line-height: 1.16; letter-spacing: -.055em; text-wrap: balance; }
+    .description { margin: 24px 0 31px; color: rgba(239, 246, 255, .86); font-size: 22px; line-height: 1.58; letter-spacing: -.025em; }
+    .chips { display: flex; flex-wrap: wrap; gap: 9px; width: 510px; }
+    .chips span { padding: 9px 14px; border: 1px solid rgba(147, 197, 253, .24); border-radius: 999px; background: rgba(20, 37, 74, .66); color: #dbeafe; font-size: 15px; font-weight: 650; }
+    .url { position: absolute; left: 68px; bottom: 42px; color: rgba(255,255,255,.72); font-size: 17px; font-weight: 650; letter-spacing: .035em; }
+  </style>
+</head>
+<body>
+  <main class="content">
+    <div class="brand"><span class="mark">PD</span><strong>PromptDeck</strong></div>
+    <p class="eyebrow">AI VISUAL WORKSPACE</p>
+    <h1>아이디어를<br>실무 시각 자료로</h1>
+    <p class="description">발표자료부터 다이어그램·지도·홍보물·라벨까지,<br>목적에 맞는 생성형 AI 프롬프트를 한곳에서 설계하세요.</p>
+    <div class="chips"><span>슬라이드</span><span>데이터 다이어그램</span><span>지도</span><span>홍보 이미지</span><span>라벨·QR</span></div>
+  </main>
+  <div class="url">promptdeck.kr</div>
+</body>
+</html>

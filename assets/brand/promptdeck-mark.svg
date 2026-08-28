@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">PromptDeck</title>
+  <defs>
+    <linearGradient id="pd-gradient" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb" />
+      <stop offset="1" stop-color="#7c3aed" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0b1020" />
+  <path d="M15 16h17c10 0 16 5 16 14S42 44 32 44h-7v7H15V16Zm10 9v10h7c4 0 6-2 6-5s-2-5-6-5h-7Z" fill="url(#pd-gradient)" />
+  <path d="M45 43h5v8h-5z" fill="#2dd4bf" />
+</svg>
