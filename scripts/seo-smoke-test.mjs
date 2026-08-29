@@ -20,6 +20,7 @@ assert.match(indexHtml, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/"
 assert.match(indexHtml, /<meta property="og:url" content="https:\/\/promptdeck\.kr\/" \/>/u);
 assert.match(indexHtml, /<meta property="og:image" content="https:\/\/promptdeck\.kr\/assets\/brand\/promptdeck-social-card\.png" \/>/u);
 assert.match(indexHtml, /<meta name="twitter:card" content="summary_large_image" \/>/u);
+assert.match(indexHtml, /<meta name="google-site-verification" content="IvvWzu4r08gewXxdCKnimD2Bv291qwFJhojCJUS_vrs" \/>/u);
 assert.match(indexHtml, /<link rel="alternate" type="application\/atom\+xml"[^>]+href="https:\/\/promptdeck\.kr\/feed\.xml" \/>/u);
 assert.match(indexHtml, /href="guides\/">무료 실무 가이드<\/a>/u);
 
