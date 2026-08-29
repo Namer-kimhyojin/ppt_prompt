@@ -17,6 +17,8 @@
     "public:test": "node scripts/public-access-smoke-test.mjs",
     "build:static": "node scripts/build-static.mjs",
     "seo:test": "node scripts/seo-smoke-test.mjs",
+    "guides:test": "node scripts/guides-smoke-test.mjs",
+    "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "static:test": "node scripts/static-smoke-test.mjs",
     "pages:admin:test": "node scripts/pages-admin-smoke-test.mjs",
     "release:static": "node scripts/deploy-static-release.mjs",

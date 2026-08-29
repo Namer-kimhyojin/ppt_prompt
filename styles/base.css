@@ -1029,6 +1029,18 @@ button {
   white-space: nowrap;
 }
 
+.brand-guide-link {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.brand-guide-link:hover,
+.brand-guide-link:focus-visible {
+  text-decoration: underline;
+}
+
 .theme-toggle {
   width: 38px;
   height: 38px;

@@ -6,6 +6,30 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://promptdeck.kr/guides/</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://promptdeck.kr/guides/ai-presentation-prompt.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://promptdeck.kr/guides/data-diagram-prompt.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://promptdeck.kr/guides/promotion-image-prompt.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://promptdeck.kr/privacy.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>

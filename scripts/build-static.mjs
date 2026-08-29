@@ -158,6 +158,11 @@ for (const directory of ["styles", "src", "assets"]) {
   markProfile(`copy-${directory}`);
 }
 await copyTree(
+  path.join(repoRoot, "static-pages", "guides"),
+  path.join(outputDir, "guides"),
+);
+markProfile("copy-guides");
+await copyTree(
   path.join(repoRoot, "outputs", "mixer_samples"),
   path.join(outputDir, "outputs", "mixer_samples"),
 );
@@ -219,7 +224,16 @@ for (const filename of ["privacy.html", "terms.html", "ai-policy.html", "copyrig
   await fs.writeFile(path.join(outputDir, filename), source, "utf8");
 }
 
-for (const filename of ["_headers", "_routes.json", "robots.txt", "sitemap.xml", "ads.txt", "404.html"]) {
+for (const filename of [
+  "_headers",
+  "_routes.json",
+  "robots.txt",
+  "sitemap.xml",
+  "feed.xml",
+  "indexnow-c0ffcaf8d345462bbcc8c7d3ae78acae.txt",
+  "ads.txt",
+  "404.html",
+]) {
   await fs.copyFile(path.join(repoRoot, "static-pages", filename), path.join(outputDir, filename));
 }
 markProfile("write-generated-pages");

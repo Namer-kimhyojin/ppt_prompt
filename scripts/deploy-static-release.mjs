@@ -581,7 +581,7 @@ async function main() {
   console.log(`[release] Releasing ${head} (${commitMessage})`);
   if (previous) console.log(`[release] Previous production: ${previous.Source} ${previous.Deployment}`);
 
-  for (const script of ["diagram:test", "label:test", "smoke:test", "build:static", "seo:test", "static:test", "pages:admin:test"]) {
+  for (const script of ["diagram:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
     runNpm(["run", script]);
   }
   await verifyStaticContract();

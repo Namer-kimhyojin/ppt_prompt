@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>PromptDeck 실무 가이드</title>
+  <id>https://promptdeck.kr/guides/</id>
+  <link href="https://promptdeck.kr/feed.xml" rel="self" />
+  <link href="https://promptdeck.kr/guides/" />
+  <updated>2026-08-29T00:00:00+09:00</updated>
+  <author><name>PromptDeck</name><uri>https://promptdeck.kr/</uri></author>
+  <entry>
+    <title>AI 발표자료 프롬프트 작성법</title>
+    <id>https://promptdeck.kr/guides/ai-presentation-prompt.html</id>
+    <link href="https://promptdeck.kr/guides/ai-presentation-prompt.html" />
+    <updated>2026-08-29T00:00:00+09:00</updated>
+    <summary>목적, 슬라이드 메시지, 시각 규칙, 검수 기준을 포함한 발표자료 프롬프트 작성 가이드</summary>
+  </entry>
+  <entry>
+    <title>데이터 다이어그램 프롬프트 작성법</title>
+    <id>https://promptdeck.kr/guides/data-diagram-prompt.html</id>
+    <link href="https://promptdeck.kr/guides/data-diagram-prompt.html" />
+    <updated>2026-08-29T00:00:00+09:00</updated>
+    <summary>관계도, 프로세스, 비교표에서 수치와 연결 의미를 지키는 다이어그램 프롬프트 작성 가이드</summary>
+  </entry>
+  <entry>
+    <title>홍보 이미지 프롬프트 작성법</title>
+    <id>https://promptdeck.kr/guides/promotion-image-prompt.html</id>
+    <link href="https://promptdeck.kr/guides/promotion-image-prompt.html" />
+    <updated>2026-08-29T00:00:00+09:00</updated>
+    <summary>포스터, 카드뉴스, SNS 배너의 규격과 메시지, 텍스트 안전영역을 설계하는 프롬프트 가이드</summary>
+  </entry>
+</feed>
