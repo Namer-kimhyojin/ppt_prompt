@@ -866,7 +866,7 @@
       projectHistory.index = projectHistory.entries.length - 1;
       persistRecoverySnapshot(snapshotValue);
       updateHistoryUi();
-      if (current && !options.force) showUndoToast("변경사항을 자동 저장했습니다.", -1, "실행 취소");
+      // Background saves stay silent; explicit undo/redo and recovery actions keep their feedback.
     }
 
     function scheduleProjectHistoryCapture(delay = 420) {

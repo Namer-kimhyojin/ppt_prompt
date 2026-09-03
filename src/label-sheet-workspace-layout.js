@@ -42,6 +42,18 @@
     alignLeft: '<path d="M4 6h14M4 10h10M4 14h14M4 18h8"/>',
     alignCenter: '<path d="M5 6h14M7 10h10M5 14h14M8 18h8"/>',
     alignRight: '<path d="M6 6h14M10 10h10M6 14h14M12 18h8"/>',
+    alignTop: '<path d="M4 4h16M9 8v12M15 8v8"/>',
+    alignMiddle: '<path d="M4 12h16M9 4v5m0 6v5M15 7v2m0 6v2"/>',
+    alignBottom: '<path d="M4 20h16M9 4v12M15 8v8"/>',
+    arrowLeft: '<path d="M20 12H4m6-6-6 6 6 6"/>',
+    arrowRight: '<path d="M4 12h16m-6-6 6 6-6 6"/>',
+    arrowUp: '<path d="M12 20V4m-6 6 6-6 6 6"/>',
+    arrowDown: '<path d="M12 4v16m-6-6 6 6 6-6"/>',
+    pagePrev: '<path d="m12 6-6 6 6 6m6-12-6 6 6 6"/>',
+    pageNext: '<path d="m6 6 6 6-6 6m6-12 6 6-6 6"/>',
+    contrast: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="black"/>',
+    keyboard: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10"/>',
+    document: '<path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/>',
     sample: '<path d="m12 3 1.4 4.1L17.5 8.5l-4.1 1.4L12 14l-1.4-4.1-4.1-1.4 4.1-1.4zM18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8z"/>',
     prompt: '<path d="M4 5h11v11H8l-4 4z"/><path d="m18 4 .7 2.3L21 7l-2.3.7L18 10l-.7-2.3L15 7l2.3-.7z"/>',
     qr: '<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM15 14h2v2h-2zM18 14h2v5h-3M13 18h2v2h-2z"/>',
@@ -163,6 +175,7 @@
     const focusTargets = focusTooldeck?.querySelector(".label-sheet-focus-targets");
     const focusShortcutActions = focusTooldeck?.querySelector(".label-sheet-focus-shortcut-actions");
     const focusShortcutHelp = $("labelSheetFocusShortcutHelp");
+    const focusShortcutHelpButton = $("labelSheetFocusShortcutHelpBtn");
     const focusQuickPanel = $("labelSheetFocusQuickPanel");
     const focusCommonPanel = $("labelSheetFocusCommonPanel");
     const focusDetailPanel = $("labelSheetFocusDetailPanel");
@@ -552,10 +565,10 @@
     contextNudgeGroup.setAttribute("role", "group");
     contextNudgeGroup.setAttribute("aria-label", "선택 항목 미세 이동");
     [
-      ["left", "left", "왼쪽으로 이동"],
-      ["up", "up", "위로 이동"],
-      ["down", "down", "아래로 이동"],
-      ["right", "right", "오른쪽으로 이동"],
+      ["left", "arrowLeft", "왼쪽으로 이동"],
+      ["up", "arrowUp", "위로 이동"],
+      ["down", "arrowDown", "아래로 이동"],
+      ["right", "arrowRight", "오른쪽으로 이동"],
     ].forEach(([direction, icon, ariaLabel]) => {
       const control = iconButton(ariaLabel, icon, "label-sheet-workspace-context-icon-action", { iconOnly: true });
       control.dataset.labelWorkspaceContextNudge = direction;
@@ -722,7 +735,9 @@
     append(placementSummary, node("strong", "", "선택 항목 배치"), node("small", "", "위치·크기·정렬과 프리셋을 이 속성 편집기에서 조정합니다."));
     const placementBody = node("div", "label-sheet-workspace-placement-body");
     const precisionTools = node("section", "label-sheet-workspace-precision-tools");
-    append(precisionTools, heading("POSITION", "정밀 배치", "위·아래 이동과 크기·정렬은 선택한 항목에만 적용합니다."), focusShortcutActions, focusShortcutHelp);
+    const precisionHeading = heading("POSITION", "정밀 배치", "위·아래 이동과 크기·정렬은 선택한 항목에만 적용합니다.");
+    append(precisionHeading, focusShortcutHelpButton);
+    append(precisionTools, precisionHeading, focusShortcutActions, focusShortcutHelp);
     append(placementBody, focusDetailPanel, precisionTools);
     append(placementEditor, placementSummary, placementBody);
     append(inspectorActions, detailButton, placementButton, qrButton);
@@ -1008,6 +1023,58 @@
       ["labelSheetSampleBtn", "sample"],
       ["labelSheetResetBtn", "refresh"],
     ].forEach(([id, iconName]) => iconize($(id), iconName));
+
+    [
+      ["left", "alignLeft", "왼쪽 정렬"],
+      ["center", "alignCenter", "가운데 정렬"],
+      ["right", "alignRight", "오른쪽 정렬"],
+    ].forEach(([align, iconName, label]) => {
+      const quickButton = $(`labelSheetQuickAlign${align[0].toUpperCase()}${align.slice(1)}`);
+      [quickButton, ...pane.querySelectorAll(`[data-label-sheet-focus-align="${align}"]`)]
+        .forEach((control) => iconize(control, iconName, { iconOnly: true, label }));
+    });
+
+    [
+      ["labelSheetQuickVerticalTop", "alignTop", "선택 항목 위쪽 배치"],
+      ["labelSheetQuickVerticalCenter", "alignMiddle", "선택 항목 세로 가운데 배치"],
+      ["labelSheetQuickVerticalBottom", "alignBottom", "선택 항목 아래쪽 배치"],
+      ["labelSheetFocusPrev", "left", "이전 티켓"],
+      ["labelSheetFocusNext", "right", "다음 티켓"],
+      ["labelSheetFocusPagePrev", "pagePrev", "이전 페이지"],
+      ["labelSheetFocusPageNext", "pageNext", "다음 페이지"],
+      ["labelSheetPagePrev", "pagePrev", "이전 페이지"],
+      ["labelSheetPageNext", "pageNext", "다음 페이지"],
+      ["labelSheetFocusSizeDown", "minus", "선택 항목 크기 줄이기"],
+      ["labelSheetFocusSizeUp", "plus", "선택 항목 크기 키우기"],
+      ["labelSheetFocusBackgroundToggle", "contrast", "편집 대비"],
+      ["labelSheetFocusShortcutHelpBtn", "keyboard", "편집 단축키 보기"],
+      ["labelSheetWysiwygPresetDelete", "trash", "선택 프리셋 삭제"],
+    ].forEach(([id, iconName, label]) => iconize($(id), iconName, { iconOnly: true, label }));
+    [
+      ["left", "arrowLeft", "왼쪽으로 이동"],
+      ["up", "arrowUp", "위로 이동"],
+      ["down", "arrowDown", "아래로 이동"],
+      ["right", "arrowRight", "오른쪽으로 이동"],
+    ].forEach(([direction, iconName, label]) => {
+      const control = pane.querySelector(`[data-label-sheet-nudge="${direction}"]`);
+      iconize(control, iconName, { iconOnly: true, label });
+      if (control) control.title = `${label} · Shift 클릭으로 크게 이동`;
+    });
+    [
+      ["labelSheetWorkspaceInspectorTabObject", "properties"],
+      ["labelSheetWorkspaceInspectorTabBackground", "image"],
+      ["labelSheetWorkspaceInspectorTabDocument", "document"],
+      ["labelSheetWorkspaceAssetsBtn", "image"],
+      ["labelSheetOpenDetailedEditBtn", "properties"],
+    ].forEach(([id, iconName]) => iconize($(id), iconName));
+    $("labelSheetFocusSizeDown")?.setAttribute("aria-keyshortcuts", "[");
+    $("labelSheetFocusSizeUp")?.setAttribute("aria-keyshortcuts", "]");
+    pane.querySelectorAll(".label-sheet-focus-action-group").forEach((group) => {
+      group.setAttribute("role", "group");
+      group.setAttribute("aria-label", group.querySelector("span")?.textContent || "선택 항목 조정");
+    });
+    if ($("labelSheetFocusSizeDown")) $("labelSheetFocusSizeDown").title = "선택 항목 크기 줄이기 ([)";
+    if ($("labelSheetFocusSizeUp")) $("labelSheetFocusSizeUp").title = "선택 항목 크기 키우기 (])";
 
     bindWorkspaceViewport();
 

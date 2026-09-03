@@ -7050,7 +7050,7 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   box-sizing: border-box;
 }
 
-#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor #labelSheetFocusDetailPanel :is(input, select, textarea) {
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor #labelSheetFocusDetailPanel :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
   width: 100%;
 }
 
@@ -7564,6 +7564,14 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   flex-basis: 18px;
 }
 
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-quick-align button.label-sheet-icon-only {
+  width: 100%;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 [data-label-align-axis="vertical"][data-label-icon]::before {
+  transform: rotate(90deg);
+}
+
 #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mark.label-sheet-icon-only {
   width: 34px;
   min-width: 34px;
@@ -7621,8 +7629,168 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   }
 
   #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-icon-action.label-sheet-icon-only {
-    width: 40px;
-    min-width: 40px;
-    min-height: 40px;
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Editor controls: preserve task labels, compact repeated actions, and protect narrow panels. */
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-workspace-section-heading {
+  grid-template-columns: minmax(0, 1fr) 36px;
+  column-gap: 8px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-workspace-section-heading > :is(span, strong) {
+  grid-column: 1;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-workspace-section-heading > small {
+  grid-column: 1 / -1;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools #labelSheetFocusShortcutHelpBtn {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  justify-self: end;
+  align-self: start;
+  width: 36px;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-preset-controls {
+  grid-template-columns: minmax(0, 1fr) 36px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-preset-controls > :is(label, #labelSheetWysiwygPresetSave) {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-presets {
+  min-width: 0;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWysiwygPresetStatus {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-target-picker {
+  flex: 0 0 106px;
+  min-width: 106px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-target-summary {
+  gap: 5px;
+  white-space: nowrap;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-actions {
+  flex: 1 1 0%;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-field.label-sheet-quick-vertical {
+  width: 116px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-context .label-sheet-focus-navigation {
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  gap: 4px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 :is(#labelSheetFocusPosition, #labelSheetFocusPageStatus) {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  line-height: 1.3;
+  text-align: center;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 :is(#labelSheetFocusPosition, #labelSheetFocusPageStatus)::before {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetFocusPosition::before { content: "티켓"; }
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetFocusPageStatus::before { content: "페이지"; }
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-shortcut-actions {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group {
+  grid-template-columns: repeat(4, 36px);
+  justify-content: start;
+  gap: 6px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group[data-wysiwyg-size-only] {
+  grid-template-columns: repeat(2, 36px);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group[data-wysiwyg-text-only] {
+  grid-template-columns: repeat(3, 36px);
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-check {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-check > span {
+  min-width: 0;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 button.label-sheet-icon-only[aria-pressed="true"]:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent, #fff);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 button[data-label-icon]:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+@media (max-width: 860px) {
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-workspace-section-heading {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools #labelSheetFocusShortcutHelpBtn {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-preset-controls {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-field.label-sheet-quick-vertical {
+    width: 140px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-context .label-sheet-focus-navigation {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group {
+    grid-template-columns: repeat(4, 44px);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group[data-wysiwyg-size-only] {
+    grid-template-columns: repeat(2, 44px);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group[data-wysiwyg-text-only] {
+    grid-template-columns: repeat(3, 44px);
   }
 }

@@ -3747,7 +3747,10 @@
     const visible = typeof force === "boolean" ? force : help.hidden;
     help.hidden = !visible;
     button.setAttribute("aria-expanded", String(visible));
-    button.textContent = visible ? "단축키 닫기" : "단축키 보기";
+    const label = visible ? "편집 단축키 닫기" : "편집 단축키 보기";
+    if (!button.classList.contains("label-sheet-icon-only")) button.textContent = label;
+    button.setAttribute("aria-label", label);
+    button.title = label;
   }
 
   function selectWysiwygTarget(targetInput, options = {}) {
@@ -3913,10 +3916,14 @@
     if ($("labelSheetQuickAlignGroup")) $("labelSheetQuickAlignGroup").setAttribute("aria-label", uprightText ? "세로축 문구 정렬" : "문구 정렬");
     Object.entries(axisLabels).forEach(([align, label]) => {
       const button = $(`labelSheetQuickAlign${align[0].toUpperCase()}${align.slice(1)}`);
-      if (button) button.textContent = label;
-      pane.querySelectorAll(`[data-label-sheet-focus-align="${align}"]`).forEach((focusButton) => {
-        Array.from(focusButton.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE).forEach((node) => { node.textContent = label; });
-        focusButton.setAttribute("aria-label", `${label} 정렬`);
+      const controls = [button, ...pane.querySelectorAll(`[data-label-sheet-focus-align="${align}"], [data-label-workspace-context-align="${align}"]`)];
+      controls.filter(Boolean).forEach((control) => {
+        if (!control.classList.contains("label-sheet-icon-only")) {
+          Array.from(control.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE).forEach((node) => { node.textContent = label; });
+        }
+        control.setAttribute("aria-label", `${label} 정렬`);
+        control.title = `${label} 정렬`;
+        control.dataset.labelAlignAxis = uprightText ? "vertical" : "horizontal";
       });
     });
     if (!context.placement) {
@@ -4863,8 +4870,9 @@
     surface?.classList.toggle("is-edit-contrast", focusBackgroundMuted);
     if (button) {
       button.setAttribute("aria-pressed", String(focusBackgroundMuted));
-      button.textContent = focusBackgroundMuted ? "편집 대비 켬" : "편집 대비 끔";
-      button.title = focusBackgroundMuted ? "배경을 약하게 표시해 편집 개체를 선명하게 봅니다." : "배경 원본 밝기와 색상을 표시합니다.";
+      if (!button.classList.contains("label-sheet-icon-only")) button.textContent = focusBackgroundMuted ? "편집 대비 켬" : "편집 대비 끔";
+      button.setAttribute("aria-label", "편집 대비");
+      button.title = focusBackgroundMuted ? "편집 대비 켜짐 · 클릭하면 원본 배경으로 보기" : "편집 대비 꺼짐 · 클릭하면 배경을 약하게 보기";
     }
   }
 

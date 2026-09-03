@@ -2772,7 +2772,18 @@ SLIDE-TWO-CONTENT`);
     await page.waitForFunction(() => document.activeElement?.id === "labelSheetContentOrientation");
     await page.selectOption("#labelSheetContentOrientation", "vertical-upright");
     await page.waitForFunction(() => document.querySelector("#labelSheetQuickWidthLabel")?.textContent === "세로 길이");
-    record((await page.locator("#labelSheetQuickAlignGroup button").allTextContents()).join("|") === "위쪽|가운데|아래쪽", "Label-sheet upright writing did not relabel alignment for the vertical axis", failures);
+    const verticalAlignmentIcons = await page.locator('#labelSheetQuickAlignGroup button, [data-label-sheet-focus-align], [data-label-workspace-context-align]').evaluateAll((buttons) => buttons.map((button) => ({
+      label: button.getAttribute("aria-label"),
+      title: button.title,
+      text: button.textContent.trim(),
+      iconOnly: button.classList.contains("label-sheet-icon-only"),
+      axis: button.dataset.labelAlignAxis,
+      mask: getComputedStyle(button, "::before").maskImage,
+    })));
+    record(verticalAlignmentIcons.length === 9 && verticalAlignmentIcons.every((button) =>
+      button.iconOnly && !button.text && button.axis === "vertical" && button.mask !== "none"
+      && ["위쪽 정렬", "가운데 정렬", "아래쪽 정렬"].includes(button.label) && button.title === button.label
+    ), `Label-sheet vertical alignment icons lost their accessible labels or rendered text: ${JSON.stringify(verticalAlignmentIcons)}`, failures);
     record((await page.locator("#labelSheetWysiwygMaxLinesLabel").textContent()).trim() === "최대 열 수", "Label-sheet upright writing did not expose column terminology", failures);
     await page.selectOption("#labelSheetContentOrientation", "auto");
     await page.locator("#labelSheetWorkspaceCommonDrawer [data-label-workspace-drawer-close]").first().click();
@@ -4077,13 +4088,69 @@ SLIDE-TWO-CONTENT`);
     );
     await page.click('[data-label-workspace-inspector-tab="object"]');
     const focusTitleSizeBefore = await page.locator('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]').evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
+    const autosaveBeforeEdit = await page.evaluate(() => ({
+      project: localStorage.getItem("promptdeck_label_sheet_project_v1"),
+      recovery: localStorage.getItem("promptdeck_label_sheet_recovery_v1"),
+    }));
     await page.locator("#labelSheetQuickSize").evaluate((control) => {
       control.value = "20";
       control.dispatchEvent(new Event("input", { bubbles: true }));
       control.dispatchEvent(new Event("change", { bubbles: true }));
     });
     await page.waitForFunction((before) => parseFloat(getComputedStyle(document.querySelector('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]')).fontSize) > before, focusTitleSizeBefore);
+    await page.waitForFunction((before) => localStorage.getItem("promptdeck_label_sheet_project_v1") !== before.project
+      && localStorage.getItem("promptdeck_label_sheet_recovery_v1") !== before.recovery, autosaveBeforeEdit);
+    record(await page.locator("#labelSheetWorkspaceUndoToast").isHidden(), "Label-sheet background autosave displayed an unsolicited notification", failures);
     await openLabelDetail();
+    for (const [align, label] of [["left", "왼쪽 정렬"], ["right", "오른쪽 정렬"], ["center", "가운데 정렬"]]) {
+      const control = page.locator(`[data-label-sheet-focus-align="${align}"]`);
+      await control.click();
+      await page.waitForFunction((expected) => document.querySelector('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]')?.style.textAlign === expected, align);
+      record((await control.getAttribute("aria-pressed")) === "true" && (await control.getAttribute("aria-label")) === label && !(await control.textContent()).trim(), `Label-sheet ${align} alignment icon did not retain its action, selected state, or accessible name`, failures);
+    }
+    const propertyIconProbe = await page.evaluate(() => {
+      const ids = ["labelSheetQuickVerticalTop", "labelSheetQuickVerticalCenter", "labelSheetQuickVerticalBottom", "labelSheetFocusPrev", "labelSheetFocusNext", "labelSheetFocusPagePrev", "labelSheetFocusPageNext", "labelSheetPagePrev", "labelSheetPageNext", "labelSheetFocusSizeDown", "labelSheetFocusSizeUp", "labelSheetFocusBackgroundToggle", "labelSheetFocusShortcutHelpBtn", "labelSheetWysiwygPresetDelete"];
+      return {
+        icons: [...ids.map((id) => document.getElementById(id)), ...document.querySelectorAll("[data-label-sheet-nudge]")].map((button) => ({
+          id: button?.id || button?.dataset.labelSheetNudge,
+          iconOnly: button?.classList.contains("label-sheet-icon-only"),
+          text: button?.textContent.trim(),
+          label: button?.getAttribute("aria-label"),
+          title: button?.title,
+          mask: button && getComputedStyle(button, "::before").maskImage,
+        })),
+        checks: [...document.querySelectorAll("#labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-check")].filter((label) => label.getClientRects().length).map((label) => ({
+          inputWidth: label.querySelector("input").getBoundingClientRect().width,
+          textWidth: label.querySelector("span").getBoundingClientRect().width,
+          height: label.getBoundingClientRect().height,
+        })),
+        tabs: [...document.querySelectorAll("[data-label-workspace-inspector-tab]")].map((tab) => tab.textContent.trim()),
+        presetOverflow: (() => {
+          const panel = document.querySelector("#labelSheetWorkspacePlacementEditor .label-sheet-wysiwyg-presets");
+          return panel.scrollWidth - panel.clientWidth;
+        })(),
+      };
+    });
+    record(propertyIconProbe.icons.length === 18 && propertyIconProbe.icons.every((button) => button.iconOnly && !button.text && button.label && button.title && button.mask && button.mask !== "none"), `Label-sheet property icons lost their visual or accessible labels: ${JSON.stringify(propertyIconProbe.icons)}`, failures);
+    record(propertyIconProbe.checks.length >= 2 && propertyIconProbe.checks.every((check) => check.inputWidth <= 24 && check.textWidth >= 100 && check.height < 100), `Label-sheet property checkboxes squeezed their explanatory text: ${JSON.stringify(propertyIconProbe.checks)}`, failures);
+    record(propertyIconProbe.tabs.join("|") === "개체|배경|문서", "Label-sheet property tabs lost their recognizable text labels", failures);
+    record(propertyIconProbe.presetOverflow <= 1, `Label-sheet preset controls overflowed the narrow property panel by ${propertyIconProbe.presetOverflow}px`, failures);
+    const propertySizeBefore = Number(await page.locator("#labelSheetQuickSize").inputValue());
+    await page.click("#labelSheetFocusSizeUp");
+    record(Number(await page.locator("#labelSheetQuickSize").inputValue()) === propertySizeBefore + 0.5, "Label-sheet property size icon did not increase the selection size", failures);
+    await page.click("#labelSheetFocusSizeDown");
+    const propertyXBefore = Number(await page.locator("#labelSheetWysiwygX").inputValue());
+    await page.click('[data-label-sheet-nudge="right"]');
+    record(Number(await page.locator("#labelSheetWysiwygX").inputValue()) === propertyXBefore + 1, "Label-sheet property move icon did not move the selection", failures);
+    await page.click('[data-label-sheet-nudge="left"]');
+    for (const expected of ["true", "false"]) {
+      await page.click("#labelSheetFocusShortcutHelpBtn");
+      record((await page.locator("#labelSheetFocusShortcutHelpBtn").getAttribute("aria-expanded")) === expected && !(await page.locator("#labelSheetFocusShortcutHelpBtn").textContent()).trim(), "Label-sheet keyboard-help icon lost its icon or expanded state", failures);
+    }
+    const contrastBefore = await page.locator("#labelSheetFocusBackgroundToggle").getAttribute("aria-pressed");
+    await page.click("#labelSheetFocusBackgroundToggle");
+    record((await page.locator("#labelSheetFocusBackgroundToggle").getAttribute("aria-pressed")) !== contrastBefore && !(await page.locator("#labelSheetFocusBackgroundToggle").textContent()).trim(), "Label-sheet contrast icon lost its icon or pressed state", failures);
+    await page.click("#labelSheetFocusBackgroundToggle");
     await page.click('[data-label-workspace-context-align="right"]');
     await page.waitForFunction(() => document.querySelector('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]')?.style.textAlign === "right");
     record((await page.locator('#labelSheetFocusSurface .label-sheet-wysiwyg-field[data-wysiwyg-field="title"]').evaluate((element) => element.style.textAlign)) === "right", "Label-sheet focus editor did not apply alignment immediately", failures);
@@ -4536,6 +4603,8 @@ SLIDE-TWO-CONTENT`);
       transform: getComputedStyle(element).transform,
       smallControls: Array.from(element.querySelectorAll("button, a, input, select, textarea"))
         .filter((control) => {
+          // Closed details can retain stale desktop rectangles despite not being rendered.
+          if (!control.checkVisibility()) return false;
           const box = control.getBoundingClientRect();
           const style = getComputedStyle(control);
           if (!box.width || !box.height || style.display === "none" || style.visibility === "hidden") return false;
@@ -4557,6 +4626,17 @@ SLIDE-TWO-CONTENT`);
       `Label-sheet mobile property drawer did not open with touch-safe controls: ${JSON.stringify(labelMobileInspectorOpen)}`,
       failures
     );
+    await page.click('[data-label-workspace-inspector-tab="object"]');
+    await openLabelDetail();
+    await page.locator("#labelSheetFocusShortcutHelpBtn").scrollIntoViewIfNeeded();
+    const mobilePrecisionIcons = await page.locator("#labelSheetFocusShortcutHelpBtn, [data-label-sheet-nudge]").evaluateAll((buttons) => buttons.map((button) => ({
+      id: button.id || button.dataset.labelSheetNudge,
+      visible: button.checkVisibility(),
+      width: button.getBoundingClientRect().width,
+      height: button.getBoundingClientRect().height,
+    })));
+    record(mobilePrecisionIcons.length === 5 && mobilePrecisionIcons.every((button) => button.visible && button.width >= 44 && button.height >= 44), `Label-sheet opened mobile precision icons were not touch safe: ${JSON.stringify(mobilePrecisionIcons)}`, failures);
+    await closeLabelDetail();
     await page.keyboard.press("Escape");
     await page.waitForFunction(() => !document.querySelector("#paneLabelSheet")?.classList.contains("is-mobile-inspector-open"));
     await page.waitForFunction(() => getComputedStyle(document.querySelector("#labelSheetWorkspaceInspector")).visibility === "hidden");
