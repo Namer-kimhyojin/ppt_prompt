@@ -4,27 +4,34 @@
   <id>https://promptdeck.kr/guides/</id>
   <link href="https://promptdeck.kr/feed.xml" rel="self" />
   <link href="https://promptdeck.kr/guides/" />
-  <updated>2026-08-29T00:00:00+09:00</updated>
+  <updated>2026-09-03T00:00:00+09:00</updated>
   <author><name>PromptDeck</name><uri>https://promptdeck.kr/</uri></author>
   <entry>
+    <title>ppt-slide-planner Codex·Claude 등록·사용법</title>
+    <id>https://promptdeck.kr/guides/ppt-slide-planner-skill</id>
+    <link href="https://promptdeck.kr/guides/ppt-slide-planner-skill" />
+    <updated>2026-09-03T00:00:00+09:00</updated>
+    <summary>원문을 발표 전략과 슬라이드 제작 명세로 바꾸는 Codex·Claude 스킬의 등록, 호출, 밀도 설정, PromptDeck 연계 가이드</summary>
+  </entry>
+  <entry>
     <title>AI 발표자료 프롬프트 작성법</title>
-    <id>https://promptdeck.kr/guides/ai-presentation-prompt.html</id>
-    <link href="https://promptdeck.kr/guides/ai-presentation-prompt.html" />
-    <updated>2026-08-29T00:00:00+09:00</updated>
+    <id>https://promptdeck.kr/guides/ai-presentation-prompt</id>
+    <link href="https://promptdeck.kr/guides/ai-presentation-prompt" />
+    <updated>2026-09-02T00:00:00+09:00</updated>
     <summary>목적, 슬라이드 메시지, 시각 규칙, 검수 기준을 포함한 발표자료 프롬프트 작성 가이드</summary>
   </entry>
   <entry>
     <title>데이터 다이어그램 프롬프트 작성법</title>
-    <id>https://promptdeck.kr/guides/data-diagram-prompt.html</id>
-    <link href="https://promptdeck.kr/guides/data-diagram-prompt.html" />
-    <updated>2026-08-29T00:00:00+09:00</updated>
+    <id>https://promptdeck.kr/guides/data-diagram-prompt</id>
+    <link href="https://promptdeck.kr/guides/data-diagram-prompt" />
+    <updated>2026-09-02T00:00:00+09:00</updated>
     <summary>관계도, 프로세스, 비교표에서 수치와 연결 의미를 지키는 다이어그램 프롬프트 작성 가이드</summary>
   </entry>
   <entry>
     <title>홍보 이미지 프롬프트 작성법</title>
-    <id>https://promptdeck.kr/guides/promotion-image-prompt.html</id>
-    <link href="https://promptdeck.kr/guides/promotion-image-prompt.html" />
-    <updated>2026-08-29T00:00:00+09:00</updated>
+    <id>https://promptdeck.kr/guides/promotion-image-prompt</id>
+    <link href="https://promptdeck.kr/guides/promotion-image-prompt" />
+    <updated>2026-09-02T00:00:00+09:00</updated>
     <summary>포스터, 카드뉴스, SNS 배너의 규격과 메시지, 텍스트 안전영역을 설계하는 프롬프트 가이드</summary>
   </entry>
 </feed>

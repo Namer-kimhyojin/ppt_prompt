@@ -92,7 +92,7 @@ function cookieFrom(response) {
 try {
   await waitForServer();
 
-  const publicAppResponse = await fetch(`${origin}/`, { cache: "no-store" });
+  const publicAppResponse = await fetch(`${origin}/app`, { cache: "no-store" });
   assert.equal(publicAppResponse.status, 200);
   assert.match(publicAppResponse.headers.get("cache-control") || "", /\bno-store\b/iu);
   const publicAppEtag = publicAppResponse.headers.get("etag") || "";
@@ -107,7 +107,7 @@ try {
   publicScriptTags.forEach((match) => {
     assert.match(match[1], new RegExp(`\\bnonce=["']${publicAppNonce}["']`, "iu"));
   });
-  const conditionalPublicAppResponse = await fetch(`${origin}/`, {
+  const conditionalPublicAppResponse = await fetch(`${origin}/app`, {
     headers: { "if-none-match": publicAppEtag },
   });
   assert.equal(conditionalPublicAppResponse.status, 200);
@@ -122,7 +122,7 @@ try {
   conditionalScriptTags.forEach((match) => {
     assert.match(match[1], new RegExp(`\\bnonce=["']${conditionalPublicAppNonce}["']`, "iu"));
   });
-  const secondPublicAppResponse = await fetch(`${origin}/`, { cache: "no-store" });
+  const secondPublicAppResponse = await fetch(`${origin}/app`, { cache: "no-store" });
   const secondPublicAppNonce = (secondPublicAppResponse.headers.get("content-security-policy") || "")
     .match(/'nonce-([^']+)'/u)?.[1] || "";
   assert.match(secondPublicAppNonce, /^[a-f0-9]{32}$/u);
@@ -135,10 +135,12 @@ try {
 
   const lockedPage = await fetch(`${origin}/admin.html`, { redirect: "manual" });
   assert.equal(lockedPage.status, 302);
-  assert.match(lockedPage.headers.get("location") || "", /admin=locked/u);
+  assert.equal(new URL(lockedPage.headers.get("location") || "", origin).pathname, "/app");
+  assert.equal(new URL(lockedPage.headers.get("location") || "", origin).search, "");
   const lockedCleanUrl = await fetch(`${origin}/admin`, { redirect: "manual" });
   assert.equal(lockedCleanUrl.status, 302);
-  assert.match(lockedCleanUrl.headers.get("location") || "", /admin=locked/u);
+  assert.equal(new URL(lockedCleanUrl.headers.get("location") || "", origin).pathname, "/app");
+  assert.equal(new URL(lockedCleanUrl.headers.get("location") || "", origin).search, "");
 
   result = await json("/api/admin-settings", postOptions({ programName: "blocked" }));
   assert.equal(result.response.status, 403);
@@ -202,7 +204,7 @@ try {
     });
     page.on("pageerror", (error) => browserPageErrors.push(error.stack || error.message));
     await page.route(/\.(?:avif|gif|jpe?g|png|webp)(?:\?.*)?$/iu, (route) => route.abort());
-    await page.goto(origin, { waitUntil: "domcontentloaded" });
+    await page.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.PromptDeckTabs));
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => Boolean(window.PromptDeckTabs));
@@ -237,10 +239,11 @@ try {
     assert.equal(logoutResponse.status(), 200);
     await page.waitForURL((url) => !url.pathname.startsWith("/admin"));
     const relocked = await page.goto(`${origin}/admin.html`, { waitUntil: "domcontentloaded" });
-    assert.equal(new URL(relocked.url()).searchParams.get("admin"), "locked");
+    assert.equal(new URL(relocked.url()).pathname, "/app");
+    assert.equal(new URL(relocked.url()).search, "");
 
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await mobile.goto(origin, { waitUntil: "domcontentloaded" });
+    await mobile.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await mobile.locator(".brand-mark").evaluate((element) => {
       for (let index = 0; index < 7; index += 1) element.click();
     });

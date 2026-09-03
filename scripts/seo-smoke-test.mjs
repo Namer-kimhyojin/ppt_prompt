@@ -4,25 +4,35 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..", "dist-static");
 const indexHtml = await fs.readFile(path.join(root, "index.html"), "utf8");
+const appHtml = await fs.readFile(path.join(root, "app.html"), "utf8");
+const aboutHtml = await fs.readFile(path.join(root, "about.html"), "utf8");
 const robots = await fs.readFile(path.join(root, "robots.txt"), "utf8");
 const sitemap = await fs.readFile(path.join(root, "sitemap.xml"), "utf8");
 const feed = await fs.readFile(path.join(root, "feed.xml"), "utf8");
 const socialCard = await fs.readFile(path.join(root, "assets", "brand", "promptdeck-social-card.png"));
 const guidePaths = [
   "guides/index.html",
+  "guides/ppt-slide-planner-skill.html",
   "guides/ai-presentation-prompt.html",
   "guides/data-diagram-prompt.html",
   "guides/promotion-image-prompt.html",
 ];
 
-assert.match(indexHtml, /<title>PromptDeck \| AI 발표자료·이미지 프롬프트 설계 도구<\/title>/u);
+assert.match(indexHtml, /<title>PromptDeck \| 실무 시각자료 프롬프트 설계<\/title>/u);
 assert.match(indexHtml, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/" \/>/u);
 assert.match(indexHtml, /<meta property="og:url" content="https:\/\/promptdeck\.kr\/" \/>/u);
 assert.match(indexHtml, /<meta property="og:image" content="https:\/\/promptdeck\.kr\/assets\/brand\/promptdeck-social-card\.png" \/>/u);
 assert.match(indexHtml, /<meta name="twitter:card" content="summary_large_image" \/>/u);
 assert.match(indexHtml, /<meta name="google-site-verification" content="IvvWzu4r08gewXxdCKnimD2Bv291qwFJhojCJUS_vrs" \/>/u);
 assert.match(indexHtml, /<link rel="alternate" type="application\/atom\+xml"[^>]+href="https:\/\/promptdeck\.kr\/feed\.xml" \/>/u);
-assert.match(indexHtml, /href="guides\/">무료 실무 가이드<\/a>/u);
+assert.match(indexHtml, /href="\/app">작업 도구 열기<\/a>/u);
+assert.match(indexHtml, /AI가 그리기 전에/u);
+assert.doesNotMatch(indexHtml, /pagead2\.googlesyndication\.com|adsbygoogle|mainAdBand|src\/adsense\.js/u);
+
+assert.match(appHtml, /<meta name="robots" content="noindex, follow" \/>/u);
+assert.match(appHtml, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/app" \/>/u);
+assert.doesNotMatch(appHtml, /pagead2\.googlesyndication\.com|adsbygoogle|mainAdBand|src\/adsense\.js|src\/adsense-config\.js/u);
+assert.match(aboutHtml, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/about" \/>/u);
 
 const jsonLdMatch = indexHtml.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/u);
 assert.ok(jsonLdMatch, "JSON-LD metadata is missing");
@@ -50,15 +60,30 @@ for (const guidePath of guidePaths) {
   assert.match(html, /src="\.\.\/src\/guide-share\.js"/u);
 }
 
-for (const guideUrl of [
+const guideUrls = [
   "https://promptdeck.kr/guides/",
-  "https://promptdeck.kr/guides/ai-presentation-prompt.html",
-  "https://promptdeck.kr/guides/data-diagram-prompt.html",
-  "https://promptdeck.kr/guides/promotion-image-prompt.html",
-]) {
+  "https://promptdeck.kr/guides/ppt-slide-planner-skill",
+  "https://promptdeck.kr/guides/ai-presentation-prompt",
+  "https://promptdeck.kr/guides/data-diagram-prompt",
+  "https://promptdeck.kr/guides/promotion-image-prompt",
+];
+for (const guideUrl of guideUrls) {
   assert.ok(sitemap.includes(`<loc>${guideUrl}</loc>`), `sitemap missing ${guideUrl}`);
   assert.ok(feed.includes(guideUrl), `feed missing ${guideUrl}`);
 }
+
+for (const [filename, canonical] of [
+  ["privacy.html", "https://promptdeck.kr/privacy"],
+  ["terms.html", "https://promptdeck.kr/terms"],
+  ["ai-policy.html", "https://promptdeck.kr/ai-policy"],
+  ["copyright-policy.html", "https://promptdeck.kr/copyright-policy"],
+]) {
+  const html = await fs.readFile(path.join(root, filename), "utf8");
+  assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), `${filename} canonical mismatch`);
+  assert.ok(sitemap.includes(`<loc>${canonical}</loc>`), `sitemap missing ${canonical}`);
+}
+assert.ok(sitemap.includes("<loc>https://promptdeck.kr/about</loc>"), "sitemap missing about page");
+assert.doesNotMatch(sitemap, /<loc>[^<]+\.html<\/loc>|<loc>https:\/\/promptdeck\.kr\/app<\/loc>/u);
 
 const key = "c0ffcaf8d345462bbcc8c7d3ae78acae";
 const indexNowKey = (await fs.readFile(path.join(root, `indexnow-${key}.txt`), "utf8")).trim();

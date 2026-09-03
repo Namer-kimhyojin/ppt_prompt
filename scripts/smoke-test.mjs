@@ -487,6 +487,14 @@ async function runSmokeTest() {
     await page.evaluate(() => localStorage.clear());
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForSelector("#paneCommonPrompt.active");
+    record((await page.locator(".brand-home-link").getAttribute("href")) === "/", "PromptDeck brand title did not link to the default homepage", failures);
+    await Promise.all([
+      page.waitForURL((url) => url.pathname === "/"),
+      page.click(".brand-home-link"),
+    ]);
+    record(new URL(page.url()).pathname === "/", "PromptDeck brand title click did not open the default homepage", failures);
+    await page.goto(`${server.baseUrl}/index.html`, { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.waitForSelector("#paneCommonPrompt.active");
     record((await page.locator(".app-tab-group").count()) === 3, "Primary tools were not organized into three purpose groups", failures);
     record((await page.locator("[data-tab-group-filter]").count()) === 3, "Purpose-group switcher was incomplete", failures);
     record((await page.locator('[data-tab-group-filter="deck"]').textContent()).trim() === "슬라이드" && (await page.locator('[data-tab-group-filter="special"]').textContent()).trim() === "업무 이미지" && (await page.locator('[data-tab-group-filter="visual"]').textContent()).trim() === "일반 이미지", "Purpose-group switcher labels were incorrect", failures);

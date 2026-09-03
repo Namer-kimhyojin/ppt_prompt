@@ -114,7 +114,7 @@ function sha256(buffer) {
 }
 
 function releaseAssetHash(filename, buffer) {
-  if (filename !== "index.html") return sha256(buffer);
+  if (filename !== "app.html") return sha256(buffer);
   const normalizedHtml = Buffer.from(buffer)
     .toString("utf8")
     .replace(/\snonce=(?:"[^"]*"|'[^']*')/gu, "");
@@ -165,10 +165,19 @@ function findDeployment(deployments, branch, head) {
 async function verifyStaticContract() {
   const indexPath = path.join(distDir, "index.html");
   assert(existsSync(indexPath), "dist-static/index.html is missing after build");
-  const html = await fs.readFile(indexPath, "utf8");
-  assert(/src\/static-mode\.js(?:\?[^"']*)?/u.test(html), "Static build omitted src/static-mode.js");
+  const appPath = path.join(distDir, "app.html");
+  assert(existsSync(appPath), "dist-static/app.html is missing after build");
+  const homeHtml = await fs.readFile(indexPath, "utf8");
+  const html = await fs.readFile(appPath, "utf8");
+  assert(homeHtml.includes("AI가 그리기 전에"), "Static build omitted the content landing page");
+  assert(!/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand/u.test(homeHtml), "Landing page contains advertising code");
+  assert(/src\/static-mode\.js(?:\?[^"']*)?/u.test(html), "Static app build omitted src/static-mode.js");
+  assert(/<meta name="robots" content="noindex, follow"/u.test(html), "Static app omitted noindex metadata");
+  assert(!/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand|src\/adsense\.js/u.test(html), "Static app contains advertising code");
   for (const forbidden of [
     "src/account-settings.js",
+    "src/adsense-config.js",
+    "src/adsense.js",
     "src/image-generation-client.js",
     "src/generation-queue.js",
     "src/slide-image-generation.js",
@@ -192,6 +201,9 @@ async function fetchChecked(url, options = {}) {
 async function verifyAssetHashes(origin, head) {
   const files = [
     "index.html",
+    "app.html",
+    "about.html",
+    "styles/landing.css",
     "src/data-diagram.js",
     "src/visual-style-contract.js",
     "src/slide-style-presets/visual-spectrum.js",
@@ -249,42 +261,73 @@ async function verifyAssetHashes(origin, head) {
 async function verifyHttpContracts(origin) {
   let response = await fetchChecked(`${origin}/`);
   assert(response.status === 200, `${origin}/ returned ${response.status}`);
-  assert(String(response.headers.get("cache-control") || "").includes("no-store"), `${origin}/ did not disable nonce HTML caching`);
+  const homeHtml = await response.text();
+  assert(homeHtml.includes('rel="canonical" href="https://promptdeck.kr/"'), `${origin}/ omitted the home canonical`);
+  assert(homeHtml.includes("AI가 그리기 전에"), `${origin}/ omitted the content landing page`);
+  assert(!/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand/u.test(homeHtml), `${origin}/ contains advertising code`);
+
+  response = await fetchChecked(`${origin}/app`);
+  assert(response.status === 200, `${origin}/app returned ${response.status}`);
+  assert(String(response.headers.get("cache-control") || "").includes("no-store"), `${origin}/app did not disable nonce HTML caching`);
   const publicAppEtag = String(response.headers.get("etag") || "");
   const publicAppCsp = String(response.headers.get("content-security-policy") || "");
   const publicAppHtml = await response.text();
+  assert(publicAppHtml.includes('content="noindex, follow"'), `${origin}/app omitted noindex metadata`);
+  assert(!/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand/u.test(publicAppHtml), `${origin}/app contains advertising code`);
   const nonceMatch = publicAppCsp.match(/'nonce-([^']+)'/u);
-  assert(nonceMatch && /^[a-f0-9]{32}$/u.test(nonceMatch[1]), `${origin}/ CSP omitted a valid per-response nonce`);
-  assert(publicAppCsp.includes("'strict-dynamic'"), `${origin}/ CSP omitted strict-dynamic`);
+  assert(nonceMatch && /^[a-f0-9]{32}$/u.test(nonceMatch[1]), `${origin}/app CSP omitted a valid per-response nonce`);
+  assert(publicAppCsp.includes("'strict-dynamic'"), `${origin}/app CSP omitted strict-dynamic`);
   const scriptTags = publicAppHtml.match(/<script\b[^>]*>/giu) || [];
   assert(scriptTags.length > 0, `${origin}/ did not include any script tags`);
   assert(scriptTags.every((tag) => {
     const attribute = tag.match(/\snonce=(?:"([^"]+)"|'([^']+)')/iu);
     return (attribute?.[1] || attribute?.[2] || "") === nonceMatch[1];
-  }), `${origin}/ did not apply its CSP nonce to every script tag`);
+  }), `${origin}/app did not apply its CSP nonce to every script tag`);
 
-  const conditionalResponse = await fetchChecked(`${origin}/`, {
+  const conditionalResponse = await fetchChecked(`${origin}/app`, {
     headers: publicAppEtag
       ? { "if-none-match": publicAppEtag }
       : { "if-modified-since": "Wed, 21 Oct 2099 07:28:00 GMT" },
   });
-  assert(conditionalResponse.status === 200, `${origin}/ returned ${conditionalResponse.status} for a conditional nonce HTML request`);
-  assert(String(conditionalResponse.headers.get("cache-control") || "").includes("no-store"), `${origin}/ conditional response allowed nonce HTML caching`);
+  assert(conditionalResponse.status === 200, `${origin}/app returned ${conditionalResponse.status} for a conditional nonce HTML request`);
+  assert(String(conditionalResponse.headers.get("cache-control") || "").includes("no-store"), `${origin}/app conditional response allowed nonce HTML caching`);
   const conditionalCsp = String(conditionalResponse.headers.get("content-security-policy") || "");
   const conditionalNonceMatch = conditionalCsp.match(/'nonce-([^']+)'/u);
-  assert(conditionalNonceMatch && /^[a-f0-9]{32}$/u.test(conditionalNonceMatch[1]), `${origin}/ conditional response omitted a valid nonce`);
-  assert(conditionalNonceMatch[1] !== nonceMatch[1], `${origin}/ conditional response reused its CSP nonce`);
+  assert(conditionalNonceMatch && /^[a-f0-9]{32}$/u.test(conditionalNonceMatch[1]), `${origin}/app conditional response omitted a valid nonce`);
+  assert(conditionalNonceMatch[1] !== nonceMatch[1], `${origin}/app conditional response reused its CSP nonce`);
   const conditionalHtml = await conditionalResponse.text();
   const conditionalScriptTags = conditionalHtml.match(/<script\b[^>]*>/giu) || [];
-  assert(conditionalScriptTags.length === scriptTags.length, `${origin}/ conditional response omitted script tags`);
+  assert(conditionalScriptTags.length === scriptTags.length, `${origin}/app conditional response omitted script tags`);
   assert(conditionalScriptTags.every((tag) => {
     const attribute = tag.match(/\snonce=(?:"([^"]+)"|'([^']+)')/iu);
     return (attribute?.[1] || attribute?.[2] || "") === conditionalNonceMatch[1];
-  }), `${origin}/ conditional response mixed CSP nonces`);
+  }), `${origin}/app conditional response mixed CSP nonces`);
+
+  response = await fetchChecked(`${origin}/sitemap.xml`);
+  assert(response.status === 200, `${origin}/sitemap.xml returned ${response.status}`);
+  const sitemap = await response.text();
+  const sitemapUrls = [...sitemap.matchAll(/<loc>(https:\/\/promptdeck\.kr\/[^<]*)<\/loc>/gu)].map((match) => match[1]);
+  assert(sitemapUrls.length >= 9, `${origin}/sitemap.xml omitted public content URLs`);
+  assert(sitemapUrls.every((url) => !url.endsWith(".html") && new URL(url).pathname !== "/app"), `${origin}/sitemap.xml contains legacy or app URLs`);
+  for (const canonicalUrl of sitemapUrls) {
+    const pathAndQuery = `${new URL(canonicalUrl).pathname}${new URL(canonicalUrl).search}`;
+    const canonicalResponse = await fetchChecked(`${origin}${pathAndQuery}`, { redirect: "manual" });
+    assert(canonicalResponse.status === 200, `${origin}${pathAndQuery} canonical returned ${canonicalResponse.status}`);
+  }
+
+  for (const [legacyPath, cleanPath] of [
+    ["/guides/ai-presentation-prompt.html", "/guides/ai-presentation-prompt"],
+    ["/privacy.html", "/privacy"],
+  ]) {
+    const legacyResponse = await fetchChecked(`${origin}${legacyPath}`, { redirect: "manual" });
+    const location = new URL(String(legacyResponse.headers.get("location") || ""), origin);
+    assert([301, 308].includes(legacyResponse.status) && location.pathname === cleanPath, `${origin}${legacyPath} did not redirect once to ${cleanPath}`);
+  }
 
   response = await fetchChecked(`${origin}/admin.html`, { redirect: "manual" });
   assert(response.status === 302, `${origin}/admin.html did not redirect for an unauthenticated visitor`);
-  assert(String(response.headers.get("location") || "").includes("admin=locked"), `${origin}/admin.html redirect omitted admin=locked`);
+  const adminLocation = new URL(String(response.headers.get("location") || ""), origin);
+  assert(adminLocation.pathname === "/app" && !adminLocation.search, `${origin}/admin.html did not redirect cleanly to /app`);
 
   response = await fetchChecked(`${origin}/api/admin/access`);
   assert(response.status === 200, `${origin}/api/admin/access returned ${response.status}`);
@@ -314,6 +357,7 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
   const pageErrors = [];
   const badResponses = [];
   const requestFailures = [];
+  const adRequests = [];
   page.on("console", (message) => {
     if (message.type() === "error") consoleErrors.push(message.text());
   });
@@ -322,9 +366,12 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
     if (response.status() >= 400) badResponses.push(`${response.status()} ${response.url()}`);
   });
   page.on("requestfailed", (request) => requestFailures.push(`${request.failure()?.errorText || "failed"} ${request.url()}`));
+  page.on("request", (request) => {
+    if (/googlesyndication|doubleclick|googleadservices/iu.test(request.url())) adRequests.push(request.url());
+  });
 
   try {
-    await page.goto(`${origin}/?release-browser=${cacheToken}-${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 60_000 });
+    await page.goto(`${origin}/app?release-browser=${cacheToken}-${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 60_000 });
     await page.waitForFunction(() => Boolean(window.PromptDeckDataDiagram && window.PromptDeckTabs), null, { timeout: 30_000 });
     const assertOnlyPane = async (expectedId, phase) => {
       const paneIds = await page.locator(".tab-pane").evaluateAll((panes) => panes
@@ -350,6 +397,8 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
       // Keep console/page errors, but do not treat those expected navigation aborts as failures.
       requestFailures.length = 0;
     }
+    assert(adRequests.length === 0, `${origin}/app made advertising requests: ${adRequests.join(", ")}`);
+    assert((await page.locator("#mainAdBand, .adsbygoogle, [data-ad-zone]").count()) === 0, `${origin}/app still contains advertising DOM`);
     assert((await page.locator("#diagramOpenSlideStyleGalleryBtn").count()) === 1, `${origin} edge still serves HTML without the full gallery control`);
     await page.evaluate(() => window.PromptDeckTabs.switchTab("dataDiagram"));
     await page.waitForSelector("#paneDataDiagram.active");

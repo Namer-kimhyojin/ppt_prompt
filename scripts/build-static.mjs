@@ -126,9 +126,12 @@ markProfile("clear-output");
 const skippedSuffixes = new Set([".bak", ".map", ".md", ".log", ".ps1", ".mjs", ".ts"]);
 const excludedSourceFiles = new Set([
   "src/account-settings.js",
+  "src/adsense-config.js",
+  "src/adsense.js",
   "src/generation-queue.js",
   "src/image-generation-client.js",
   "src/slide-image-generation.js",
+  "styles/adsense.css",
 ]);
 const maxAssetBytes = 25 * 1024 * 1024;
 
@@ -204,7 +207,7 @@ indexHtml = indexHtml.replace(
   designerConfigScript,
   `  <script src="src/static-mode.js"></script>\n${designerConfigScript}`,
 );
-await fs.writeFile(path.join(outputDir, "index.html"), indexHtml, "utf8");
+await fs.writeFile(path.join(outputDir, "app.html"), indexHtml, "utf8");
 
 const replacements = new Map([
   ["__OPERATOR_NAME__", escapeHtml(deployConfig.operatorName)],
@@ -218,10 +221,11 @@ const replacements = new Map([
     : ""],
 ]);
 
-for (const filename of ["privacy.html", "terms.html", "ai-policy.html", "copyright-policy.html", "third-party-notices.html"]) {
+for (const filename of ["home.html", "about.html", "privacy.html", "terms.html", "ai-policy.html", "copyright-policy.html", "third-party-notices.html"]) {
   let source = await fs.readFile(path.join(repoRoot, "static-pages", filename), "utf8");
   for (const [token, value] of replacements) source = source.replaceAll(token, value);
-  await fs.writeFile(path.join(outputDir, filename), source, "utf8");
+  const outputName = filename === "home.html" ? "index.html" : filename;
+  await fs.writeFile(path.join(outputDir, outputName), source, "utf8");
 }
 
 for (const filename of [

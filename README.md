@@ -6,11 +6,13 @@ PromptDeck은 발표자료와 실무 시각 자료를 위한 생성형 AI 프롬
 
 ## 바로 사용하기
 
-- 서비스: [https://promptdeck.kr/](https://promptdeck.kr/)
+- 서비스 소개: [https://promptdeck.kr/](https://promptdeck.kr/)
+- 광고 없는 작업 도구: [https://promptdeck.kr/app](https://promptdeck.kr/app)
+- 운영·콘텐츠 원칙: [https://promptdeck.kr/about](https://promptdeck.kr/about)
 - 무료 실무 가이드: [https://promptdeck.kr/guides/](https://promptdeck.kr/guides/)
-- AI 발표자료 프롬프트: [가이드 보기](https://promptdeck.kr/guides/ai-presentation-prompt.html)
-- 데이터 다이어그램 프롬프트: [가이드 보기](https://promptdeck.kr/guides/data-diagram-prompt.html)
-- 홍보 이미지 프롬프트: [가이드 보기](https://promptdeck.kr/guides/promotion-image-prompt.html)
+- AI 발표자료 프롬프트: [가이드 보기](https://promptdeck.kr/guides/ai-presentation-prompt)
+- 데이터 다이어그램 프롬프트: [가이드 보기](https://promptdeck.kr/guides/data-diagram-prompt)
+- 홍보 이미지 프롬프트: [가이드 보기](https://promptdeck.kr/guides/promotion-image-prompt)
 
 ## 주요 기능
 
@@ -39,4 +41,4 @@ npm run static:test
 
 ## 이용 전 확인
 
-생성형 AI 결과는 사실, 수치, 저작권, 개인정보를 사용자가 최종 검토해야 합니다. 공개 서비스의 세부 기준은 [AI 이용정책](https://promptdeck.kr/ai-policy.html), [저작권 정책](https://promptdeck.kr/copyright-policy.html), [개인정보처리방침](https://promptdeck.kr/privacy.html)에서 확인할 수 있습니다.
+생성형 AI 결과는 사실, 수치, 저작권, 개인정보를 사용자가 최종 검토해야 합니다. 공개 서비스의 세부 기준은 [AI 이용정책](https://promptdeck.kr/ai-policy), [저작권 정책](https://promptdeck.kr/copyright-policy), [개인정보처리방침](https://promptdeck.kr/privacy)에서 확인할 수 있습니다.

@@ -81,6 +81,7 @@ const MIME_TYPES = new Map([
   [".jpeg", "image/jpeg"],
   [".webp", "image/webp"],
   [".ico", "image/x-icon"],
+  [".zip", "application/zip"],
 ]);
 
 function sendJson(res, statusCode, payload) {
@@ -131,11 +132,21 @@ function resolveStaticPath(urlPath) {
     "tmp", "scratch", "partials", "비주얼 믹스 가이드",
   ]);
   const basename = segments.at(-1)?.toLowerCase() || "";
+  const publicGuideDownloads = new Set([
+    "ppt-slide-planner-codex-20260903.zip",
+    "ppt-slide-planner-claude-20260903.zip",
+  ]);
+  const isPublicGuideDownload =
+    segments.length === 4 &&
+    segments[0]?.toLowerCase() === "static-pages" &&
+    segments[1]?.toLowerCase() === "guides" &&
+    segments[2]?.toLowerCase() === "downloads" &&
+    publicGuideDownloads.has(basename);
   if (
     segments.some((segment) => segment.startsWith(".")) ||
     segments.some((segment) => blockedSegments.has(segment.toLowerCase())) ||
     /^(package(?:-lock)?\.json|dockerfile|docker-compose\.ya?ml|agents\.md|readme(?:\..*)?|index\.template\.html)$/i.test(basename) ||
-    /\.(?:md|log|env|ya?ml|bak|zip|map|mjs|cjs|ts|ps1)$/i.test(basename)
+    (/\.(?:md|log|env|ya?ml|bak|zip|map|mjs|cjs|ts|ps1)$/i.test(basename) && !isPublicGuideDownload)
   ) {
     return null;
   }
@@ -184,11 +195,13 @@ async function serveStatic(req, res, pathname) {
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES.get(ext) || "application/octet-stream";
     const data = await fs.readFile(filePath);
-    res.writeHead(200, {
+    const headers = {
       "content-type": contentType,
       "content-length": data.length,
       "cache-control": "no-store",
-    });
+    };
+    if (ext === ".zip") headers["content-disposition"] = `attachment; filename="${path.basename(filePath)}"`;
+    res.writeHead(200, headers);
     res.end(data);
   } catch (error) {
     if (error?.code === "ENOENT") return sendText(res, 404, "Not found");
@@ -1586,14 +1599,90 @@ async function handleRequest(req, res) {
   }
 
   if (req.method === "GET") {
+    if (url.pathname.startsWith("/static-pages/styles/")) {
+      const mappedPathname = url.pathname.replace(/^\/static-pages\//, "/");
+      return serveStatic(req, res, mappedPathname);
+    }
+    if (url.pathname.startsWith("/static-pages/assets/")) {
+      const mappedPathname = url.pathname.replace(/^\/static-pages\//, "/");
+      return serveStatic(req, res, mappedPathname);
+    }
+
     if (!config.authEnabled && ["/login.html", "/signup.html"].includes(url.pathname)) {
+      res.writeHead(302, { Location: "/app", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/") {
+      res.writeHead(302, { Location: "/static-pages/home.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/app") {
+      res.writeHead(302, { Location: `/index.html${url.search}`, "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/home") {
       res.writeHead(302, { Location: "/", "Cache-Control": "no-store" });
       return res.end();
+    }
+    if (url.pathname === "/about") {
+      res.writeHead(302, { Location: "/static-pages/about.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/privacy") {
+      res.writeHead(302, { Location: "/static-pages/privacy.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/terms") {
+      res.writeHead(302, { Location: "/static-pages/terms.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/ai-policy") {
+      res.writeHead(302, { Location: "/static-pages/ai-policy.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/copyright-policy") {
+      res.writeHead(302, { Location: "/static-pages/copyright-policy.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/third-party-notices") {
+      res.writeHead(302, { Location: "/static-pages/third-party-notices.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/feed.xml") {
+      res.writeHead(302, { Location: "/static-pages/feed.xml", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/sitemap.xml") {
+      res.writeHead(302, { Location: "/static-pages/sitemap.xml", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname === "/guides" || url.pathname === "/guides/") {
+      res.writeHead(302, { Location: "/static-pages/guides/index.html", "Cache-Control": "no-store" });
+      return res.end();
+    }
+    if (url.pathname.startsWith("/guides/")) {
+      const guide = url.pathname.slice("/guides/".length).replace(/\/$/, "");
+      if (guide === "ai-presentation-prompt") {
+        res.writeHead(302, { Location: "/static-pages/guides/ai-presentation-prompt.html", "Cache-Control": "no-store" });
+        return res.end();
+      }
+      if (guide === "data-diagram-prompt") {
+        res.writeHead(302, { Location: "/static-pages/guides/data-diagram-prompt.html", "Cache-Control": "no-store" });
+        return res.end();
+      }
+      if (guide === "promotion-image-prompt") {
+        res.writeHead(302, { Location: "/static-pages/guides/promotion-image-prompt.html", "Cache-Control": "no-store" });
+        return res.end();
+      }
+      if (guide === "ppt-slide-planner-skill") {
+        res.writeHead(302, { Location: "/static-pages/guides/ppt-slide-planner-skill.html", "Cache-Control": "no-store" });
+        return res.end();
+      }
     }
     if (url.pathname === "/admin.html") {
       const actor = await resolveAdminActor(req);
       if (!actor) {
-        res.writeHead(302, { Location: config.adminModeEnabled ? "/?admin=locked" : "/", "Cache-Control": "no-store" });
+        res.writeHead(302, { Location: config.adminModeEnabled ? "/app?admin=locked" : "/app", "Cache-Control": "no-store" });
         return res.end();
       }
     }

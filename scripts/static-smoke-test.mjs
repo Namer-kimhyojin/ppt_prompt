@@ -8,10 +8,13 @@ const root = path.resolve(process.cwd(), "dist-static");
 const remoteOrigin = String(process.env.STATIC_BASE_URL || "").replace(/\/$/, "");
 const excludedStaticScripts = [
   "src/account-settings.js",
+  "src/adsense-config.js",
+  "src/adsense.js",
   "src/image-generation-client.js",
   "src/generation-queue.js",
   "src/slide-image-generation.js",
 ];
+const excludedAdAssets = ["src/adsense-config.js", "src/adsense.js", "styles/adsense.css"];
 const localPagesFunctionPaths = new Set(["/api/admin-settings", "/api/admin/access"]);
 const mime = new Map([
   [".css", "text/css; charset=utf-8"],
@@ -29,7 +32,9 @@ const mime = new Map([
 const server = remoteOrigin ? null : http.createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
-    const relative = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+    let relative = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+    if (pathname !== "/" && pathname.endsWith("/")) relative += "index.html";
+    else if (pathname !== "/" && !path.extname(relative)) relative += ".html";
     const filename = path.resolve(root, relative);
     if (filename !== root && !filename.startsWith(`${root}${path.sep}`)) throw new Error("bad path");
     const stat = await fs.stat(filename);
@@ -57,6 +62,10 @@ async function verifyViewport(label, viewport) {
   const pageErrors = [];
   const failedScripts = [];
   const failedResponses = [];
+  const adRequests = [];
+  page.on("request", (request) => {
+    if (/googlesyndication|doubleclick|googleadservices/i.test(request.url())) adRequests.push(request.url());
+  });
   page.on("pageerror", (error) => pageErrors.push(error.stack || error.message));
   page.on("response", (response) => {
     if (response.request().resourceType() === "script" && !response.ok()) {
@@ -69,7 +78,7 @@ async function verifyViewport(label, viewport) {
       }
     }
   });
-  await page.goto(origin, { waitUntil: "commit" });
+  await page.goto(`${origin}/app`, { waitUntil: "commit" });
   await page.waitForLoadState("load");
   try {
     await page.waitForSelector("#tabBtnCommonPrompt", { state: viewport.width <= 720 ? "attached" : "visible", timeout: 30_000 });
@@ -338,14 +347,20 @@ async function verifyViewport(label, viewport) {
   if (pageErrors.length) failures.push(`${label}: 페이지 오류: ${pageErrors.join(" | ")}`);
   if (failedScripts.length) failures.push(`${label}: 스크립트 로드 실패: ${failedScripts.join(" | ")}`);
   if (failedResponses.length) failures.push(`${label}: 리소스 응답 실패: ${failedResponses.join(" | ")}`);
+  if (adRequests.length) failures.push(`${label}: 앱에서 광고 네트워크 요청이 발생했습니다: ${adRequests.join(" | ")}`);
+  if (await page.locator("#mainAdBand, .adsbygoogle, [data-ad-zone]").count()) failures.push(`${label}: 앱 DOM에 광고 영역이 남아 있습니다.`);
   await page.close();
 }
 
 async function verifyCompactLabelViewport(label, viewport) {
   const page = await browser.newPage({ viewport });
   const pageErrors = [];
+  const adRequests = [];
   page.on("pageerror", (error) => pageErrors.push(error.stack || error.message));
-  await page.goto(origin, { waitUntil: "load" });
+  page.on("request", (request) => {
+    if (/googlesyndication|doubleclick|googleadservices/i.test(request.url())) adRequests.push(request.url());
+  });
+  await page.goto(`${origin}/app`, { waitUntil: "load" });
   await page.waitForFunction(() => Boolean(window.PromptDeckTabs));
   await page.evaluate(() => window.PromptDeckTabs.switchTab("labelSheet"));
   await page.waitForSelector("#paneLabelSheet[data-label-workspace-controller-ready='true']");
@@ -487,6 +502,33 @@ async function verifyCompactLabelViewport(label, viewport) {
     return getComputedStyle(inspector).visibility === "hidden" && inspector.inert && inspector.getAttribute("aria-hidden") === "true";
   });
   if (pageErrors.length) failures.push(`${label}: 페이지 오류: ${pageErrors.join(" | ")}`);
+  if (adRequests.length) failures.push(`${label}: 앱에서 광고 네트워크 요청이 발생했습니다: ${adRequests.join(" | ")}`);
+  if (await page.locator("#mainAdBand, .adsbygoogle, [data-ad-zone]").count()) failures.push(`${label}: 앱 DOM에 광고 영역이 남아 있습니다.`);
+  await page.close();
+}
+
+async function verifyLandingViewport(label, viewport) {
+  const page = await browser.newPage({ viewport });
+  const errors = [];
+  const adRequests = [];
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("request", (request) => {
+    if (/googlesyndication|doubleclick|googleadservices/i.test(request.url())) adRequests.push(request.url());
+  });
+  const response = await page.goto(origin, { waitUntil: "networkidle" });
+  if (!response?.ok()) failures.push(`${label}: 홈페이지가 HTTP ${response?.status()}로 응답했습니다.`);
+  const metrics = await page.evaluate(() => ({
+    h1Count: document.querySelectorAll("h1").length,
+    ctaCount: document.querySelectorAll('a[href="/app"]').length,
+    overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    adNodes: document.querySelectorAll("#mainAdBand, .adsbygoogle, [data-ad-zone]").length,
+  }));
+  if (metrics.h1Count !== 1 || metrics.ctaCount < 2 || metrics.overflow || metrics.adNodes) {
+    failures.push(`${label}: 홈페이지 반응형 계약 실패 ${JSON.stringify(metrics)}`);
+  }
+  if (errors.length) failures.push(`${label}: 홈페이지 오류: ${errors.join(" | ")}`);
+  if (adRequests.length) failures.push(`${label}: 홈페이지 광고 네트워크 요청이 발생했습니다.`);
   await page.close();
 }
 
@@ -498,6 +540,8 @@ async function runPhase(label, task) {
 }
 
 try {
+  await runPhase("landing desktop", () => verifyLandingViewport("landing desktop", { width: 1440, height: 1000 }));
+  await runPhase("landing mobile", () => verifyLandingViewport("landing mobile", { width: 390, height: 844 }));
   await runPhase("wide desktop", () => verifyViewport("wide desktop", { width: 1920, height: 800 }));
   await runPhase("desktop", () => verifyViewport("desktop", { width: 1440, height: 1000 }));
   await runPhase("mobile", () => verifyViewport("mobile", { width: 390, height: 844 }));
@@ -507,8 +551,14 @@ try {
 
   const indexResponse = await fetch(`${origin}/`);
   const indexHtml = await indexResponse.text();
+  const appResponse = await fetch(`${origin}/app`);
+  const appHtml = await appResponse.text();
   for (const script of excludedStaticScripts) {
-    if (indexHtml.includes(script)) failures.push(`index.html: 제외된 스크립트가 참조됩니다: ${script}`);
+    if (appHtml.includes(script)) failures.push(`app.html: 제외된 스크립트가 참조됩니다: ${script}`);
+  }
+  for (const asset of excludedAdAssets) {
+    const response = await fetch(`${origin}/${asset}`);
+    if (response.status !== 404) failures.push(`${asset}: 광고 자산이 정적 배포본에 포함되었습니다.`);
   }
   for (const expectedMetadata of [
     '<link rel="canonical" href="https://promptdeck.kr/"',
@@ -518,6 +568,16 @@ try {
     'type="application/ld+json"',
   ]) {
     if (!indexHtml.includes(expectedMetadata)) failures.push(`index.html: 검색·공유 메타데이터가 누락되었습니다: ${expectedMetadata}`);
+  }
+  for (const expectedAppMetadata of [
+    '<meta name="robots" content="noindex, follow"',
+    '<link rel="canonical" href="https://promptdeck.kr/app"',
+    'src/static-mode.js',
+  ]) {
+    if (!appHtml.includes(expectedAppMetadata)) failures.push(`app.html: 앱 메타데이터 또는 정적 모드가 누락되었습니다: ${expectedAppMetadata}`);
+  }
+  if (/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand|src\/adsense\.js/u.test(`${indexHtml}\n${appHtml}`)) {
+    failures.push("홈페이지 또는 앱에 광고 코드가 남아 있습니다.");
   }
 
   const socialCardResponse = await fetch(`${origin}/assets/brand/promptdeck-social-card.png`);
@@ -538,6 +598,7 @@ try {
   }
 
   for (const pageName of [
+    "about.html",
     "privacy.html",
     "terms.html",
     "ai-policy.html",
@@ -565,7 +626,8 @@ try {
 
   const adminResponse = await fetch(`${origin}/admin.html`, { redirect: "manual" });
   if (remoteOrigin) {
-    if (adminResponse.status !== 302 || !String(adminResponse.headers.get("location") || "").includes("admin=locked")) {
+    const location = new URL(String(adminResponse.headers.get("location") || ""), origin);
+    if (adminResponse.status !== 302 || location.pathname !== "/app" || location.search) {
       failures.push("admin.html: 인증되지 않은 운영 접근이 차단되지 않았습니다.");
     }
   } else if (adminResponse.status !== 200) {

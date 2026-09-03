@@ -74,7 +74,7 @@ try {
   for (const pathname of ["/login.html", "/signup.html", "/admin.html"]) {
     const page = await fetch(`${origin}${pathname}`, { redirect: "manual" });
     assert.equal(page.status, 302, `${pathname}은 공개 앱으로 돌려보내야 함`);
-    assert.equal(page.headers.get("location"), "/");
+    assert.equal(page.headers.get("location"), "/app");
   }
 
   result = await json("/api/auth/login", {
@@ -112,18 +112,19 @@ try {
   const browser = await chromium.launch({ channel: "msedge", headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-    await page.goto(origin, { waitUntil: "domcontentloaded" });
+    await page.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => document.documentElement.style.visibility !== "hidden");
-    assert.equal(new URL(page.url()).pathname, "/", "브라우저가 로그인 화면으로 이동하면 안 됨");
+    assert.equal(new URL(page.url()).pathname, "/index.html", "브라우저가 작업 앱 대신 로그인 화면으로 이동하면 안 됨");
     assert.equal(await page.locator("#tabBtnCommonPrompt").isVisible(), true, "첫 작업 탭이 바로 보여야 함");
     assert.equal(await page.locator("#userBar").isVisible(), false, "계정·관리 사용자 바가 숨겨져야 함");
     assert.equal(await page.locator("#photoTransformPreviewAdminBtn").isVisible(), false, "미리보기 관리 버튼이 숨겨져야 함");
 
     const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await mobilePage.goto(origin, { waitUntil: "domcontentloaded" });
+    await mobilePage.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await mobilePage.waitForFunction(() => document.documentElement.style.visibility !== "hidden");
     assert.equal(await mobilePage.locator("[data-tab-group-filter]").count(), 3, "모바일 목적 탭은 3개여야 함");
-    assert.equal(await mobilePage.locator(".app-header").evaluate((element) => getComputedStyle(element).position), "static", "모바일 브랜드 헤더가 콘텐츠 공간을 계속 차지하면 안 됨");
+    assert.equal(await mobilePage.locator(".app-header").evaluate((element) => getComputedStyle(element).position), "sticky", "모바일 브랜드 헤더가 고정 앱 셸로 유지되어야 함");
+    await mobilePage.click("#appToolMenuBtn");
     await mobilePage.click('[data-tab-group-filter="visual"]');
     await mobilePage.click("#tabBtnPhotoTransform");
     await mobilePage.waitForSelector("#panePhotoTransform.active");

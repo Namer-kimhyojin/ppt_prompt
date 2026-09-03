@@ -2,50 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://promptdeck.kr/</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://promptdeck.kr/about</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://promptdeck.kr/guides/</loc>
-    <lastmod>2026-08-29</lastmod>
+    <lastmod>2026-09-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/guides/ai-presentation-prompt.html</loc>
-    <lastmod>2026-08-29</lastmod>
+    <loc>https://promptdeck.kr/guides/ppt-slide-planner-skill</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://promptdeck.kr/guides/ai-presentation-prompt</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/guides/data-diagram-prompt.html</loc>
-    <lastmod>2026-08-29</lastmod>
+    <loc>https://promptdeck.kr/guides/data-diagram-prompt</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/guides/promotion-image-prompt.html</loc>
-    <lastmod>2026-08-29</lastmod>
+    <loc>https://promptdeck.kr/guides/promotion-image-prompt</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/privacy.html</loc>
+    <loc>https://promptdeck.kr/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/terms.html</loc>
+    <loc>https://promptdeck.kr/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/ai-policy.html</loc>
+    <loc>https://promptdeck.kr/ai-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://promptdeck.kr/copyright-policy.html</loc>
+    <loc>https://promptdeck.kr/copyright-policy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

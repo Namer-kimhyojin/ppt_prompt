@@ -869,7 +869,7 @@
       exitBtn.addEventListener('click', function () {
         exitBtn.disabled = true;
         fetch('/api/admin/logout', { method: 'POST' })
-          .finally(function () { window.location.replace('index.html'); });
+          .finally(function () { window.location.replace(window.PROMPTDECK_STATIC_MODE ? 'app' : 'index.html'); });
       });
     }
     // 관리자 목록과 사용자 권한 매트릭스를 실제 앱의 탭 구조와 동기화합니다.

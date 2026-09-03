@@ -1,6 +1,6 @@
 import { verifyAdminSession } from "../cloudflare/admin-auth.js";
 
-const PUBLIC_APP_PATHS = new Set(["/", "/index.html"]);
+const PUBLIC_APP_PATHS = new Set(["/app", "/app.html"]);
 
 function buildPublicAppCsp(nonce) {
   return [
@@ -54,7 +54,7 @@ export async function onRequest(context) {
   }
   const session = await verifyAdminSession(context.request, context.env);
   if (!session) {
-    return Response.redirect(`${url.origin}/?admin=locked`, 302);
+    return Response.redirect(`${url.origin}/app`, 302);
   }
   return context.next();
 }

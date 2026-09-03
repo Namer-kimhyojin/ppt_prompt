@@ -70,7 +70,7 @@ try {
 
   const lockedPage = await fetch(`${origin}/admin.html`, { redirect: "manual" });
   assert.equal(lockedPage.status, 302);
-  assert.equal(lockedPage.headers.get("location"), "/?admin=locked");
+  assert.equal(lockedPage.headers.get("location"), "/app?admin=locked");
 
   result = await json("/api/admin-settings", {
     method: "POST",
@@ -129,7 +129,7 @@ try {
   const browser = await chromium.launch({ channel: "msedge", headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-    await page.goto(origin, { waitUntil: "domcontentloaded" });
+    await page.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await page.locator(".brand-mark").evaluate((element) => {
       for (let index = 0; index < 7; index += 1) element.click();
     });
@@ -149,10 +149,11 @@ try {
       page.click("#adminModeExitBtn"),
     ]);
     const relocked = await page.goto(`${origin}/admin.html`, { waitUntil: "domcontentloaded" });
+    assert.equal(new URL(relocked.url()).pathname, "/index.html");
     assert.equal(new URL(relocked.url()).searchParams.get("admin"), "locked");
 
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await mobile.goto(origin, { waitUntil: "domcontentloaded" });
+    await mobile.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await mobile.locator(".brand-mark").evaluate((element) => {
       for (let index = 0; index < 7; index += 1) element.click();
     });

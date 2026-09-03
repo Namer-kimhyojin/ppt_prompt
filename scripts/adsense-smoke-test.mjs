@@ -195,6 +195,8 @@ const [
   middleware,
   privacy,
   thirdPartyNotices,
+  appHtml,
+  homeHtml,
 ] = await Promise.all([
   fs.readFile(path.join(repoRoot, "src", "admin-settings.js"), "utf8"),
   fs.readFile(path.join(repoRoot, "src", "admin.js"), "utf8"),
@@ -203,7 +205,9 @@ const [
   fs.readFile(path.join(repoRoot, "static-pages", "_routes.json"), "utf8"),
   fs.readFile(path.join(repoRoot, "functions", "_middleware.js"), "utf8"),
   fs.readFile(path.join(repoRoot, "static-pages", "privacy.html"), "utf8"),
-  fs.readFile(path.join(repoRoot, "third-party-notices.html"), "utf8"),
+  fs.readFile(path.join(repoRoot, "static-pages", "third-party-notices.html"), "utf8"),
+  fs.readFile(path.join(repoRoot, "index.html"), "utf8"),
+  fs.readFile(path.join(repoRoot, "static-pages", "home.html"), "utf8"),
 ]);
 
 assert.doesNotMatch(adminSettingsSource, /PROMPTDECK_ADS_CONSENT_GRANTED|adminAdBannerTop|adminAdBannerBottom/u);
@@ -212,11 +216,13 @@ assert.match(adminSource, /광고를 활성화하려면 ca-pub-/u);
 assert.match(adminHtml, /id="adminAdClientFromAdsTxt"/u);
 assert.match(adminHtml, /Client ID를 저장하면 사이트 검토와 CMP·Auto ads용 Google 태그/u);
 assert.doesNotMatch(headers, /! Content-Security-Policy/u);
-assert.deepEqual(JSON.parse(routes).include.slice(0, 2), ["/", "/index.html"]);
+assert.deepEqual(JSON.parse(routes).include.slice(0, 2), ["/app", "/app.html"]);
 assert.match(middleware, /script-src 'nonce-\$\{nonce\}'.*'strict-dynamic'/u);
 assert.match(middleware, /new HTMLRewriter\(\)/u);
+assert.match(middleware, /PUBLIC_APP_PATHS = new Set\(\["\/app", "\/app\.html"\]\)/u);
+assert.doesNotMatch(appHtml, /mainAdBand|src\/adsense(?:-config)?\.js|adsbygoogle/u);
+assert.doesNotMatch(homeHtml, /mainAdBand|src\/adsense(?:-config)?\.js|adsbygoogle|pagead2\.googlesyndication\.com/u);
 assert.match(privacy, /policies\.google\.com\/technologies\/partner-sites/u);
-assert.doesNotMatch(thirdPartyNotices, /동의 전 태그 차단/u);
-assert.match(thirdPartyNotices, /동의 신호 적용/u);
+assert.match(thirdPartyNotices, /홈페이지·가이드·작업 앱은 Google 광고 태그와 광고 슬롯을 로드하지 않습니다/u);
 
-console.log("AdSense configuration smoke test passed.");
+console.log("AdSense separation smoke test passed: app and landing page contain no ad loader or slot.");

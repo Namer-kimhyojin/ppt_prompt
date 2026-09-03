@@ -27,17 +27,17 @@
     name="description"
     content="발표자료 슬라이드, 데이터 다이어그램, 지도, 홍보 이미지, 라벨·티켓, QR까지 목적에 맞는 생성형 AI 프롬프트와 시각 자료를 한곳에서 설계하세요."
   />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="robots" content="noindex, follow" />
   <meta name="google-site-verification" content="IvvWzu4r08gewXxdCKnimD2Bv291qwFJhojCJUS_vrs" />
   <meta name="theme-color" content="#0b1020" />
-  <link rel="canonical" href="https://promptdeck.kr/" />
+  <link rel="canonical" href="https://promptdeck.kr/app" />
   <link rel="icon" type="image/svg+xml" href="assets/brand/promptdeck-mark.svg" />
   <link rel="alternate" type="application/atom+xml" title="PromptDeck 실무 가이드" href="https://promptdeck.kr/feed.xml" />
 
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:site_name" content="PromptDeck" />
-  <meta property="og:url" content="https://promptdeck.kr/" />
+  <meta property="og:url" content="https://promptdeck.kr/app" />
   <meta property="og:title" content="PromptDeck | AI 발표자료·이미지 프롬프트 설계 도구" />
   <meta property="og:description" content="슬라이드부터 데이터 다이어그램, 지도, 홍보 이미지, 라벨·QR까지. 실무 시각 자료를 위한 생성형 AI 프롬프트를 한곳에서 설계하세요." />
   <meta property="og:image" content="https://promptdeck.kr/assets/brand/promptdeck-social-card.png" />
@@ -64,8 +64,8 @@
         },
         {
           "@type": "WebApplication",
-          "@id": "https://promptdeck.kr/#application",
-          "url": "https://promptdeck.kr/",
+          "@id": "https://promptdeck.kr/app#application",
+          "url": "https://promptdeck.kr/app",
           "name": "PromptDeck",
           "description": "발표자료와 실무 시각 자료를 위한 생성형 AI 프롬프트 설계 워크스페이스",
           "applicationCategory": "DesignApplication",
@@ -112,7 +112,6 @@
     })();
   </script>
   <link rel="stylesheet" href="styles/base.css?v=3" />
-  <link rel="stylesheet" href="styles/adsense.css?v=1" />
   <link rel="stylesheet" href="styles/admin-access.css?v=1" />
   <link rel="stylesheet" href="styles/designer.css" />
   <link rel="stylesheet" href="styles/common-prompt.css?v=61" />
@@ -130,16 +129,14 @@
   <link rel="stylesheet" href="styles/qr-generator.css?v=4" />
   <link rel="stylesheet" href="styles/theme.css?v=dark-aa-20260804" />
   <link rel="stylesheet" href="styles/ui-system.css?v=4" />
-  <script src="src/adsense-config.js"></script>
-  <script defer src="src/adsense.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="brand-block">
       <div class="brand-mark">PD</div>
       <div class="brand-copy">
-        <h1 class="brand-title">PromptDeck</h1>
-        <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스 · <a class="brand-guide-link" href="guides/">무료 실무 가이드</a></p>
+        <a class="brand-home-link" href="/" aria-label="PromptDeck 기본 홈페이지로 이동"><h1 class="brand-title">PromptDeck</h1></a>
+        <p class="brand-subtitle">이미지 프롬프트를 구조적으로 설계하는 워크스페이스 · <a class="brand-guide-link" href="/guides/">무료 실무 가이드</a></p>
         <span class="mobile-active-tool" id="mobileActiveTool" aria-live="polite">공통 프롬프트</span>
       </div>
     </div>
@@ -167,13 +164,6 @@
       <span class="theme-toggle-text" aria-hidden="true">다크</span>
     </button>
   </header>
-
-  <section class="main-ad-band" id="mainAdBand" aria-label="Ad placement" hidden>
-    <div class="main-ad-grid">
-      <div class="main-ad-slot" data-ad-position="1"></div>
-      <div class="main-ad-slot" data-ad-position="2"></div>
-    </div>
-  </section>
 
   <div class="app-tabs-bar" id="appToolNavigation">
     <div class="app-tab-group-switcher" role="group" aria-label="작업군 선택">
