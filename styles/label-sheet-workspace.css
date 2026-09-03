@@ -7530,3 +7530,99 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
     animation: none !important;
   }
 }
+
+/* 반복 작업 버튼을 동일한 선형 아이콘 체계로 정리한다. */
+#paneLabelSheet.label-sheet-workspace-v11 [data-label-icon] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 [data-label-icon]::before {
+  content: "";
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+  flex: 0 0 1.15em;
+  background: currentColor;
+  -webkit-mask: var(--label-sheet-button-icon) center / contain no-repeat;
+  mask: var(--label-sheet-button-icon) center / contain no-repeat;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 button.label-sheet-icon-only {
+  width: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  gap: 0;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 button.label-sheet-icon-only::before {
+  width: 18px;
+  height: 18px;
+  flex-basis: 18px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mark.label-sheet-icon-only {
+  width: 34px;
+  min-width: 34px;
+  min-height: 34px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-tool-icon[data-label-icon] {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  color: currentColor;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-tool-icon[data-label-icon]::before {
+  width: 22px;
+  height: 22px;
+  flex-basis: 22px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-icon-action.label-sheet-icon-only {
+  width: 32px;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-drawer-close-icon[data-label-icon] {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-drawer-close-icon[data-label-icon]::before {
+  width: 18px;
+  height: 18px;
+  flex-basis: 18px;
+}
+
+#paneLabelSheet.label-sheet-workspace-v11 :is(.btn, .label-sheet-workspace-context-action)[data-label-icon]:disabled::before,
+#paneLabelSheet.label-sheet-workspace-v11 button.label-sheet-icon-only:disabled::before {
+  opacity: 0.68;
+}
+
+@media (max-width: 860px) {
+  #paneLabelSheet.label-sheet-workspace-v11 button.label-sheet-icon-only {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-mark.label-sheet-icon-only {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    flex-basis: 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-icon-action.label-sheet-icon-only {
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
