@@ -203,6 +203,15 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
 .landing-evidence-note { margin: 18px 0 0; color: var(--landing-soft); font-size: 13px; }
 
 .landing-skill-download { background: var(--landing-navy); color: #fff; }
+.landing-skill-install { margin-top: 36px; padding-top: 30px; border-top: 1px solid #35425b; scroll-margin-top: 90px; }
+.landing-skill-install h3 { margin: 0 0 12px; font-size: clamp(22px, 3vw, 28px); }
+.landing-skill-install > p { color: #c2cee2; }
+.landing-install-card { min-width: 0; padding: 24px; border: 1px solid #35425b; border-radius: 16px; background: #14213a; }
+.landing-install-card h4 { margin: 0 0 16px; font-size: 18px; }
+.landing-install-card ol { padding-left: 22px; color: #d3def0; }
+.landing-install-card li + li { margin-top: 12px; }
+.landing-install-card code { overflow-wrap: anywhere; color: #fff; }
+.landing-install-card a { display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; color: #a9c1ff; text-underline-offset: 4px; }
 .landing-skill-download .landing-section-heading span { color: #8facff; }
 .landing-skill-download .landing-section-heading h2 { color: #fff; }
 .landing-skill-download .landing-section-heading p { color: #bfcae0; }

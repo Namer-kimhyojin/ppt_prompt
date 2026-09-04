@@ -102,6 +102,13 @@ try {
         throw new Error(`${route} must expose two skill ZIP downloads: ${JSON.stringify(metrics)}`);
       }
       if (route === "/guides/ppt-slide-planner-skill") {
+        for (const id of ["install", "codex-check", "claude-install", "claude-code-install", "install-help"]) {
+          if (await page.locator(`#${id}`).count() !== 1) throw new Error(`Missing skill registration section: ${id}`);
+        }
+        const registrationText = await page.locator('.guide-content').textContent();
+        for (const required of ['.agents', 'Upload a skill', '/ppt-slide-planner', 'SKILL.md.txt']) {
+          if (!registrationText.includes(required)) throw new Error(`Missing skill registration instruction: ${required}`);
+        }
         await page.evaluate(() => {
           window.__guideShareCopiedUrl = "";
           Object.defineProperty(navigator, "clipboard", {
@@ -123,6 +130,15 @@ try {
     for (const route of ["/", "/about"]) {
       const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
       if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
+      if (route === '/') {
+        if (await page.locator('#skill-install .landing-install-card').count() !== 2) throw new Error('Homepage must explain both skill registration methods');
+        for (const target of ['install', 'claude-install', 'install-help']) {
+          await page.locator(`#skill-install a[href$="#${target}"]`).click();
+          await page.locator(`#${target}`).waitFor({ state: 'visible' });
+          await page.goto(`${origin}/`, { waitUntil: 'networkidle' });
+        }
+        if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Homepage skill registration section overflowed');
+      }
       const publicNav = await readPublicNav(page);
       const expectedVisibleLinkCount = viewport.width <= 820 ? 1 : 3;
       if (!matchesPublicNavContract(publicNav, expectedVisibleLinkCount)) {
