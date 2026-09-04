@@ -10,6 +10,7 @@
   <link rel="canonical" href="https://promptdeck.kr/" />
   <link rel="icon" type="image/svg+xml" href="/assets/brand/promptdeck-mark.svg" />
   <link rel="alternate" type="application/atom+xml" title="PromptDeck 실무 가이드" href="https://promptdeck.kr/feed.xml" />
+  <link rel="stylesheet" href="/styles/public-nav.css?v=1" />
   <link rel="stylesheet" href="/styles/landing.css?v=1" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ko_KR" />
@@ -52,10 +53,10 @@
 </head>
 <body>
   <a class="landing-skip" href="#main-content">본문 바로가기</a>
-  <header class="landing-header">
-    <nav class="landing-nav" aria-label="주요 메뉴">
-      <a class="landing-brand" href="/" aria-label="PromptDeck 홈"><img src="/assets/brand/promptdeck-mark.svg" alt="" />PromptDeck</a>
-      <div class="landing-links"><a href="/guides/">실무 가이드</a><a href="/about">소개</a><a class="landing-button" href="/app">작업 도구 열기</a></div>
+  <header class="public-header">
+    <nav class="public-nav" aria-label="주요 메뉴">
+      <a class="public-brand" href="/" aria-label="PromptDeck 홈"><img src="/assets/brand/promptdeck-mark.svg" alt="" />PromptDeck</a>
+      <div class="public-nav-links"><a href="/guides/">실무 가이드</a><a href="/about">소개</a><a class="public-nav-cta" href="/app">작업 도구 열기</a></div>
     </nav>
   </header>
 
@@ -65,7 +66,7 @@
         <p class="landing-kicker">STRUCTURE BEFORE GENERATION</p>
         <h1 id="hero-title">AI가 그리기 전에,<br />검토할 수 있게 설계합니다.</h1>
         <p class="landing-lead">PromptDeck은 발표자료·다이어그램·홍보 이미지의 막연한 요청을 목적, 필수 정보, 시각 규칙, 금지 조건이 분명한 프롬프트로 바꾸는 실무 워크스페이스입니다.</p>
-        <div class="landing-actions"><a class="landing-button" href="/app">무료로 작업 시작</a><a class="landing-button-secondary" href="/guides/">작성법부터 보기</a></div>
+        <div class="landing-actions"><a class="landing-button" href="/app">무료로 작업 시작</a><a class="landing-button-secondary" href="#use-cases">기능·메뉴 살펴보기</a><a class="landing-text-link" href="/guides/">작성 가이드 →</a></div>
         <ul class="landing-assurance"><li>작업 화면 광고 없음</li><li>가입 없이 정적 공개 기능 사용</li><li>사실·수치 검수 기준 제공</li></ul>
       </div>
       <div class="prompt-workbench" aria-label="한 줄 요청을 구조화된 프롬프트로 바꾸는 예시">
@@ -86,15 +87,76 @@
 
     <section class="landing-section alt" id="use-cases">
       <div class="landing-shell">
-        <header class="landing-section-heading"><span>WHAT YOU CAN DESIGN</span><h2>결과물에 맞는 질문 순서부터 정리합니다.</h2><p>입력 항목을 많이 늘리는 대신, 각 작업에서 실제로 판단해야 하는 내용을 순서대로 묻고 하나의 프롬프트로 정리합니다.</p></header>
-        <div class="landing-feature-grid">
-          <article class="landing-feature"><em>PT</em><h3>발표자료와 슬라이드</h3><p>청중, 슬라이드별 메시지, 공통 비주얼 규칙을 분리해 여러 장의 일관성을 설계합니다.</p></article>
-          <article class="landing-feature"><em>DG</em><h3>데이터 다이어그램</h3><p>표·프로세스·관계도 중 정보에 맞는 구조를 선택하고 수치 왜곡 방지 조건을 함께 둡니다.</p></article>
-          <article class="landing-feature"><em>PR</em><h3>홍보 이미지</h3><p>문구와 이미지의 역할, 매체 규격, 텍스트 안전 영역을 나눠 포스터와 카드뉴스를 설계합니다.</p></article>
-          <article class="landing-feature"><em>MP</em><h3>지도 강조 이미지</h3><p>지명·경계·도로 같은 실제 지리 구조를 보존하면서 강조 범위와 낮은 입체감을 지정합니다.</p></article>
-          <article class="landing-feature"><em>LB</em><h3>라벨과 티켓</h3><p>A4 용지, 여백, 재단선, 양면 인쇄 방향을 화면에서 확인하고 인쇄용 결과를 준비합니다.</p></article>
-          <article class="landing-feature"><em>QR</em><h3>QR 제작</h3><p>링크를 QR로 만들고 SVG·PNG 또는 라벨 인쇄 흐름으로 연결해 실제 사용 형식을 준비합니다.</p></article>
-        </div>
+        <header class="landing-section-heading"><span>FEATURE &amp; MENU GUIDE</span><h2>만들고 싶은 결과물에서<br />실제 메뉴까지 찾아가세요.</h2><p>작업 도구의 세 가지 상위 메뉴를 기준으로 공개 기능 11개를 정리했습니다. 메뉴명을 펼치면 준비할 입력, 세부 작업 순서, 얻을 수 있는 결과를 확인할 수 있습니다.</p></header>
+        <nav class="landing-menu-index" aria-label="기능 안내 분류">
+          <a href="#tools-deck"><strong>01 · 슬라이드</strong><span>공통 프롬프트 · 슬라이드 분리기</span><small>2개 메뉴 ↓</small></a>
+          <a href="#tools-special"><strong>02 · 업무 이미지</strong><span>양식 · 지도 · 홍보 · QR · 도식 · 라벨</span><small>6개 메뉴 ↓</small></a>
+          <a href="#tools-visual"><strong>03 · 일반 이미지</strong><span>컨셉 제안 · 비주얼 믹서 · 사진 변환</span><small>3개 메뉴 ↓</small></a>
+        </nav>
+        <p class="landing-menu-help">PC에서는 상단 작업 메뉴를, 모바일에서는 <strong>도구 → 작업군 → 세부 메뉴</strong>를 선택하세요. 아래 ‘메뉴 열기’는 해당 작업 화면으로 바로 연결됩니다. 각 안내의 단계는 작업 순서이며 별도 하위 메뉴가 없는 기능도 있습니다.</p>
+
+        <section class="landing-tool-group" id="tools-deck" aria-labelledby="tools-deck-title">
+          <header class="landing-tool-heading"><span>01</span><div><h3 id="tools-deck-title">슬라이드</h3><p>여러 장에 적용할 공통 디자인을 정하고, 기획안을 장별 실행 프롬프트로 나눕니다.</p></div></header>
+          <div class="landing-tool-grid">
+            <details class="landing-tool" data-tool="commonPrompt" open>
+              <summary><span class="landing-tool-path">슬라이드 → 공통 프롬프트</span><h4>공통 프롬프트</h4><p>발표 전체가 공유할 규격과 시각 규칙을 설계합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 발표 용도, 화면 비율, 원하는 스타일</p><ol><li><strong>규격</strong> · 캔버스 크기와 헤더·푸터 예약 영역을 정합니다.</li><li><strong>인상 → 색상 → 강조</strong> · 스타일 갤러리, 팔레트, 글자의 읽기 우선순위를 선택합니다.</li><li><strong>자원</strong> · 사진·아이콘·도식 등 사용할 시각 자원을 고른 뒤 디자인 가이드를 생성합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 공통 디자인 가이드 · 복사 또는 분리기로 전달</p><a class="landing-tool-link" data-tool-link="commonPrompt" href="/app?tab=commonPrompt">공통 프롬프트 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="generator" open>
+              <summary><span class="landing-tool-path">슬라이드 → 슬라이드 분리기</span><h4>슬라이드 분리기</h4><p>Markdown 기획안을 슬라이드별 프롬프트로 정리합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 슬라이드별 기획안(MD·TXT)과 공통 디자인 가이드</p><ol><li><strong>공통 설정</strong> · 디자인 가이드와 실행 규칙, 헤더·푸터 전달 범위를 확인합니다.</li><li><strong>기획안 입력</strong> · 파일을 불러오거나 본문을 붙여넣고 이미지 생성 준비 상태를 점검합니다.</li><li><strong>프롬프트 생성</strong> · 슬라이드 목록에서 각 장을 검토하고 현재 장 또는 전체를 복사합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 장별 실행 프롬프트 · 텍스트 다운로드</p><a class="landing-tool-link" data-tool-link="generator" href="/app?tab=generator">슬라이드 분리기 메뉴 열기 →</a></div>
+            </details>
+          </div>
+          <p class="landing-menu-help">아직 기획안이 없다면 <a href="/guides/ppt-slide-planner-skill">ppt-slide-planner 스킬</a>로 Codex 또는 Claude에서 먼저 작성하세요. 스킬 실행은 웹 메뉴와 별도이며, 공개 웹 앱은 서버 전용 ‘슬라이드 이미지 생성’을 제공하지 않습니다.</p>
+        </section>
+
+        <section class="landing-tool-group" id="tools-special" aria-labelledby="tools-special-title">
+          <header class="landing-tool-heading"><span>02</span><div><h3 id="tools-special-title">업무 이미지</h3><p>보고서·행사·안내·홍보에 필요한 자료를 목적에 맞는 도구로 준비합니다.</p></div></header>
+          <div class="landing-tool-grid">
+            <details class="landing-tool" data-tool="formImage">
+              <summary><span class="landing-tool-path">업무 이미지 → 양식 이미지</span><h4>양식 이미지</h4><p>표지·간지·배경·안내판·맺음말의 문구와 스타일을 정합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 제목, 기관명, 날짜 등 화면에 넣을 문구</p><ol><li><strong>만들 이미지</strong> · 표지·간지·배경·안내판·맺음말 중 역할을 선택합니다.</li><li><strong>표시할 데이터</strong> · 실제 문구를 입력하고 보기 설정으로 표시 여부를 정합니다.</li><li><strong>유형·스타일</strong> · 구성과 시각 방향을 조정한 뒤 프롬프트를 확인합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 양식 이미지 생성용 프롬프트 · 외부 이미지 AI에서 사용</p><a class="landing-tool-link" data-tool-link="formImage" href="/app?tab=formImage">양식 이미지 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="mapPrompt">
+              <summary><span class="landing-tool-path">업무 이미지 → 지도 이미지</span><h4>지도 이미지</h4><p>실제 지리를 보존하면서 위치와 구역을 강조하도록 요청합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 참조 지도와 강조할 위치·구역 설명</p><ol><li><strong>참조 지도·강조 대상</strong> · 지역, 범위, 유지해야 할 지명·도로·경계를 설명합니다.</li><li><strong>전달 내용</strong> · 위치 안내, 구역 비교 등 지도의 핵심 목적을 선택합니다.</li><li><strong>표현 취향</strong> · 입체감과 강조 방식을 조정한 뒤 프롬프트를 복사합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 지도 강조 프롬프트 · 외부 AI에 참조 지도와 함께 전달</p><a class="landing-tool-link" data-tool-link="mapPrompt" href="/app?tab=mapPrompt">지도 이미지 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="promotion">
+              <summary><span class="landing-tool-path">업무 이미지 → 홍보용 이미지</span><h4>홍보용 이미지</h4><p>포스터·배너·카드뉴스의 메시지와 이미지 구성을 설계합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 홍보 목적, 대상, 제목·본문·행동 유도 문구</p><ol><li><strong>홍보 내용</strong> · 목적과 매체 규격, 꼭 들어갈 문구를 입력합니다.</li><li><strong>시각 방향</strong> · 화풍, 색상과 레이아웃을 선택하거나 추천을 확인합니다.</li><li><strong>초안 검토</strong> · 프롬프트를 확인·편집하고 복사하거나 작업 설정을 저장합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 홍보 이미지용 프롬프트 · 이미지 자체는 외부 AI에서 생성</p><a class="landing-tool-link" data-tool-link="promotion" href="/app?tab=promotion">홍보용 이미지 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="qrGenerator">
+              <summary><span class="landing-tool-path">업무 이미지 → QR코드 생성기</span><h4>QR코드 생성기</h4><p>주소나 텍스트를 실제 QR 이미지와 인쇄용 라벨로 만듭니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 연결할 URL 또는 QR에 담을 텍스트</p><ol><li><strong>QR 데이터</strong> · 사용할 주소나 내용을 입력합니다.</li><li><strong>디자인</strong> · 색상·크기·여백을 조정하고 QR 미리보기를 확인합니다.</li><li><strong>저장·인쇄</strong> · SVG·PNG로 저장하거나 라벨 출력 화면에서 배치를 확인합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 실제 QR 이미지 · 인쇄용 라벨 / 사용 전 휴대폰 스캔 확인</p><a class="landing-tool-link" data-tool-link="qrGenerator" href="/app?tab=qrGenerator">QR코드 생성기 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="dataDiagram">
+              <summary><span class="landing-tool-path">업무 이미지 → 데이터 다이어그램</span><h4>데이터 다이어그램</h4><p>표·관계·흐름 데이터를 도식과 프롬프트로 정리합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 원본 수치, 항목 간 관계 또는 단계별 흐름</p><ol><li><strong>목적과 원본 데이터</strong> · 데이터와 전달할 결론을 입력합니다.</li><li><strong>구조·시각 표현</strong> · 데이터에 맞는 도식과 스타일을 선택합니다.</li><li><strong>예상 결과와 프롬프트</strong> · 수치·관계의 누락을 검토하고 결과를 저장합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 다이어그램 프롬프트 · SVG·PNG 도식 · JSON 명세</p><a class="landing-tool-link" data-tool-link="dataDiagram" href="/app?tab=dataDiagram">데이터 다이어그램 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="labelSheet">
+              <summary><span class="landing-tool-path">업무 이미지 → 라벨·티켓 제작</span><h4>라벨·티켓 제작</h4><p>연번·명단·QR이 있는 라벨과 티켓을 페이지 단위로 준비합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 용지 규격, 연번·명단·CSV, 필요 시 배경 이미지</p><ol><li><strong>목표 → 규격</strong> · 직접 제작 또는 프롬프트 설계, 품목·용지·출력 면을 정합니다.</li><li><strong>데이터 → 화면 편집</strong> · 연번·명단을 입력하고 문구·배경·QR 배치를 조정합니다.</li><li><strong>검토·출력</strong> · 여백·양면 방향을 확인한 뒤 선택한 목표에 맞게 저장합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 직접 제작: PNG·PDF·인쇄 / 설계: 페이지·라벨별 프롬프트</p><a class="landing-tool-link" data-tool-link="labelSheet" href="/app?tab=labelSheet">라벨·티켓 제작 메뉴 열기 →</a></div>
+            </details>
+          </div>
+        </section>
+
+        <section class="landing-tool-group" id="tools-visual" aria-labelledby="tools-visual-title">
+          <header class="landing-tool-heading"><span>03</span><div><h3 id="tools-visual-title">일반 이미지</h3><p>컨셉을 탐색하고 시각 요소를 조합하거나, 참조 사진을 바꿀 표현 방향을 설계합니다.</p></div></header>
+          <div class="landing-tool-grid">
+            <details class="landing-tool" data-tool="promotionPlanner">
+              <summary><span class="landing-tool-path">일반 이미지 → 컨셉 제안</span><h4>컨셉 제안</h4><p>스타일 카드를 비교하며 이미지의 컨셉 출발점을 찾습니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 표현하고 싶은 주제 또는 스타일 키워드</p><ol><li><strong>검색·필터</strong> · 이름·태그·설명으로 스타일 후보를 찾습니다.</li><li><strong>색상·생성 엔진</strong> · 라이트·다크와 사용할 생성 엔진을 선택합니다.</li><li><strong>카드 비교·복사</strong> · 컨셉별 설명을 비교하고 원하는 카드의 프롬프트를 복사합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 선택한 컨셉의 이미지 프롬프트</p><a class="landing-tool-link" data-tool-link="promotionPlanner" href="/app?tab=promotionPlanner">컨셉 제안 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="conceptMixer">
+              <summary><span class="landing-tool-path">일반 이미지 → 비주얼 믹서</span><h4>비주얼 믹서</h4><p>주제와 매체·표현 요소를 조합해 새로운 시각 방향을 만듭니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 이미지의 주제, 원하는 분위기 또는 매체</p><ol><li><strong>주제 선택</strong> · 이미지에서 표현할 대상이나 장면을 고릅니다.</li><li><strong>시각 요소 조합</strong> · 매체·화풍·구도·색상 등의 요소를 선택하며 조합을 비교합니다.</li><li><strong>프롬프트 확인</strong> · 조합의 표현 방향을 확인하고 사용할 프롬프트를 복사합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 시각 요소를 조합한 이미지 프롬프트</p><a class="landing-tool-link" data-tool-link="conceptMixer" href="/app?tab=conceptMixer">비주얼 믹서 메뉴 열기 →</a></div>
+            </details>
+            <details class="landing-tool" data-tool="photoTransform">
+              <summary><span class="landing-tool-path">일반 이미지 → 사진 변환 프롬프터</span><h4>사진 변환 프롬프터</h4><p>참조 사진에서 보존할 인물·구조와 바꿀 스타일을 구분합니다.</p><span class="landing-tool-toggle">세부 작업 단계</span></summary>
+              <div class="landing-tool-detail"><p><strong>준비할 것</strong> 사용할 참조 사진과 원하는 변환 목적</p><ol><li><strong>원본 사진 조건</strong> · 인물 수와 원본 구조, 결과 구성 방식을 정합니다.</li><li><strong>스타일 갤러리</strong> · 용도에 맞는 스타일을 검색하고 변환 방향을 선택합니다.</li><li><strong>프롬프트 복사</strong> · 원본 보존 조건을 검토하고 외부 AI에 사진과 함께 전달합니다.</li></ol><p class="landing-tool-output"><strong>결과</strong> 사진 변환 지시문 · 사진 편집 자체는 외부 이미지 AI에서 실행</p><a class="landing-tool-link" data-tool-link="photoTransform" href="/app?tab=photoTransform">사진 변환 프롬프터 메뉴 열기 →</a></div>
+            </details>
+          </div>
+        </section>
       </div>
     </section>
 

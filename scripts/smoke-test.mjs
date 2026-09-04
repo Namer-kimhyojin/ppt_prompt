@@ -3419,7 +3419,31 @@ SLIDE-TWO-CONTENT`);
       `Label-sheet sample did not keep source data separate from token-driven output: ${JSON.stringify(outputTemplateProbe)}`,
       failures
     );
+    await page.locator('[data-label-workspace-inspector-tab="background"]').click();
+    const surfaceLayoutProbe = await page.locator('.label-sheet-quick-surface-controls').evaluate((surface) => ({
+      sections: surface.querySelectorAll('.label-sheet-surface-section').length,
+      overflow: surface.scrollWidth > surface.clientWidth + 1,
+      controls: Array.from(surface.querySelectorAll('input, select, button')).map((control) => ({
+        id: control.id,
+        height: control.getBoundingClientRect().height,
+        overflow: control.scrollWidth > control.clientWidth + 1,
+      })),
+      background: surface.querySelector('#labelSheetQuickBackgroundColorValue')?.textContent,
+      actualBackground: surface.querySelector('#labelSheetQuickBackgroundColor')?.value.toUpperCase(),
+    }));
+    record(surfaceLayoutProbe.sections === 3 && !surfaceLayoutProbe.overflow && surfaceLayoutProbe.controls.length === 4 &&
+      surfaceLayoutProbe.controls.every((control) => control.height >= 44 && !control.overflow) &&
+      surfaceLayoutProbe.background === surfaceLayoutProbe.actualBackground,
+      `Label surface inspector layout or color readout regressed: ${JSON.stringify(surfaceLayoutProbe)}`, failures);
+    await page.locator('[data-label-workspace-inspector-tab="object"]').click();
     await page.locator("#labelSheetFrontTitle").focus();
+    const outputTokenSizes = await page.locator('[data-label-sheet-output-token-bar="front"] button').evaluateAll((buttons) => buttons.map((button) => ({
+      height: button.getBoundingClientRect().height,
+      fontSize: getComputedStyle(button).fontSize,
+      clipped: button.scrollWidth > button.clientWidth + 1,
+    })));
+    record(outputTokenSizes.length === 8 && outputTokenSizes.every((size) => size.height === 26 && size.fontSize === "12px" && !size.clipped),
+      `Label-sheet data insertion buttons were not compact or clipped: ${JSON.stringify(outputTokenSizes)}`, failures);
     await page.locator("#labelSheetFrontTitle").evaluate((input) => input.setSelectionRange(input.value.length, input.value.length));
     await page.click('[data-label-sheet-output-token-bar="front"] [data-label-sheet-output-token="{{번호}}"]');
     await page.waitForFunction(() => document.querySelector("#labelSheetFrontTitle")?.value === "{{제목}}{{번호}}");
@@ -4157,8 +4181,22 @@ SLIDE-TWO-CONTENT`);
     await page.click('[data-label-workspace-context-align="center"]');
     await closeLabelDetail();
     await page.click("#labelSheetWorkspaceContextTargetPicker > summary");
+    const quickTargetMenuProbe = await page.locator('#labelSheetWorkspaceContextTargetPicker [data-label-sheet-focus-target="subtitle"]').evaluate((button) => {
+      const rect = button.getBoundingClientRect();
+      return button.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+    });
+    record(quickTargetMenuProbe, "Label-sheet quick target menu was clipped or covered by the toolbar", failures);
     await page.click('[data-label-sheet-focus-target="subtitle"]');
     record((await page.locator('[data-label-sheet-focus-target="subtitle"]').getAttribute("aria-pressed")) === "true" && (await page.locator("#labelSheetQuickTarget").inputValue()) === "subtitle", "Label-sheet integrated target shortcuts did not synchronize the selected field", failures);
+    const quickColorTextProbe = await page.locator('#labelSheetQuickColorMode').evaluate((select) => {
+      const style = getComputedStyle(select);
+      const context = document.createElement('canvas').getContext('2d');
+      context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const available = select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      return { labels: Array.from(select.options, (option) => option.text), fits: Array.from(select.options).every((option) => context.measureText(option.text).width <= available) };
+    });
+    record(quickColorTextProbe.labels.join('|') === '기본색상|직접 선택' && quickColorTextProbe.fits,
+      `Label-sheet quick color options were inconsistent or clipped: ${JSON.stringify(quickColorTextProbe)}`, failures);
     const focusSubtitleSizeBefore = Number(await page.locator("#labelSheetQuickSize").inputValue());
     await openLabelDetail();
     await page.click("#labelSheetWorkspaceContextSizeUp");

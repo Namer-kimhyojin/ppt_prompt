@@ -539,9 +539,88 @@ async function runPhase(label, task) {
   console.log(`[static:test] ${label} passed (${Date.now() - startedAt}ms)`);
 }
 
+async function verifyLandingMenuLinks(viewport) {
+  const page = await browser.newPage({ viewport });
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  if (!remoteOrigin) {
+    await page.route("**/api/admin-settings", (route) => route.fulfill({
+      json: { ok: true, defaultTab: "tabBtnCommonPrompt", tabs: {
+        tabBtnDesigner: { visible: false, requireAuth: true },
+        tabBtnSlideDocument: { visible: false, requireAuth: true },
+      } },
+    }));
+  }
+  await page.goto(origin, { waitUntil: "networkidle" });
+  const tools = await page.locator(".landing-tool").evaluateAll((items) => items.map((item) => ({
+    key: item.dataset.tool,
+    label: item.querySelector("h4")?.textContent.trim(),
+    group: item.closest(".landing-tool-group").id.replace("tools-", ""),
+    steps: item.querySelectorAll("ol > li").length,
+    output: item.querySelector(".landing-tool-output")?.textContent.trim(),
+    href: item.querySelector("[data-tool-link]")?.getAttribute("href"),
+  })));
+  if (tools.length !== 11 || new Set(tools.map((tool) => tool.key)).size !== 11
+    || tools.filter((tool) => tool.group === "deck").length !== 2
+    || tools.filter((tool) => tool.group === "special").length !== 6
+    || tools.filter((tool) => tool.group === "visual").length !== 3
+    || tools.some((tool) => tool.steps !== 3 || !tool.output || tool.href !== `/app?tab=${tool.key}`)) {
+    throw new Error(`Homepage menu content contract failed: ${JSON.stringify(tools)}`);
+  }
+  const summary = page.locator('[data-tool="formImage"] > summary');
+  await summary.focus();
+  await page.keyboard.press("Enter");
+  if (await page.locator('[data-tool="formImage"]').getAttribute("open") === null) {
+    throw new Error("Homepage tool details cannot be opened with the keyboard");
+  }
+  await page.keyboard.press("Enter");
+  if (await page.locator('[data-tool="formImage"]').getAttribute("open") !== null) {
+    throw new Error("Homepage tool details cannot be closed with the keyboard");
+  }
+  await page.locator(".landing-tool").evaluateAll((items) => items.forEach((item) => { item.open = true; }));
+  if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) {
+    throw new Error(`Expanded homepage menu overflows at ${viewport.width}px`);
+  }
+  for (const tool of tools) {
+    const detail = page.locator(`[data-tool="${tool.key}"]`);
+    if (await detail.getAttribute("open") === null) await detail.locator("summary").click();
+    await page.locator(`[data-tool-link="${tool.key}"]`).click();
+    await page.waitForFunction((key) => window.PromptDeckTabs?.getActiveTabKey() === key, tool.key);
+    const state = await page.evaluate(() => ({
+      label: document.querySelector(".app-tab-btn.active")?.textContent.trim(),
+      group: document.querySelector(".app-tabs")?.dataset.activeGroup,
+      visiblePanes: [...document.querySelectorAll(".tab-pane")].filter((pane) => getComputedStyle(pane).display !== "none").length,
+    }));
+    if (state.label !== tool.label || state.group !== tool.group || state.visiblePanes !== 1) {
+      throw new Error(`Homepage menu ${tool.key} opened the wrong view: ${JSON.stringify(state)}`);
+    }
+    await page.goto(origin, { waitUntil: "networkidle" });
+  }
+  // Explicit menu links take precedence over a previously saved tab and survive reloads.
+  await page.evaluate(() => localStorage.setItem("promptdeck.activeTab.v1", "labelSheet"));
+  await page.goto(`${origin}/app?tab=mapPrompt`, { waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.PromptDeckTabs?.getActiveTabKey() === "mapPrompt");
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.PromptDeckTabs?.getActiveTabKey() === "mapPrompt");
+  if (!remoteOrigin) {
+    for (const key of ["unknown-menu", "slideImage", "designer", "constructor"]) {
+      await page.goto(`${origin}/app?tab=${key}`, { waitUntil: "networkidle" });
+      if (await page.evaluate(() => window.PromptDeckTabs?.getActiveTabKey()) !== "commonPrompt") {
+        throw new Error(`Invalid or unavailable deep link ${key} bypassed the public default`);
+      }
+    }
+  }
+  if (errors.length) throw new Error(`Homepage menu navigation errors: ${errors.join(" | ")}`);
+  await page.close();
+}
+
 try {
   await runPhase("landing desktop", () => verifyLandingViewport("landing desktop", { width: 1440, height: 1000 }));
   await runPhase("landing mobile", () => verifyLandingViewport("landing mobile", { width: 390, height: 844 }));
+  await runPhase("landing tablet", () => verifyLandingViewport("landing tablet", { width: 820, height: 1000 }));
+  await runPhase("landing compact", () => verifyLandingViewport("landing compact", { width: 320, height: 740 }));
+  await runPhase("landing menu desktop", () => verifyLandingMenuLinks({ width: 1440, height: 1000 }));
+  await runPhase("landing menu mobile", () => verifyLandingMenuLinks({ width: 390, height: 844 }));
   await runPhase("wide desktop", () => verifyViewport("wide desktop", { width: 1920, height: 800 }));
   await runPhase("desktop", () => verifyViewport("desktop", { width: 1440, height: 1000 }));
   await runPhase("mobile", () => verifyViewport("mobile", { width: 390, height: 844 }));

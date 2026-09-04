@@ -4047,6 +4047,15 @@
     setControl("labelSheetQuickBackgroundColor", labelSurface.backgroundColor);
     setControl("labelSheetQuickBorderColor", labelSurface.borderColor || "#cbd5e1");
     setControl("labelSheetQuickBorderWidth", rounded(labelSurface.borderWidthMm));
+    [["labelSheetQuickBackgroundColorValue", labelSurface.backgroundColor], ["labelSheetQuickBorderColorValue", labelSurface.borderColor || "#cbd5e1"]].forEach(([id, color]) => {
+      if ($(id)) $(id).textContent = color.toUpperCase();
+    });
+    if ($("labelSheetSurfaceScope")) $("labelSheetSurfaceScope").textContent = wysiwygScope === "record"
+      ? `선택한 라벨 · ${previewSide === "back" ? "뒷면" : "앞면"}만`
+      : "앞·뒷면 공통 기본값 · 개별 설정 우선";
+    if ($("labelSheetSurfaceBorderHint")) $("labelSheetSurfaceBorderHint").textContent = Number(labelSurface.borderWidthMm) === 0
+      ? "테두리 없음 · 색상을 적용하려면 굵기를 선택하세요."
+      : "선택한 굵기와 색상으로 테두리를 표시합니다.";
     const verticalHeight = isQr ? config.heightPercent : config.heightPercent ?? automaticFieldHeightPercent(config);
     const verticalPosition = config.yPercent <= 1 ? "top" : config.yPercent >= 99 - verticalHeight ? "bottom" : "center";
     ["top", "center", "bottom"].forEach((position) => {

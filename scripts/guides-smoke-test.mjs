@@ -43,10 +43,32 @@ await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const address = server.address();
 const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
+const expectedNavLabels = ["실무 가이드", "소개", "작업 도구 열기"];
+
+async function readPublicNav(page) {
+  return page.evaluate(() => {
+    const links = Array.from(document.querySelectorAll(".public-nav-links > a"));
+    return {
+      labels: links.map((link) => link.textContent.trim()),
+      brandPath: new URL(document.querySelector(".public-brand")?.href || "", location.href).pathname,
+      ctaPath: new URL(document.querySelector(".public-nav-cta")?.href || "", location.href).pathname,
+      visibleLinkCount: links.filter((link) => link.getClientRects().length > 0).length,
+      headerHeight: document.querySelector(".public-header")?.getBoundingClientRect().height || 0,
+    };
+  });
+}
+
+function matchesPublicNavContract(publicNav, expectedVisibleLinkCount) {
+  return publicNav.labels.length === expectedNavLabels.length
+    && publicNav.labels.every((label, index) => label === expectedNavLabels[index])
+    && publicNav.brandPath === "/"
+    && publicNav.ctaPath === "/app"
+    && publicNav.visibleLinkCount === expectedVisibleLinkCount;
+}
 
 try {
   for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
-    const page = await browser.newPage({ viewportSize: viewport });
+    const page = await browser.newPage({ viewport });
     const errors = [];
     page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     page.on("pageerror", (error) => errors.push(error.message));
@@ -60,6 +82,11 @@ try {
     ]) {
       const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
       if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
+      const publicNav = await readPublicNav(page);
+      const expectedVisibleLinkCount = viewport.width <= 820 ? 1 : 3;
+      if (!matchesPublicNavContract(publicNav, expectedVisibleLinkCount)) {
+        throw new Error(`${route} failed unified public navigation contract: ${JSON.stringify({ publicNav, viewport, expectedVisibleLinkCount })}`);
+      }
       const metrics = await page.evaluate(() => ({
         h1Count: document.querySelectorAll("h1").length,
         hasCta: Boolean(document.querySelector(".guide-cta")),
@@ -93,10 +120,19 @@ try {
         if (await page.locator("[data-share-panel]").isVisible()) throw new Error("guide share panel did not close with Escape");
       }
     }
+    for (const route of ["/", "/about"]) {
+      const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
+      if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
+      const publicNav = await readPublicNav(page);
+      const expectedVisibleLinkCount = viewport.width <= 820 ? 1 : 3;
+      if (!matchesPublicNavContract(publicNav, expectedVisibleLinkCount)) {
+        throw new Error(`${route} failed unified public navigation contract: ${JSON.stringify({ publicNav, viewport, expectedVisibleLinkCount })}`);
+      }
+    }
     if (errors.length) throw new Error(`browser errors at ${viewport.width}px: ${errors.join(" | ")}`);
     await page.close();
   }
-  console.log("Guide smoke test passed: 5 pages at desktop and mobile widths, no overflow or browser errors");
+  console.log("Guide smoke test passed: 7 public pages share one responsive navigation contract with no overflow or browser errors");
 } finally {
   await browser.close();
   server.closeIdleConnections?.();

@@ -567,7 +567,17 @@
   const initializeActiveTab = () => {
     const ready = window.PromptDeckAdminSettingsReady;
     Promise.resolve(ready).finally(() => {
-      window.setTimeout(() => switchTab(activeTabKey, { initial: true, persist: false }), 0);
+      window.setTimeout(() => {
+        // Resolve homepage deep links only after public visibility and access rules apply.
+        const requested = new URLSearchParams(window.location.search).get("tab");
+        const entry = Object.prototype.hasOwnProperty.call(tabs, requested) ? tabs[requested] : null;
+        const available = entry?.pane && entry?.button
+          && !entry.button.hidden
+          && !entry.button.disabled
+          && !entry.button.classList.contains("tab-locked")
+          && window.getComputedStyle(entry.button).display !== "none";
+        switchTab(available ? requested : activeTabKey, { initial: true, persist: false });
+      }, 0);
     });
   };
   if (document.readyState === "loading") {

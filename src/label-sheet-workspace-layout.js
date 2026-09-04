@@ -549,7 +549,8 @@
     const contextTargetPicker = node("details", "label-sheet-workspace-context-target-picker");
     contextTargetPicker.id = "labelSheetWorkspaceContextTargetPicker";
     const contextTargetSummary = node("summary", "label-sheet-workspace-context-target-summary");
-    append(contextTargetSummary, node("span", "", "편집"));
+    contextTargetSummary.setAttribute("aria-label", "편집 대상 선택");
+    append(contextTargetSummary, node("span", "", "편집 대상"));
     const contextTargetLabel = node("span", "", "제목");
     contextTargetLabel.id = "labelSheetWorkspaceContextTargetLabel";
     contextTargetSummary.append(contextTargetLabel);
@@ -743,7 +744,7 @@
     append(inspectorActions, detailButton, placementButton, qrButton);
     const surfaceControls = focusQuickPanel.querySelector(".label-sheet-quick-surface-controls")
       || $("labelSheetQuickEditbar")?.querySelector(".label-sheet-quick-surface-controls");
-    const backgroundHeading = heading("BACKGROUND", "라벨 표면", "현재 적용 범위에 맞춰 배경색·배경 이미지·테두리를 설정합니다.");
+    const backgroundHeading = heading("BACKGROUND", "라벨 표면", "배경색과 테두리는 변경 즉시 미리보기에 반영됩니다.");
     if (surfaceControls) inspectorPanels.background.append(backgroundHeading, surfaceControls);
     else inspectorPanels.background.append(backgroundHeading, node("p", "label-sheet-workspace-panel-empty", "선택한 라벨의 표면 설정을 준비하고 있습니다."));
     const documentHeading = heading("DOCUMENT", "문서 규격", "용지 방향, 라벨 크기와 배치 수는 프로젝트 전체에 적용됩니다.");
