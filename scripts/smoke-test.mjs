@@ -3442,8 +3442,11 @@ SLIDE-TWO-CONTENT`);
       fontSize: getComputedStyle(button).fontSize,
       clipped: button.scrollWidth > button.clientWidth + 1,
     })));
-    record(outputTokenSizes.length === 8 && outputTokenSizes.every((size) => size.height === 26 && size.fontSize === "12px" && !size.clipped),
+    record(outputTokenSizes.length === 8 && outputTokenSizes.every((size) => size.height === 24 && size.fontSize === "12px" && !size.clipped),
       `Label-sheet data insertion buttons were not compact or clipped: ${JSON.stringify(outputTokenSizes)}`, failures);
+    const outputTokenPreviewGap = await page.locator('[data-label-sheet-output-token-bar="front"]').evaluate((bar) =>
+      bar.nextElementSibling.getBoundingClientRect().top - bar.getBoundingClientRect().bottom);
+    record(outputTokenPreviewGap >= 12, `Label-sheet data insertion buttons crowded the preview text: ${outputTokenPreviewGap}px`, failures);
     await page.locator("#labelSheetFrontTitle").evaluate((input) => input.setSelectionRange(input.value.length, input.value.length));
     await page.click('[data-label-sheet-output-token-bar="front"] [data-label-sheet-output-token="{{번호}}"]');
     await page.waitForFunction(() => document.querySelector("#labelSheetFrontTitle")?.value === "{{제목}}{{번호}}");

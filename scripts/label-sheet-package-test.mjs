@@ -1,12 +1,22 @@
 import assert from "node:assert/strict";
 
 globalThis.window = globalThis;
+await import("../src/label-sheet-engine.js");
 await import("../src/tabular-data.js");
 await import("../src/zip-writer.js");
 await import("../src/label-sheet-package.js");
 
 const Package = globalThis.PromptDeckLabelSheetPackage;
 const Tabular = globalThis.PromptDeckTabularData;
+const Engine = globalThis.PromptDeckLabelSheetEngine;
+await import("../src/label-sheet-data-mapping.js");
+const Mapping = globalThis.PromptDeckLabelSheetDataMapping;
+const roundtripSource = Engine.normalizeRecord({ ID: "CSV-001", 번호: "0007", 이름: "홍길동", 제외: "예", front_subtitle: "부제", back_footer: "안내", data: { Allergy: '견과류, "주의"\n확인' } });
+const csvRoundtrip = Engine.parseTable(Package.recordsToCsv([roundtripSource]));
+assert.equal(csvRoundtrip.headers.length, 18, "17 shared fields plus one custom field");
+const roundtripRecord = Engine.normalizeRecord(Mapping.applyRecord(csvRoundtrip.objects[0], Mapping.suggest(csvRoundtrip.headers)));
+for (const field of Engine.RECORD_FIELDS) assert.equal(Engine.fieldValue(roundtripRecord, field), Engine.fieldValue(roundtripSource, field), field.key);
+assert.equal(roundtripRecord.data.Allergy, roundtripSource.data.Allergy);
 assert.ok(Package, "PromptDeckLabelSheetPackage global must be available");
 assert.ok(Tabular, "PromptDeckTabularData global must be available");
 assert.equal(typeof globalThis.createZip, "function", "ZIP writer must be available");

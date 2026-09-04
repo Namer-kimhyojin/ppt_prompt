@@ -2590,11 +2590,15 @@ body:has(#paneLabelSheet.label-sheet-workspace-v2.active) > .promptdeck-legal-fo
   flex: 0 0 auto;
   width: auto;
   min-width: 0;
-  min-height: 26px;
-  padding: 2px 6px;
+  min-height: 24px;
+  padding: 0 4px;
   border-radius: 6px;
   font-size: 12px !important;
   line-height: 18px;
+}
+
+#paneLabelSheet #labelSheetWorkspaceInspector .label-sheet-output-token-bar + .label-sheet-output-resolved-preview {
+  margin-top: 12px;
 }
 
 @media (max-width: 860px), (pointer: coarse) {
@@ -7903,4 +7907,222 @@ body.label-sheet-modal-open > :is(.app-header, .app-tabs-bar) {
   #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-precision-tools .label-sheet-focus-action-group[data-wysiwyg-text-only] {
     grid-template-columns: repeat(3, 44px);
   }
+}
+
+/* Mobile data entry uses the same cells as desktop, one ticket at a time. */
+#paneLabelSheet .label-sheet-mobile-record-nav,
+#paneLabelSheet .label-sheet-mobile-field-label { display: none; }
+#paneLabelSheet #labelSheetMobileSequenceSettings > summary { display: none; }
+#paneLabelSheet #labelSheetMobileSequenceSettings { display: contents; }
+
+@media (max-width: 860px) {
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-drawer {
+    top: var(--label-mobile-viewport-top, 0px);
+    bottom: auto;
+    height: var(--label-mobile-viewport-height, 100dvh);
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-drawer-panel {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 :is(#labelSheetWorkspaceQrDrawer, #labelSheetWorkspaceCommonDrawer, #labelSheetWorkspaceAssetsDrawer) .label-sheet-workspace-drawer-panel {
+    width: 100%;
+    max-height: 100%;
+    height: auto;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 :is(input:not([type="checkbox"]):not([type="range"]):not([type="file"]), textarea, select) {
+    font-size: 16px !important;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-data-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-data-tabs button {
+    width: auto;
+    min-width: 0;
+    min-height: 44px;
+    padding: 6px 3px;
+    font-size: 12px;
+    line-height: 1.4;
+    word-break: keep-all;
+  }
+
+  #paneLabelSheet #labelSheetMobileSequenceSettings { display: block; }
+  #paneLabelSheet #labelSheetMobileSequenceSettings > summary {
+    display: list-item;
+    min-height: 44px;
+    padding: 12px 8px;
+    border: 1px solid var(--line-control);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  #paneLabelSheet #labelSheetMobileSequenceSettings[open] > summary { margin-bottom: 12px; }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-spreadsheet-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-spreadsheet-actions .btn {
+    min-width: 0;
+    min-height: 44px;
+    padding: 7px 6px;
+    font-size: 12px;
+    white-space: normal;
+    word-break: keep-all;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-context .label-sheet-focus-scope {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-inspector-context .label-sheet-focus-scope button,
+  #paneLabelSheet.label-sheet-workspace-v11 :is(#labelSheetWorkspaceContextSizeDown, #labelSheetWorkspaceContextSizeUp),
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-workspace-context-field.label-sheet-quick-vertical button {
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 .label-sheet-output-visibility {
+    min-height: 44px;
+    padding-inline: 8px;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetMobileRecordNav {
+    display: grid;
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceDataDrawer .label-sheet-workspace-data-records { display: none; }
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceDataDrawer .label-sheet-workspace-data-workspace { grid-template-rows: minmax(0, 1fr); }
+
+  #paneLabelSheet #labelSheetMobileRecordNav > label {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  #paneLabelSheet .label-sheet-mobile-record-picker {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    gap: 6px;
+  }
+
+  #paneLabelSheet .label-sheet-mobile-record-picker > :is(button, select) {
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    padding: 6px;
+  }
+
+  #paneLabelSheet #labelSheetMobileRecordSelect {
+    border: 1px solid var(--line-control);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  #paneLabelSheet #labelSheetMobileRecordMore {
+    min-height: 44px;
+    font-size: 13px;
+    white-space: normal;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceDataDrawer .label-sheet-table-scroll {
+    overflow: visible;
+    max-height: none;
+    border: 0;
+  }
+
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetRecordTable {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
+  }
+
+  #paneLabelSheet #labelSheetRecordTable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  #paneLabelSheet #labelSheetRecordTable tbody { display: block; }
+  #paneLabelSheet #labelSheetRecordTable tr[data-record-index] { display: none; }
+
+  #paneLabelSheet #labelSheetRecordTable tr.is-mobile-record-current {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 8px;
+    padding: 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+
+  #paneLabelSheet #labelSheetRecordTable td[data-record-column] {
+    display: block;
+    position: static;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  #paneLabelSheet #labelSheetRecordTable td[data-column-label]::before {
+    content: attr(data-column-label);
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  #paneLabelSheet #labelSheetRecordTable td[data-record-column^="front."],
+  #paneLabelSheet #labelSheetRecordTable td[data-record-column^="back."],
+  #paneLabelSheet #labelSheetRecordTable td[data-record-column="selection"],
+  #paneLabelSheet #labelSheetRecordTable td[data-record-column="data.excluded"] { grid-column: 1 / -1; }
+
+  #paneLabelSheet #labelSheetRecordTable:not(.is-mobile-record-expanded) td:is([data-record-column^="back."], [data-record-column$="qrValue"], [data-record-column$="backgroundFile"], [data-record-column="data.excluded"]) { display: none; }
+
+  #paneLabelSheet #labelSheetRecordTable :is(input:not([type="checkbox"]), textarea) {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+
+  #paneLabelSheet #labelSheetRecordTable textarea { min-height: 88px; resize: vertical; }
+  #paneLabelSheet .label-sheet-mobile-field-label { display: inline; }
+  #paneLabelSheet .label-sheet-record-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: 13px;
+    text-align: left;
+  }
+  #paneLabelSheet #labelSheetRecordTable .label-sheet-record-check input[type="checkbox"] { margin: 0; flex: 0 0 24px; }
+}
+
+@media (max-width: 860px) and (max-height: 500px) {
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceDataDrawer .label-sheet-workspace-data-records { display: none; }
+  #paneLabelSheet.label-sheet-workspace-v11 #labelSheetWorkspaceDataDrawer .label-sheet-workspace-data-workspace { grid-template-rows: minmax(0, 1fr); }
 }

@@ -116,7 +116,7 @@ test("quoted CSV preserves commas quotes and embedded newlines", () => {
   assert.equal(result.hasHeader, true);
   assert.equal(result.errors.length, 0);
   assert.equal(result.objects.length, 1);
-  assert.equal(result.objects[0].title, "홍길동, VIP");
+  assert.equal(result.objects[0].front_title, "홍길동, VIP");
   assert.equal(result.objects[0].front_background_prompt, 'blue "ocean"\nline');
   assert.equal(result.objects[0].back_body, "뒤,면");
 });
@@ -131,14 +131,14 @@ test("TSV paste and one-value-per-line paste are detected", () => {
   const lines = engine.parseTable("첫 번째\n두 번째\n세 번째");
   assert.equal(lines.delimiter, "newline");
   assert.equal(lines.hasHeader, false);
-  assert.deepEqual(plain(lines.objects.map((row) => row.title)), ["첫 번째", "두 번째", "세 번째"]);
+  assert.deepEqual(plain(lines.objects.map((row) => row.front_title)), ["첫 번째", "두 번째", "세 번째"]);
 });
 
 test("common business headers are recognized for mapping imports", () => {
   const tsv = engine.parseTable("관리번호\t성명\t소속\t품명\tURL\nMAP-001\t김배터리\t교육센터\t안내 라벨\thttps://example.kr/MAP-001");
   assert.equal(tsv.hasHeader, true);
   assert.deepEqual(plain(tsv.originalHeaders), ["관리번호", "성명", "소속", "품명", "URL"]);
-  assert.deepEqual(plain(tsv.headers), ["label_id", "name", "category", "title", "qr_value"]);
+  assert.deepEqual(plain(tsv.headers), ["label_id", "name", "category", "front_title", "front_qr_value"]);
   assert.equal(tsv.objects.length, 1);
 });
 

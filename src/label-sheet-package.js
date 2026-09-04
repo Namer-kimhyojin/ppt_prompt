@@ -34,34 +34,17 @@
   }
 
   function recordsToCsv(records) {
-    const headers = [
-      "label_id", "number", "name", "category",
-      "front_title", "front_subtitle", "front_body", "front_footer", "front_qr_value", "front_background_file",
-      "back_title", "back_subtitle", "back_body", "back_footer", "back_qr_value", "back_background_file",
-    ];
-    const lines = [headers.join(",")];
-    Array.from(records || []).forEach((record) => {
-      const row = [
-        record?.id,
-        record?.number,
-        record?.data?.name,
-        record?.data?.category,
-        record?.front?.title,
-        record?.front?.subtitle,
-        record?.front?.body,
-        record?.front?.footer,
-        record?.front?.qrValue,
-        record?.front?.backgroundFile,
-        record?.back?.title,
-        record?.back?.subtitle,
-        record?.back?.body,
-        record?.back?.footer,
-        record?.back?.qrValue,
-        record?.back?.backgroundFile,
-      ];
-      lines.push(row.map(csvCell).join(","));
+    const engine = root.PromptDeckLabelSheetEngine;
+    const fields = engine.RECORD_FIELDS;
+    const rows = Array.from(records || []);
+    const customKeys = [...new Set(rows.flatMap((record) => Object.keys(record.data || {})))].filter((key) => !engine.fieldForHeader(key));
+    const headers = [...fields.map((field) => field.target), ...customKeys.map((key) => 'data.' + key)];
+    const lines = [headers.map(csvCell).join(',')];
+    rows.forEach((record) => {
+      const row = [...fields.map((field) => engine.fieldValue(record, field)), ...customKeys.map((key) => record.data?.[key] ?? '')];
+      lines.push(row.map(csvCell).join(','));
     });
-    return `\uFEFF${lines.join("\r\n")}`;
+    return '\uFEFF' + lines.join('\r\n');
   }
 
   async function blobToBytes(blob) {
@@ -145,7 +128,8 @@
         "PromptDeck 라벨·티켓 프로젝트 패키지",
         "",
         "project.json: 규격, 데이터, QR, 스타일, 양면 설정",
-        "records.csv: 표 형태의 라벨 데이터",
+        "records.csv: 입력 표와 같은 17개 항목 및 data. 접두사의 사용자 열",
+        "CSV는 데이터 교환용입니다. 이미지·레이아웃까지 복원하려면 ZIP 전체를 불러오세요.",
         "prompts.jsonl: 라벨 면별 배경 및 오버레이 프롬프트",
         "page-prompts.jsonl: A4 출력 페이지별 프롬프트와 슬롯 정보",
         "prompts/pages/: 출력 순서대로 분리된 A4 페이지 프롬프트",

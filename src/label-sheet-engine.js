@@ -167,6 +167,42 @@
     "뒷면배경프롬프트": "back_background_prompt",
   });
 
+  // One field contract for manual entry, clipboard, CSV, mapping and export.
+  const RECORD_FIELDS = Object.freeze([
+    Object.freeze({ key: "id", label: "ID", target: "label_id", side: "common", aliases: ["label_id","labelid","id","식별자","고유번호","관리번호","라벨id","라벨아이디"] }),
+    Object.freeze({ key: "number", label: "번호", target: "number", side: "common", aliases: ["number","번호","순번","연번","일련번호","티켓번호","serial","sequence","no"] }),
+    Object.freeze({ key: "data.name", label: "이름", target: "name", side: "common", aliases: ["name","이름","성명","참석자","대상자","교육생","담당자","이름·구분","이름구분","data.name"] }),
+    Object.freeze({ key: "data.category", label: "구분·소속", target: "category", side: "common", aliases: ["category","구분","소속","기관","기관명","회사","회사명","과정","과정명","종류","역할","role","좌석","좌석번호","구분소속","구분·소속","affiliation","data.category"] }),
+    Object.freeze({ key: "front.title", label: "앞면 제목", target: "front_title", side: "front", aliases: ["front_title","앞면제목","제목","title","품명","항목명","앞면 제목","front.title"] }),
+    Object.freeze({ key: "front.subtitle", label: "앞면 부제", target: "front_subtitle", side: "front", aliases: ["front_subtitle","앞면부제","부제","subtitle","앞면 부제","front.subtitle"] }),
+    Object.freeze({ key: "front.body", label: "앞면 본문", target: "front_body", side: "front", aliases: ["front_body","앞면본문","본문","내용","body","content","앞면 본문","front.body"] }),
+    Object.freeze({ key: "front.footer", label: "앞면 하단", target: "front_footer", side: "front", aliases: ["front_footer","앞면하단문구","하단문구","footer","비고","note","날짜","date","장소","location","유효기간","앞면하단","앞면 하단","front.footer","하단"] }),
+    Object.freeze({ key: "back.title", label: "뒷면 제목", target: "back_title", side: "back", aliases: ["back_title","뒷면제목","후면제목","뒷면 제목","back.title"] }),
+    Object.freeze({ key: "back.subtitle", label: "뒷면 부제", target: "back_subtitle", side: "back", aliases: ["back_subtitle","뒷면부제","후면부제","뒷면 부제","back.subtitle"] }),
+    Object.freeze({ key: "back.body", label: "뒷면 본문", target: "back_body", side: "back", aliases: ["back_body","뒷면본문","후면본문","뒷면내용","이용안내","주의사항","뒷면 본문","back.body"] }),
+    Object.freeze({ key: "back.footer", label: "뒷면 하단", target: "back_footer", side: "back", aliases: ["back_footer","뒷면하단문구","후면하단문구","문의처","뒷면하단","뒷면 하단","back.footer"] }),
+    Object.freeze({ key: "front.qrValue", label: "앞면 QR", target: "front_qr_value", side: "front", aliases: ["front_qr_value","앞면qr값","qr_value","qr","qrcode","qr코드","링크","url","주소","앞면qr","앞면 qr","front_qr","front.qrvalue","qr값"] }),
+    Object.freeze({ key: "back.qrValue", label: "뒷면 QR", target: "back_qr_value", side: "back", aliases: ["back_qr_value","뒷면qr값","후면qr값","뒷면qr","뒷면 qr","back_qr","back.qrvalue"] }),
+    Object.freeze({ key: "front.backgroundFile", label: "앞면 배경", target: "front_background_file", side: "front", aliases: ["앞면배경","앞면 배경","front_background","front_background_file","front.backgroundfile","앞면배경파일","배경파일","background_file","backgroundFile"] }),
+    Object.freeze({ key: "back.backgroundFile", label: "뒷면 배경", target: "back_background_file", side: "back", aliases: ["뒷면배경","뒷면 배경","back_background","back_background_file","back.backgroundfile","뒷면배경파일"] }),
+    Object.freeze({ key: "data.excluded", label: "제외", target: "excluded", side: "common", type: "boolean", aliases: ["제외","출력제외","excluded","exclude","data.excluded"] }),
+  ]);
+
+  function fieldForHeader(value) {
+    const key = String(value ?? "").normalize("NFKC").toLowerCase().replace(/[^0-9a-z가-힣]/g, "");
+    if (!key) return null;
+    return RECORD_FIELDS.find((field) => [field.key, field.target, field.label, ...field.aliases]
+      .some((alias) => String(alias).normalize("NFKC").toLowerCase().replace(/[^0-9a-z가-힣]/g, "") === key)) || null;
+  }
+
+  function fieldValue(record, field) {
+    return field.key.split(".").reduce((value, key) => value?.[key], record) ?? "";
+  }
+
+  function parseBoolean(value) {
+    return ["1", "true", "yes", "y", "예", "제외", "x"].includes(String(value ?? "").trim().toLowerCase());
+  }
+
   function isObject(value) {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
   }
@@ -580,14 +616,22 @@
   }
 
   function normalizeRecord(input, index) {
-    const record = isObject(input) ? input : { title: input };
+    const record = isObject(input) ? { ...input } : { title: input };
+    Object.keys(record).forEach((key) => {
+      const field = fieldForHeader(key);
+      if (field && !own(record, field.target)) record[field.target] = record[key];
+    });
     const position = Math.max(0, Math.trunc(finiteNumber(index, 0)));
     const idValue = firstDefined(record, ["id", "label_id", "labelId", "식별자"], `label-${position + 1}`);
     const numberValue = firstDefined(record, ["number", "번호", "순번"], "");
     const data = isObject(record.data) ? deepMerge({}, record.data) : {};
     Object.keys(record).forEach((key) => {
-      if (!["front", "back", "data"].includes(key)) data[key] = record[key];
+      if (!["front", "back", "data"].includes(key)) {
+        const dataKey = key.startsWith("data.") ? key.slice(5) : key;
+        if (!["__proto__", "constructor", "prototype"].includes(dataKey)) data[dataKey] = record[key];
+      }
     });
+    data.excluded = parseBoolean(record.excluded ?? data.excluded);
     const normalized = {
       id: trimmed(idValue) || `label-${position + 1}`,
       number: text(numberValue),
@@ -627,11 +671,13 @@
 
   function canonicalHeader(value, index) {
     const raw = trimmed(value).replace(/^\uFEFF/, "");
+    const field = fieldForHeader(raw);
+    if (field) return field.target;
     const compact = raw.toLowerCase().replace(/[\s-]+/g, "_");
     const aliasKey = compact.replace(/_/g, "");
     if (own(HEADER_ALIASES, compact)) return HEADER_ALIASES[compact];
     if (own(HEADER_ALIASES, aliasKey)) return HEADER_ALIASES[aliasKey];
-    return compact || `column_${index + 1}`;
+    return raw || `column_${index + 1}`;
   }
 
   function dedupeHeaders(values) {
@@ -720,6 +766,7 @@
 
   function detectedHeader(row) {
     if (!Array.isArray(row) || !row.length) return false;
+    if (row.some(fieldForHeader)) return true;
     const recognized = row.filter((value, index) => canonicalHeader(value, index) !== `column_${index + 1}` && own(HEADER_ALIASES, trimmed(value).toLowerCase().replace(/[\s-]+/g, "_"))).length;
     if (recognized > 0) return true;
     const canonical = row.map(canonicalHeader);
@@ -1661,6 +1708,11 @@
 
   global.PromptDeckLabelSheetEngine = Object.freeze({
     VERSION,
+    RECORD_FIELDS,
+    fieldForHeader,
+    fieldValue,
+    parseBoolean,
+    detectedHeader,
     SCHEMAS,
     A4,
     IMPORT_MODES,

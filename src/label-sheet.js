@@ -122,25 +122,7 @@
   const WYSIWYG_FIELD_LABELS = Object.freeze({ content: "전체 콘텐츠", number: "연번", title: "제목", subtitle: "부제", body: "본문", footer: "하단 문구", qr: "QR 영역" });
   const OUTPUT_FIELD_KEYS = Object.freeze(["title", "subtitle", "body", "footer"]);
   const OUTPUT_FIELD_LABELS = Object.freeze({ title: "제목", subtitle: "부제", body: "본문", footer: "하단 문구" });
-  const RECORD_TABLE_COLUMNS = Object.freeze([
-    Object.freeze({ field: "id", label: "ID", aliases: ["id", "label_id", "labelid", "라벨id", "라벨아이디"] }),
-    Object.freeze({ field: "number", label: "번호", aliases: ["번호", "연번", "number", "serial", "sequence"] }),
-    Object.freeze({ field: "data.name", label: "이름", aliases: ["이름", "성명", "이름·구분", "이름구분", "name", "data.name"] }),
-    Object.freeze({ field: "data.category", label: "구분·소속", aliases: ["구분소속", "구분·소속", "구분", "소속", "category", "affiliation", "data.category"] }),
-    Object.freeze({ field: "front.title", label: "앞면 제목", aliases: ["앞면제목", "앞면 제목", "front_title", "front.title", "title", "제목"] }),
-    Object.freeze({ field: "front.subtitle", label: "앞면 부제", aliases: ["앞면부제", "앞면 부제", "front_subtitle", "front.subtitle", "subtitle", "부제"] }),
-    Object.freeze({ field: "front.body", label: "앞면 본문", aliases: ["앞면본문", "앞면 본문", "front_body", "front.body", "body", "본문"] }),
-    Object.freeze({ field: "front.footer", label: "앞면 하단", aliases: ["앞면하단", "앞면 하단", "front_footer", "front.footer", "footer", "하단"] }),
-    Object.freeze({ field: "back.title", label: "뒷면 제목", aliases: ["뒷면제목", "뒷면 제목", "back_title", "back.title"] }),
-    Object.freeze({ field: "back.subtitle", label: "뒷면 부제", aliases: ["뒷면부제", "뒷면 부제", "back_subtitle", "back.subtitle"] }),
-    Object.freeze({ field: "back.body", label: "뒷면 본문", aliases: ["뒷면본문", "뒷면 본문", "back_body", "back.body"] }),
-    Object.freeze({ field: "back.footer", label: "뒷면 하단", aliases: ["뒷면하단", "뒷면 하단", "back_footer", "back.footer"] }),
-    Object.freeze({ field: "front.qrValue", label: "앞면 QR", aliases: ["앞면qr", "앞면 qr", "front_qr", "front_qr_value", "front.qrvalue"] }),
-    Object.freeze({ field: "back.qrValue", label: "뒷면 QR", aliases: ["뒷면qr", "뒷면 qr", "back_qr", "back_qr_value", "back.qrvalue"] }),
-    Object.freeze({ field: "front.backgroundFile", label: "앞면 배경", aliases: ["앞면배경", "앞면 배경", "front_background", "front_background_file", "front.backgroundfile"] }),
-    Object.freeze({ field: "back.backgroundFile", label: "뒷면 배경", aliases: ["뒷면배경", "뒷면 배경", "back_background", "back_background_file", "back.backgroundfile"] }),
-    Object.freeze({ field: "data.excluded", label: "제외", aliases: ["제외", "출력제외", "excluded", "exclude", "data.excluded"], type: "boolean" }),
-  ]);
+  const RECORD_TABLE_COLUMNS = Object.freeze(ENGINE.RECORD_FIELDS.map((field) => Object.freeze({ ...field, field: field.key })));
   const DEFAULT_CONTENT_LAYOUT = Object.freeze({ xPercent: 0, yPercent: 0, widthPercent: 100, heightPercent: 100 });
   const DEFAULT_TEXT_FIELD_LAYOUT = Object.freeze({
     number: Object.freeze({ xPercent: 50, yPercent: 0, widthPercent: 50, heightPercent: null, sizePercent: 12, fontFamily: "inherit", color: "inherit", align: "right", weight: 700, maxLines: 1, visible: true, avoidQr: true }),
@@ -1648,16 +1630,6 @@
     return { background, surface, text, secondaryText, accent, border, fontFamily: resolveFontFamily(typography), stylePrompt };
   }
 
-  function readRecordToken(record, key, sideName) {
-    const normalized = cleanText(key);
-    if (normalized === "id" || normalized === "label_id") return record.id;
-    if (normalized === "number") return record.number;
-    if (normalized.startsWith("front.")) return record.front?.[normalized.slice(6)] ?? "";
-    if (normalized.startsWith("back.")) return record.back?.[normalized.slice(5)] ?? "";
-    if (normalized.startsWith("data.")) return record.data?.[normalized.slice(5)] ?? "";
-    return record.data?.[normalized] ?? record?.[sideName]?.[normalized] ?? record?.[normalized] ?? "";
-  }
-
   function normalizedOutputToken(input) {
     return cleanText(input).normalize("NFKC").toLowerCase().replace(/[\s_-]+/gu, "");
   }
@@ -1693,6 +1665,13 @@
       const fieldName = Object.keys(aliases).find((name) => ["title", "subtitle", "body", "footer"].includes(name)
         && aliases[name].some((alias) => normalizedOutputToken(alias) === normalizedOutputToken(fieldToken)));
       if (fieldName) return { found: true, value: record?.[qualifiedSide]?.[fieldName] ?? "" };
+    }
+
+    const field = ENGINE.fieldForHeader(key);
+    if (field) return { found: true, value: ENGINE.fieldValue(record, field) };
+    if (/^(front|back)\.[a-zA-Z]+$/u.test(key)) {
+      const [scope, property] = key.split(".");
+      if (Object.prototype.hasOwnProperty.call(record?.[scope] || {}, property)) return { found: true, value: record[scope][property] ?? "" };
     }
 
     const dataKey = token.startsWith("data.") ? key.slice(key.indexOf(".") + 1) : key;
@@ -1743,9 +1722,12 @@
   function resolveQrTemplate(record, sideName, template) {
     const emptyTokens = new Set();
     let tokenCount = 0;
-    const value = cleanText(template).replace(/\{([a-zA-Z0-9_.-]+)(?:\|(url))?\}/g, (_match, key, modifier) => {
+    // Double braces share output aliases; single braces remain compatible with saved QR templates.
+    const value = cleanText(template).replace(/\{\{\s*([^{}|]+?)\s*(?:\|\s*(url)\s*)?\}\}|\{\s*([^{}|]+?)\s*(?:\|\s*(url)\s*)?\}/gu, (_match, doubleKey, doubleModifier, singleKey, singleModifier) => {
       tokenCount += 1;
-      const tokenValue = String(readRecordToken(record, key, sideName) ?? "");
+      const key = doubleKey ?? singleKey;
+      const modifier = doubleModifier ?? singleModifier;
+      const tokenValue = String(outputTokenResult(record, key, sideName).value ?? "");
       if (!cleanText(tokenValue)) emptyTokens.add(key);
       return modifier === "url" ? encodeURIComponent(tokenValue) : tokenValue;
     });
@@ -2448,8 +2430,7 @@
     draftMapping = DATA_MAPPING.normalizeMapping(draftMapping);
     project.settings = project.settings || {};
     project.settings.dataMapping = deepClone(draftMapping);
-    draftRawRecords = draftRawRecords.map((record, index) => DATA_MAPPING.applyRecord(record, draftMapping, index));
-    draftRecords = draftRawRecords.map((record, index) => ENGINE.normalizeRecord(record, index));
+    draftRecords = draftRawRecords.map((record, index) => ENGINE.normalizeRecord(DATA_MAPPING.applyRecord(record, draftMapping, index), index));
     if (options.render !== false) {
       renderDataMappingControls();
       renderRecordTable();
@@ -2467,6 +2448,42 @@
     applyDraftMapping();
     const summary = DATA_MAPPING.describe(draftMapping, draftHeaders);
     setElementStatus("labelSheetDataMappingStatus", `자동 연결 완료 · ${summary.text}`, summary.count ? "success" : "warning");
+  }
+
+  let mobileRecordIndex = 0;
+
+  function syncMobileSequenceSettings() {
+    const settings = $("labelSheetMobileSequenceSettings");
+    if (!settings) return;
+    const mobile = window.matchMedia("(max-width: 860px)").matches;
+    const hasRows = Boolean(spreadsheetRows().length);
+    const mode = `${mobile}:${hasRows}`;
+    if (settings.dataset.displayMode !== mode) {
+      settings.open = !mobile || !hasRows || settings.contains(document.activeElement);
+      settings.dataset.displayMode = mode;
+    }
+  }
+
+  function syncMobileRecordEditor(index = mobileRecordIndex) {
+    syncMobileSequenceSettings();
+    const rows = spreadsheetRows().slice(0, 500);
+    mobileRecordIndex = Math.max(0, Math.min(Number(index) || 0, rows.length - 1));
+    const select = $("labelSheetMobileRecordSelect");
+    if (!select) return;
+    select.replaceChildren(...rows.map((record, rowIndex) => {
+      const option = document.createElement("option");
+      option.value = String(rowIndex);
+      option.textContent = `${rowIndex + 1} / ${rows.length} · ${record.data?.name || record.id || "티켓"}`;
+      return option;
+    }));
+    select.value = String(mobileRecordIndex);
+    select.disabled = !rows.length;
+    $("labelSheetMobileRecordPrev").disabled = mobileRecordIndex === 0;
+    $("labelSheetMobileRecordNext").disabled = mobileRecordIndex >= rows.length - 1;
+    $("labelSheetMobileRecordMore").disabled = !rows.length;
+    $("labelSheetRecordTableBody")?.querySelectorAll("tr[data-record-index]").forEach((row) => {
+      row.classList.toggle("is-mobile-record-current", Number(row.dataset.recordIndex) === mobileRecordIndex);
+    });
   }
 
   function renderRecordTable() {
@@ -2495,6 +2512,7 @@
     updateProgressState();
     renderDataMappingControls();
     syncSpreadsheetTools(rows);
+    syncMobileRecordEditor();
     restoreSpreadsheetActiveCell();
   }
 
@@ -2512,8 +2530,12 @@
 
   function editableCell(record, index, field, textValue, draft, label = field) {
     const cell = document.createElement("td");
-    const input = document.createElement("input");
-    input.type = "text";
+    cell.dataset.recordColumn = field;
+    cell.dataset.columnLabel = label;
+    const multiline = field.endsWith(".body");
+    const input = document.createElement(multiline ? "textarea" : "input");
+    if (multiline) { input.rows = 2; input.setAttribute("aria-description", "Shift+Enter로 줄바꿈"); }
+    else input.type = "text";
     input.value = String(textValue ?? "");
     input.dataset.recordIndex = String(index);
     input.dataset.recordField = field;
@@ -2534,12 +2556,19 @@
     row.classList.toggle("is-selected", selectedRecordIds.has(record.id));
     const selectionCell = document.createElement("td");
     selectionCell.className = "label-sheet-selection-cell";
+    selectionCell.dataset.recordColumn = "selection";
+    const selectionLabel = document.createElement("label");
+    selectionLabel.className = "label-sheet-record-check";
+    const selectionText = document.createElement("span");
+    selectionText.className = "label-sheet-mobile-field-label";
+    selectionText.textContent = "이 티켓을 일괄 작업 대상으로 선택";
     const selection = document.createElement("input");
     selection.type = "checkbox";
     selection.checked = selectedRecordIds.has(record.id);
     selection.dataset.recordSelect = "true";
     selection.setAttribute("aria-label", `${index + 1}행 QR·배경 배정 대상으로 선택`);
-    selectionCell.appendChild(selection);
+    selectionLabel.append(selection, selectionText);
+    selectionCell.appendChild(selectionLabel);
     row.appendChild(selectionCell);
     RECORD_TABLE_COLUMNS.forEach((column) => {
       if (column.type !== "boolean") {
@@ -2547,6 +2576,12 @@
         return;
       }
       const cell = document.createElement("td");
+      cell.dataset.recordColumn = column.field;
+      const label = document.createElement("label");
+      label.className = "label-sheet-record-check";
+      const text = document.createElement("span");
+      text.className = "label-sheet-mobile-field-label";
+      text.textContent = "이 티켓을 출력에서 제외";
       const input = document.createElement("input");
       input.type = "checkbox";
       input.checked = Boolean(spreadsheetValue(record, column.field));
@@ -2554,14 +2589,11 @@
       input.dataset.recordField = column.field;
       input.dataset.recordDraft = String(draft);
       input.setAttribute("aria-label", `${index + 1}행 ${column.label}`);
-      cell.appendChild(input);
+      label.append(input, text);
+      cell.appendChild(label);
       row.appendChild(cell);
     });
     return row;
-  }
-
-  function normalizedSpreadsheetHeader(input) {
-    return cleanText(input).normalize("NFKC").toLowerCase().replace(/[\s·._\-/]+/gu, "");
   }
 
   function spreadsheetColumn(field) {
@@ -2569,11 +2601,7 @@
   }
 
   function spreadsheetFieldForHeader(input) {
-    const normalized = normalizedSpreadsheetHeader(input);
-    if (!normalized) return "";
-    const column = RECORD_TABLE_COLUMNS.find((candidate) => [candidate.label, candidate.field, ...candidate.aliases]
-      .some((alias) => normalizedSpreadsheetHeader(alias) === normalized));
-    return column?.field || "";
+    return ENGINE.fieldForHeader(input)?.key || "";
   }
 
   function spreadsheetRows(draft = draftActive) {
@@ -2582,6 +2610,7 @@
 
   function recordFieldValue(record, field) {
     if (!record || !field) return "";
+    if (field.startsWith("data.")) return record.data?.[field.slice(5)] ?? "";
     return field.split(".").reduce((current, key) => current?.[key], record) ?? "";
   }
 
@@ -2605,10 +2634,7 @@
   }
 
   function spreadsheetBoolean(input) {
-    if (typeof input === "boolean") return input;
-    const normalized = cleanText(input).normalize("NFKC").toLowerCase();
-    if (["1", "true", "yes", "y", "예", "제외", "x"].includes(normalized)) return true;
-    return false;
+    return ENGINE.parseBoolean(input);
   }
 
   function ensureSpreadsheetRows(rowCount, draft) {
@@ -2635,8 +2661,7 @@
     if (field === "id") {
       const previousId = record.id;
       record.id = cleanText(nextValue) || `label-${index + 1}`;
-      if (draftRaw) draftRaw.label_id = cleanText(nextValue);
-      else migrateRecordIdentity(previousId, record.id, index, target);
+      if (!draftRaw) migrateRecordIdentity(previousId, record.id, index, target);
       if (draftRaw) {
         const row = target?.closest?.("tr[data-record-id]");
         if (row) row.dataset.recordId = record.id;
@@ -2646,14 +2671,12 @@
       record.number = String(nextValue);
       record.front.number = String(nextValue);
       record.back.number = String(nextValue);
-      if (draftRaw) draftRaw.number = String(nextValue);
     }
     else if (field === "front.qrValue") {
       const qrSettings = draftRaw ? null : qrSettingsForManualSide("front");
       if (qrSettings) materializeDynamicQrValues(qrSettings);
       record.front.qrValue = String(nextValue);
-      if (draftRaw) draftRaw.front_qr_value = String(nextValue);
-      else {
+      if (!draftRaw) {
         setQrSourceToAssignedValues(qrSettings);
         updateQrControlState();
       }
@@ -2662,33 +2685,38 @@
       const qrSettings = draftRaw ? null : qrSettingsForManualSide("back");
       if (qrSettings) materializeDynamicQrValues(qrSettings);
       record.back.qrValue = String(nextValue);
-      if (draftRaw) draftRaw.back_qr_value = String(nextValue);
-      else {
+      if (!draftRaw) {
         setQrSourceToAssignedValues(qrSettings);
         updateQrControlState();
       }
     }
     else if (field === "front.backgroundFile") {
       record.front.backgroundFile = String(nextValue);
-      if (draftRaw) draftRaw.front_background_file = String(nextValue);
-      else resolveRecordBackground(record, "front");
+      if (!draftRaw) resolveRecordBackground(record, "front");
     }
     else if (field === "back.backgroundFile") {
       record.back.backgroundFile = String(nextValue);
-      if (draftRaw) draftRaw.back_background_file = String(nextValue);
-      else resolveRecordBackground(record, "back");
+      if (!draftRaw) resolveRecordBackground(record, "back");
     }
     else if (field === "data.excluded") {
       record.data.excluded = spreadsheetBoolean(nextValue);
-      if (draftRaw) draftRaw.data = { ...(draftRaw.data || {}), excluded: spreadsheetBoolean(nextValue) };
     }
     else if (/^(front|back)\.(title|subtitle|body|footer)$/u.test(field) || /^(data)\.(name|category)$/u.test(field)) {
       setRecordFieldValue(record, field, String(nextValue));
-      if (draftRaw) {
-        const targetName = DATA_MAPPING.definition(field)?.target;
-        if (targetName) draftRaw[targetName] = String(nextValue);
-      }
+    } else if (field.startsWith("data.") && !["__proto__", "constructor", "prototype"].includes(field.slice(5))) {
+      record.data[field.slice(5)] = String(nextValue);
     } else return false;
+    if (draftRaw) {
+      const definition = DATA_MAPPING.definition(field);
+      const header = draftMapping[field] || definition?.target || field;
+      draftMapping[field] = header;
+      if (!draftHeaders.includes(header)) draftHeaders.push(header);
+      draftRaw[header] = field === "data.excluded" ? spreadsheetBoolean(nextValue) : String(nextValue);
+    }
+    if (field === "id" || field === "data.name") {
+      const option = $("labelSheetMobileRecordSelect")?.options[index];
+      if (option) option.textContent = `${index + 1} / ${Math.min(rows.length, 500)} · ${record.data?.name || record.id || "티켓"}`;
+    }
     return true;
   }
 
@@ -2709,7 +2737,7 @@
   function spreadsheetCellTarget(cell = activeSpreadsheetCell) {
     if (!cell) return null;
     return $("labelSheetRecordTableBody")?.querySelector(
-      `input[data-record-index="${cell.index}"][data-record-field="${cell.field}"][data-record-draft="${cell.draft}"]`
+      `[data-record-index="${cell.index}"][data-record-field="${cell.field}"][data-record-draft="${cell.draft}"]`
     ) || null;
   }
 
@@ -2743,7 +2771,7 @@
   }
 
   function rememberSpreadsheetCell(target, options = {}) {
-    const input = target?.closest?.("input[data-record-index][data-record-field]");
+    const input = target?.closest?.("[data-record-index][data-record-field]");
     if (!input) return null;
     activeSpreadsheetCell = {
       index: Number(input.dataset.recordIndex),
@@ -2774,12 +2802,10 @@
   }
 
   function spreadsheetHeaderFields(row) {
-    const fields = (row || []).map(spreadsheetFieldForHeader);
-    const nonEmpty = (row || []).filter((cell) => cleanText(cell)).length;
-    const recognized = fields.filter(Boolean).length;
+    const fields = (row || []).map((header) => spreadsheetFieldForHeader(header) || (cleanText(header) ? `data.${cleanText(header).replace(/^data\./, "")}` : ""));
     return {
       fields,
-      hasHeader: recognized > 0 && recognized >= Math.max(1, Math.ceil(nonEmpty * 0.6)),
+      hasHeader: ENGINE.detectedHeader(row),
     };
   }
 
@@ -2848,8 +2874,10 @@
   }
 
   function spreadsheetTsv(records) {
-    const header = RECORD_TABLE_COLUMNS.map((column) => spreadsheetTsvCell(column.label)).join("\t");
-    const rows = records.map((record) => RECORD_TABLE_COLUMNS.map((column) => {
+    const customKeys = [...new Set(records.flatMap((record) => Object.keys(record.data || {})))].filter((key) => !ENGINE.fieldForHeader(key));
+    const columns = [...RECORD_TABLE_COLUMNS, ...customKeys.map((key) => ({ field: `data.${key}`, label: `data.${key}` }))];
+    const header = columns.map((column) => spreadsheetTsvCell(column.label)).join("\t");
+    const rows = records.map((record) => columns.map((column) => {
       const cellValue = spreadsheetValue(record, column.field);
       return spreadsheetTsvCell(column.type === "boolean" ? (cellValue ? "예" : "") : cellValue);
     }).join("\t"));
@@ -2990,9 +3018,13 @@
   }
 
   function reviewImportText(text, sourceLabel) {
-    const parsed = TABLE_DATA?.parseLabelTable
+    let parsed = TABLE_DATA?.parseLabelTable
       ? TABLE_DATA.parseLabelTable(text, { delimiter: "auto", header: "auto" })
       : ENGINE.parseTable(text, { delimiter: "auto", header: "auto" });
+    if (!parsed.hasHeader && parsed.headers.length > 1) {
+      const columns = ENGINE.RECORD_FIELDS.slice(0, parsed.headers.length).map((field) => field.target);
+      parsed = ENGINE.parseTable(text, { delimiter: "auto", header: "absent", columns });
+    }
     if (parsed.errors.length || !parsed.objects.length) {
       setImportStatus(parsed.errors[0]?.message || "가져올 행을 찾지 못했습니다.", "error");
       return;
@@ -3010,10 +3042,8 @@
     draftRawRecords = Array.isArray(parsed.rows) && draftHeaders.length
       ? parsed.rows.map((row) => Object.fromEntries(draftHeaders.map((header, index) => [header, row[index] ?? ""])))
       : parsed.objects.map((record) => ({ ...record }));
-    draftMapping = DATA_MAPPING.suggest(draftHeaders, {
-      current: project.settings?.dataMapping,
-      duplex: project.spec.duplex.enabled,
-    });
+    // A new source gets fresh matching; stale suggestions from another file must not override its headers.
+    draftMapping = DATA_MAPPING.suggest(draftHeaders);
     draftMode = value("labelSheetPasteMode") === "update" ? "update-by-id" : value("labelSheetPasteMode") || "replace";
     draftActive = true;
     applyDraftMapping({ render: false });
@@ -3029,12 +3059,13 @@
       setImportStatus("먼저 붙여넣기 또는 CSV 데이터를 검토해 주세요.", "warning");
       return;
     }
-    if (draftMode === "update-by-id" && draftRawRecords.some((record) => !cleanText(record.label_id || record.id || record.labelId))) {
+    const partialRecords = draftRawRecords.map((record, index) => DATA_MAPPING.applyRecord(record, draftMapping, index, { partial: true }));
+    if (draftMode === "update-by-id" && partialRecords.some((record) => !cleanText(record.label_id))) {
       setImportStatus("ID 기준 업데이트에는 모든 행의 label_id가 필요합니다. 표의 ID 셀을 확인해 주세요.", "error");
       return;
     }
     undoRecords = deepClone(project.records);
-    const importInput = draftMode === "update-by-id" ? draftRawRecords : draftRecords;
+    const importInput = draftMode === "update-by-id" ? partialRecords : draftRecords;
     const result = ENGINE.importRecords(project.records, importInput, { mode: draftMode, idField: draftMode === "update-by-id" ? "label_id" : "id" });
     if (result.errors.length) {
       setImportStatus(result.errors[0].message, "error");
@@ -3112,13 +3143,18 @@
   }
 
   function downloadSampleCsv() {
-    const csv = [
-      "label_id,number,front_title,name,front_body,front_footer,front_qr_value,back_title,back_body,back_qr_value,front_background_file,back_background_file",
-      "PASS-001,001,행사 출입표,홍길동,VIP,2026 지역혁신 포럼,https://example.kr/pass/PASS-001,이용 안내,입장 시 제시해 주세요,,pass-001-front.png,pass-001-back.png",
-      "PASS-002,002,행사 출입표,김서연,일반,2026 지역혁신 포럼,https://example.kr/pass/PASS-002,이용 안내,타인에게 양도할 수 없습니다,,pass-002-front.png,pass-002-back.png",
-    ].join("\r\n");
-    downloadBlob(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }), "label-ticket-sample.csv");
-    setImportStatus("앞·뒷면과 배경 파일명이 분리된 샘플 CSV를 내려받았습니다.", "success");
+    const records = ["홍길동", "김서연"].map((name, index) => ENGINE.normalizeRecord({
+      label_id: 'PASS-00' + (index + 1), number: '00' + (index + 1), name,
+      category: index ? "일반" : "VIP", front_title: "행사 출입표", front_subtitle: "2026 지역혁신 포럼",
+      front_body: "입장 시 제시해 주세요", front_footer: "당일 유효",
+      front_qr_value: 'https://example.kr/pass/PASS-00' + (index + 1),
+      back_title: "이용 안내", back_subtitle: "참가자 안내", back_body: "타인에게 양도할 수 없습니다",
+      back_footer: "운영사무국", back_qr_value: "https://example.kr/info",
+      front_background_file: 'pass-00' + (index + 1) + '-front.png',
+      back_background_file: 'pass-00' + (index + 1) + '-back.png', excluded: false,
+    }, index));
+    downloadBlob(new Blob([PACKAGE.recordsToCsv(records)], { type: "text/csv;charset=utf-8" }), "label-ticket-sample.csv");
+    setImportStatus("입력 표와 동일한 17개 항목의 샘플 CSV를 내려받았습니다.", "success");
   }
 
   function printFitValue() {
@@ -4211,7 +4247,7 @@
     record[previewSide][wysiwygField] = nextValue;
     const recordIndex = project.records.indexOf(record);
     const tableInput = recordIndex >= 0
-      ? $("labelSheetRecordTableBody")?.querySelector(`input[data-record-index="${recordIndex}"][data-record-field="${previewSide}.${wysiwygField}"]`)
+      ? $("labelSheetRecordTableBody")?.querySelector(`[data-record-index="${recordIndex}"][data-record-field="${previewSide}.${wysiwygField}"]`)
       : null;
     if (tableInput && document.activeElement !== tableInput) tableInput.value = nextValue;
     const forcedLines = Math.min(8, Math.max(1, nextValue.split("\n").length));
@@ -7196,11 +7232,11 @@
     if (!incomingRaw.length) throw new Error("라벨로 보낼 데이터가 없습니다.");
     const incomingHeaders = Array.from(new Set(incomingRaw.flatMap((record) => Object.keys(record && typeof record === "object" ? record : {}))));
     const incomingMapping = DATA_MAPPING.suggest(incomingHeaders, {
-      current: payload.dataMapping || project.settings?.dataMapping,
+      current: payload.dataMapping,
       duplex: payload.spec?.duplex?.enabled ?? project.spec.duplex.enabled,
     });
-    const incoming = incomingRaw.map((record, index) => DATA_MAPPING.applyRecord(record, incomingMapping, index));
     const mode = ["replace", "append", "update-by-id"].includes(payload.importMode) ? payload.importMode : "append";
+    const incoming = incomingRaw.map((record, index) => DATA_MAPPING.applyRecord(record, incomingMapping, index, { partial: mode === "update-by-id" }));
     if (mode === "replace" && project.records.length && options.confirmReplace !== false) {
       const confirmed = window.confirm("현재 라벨 목록을 전달받은 데이터로 교체할까요?");
       if (!confirmed) return { ok: false, cancelled: true };
@@ -7568,14 +7604,40 @@
     listen("labelSheetCopySelectedRowsBtn", "click", safeAsync(() => copySpreadsheetRows("selected")));
     listen("labelSheetCopyAllRowsBtn", "click", safeAsync(() => copySpreadsheetRows("all")));
     listen("labelSheetFillDownBtn", "click", fillSpreadsheetColumn);
+    listen("labelSheetMobileRecordSelect", "change", (event) => {
+      activeSpreadsheetCell = null;
+      syncMobileRecordEditor(event.target.value);
+    });
+    window.matchMedia("(max-width: 860px)").addEventListener("change", syncMobileSequenceSettings);
+    listen("labelSheetMobileRecordPrev", "click", () => {
+      activeSpreadsheetCell = null;
+      syncMobileRecordEditor(mobileRecordIndex - 1);
+    });
+    listen("labelSheetMobileRecordNext", "click", () => {
+      activeSpreadsheetCell = null;
+      syncMobileRecordEditor(mobileRecordIndex + 1);
+    });
+    listen("labelSheetMobileRecordMore", "click", () => {
+      const expanded = $("labelSheetMobileRecordMore").getAttribute("aria-expanded") !== "true";
+      $("labelSheetMobileRecordMore").setAttribute("aria-expanded", String(expanded));
+      $("labelSheetMobileRecordMore").textContent = expanded ? "뒷면·QR·배경·제외 접기" : "뒷면·QR·배경·제외 펼치기";
+      $("labelSheetRecordTable").classList.toggle("is-mobile-record-expanded", expanded);
+    });
+    pane.addEventListener("promptdeck:label-sheet-data-record-focus", (event) => syncMobileRecordEditor(event.detail?.index));
+    window.addEventListener("promptdeck:label-sheet-focus-issue", () => {
+      if (window.matchMedia("(max-width: 860px)").matches && $("labelSheetMobileRecordMore")?.getAttribute("aria-expanded") === "false") {
+        $("labelSheetMobileRecordMore").click();
+      }
+    });
     const recordBody = $("labelSheetRecordTableBody");
     recordBody?.addEventListener("focusin", (event) => {
-      if (event.target?.matches("input[data-record-index][data-record-field]")) rememberSpreadsheetCell(event.target);
+      if (event.target?.matches("[data-record-index][data-record-field]")) rememberSpreadsheetCell(event.target);
     });
     recordBody?.addEventListener("paste", (event) => {
-      const target = event.target?.closest?.('input[type="text"][data-record-field]');
+      const target = event.target?.closest?.('input[type="text"][data-record-field], textarea[data-record-field]');
       const text = event.clipboardData?.getData("text/plain") || "";
       if (!target || (!text.includes("\t") && !/[\r\n]/u.test(text))) return;
+      if (target.tagName === "TEXTAREA" && !text.includes("\t")) return;
       event.preventDefault();
       rememberSpreadsheetCell(target, { announce: false });
       try {
@@ -7595,11 +7657,11 @@
       if (event.target?.dataset?.recordField) updateRecordField(event.target);
     });
     recordBody?.addEventListener("click", (event) => {
-      if (event.target.closest("input,button,a,label")) return;
+      if (event.target.closest("input,textarea,button,a,label")) return;
       toggleSelectedRecord(event.target.closest("tr[data-record-id]"));
     });
     recordBody?.addEventListener("keydown", (event) => {
-      const input = event.target?.closest?.('input[type="text"][data-record-field]');
+      const input = event.target?.closest?.('input[type="text"][data-record-field], textarea[data-record-field]');
       if (input && event.ctrlKey && event.key.toLowerCase() === "d") {
         event.preventDefault();
         rememberSpreadsheetCell(input, { announce: false });
@@ -7609,12 +7671,13 @@
       if (input && event.key === "Enter" && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
         event.preventDefault();
         const nextIndex = Number(input.dataset.recordIndex) + 1;
-        const next = recordBody.querySelector(`input[data-record-index="${nextIndex}"][data-record-field="${input.dataset.recordField}"]`);
+        if (window.matchMedia("(max-width: 860px)").matches && nextIndex < spreadsheetRows().length) syncMobileRecordEditor(nextIndex);
+        const next = recordBody.querySelector(`[data-record-index="${nextIndex}"][data-record-field="${input.dataset.recordField}"]`);
         next?.focus();
         next?.select?.();
         return;
       }
-      if (!["Enter", " "].includes(event.key) || event.target.matches("input")) return;
+      if (!["Enter", " "].includes(event.key) || event.target.matches("input,textarea")) return;
       event.preventDefault();
       toggleSelectedRecord(event.target.closest("tr[data-record-id]"));
     });

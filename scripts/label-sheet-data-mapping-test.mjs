@@ -50,4 +50,37 @@ assert.equal(manual["front.body"], "앞면본문", "remaining unclaimed columns 
 const fallback = mapping.applyRecord({ 성명: "ID 없는 데이터" }, { "front.title": "성명" }, 4);
 assert.equal(fallback.label_id, "label-5");
 
-console.log("label-sheet data mapping tests: 15 assertions passed");
+assert.equal(engine.RECORD_FIELDS.length, 17);
+for (const field of engine.RECORD_FIELDS) {
+  for (const header of [field.key, field.target, field.label, ...field.aliases]) {
+    assert.equal(engine.fieldForHeader(header)?.key, field.key, header);
+    assert.equal(mapping.suggest([header])[field.key], header, header);
+  }
+}
+for (const header of ["back_title", "front_subtitle"]) {
+  const suggestion = mapping.suggest(["label_id", header], { duplex: false });
+  assert.equal(suggestion["front.title"], "", "do not steal a side-qualified field via substring matching");
+}
+const source = { ID: "T1", "앞면 제목": "제목", "뒷면 제목": "안내", "앞면 배경": "front.png", 제외: "아니오", Allergy: "견과류" };
+const sourceMapping = mapping.suggest(Object.keys(source), { duplex: false });
+const mapped = engine.normalizeRecord(mapping.applyRecord(source, sourceMapping));
+assert.equal(mapped.front.backgroundFile, "front.png");
+assert.equal(mapped.back.title, "안내", "single-sided work must retain back data");
+assert.equal(mapped.data.excluded, false);
+const cleared = engine.normalizeRecord(mapping.applyRecord(source, { ...sourceMapping, "front.title": "" }));
+assert.equal(cleared.front.title, "", "unmapping clears the field even when source has a recognized header");
+assert.equal(source["앞면 제목"], "제목", "mapping never mutates source rows");
+const partial = mapping.applyRecord({ ID: "T1", "앞면 부제": "수정" }, mapping.suggest(["ID", "앞면 부제"]), 0, { partial: true });
+const updated = engine.importRecords([mapped], [partial], { mode: "update-by-id" }).records[0];
+assert.equal(updated.front.title, "제목", "partial updates preserve absent fields");
+assert.equal(updated.front.subtitle, "수정");
+assert.equal(updated.back.title, "안내");
+assert.equal(engine.normalizeRecord({ 제외: "예" }).data.excluded, true);
+assert.equal(engine.normalizeRecord({ 제외: "false" }).data.excluded, false);
+const nestedSource = { id: "QR1", data: { name: "전송" }, front: { title: "QR 티켓", qrValue: "https://example.kr/qr", backgroundAssetId: "asset-1" }, back: { title: "안내" } };
+const nestedRecord = engine.normalizeRecord(mapping.applyRecord(nestedSource, mapping.suggest(Object.keys(nestedSource))));
+assert.equal(nestedRecord.front.qrValue, nestedSource.front.qrValue, "QR-generator bridge must retain nested record fields");
+assert.equal(nestedRecord.front.backgroundAssetId, "asset-1");
+assert.equal(nestedRecord.data.name, "전송");
+assert.equal(nestedRecord.back.title, "안내");
+console.log("label-sheet data mapping tests: shared schema, aliases, unmapping and partial updates passed");

@@ -1127,6 +1127,11 @@
     const sync = () => {
       if (!pane.classList.contains("active") || !pane.getClientRects().length) return;
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      // Keep modal actions above the on-screen keyboard without changing pinch zoom.
+      if (!window.visualViewport || window.visualViewport.scale === 1) {
+        pane.style.setProperty("--label-mobile-viewport-height", `${Math.round(viewportHeight)}px`);
+        pane.style.setProperty("--label-mobile-viewport-top", `${Math.round(window.visualViewport?.offsetTop || 0)}px`);
+      }
       const documentScrollTop = window.scrollY || document.documentElement.scrollTop || 0;
       const viewportTop = Math.max(0, pane.getBoundingClientRect().top + documentScrollTop);
       const bodyPaddingBottom = Number.parseFloat(window.getComputedStyle(document.body).paddingBottom) || 0;
@@ -1339,7 +1344,7 @@
       window.setTimeout(() => {
         if (detail.route === "data" && Number.isInteger(recordIndex) && recordIndex >= 0) {
           const field = detail.dataField || (detail.code === "DUPLICATE_RECORD_ID" ? "id" : detail.code === "DUPLICATE_NUMBER" ? "number" : "");
-          const input = field ? $("labelSheetRecordTableBody")?.querySelector(`input[data-record-index="${recordIndex}"][data-record-field="${field}"]`) : null;
+          const input = field ? $("labelSheetRecordTableBody")?.querySelector(`[data-record-index="${recordIndex}"][data-record-field="${field}"]`) : null;
           input?.scrollIntoView({ block: "center", inline: "nearest" });
           input?.focus({ preventScroll: true });
           input?.select?.();
@@ -1386,6 +1391,7 @@
   }
 
   async function selectRecord(index) {
+    pane.dispatchEvent(new CustomEvent("promptdeck:label-sheet-data-record-focus", { detail: { index } }));
     pane.querySelector('[data-label-canvas-view="ticket"]')?.click();
     const capacity = Math.max(1, Number.parseInt($("labelSheetCapacity")?.textContent || "1", 10) || 1);
     const targetPage = Math.floor(index / capacity);

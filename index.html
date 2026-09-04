@@ -1995,6 +1995,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
               </div>
 
               <section class="label-sheet-data-panel active" id="labelSheetDataDirectPanel" role="tabpanel" aria-labelledby="labelSheetDataDirectTab">
+                <details id="labelSheetMobileSequenceSettings" open>
+                  <summary>연속번호·수량 설정</summary>
                 <div class="label-sheet-form-grid label-sheet-grid-4">
                   <label class="label-sheet-field" id="labelSheetSequenceModeField" for="labelSheetSequenceMode"><span>연번 방식</span><select id="labelSheetSequenceMode"><option value="sequence">연번 표시</option><option value="none">연번 없이 수량만</option></select></label>
                   <label class="label-sheet-field" for="labelSheetRecordCount" id="labelSheetRecordCountField" hidden><span>생성 수량</span><input id="labelSheetRecordCount" type="number" min="1" max="100000" step="1" value="24" inputmode="numeric" /></label>
@@ -2016,6 +2018,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <span id="labelSheetSequenceSummary" role="status" aria-live="polite">1~24, 24건</span>
                 </div>
                 <p class="label-sheet-help" id="labelSheetLiveDataHelp">번호·접두사·수량을 바꾸면 목록과 오른쪽 미리보기에 자동으로 반영됩니다.</p>
+                </details>
               </section>
 
               <section class="label-sheet-data-panel" id="labelSheetDataPastePanel" data-label-sheet-goal="print prompt" role="tabpanel" aria-labelledby="labelSheetDataPasteTab" hidden>
@@ -2036,7 +2039,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <span id="labelSheetCsvStatus" role="status" aria-live="polite">선택된 파일 없음</span>
                   <button type="button" class="btn ghost" id="labelSheetCsvSampleBtn">샘플 CSV 받기</button>
                 </div>
-                <p class="label-sheet-help">앞·뒷면 문구, <code>front_qr_value</code>, <code>back_qr_value</code>, 배경 파일명을 분리해 연결할 수 있습니다.</p>
+                <p class="label-sheet-help">직접 입력·붙여넣기·CSV는 동일한 17개 항목을 사용합니다. 한글·영문 머리글을 모두 인식하며, 머리글 없는 여러 열은 아래 표 순서로 연결합니다. 추가 열은 사용자 데이터로 보존합니다.</p>
               </section>
 
               <div class="label-sheet-import-review" data-label-sheet-goal="print prompt">
@@ -2077,6 +2080,8 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                       <label class="label-sheet-field" for="labelSheetMapCategory"><span>구분·소속</span><select id="labelSheetMapCategory" data-label-sheet-map="data.category"></select></label>
                       <label class="label-sheet-field" for="labelSheetMapFrontTitle"><span>앞면 제목</span><select id="labelSheetMapFrontTitle" data-label-sheet-map="front.title"></select></label>
                       <label class="label-sheet-field" for="labelSheetMapFrontQr"><span>앞면 QR 값</span><select id="labelSheetMapFrontQr" data-label-sheet-map="front.qrValue"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapExcluded"><span>출력 제외</span><select id="labelSheetMapExcluded" data-label-sheet-map="data.excluded"></select></label>
+                      <label class="label-sheet-field" for="labelSheetMapFrontBackground"><span>앞면 배경</span><select id="labelSheetMapFrontBackground" data-label-sheet-map="front.backgroundFile"></select></label>
                     </div>
                     <details class="label-sheet-mapping-back" id="labelSheetDataMappingExtra">
                       <summary>추가 문구 열 연결</summary>
@@ -2094,6 +2099,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                         <label class="label-sheet-field" for="labelSheetMapBackBody"><span>뒷면 본문</span><select id="labelSheetMapBackBody" data-label-sheet-map="back.body"></select></label>
                         <label class="label-sheet-field" for="labelSheetMapBackFooter"><span>뒷면 하단</span><select id="labelSheetMapBackFooter" data-label-sheet-map="back.footer"></select></label>
                         <label class="label-sheet-field" for="labelSheetMapBackQr"><span>뒷면 QR 값</span><select id="labelSheetMapBackQr" data-label-sheet-map="back.qrValue"></select></label>
+                        <label class="label-sheet-field" for="labelSheetMapBackBackground"><span>뒷면 배경</span><select id="labelSheetMapBackBackground" data-label-sheet-map="back.backgroundFile"></select></label>
                       </div>
                     </details>
                     <p class="label-sheet-inline-status" id="labelSheetDataMappingStatus" role="status" aria-live="polite">가져온 열의 자동 연결 결과를 확인해 주세요.</p>
@@ -2116,6 +2122,15 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   </div>
                   <p class="label-sheet-inline-status label-sheet-spreadsheet-status" id="labelSheetSpreadsheetStatus" role="status" aria-live="polite">셀을 선택하면 현재 행·열과 사용할 수 있는 편집 기능을 안내합니다.</p>
                 </section>
+                <div class="label-sheet-mobile-record-nav" id="labelSheetMobileRecordNav" aria-label="티켓별 데이터 편집">
+                  <label for="labelSheetMobileRecordSelect">편집할 티켓</label>
+                  <div class="label-sheet-mobile-record-picker">
+                    <button type="button" class="btn secondary" id="labelSheetMobileRecordPrev" aria-label="이전 티켓 데이터">‹</button>
+                    <select id="labelSheetMobileRecordSelect" aria-controls="labelSheetRecordTableBody"></select>
+                    <button type="button" class="btn secondary" id="labelSheetMobileRecordNext" aria-label="다음 티켓 데이터">›</button>
+                  </div>
+                  <button type="button" class="btn secondary" id="labelSheetMobileRecordMore" aria-expanded="false" aria-controls="labelSheetRecordTable">뒷면·QR·배경·제외 펼치기</button>
+                </div>
                 <div class="label-sheet-table-scroll" tabindex="0" aria-label="가져온 라벨 데이터 표">
                   <table id="labelSheetRecordTable">
                     <thead><tr><th scope="col">선택</th><th scope="col">ID</th><th scope="col">번호</th><th scope="col">이름</th><th scope="col">구분·소속</th><th scope="col">앞면 제목</th><th scope="col">앞면 부제</th><th scope="col">앞면 본문</th><th scope="col">앞면 하단</th><th scope="col">뒷면 제목</th><th scope="col">뒷면 부제</th><th scope="col">뒷면 본문</th><th scope="col">뒷면 하단</th><th scope="col">앞면 QR</th><th scope="col">뒷면 QR</th><th scope="col">앞면 배경</th><th scope="col">뒷면 배경</th><th scope="col">제외</th></tr></thead>
@@ -2309,13 +2324,13 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                       <label class="label-sheet-field" for="labelSheetQrLayoutMode"><span>QR 레이아웃</span><select id="labelSheetQrLayoutMode"><option value="adaptive">자동 감싸기 · 권장</option><option value="reserved">고정 여백 확보</option><option value="overlay">자유 겹침</option></select><small>자동 감싸기는 QR과 실제로 겹치는 문구만 줄이고, 자유 겹침은 경고만 표시합니다.</small></label>
                       <label class="label-sheet-field label-sheet-field-wide" for="labelSheetQrTemplate" data-label-sheet-goal="print">
                         <span>QR 템플릿 <em class="label-sheet-field-badge">입력 시 자동 선택</em></span>
-                        <input id="labelSheetQrTemplate" type="text" maxlength="500" aria-describedby="labelSheetQrTemplateHelp" placeholder="예: https://example.kr/pass/{id}?number={number}" />
-                        <small id="labelSheetQrTemplateHelp"><code>{id}</code>, <code>{number}</code>, <code>{name}</code>, <code>{category}</code> 또는 CSV 열을 조합할 수 있습니다.</small>
+                        <input id="labelSheetQrTemplate" type="text" maxlength="500" aria-describedby="labelSheetQrTemplateHelp" placeholder="예: https://example.kr/pass/{{ID}}?number={{번호}}" />
+                        <small id="labelSheetQrTemplateHelp">출력 문구와 동일하게 <code>{{ID}}</code>, <code>{{번호}}</code>, <code>{{이름}}</code>, <code>{{구분}}</code>, <code>{{data.열이름}}</code>을 사용합니다. 기존 <code>{id}</code> 방식도 지원합니다.</small>
                       </label>
                       <label class="label-sheet-field" for="labelSheetQrAssignScope" data-label-sheet-goal="print"><span>배정 범위</span><select id="labelSheetQrAssignScope"><option value="selected">표에서 선택한 라벨</option><option value="all">전체 라벨</option><option value="missing">QR 값이 빈 라벨만</option></select></label>
                       <div class="label-sheet-inline-actions label-sheet-field-action" data-label-sheet-goal="print"><button type="button" class="btn secondary" id="labelSheetUseQrStyleBtn">QR 탭 스타일 가져오기</button></div>
                       <div class="label-sheet-qr-token-bar" id="labelSheetQrTokenBar" data-label-sheet-goal="print" aria-label="QR 템플릿 빠른 토큰">
-                        <span>빠른 토큰</span><button type="button" data-label-sheet-qr-token="{id}">{id}</button><button type="button" data-label-sheet-qr-token="{number}">{number}</button><button type="button" data-label-sheet-qr-token="{name}">{name}</button><button type="button" data-label-sheet-qr-token="{category}">{category}</button><button type="button" data-label-sheet-qr-token="{name|url}">{name|url}</button>
+                        <span>데이터 호출</span><button type="button" data-label-sheet-qr-token="{{ID}}">{{ID}}</button><button type="button" data-label-sheet-qr-token="{{번호}}">{{번호}}</button><button type="button" data-label-sheet-qr-token="{{이름}}">{{이름}}</button><button type="button" data-label-sheet-qr-token="{{구분}}">{{구분}}</button><button type="button" data-label-sheet-qr-token="{{이름|url}}">{{이름|url}}</button>
                       </div>
                       <div class="label-sheet-inline-actions label-sheet-qr-assignment-actions" data-label-sheet-goal="print">
                         <button type="button" class="btn primary" id="labelSheetQrAssignBtn">각 라벨에 QR 값 배정</button>

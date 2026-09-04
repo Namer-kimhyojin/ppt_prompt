@@ -1581,7 +1581,8 @@
   background: color-mix(in srgb, var(--accent) 9%, var(--surface));
 }
 
-#paneLabelSheet #labelSheetRecordTable input {
+#paneLabelSheet #labelSheetRecordTable input,
+#paneLabelSheet #labelSheetRecordTable textarea {
   width: 100%;
   min-width: 84px;
   min-height: 34px;
@@ -1593,7 +1594,8 @@
   font-size: 12px;
 }
 
-#paneLabelSheet #labelSheetRecordTable input.is-spreadsheet-active {
+#paneLabelSheet #labelSheetRecordTable input.is-spreadsheet-active,
+#paneLabelSheet #labelSheetRecordTable textarea.is-spreadsheet-active {
   border-color: var(--accent);
   outline: 2px solid color-mix(in srgb, var(--accent) 24%, transparent);
   outline-offset: 1px;
@@ -2758,7 +2760,8 @@
     min-height: 44px;
   }
 
-  #paneLabelSheet #labelSheetRecordTable input:not([type="checkbox"]) {
+  #paneLabelSheet #labelSheetRecordTable input:not([type="checkbox"]),
+  #paneLabelSheet #labelSheetRecordTable textarea {
     min-height: 44px;
   }
 
