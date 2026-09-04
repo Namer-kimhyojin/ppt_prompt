@@ -177,6 +177,18 @@ try {
   assert.equal(result.response.status, 200);
   assert.equal(result.body.programName, "PromptDeck Pages Admin Test");
 
+  result = await json("/api/admin-settings", postOptions({ pollinationsPublicKey: "pk_pages_fixture" }));
+  assert.equal(result.response.status, 403);
+  result = await json("/api/admin-settings", postOptions({ pollinationsPublicKey: "pk_pages_fixture" }, cookie));
+  assert.equal(result.response.status, 200);
+  result = await json("/api/admin-settings", postOptions({ pollinationsPublicKey: "sk_must_not_be_stored" }, cookie));
+  assert.equal(result.response.status, 400);
+  result = await json("/api/admin-settings", postOptions({ programSubtitle: "Keep saved key" }, cookie));
+  assert.equal(result.response.status, 200);
+  result = await json("/api/admin-settings");
+  assert.equal(result.body.pollinationsPublicKey, "pk_pages_fixture");
+  assert.equal(result.body.programName, "PromptDeck Pages Admin Test");
+
   result = await json("/api/admin/access", postOptions({
     currentAccessKey: initialAccessKey,
     newAccessKey: changedAccessKey,
@@ -227,7 +239,36 @@ try {
     await page.waitForLoadState("load");
     await page.waitForFunction(() => document.getElementById("adminSessionName")?.textContent.trim());
     assert.equal(await page.locator("#adminSaveBtn").isVisible(), true);
-    assert.equal(await page.locator("#adminApiIntegrationSection").isVisible(), false);
+    assert.equal(await page.locator("#adminApiIntegrationSection").isVisible(), true);
+    assert.equal(await page.locator("#adminUnsplashIntegration").isVisible(), false);
+    await page.waitForFunction(() => document.getElementById("adminPollinationsKey")?.value === "pk_pages_fixture").catch(async error => {
+      console.error('Admin initialization diagnostics', await page.evaluate(() => ({
+        status: document.getElementById('adminPollinationsStatus')?.textContent,
+        configured: !!JSON.parse(localStorage.getItem('promptdeck_admin') || '{}').pollinationsPublicKey,
+        resources: performance.getEntriesByType('resource').map(entry => new URL(entry.name).pathname).filter(name => /admin|index/.test(name)),
+      })), browserPageErrors, browserSecurityErrors);
+      throw error;
+    });
+    await page.locator("#adminPollinationsKey").fill("sk_rejected_fixture");
+    await page.locator("#adminPollinationsSaveBtn").click();
+    await page.locator("#adminPollinationsStatus").getByText("비밀 키(sk_)는 저장할 수 없습니다.", { exact: false }).waitFor();
+    await page.locator("#adminPollinationsKey").fill("pk_saved_from_admin_ui");
+    await page.locator("#adminPollinationsSaveBtn").click();
+    await page.waitForFunction(() => document.getElementById("adminPollinationsStatus")?.textContent.includes("키를 서버에 저장했습니다"));
+    await page.reload();
+    await page.waitForFunction(() => document.getElementById("adminPollinationsKey")?.value === "pk_saved_from_admin_ui");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator("#adminPollinationsKey").scrollIntoViewIfNeeded();
+    const keyBounds = await page.locator("#adminPollinationsKey").boundingBox();
+    assert.ok(keyBounds && keyBounds.x >= 0 && keyBounds.x + keyBounds.width <= 390);
+    await page.goto(`${origin}/app`);
+    await page.waitForFunction(() => window.PROMPTDECK_POLLINATIONS_PUBLIC_KEY === "pk_saved_from_admin_ui");
+    await page.goto(`${origin}/admin.html`);
+    await page.waitForFunction(() => document.getElementById("adminPollinationsKey")?.value === "pk_saved_from_admin_ui");
+    await page.locator("#adminPollinationsClearBtn").click();
+    await page.waitForFunction(() => document.getElementById("adminPollinationsStatus")?.textContent.includes("연동을 해제했습니다"));
+    result = await json("/api/admin-settings");
+    assert.equal(result.body.pollinationsPublicKey, "");
     assert.equal(await page.locator("#adminUserManagement").isVisible(), false);
 
     const logoutResponsePromise = page.waitForResponse((response) => (

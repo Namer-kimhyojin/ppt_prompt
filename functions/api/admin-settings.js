@@ -51,6 +51,7 @@ function sanitizeSettings(body, current) {
   if (Object.hasOwn(body, "tabs")) next.tabs = cleanTabs(body.tabs);
   if (Object.hasOwn(body, "defaultTab")) next.defaultTab = cleanText(body.defaultTab, 80);
   if (Object.hasOwn(body, "adsEnabled")) next.adsEnabled = body.adsEnabled === true;
+  if (Object.hasOwn(body, "pollinationsPublicKey")) next.pollinationsPublicKey = body.pollinationsPublicKey.trim();
   if (Object.hasOwn(body, "adClient")) {
     const value = cleanText(body.adClient, 48);
     next.adClient = /^ca-pub-\d{6,32}$/u.test(value) ? value : "";
@@ -77,6 +78,11 @@ export async function onRequestPost(context) {
   catch (error) {
     return json({ ok: false, error: error.message === "PAYLOAD_TOO_LARGE" ? "Request is too large." : "Invalid JSON body." }, 400);
   }
+  if (!body || typeof body !== "object" || Array.isArray(body)) return json({ ok: false, error: "Invalid JSON body." }, 400);
+  if (Object.hasOwn(body, "pollinationsPublicKey") && (
+    typeof body.pollinationsPublicKey !== "string"
+    || (body.pollinationsPublicKey.trim() !== "" && !/^pk_[A-Za-z0-9_-]{1,253}$/u.test(body.pollinationsPublicKey.trim()))
+  )) return json({ ok: false, error: "Pollinations 공개 키(pk_)만 저장할 수 있습니다." }, 400);
   try {
     const current = await readAdminSettings(context.env);
     await writeAdminSettings(context.env, sanitizeSettings(body, current));

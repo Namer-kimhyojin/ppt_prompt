@@ -3300,6 +3300,11 @@
   }
 
   function getCustomSamplesForMed(medId) {
+    // 정적 배포에서는 사용자가 만든 참조 이미지가 배포 기본 샘플보다 우선한다.
+    if (window.PROMPTDECK_STATIC_MODE) {
+      const local = _getCustomAll()[medId];
+      if (Array.isArray(local) && local.some(Boolean)) return local.slice(0, 3);
+    }
     // 서버 manifest 우선
     const srv = MIXER_SERVER_MANIFEST[medId];
     if (Array.isArray(srv) && srv.some(Boolean)) return srv.slice(0, 3);

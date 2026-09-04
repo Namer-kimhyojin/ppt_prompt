@@ -5,7 +5,7 @@
   var HAS_USERS_SK = 'promptdeck_has_users';
   var SETTINGS_KEYS = [
     'programName', 'programSubtitle', 'tabOrder', 'tabLabels', 'tabGroups', 'tabs', 'defaultTab',
-    'hasUnsplashKey', 'adsEnabled', 'adClient', 'adSlotTop', 'adSlotBottom'
+    'hasUnsplashKey', 'pollinationsPublicKey', 'adsEnabled', 'adClient', 'adSlotTop', 'adSlotBottom'
   ];
 
   function getAllTabs() {
@@ -38,6 +38,7 @@
   var session = window.PromptDeckAuth ? window.PromptDeckAuth.loadSession() : null;
 
   function exposeSettings(settings) {
+    window.PROMPTDECK_POLLINATIONS_PUBLIC_KEY = /^pk_[A-Za-z0-9_-]{1,253}$/.test(settings.pollinationsPublicKey || '') ? settings.pollinationsPublicKey : '';
     window.PROMPTDECK_HAS_UNSPLASH_KEY = !!settings.hasUnsplashKey;
     delete window.PROMPTDECK_UNSPLASH_KEY;
     localStorage.removeItem('mixer_unsplash_key');

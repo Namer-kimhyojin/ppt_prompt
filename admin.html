@@ -68,13 +68,23 @@
   <!-- API 연동 -->
   <section class="admin-section" id="adminApiIntegrationSection">
     <h2 class="admin-section-title">API 연동</h2>
-    <div class="admin-field">
+    <div class="admin-field" id="adminUnsplashIntegration">
       <label class="admin-label" for="adminUnsplashKey">Unsplash Access Key</label>
       <div class="admin-input-row">
         <input type="password" id="adminUnsplashKey" class="admin-input" placeholder="Unsplash API Access Key" autocomplete="off" spellcheck="false" />
         <button type="button" class="admin-pw-btn" id="adminUnsplashKeyToggle">표시</button>
       </div>
       <span class="admin-hint">서버에만 전송·저장되는 쓰기 전용 값입니다. 비워두면 기존 키를 유지하며, 검색 결과 이미지는 서버 로컬 폴더에 저장됩니다.</span>
+    </div>
+    <div class="admin-field">
+      <label class="admin-label" for="adminPollinationsKey">Pollinations 공개 키</label>
+      <input type="password" id="adminPollinationsKey" class="admin-input" placeholder="pk_로 시작하는 브라우저용 공개 키" autocomplete="off" spellcheck="false" maxlength="256" />
+      <span class="admin-hint">저장한 공개 키는 모든 이용자의 비주얼 믹서에 제공됩니다. 생성 비용은 이 키의 계정에 적용됩니다. 비밀 키(sk_)는 입력할 수 없습니다. <a href="https://enter.pollinations.ai" target="_blank" rel="noopener noreferrer">키 발급</a></span>
+      <div class="admin-input-row">
+        <button type="button" class="admin-btn admin-btn-save" id="adminPollinationsSaveBtn">키 저장</button>
+        <button type="button" class="admin-btn" id="adminPollinationsClearBtn">연동 해제</button>
+      </div>
+      <span class="admin-save-status" id="adminPollinationsStatus" aria-live="polite"></span>
     </div>
   </section>
 

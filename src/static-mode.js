@@ -11,9 +11,7 @@
     '#photoTransformAdminGenerateMissingBtn',
     '#photoTransformAdminRefreshBtn',
     '#btnSubjectSampleRefresh',
-    '#btnSubjectSampleGenerate',
     '#btnMediumSampleRefresh',
-    '#btnMediumSampleGenerate',
     '#labelSheetGenerateMissingBtn',
   ];
 

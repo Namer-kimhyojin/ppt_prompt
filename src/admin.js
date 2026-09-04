@@ -850,9 +850,44 @@
   }
 
   // ─── 초기화 ─────────────────────────────────────────────────────────────────
+  async function savePollinationsKey(clear) {
+    var input = $('adminPollinationsKey');
+    var status = $('adminPollinationsStatus');
+    var key = clear ? '' : input.value.trim();
+    if (!clear && !/^pk_[A-Za-z0-9_-]{1,253}$/.test(key)) {
+      status.textContent = 'Pollinations 공개 키(pk_)를 입력하세요. 비밀 키(sk_)는 저장할 수 없습니다.';
+      status.className = 'admin-save-status err';
+      return;
+    }
+    var buttons = [$('adminPollinationsSaveBtn'), $('adminPollinationsClearBtn')];
+    buttons.forEach(function (button) { button.disabled = true; });
+    status.textContent = '저장 중…';
+    status.className = 'admin-save-status';
+    try {
+      var response = await fetch('/api/admin-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pollinationsPublicKey: key }),
+      });
+      var result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || '서버 저장 실패');
+      var cached = loadSettings();
+      cached.pollinationsPublicKey = key;
+      saveSettings(cached);
+      input.value = key;
+      status.textContent = clear ? 'Pollinations 연동을 해제했습니다.' : '키를 서버에 저장했습니다. 메인 앱 새로고침 시 적용됩니다.';
+      status.className = 'admin-save-status ok';
+    } catch (error) {
+      status.textContent = '키를 저장하지 못했습니다. 관리자 로그인과 서버 연결을 확인하고 다시 시도하세요.';
+      status.className = 'admin-save-status err';
+    } finally {
+      buttons.forEach(function (button) { button.disabled = false; });
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', async function () {
     if (window.PROMPTDECK_STATIC_MODE) {
-      var localServerOnlySection = $('adminApiIntegrationSection');
+      var localServerOnlySection = $('adminUnsplashIntegration');
       if (localServerOnlySection) localServerOnlySection.hidden = true;
     }
     // 세션 표시
@@ -877,6 +912,10 @@
 
     // 폼 채우기
     var s = await loadServerSettings();
+    $('adminPollinationsKey').value = s.pollinationsPublicKey || '';
+    $('adminPollinationsStatus').textContent = s.pollinationsPublicKey ? '저장된 공개 키가 있습니다.' : '등록된 공개 키가 없습니다.';
+    $('adminPollinationsSaveBtn').addEventListener('click', function () { savePollinationsKey(false); });
+    $('adminPollinationsClearBtn').addEventListener('click', function () { savePollinationsKey(true); });
     populateProgramInfo(s);
     populateAds(s);
     renderTabManager(s);

@@ -211,6 +211,13 @@ async function verifyAssetHashes(origin, head) {
     "src/slide-style-catalog.js",
     "styles/data-diagram.css",
     "src/static-mode.js",
+    "src/admin.js",
+    "src/admin-settings.js",
+    "src/concept-mixer.js",
+    "src/concept-mixer-presets/mediums.js",
+    "ai-policy.html",
+    "privacy.html",
+    "third-party-notices.html",
     "src/tabular-data.js",
     "src/label-sheet-package.js",
     "src/label-sheet.js",
@@ -633,6 +640,7 @@ async function main() {
   for (const script of ["diagram:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
     runNpm(["run", script]);
   }
+  run(process.execPath, ["scripts/mixer-pollinations-test.mjs"]);
   await verifyStaticContract();
   const postBuildWorktree = runGit(["status", "--porcelain=v1"], { capture: true });
   assert(!postBuildWorktree, `Build changed tracked files:\n${postBuildWorktree}`);
