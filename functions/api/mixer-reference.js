@@ -75,6 +75,7 @@ export async function onRequestPost(context) {
     return imageResponse(bytes, type);
   } catch (error) {
     const message = String(error && error.message || "").toLowerCase();
+    console.error("Workers AI mixer generation failed:", message.slice(0, 400));
     if (/quota|limit|neuron|exceed|billing/u.test(message)) return json({ ok: false, error: "Cloudflare의 오늘 무료 AI 제공량을 사용했습니다. 내일 다시 이용해 주세요." }, 429);
     return json({ ok: false, error: "이미지 생성에 실패했습니다. 잠시 후 다시 시도해 주세요." }, 502);
   }
