@@ -73,48 +73,23 @@
   let lastGeneratedPrompt = null;
   let isSubjectOverlayOpen = false;
   let isMediumOverlayOpen = false;
-  // 브라우저용 공개 키만 페이지 메모리에 보관한다. 새로고침하면 지워진다.
-  let pollinationsPublishableKey = '';
-
-  function renderPollinationsKeyField(kind) {
-    if (!window.PROMPTDECK_STATIC_MODE) return '';
-    const hasAdminKey = !!window.PROMPTDECK_POLLINATIONS_PUBLIC_KEY;
-    return `<div class="panel-search-block">
-      <label class="panel-field-label" for="${kind}PollinationsKey"><strong>Pollinations 공개 키</strong><a href="https://enter.pollinations.ai" target="_blank" rel="noopener noreferrer">키 발급</a></label>
-      <div class="panel-keyword-row"><input type="password" id="${kind}PollinationsKey" data-pollinations-key autocomplete="off" spellcheck="false" placeholder="${hasAdminKey ? '관리자 키 사용 중 · 개인 키 입력 가능' : 'pk_로 시작하는 브라우저용 키'}" /></div>
-      <small>${hasAdminKey ? '관리자 키가 연결되었습니다. 개인 키를 입력하면 우선 사용합니다.' : '관리자 키가 없으면 개인 공개 키를 입력하세요.'} 개인 키는 새로고침하면 지워집니다. 생성 시 사용한 계정의 Pollen이 차감됩니다.</small>
-    </div>`;
-  }
-
-  async function generateStaticPollinationsSample(prompt, itemId) {
-    await window.PromptDeckAdminSettingsReady;
-    const apiKey = pollinationsPublishableKey || window.PROMPTDECK_POLLINATIONS_PUBLIC_KEY || '';
-    if (!/^pk_[A-Za-z0-9_-]{1,253}$/.test(apiKey)) {
-      throw new Error('Pollinations 공개 키(pk_)를 입력해 주세요. 비밀 키(sk_)는 사용할 수 없습니다.');
-    }
-    const url = new URL(`https://gen.pollinations.ai/image/${encodeURIComponent(prompt)}`);
-    url.search = new URLSearchParams({ model: 'flux', width: '768', height: '512', seed: String(Math.floor(Math.random() * 2147483647)) });
+  async function generateStaticCloudflareSample(prompt, itemId) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 120000);
     try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${apiKey}` },
-        credentials: 'omit',
-        referrerPolicy: 'no-referrer',
+      const response = await fetch('/api/mixer-reference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, privacyConfirmed: true }),
         signal: controller.signal,
       });
       if (!response.ok) {
-        const messages = {
-          401: 'Pollinations 키가 올바르지 않습니다. 공개 키를 확인해 주세요.',
-          402: 'Pollinations 잔액 또는 키 사용 한도가 부족합니다.',
-          403: '이 키에 이미지 생성 권한이 없습니다. flux 모델 권한을 확인해 주세요.',
-          429: 'Pollinations 요청이 많습니다. 잠시 후 다시 시도해 주세요.',
-        };
-        throw new Error(messages[response.status] || `Pollinations 생성 요청에 실패했습니다. (HTTP ${response.status})`);
+        const result = await response.json().catch(() => null);
+        throw new Error(result?.error || `무료 이미지 생성 요청에 실패했습니다. (HTTP ${response.status})`);
       }
       const blob = await response.blob();
       if (!/^image\/(png|jpeg|webp)$/i.test(blob.type) || !blob.size) {
-        throw new Error('Pollinations가 유효한 이미지 파일을 반환하지 않았습니다.');
+        throw new Error('Cloudflare가 유효한 이미지 파일을 반환하지 않았습니다.');
       }
       const bitmap = await createImageBitmap(blob);
       let dataUrl;
@@ -135,8 +110,8 @@
       }
       return dataUrl;
     } catch (error) {
-      if (error.name === 'AbortError') throw new Error('Pollinations 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.');
-      if (error instanceof TypeError) throw new Error('Pollinations에 연결하지 못했습니다. 네트워크 연결을 확인해 주세요.');
+      if (error.name === 'AbortError') throw new Error('이미지 생성 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.');
+      if (error instanceof TypeError) throw new Error('이미지 생성 서버에 연결하지 못했습니다. 네트워크 연결을 확인해 주세요.');
       throw error;
     } finally {
       clearTimeout(timer);
@@ -9539,10 +9514,9 @@
             </div>
           </div>
           <div class="panel-action-section">
-            <div class="panel-group-head"><strong class="panel-group-label">새 이미지 만들기</strong><span>Pollinations로 생성하거나 가져옵니다.</span></div>
-            ${renderPollinationsKeyField('subject')}
+            <div class="panel-group-head"><strong class="panel-group-label">새 이미지 만들기</strong><span>무료 AI로 생성하거나 가져옵니다.</span></div>
             <div class="mixer-reference-tools-row">
-              <button type="button" class="panel-action-btn" id="btnSubjectSampleGenerate" title="Pollinations로 새 이미지 생성 후 저장">${renderMixerUiIcon('sparkles')}<span>Pollinations 생성 · 저장</span></button>
+              <button type="button" class="panel-action-btn" id="btnSubjectSampleGenerate" title="Cloudflare Workers AI로 새 이미지 생성 후 저장">${renderMixerUiIcon('sparkles')}<span>무료 AI 생성 · 저장</span></button>
               <button type="button" class="panel-action-btn" id="btnSubjectSamplePaste" title="클립보드의 이미지 붙여넣기">${renderMixerUiIcon('clipboard')}<span>클립보드에서 가져오기</span></button>
             </div>
           </div>
@@ -9576,10 +9550,9 @@
             </div>
           </div>
           <div class="panel-action-section">
-            <div class="panel-group-head"><strong class="panel-group-label">새 이미지 만들기</strong><span>Pollinations로 생성하거나 가져옵니다.</span></div>
-            ${renderPollinationsKeyField('medium')}
+            <div class="panel-group-head"><strong class="panel-group-label">새 이미지 만들기</strong><span>무료 AI로 생성하거나 가져옵니다.</span></div>
             <div class="mixer-reference-tools-row">
-              <button type="button" class="panel-action-btn" id="btnMediumSampleGenerate" title="Pollinations로 새 이미지 생성 후 저장">${renderMixerUiIcon('sparkles')}<span>Pollinations 생성 · 저장</span></button>
+              <button type="button" class="panel-action-btn" id="btnMediumSampleGenerate" title="Cloudflare Workers AI로 새 이미지 생성 후 저장">${renderMixerUiIcon('sparkles')}<span>무료 AI 생성 · 저장</span></button>
               <button type="button" class="panel-action-btn" id="btnMediumSamplePaste" title="클립보드의 이미지 붙여넣기">${renderMixerUiIcon('clipboard')}<span>클립보드에서 가져오기</span></button>
             </div>
           </div>
@@ -9846,15 +9819,6 @@
     // -------------------------------------------------------------
     // 패널 열기/닫기 이벤트 바인딩
     // -------------------------------------------------------------
-    cardWrap.querySelectorAll('[data-pollinations-key]').forEach(input => {
-      input.value = pollinationsPublishableKey;
-      input.addEventListener('input', () => {
-        pollinationsPublishableKey = input.value.trim();
-        cardWrap.querySelectorAll('[data-pollinations-key]').forEach(other => {
-          if (other !== input) other.value = pollinationsPublishableKey;
-        });
-      });
-    });
     const subjectPanel = cardWrap.querySelector('#panelSubjectSettings');
     const subjectSettingsBtn = cardWrap.querySelector('#btnSubjectSampleSettings');
     const subjectCloseBtn = cardWrap.querySelector('#btnSubjectSettingsClose');
@@ -10035,19 +9999,19 @@
       const button = event.currentTarget;
       button.disabled = true;
       const originalContent = button.innerHTML;
-      button.textContent = 'Pollinations 생성 중…';
-      setSubjectStatus(window.PROMPTDECK_STATIC_MODE ? 'Pollinations에서 이미지를 생성하고 있습니다…' : 'Pollinations가 이미지를 생성하여 서버에 저장하고 있습니다…');
+      button.textContent = '무료 AI 생성 중…';
+      setSubjectStatus(window.PROMPTDECK_STATIC_MODE ? 'Cloudflare Workers AI에서 이미지를 생성하고 있습니다…' : '이미지를 생성하여 서버에 저장하고 있습니다…');
 
       try {
-        if (!window.confirm('입력한 프롬프트가 이미지 생성을 위해 Pollinations에 전송됩니다. 개인정보·기밀정보가 없음을 확인하고 계속할까요?')) {
+        if (!window.confirm(`입력한 프롬프트가 이미지 생성을 위해 ${window.PROMPTDECK_STATIC_MODE ? 'Cloudflare Workers AI' : '외부 AI 제공자'}에 전송됩니다. 개인정보·기밀정보가 없음을 확인하고 계속할까요?`)) {
           setSubjectStatus('이미지 생성을 취소했습니다.');
           return;
         }
         if (window.PROMPTDECK_STATIC_MODE) {
-          const dataUrl = await generateStaticPollinationsSample(prompt, subject.id);
+          const dataUrl = await generateStaticCloudflareSample(prompt, subject.id);
           if (subjectImg) subjectImg.src = dataUrl;
           isSubjectOverlayOpen = false;
-          showMixerResultOverlay('참조 이미지 생성 성공', dataUrl, 'Pollinations AI로 생성한 주제 참조 이미지를 이 브라우저에 저장했습니다.');
+          showMixerResultOverlay('참조 이미지 생성 성공', dataUrl, 'Cloudflare Workers AI로 생성한 주제 참조 이미지를 이 브라우저에 저장했습니다.');
           return;
         }
         const response = await fetch('/api/generate-photo-preview', {
@@ -10078,8 +10042,8 @@
         }
       } catch (err) {
         console.error(err);
-        showMixerResultOverlay('Pollinations 생성 실패', null, escapeMixerHTML(err.message), true);
-        setSubjectStatus(`Pollinations 생성 실패: ${err.message}`, true);
+        showMixerResultOverlay('AI 생성 실패', null, escapeMixerHTML(err.message), true);
+        setSubjectStatus(`AI 생성 실패: ${err.message}`, true);
       } finally {
         button.disabled = false;
         button.innerHTML = originalContent;
@@ -10274,19 +10238,19 @@
       const button = event.currentTarget;
       button.disabled = true;
       const originalContent = button.innerHTML;
-      button.textContent = 'Pollinations 생성 중…';
-      setMediumStatus(window.PROMPTDECK_STATIC_MODE ? 'Pollinations에서 이미지를 생성하고 있습니다…' : 'Pollinations가 이미지를 생성하여 서버에 저장하고 있습니다…');
+      button.textContent = '무료 AI 생성 중…';
+      setMediumStatus(window.PROMPTDECK_STATIC_MODE ? 'Cloudflare Workers AI에서 이미지를 생성하고 있습니다…' : '이미지를 생성하여 서버에 저장하고 있습니다…');
 
       try {
-        if (!window.confirm('입력한 프롬프트가 이미지 생성을 위해 Pollinations에 전송됩니다. 개인정보·기밀정보가 없음을 확인하고 계속할까요?')) {
+        if (!window.confirm(`입력한 프롬프트가 이미지 생성을 위해 ${window.PROMPTDECK_STATIC_MODE ? 'Cloudflare Workers AI' : '외부 AI 제공자'}에 전송됩니다. 개인정보·기밀정보가 없음을 확인하고 계속할까요?`)) {
           setMediumStatus('이미지 생성을 취소했습니다.');
           return;
         }
         if (window.PROMPTDECK_STATIC_MODE) {
-          const dataUrl = await generateStaticPollinationsSample(prompt, medium.id);
+          const dataUrl = await generateStaticCloudflareSample(prompt, medium.id);
           if (mediumImg) mediumImg.src = dataUrl;
           isMediumOverlayOpen = false;
-          showMixerResultOverlay('참조 이미지 생성 성공', dataUrl, 'Pollinations AI로 생성한 화풍 참조 이미지를 이 브라우저에 저장했습니다.');
+          showMixerResultOverlay('참조 이미지 생성 성공', dataUrl, 'Cloudflare Workers AI로 생성한 화풍 참조 이미지를 이 브라우저에 저장했습니다.');
           return;
         }
         const response = await fetch('/api/generate-photo-preview', {
@@ -10317,8 +10281,8 @@
         }
       } catch (err) {
         console.error(err);
-        showMixerResultOverlay('Pollinations 생성 실패', null, escapeMixerHTML(err.message), true);
-        setMediumStatus(`Pollinations 생성 실패: ${err.message}`, true);
+        showMixerResultOverlay('AI 생성 실패', null, escapeMixerHTML(err.message), true);
+        setMediumStatus(`AI 생성 실패: ${err.message}`, true);
       } finally {
         button.disabled = false;
         button.innerHTML = originalContent;

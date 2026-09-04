@@ -23,6 +23,7 @@
     "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "static:test": "node scripts/static-smoke-test.mjs",
     "pages:admin:test": "node scripts/pages-admin-smoke-test.mjs",
+    "mixer:ai:test": "node scripts/workers-ai-mixer-test.mjs",
     "release:static": "node scripts/deploy-static-release.mjs",
     "deploy:check": "node scripts/deployment-preflight.mjs --target=docker",
     "batch:subjects": "node scripts/batch-generate-subjects.mjs",

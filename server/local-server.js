@@ -453,7 +453,7 @@ async function removeUserShortLinks(userId) {
 
 const ADMIN_SETTING_KEYS = new Set([
   "programName", "programSubtitle", "tabOrder", "tabLabels", "tabGroups", "tabs", "defaultTab",
-  "unsplashKey", "pollinationsPublicKey", "adsEnabled", "adClient", "adSlotTop", "adSlotBottom",
+  "unsplashKey", "adsEnabled", "adClient", "adSlotTop", "adSlotBottom",
 ]);
 
 async function handleGetAdminSettings(req, res) {
@@ -462,6 +462,7 @@ async function handleGetAdminSettings(req, res) {
   const data = await loadAdminSettings();
   const safe = { ...data };
   delete safe.unsplashKey;
+  delete safe.pollinationsPublicKey;
   delete safe.adminAccessHash;
   delete safe.adminModeEnabled;
   sendJson(res, 200, { ok: true, ...safe, hasUnsplashKey: !!data.unsplashKey });
@@ -471,7 +472,11 @@ async function handleSaveAdminSettings(req, res) {
   const me = await resolveAdminActor(req);
   if (!me) return sendJson(res, 403, { ok: false, error: "Admin only." });
   const body = await readJsonBody(req);
+  if (Object.hasOwn(body || {}, "pollinationsPublicKey")) {
+    return sendJson(res, 400, { ok: false, error: "Pollinations 키 설정은 더 이상 사용하지 않습니다." });
+  }
   const current = await loadAdminSettings();
+  delete current.pollinationsPublicKey;
   const sanitized = {};
   for (const [key, value] of Object.entries(body || {})) {
     if (ADMIN_SETTING_KEYS.has(key)) sanitized[key] = value;
@@ -482,12 +487,6 @@ async function handleSaveAdminSettings(req, res) {
     else if (config.deploymentMode && !config.unsplashDataTransferConfirmed) {
       return sendJson(res, 400, { ok: false, error: "Unsplash의 국외 전송·API 조건을 확인하고 PROMPTDECK_UNSPLASH_DATA_TRANSFER_CONFIRMED=true를 설정해야 합니다." });
     }
-  }
-  if (Object.hasOwn(sanitized, "pollinationsPublicKey")) {
-    if (typeof sanitized.pollinationsPublicKey !== "string" || (sanitized.pollinationsPublicKey.trim() !== "" && !/^pk_[A-Za-z0-9_-]{1,253}$/.test(sanitized.pollinationsPublicKey.trim()))) {
-      return sendJson(res, 400, { ok: false, error: "Pollinations 공개 키(pk_)만 저장할 수 있습니다." });
-    }
-    sanitized.pollinationsPublicKey = sanitized.pollinationsPublicKey.trim();
   }
   if (sanitized.adsEnabled !== undefined) sanitized.adsEnabled = sanitized.adsEnabled === true;
   if (sanitized.adClient !== undefined && !/^ca-pub-\d{6,32}$/.test(String(sanitized.adClient))) delete sanitized.adClient;

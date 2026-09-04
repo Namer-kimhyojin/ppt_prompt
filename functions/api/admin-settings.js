@@ -43,6 +43,7 @@ function cleanTabs(value) {
 
 function sanitizeSettings(body, current) {
   const next = { ...current };
+  delete next.pollinationsPublicKey;
   if (Object.hasOwn(body, "programName")) next.programName = cleanText(body.programName, 80);
   if (Object.hasOwn(body, "programSubtitle")) next.programSubtitle = cleanText(body.programSubtitle, 160);
   if (Object.hasOwn(body, "tabOrder")) next.tabOrder = cleanStringArray(body.tabOrder);
@@ -51,7 +52,6 @@ function sanitizeSettings(body, current) {
   if (Object.hasOwn(body, "tabs")) next.tabs = cleanTabs(body.tabs);
   if (Object.hasOwn(body, "defaultTab")) next.defaultTab = cleanText(body.defaultTab, 80);
   if (Object.hasOwn(body, "adsEnabled")) next.adsEnabled = body.adsEnabled === true;
-  if (Object.hasOwn(body, "pollinationsPublicKey")) next.pollinationsPublicKey = body.pollinationsPublicKey.trim();
   if (Object.hasOwn(body, "adClient")) {
     const value = cleanText(body.adClient, 48);
     next.adClient = /^ca-pub-\d{6,32}$/u.test(value) ? value : "";
@@ -66,7 +66,9 @@ function sanitizeSettings(body, current) {
 
 export async function onRequestGet(context) {
   const settings = await readAdminSettings(context.env);
-  return json({ ok: true, ...settings, hasUnsplashKey: false });
+  const safeSettings = { ...settings };
+  delete safeSettings.pollinationsPublicKey;
+  return json({ ok: true, ...safeSettings, hasUnsplashKey: false });
 }
 
 export async function onRequestPost(context) {
@@ -79,10 +81,9 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: error.message === "PAYLOAD_TOO_LARGE" ? "Request is too large." : "Invalid JSON body." }, 400);
   }
   if (!body || typeof body !== "object" || Array.isArray(body)) return json({ ok: false, error: "Invalid JSON body." }, 400);
-  if (Object.hasOwn(body, "pollinationsPublicKey") && (
-    typeof body.pollinationsPublicKey !== "string"
-    || (body.pollinationsPublicKey.trim() !== "" && !/^pk_[A-Za-z0-9_-]{1,253}$/u.test(body.pollinationsPublicKey.trim()))
-  )) return json({ ok: false, error: "Pollinations 공개 키(pk_)만 저장할 수 있습니다." }, 400);
+  if (Object.hasOwn(body, "pollinationsPublicKey")) {
+    return json({ ok: false, error: "Pollinations 키 설정은 더 이상 사용하지 않습니다." }, 400);
+  }
   try {
     const current = await readAdminSettings(context.env);
     await writeAdminSettings(context.env, sanitizeSettings(body, current));

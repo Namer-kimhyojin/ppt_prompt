@@ -341,6 +341,22 @@ async function verifyHttpContracts(origin) {
   const access = await response.json();
   assert(access && access.authenticated === false, `${origin}/api/admin/access returned an unexpected session state`);
 
+  response = await fetchChecked(`${origin}/api/mixer-reference`, {
+    method: "POST",
+    headers: { "content-type": "application/json", origin },
+    body: JSON.stringify({ prompt: "release check", privacyConfirmed: false }),
+  });
+  assert(response.status === 400, `${origin}/api/mixer-reference did not require explicit transfer confirmation`);
+  const mixerApiError = await response.json();
+  assert(/전송 확인/u.test(String(mixerApiError?.error || "")), `${origin}/api/mixer-reference returned an unexpected validation error`);
+
+  response = await fetchChecked(`${origin}/api/mixer-reference`, {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: "https://invalid.example" },
+    body: JSON.stringify({ prompt: "release check", privacyConfirmed: true }),
+  });
+  assert(response.status === 403, `${origin}/api/mixer-reference accepted a cross-origin request`);
+
   response = await fetchChecked(`${origin}/outputs/mixer_samples/manifest.json`);
   assert(response.status === 200, `${origin}/outputs/mixer_samples/manifest.json returned ${response.status}`);
   const manifest = await response.json();
@@ -640,6 +656,7 @@ async function main() {
   for (const script of ["diagram:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
     runNpm(["run", script]);
   }
+  run(process.execPath, ["scripts/workers-ai-mixer-test.mjs"]);
   run(process.execPath, ["scripts/mixer-pollinations-test.mjs"]);
   await verifyStaticContract();
   const postBuildWorktree = runGit(["status", "--porcelain=v1"], { capture: true });
