@@ -72,8 +72,10 @@
   }
 
   async function loadCurrentTabs() {
+    var controller = new AbortController();
+    var timeout = window.setTimeout(function () { controller.abort(); }, 5000);
     try {
-      var response = await fetch('index.html', { cache: 'no-store' });
+      var response = await fetch(window.PROMPTDECK_STATIC_MODE ? 'app.html' : 'index.html', { cache: 'no-store', signal: controller.signal });
       if (!response.ok) throw new Error('index.html을 불러오지 못했습니다.');
       var html = await response.text();
       var parsed = new DOMParser().parseFromString(html, 'text/html');
@@ -81,6 +83,8 @@
       if (tabs.length) DEFAULT_TABS = tabs;
     } catch (e) {
       DEFAULT_TABS = FALLBACK_TABS.slice();
+    } finally {
+      window.clearTimeout(timeout);
     }
   }
 
@@ -908,10 +912,10 @@
       });
     }
     // 관리자 목록과 사용자 권한 매트릭스를 실제 앱의 탭 구조와 동기화합니다.
-    await loadCurrentTabs();
+    var loaded = await Promise.all([loadServerSettings(), loadCurrentTabs()]);
 
     // 폼 채우기
-    var s = await loadServerSettings();
+    var s = loaded[0];
     $('adminPollinationsKey').value = s.pollinationsPublicKey || '';
     $('adminPollinationsStatus').textContent = s.pollinationsPublicKey ? '저장된 공개 키가 있습니다.' : '등록된 공개 키가 없습니다.';
     $('adminPollinationsSaveBtn').addEventListener('click', function () { savePollinationsKey(false); });
