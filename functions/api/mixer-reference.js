@@ -68,7 +68,7 @@ export async function onRequestPost(context) {
     : "무료 이미지 생성 기능을 준비하지 못했습니다." }, reservation.limited ? 429 : 503);
 
   try {
-    const result = await context.env.AI.run(MODEL, { prompt, steps: 4, seed: Math.floor(Math.random() * 2147483647) });
+    const result = await context.env.AI.run(MODEL, { prompt, steps: 4 });
     const bytes = decodeBase64(result && result.image);
     const type = detectImageType(bytes);
     if (!type || bytes.length === 0 || bytes.length > 8 * 1024 * 1024) throw new Error("INVALID_IMAGE");

@@ -43,7 +43,7 @@ assert.equal(response.headers.get("cache-control"), "no-store");
 assert.equal(response.headers.get("x-promptdeck-ai-provider"), "cloudflare-workers-ai");
 assert.equal(env.calls.length, 1);
 assert.equal(env.calls[0].model, "@cf/black-forest-labs/flux-1-schnell");
-assert.deepEqual(Object.keys(env.calls[0].input).sort(), ["prompt", "seed", "steps"]);
+assert.deepEqual(Object.keys(env.calls[0].input).sort(), ["prompt", "steps"]);
 assert.equal(env.calls[0].input.steps, 4);
 
 response = await onRequestPost({ request: request({ prompt: "x", privacyConfirmed: true }, { origin: "https://attacker.test" }), env });
