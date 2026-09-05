@@ -197,7 +197,7 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
 
 .landing-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .landing-gallery figure { overflow: hidden; margin: 0; border: 1px solid var(--landing-line); border-radius: 18px; background: #fff; }
-.landing-gallery img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.landing-gallery img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
 .landing-gallery figcaption { padding: 16px 18px 18px; color: var(--landing-soft); font-size: 13px; }
 .landing-gallery strong { display: block; margin-bottom: 3px; color: var(--landing-navy); font-size: 15px; }
 .landing-evidence-note { margin: 18px 0 0; color: var(--landing-soft); font-size: 13px; }
@@ -320,4 +320,37 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
 @media (prefers-reduced-motion: no-preference) {
   .landing-button, .landing-guide-card, .landing-feature { transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease; }
   .landing-guide-card:hover, .landing-feature:hover { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(23, 44, 83, 0.09); }
+}
+
+/* 홈은 작업 선택을 먼저 보여주고 상세 설명은 기능 페이지에서 제공한다. */
+.landing-home .landing-hero { min-height: 540px; padding-block: 56px; gap: 40px; }
+.landing-home .landing-hero h1 { font-size: clamp(36px, 4vw, 56px); line-height: 1.2; }
+.landing-home .landing-section { padding-block: 56px; }
+.landing-home .landing-process { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.landing-home .landing-start-grid small { margin-top: 0; font-size: 12px; }
+.landing-start-grid b { margin-top: auto; padding-top: 12px; color: var(--landing-blue-dark); font-size: 14px; }
+#features-overview, #examples, #main-content { scroll-margin-top: 90px; }
+@media (max-width: 900px) {
+  .landing-home .landing-hero { gap: 24px; }
+  .landing-home .workbench-card { padding: 16px; }
+}
+@media (max-width: 640px) {
+  .landing-home .landing-hero { padding-block: 32px; }
+  .landing-home .landing-hero h1 { font-size: clamp(32px, 9vw, 42px); }
+  .landing-home .landing-lead { margin-top: 18px; }
+  .landing-home .landing-actions { margin-top: 22px; }
+  .landing-home .workbench-grid { grid-template-columns: 1fr; }
+  .landing-home .workbench-card:not(.output) { display: flex; align-items: baseline; gap: 12px; }
+  .landing-home .workbench-card:not(.output) h2 { margin: 0; font-size: 14px; }
+  .landing-home .workbench-card:not(.output) p { display: none; }
+  .landing-home .workbench-list { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 10px; gap: 6px; }
+  .landing-home .workbench-list li { padding: 7px; }
+  .landing-home .landing-section { padding-block: 36px; }
+  .landing-home .landing-section-heading { margin-bottom: 24px; }
+  .landing-home .landing-section-heading h2 { font-size: 30px; }
+  .landing-home .landing-process { grid-template-columns: 1fr; }
+  .landing-home .landing-guide-card { min-height: 220px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

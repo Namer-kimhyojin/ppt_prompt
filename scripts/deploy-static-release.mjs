@@ -169,7 +169,7 @@ async function verifyStaticContract() {
   assert(existsSync(appPath), "dist-static/app.html is missing after build");
   const homeHtml = await fs.readFile(indexPath, "utf8");
   const html = await fs.readFile(appPath, "utf8");
-  assert(homeHtml.includes("AI가 그리기 전에"), "Static build omitted the content landing page");
+  assert(homeHtml.includes('data-start-tool="commonPrompt"'), "Static build omitted the content landing page");
   assert(!/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand/u.test(homeHtml), "Landing page contains advertising code");
   assert(/src\/static-mode\.js(?:\?[^"']*)?/u.test(html), "Static app build omitted src/static-mode.js");
   assert(/<meta name="robots" content="noindex, follow"/u.test(html), "Static app omitted noindex metadata");
@@ -270,7 +270,7 @@ async function verifyHttpContracts(origin) {
   assert(response.status === 200, `${origin}/ returned ${response.status}`);
   const homeHtml = await response.text();
   assert(homeHtml.includes('rel="canonical" href="https://promptdeck.kr/"'), `${origin}/ omitted the home canonical`);
-  assert(homeHtml.includes("AI가 그리기 전에"), `${origin}/ omitted the content landing page`);
+  assert(homeHtml.includes('data-start-tool="commonPrompt"'), `${origin}/ omitted the content landing page`);
   assert(!/adsbygoogle|pagead2\.googlesyndication\.com|mainAdBand/u.test(homeHtml), `${origin}/ contains advertising code`);
 
   response = await fetchChecked(`${origin}/app`);

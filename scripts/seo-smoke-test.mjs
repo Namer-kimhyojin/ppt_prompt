@@ -26,7 +26,7 @@ assert.match(indexHtml, /<meta name="twitter:card" content="summary_large_image"
 assert.match(indexHtml, /<meta name="google-site-verification" content="IvvWzu4r08gewXxdCKnimD2Bv291qwFJhojCJUS_vrs" \/>/u);
 assert.match(indexHtml, /<link rel="alternate" type="application\/atom\+xml"[^>]+href="https:\/\/promptdeck\.kr\/feed\.xml" \/>/u);
 assert.match(indexHtml, /href="\/app">작업 도구 열기<\/a>/u);
-assert.match(indexHtml, /AI가 그리기 전에/u);
+assert.match(indexHtml, /<h1\b[^>]*>[\s\S]*?프롬프트[\s\S]*?<\/h1>/u);
 assert.doesNotMatch(indexHtml, /pagead2\.googlesyndication\.com|adsbygoogle|mainAdBand|src\/adsense\.js/u);
 
 assert.match(appHtml, /<meta name="robots" content="noindex, follow" \/>/u);

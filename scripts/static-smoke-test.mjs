@@ -511,7 +511,14 @@ async function verifyLandingViewport(label, viewport) {
   const page = await browser.newPage({ viewport });
   const errors = [];
   const adRequests = [];
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("console", (message) => {
+    if (message.type() !== "error") return;
+    // The file-only test server does not implement these Pages Functions.
+    // Keep all other resource and script errors visible, including on the home page.
+    const pathname = new URL(message.location().url || origin, origin).pathname;
+    if (!remoteOrigin && localPagesFunctionPaths.has(pathname)) return;
+    errors.push(message.text());
+  });
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("request", (request) => {
     if (/googlesyndication|doubleclick|googleadservices/i.test(request.url())) adRequests.push(request.url());
@@ -527,9 +534,45 @@ async function verifyLandingViewport(label, viewport) {
   if (metrics.h1Count !== 1 || metrics.ctaCount < 2 || metrics.overflow || metrics.adNodes) {
     failures.push(`${label}: 홈페이지 반응형 계약 실패 ${JSON.stringify(metrics)}`);
   }
+  const starts = await page.locator('[data-start-tool]').evaluateAll((links) => links.map((link) => ({
+    key: link.dataset.startTool, href: link.getAttribute('href'),
+  })));
+  if (starts.length !== 6 || new Set(starts.map((link) => link.key)).size !== 6
+    || starts.some((link) => link.href !== `/app?tab=${link.key}`)) {
+    failures.push(`${label}: 작업 바로가기 대상이 잘못되었습니다.`);
+  }
+  for (const image of await page.locator('.landing-gallery img').all()) {
+    await image.scrollIntoViewIfNeeded();
+    await image.evaluate((img) => img.decode());
+    const ratioError = await image.evaluate((img) => {
+      const rect = img.getBoundingClientRect();
+      return Math.abs(rect.width / rect.height - img.naturalWidth / img.naturalHeight);
+    });
+    if (ratioError > 0.02) failures.push(`${label}: 스타일 이미지 원본 비율이 유지되지 않습니다.`);
+  }
+  if (viewport.width === 390) {
+    for (const link of starts) {
+      await page.locator(`[data-start-tool="${link.key}"]`).click();
+      await page.waitForFunction((key) => window.PromptDeckTabs?.getActiveTabKey() === key, link.key);
+      await page.goto(origin, { waitUntil: 'networkidle' });
+    }
+  }
   if (errors.length) failures.push(`${label}: 홈페이지 오류: ${errors.join(" | ")}`);
   if (adRequests.length) failures.push(`${label}: 홈페이지 광고 네트워크 요청이 발생했습니다.`);
   await page.close();
+  if (viewport.width === 390) {
+    const fallback = await browser.newPage({ viewport, javaScriptEnabled: false });
+    await fallback.goto(origin, { waitUntil: 'networkidle' });
+    for (const href of ['/features', '/guides/', '/app']) {
+      if (!await fallback.locator(`.public-nav-links a[href="${href}"]`).isVisible()) {
+        failures.push(`${label}: JS 비활성 상태에서 ${href} 탐색 링크가 보이지 않습니다.`);
+      }
+    }
+    if (await fallback.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) {
+      failures.push(`${label}: JS 비활성 상태에서 가로 넘침이 발생합니다.`);
+    }
+    await fallback.close();
+  }
 }
 
 async function runPhase(label, task) {

@@ -83,22 +83,22 @@
         type: "button",
         "class": "public-nav-dd-toggle",
         "aria-expanded": "false",
-        "aria-haspopup": "true"
+        "aria-controls": "publicFeatureLinks"
       });
       dropdownButton.textContent = link.label;
       if (isCurrent(link)) dropdownButton.setAttribute("aria-current", "page");
 
-      dropdownPanel = el("div", { "class": "public-nav-panel", role: "menu", hidden: "" });
+      dropdownPanel = el("div", { "class": "public-nav-panel", id: "publicFeatureLinks", hidden: "" });
       FEATURE_GROUPS.forEach(function (group) {
         var col = el("div", { "class": "public-nav-panel-col" });
-        var head = el("a", { "class": "public-nav-panel-head", href: group.href, role: "menuitem" });
+        var head = el("a", { "class": "public-nav-panel-head", href: group.href });
         head.appendChild(el("strong", { text: group.label }));
         head.appendChild(el("span", { text: group.desc }));
         col.appendChild(head);
         var list = el("ul");
         group.items.forEach(function (item) {
           var li = el("li");
-          li.appendChild(el("a", { href: item[1], role: "menuitem", text: item[0] }));
+          li.appendChild(el("a", { href: item[1], text: item[0] }));
           list.appendChild(li);
         });
         col.appendChild(list);
@@ -132,6 +132,7 @@
   linksWrap.dataset.enhanced = "true";
   linksWrap.appendChild(frag);
   nav.insertBefore(toggle, linksWrap);
+  nav.insertBefore(cta.cloneNode(true), toggle);
 
   var DESKTOP = "(min-width: 821px)";
 
@@ -188,7 +189,9 @@
 
   document.addEventListener("keydown", function (event) {
     if (event.key !== "Escape") return;
+    var focusInDropdown = dropdownPanel && dropdownPanel.contains(document.activeElement);
     closeDropdown();
+    if (isDesktop() && focusInDropdown) dropdownButton.focus();
     if (!isDesktop()) {
       closeMobile();
       toggle.focus();
@@ -196,11 +199,7 @@
   });
 
   window.matchMedia(DESKTOP).addEventListener("change", function (event) {
-    if (event.matches) {
-      linksWrap.removeAttribute("data-open");
-      toggle.setAttribute("aria-expanded", "false");
-    }
-    closeDropdown();
+    closeMobile();
   });
 
   // 기능 페이지 진입 시 해시가 가리키는 도구 카드를 펼친다.
