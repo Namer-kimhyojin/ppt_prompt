@@ -221,7 +221,7 @@ const replacements = new Map([
     : ""],
 ]);
 
-for (const filename of ["home.html", "about.html", "privacy.html", "terms.html", "ai-policy.html", "copyright-policy.html", "third-party-notices.html"]) {
+for (const filename of ["home.html", "features.html", "about.html", "privacy.html", "terms.html", "ai-policy.html", "copyright-policy.html", "third-party-notices.html"]) {
   let source = await fs.readFile(path.join(repoRoot, "static-pages", filename), "utf8");
   for (const [token, value] of replacements) source = source.replaceAll(token, value);
   const outputName = filename === "home.html" ? "index.html" : filename;

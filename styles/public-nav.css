@@ -59,12 +59,181 @@
 
 .public-nav-cta:hover { background: #1548d7; }
 
+/* 기능 드롭다운 */
+.public-nav-dd { position: relative; display: inline-flex; }
+
+.public-nav-dd-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #0b1730;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.public-nav-dd-toggle::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 140ms ease;
+}
+
+.public-nav-dd-toggle:hover,
+.public-nav-dd-toggle[aria-current="page"],
+.public-nav-dd-toggle[aria-expanded="true"] { color: #1f5eff; }
+
+.public-nav-dd-toggle[aria-expanded="true"]::after { transform: translateY(1px) rotate(-135deg); }
+
+.public-nav-panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(190px, 1fr));
+  gap: 22px;
+  width: max-content;
+  max-width: 92vw;
+  padding: 22px;
+  border: 1px solid rgba(219, 228, 241, 0.9);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 26px 60px rgba(15, 30, 60, 0.16);
+}
+
+.public-nav-panel[hidden] { display: none; }
+
+.public-nav-dd:hover .public-nav-panel,
+.public-nav-dd:focus-within .public-nav-panel { display: grid; }
+
+.public-nav-panel-col > ul {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+
+.public-nav-panel-head {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.public-nav-panel-head strong { display: block; color: #0b1730; font-size: 14px; font-weight: 850; }
+.public-nav-panel-head span { display: block; margin-top: 2px; color: #5a6880; font-size: 12px; font-weight: 600; }
+.public-nav-panel-head:hover { background: #f2f6ff; }
+
+.public-nav-panel-col li a {
+  display: block;
+  padding: 7px 8px;
+  border-radius: 8px;
+  color: #29364f;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.public-nav-panel-col li a:hover { background: #f2f6ff; color: #1f5eff; }
+
+/* 모바일 토글 버튼 */
+.public-nav-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  border: 1px solid rgba(219, 228, 241, 0.9);
+  border-radius: 11px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.public-nav-toggle span {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: #0b1730;
+}
+
+.public-nav-toggle span + span { margin-top: 4px; }
+.public-nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.public-nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.public-nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.public-nav-toggle span { transition: transform 140ms ease, opacity 140ms ease; }
+
 @media (max-width: 820px) {
   .public-nav {
+    position: relative;
     width: min(100% - 28px, 680px);
     min-height: 62px;
   }
 
-  .public-nav-links > a:not(.public-nav-cta) { display: none; }
-  .public-nav-cta { min-height: 42px; padding-inline: 15px; }
+  .public-nav-toggle { display: block; }
+
+  .public-nav-links {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    left: 0;
+    z-index: 30;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 12px;
+    border: 1px solid rgba(219, 228, 241, 0.95);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 24px 54px rgba(15, 30, 60, 0.18);
+  }
+
+  .public-nav-links:not([data-open]) { display: none; }
+
+  .public-nav-links > a,
+  .public-nav-dd-toggle {
+    padding: 12px 12px;
+    border-radius: 9px;
+    text-align: left;
+  }
+
+  .public-nav-links > a:hover,
+  .public-nav-dd-toggle:hover { background: #f2f6ff; }
+
+  .public-nav-dd { display: block; }
+  .public-nav-dd-toggle { width: 100%; justify-content: space-between; }
+
+  .public-nav-panel,
+  .public-nav-dd:hover .public-nav-panel,
+  .public-nav-dd:focus-within .public-nav-panel {
+    position: static;
+    display: none;
+    transform: none;
+    width: auto;
+    max-width: none;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 4px 0 6px;
+    padding: 10px 8px;
+    border: 0;
+    border-left: 2px solid #e2e9f6;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .public-nav-dd-toggle[aria-expanded="true"] + .public-nav-panel { display: grid; }
+
+  .public-nav-cta {
+    min-height: 44px;
+    margin-top: 6px;
+    padding-inline: 15px;
+  }
 }

@@ -551,10 +551,11 @@ async function verifyLandingMenuLinks(viewport) {
       } },
     }));
   }
-  await page.goto(origin, { waitUntil: "networkidle" });
+  const menuUrl = `${origin}/features`;
+  await page.goto(menuUrl, { waitUntil: "networkidle" });
   const tools = await page.locator(".landing-tool").evaluateAll((items) => items.map((item) => ({
     key: item.dataset.tool,
-    label: item.querySelector("h4")?.textContent.trim(),
+    label: item.querySelector("h3, h4")?.textContent.trim(),
     group: item.closest(".landing-tool-group").id.replace("tools-", ""),
     steps: item.querySelectorAll("ol > li").length,
     output: item.querySelector(".landing-tool-output")?.textContent.trim(),
@@ -594,7 +595,7 @@ async function verifyLandingMenuLinks(viewport) {
     if (state.label !== tool.label || state.group !== tool.group || state.visiblePanes !== 1) {
       throw new Error(`Homepage menu ${tool.key} opened the wrong view: ${JSON.stringify(state)}`);
     }
-    await page.goto(origin, { waitUntil: "networkidle" });
+    await page.goto(menuUrl, { waitUntil: "networkidle" });
   }
   // Explicit menu links take precedence over a previously saved tab and survive reloads.
   await page.evaluate(() => localStorage.setItem("promptdeck.activeTab.v1", "labelSheet"));
@@ -677,6 +678,7 @@ try {
   }
 
   for (const pageName of [
+    "features.html",
     "about.html",
     "privacy.html",
     "terms.html",

@@ -43,7 +43,7 @@ await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const address = server.address();
 const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
-const expectedNavLabels = ["실무 가이드", "소개", "작업 도구 열기"];
+const expectedNavLabels = ["실무 가이드", "스킬 다운로드", "소개", "작업 도구 열기"];
 
 async function readPublicNav(page) {
   return page.evaluate(() => {
@@ -54,6 +54,7 @@ async function readPublicNav(page) {
       ctaPath: new URL(document.querySelector(".public-nav-cta")?.href || "", location.href).pathname,
       visibleLinkCount: links.filter((link) => link.getClientRects().length > 0).length,
       headerHeight: document.querySelector(".public-header")?.getBoundingClientRect().height || 0,
+      featureDropdown: (document.querySelector(".public-nav-dd-toggle")?.textContent || "").trim(),
     };
   });
 }
@@ -63,6 +64,7 @@ function matchesPublicNavContract(publicNav, expectedVisibleLinkCount) {
     && publicNav.labels.every((label, index) => label === expectedNavLabels[index])
     && publicNav.brandPath === "/"
     && publicNav.ctaPath === "/app"
+    && publicNav.featureDropdown === "기능"
     && publicNav.visibleLinkCount === expectedVisibleLinkCount;
 }
 
@@ -83,7 +85,7 @@ try {
       const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
       if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
       const publicNav = await readPublicNav(page);
-      const expectedVisibleLinkCount = viewport.width <= 820 ? 1 : 3;
+      const expectedVisibleLinkCount = viewport.width <= 820 ? 0 : 4;
       if (!matchesPublicNavContract(publicNav, expectedVisibleLinkCount)) {
         throw new Error(`${route} failed unified public navigation contract: ${JSON.stringify({ publicNav, viewport, expectedVisibleLinkCount })}`);
       }
@@ -127,20 +129,20 @@ try {
         if (await page.locator("[data-share-panel]").isVisible()) throw new Error("guide share panel did not close with Escape");
       }
     }
-    for (const route of ["/", "/about"]) {
+    for (const route of ["/", "/features", "/about"]) {
       const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
       if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
-      if (route === '/') {
-        if (await page.locator('#skill-install .landing-install-card').count() !== 2) throw new Error('Homepage must explain both skill registration methods');
+      if (route === '/features') {
+        if (await page.locator('#skill-install .landing-install-card').count() !== 2) throw new Error('Features page must explain both skill registration methods');
         for (const target of ['install', 'claude-install', 'install-help']) {
           await page.locator(`#skill-install a[href$="#${target}"]`).click();
           await page.locator(`#${target}`).waitFor({ state: 'visible' });
-          await page.goto(`${origin}/`, { waitUntil: 'networkidle' });
+          await page.goto(`${origin}/features`, { waitUntil: 'networkidle' });
         }
-        if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Homepage skill registration section overflowed');
+        if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Features skill registration section overflowed');
       }
       const publicNav = await readPublicNav(page);
-      const expectedVisibleLinkCount = viewport.width <= 820 ? 1 : 3;
+      const expectedVisibleLinkCount = viewport.width <= 820 ? 0 : 4;
       if (!matchesPublicNavContract(publicNav, expectedVisibleLinkCount)) {
         throw new Error(`${route} failed unified public navigation contract: ${JSON.stringify({ publicNav, viewport, expectedVisibleLinkCount })}`);
       }
@@ -148,7 +150,7 @@ try {
     if (errors.length) throw new Error(`browser errors at ${viewport.width}px: ${errors.join(" | ")}`);
     await page.close();
   }
-  console.log("Guide smoke test passed: 7 public pages share one responsive navigation contract with no overflow or browser errors");
+  console.log("Guide smoke test passed: 8 public pages share one responsive navigation contract with no overflow or browser errors");
 } finally {
   await browser.close();
   server.closeIdleConnections?.();

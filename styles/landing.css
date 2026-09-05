@@ -230,6 +230,27 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
 .landing-skill-note { margin: 18px 0 0; color: #aebbd3; font-size: 13px; }
 .landing-skill-note a { color: #fff; font-weight: 800; }
 
+.landing-features-hero { padding: 72px 0 30px; }
+.landing-features-hero .landing-lead { margin-top: 18px; }
+.landing-features-hero .landing-actions { margin-top: 24px; }
+.landing-tool { scroll-margin-top: 88px; }
+
+.landing-skill-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 30px;
+  padding: 34px 36px;
+  border: 1px solid var(--landing-line);
+  border-radius: 22px;
+  background: var(--landing-surface);
+  box-shadow: 0 14px 38px rgba(23, 44, 83, 0.05);
+}
+.landing-skill-band h2 { margin: 6px 0 10px; color: var(--landing-navy); font-size: clamp(23px, 3.2vw, 33px); line-height: 1.22; letter-spacing: -0.03em; }
+.landing-skill-band p { margin: 0; color: var(--landing-soft); font-size: 15px; }
+.landing-skill-band code { padding: 1px 6px; border-radius: 6px; background: #eef2fb; color: var(--landing-blue-dark); font-size: 0.92em; }
+.landing-skill-band-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+
 .landing-guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .landing-guide-card { display: flex; min-height: 270px; padding: 28px; flex-direction: column; border: 1px solid var(--landing-line); border-radius: 20px; background: #fff; text-decoration: none; }
 .landing-guide-card small { color: var(--landing-orange); font-size: 11px; font-weight: 900; letter-spacing: 0.1em; }
@@ -282,6 +303,8 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
   .landing-hero h1 { font-size: clamp(39px, 13vw, 56px); }
   .landing-lead { font-size: 16px; }
   .workbench-grid, .landing-feature-grid, .landing-guide-grid, .landing-process, .landing-boundary, .landing-skill-download-grid { grid-template-columns: 1fr; }
+  .landing-skill-band { grid-template-columns: 1fr; gap: 20px; padding: 26px 22px; }
+  .landing-skill-band-actions { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .prompt-workbench { padding: 12px; border-radius: 21px; }
   .prompt-workbench::before { right: 0; }
   .landing-proof { grid-template-columns: 1fr; margin-bottom: 48px; }
