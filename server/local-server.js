@@ -1667,6 +1667,18 @@ async function handleRequest(req, res) {
     }
     if (url.pathname.startsWith("/guides/")) {
       const guide = url.pathname.slice("/guides/".length).replace(/\/$/, "");
+      const toolGuides = new Set([
+        "common-prompt", "slide-splitter", "form-image", "map-image", "promotion-image",
+        "qr-code", "data-diagram", "label-ticket", "concept-suggest", "visual-mixer", "photo-transform",
+      ]);
+      if (guide === "tools") {
+        res.writeHead(302, { Location: "/static-pages/guides/tools/index.html", "Cache-Control": "no-store" });
+        return res.end();
+      }
+      if (guide.startsWith("tools/") && toolGuides.has(guide.slice("tools/".length))) {
+        res.writeHead(302, { Location: `/static-pages/guides/tools/${guide.slice("tools/".length)}.html`, "Cache-Control": "no-store" });
+        return res.end();
+      }
       if (guide === "ai-presentation-prompt") {
         res.writeHead(302, { Location: "/static-pages/guides/ai-presentation-prompt.html", "Cache-Control": "no-store" });
         return res.end();

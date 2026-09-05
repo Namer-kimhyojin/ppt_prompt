@@ -17,6 +17,10 @@ const guidePaths = [
   "guides/data-diagram-prompt.html",
   "guides/promotion-image-prompt.html",
 ];
+const toolGuideSlugs = [
+  "common-prompt", "slide-splitter", "form-image", "map-image", "promotion-image", "qr-code",
+  "data-diagram", "label-ticket", "concept-suggest", "visual-mixer", "photo-transform",
+];
 
 assert.match(indexHtml, /<title>PromptDeck \| 실무 시각자료 프롬프트 설계<\/title>/u);
 assert.match(indexHtml, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/" \/>/u);
@@ -59,6 +63,24 @@ for (const guidePath of guidePaths) {
   assert.match(html, /<meta property="og:image" content="https:\/\/promptdeck\.kr\/assets\/brand\/promptdeck-social-card\.png" \/>/u);
   assert.match(html, /src="\.\.\/src\/guide-share\.js"/u);
 }
+
+for (const guidePath of ["guides/tools/index.html", ...toolGuideSlugs.map((slug) => `guides/tools/${slug}.html`)]) {
+  const html = await fs.readFile(path.join(root, ...guidePath.split("/")), "utf8");
+  const titles = [...html.matchAll(/<title>([^<]+)<\/title>/gu)];
+  const descriptions = [...html.matchAll(/<meta name="description" content="([^"]+)" \/>/gu)];
+  assert.equal(titles.length, 1, `${guidePath} must contain one title`);
+  assert.ok(titles[0][1].length <= 60, `${guidePath} title exceeds 60 characters`);
+  assert.equal(descriptions.length, 1, `${guidePath} must contain one meta description`);
+  assert.ok(descriptions[0][1].length <= 160, `${guidePath} description exceeds 160 characters`);
+  assert.equal([...html.matchAll(/<h1(?:\s[^>]*)?>/gu)].length, 1, `${guidePath} must contain one h1`);
+  assert.match(html, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/guides\/tools\//u);
+  assert.match(html, /<meta property="og:image" content="https:\/\/promptdeck\.kr\/assets\/brand\/promptdeck-social-card\.png" \/>/u);
+}
+
+for (const slug of toolGuideSlugs) {
+  assert.ok(sitemap.includes(`<loc>https://promptdeck.kr/guides/tools/${slug}</loc>`), `sitemap missing tool guide ${slug}`);
+}
+assert.ok(sitemap.includes("<loc>https://promptdeck.kr/guides/tools/</loc>"), "sitemap missing tool guide hub");
 
 const guideUrls = [
   "https://promptdeck.kr/guides/",

@@ -44,6 +44,12 @@ const address = server.address();
 const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const expectedNavLabels = ["실무 가이드", "스킬 다운로드", "소개", "작업 도구 열기"];
+const toolGuides = new Map([
+  ["common-prompt", "commonPrompt"], ["slide-splitter", "generator"], ["form-image", "formImage"],
+  ["map-image", "mapPrompt"], ["promotion-image", "promotion"], ["qr-code", "qrGenerator"],
+  ["data-diagram", "dataDiagram"], ["label-ticket", "labelSheet"], ["concept-suggest", "promotionPlanner"],
+  ["visual-mixer", "conceptMixer"], ["photo-transform", "photoTransform"],
+]);
 
 async function readPublicNav(page) {
   return page.evaluate(() => {
@@ -129,6 +135,37 @@ try {
         if (await page.locator("[data-share-panel]").isVisible()) throw new Error("guide share panel did not close with Escape");
       }
     }
+    const toolHubResponse = await page.goto(`${origin}/guides/tools/`, { waitUntil: "networkidle" });
+    if (!toolHubResponse?.ok()) throw new Error(`/guides/tools/ returned HTTP ${toolHubResponse?.status()}`);
+    const toolHubMetrics = await page.evaluate(() => ({
+      h1Count: document.querySelectorAll("h1").length,
+      cardCount: document.querySelectorAll('a.guide-card[href^="/guides/tools/"]').length,
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    }));
+    if (toolHubMetrics.h1Count !== 1 || toolHubMetrics.cardCount !== toolGuides.size || toolHubMetrics.overflow) {
+      throw new Error(`tool guide hub failed contract: ${JSON.stringify(toolHubMetrics)}`);
+    }
+    for (const [slug, tab] of toolGuides) {
+      const route = `/guides/tools/${slug}`;
+      const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
+      if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
+      const metrics = await page.evaluate((expectedTab) => ({
+        h1Count: document.querySelectorAll("h1").length,
+        stepCount: document.querySelectorAll(".guide-process > li").length,
+        hasChecklist: Boolean(document.querySelector(".guide-checklist")),
+        hasResult: Boolean(document.querySelector(".guide-result-band")),
+        hasExactCta: Array.from(document.querySelectorAll("a.guide-cta")).some((link) => new URL(link.href).searchParams.get("tab") === expectedTab),
+        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      }), tab);
+      if (metrics.h1Count !== 1 || metrics.stepCount < 4 || !metrics.hasChecklist || !metrics.hasResult || !metrics.hasExactCta || metrics.overflow) {
+        throw new Error(`${route} failed practical guide contract: ${JSON.stringify(metrics)}`);
+      }
+      const publicNav = await readPublicNav(page);
+      const expectedVisibleLinkCount = viewport.width <= 820 ? 0 : 4;
+      if (publicNav.brandPath !== "/" || publicNav.featureDropdown !== "기능" || publicNav.visibleLinkCount !== expectedVisibleLinkCount) {
+        throw new Error(`${route} failed tool guide navigation contract: ${JSON.stringify(publicNav)}`);
+      }
+    }
     for (const route of ["/", "/features", "/about"]) {
       const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
       if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
@@ -150,7 +187,7 @@ try {
     if (errors.length) throw new Error(`browser errors at ${viewport.width}px: ${errors.join(" | ")}`);
     await page.close();
   }
-  console.log("Guide smoke test passed: 8 public pages share one responsive navigation contract with no overflow or browser errors");
+  console.log("Guide smoke test passed: public pages and 11 practical tool guides have valid navigation, actions, and responsive layouts");
 } finally {
   await browser.close();
   server.closeIdleConnections?.();
