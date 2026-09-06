@@ -537,7 +537,7 @@ async function verifyLandingViewport(label, viewport) {
   const starts = await page.locator('[data-start-tool]').evaluateAll((links) => links.map((link) => ({
     key: link.dataset.startTool, href: link.getAttribute('href'),
   })));
-  if (starts.length !== 6 || new Set(starts.map((link) => link.key)).size !== 6
+  if (starts.length !== 7 || new Set(starts.map((link) => link.key)).size !== 7
     || starts.some((link) => link.href !== `/app?tab=${link.key}`)) {
     failures.push(`${label}: 작업 바로가기 대상이 잘못되었습니다.`);
   }
@@ -604,8 +604,8 @@ async function verifyLandingMenuLinks(viewport) {
     output: item.querySelector(".landing-tool-output")?.textContent.trim(),
     href: item.querySelector("[data-tool-link]")?.getAttribute("href"),
   })));
-  if (tools.length !== 11 || new Set(tools.map((tool) => tool.key)).size !== 11
-    || tools.filter((tool) => tool.group === "deck").length !== 2
+  if (tools.length !== 12 || new Set(tools.map((tool) => tool.key)).size !== 12
+    || tools.filter((tool) => tool.group === "deck").length !== 3
     || tools.filter((tool) => tool.group === "special").length !== 6
     || tools.filter((tool) => tool.group === "visual").length !== 3
     || tools.some((tool) => tool.steps !== 3 || !tool.output || tool.href !== `/app?tab=${tool.key}`)) {
