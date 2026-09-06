@@ -10,9 +10,17 @@
   const TRANSFER_KEY = "promptdeck.documentDesign.transfer.v1";
   const viewLabels = { cover: "표지", content: "본문", data: "표·차트" };
   const colorLabels = { primary: "주색", secondary: "보조", accent: "강조", background: "배경", surface: "표면", text: "본문", muted: "보조 글자", border: "구분선" };
+  const densityLabels = { airy: "여유", balanced: "균형", compact: "촘촘" };
   let activeCategory = "all";
+  let mobileStep = 1;
   let generated = { designPrompt: "", fullPrompt: "", spec: null, generatedAt: "" };
   let dirty = true;
+  const mobileStepMeta = {
+    1: { label: "요청 작성", next: "테마 고르기" },
+    2: { label: "테마 선택", next: "세부 조정" },
+    3: { label: "세부 조정", next: "결과 확인" },
+    4: { label: "미리보기·결과", next: "지침 생성" },
+  };
 
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
   function escapeHtml(value) { return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;"); }
@@ -41,6 +49,53 @@
     saveState();
     setStatus(message);
     syncResultMeta();
+    syncMobileFlow();
+  }
+
+  function syncMobileFlow() {
+    root.dataset.mobileStep = String(mobileStep);
+    root.querySelectorAll("[data-mobile-step]").forEach((button) => {
+      const active = Number(button.dataset.mobileStep) === mobileStep;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-current", active ? "step" : "false");
+    });
+    const meta = mobileStepMeta[mobileStep];
+    const count = document.getElementById("documentDesignMobileStepCount");
+    const label = document.getElementById("documentDesignMobileStepLabel");
+    const back = root.querySelector('[data-mobile-action="back"]');
+    const next = root.querySelector('[data-mobile-action="next"]');
+    if (count) count.textContent = `${mobileStep} / 4`;
+    if (label) label.textContent = meta.label;
+    if (back) back.disabled = mobileStep === 1;
+    if (next) next.textContent = mobileStep === 4 && generated.fullPrompt && !dirty ? "전체 복사" : meta.next;
+  }
+
+  function setMobileStep(step, moveFocus = true) {
+    mobileStep = Math.max(1, Math.min(4, Number(step) || 1));
+    syncMobileFlow();
+    if (!moveFocus || !window.matchMedia("(max-width: 720px)").matches) return;
+    if (mobileStep === 3) {
+      const groups = [...root.querySelectorAll(".doc-design-adjust-group")];
+      groups.forEach((details, index) => { details.open = index === 0; });
+    }
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(`docDesignStep${mobileStep}`);
+      if (!target) return;
+      target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      target.focus({ preventScroll: true });
+    });
+  }
+
+  async function handleMobilePrimary() {
+    if (mobileStep < 4) {
+      setMobileStep(mobileStep + 1);
+      return;
+    }
+    if (!generated.fullPrompt || dirty) {
+      if (generate()) syncMobileFlow();
+      return;
+    }
+    await copyFull();
   }
 
   function themeCards() {
@@ -78,9 +133,12 @@
           <div><span class="document-design-kicker">Document Design Builder</span><h2>문서 요청에 완성도 높은 디자인 지침을 더하세요</h2><p>업무 요청 원문을 그대로 보존하고, 선택한 테마의 색상·글꼴·레이아웃·표·차트 규칙을 뒤에 붙여 하나의 실행 프롬프트로 만듭니다.</p></div>
           <div class="doc-design-hero-flow" aria-label="작업 흐름"><b>요청 입력</b><span>→</span><b>테마 선택</b><span>→</span><b>세부 조정</b><span>→</span><b>전체 복사</b></div>
         </header>
+        <nav class="doc-design-mobile-steps" aria-label="문서 디자인 작업 단계">
+          ${Object.entries(mobileStepMeta).map(([step, meta]) => `<button type="button" data-mobile-step="${step}" aria-controls="docDesignStep${step}"><span>${step}</span>${meta.label.replace(" 작성", "").replace(" 선택", "").replace(" 조정", "").replace("미리보기·", "")}</button>`).join("")}
+        </nav>
         <div class="doc-design-grid">
           <div class="doc-design-input-stack">
-            <section class="doc-design-card" aria-labelledby="docDesignInputTitle">
+            <section class="doc-design-card" id="docDesignStep1" data-doc-step="1" aria-labelledby="docDesignInputTitle" tabindex="-1">
               <div class="doc-design-card-head"><div><span class="doc-design-step-label">1 · 요청과 형식</span><h3 id="docDesignInputTitle">무엇을 어떤 문서로 만들까요?</h3><p>원문은 최종 프롬프트 앞부분에 입력한 그대로 유지됩니다.</p></div></div>
               <div class="doc-design-card-body">
                 <div class="doc-design-field"><label for="documentDesignSource">문서 작성 요청 원문</label><textarea id="documentDesignSource" placeholder="예: 2026년 지역기업 지원사업 결과보고서를 A4 10쪽 이내로 작성해줘. 핵심 성과, 기업 사례, 예산 집행, 후속 계획을 포함해줘.">${escapeHtml(state.sourcePrompt)}</textarea><small id="documentDesignSourceCount">${state.sourcePrompt.length.toLocaleString("ko-KR")}자 · 입력 내용은 임의로 고치지 않습니다.</small></div>
@@ -88,13 +146,14 @@
                   <div class="doc-design-field"><label for="documentDesignKind">문서 종류</label><select id="documentDesignKind">${kindOptions()}</select></div>
                   <fieldset class="doc-design-field"><legend>출력 형식</legend><div class="doc-design-format-options">${formatOptions()}</div></fieldset>
                 </div>
+                <div class="doc-design-mobile-only doc-design-inline-actions"><button type="button" class="doc-design-btn" data-inline-action="sample">작성 예시 채우기</button></div>
               </div>
             </section>
-            <section class="doc-design-card" aria-labelledby="docDesignThemeTitle">
+            <section class="doc-design-card" id="docDesignStep2" data-doc-step="2" aria-labelledby="docDesignThemeTitle" tabindex="-1">
               <div class="doc-design-card-head"><div><span class="doc-design-step-label">2 · 테마 선택</span><h3 id="docDesignThemeTitle">문서 화면을 보고 고르세요</h3><p>표지·본문·표·차트 보기에서 같은 테마의 실제 페이지 구성을 비교합니다.</p></div><div class="doc-design-view-tabs" role="group" aria-label="테마 카드 미리보기 종류">${Object.entries(viewLabels).map(([id, label]) => `<button type="button" class="doc-design-view-tab${id === state.previewView ? " active" : ""}" data-gallery-view="${id}" aria-pressed="${id === state.previewView}">${label}</button>`).join("")}</div></div>
-              <div class="doc-design-card-body"><div class="doc-design-category-bar" role="group" aria-label="문서 테마 분류">${CATALOG.categories.map((item) => `<button type="button" class="doc-design-filter${item.id === activeCategory ? " active" : ""}" data-theme-category="${item.id}" aria-pressed="${item.id === activeCategory}">${item.label}</button>`).join("")}</div><div class="doc-design-theme-grid" id="documentDesignThemeGrid">${themeCards()}</div></div>
+              <div class="doc-design-card-body"><div class="doc-design-category-bar" role="group" aria-label="문서 테마 분류">${CATALOG.categories.map((item) => `<button type="button" class="doc-design-filter${item.id === activeCategory ? " active" : ""}" data-theme-category="${item.id}" aria-pressed="${item.id === activeCategory}">${item.label}</button>`).join("")}</div><div class="doc-design-theme-grid" id="documentDesignThemeGrid">${themeCards()}</div><div class="doc-design-mobile-selection" aria-live="polite"><span>선택한 테마</span><strong id="documentDesignMobileTheme"></strong><small>카드를 좌우로 넘겨 다른 테마를 비교할 수 있습니다.</small></div></div>
             </section>
-            <section class="doc-design-card" aria-labelledby="docDesignAdjustTitle">
+            <section class="doc-design-card" id="docDesignStep3" data-doc-step="3" aria-labelledby="docDesignAdjustTitle" tabindex="-1">
               <div class="doc-design-card-head"><div><span class="doc-design-step-label">3 · 세부 조정</span><h3 id="docDesignAdjustTitle">선택한 테마를 문서에 맞추세요</h3><p>변경 내용은 오른쪽 실시간 미리보기와 생성 지침에 반영됩니다.</p></div><button type="button" class="doc-design-btn" id="documentDesignRestoreThemeBtn">테마 기본값</button></div>
               <div class="doc-design-card-body"><div class="doc-design-adjust-groups">
                 <details class="doc-design-adjust-group" open><summary>색상 역할</summary><div class="doc-design-adjust-body"><div class="doc-design-color-grid" id="documentDesignColorGrid">${colorInputs()}</div></div></details>
@@ -131,18 +190,24 @@
               </div></div>
             </section>
           </div>
-          <aside class="doc-design-result-stack">
+          <aside class="doc-design-result-stack" id="docDesignStep4" data-doc-step="4" tabindex="-1">
             <button id="documentDesignGenerateBtn" class="doc-design-hidden" type="button"></button><button id="documentDesignCopyBtn" class="doc-design-hidden" type="button"></button><button id="documentDesignSendCommonBtn" class="doc-design-hidden" type="button"></button><button id="documentDesignDownloadBtn" class="doc-design-hidden" type="button"></button><button id="documentDesignSampleBtn" class="doc-design-hidden" type="button"></button><button id="documentDesignResetBtn" class="doc-design-hidden" type="button"></button>
             <div class="doc-design-summary"><div><span>현재 선택</span><strong id="documentDesignSummaryTitle"></strong><span id="documentDesignSummaryMeta"></span></div><div class="doc-design-swatches" id="documentDesignSwatches" aria-label="선택 색상"></div></div>
             <section class="doc-design-card" aria-labelledby="docDesignPreviewTitle"><div class="doc-design-preview-panel"><div class="doc-design-preview-top"><strong id="docDesignPreviewTitle">실시간 문서 미리보기</strong><div class="doc-design-view-tabs" role="group" aria-label="실시간 미리보기 종류">${Object.entries(viewLabels).map(([id, label]) => `<button type="button" class="doc-design-view-tab${id === state.previewView ? " active" : ""}" data-live-view="${id}" aria-pressed="${id === state.previewView}">${label}</button>`).join("")}</div></div><div class="doc-design-live-stage"><div class="doc-design-page" id="documentDesignLivePreview"></div></div></div></section>
-            <section class="doc-design-card" aria-labelledby="docDesignOutputTitle"><div class="doc-design-card-head"><div><span class="doc-design-step-label">4 · 결과</span><h3 id="docDesignOutputTitle">전체 실행 프롬프트</h3><p>원문 뒤에 디자인·출력·검수 지침이 추가됩니다.</p></div></div><div class="doc-design-card-body"><div class="doc-design-status" id="documentDesignStatus" aria-live="polite">설정을 확인한 뒤 디자인 지침을 생성하세요.</div><textarea class="doc-design-output" id="documentDesignOutput" readonly placeholder="생성된 전체 프롬프트가 여기에 표시됩니다."></textarea><div class="doc-design-result-meta"><span id="documentDesignResultCount">0자</span><span id="documentDesignResultState">생성 전</span></div><div class="doc-design-inline-actions"><button type="button" class="doc-design-btn primary" data-inline-action="generate">디자인 지침 생성</button><button type="button" class="doc-design-btn" data-inline-action="copy">전체 프롬프트 복사</button><button type="button" class="doc-design-btn" data-inline-action="copy-design">디자인 지침만 복사</button></div></div></section>
+            <section class="doc-design-card doc-design-output-card" aria-labelledby="docDesignOutputTitle"><div class="doc-design-card-head"><div><span class="doc-design-step-label">4 · 결과</span><h3 id="docDesignOutputTitle">전체 실행 프롬프트</h3><p>원문 뒤에 디자인·출력·검수 지침이 추가됩니다.</p></div></div><div class="doc-design-card-body"><div class="doc-design-status" id="documentDesignStatus" aria-live="polite">설정을 확인한 뒤 디자인 지침을 생성하세요.</div><textarea class="doc-design-output" id="documentDesignOutput" readonly placeholder="생성된 전체 프롬프트가 여기에 표시됩니다."></textarea><div class="doc-design-result-meta"><span id="documentDesignResultCount">0자</span><span id="documentDesignResultState">생성 전</span></div><div class="doc-design-inline-actions"><button type="button" class="doc-design-btn primary" data-inline-action="generate">디자인 지침 생성</button><button type="button" class="doc-design-btn" data-inline-action="copy">전체 프롬프트 복사</button><button type="button" class="doc-design-btn" data-inline-action="copy-design">디자인 지침만 복사</button></div></div></section>
           </aside>
+        </div>
+        <div class="doc-design-mobile-bar" aria-label="문서 디자인 단계 이동">
+          <button type="button" class="doc-design-mobile-back" data-mobile-action="back">이전</button>
+          <div><span id="documentDesignMobileStepCount">1 / 4</span><strong id="documentDesignMobileStepLabel">요청 작성</strong></div>
+          <button type="button" class="doc-design-mobile-next" data-mobile-action="next">테마 고르기</button>
         </div>
       </div>`;
     syncControls();
     renderThemeGrid();
     renderPreview();
     syncSummary();
+    syncMobileFlow();
   }
 
   function applyTheme(themeId) {
@@ -198,7 +263,7 @@
     setValue("documentDesignChartSort", state.adjustments.chartRules.sortOrder);
     setValue("documentDesignImagePolicy", state.adjustments.components.images);
     const sourceCount = document.getElementById("documentDesignSourceCount");
-    if (sourceCount) sourceCount.textContent = `${state.sourcePrompt.length.toLocaleString("ko-KR")}자 · 입력 내용은 임의로 고치지 않습니다.`;
+    if (sourceCount) { sourceCount.textContent = `${state.sourcePrompt.length.toLocaleString("ko-KR")}자 · 입력 내용은 임의로 고치지 않습니다.`; sourceCount.classList.remove("error"); }
     document.querySelectorAll('[name="documentDesignFormat"]').forEach((input) => { input.checked = state.formats.includes(input.value); });
     document.querySelectorAll("[data-adjust-group][data-adjust-key]").forEach((input) => {
       const value = state.adjustments[input.dataset.adjustGroup]?.[input.dataset.adjustKey];
@@ -247,9 +312,11 @@
     const title = document.getElementById("documentDesignSummaryTitle");
     const meta = document.getElementById("documentDesignSummaryMeta");
     const swatches = document.getElementById("documentDesignSwatches");
+    const mobileTheme = document.getElementById("documentDesignMobileTheme");
     if (title) title.textContent = `${theme.nameKo} · ${kind?.label || "업무보고서"}`;
-    if (meta) meta.textContent = `${state.formats.join(" + ")} · ${state.adjustments.layout.density} · 여백 ${state.adjustments.layout.marginTopMm}/${state.adjustments.layout.marginRightMm}/${state.adjustments.layout.marginBottomMm}/${state.adjustments.layout.marginLeftMm}mm`;
+    if (meta) meta.textContent = `${state.formats.join(" + ")} · ${densityLabels[state.adjustments.layout.density] || state.adjustments.layout.density} · 여백 ${state.adjustments.layout.marginTopMm}/${state.adjustments.layout.marginRightMm}/${state.adjustments.layout.marginBottomMm}/${state.adjustments.layout.marginLeftMm}mm`;
     if (swatches) swatches.innerHTML = ["primary", "secondary", "accent", "background"].map((key) => `<i style="background:${escapeHtml(state.adjustments.colors[key])}" title="${colorLabels[key]}"></i>`).join("");
+    if (mobileTheme) mobileTheme.textContent = `${theme.nameKo} · ${kind?.label || "업무보고서"}`;
   }
 
   function syncResultMeta() {
@@ -265,7 +332,14 @@
     const error = result.issues.find((item) => item.level === "error");
     if (error) {
       setStatus(error.message, true);
-      document.getElementById(error.field === "sourcePrompt" ? "documentDesignSource" : "documentDesignOutput")?.focus();
+      if (window.matchMedia("(max-width: 720px)").matches && error.field === "sourcePrompt") setMobileStep(1);
+      const errorTarget = document.getElementById(error.field === "sourcePrompt" ? "documentDesignSource" : "documentDesignOutput");
+      const sourceCount = document.getElementById("documentDesignSourceCount");
+      if (error.field === "sourcePrompt" && sourceCount) {
+        sourceCount.textContent = error.message;
+        sourceCount.classList.add("error");
+      }
+      window.requestAnimationFrame(() => errorTarget?.focus());
       return null;
     }
     generated = { designPrompt: result.designPrompt, fullPrompt: result.fullPrompt, spec: result.spec, generatedAt: new Date().toISOString() };
@@ -274,6 +348,7 @@
     if (output) output.value = generated.fullPrompt;
     if (showStatus) setStatus("원문 뒤에 문서 디자인·출력 지침을 추가했습니다.");
     syncResultMeta();
+    syncMobileFlow();
     return generated;
   }
 
@@ -323,6 +398,7 @@
   }
   function reset() {
     state = defaultState(); generated = { designPrompt: "", fullPrompt: "", spec: null, generatedAt: "" }; dirty = true; activeCategory = "all";
+    mobileStep = 1;
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
     syncControls();
     renderThemeGrid();
@@ -331,6 +407,7 @@
     const output = document.getElementById("documentDesignOutput");
     if (output) output.value = "";
     syncResultMeta();
+    syncMobileFlow();
     setStatus("문서 디자인 설정을 초기화했습니다.");
     window.PromptDeckTabs?.syncHeaderActionStates?.();
   }
@@ -341,7 +418,7 @@
       const target = event.target;
       if (target.id === "documentDesignSource") {
         state.sourcePrompt = target.value;
-        const count = document.getElementById("documentDesignSourceCount"); if (count) count.textContent = `${target.value.length.toLocaleString("ko-KR")}자 · 입력 내용은 임의로 고치지 않습니다.`;
+        const count = document.getElementById("documentDesignSourceCount"); if (count) { count.textContent = `${target.value.length.toLocaleString("ko-KR")}자 · 입력 내용은 임의로 고치지 않습니다.`; count.classList.remove("error"); }
         markDirty(); return;
       }
       if (target.matches("[data-adjust-group][data-adjust-key]")) {
@@ -387,6 +464,10 @@
     });
 
     root.addEventListener("click", (event) => {
+      const mobileStepButton = event.target.closest("button[data-mobile-step]"); if (mobileStepButton) return setMobileStep(mobileStepButton.dataset.mobileStep);
+      const mobileAction = event.target.closest("[data-mobile-action]")?.dataset.mobileAction;
+      if (mobileAction === "back") return setMobileStep(mobileStep - 1);
+      if (mobileAction === "next") return handleMobilePrimary();
       const themeButton = event.target.closest("[data-theme-id]"); if (themeButton) return applyTheme(themeButton.dataset.themeId);
       const categoryButton = event.target.closest("[data-theme-category]"); if (categoryButton) { activeCategory = categoryButton.dataset.themeCategory; return renderThemeGrid(); }
       const galleryView = event.target.closest("[data-gallery-view]"); if (galleryView) { state.previewView = galleryView.dataset.galleryView; markDirty("미리보기 종류를 바꿨습니다."); renderThemeGrid(); renderPreview(); return; }
@@ -395,8 +476,13 @@
       if (action === "generate") generate();
       if (action === "copy") copyFull();
       if (action === "copy-design") copyDesign();
+      if (action === "sample") sample();
       if (event.target.closest("#documentDesignRestoreThemeBtn")) applyTheme(state.themeId);
     });
+    root.querySelectorAll(".doc-design-adjust-group").forEach((details) => details.addEventListener("toggle", () => {
+      if (!details.open || !window.matchMedia("(max-width: 720px)").matches) return;
+      root.querySelectorAll(".doc-design-adjust-group[open]").forEach((item) => { if (item !== details) item.open = false; });
+    }));
     document.getElementById("documentDesignGenerateBtn")?.addEventListener("click", () => generate());
     document.getElementById("documentDesignCopyBtn")?.addEventListener("click", copyFull);
     document.getElementById("documentDesignSendCommonBtn")?.addEventListener("click", sendToCommon);

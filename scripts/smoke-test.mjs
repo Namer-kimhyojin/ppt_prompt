@@ -249,7 +249,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
 
     const regressionSelectors = {
       tabBtnCommonPrompt: [".cpd-btn.primary", ".cpd-journey-panel-head > span"],
-      tabBtnDocumentDesign: [".document-design-kicker", ".doc-design-theme-card strong"],
+      tabBtnDocumentDesign: [".document-design-kicker", "#docDesignInputTitle"],
       tabBtnFormImage: [".form-image-prompt-viewer", ".form-image-step-head b"],
       tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-flow-step[aria-current='step']"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],

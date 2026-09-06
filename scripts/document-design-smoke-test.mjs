@@ -136,18 +136,65 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.evaluate(() => window.PromptDeckTabs.switchTab("documentDesign"));
   await page.waitForSelector("#paneDocumentDesign.active");
-  const mobile = await page.evaluate(() => {
+  const mobileStart = await page.evaluate(() => {
     const pane = document.getElementById("paneDocumentDesign");
-    const grid = document.querySelector(".doc-design-theme-grid");
     return {
       overflow: pane.scrollWidth - pane.clientWidth,
-      columns: getComputedStyle(grid).gridTemplateColumns.split(" ").filter(Boolean).length,
-      mobileCopy: Boolean(document.querySelector('#mobileTabActions [data-proxy-target="documentDesignCopyBtn"]')),
+      step: document.getElementById("documentDesignApp")?.dataset.mobileStep,
+      stepOneVisible: document.getElementById("docDesignStep1")?.offsetParent !== null,
+      stepTwoVisible: document.getElementById("docDesignStep2")?.offsetParent !== null,
+      journeyBarVisible: (() => {
+        const bar = document.querySelector(".doc-design-mobile-bar");
+        return Boolean(bar && getComputedStyle(bar).display !== "none" && bar.getBoundingClientRect().height > 0);
+      })(),
+      globalActionHidden: document.getElementById("mobileTabActions")?.hidden,
+      touchTargets: [...document.querySelectorAll(".doc-design-mobile-steps button, .doc-design-mobile-bar button")].map((button) => button.getBoundingClientRect().height),
     };
   });
-  record(mobile.overflow <= 1, `Mobile pane overflows horizontally by ${mobile.overflow}px`);
-  record(mobile.columns === 2, `Mobile theme gallery does not use two columns (${mobile.columns})`);
-  record(mobile.mobileCopy, "Mobile primary action is not connected to full prompt copy");
+  record(mobileStart.overflow <= 1, `Mobile pane overflows horizontally by ${mobileStart.overflow}px`);
+  record(mobileStart.step === "1" && mobileStart.stepOneVisible && !mobileStart.stepTwoVisible, `Mobile journey did not start with only step 1 visible: ${JSON.stringify(mobileStart)}`);
+  record(mobileStart.journeyBarVisible && mobileStart.globalActionHidden, `Dedicated mobile journey bar conflicts with the global mobile action bar: ${JSON.stringify(mobileStart)}`);
+  record(mobileStart.touchTargets.every((height) => height >= 44), `Mobile journey controls are smaller than 44px: ${JSON.stringify(mobileStart.touchTargets)}`);
+
+  await page.click('[data-mobile-action="next"]');
+  const mobileTheme = await page.evaluate(() => {
+    const pane = document.getElementById("paneDocumentDesign");
+    const grid = document.querySelector(".doc-design-theme-grid");
+    const card = grid?.querySelector(".doc-design-theme-card");
+    return {
+      step: document.getElementById("documentDesignApp")?.dataset.mobileStep,
+      overflow: pane.scrollWidth - pane.clientWidth,
+      layout: getComputedStyle(grid).display,
+      cardWidth: card?.getBoundingClientRect().width || 0,
+      gridWidth: grid?.getBoundingClientRect().width || 0,
+      selection: document.getElementById("documentDesignMobileTheme")?.textContent || "",
+    };
+  });
+  record(mobileTheme.step === "2" && mobileTheme.layout === "flex", `Mobile theme step or swipe gallery is incorrect: ${JSON.stringify(mobileTheme)}`);
+  record(mobileTheme.overflow <= 1 && mobileTheme.cardWidth < mobileTheme.gridWidth, `Mobile theme carousel does not show a usable next-card cue: ${JSON.stringify(mobileTheme)}`);
+  record(mobileTheme.selection.includes("다크 이노베이션"), "Mobile selected-theme summary is missing");
+
+  await page.click('[data-mobile-step="3"]');
+  await page.click(".doc-design-adjust-group:nth-child(3) summary");
+  const mobileAdjust = await page.evaluate(() => ({
+    step: document.getElementById("documentDesignApp")?.dataset.mobileStep,
+    openGroups: document.querySelectorAll(".doc-design-adjust-group[open]").length,
+    previewVisible: document.querySelector(".doc-design-preview-panel")?.offsetParent !== null,
+    outputVisible: document.querySelector(".doc-design-output-card")?.offsetParent !== null,
+  }));
+  record(mobileAdjust.step === "3" && mobileAdjust.openGroups === 1, `Mobile detail accordion did not keep one group open: ${JSON.stringify(mobileAdjust)}`);
+  record(mobileAdjust.previewVisible && !mobileAdjust.outputVisible, "Mobile detail step did not expose the preview without the final output card");
+
+  await page.click('[data-mobile-action="next"]');
+  const mobileResult = await page.evaluate(() => ({
+    step: document.getElementById("documentDesignApp")?.dataset.mobileStep,
+    inputVisible: document.querySelector(".doc-design-input-stack")?.getBoundingClientRect().height > 1,
+    resultVisible: document.getElementById("docDesignStep4")?.offsetParent !== null,
+    outputVisible: document.querySelector(".doc-design-output-card")?.offsetParent !== null,
+    primaryLabel: document.querySelector('[data-mobile-action="next"]')?.textContent.trim(),
+  }));
+  record(mobileResult.step === "4" && !mobileResult.inputVisible && mobileResult.resultVisible && mobileResult.outputVisible, `Mobile result step visibility is incorrect: ${JSON.stringify(mobileResult)}`);
+  record(mobileResult.primaryLabel === "전체 복사", `Mobile result action did not reflect the generated state: ${mobileResult.primaryLabel}`);
   record(pageErrors.length === 0, `Browser page errors: ${pageErrors.join(" | ")}`);
 } finally {
   await browser?.close();
@@ -159,4 +206,4 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
-console.log("Document design smoke test passed: 12 themes, 36 previews, source preservation, live controls, transfer, and mobile layout.");
+console.log("Document design smoke test passed: 12 themes, 36 previews, source preservation, live controls, transfer, and four-step mobile journey.");
