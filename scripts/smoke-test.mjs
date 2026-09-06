@@ -4909,6 +4909,38 @@ SLIDE-TWO-CONTENT`);
     const mobileQrLabelAction = page.locator("#mobileTabActions [data-proxy-target='qrGeneratorPrintBtn']");
     record(await mobileQrLabelAction.isVisible(), "QR built-in label output was not restored to the mobile action bar", failures);
     record((await mobileQrLabelAction.textContent()).trim() === "QR 라벨 출력", "QR mobile label output action was not clearly named", failures);
+    await page.locator("#qrInputText").fill("https://example.com/mobile-label-qr");
+    await page.waitForFunction(() => window.QRGeneratorCore?.getCurrentValue?.() === "https://example.com/mobile-label-qr");
+    await page.click("#btnQrPrintLabel");
+    await page.waitForSelector("#qrPrintModal:not([hidden])");
+    const mobileQrPrintMetrics = await page.evaluate(() => {
+      const dialog = document.querySelector("#qrPrintModal .qr-print-modal-dialog");
+      const body = document.querySelector("#qrPrintModal .qr-print-modal-body");
+      const controls = document.querySelector("#qrPrintModal .qr-print-modal-controls");
+      const preview = document.querySelector("#qrPrintModal .qr-print-modal-preview");
+      const footer = document.querySelector("#qrPrintModal .qr-print-modal-foot");
+      const close = document.querySelector("#qrPrintModalCloseBtn");
+      const range = document.createRange();
+      range.selectNodeContents(close);
+      const dialogBox = dialog.getBoundingClientRect();
+      const footerBox = footer.getBoundingClientRect();
+      return {
+        bodyOverflow: getComputedStyle(body).overflowY,
+        bodyScrolls: body.scrollHeight > body.clientHeight,
+        controlsOverflow: getComputedStyle(controls).overflowY,
+        previewOverflow: getComputedStyle(preview).overflowY,
+        closeWhiteSpace: getComputedStyle(close).whiteSpace,
+        closeLineCount: range.getClientRects().length,
+        dialogWithinViewport: dialogBox.left >= 0 && dialogBox.right <= innerWidth && dialogBox.top >= 0 && dialogBox.bottom <= innerHeight,
+        footerWithinViewport: footerBox.left >= 0 && footerBox.right <= innerWidth && footerBox.bottom <= innerHeight,
+      };
+    });
+    record(mobileQrPrintMetrics.bodyOverflow === "auto" && mobileQrPrintMetrics.bodyScrolls, "QR mobile label modal did not provide one continuous body scroll", failures);
+    record(mobileQrPrintMetrics.controlsOverflow === "visible" && mobileQrPrintMetrics.previewOverflow === "visible", "QR mobile label modal kept nested control or preview scroll regions", failures);
+    record(mobileQrPrintMetrics.closeWhiteSpace === "nowrap" && mobileQrPrintMetrics.closeLineCount === 1, "QR mobile label modal wrapped the close action onto multiple lines", failures);
+    record(mobileQrPrintMetrics.dialogWithinViewport && mobileQrPrintMetrics.footerWithinViewport, "QR mobile label modal or print actions overflowed the viewport", failures);
+    await page.click("#qrPrintModalCloseBtn");
+    await page.waitForSelector("#qrPrintModal", { state: "hidden" });
     await page.setViewportSize({ width: 1440, height: 1200 });
 
     record((await page.locator("#paneQrGenerator .qr-result-stack > #tabActions").count()) === 1, "QR quick actions were not mounted in an independent result column", failures);
@@ -4923,6 +4955,39 @@ SLIDE-TWO-CONTENT`);
     const qrPrintLayouts = await page.locator("#qrPrintLayout option").allTextContents();
     record(qrPrintLayouts.length === 4 && ["1장", "4장", "12장", "24장"].every((label) => qrPrintLayouts.some((option) => option.includes(label))), "QR label output did not keep the 1/4/12/24-up layouts", failures);
     record((await page.locator("#qrPrintPreviewSheet .print-label-card").count()) === 1, "QR label output did not render its WYSIWYG print preview", failures);
+    await page.selectOption("#qrPrintLayout", "24");
+    await page.evaluate(() => {
+      window.__qrNativePrint = window.print;
+      window.__qrPrintCalls = 0;
+      window.print = () => { window.__qrPrintCalls += 1; };
+    });
+    await page.click("#qrPrintModalPrintBtn");
+    await page.waitForSelector("#printArea.layout-24", { state: "attached" });
+    await page.waitForFunction(() => window.__qrPrintCalls === 1);
+    record((await page.locator("#printArea .print-label-card").count()) === 24, "QR label output did not create all 24 print cards", failures);
+    await page.emulateMedia({ media: "print" });
+    const qrPrintSheetMetrics = await page.locator("#printArea").evaluate((sheet) => {
+      const sheetBox = sheet.getBoundingClientRect();
+      const cards = [...sheet.querySelectorAll(".print-label-card")];
+      return {
+        display: getComputedStyle(sheet).display,
+        width: sheetBox.width,
+        height: sheetBox.height,
+        allCardsInside: cards.every((card) => {
+          const cardBox = card.getBoundingClientRect();
+          return cardBox.left >= sheetBox.left - 1 && cardBox.right <= sheetBox.right + 1 && cardBox.top >= sheetBox.top - 1 && cardBox.bottom <= sheetBox.bottom + 1;
+        }),
+      };
+    });
+    record(qrPrintSheetMetrics.display === "grid" && Math.abs(qrPrintSheetMetrics.width / qrPrintSheetMetrics.height - 210 / 297) < 0.01, "QR label output did not preserve the A4 print sheet geometry", failures);
+    record(qrPrintSheetMetrics.allCardsInside, "QR label output placed one or more 24-up cards outside the A4 sheet", failures);
+    await page.emulateMedia({ media: "screen" });
+    await page.evaluate(() => {
+      window.dispatchEvent(new Event("afterprint"));
+      window.print = window.__qrNativePrint;
+      delete window.__qrNativePrint;
+    });
+    await page.waitForSelector("#printArea", { state: "detached" });
     await page.click("#qrPrintModalCloseBtn");
     await page.waitForSelector("#qrPrintModal", { state: "hidden" });
     await page.click("#btnQrBatchOpen");

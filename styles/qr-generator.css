@@ -680,6 +680,12 @@ body.qr-print-modal-open {
   overflow: hidden;
 }
 
+@media screen {
+  #printArea {
+    display: none !important;
+  }
+}
+
 /* ==================================================== */
 /* 공용 필드 프리미티브 (QR 탭 전용 스코프) */
 /* ==================================================== */
@@ -1293,9 +1299,77 @@ body.qr-print-modal-open {
   .qr-print-design-grid {
     grid-template-columns: 1fr;
   }
+
+  #qrPrintModal {
+    padding: 10px;
+  }
+
+  #qrPrintModal .qr-print-modal-dialog {
+    width: 100%;
+    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
+  }
+
+  #qrPrintModal .qr-print-modal-head {
+    align-items: flex-start;
+    flex: 0 0 auto;
+  }
+
+  #qrPrintModal .qr-print-modal-head > div {
+    min-width: 0;
+    flex: 1;
+  }
+
+  #qrPrintModalCloseBtn {
+    flex: 0 0 auto;
+    min-width: 64px;
+    white-space: nowrap;
+  }
+
+  #qrPrintModal .qr-print-modal-body {
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #qrPrintModal .qr-print-modal-controls,
+  #qrPrintModal .qr-print-modal-preview {
+    min-height: auto;
+    overflow: visible;
+  }
 }
 
 @media (max-width: 480px) {
+  #qrPrintModal .qr-print-modal-head,
+  #qrPrintModal .qr-print-modal-controls,
+  #qrPrintModal .qr-print-modal-preview,
+  #qrPrintModal .qr-print-modal-foot {
+    padding: 14px;
+  }
+
+  #qrPrintModal .qr-print-modal-head {
+    gap: 10px;
+  }
+
+  #qrPrintModal .qr-print-modal-head h2 {
+    font-size: 18px;
+  }
+
+  #qrPrintModal .qr-print-modal-head p {
+    font-size: 12px;
+  }
+
+  #qrPrintModal .qr-print-modal-foot {
+    gap: 10px;
+  }
+
+  #qrPrintModal .qr-print-modal-foot .btn {
+    min-width: 0;
+    padding-inline: 14px;
+    white-space: nowrap;
+  }
+
   .qr-type-selector {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

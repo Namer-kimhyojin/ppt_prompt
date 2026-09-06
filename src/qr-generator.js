@@ -1570,6 +1570,7 @@
 
     const count = parseInt(qrPrintLayout.value, 10) || 1;
     const context = getPrintContext(qrDataUrl);
+    document.getElementById("printArea")?.remove();
     const printArea = document.createElement("div");
     printArea.id = "printArea";
     printArea.className = `layout-${count} qr-print-sheet-custom`;
@@ -1579,21 +1580,42 @@
       const card = renderPrintCard(context);
       card.querySelectorAll("img").forEach((img) => {
         imageLoadPromises.push(new Promise((resolve) => {
-          if (img.complete) resolve();
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
+          if (img.complete) {
+            resolve();
+            return;
+          }
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
         }));
       });
       printArea.appendChild(card);
     }
 
     document.body.appendChild(printArea);
-    Promise.all(imageLoadPromises).then(() => {
-      window.print();
-      setTimeout(() => {
-        document.body.removeChild(printArea);
-      }, 500);
-    });
+    let cleanupTimer = 0;
+    let cleanedUp = false;
+    const cleanupPrintArea = () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+      window.removeEventListener("afterprint", cleanupPrintArea);
+      if (cleanupTimer) window.clearTimeout(cleanupTimer);
+      printArea.remove();
+    };
+
+    Promise.all(imageLoadPromises)
+      .then(() => new Promise((resolve) => {
+        window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
+      }))
+      .then(() => {
+        window.addEventListener("afterprint", cleanupPrintArea, { once: true });
+        window.print();
+        if (!cleanedUp) cleanupTimer = window.setTimeout(cleanupPrintArea, 60000);
+      })
+      .catch((error) => {
+        cleanupPrintArea();
+        console.error(error);
+        showToast("인쇄 화면을 준비하지 못했습니다. 다시 시도해 주세요.", true);
+      });
     return;
 
     {
