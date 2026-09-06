@@ -102,9 +102,43 @@
     return CATALOG.list(activeCategory).map((theme) => `
       <button type="button" class="doc-design-theme-card${theme.id === state.themeId ? " active" : ""}" data-theme-id="${theme.id}" aria-pressed="${theme.id === state.themeId}">
         <span class="doc-design-selected-mark">선택</span>
-        <img src="${theme.previews[state.previewView]}" alt="${escapeHtml(theme.nameKo)} ${viewLabels[state.previewView]} 문서 미리보기" width="960" height="540" loading="lazy">
+        <img src="${theme.previews[state.previewView]}" alt="${escapeHtml(theme.nameKo)} ${viewLabels[state.previewView]} 문서 미리보기" width="960" height="540" loading="${theme.id === state.themeId ? "eager" : "lazy"}">
         <span class="doc-design-theme-card-copy"><strong>${escapeHtml(theme.nameKo)}</strong><small>${escapeHtml(theme.bestFor)}</small></span>
       </button>`).join("");
+  }
+
+  function visibleThemes() { return CATALOG.list(activeCategory); }
+
+  function syncThemeNavigator() {
+    const themes = visibleThemes();
+    const index = themes.findIndex((theme) => theme.id === state.themeId);
+    const selected = getTheme(state.themeId);
+    const name = document.getElementById("documentDesignMobileTheme");
+    const position = document.getElementById("documentDesignThemePosition");
+    const previous = root.querySelector('[data-theme-nav="previous"]');
+    const next = root.querySelector('[data-theme-nav="next"]');
+    if (name) name.textContent = selected.nameKo;
+    if (position) position.textContent = index >= 0 ? `${index + 1} / ${themes.length}` : `전체 ${themes.length}개`;
+    if (previous) previous.disabled = index <= 0;
+    if (next) next.disabled = index < 0 || index >= themes.length - 1;
+  }
+
+  function centerSelectedTheme(behavior = "auto") {
+    if (!window.matchMedia("(max-width: 1120px)").matches) return;
+    const grid = document.getElementById("documentDesignThemeGrid");
+    const card = grid?.querySelector(`[data-theme-id="${state.themeId}"]`);
+    if (!grid || !card) return;
+    const gridRect = grid.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const target = grid.scrollLeft + cardRect.left - gridRect.left - (gridRect.width - cardRect.width) / 2;
+    grid.scrollTo({ left: Math.max(0, target), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : behavior });
+  }
+
+  function moveThemeSelection(direction) {
+    const themes = visibleThemes();
+    const index = themes.findIndex((theme) => theme.id === state.themeId);
+    const target = themes[index + direction];
+    if (target) applyTheme(target.id);
   }
 
   function kindOptions() {
@@ -151,7 +185,7 @@
             </section>
             <section class="doc-design-card" id="docDesignStep2" data-doc-step="2" aria-labelledby="docDesignThemeTitle" tabindex="-1">
               <div class="doc-design-card-head"><div><span class="doc-design-step-label">2 · 테마 선택</span><h3 id="docDesignThemeTitle">문서 화면을 보고 고르세요</h3><p>표지·본문·표·차트 보기에서 같은 테마의 실제 페이지 구성을 비교합니다.</p></div><div class="doc-design-view-tabs" role="group" aria-label="테마 카드 미리보기 종류">${Object.entries(viewLabels).map(([id, label]) => `<button type="button" class="doc-design-view-tab${id === state.previewView ? " active" : ""}" data-gallery-view="${id}" aria-pressed="${id === state.previewView}">${label}</button>`).join("")}</div></div>
-              <div class="doc-design-card-body"><div class="doc-design-category-bar" role="group" aria-label="문서 테마 분류">${CATALOG.categories.map((item) => `<button type="button" class="doc-design-filter${item.id === activeCategory ? " active" : ""}" data-theme-category="${item.id}" aria-pressed="${item.id === activeCategory}">${item.label}</button>`).join("")}</div><div class="doc-design-theme-grid" id="documentDesignThemeGrid">${themeCards()}</div><div class="doc-design-mobile-selection" aria-live="polite"><span>선택한 테마</span><strong id="documentDesignMobileTheme"></strong><small>카드를 좌우로 넘겨 다른 테마를 비교할 수 있습니다.</small></div></div>
+              <div class="doc-design-card-body"><div class="doc-design-category-bar" role="group" aria-label="문서 테마 분류">${CATALOG.categories.map((item) => `<button type="button" class="doc-design-filter${item.id === activeCategory ? " active" : ""}" data-theme-category="${item.id}" aria-pressed="${item.id === activeCategory}">${item.label}</button>`).join("")}</div><div class="doc-design-theme-grid" id="documentDesignThemeGrid">${themeCards()}</div><div class="doc-design-theme-navigator" aria-label="테마 이동"><button type="button" data-theme-nav="previous">이전 테마</button><div aria-live="polite"><span>선택한 테마</span><strong id="documentDesignMobileTheme"></strong><small><b id="documentDesignThemePosition"></b> · 좌우로 넘겨 비교</small></div><button type="button" data-theme-nav="next">다음 테마</button></div></div>
             </section>
             <section class="doc-design-card" id="docDesignStep3" data-doc-step="3" aria-labelledby="docDesignAdjustTitle" tabindex="-1">
               <div class="doc-design-card-head"><div><span class="doc-design-step-label">3 · 세부 조정</span><h3 id="docDesignAdjustTitle">선택한 테마를 문서에 맞추세요</h3><p>변경 내용은 오른쪽 실시간 미리보기와 생성 지침에 반영됩니다.</p></div><button type="button" class="doc-design-btn" id="documentDesignRestoreThemeBtn">테마 기본값</button></div>
@@ -218,6 +252,7 @@
     renderThemeGrid();
     renderPreview();
     syncSummary();
+    window.requestAnimationFrame(() => centerSelectedTheme("smooth"));
   }
 
   function syncControls() {
@@ -277,6 +312,7 @@
     if (grid) grid.innerHTML = themeCards();
     document.querySelectorAll("[data-theme-category]").forEach((button) => { const active = button.dataset.themeCategory === activeCategory; button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); });
     document.querySelectorAll("[data-gallery-view]").forEach((button) => { const active = button.dataset.galleryView === state.previewView; button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); });
+    syncThemeNavigator();
   }
 
   function previewMarkup(view) {
@@ -468,8 +504,18 @@
       const mobileAction = event.target.closest("[data-mobile-action]")?.dataset.mobileAction;
       if (mobileAction === "back") return setMobileStep(mobileStep - 1);
       if (mobileAction === "next") return handleMobilePrimary();
+      const themeNav = event.target.closest("[data-theme-nav]")?.dataset.themeNav;
+      if (themeNav === "previous") return moveThemeSelection(-1);
+      if (themeNav === "next") return moveThemeSelection(1);
       const themeButton = event.target.closest("[data-theme-id]"); if (themeButton) return applyTheme(themeButton.dataset.themeId);
-      const categoryButton = event.target.closest("[data-theme-category]"); if (categoryButton) { activeCategory = categoryButton.dataset.themeCategory; return renderThemeGrid(); }
+      const categoryButton = event.target.closest("[data-theme-category]"); if (categoryButton) {
+        activeCategory = categoryButton.dataset.themeCategory;
+        const themes = visibleThemes();
+        if (!themes.some((theme) => theme.id === state.themeId) && themes[0]) return applyTheme(themes[0].id);
+        renderThemeGrid();
+        window.requestAnimationFrame(() => centerSelectedTheme("smooth"));
+        return;
+      }
       const galleryView = event.target.closest("[data-gallery-view]"); if (galleryView) { state.previewView = galleryView.dataset.galleryView; markDirty("미리보기 종류를 바꿨습니다."); renderThemeGrid(); renderPreview(); return; }
       const liveView = event.target.closest("[data-live-view]"); if (liveView) { state.previewView = liveView.dataset.liveView; markDirty("미리보기 종류를 바꿨습니다."); renderThemeGrid(); renderPreview(); return; }
       const action = event.target.closest("[data-inline-action]")?.dataset.inlineAction;

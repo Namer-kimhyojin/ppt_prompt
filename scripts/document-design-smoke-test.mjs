@@ -133,6 +133,38 @@ try {
   record(await page.locator("#cpdDocumentDesignTransfer").isVisible(), "Transferred prompt is not visible in the common prompt pane");
   record((await page.locator("#cpdDocumentDesignTransfer textarea").inputValue()).startsWith(sampleSource), "Transferred prompt changed the source request");
 
+  await page.setViewportSize({ width: 820, height: 1000 });
+  await page.evaluate(() => window.PromptDeckTabs.switchTab("documentDesign"));
+  await page.waitForSelector("#paneDocumentDesign.active");
+  await page.evaluate(() => document.querySelector('[data-theme-id="public-brief"]')?.click());
+  const compactGallery = await page.evaluate(() => {
+    const grid = document.getElementById("documentDesignThemeGrid");
+    const card = grid?.querySelector(".doc-design-theme-card");
+    const image = card?.querySelector("img");
+    const cardRect = card?.getBoundingClientRect();
+    const imageRect = image?.getBoundingClientRect();
+    const navigator = document.querySelector(".doc-design-theme-navigator");
+    return {
+      layout: getComputedStyle(grid).display,
+      gridWidth: grid?.getBoundingClientRect().width || 0,
+      cardWidth: cardRect?.width || 0,
+      imageRatio: imageRect?.height ? imageRect.width / imageRect.height : 0,
+      objectFit: image ? getComputedStyle(image).objectFit : "",
+      navigatorVisible: Boolean(navigator && getComputedStyle(navigator).display !== "none"),
+      position: document.getElementById("documentDesignThemePosition")?.textContent || "",
+      touchTargets: [...document.querySelectorAll(".doc-design-theme-navigator button")].map((button) => button.getBoundingClientRect().height),
+    };
+  });
+  record(compactGallery.layout === "flex" && compactGallery.cardWidth >= compactGallery.gridWidth * .8, `Compact theme gallery still uses narrow multi-column cards: ${JSON.stringify(compactGallery)}`);
+  record(Math.abs(compactGallery.imageRatio - (16 / 9)) < .03 && compactGallery.objectFit === "contain", `Compact theme preview is cropped or distorted: ${JSON.stringify(compactGallery)}`);
+  record(compactGallery.navigatorVisible && compactGallery.position.trim() === "1 / 12" && compactGallery.touchTargets.every((height) => height >= 44), `Compact theme navigator is not usable: ${JSON.stringify(compactGallery)}`);
+  await page.click('[data-theme-nav="next"]');
+  record(await page.locator('[data-theme-id="executive-summary"]').getAttribute("aria-pressed") === "true", "Next-theme control did not select the next theme");
+  await page.click('[data-theme-nav="previous"]');
+  record(await page.locator('[data-theme-id="public-brief"]').getAttribute("aria-pressed") === "true", "Previous-theme control did not return to the prior theme");
+  await page.evaluate(() => document.querySelector('[data-theme-id="dark-innovation"]')?.click());
+  await page.evaluate(() => document.getElementById("documentDesignGenerateBtn")?.click());
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.evaluate(() => window.PromptDeckTabs.switchTab("documentDesign"));
   await page.waitForSelector("#paneDocumentDesign.active");
@@ -167,11 +199,14 @@ try {
       layout: getComputedStyle(grid).display,
       cardWidth: card?.getBoundingClientRect().width || 0,
       gridWidth: grid?.getBoundingClientRect().width || 0,
+      imageRatio: (() => { const rect = card?.querySelector("img")?.getBoundingClientRect(); return rect?.height ? rect.width / rect.height : 0; })(),
       selection: document.getElementById("documentDesignMobileTheme")?.textContent || "",
+      position: document.getElementById("documentDesignThemePosition")?.textContent || "",
     };
   });
   record(mobileTheme.step === "2" && mobileTheme.layout === "flex", `Mobile theme step or swipe gallery is incorrect: ${JSON.stringify(mobileTheme)}`);
-  record(mobileTheme.overflow <= 1 && mobileTheme.cardWidth < mobileTheme.gridWidth, `Mobile theme carousel does not show a usable next-card cue: ${JSON.stringify(mobileTheme)}`);
+  record(mobileTheme.overflow <= 1 && mobileTheme.cardWidth < mobileTheme.gridWidth && mobileTheme.cardWidth >= mobileTheme.gridWidth * .88, `Mobile theme carousel does not keep one theme large with a usable next-card cue: ${JSON.stringify(mobileTheme)}`);
+  record(Math.abs(mobileTheme.imageRatio - (16 / 9)) < .03, `Mobile theme preview ratio is incorrect: ${JSON.stringify(mobileTheme)}`);
   record(mobileTheme.selection.includes("다크 이노베이션"), "Mobile selected-theme summary is missing");
 
   await page.click('[data-mobile-step="3"]');
