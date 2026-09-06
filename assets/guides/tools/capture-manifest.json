@@ -1,0 +1,166 @@
+{
+  "capturedAt": "2026-09-06T01:04:03.501Z",
+  "sourceOrigin": "https://promptdeck.kr",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "deviceScaleFactor": 1
+  },
+  "state": "Public default data; label-ticket uses the built-in sample project.",
+  "tools": [
+    {
+      "slug": "common-prompt",
+      "tab": "commonPrompt",
+      "files": {
+        "overview": {
+          "path": "common-prompt-overview.jpg",
+          "bytes": 192534
+        },
+        "detail": {
+          "path": "common-prompt-detail.jpg",
+          "bytes": 87509
+        }
+      }
+    },
+    {
+      "slug": "slide-splitter",
+      "tab": "generator",
+      "files": {
+        "overview": {
+          "path": "slide-splitter-overview.jpg",
+          "bytes": 172405
+        },
+        "detail": {
+          "path": "slide-splitter-detail.jpg",
+          "bytes": 124335
+        }
+      }
+    },
+    {
+      "slug": "form-image",
+      "tab": "formImage",
+      "files": {
+        "overview": {
+          "path": "form-image-overview.jpg",
+          "bytes": 157667
+        },
+        "detail": {
+          "path": "form-image-detail.jpg",
+          "bytes": 64980
+        }
+      }
+    },
+    {
+      "slug": "map-image",
+      "tab": "mapPrompt",
+      "files": {
+        "overview": {
+          "path": "map-image-overview.jpg",
+          "bytes": 194018
+        },
+        "detail": {
+          "path": "map-image-detail.jpg",
+          "bytes": 102950
+        }
+      }
+    },
+    {
+      "slug": "promotion-image",
+      "tab": "promotion",
+      "files": {
+        "overview": {
+          "path": "promotion-image-overview.jpg",
+          "bytes": 216337
+        },
+        "detail": {
+          "path": "promotion-image-detail.jpg",
+          "bytes": 72969
+        }
+      }
+    },
+    {
+      "slug": "qr-code",
+      "tab": "qrGenerator",
+      "files": {
+        "overview": {
+          "path": "qr-code-overview.jpg",
+          "bytes": 154200
+        },
+        "detail": {
+          "path": "qr-code-detail.jpg",
+          "bytes": 63045
+        }
+      }
+    },
+    {
+      "slug": "data-diagram",
+      "tab": "dataDiagram",
+      "files": {
+        "overview": {
+          "path": "data-diagram-overview.jpg",
+          "bytes": 167133
+        },
+        "detail": {
+          "path": "data-diagram-detail.jpg",
+          "bytes": 82130
+        }
+      }
+    },
+    {
+      "slug": "label-ticket",
+      "tab": "labelSheet",
+      "files": {
+        "overview": {
+          "path": "label-ticket-overview.jpg",
+          "bytes": 194989
+        },
+        "detail": {
+          "path": "label-ticket-detail.jpg",
+          "bytes": 106601
+        }
+      }
+    },
+    {
+      "slug": "concept-suggest",
+      "tab": "promotionPlanner",
+      "files": {
+        "overview": {
+          "path": "concept-suggest-overview.jpg",
+          "bytes": 207894
+        },
+        "detail": {
+          "path": "concept-suggest-detail.jpg",
+          "bytes": 203972
+        }
+      }
+    },
+    {
+      "slug": "visual-mixer",
+      "tab": "conceptMixer",
+      "files": {
+        "overview": {
+          "path": "visual-mixer-overview.jpg",
+          "bytes": 233793
+        },
+        "detail": {
+          "path": "visual-mixer-detail.jpg",
+          "bytes": 115212
+        }
+      }
+    },
+    {
+      "slug": "photo-transform",
+      "tab": "photoTransform",
+      "files": {
+        "overview": {
+          "path": "photo-transform-overview.jpg",
+          "bytes": 221242
+        },
+        "detail": {
+          "path": "photo-transform-detail.jpg",
+          "bytes": 57610
+        }
+      }
+    }
+  ]
+}

@@ -10,6 +10,7 @@ const robots = await fs.readFile(path.join(root, "robots.txt"), "utf8");
 const sitemap = await fs.readFile(path.join(root, "sitemap.xml"), "utf8");
 const feed = await fs.readFile(path.join(root, "feed.xml"), "utf8");
 const socialCard = await fs.readFile(path.join(root, "assets", "brand", "promptdeck-social-card.png"));
+const toolCaptureManifest = JSON.parse(await fs.readFile(path.join(root, "assets", "guides", "tools", "capture-manifest.json"), "utf8"));
 const guidePaths = [
   "guides/index.html",
   "guides/ppt-slide-planner-skill.html",
@@ -21,6 +22,8 @@ const toolGuideSlugs = [
   "common-prompt", "slide-splitter", "form-image", "map-image", "promotion-image", "qr-code",
   "data-diagram", "label-ticket", "concept-suggest", "visual-mixer", "photo-transform",
 ];
+assert.equal(toolCaptureManifest.sourceOrigin, "https://promptdeck.kr", "tool captures must record their live source");
+assert.deepEqual(toolCaptureManifest.tools.map((tool) => tool.slug), toolGuideSlugs, "tool capture manifest must cover all guide slugs in order");
 
 assert.match(indexHtml, /<title>PromptDeck \| 실무 시각자료 프롬프트 설계<\/title>/u);
 assert.match(indexHtml, /<link rel="canonical" href="https:\/\/promptdeck\.kr\/" \/>/u);
@@ -79,6 +82,11 @@ for (const guidePath of ["guides/tools/index.html", ...toolGuideSlugs.map((slug)
 
 for (const slug of toolGuideSlugs) {
   assert.ok(sitemap.includes(`<loc>https://promptdeck.kr/guides/tools/${slug}</loc>`), `sitemap missing tool guide ${slug}`);
+  for (const kind of ["overview", "detail"]) {
+    const screenshot = await fs.readFile(path.join(root, "assets", "guides", "tools", `${slug}-${kind}.jpg`));
+    assert.ok(screenshot.length > 30_000, `${slug}-${kind}.jpg is unexpectedly small`);
+    assert.equal(screenshot.subarray(0, 3).toString("hex"), "ffd8ff", `${slug}-${kind}.jpg must be JPEG`);
+  }
 }
 assert.ok(sitemap.includes("<loc>https://promptdeck.kr/guides/tools/</loc>"), "sitemap missing tool guide hub");
 

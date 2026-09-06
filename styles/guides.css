@@ -364,6 +364,210 @@ button:focus-visible {
   html { scroll-behavior: auto; }
 }
 
+.tool-guide-visuals,
+.tool-concept-section {
+  margin-block: 34px;
+}
+
+.tool-screen-intro {
+  margin: -4px 0 18px;
+  color: var(--guide-muted, #64748b);
+  font-size: 14px;
+}
+
+.tool-screen-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.tool-screen-figure {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #dbe4f0;
+  border-radius: 18px;
+  background: #f8fafc;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
+}
+
+.tool-screen-image-link {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #eaf0f8;
+}
+
+.tool-screen-image-link::after {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  content: "원본 크기로 보기 ↗";
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.78);
+  font-size: 11px;
+  font-weight: 800;
+  backdrop-filter: blur(8px);
+}
+
+.tool-screen-image-link:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.tool-screen-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top left;
+  transition: transform 180ms ease;
+}
+
+.tool-screen-detail img {
+  aspect-ratio: 4 / 5;
+}
+
+.tool-screen-image-link:hover img {
+  transform: scale(1.012);
+}
+
+.tool-screen-figure figcaption {
+  display: grid;
+  gap: 5px;
+  min-height: 112px;
+  padding: 17px 18px 19px;
+}
+
+.tool-screen-figure figcaption strong {
+  color: #1d4ed8;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.tool-screen-figure figcaption span {
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.tool-concept-diagram {
+  margin: 0;
+  padding: 24px;
+  overflow: hidden;
+  border: 1px solid #cbdcf8;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.13), transparent 30%),
+    linear-gradient(145deg, #f8fbff, #eff6ff);
+}
+
+.tool-concept-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 26px minmax(0, 1fr) 26px minmax(0, 1fr) 26px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.tool-concept-node {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  padding: 17px 15px;
+  border: 1px solid rgba(147, 197, 253, 0.75);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.07);
+}
+
+.tool-concept-node span {
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.tool-concept-node strong {
+  color: #0f172a;
+  font-size: 16px;
+}
+
+.tool-concept-node small {
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.tool-concept-flow > i {
+  display: grid;
+  place-items: center;
+  color: #60a5fa;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.tool-concept-diagram figcaption {
+  margin-top: 16px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .tool-screen-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-screen-detail img {
+    aspect-ratio: 16 / 10;
+  }
+
+  .tool-concept-flow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .tool-concept-flow > i {
+    min-height: 22px;
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 560px) {
+  .tool-guide-visuals,
+  .tool-concept-section {
+    margin-block: 26px;
+  }
+
+  .tool-screen-figure {
+    border-radius: 14px;
+  }
+
+  .tool-screen-figure figcaption {
+    min-height: 0;
+    padding: 14px;
+  }
+
+  .tool-screen-image-link::after {
+    right: 8px;
+    bottom: 8px;
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  .tool-concept-diagram {
+    padding: 15px;
+    border-radius: 15px;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .guide-card { transition: transform 160ms ease, border-color 160ms ease; }
 }

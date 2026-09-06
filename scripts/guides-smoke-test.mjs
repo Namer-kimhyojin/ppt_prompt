@@ -149,15 +149,20 @@ try {
       const route = `/guides/tools/${slug}`;
       const response = await page.goto(`${origin}${route}`, { waitUntil: "networkidle" });
       if (!response?.ok()) throw new Error(`${route} returned HTTP ${response?.status()}`);
+      await page.locator(".tool-guide-visuals").scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => Array.from(document.querySelectorAll(".tool-screen-figure img")).every((image) => image.complete && image.naturalWidth > 300));
       const metrics = await page.evaluate((expectedTab) => ({
         h1Count: document.querySelectorAll("h1").length,
         stepCount: document.querySelectorAll(".guide-process > li").length,
         hasChecklist: Boolean(document.querySelector(".guide-checklist")),
         hasResult: Boolean(document.querySelector(".guide-result-band")),
+        screenCount: document.querySelectorAll(".tool-screen-figure img[alt]").length,
+        diagramNodeCount: document.querySelectorAll(".tool-concept-node").length,
+        visualTocCount: document.querySelectorAll('.guide-toc a[href="#screen"], .guide-toc a[href="#concept"]').length,
         hasExactCta: Array.from(document.querySelectorAll("a.guide-cta")).some((link) => new URL(link.href).searchParams.get("tab") === expectedTab),
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       }), tab);
-      if (metrics.h1Count !== 1 || metrics.stepCount < 4 || !metrics.hasChecklist || !metrics.hasResult || !metrics.hasExactCta || metrics.overflow) {
+      if (metrics.h1Count !== 1 || metrics.stepCount < 4 || !metrics.hasChecklist || !metrics.hasResult || metrics.screenCount !== 2 || metrics.diagramNodeCount !== 4 || metrics.visualTocCount !== 2 || !metrics.hasExactCta || metrics.overflow) {
         throw new Error(`${route} failed practical guide contract: ${JSON.stringify(metrics)}`);
       }
       const publicNav = await readPublicNav(page);
