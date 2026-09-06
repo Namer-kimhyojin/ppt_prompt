@@ -50,6 +50,7 @@
     setStatus(message);
     syncResultMeta();
     syncMobileFlow();
+    renderThemeProfile();
   }
 
   function syncMobileFlow() {
@@ -83,6 +84,7 @@
       if (!target) return;
       target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
       target.focus({ preventScroll: true });
+      if (mobileStep === 2) centerSelectedTheme("auto");
     });
   }
 
@@ -100,10 +102,16 @@
 
   function themeCards() {
     return CATALOG.list(activeCategory).map((theme) => `
-      <button type="button" class="doc-design-theme-card${theme.id === state.themeId ? " active" : ""}" data-theme-id="${theme.id}" aria-pressed="${theme.id === state.themeId}">
+      <button type="button" class="doc-design-theme-card${theme.id === state.themeId ? " active" : ""}" data-theme-id="${theme.id}" aria-pressed="${theme.id === state.themeId}" aria-label="${escapeHtml(theme.nameKo)} 테마 세트 선택. 표지, 본문, 표와 차트 포함. ${escapeHtml(theme.bestFor)}">
         <span class="doc-design-selected-mark">선택</span>
-        <img src="${theme.previews[state.previewView]}" alt="${escapeHtml(theme.nameKo)} ${viewLabels[state.previewView]} 문서 미리보기" width="960" height="540" loading="${theme.id === state.themeId ? "eager" : "lazy"}">
-        <span class="doc-design-theme-card-copy"><strong>${escapeHtml(theme.nameKo)}</strong><small>${escapeHtml(theme.bestFor)}</small></span>
+        <span class="doc-design-theme-set" aria-hidden="true">
+          <span class="doc-design-theme-set-preview doc-design-theme-set-cover"><img src="${theme.previews.cover}" alt="" width="960" height="540" loading="${theme.id === state.themeId ? "eager" : "lazy"}"><span>표지</span></span>
+          <span class="doc-design-theme-set-secondary">
+            <span class="doc-design-theme-set-preview"><img src="${theme.previews.content}" alt="" width="960" height="540" loading="${theme.id === state.themeId ? "eager" : "lazy"}"><span>본문</span></span>
+            <span class="doc-design-theme-set-preview"><img src="${theme.previews.data}" alt="" width="960" height="540" loading="${theme.id === state.themeId ? "eager" : "lazy"}"><span>표·차트</span></span>
+          </span>
+        </span>
+        <span class="doc-design-theme-card-copy"><strong>${escapeHtml(theme.nameKo)}</strong><small>${escapeHtml(theme.bestFor)}</small><span class="doc-design-theme-card-scope">표지 · 본문 · 표·차트 · 시각 규칙 한 세트</span></span>
       </button>`).join("");
   }
 
@@ -141,6 +149,24 @@
     if (target) applyTheme(target.id);
   }
 
+  function renderThemeProfile() {
+    const title = document.getElementById("documentDesignThemeProfileTitle");
+    const grid = document.getElementById("documentDesignThemeProfileGrid");
+    if (!title || !grid) return;
+    const theme = getTheme(state.themeId);
+    const visual = state.adjustments.visualAssets;
+    const items = [
+      ["배경 이미지", `${visual.backgroundUsage} · ${visual.backgroundStyle}`],
+      ["아이콘", `${visual.iconUsage} · ${visual.iconStyle}`],
+      ["픽토그램", `${visual.pictogramUsage} · ${visual.pictogramStyle}`],
+      ["타이포그래피", visual.typographyScope],
+      ["레이아웃", `${state.adjustments.layout.grid} · ${densityLabels[state.adjustments.layout.density] || state.adjustments.layout.density}`],
+      ["표·그래프", `${state.adjustments.tableRules.style} · ${state.adjustments.chartRules.preferredType}`],
+    ];
+    title.textContent = `${theme.nameKo} 전체 구성`;
+    grid.innerHTML = items.map(([label, value]) => `<div><span>${label}</span><p>${escapeHtml(value)}</p></div>`).join("");
+  }
+
   function kindOptions() {
     return CATALOG.documentKinds.map((kind) => `<option value="${kind.id}"${kind.id === state.documentKind ? " selected" : ""}>${escapeHtml(kind.label)}</option>`).join("");
   }
@@ -157,14 +183,15 @@
     return `<label class="doc-design-check"><input type="checkbox" data-adjust-group="${group}" data-adjust-key="${key}"${state.adjustments[group][key] ? " checked" : ""}>${label}</label>`;
   }
   function optionList(current, entries) {
-    return entries.map(([value, label]) => `<option value="${escapeHtml(value)}"${value === current ? " selected" : ""}>${escapeHtml(label)}</option>`).join("");
+    const choices = entries.some(([value]) => value === current) || current === undefined || current === null ? entries : [[current, current], ...entries];
+    return choices.map(([value, label]) => `<option value="${escapeHtml(value)}"${value === current ? " selected" : ""}>${escapeHtml(label)}</option>`).join("");
   }
 
   function renderShell() {
     root.innerHTML = `
       <div class="document-design-shell">
         <header class="document-design-hero">
-          <div><span class="document-design-kicker">Document Design Builder</span><h2>문서 요청에 완성도 높은 디자인 지침을 더하세요</h2><p>업무 요청 원문을 그대로 보존하고, 선택한 테마의 색상·글꼴·레이아웃·표·차트 규칙을 뒤에 붙여 하나의 실행 프롬프트로 만듭니다.</p></div>
+          <div><span class="document-design-kicker">Document Design Builder</span><h2>문서 요청에 완성도 높은 디자인 지침을 더하세요</h2><p>업무 요청 원문을 그대로 보존하고, 선택한 테마의 배경 이미지·아이콘·픽토그램·서체·레이아웃·표·차트 규칙을 한 번에 적용합니다.</p></div>
           <div class="doc-design-hero-flow" aria-label="작업 흐름"><b>요청 입력</b><span>→</span><b>테마 선택</b><span>→</span><b>세부 조정</b><span>→</span><b>전체 복사</b></div>
         </header>
         <nav class="doc-design-mobile-steps" aria-label="문서 디자인 작업 단계">
@@ -184,19 +211,25 @@
               </div>
             </section>
             <section class="doc-design-card" id="docDesignStep2" data-doc-step="2" aria-labelledby="docDesignThemeTitle" tabindex="-1">
-              <div class="doc-design-card-head"><div><span class="doc-design-step-label">2 · 테마 선택</span><h3 id="docDesignThemeTitle">문서 화면을 보고 고르세요</h3><p>표지·본문·표·차트 보기에서 같은 테마의 실제 페이지 구성을 비교합니다.</p></div><div class="doc-design-view-tabs" role="group" aria-label="테마 카드 미리보기 종류">${Object.entries(viewLabels).map(([id, label]) => `<button type="button" class="doc-design-view-tab${id === state.previewView ? " active" : ""}" data-gallery-view="${id}" aria-pressed="${id === state.previewView}">${label}</button>`).join("")}</div></div>
-              <div class="doc-design-card-body"><div class="doc-design-category-bar" role="group" aria-label="문서 테마 분류">${CATALOG.categories.map((item) => `<button type="button" class="doc-design-filter${item.id === activeCategory ? " active" : ""}" data-theme-category="${item.id}" aria-pressed="${item.id === activeCategory}">${item.label}</button>`).join("")}</div><div class="doc-design-theme-grid" id="documentDesignThemeGrid">${themeCards()}</div><div class="doc-design-theme-navigator" aria-label="테마 이동"><button type="button" data-theme-nav="previous">이전 테마</button><div aria-live="polite"><span>선택한 테마</span><strong id="documentDesignMobileTheme"></strong><small><b id="documentDesignThemePosition"></b> · 좌우로 넘겨 비교</small></div><button type="button" data-theme-nav="next">다음 테마</button></div></div>
+              <div class="doc-design-card-head"><div><span class="doc-design-step-label">2 · 테마 선택</span><h3 id="docDesignThemeTitle">표지·본문·표·차트를 한 세트로 고르세요</h3><p>한 카드에서 세 화면의 색상·서체·레이아웃을 함께 비교하고 완성된 테마를 선택합니다.</p></div></div>
+              <div class="doc-design-card-body"><div class="doc-design-category-bar" role="group" aria-label="문서 테마 분류">${CATALOG.categories.map((item) => `<button type="button" class="doc-design-filter${item.id === activeCategory ? " active" : ""}" data-theme-category="${item.id}" aria-pressed="${item.id === activeCategory}">${item.label}</button>`).join("")}</div><div class="doc-design-theme-grid" id="documentDesignThemeGrid">${themeCards()}</div><div class="doc-design-theme-navigator" aria-label="테마 이동"><button type="button" data-theme-nav="previous">이전 테마</button><div aria-live="polite"><span>선택한 테마</span><strong id="documentDesignMobileTheme"></strong><small><b id="documentDesignThemePosition"></b> · 좌우로 넘겨 비교</small></div><button type="button" data-theme-nav="next">다음 테마</button></div><section class="doc-design-theme-profile" aria-labelledby="documentDesignThemeProfileTitle"><div class="doc-design-theme-profile-head"><div><span>테마에 포함된 설정</span><strong id="documentDesignThemeProfileTitle"></strong></div><p>테마를 선택하면 아래 구성이 한 번에 적용됩니다. 다음 단계에서 필요한 항목만 바꿀 수 있습니다.</p></div><div class="doc-design-theme-profile-grid" id="documentDesignThemeProfileGrid"></div></section></div>
             </section>
             <section class="doc-design-card" id="docDesignStep3" data-doc-step="3" aria-labelledby="docDesignAdjustTitle" tabindex="-1">
               <div class="doc-design-card-head"><div><span class="doc-design-step-label">3 · 세부 조정</span><h3 id="docDesignAdjustTitle">선택한 테마를 문서에 맞추세요</h3><p>변경 내용은 오른쪽 실시간 미리보기와 생성 지침에 반영됩니다.</p></div><button type="button" class="doc-design-btn" id="documentDesignRestoreThemeBtn">테마 기본값</button></div>
               <div class="doc-design-card-body"><div class="doc-design-adjust-groups">
                 <details class="doc-design-adjust-group" open><summary>색상 역할</summary><div class="doc-design-adjust-body"><div class="doc-design-color-grid" id="documentDesignColorGrid">${colorInputs()}</div></div></details>
+                <details class="doc-design-adjust-group"><summary>배경 이미지·아이콘·픽토그램</summary><div class="doc-design-adjust-body">
+                  <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignBackgroundUsage">배경 이미지 적용 범위</label><select id="documentDesignBackgroundUsage" data-adjust-group="visualAssets" data-adjust-key="backgroundUsage">${optionList(state.adjustments.visualAssets.backgroundUsage, [["배경 이미지를 사용하지 않음", "사용하지 않음"], ["표지에만 사용", "표지에만"], ["표지·간지에만 제한적으로 사용", "표지·간지"], ["표지·간지·핵심 페이지에 사용", "핵심 페이지까지"]])}</select></div><div class="doc-design-field"><label for="documentDesignBackgroundStyle">배경 이미지 표현 방식</label><input id="documentDesignBackgroundStyle" type="text" data-adjust-group="visualAssets" data-adjust-key="backgroundStyle" value="${escapeHtml(state.adjustments.visualAssets.backgroundStyle)}"></div></div>
+                  <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignIconUsage">아이콘 적용 범위</label><select id="documentDesignIconUsage" data-adjust-group="visualAssets" data-adjust-key="iconUsage">${optionList(state.adjustments.visualAssets.iconUsage, [["아이콘을 사용하지 않음", "사용하지 않음"], ["핵심 정보의 빠른 탐색에만 사용", "핵심 정보 탐색"], ["제목·단계·상태 표식에 사용", "제목·단계·상태"], ["모든 기능 항목에 일관되게 사용", "기능 항목 전체"]])}</select></div><div class="doc-design-field"><label for="documentDesignIconStyle">아이콘 스타일</label><input id="documentDesignIconStyle" type="text" data-adjust-group="visualAssets" data-adjust-key="iconStyle" value="${escapeHtml(state.adjustments.visualAssets.iconStyle)}"></div></div>
+                  <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignPictogramUsage">픽토그램 적용 범위</label><select id="documentDesignPictogramUsage" data-adjust-group="visualAssets" data-adjust-key="pictogramUsage">${optionList(state.adjustments.visualAssets.pictogramUsage, [["픽토그램을 사용하지 않음", "사용하지 않음"], ["절차·대상·분류를 설명할 때 사용", "절차·대상·분류"], ["프로세스와 관계 구조에 사용", "프로세스·관계"], ["핵심 개념 페이지마다 사용", "핵심 개념 전체"]])}</select></div><div class="doc-design-field"><label for="documentDesignPictogramStyle">픽토그램 스타일</label><input id="documentDesignPictogramStyle" type="text" data-adjust-group="visualAssets" data-adjust-key="pictogramStyle" value="${escapeHtml(state.adjustments.visualAssets.pictogramStyle)}"></div></div>
+                </div></details>
                 <details class="doc-design-adjust-group"><summary>서체와 정보 위계</summary><div class="doc-design-adjust-body">
                   <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignFontPreset">글꼴 조합</label><select id="documentDesignFontPreset">${fontOptions()}</select></div><div class="doc-design-field"><label for="documentDesignDensity">정보 밀도</label><select id="documentDesignDensity"><option value="airy">여유롭게</option><option value="balanced">균형 있게</option><option value="compact">촘촘하게</option></select></div></div>
                   <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignHeadingFont">제목 글꼴</label><input id="documentDesignHeadingFont" type="text" value="${escapeHtml(state.adjustments.typography.headingFamily)}"></div><div class="doc-design-field"><label for="documentDesignBodyFont">본문 글꼴</label><input id="documentDesignBodyFont" type="text" value="${escapeHtml(state.adjustments.typography.bodyFamily)}"></div></div>
                   <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignHeadingSize">제목 크기</label><div class="doc-design-range-row"><input id="documentDesignHeadingSize" type="range" min="18" max="40" step="1" value="${state.adjustments.typography.headingSizePt}"><input id="documentDesignHeadingSizeValue" type="number" min="18" max="40" value="${state.adjustments.typography.headingSizePt}" aria-label="제목 크기 pt"></div></div><div class="doc-design-field"><label for="documentDesignBodySize">본문 크기</label><div class="doc-design-range-row"><input id="documentDesignBodySize" type="range" min="8" max="24" step="0.5" value="${state.adjustments.typography.bodySizePt}"><input id="documentDesignBodySizeValue" type="number" min="8" max="24" step="0.5" value="${state.adjustments.typography.bodySizePt}" aria-label="본문 크기 pt"></div></div></div>
                   <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignFootnoteSize">주석 크기(pt)</label><input id="documentDesignFootnoteSize" type="number" min="7" max="14" step="0.5" value="${state.adjustments.typography.footnoteSizePt}"></div><div class="doc-design-field"><label for="documentDesignHeadingWeight">제목 굵기</label><select id="documentDesignHeadingWeight">${optionList(String(state.adjustments.typography.headingWeight), [["600", "Semibold 600"], ["700", "Bold 700"], ["800", "ExtraBold 800"], ["900", "Black 900"]])}</select></div></div>
                   <div class="doc-design-field"><label for="documentDesignLineHeight">본문 행간</label><div class="doc-design-range-row"><input id="documentDesignLineHeight" type="range" min="110" max="220" step="5" value="${state.adjustments.typography.lineHeightPercent}"><input id="documentDesignLineHeightValue" type="number" min="110" max="220" step="5" value="${state.adjustments.typography.lineHeightPercent}" aria-label="행간 백분율"></div></div>
+                  <div class="doc-design-field"><label for="documentDesignTypographyScope">타이포그래피 적용 범위</label><input id="documentDesignTypographyScope" type="text" data-adjust-group="visualAssets" data-adjust-key="typographyScope" value="${escapeHtml(state.adjustments.visualAssets.typographyScope)}"><small>제목, 본문, 표, 차트, 캡션, 각주 중 테마 서체를 적용할 범위를 정합니다.</small></div>
                   <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignHierarchyLevels">위계 단계</label><select id="documentDesignHierarchyLevels">${optionList(String(state.adjustments.hierarchy.levels), [["3", "3단계: 제목·본문·주석"], ["4", "4단계: 장·절·본문·주석"], ["5", "5단계: 복합 보고서"]])}</select></div><div class="doc-design-field"><label for="documentDesignHierarchyMethod">위계 구분 방식</label><select id="documentDesignHierarchyMethod">${optionList(state.adjustments.hierarchy.method, [["크기·굵기·여백을 함께 사용", "크기·굵기·여백"], ["크기와 번호 체계를 중심으로 구분", "크기·번호 체계"], ["색상 블록과 위치를 중심으로 구분", "색상 블록·위치"], ["최소한의 굵기와 여백만 사용", "굵기·여백 최소형"]])}</select></div></div>
                   <div class="doc-design-row"><div class="doc-design-field"><label for="documentDesignHeadlineStyle">페이지 제목 방식</label><select id="documentDesignHeadlineStyle">${optionList(state.adjustments.hierarchy.headlineStyle, [["결론형 문장", "결론형 문장"], ["명사형 주제", "명사형 주제"], ["질문형 제목과 답변형 부제", "질문형 제목 + 답변형 부제"], ["단계 번호와 행동형 제목", "단계 번호 + 행동형 제목"]])}</select></div><div class="doc-design-field"><label for="documentDesignEmphasis">강조 방식</label><select id="documentDesignEmphasis">${optionList(state.adjustments.hierarchy.emphasis, [["강조색과 굵기", "강조색 + 굵기"], ["굵기와 크기만 사용", "굵기 + 크기"], ["옅은 색상 면과 왼쪽 선", "색상 면 + 왼쪽 선"], ["밑줄과 번호 표식", "밑줄 + 번호"]])}</select></div></div>
                 </div></details>
@@ -297,6 +330,13 @@
     setValue("documentDesignChartGridlines", state.adjustments.chartRules.gridlines);
     setValue("documentDesignChartSort", state.adjustments.chartRules.sortOrder);
     setValue("documentDesignImagePolicy", state.adjustments.components.images);
+    setValue("documentDesignBackgroundUsage", state.adjustments.visualAssets.backgroundUsage);
+    setValue("documentDesignBackgroundStyle", state.adjustments.visualAssets.backgroundStyle);
+    setValue("documentDesignIconUsage", state.adjustments.visualAssets.iconUsage);
+    setValue("documentDesignIconStyle", state.adjustments.visualAssets.iconStyle);
+    setValue("documentDesignPictogramUsage", state.adjustments.visualAssets.pictogramUsage);
+    setValue("documentDesignPictogramStyle", state.adjustments.visualAssets.pictogramStyle);
+    setValue("documentDesignTypographyScope", state.adjustments.visualAssets.typographyScope);
     const sourceCount = document.getElementById("documentDesignSourceCount");
     if (sourceCount) { sourceCount.textContent = `${state.sourcePrompt.length.toLocaleString("ko-KR")}자 · 입력 내용은 임의로 고치지 않습니다.`; sourceCount.classList.remove("error"); }
     document.querySelectorAll('[name="documentDesignFormat"]').forEach((input) => { input.checked = state.formats.includes(input.value); });
@@ -311,8 +351,8 @@
     const grid = document.getElementById("documentDesignThemeGrid");
     if (grid) grid.innerHTML = themeCards();
     document.querySelectorAll("[data-theme-category]").forEach((button) => { const active = button.dataset.themeCategory === activeCategory; button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); });
-    document.querySelectorAll("[data-gallery-view]").forEach((button) => { const active = button.dataset.galleryView === state.previewView; button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); });
     syncThemeNavigator();
+    renderThemeProfile();
   }
 
   function previewMarkup(view) {
@@ -516,7 +556,6 @@
         window.requestAnimationFrame(() => centerSelectedTheme("smooth"));
         return;
       }
-      const galleryView = event.target.closest("[data-gallery-view]"); if (galleryView) { state.previewView = galleryView.dataset.galleryView; markDirty("미리보기 종류를 바꿨습니다."); renderThemeGrid(); renderPreview(); return; }
       const liveView = event.target.closest("[data-live-view]"); if (liveView) { state.previewView = liveView.dataset.liveView; markDirty("미리보기 종류를 바꿨습니다."); renderThemeGrid(); renderPreview(); return; }
       const action = event.target.closest("[data-inline-action]")?.dataset.inlineAction;
       if (action === "generate") generate();

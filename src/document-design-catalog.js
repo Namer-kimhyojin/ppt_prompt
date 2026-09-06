@@ -17,7 +17,91 @@
     tableRules: { style: "얇은 가로선 중심", headerStyle: "주색 배경과 반전 글자", borderStyle: "바깥선 없음·내부 가로선", stripeRows: false, repeatHeader: true, numericAlignment: "오른쪽 정렬", cellPaddingMm: 2.5, maxColumns: 8, showUnits: true, showSource: true },
     chartRules: { preferredType: "막대 차트", colorMode: "주색 계열 + 강조색 1개", dataLabels: "핵심 값만 직접 표시", legend: "상단", gridlines: "주요 가로선만", sortOrder: "의미 있는 순서 또는 내림차순", zeroBaseline: true, threeD: false, showUnits: true, showSource: true },
     components: { cover: true, toc: true, sectionDividers: true, pageNumber: true, table: true, chart: true, images: "필요할 때만 근거 이미지 사용" },
+    visualAssets: {
+      backgroundUsage: "표지·간지에만 제한적으로 사용",
+      backgroundStyle: "주제와 직접 관련된 실제 이미지를 낮은 대비로 사용",
+      iconUsage: "핵심 정보의 빠른 탐색에만 사용",
+      iconStyle: "단색 선형 아이콘, 동일한 선 굵기",
+      pictogramUsage: "절차·대상·분류를 설명할 때 사용",
+      pictogramStyle: "단순한 정면형 픽토그램, 한 세트의 조형 언어 유지",
+      typographyScope: "제목·본문·표·차트·캡션·각주 전체에 같은 서체 체계 적용",
+    },
   };
+
+  const VISUAL_PROFILES = Object.freeze({
+    "public-brief": Object.freeze({
+      backgroundUsage: "표지·간지에만 제한적으로 사용", backgroundStyle: "기관·사업 현장 실사에 주색 오버레이를 옅게 적용",
+      iconUsage: "일정·담당·확인 항목 표식에만 사용", iconStyle: "단색 1.5pt 선형 아이콘, 직선 중심의 공식적 형태",
+      pictogramUsage: "정책 대상·지원 절차·성과 분류에 사용", pictogramStyle: "공공 안내체계형 정면 픽토그램, 동일한 선 굵기",
+      typographyScope: "제목·본문·표·차트·캡션·각주 전체에 공공 문서 서체 체계 적용",
+    }),
+    "executive-summary": Object.freeze({
+      backgroundUsage: "표지와 장 전환 화면에 사용", backgroundStyle: "기업 현장 사진을 짙은 네이비 톤으로 정돈하고 결론 영역은 비움",
+      iconUsage: "의사결정·담당·기한·위험 신호에 사용", iconStyle: "작은 면형 아이콘과 숫자 배지, 각진 모서리",
+      pictogramUsage: "사업부·이해관계자·KPI 묶음에 사용", pictogramStyle: "기하학적 비즈니스 픽토그램, 2색 이내",
+      typographyScope: "결론형 제목·KPI 숫자·조치 항목은 강하게, 본문·주석은 중립적으로 적용",
+    }),
+    "consulting-strategy": Object.freeze({
+      backgroundUsage: "표지에만 추상 구조 이미지 사용", backgroundStyle: "전략 축과 흐름을 암시하는 얇은 선·그리드 배경",
+      iconUsage: "논점·가설·시사점 구분에 제한 사용", iconStyle: "정밀한 단색 선형 아이콘, 정사각 모듈에 정렬",
+      pictogramUsage: "프로세스·조직·시장 구조 설명에 사용", pictogramStyle: "MECE 블록형 픽토그램, 선과 면 비율을 통일",
+      typographyScope: "페이지 결론·논점 제목·도표 주석까지 동일한 컨설팅 위계로 적용",
+    }),
+    "proposal-win": Object.freeze({
+      backgroundUsage: "표지·수행 단계 간지에 사용", backgroundStyle: "과업 현장 또는 서비스 장면을 사선 마스크와 주색으로 결합",
+      iconUsage: "요구사항·해결안·차별성 표식에 사용", iconStyle: "굵은 선형 아이콘과 강조색 포인트, 평가항목별 동일 규격",
+      pictogramUsage: "수행체계·인력·일정·산출물 설명에 사용", pictogramStyle: "역할이 명확한 제안서형 픽토그램, 연결선을 함께 사용",
+      typographyScope: "평가항목 제목·핵심 약속·증빙 캡션에 강한 위계, 본문은 읽기 중심으로 적용",
+    }),
+    "research-policy": Object.freeze({
+      backgroundUsage: "표지에만 연구 대상 이미지를 사용", backgroundStyle: "현장·자료 이미지를 저채도 처리하고 넓은 여백과 결합",
+      iconUsage: "방법·결과·한계 구분에만 사용", iconStyle: "가는 선형 아이콘, 장식 없이 학술적 형태",
+      pictogramUsage: "조사 대상·연구 절차·정책 대안을 설명할 때 사용", pictogramStyle: "도식형 픽토그램과 짧은 명사 레이블을 함께 사용",
+      typographyScope: "장·절·본문·표 제목·그림 캡션·출처·각주까지 연구보고서 위계 적용",
+    }),
+    "technology-industry": Object.freeze({
+      backgroundUsage: "표지·기술 구조 간지에 사용", backgroundStyle: "연구장비·산업 현장 실사에 청색 기술 그리드를 낮은 밀도로 중첩",
+      iconUsage: "기술 요소·기능·성숙도 표식에 사용", iconStyle: "정밀한 모노라인 아이콘, 직각 연결부와 기술 도면 비례",
+      pictogramUsage: "기술 스택·공급망·로드맵 단계에 사용", pictogramStyle: "모듈형 산업 픽토그램, 관계선과 방향 동사를 함께 표시",
+      typographyScope: "기술명·수치·도식 레이블은 기술 서체, 긴 본문·출처는 읽기 서체로 분리 적용",
+    }),
+    "data-evidence": Object.freeze({
+      backgroundUsage: "사진 대신 데이터 패턴을 제한 사용", backgroundStyle: "옅은 좌표선·점 패턴을 표지와 데이터 장에만 적용",
+      iconUsage: "KPI 범주와 증감 상태에 사용", iconStyle: "작은 채움형 데이터 아이콘, 숫자보다 시각 우선순위를 낮게 유지",
+      pictogramUsage: "지표 정의·비교 집단·데이터 흐름에 사용", pictogramStyle: "범례와 직접 연결되는 단색 데이터 픽토그램",
+      typographyScope: "KPI 숫자·차트 제목·축·범례·표 숫자·단위에 숫자 가독성 중심 체계 적용",
+    }),
+    "minimal-office": Object.freeze({
+      backgroundUsage: "배경 이미지를 사용하지 않음", backgroundStyle: "흰 배경과 옅은 회색 면, 얇은 구분선만 사용",
+      iconUsage: "탐색이 필요한 항목에만 최소 사용", iconStyle: "작은 단색 선형 아이콘, 텍스트 기준선에 맞춤",
+      pictogramUsage: "복잡한 절차가 있을 때만 사용", pictogramStyle: "원형·사각형 기본 도형 기반의 단순 픽토그램",
+      typographyScope: "제목·본문·표·주석의 3단 위계만 유지하고 장식적 서체 변형은 사용하지 않음",
+    }),
+    "editorial-premium": Object.freeze({
+      backgroundUsage: "표지와 장 도입부에 대표 이미지 한 장을 크게 사용", backgroundStyle: "고품질 사진을 과감하게 크롭하고 종이 질감과 따뜻한 여백을 결합",
+      iconUsage: "페이지 안내와 인용 출처에만 사용", iconStyle: "가는 에디토리얼 선형 아이콘, 본문보다 낮은 대비",
+      pictogramUsage: "브랜드 원칙·콘텐츠 범주를 설명할 때 사용", pictogramStyle: "기하학과 유기 곡선을 섞은 편집형 픽토그램",
+      typographyScope: "대형 제목·짧은 부제·인용·캡션은 에디토리얼 서체, 긴 본문과 데이터는 중립 서체 적용",
+    }),
+    "education-guide": Object.freeze({
+      backgroundUsage: "화면 예시 주변과 단계 시작 화면에 사용", backgroundStyle: "실제 화면 캡처를 흐리지 않고 옅은 색상 면과 충분한 여백으로 받침",
+      iconUsage: "행동·주의·완료 상태를 항상 함께 표시", iconStyle: "둥근 모서리의 2색 면형 아이콘, 44px 이상 식별 크기",
+      pictogramUsage: "사용자 역할·준비물·단계 흐름에 사용", pictogramStyle: "친근한 평면 픽토그램, 한 단계에 한 의미만 표현",
+      typographyScope: "행동형 제목·단계 번호·버튼명·주의문·화면 캡션까지 교육용 위계 적용",
+    }),
+    "warm-human": Object.freeze({
+      backgroundUsage: "표지·사례 도입부에 인물과 현장 이미지를 사용", backgroundStyle: "자연광의 다큐멘터리 사진을 따뜻한 종이색과 부드럽게 결합",
+      iconUsage: "인용·관계·활동 유형 표식에 사용", iconStyle: "부드러운 곡선의 선형 아이콘, 낮은 채도의 강조색",
+      pictogramUsage: "사람·지역·지원 관계를 설명할 때 사용", pictogramStyle: "다양성을 존중하는 단순 인물 픽토그램, 과장된 표정 금지",
+      typographyScope: "사례 제목·인용문·본문·사진 캡션에 따뜻한 서체 체계, 수치와 출처는 중립 서체 적용",
+    }),
+    "dark-innovation": Object.freeze({
+      backgroundUsage: "표지·간지·기술 개념 페이지에 사용", backgroundStyle: "어두운 공간감 위에 네트워크·신호·입자 이미지를 낮은 밝기로 사용",
+      iconUsage: "기술 기능·상태·핵심 경로에 사용", iconStyle: "청록 발광 포인트가 있는 정밀 선형 아이콘, 외곽 광선 최소화",
+      pictogramUsage: "AI 구성요소·데이터 흐름·미래 시나리오에 사용", pictogramStyle: "노드 기반 기술 픽토그램, 연결 방향과 계층을 명확히 표시",
+      typographyScope: "대형 기술 제목·핵심 수치·도식 레이블에 고대비 서체, 긴 본문은 인쇄 가능한 밝은 중립색 적용",
+    }),
+  });
 
   const CATEGORY_PROFILES = Object.freeze({
     public: {
@@ -50,6 +134,13 @@
   function theme(definition) {
     const categoryProfile = CATEGORY_PROFILES[definition.category] || {};
     const typography = { ...base.typography, ...definition.typography };
+    const layout = { ...base.layout, ...definition.layout };
+    if (definition.layout?.marginMm !== undefined) {
+      layout.marginTopMm = definition.layout.marginTopMm ?? definition.layout.marginMm;
+      layout.marginRightMm = definition.layout.marginRightMm ?? definition.layout.marginMm;
+      layout.marginBottomMm = definition.layout.marginBottomMm ?? definition.layout.marginMm;
+      layout.marginLeftMm = definition.layout.marginLeftMm ?? definition.layout.marginMm;
+    }
     const preset = BASE_FONTS[typography.fontPreset] || BASE_FONTS.corporate;
     typography.headingFamily = definition.typography?.headingFamily || preset.heading;
     typography.bodyFamily = definition.typography?.bodyFamily || preset.body;
@@ -57,11 +148,12 @@
     return Object.freeze({
       ...definition,
       typography: Object.freeze(typography),
-      layout: Object.freeze({ ...base.layout, ...definition.layout }),
+      layout: Object.freeze(layout),
       hierarchy: Object.freeze({ ...base.hierarchy, ...(categoryProfile.hierarchy || {}), ...definition.hierarchy }),
       tableRules: Object.freeze({ ...base.tableRules, ...(categoryProfile.tableRules || {}), ...definition.tableRules }),
       chartRules: Object.freeze({ ...base.chartRules, ...(categoryProfile.chartRules || {}), ...definition.chartRules }),
       components: Object.freeze({ ...base.components, ...definition.components }),
+      visualAssets: Object.freeze({ ...base.visualAssets, ...(VISUAL_PROFILES[definition.id] || {}), ...definition.visualAssets }),
       previews: Object.freeze({
         cover: `${PREVIEW_ROOT}/${definition.id}-cover.png?v=1`,
         content: `${PREVIEW_ROOT}/${definition.id}-content.png?v=1`,
@@ -197,7 +289,7 @@
   ]);
 
   window.PromptDeckDocumentDesignCatalog = Object.freeze({
-    version: 1,
+    version: 2,
     themes,
     categories,
     documentKinds,

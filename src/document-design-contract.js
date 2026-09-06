@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const SCHEMA = "promptdeck-document-design/1.0";
+  const SCHEMA = "promptdeck-document-design/1.1";
   const CATALOG = window.PromptDeckDocumentDesignCatalog;
 
   function clone(value) {
@@ -22,13 +22,14 @@
     const tableRules = { ...theme.tableRules, ...(input?.adjustments?.tableRules || {}) };
     const chartRules = { ...theme.chartRules, ...(input?.adjustments?.chartRules || {}) };
     const components = { ...theme.components, ...(input?.adjustments?.components || {}) };
+    const visualAssets = { ...theme.visualAssets, ...(input?.adjustments?.visualAssets || {}) };
     return {
       sourcePrompt: typeof input?.sourcePrompt === "string" ? input.sourcePrompt : "",
       documentKind: pick(CATALOG.documentKinds, input?.documentKind, CATALOG.documentKinds[0]).id,
       formats: formats.length ? formats : ["DOCX"],
       themeId: theme.id,
       previewView: ["cover", "content", "data"].includes(input?.previewView) ? input.previewView : "cover",
-      adjustments: { colors, typography, layout, hierarchy, tableRules, chartRules, components },
+      adjustments: { colors, typography, layout, hierarchy, tableRules, chartRules, components, visualAssets },
       quality: {
         preserveFacts: input?.quality?.preserveFacts !== false,
         preventOverflow: input?.quality?.preventOverflow !== false,
@@ -74,6 +75,7 @@
       tableRules: clone(state.adjustments.tableRules),
       chartRules: clone(state.adjustments.chartRules),
       components: clone(state.adjustments.components),
+      visualAssets: clone(state.adjustments.visualAssets),
       formatRules: formatProfiles.map((item) => ({ format: item.id, rule: item.rule })),
       signatureRules: theme.signatureRules.slice(),
       avoidRules: theme.avoidRules.slice(),
@@ -94,8 +96,9 @@
     const hierarchy = spec.hierarchy;
     const table = spec.tableRules;
     const chart = spec.chartRules;
+    const visual = spec.visualAssets;
     const lines = [
-      "## 문서 디자인 및 출력 지침 (PromptDeck DocumentDesignSpec 1.0)",
+      "## 문서 디자인 및 출력 지침 (PromptDeck DocumentDesignSpec 1.1)",
       `- 문서 종류: ${spec.document.kindLabel}`,
       `- 출력 형식: ${spec.document.formats.join(", ")}`,
       `- 권장 내용 흐름: ${spec.document.contentFlow}`,
@@ -105,6 +108,10 @@
       `- 레이아웃: ${layout.grid}, 정보 밀도 ${layout.density}, 여백 상 ${layout.marginTopMm}mm·우 ${layout.marginRightMm}mm·하 ${layout.marginBottomMm}mm·좌 ${layout.marginLeftMm}mm, 머리말 거리 ${layout.headerDistanceMm}mm, 꼬리말 거리 ${layout.footerDistanceMm}mm, 문단 간격 ${layout.paragraphGapPt}pt, 절 간격 ${layout.sectionGapPt}pt`,
       `- 정보 위계: ${hierarchy.levels}단계, ${hierarchy.method}; 제목은 ${hierarchy.headlineStyle}, 번호 체계 ${hierarchy.numbering}, 강조 ${hierarchy.emphasis}, ${hierarchy.alignment}`,
       `- 문서 요소: 표지 ${yesNo(component.cover)}, 목차 ${yesNo(component.toc)}, 간지 ${yesNo(component.sectionDividers)}, 쪽번호 ${yesNo(component.pageNumber)}, 표 ${yesNo(component.table)}, 차트 ${yesNo(component.chart)}, 이미지 정책 ‘${component.images}’`,
+      `- 배경 이미지: ${visual.backgroundUsage}; ${visual.backgroundStyle}`,
+      `- 아이콘: ${visual.iconUsage}; ${visual.iconStyle}`,
+      `- 픽토그램: ${visual.pictogramUsage}; ${visual.pictogramStyle}`,
+      `- 타이포그래피 적용 범위: ${visual.typographyScope}`,
       `- 표 규칙: ${table.style}, 머리행 ${table.headerStyle}, 선 ${table.borderStyle}, 줄무늬 ${yesNo(table.stripeRows)}, 머리행 반복 ${yesNo(table.repeatHeader)}, 숫자 ${table.numericAlignment}, 셀 안쪽 여백 ${table.cellPaddingMm}mm, 최대 ${table.maxColumns}열, 단위 ${yesNo(table.showUnits)}, 출처 ${yesNo(table.showSource)}`,
       `- 그래프 규칙: 우선 ${chart.preferredType}, 색상 ${chart.colorMode}, 값 표기 ${chart.dataLabels}, 범례 ${chart.legend}, 눈금선 ${chart.gridlines}, 정렬 ${chart.sortOrder}, 0 기준선 ${yesNo(chart.zeroBaseline)}, 3D ${yesNo(chart.threeD)}, 단위 ${yesNo(chart.showUnits)}, 출처 ${yesNo(chart.showSource)}`,
       `- 시그니처 규칙: ${spec.signatureRules.join("; ")}`,
