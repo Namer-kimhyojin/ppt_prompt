@@ -220,7 +220,7 @@
   openTargetDetails();
   window.addEventListener("hashchange", openTargetDetails);
 
-  if (/^\/guides\/tools\/[^/]+\/?$/u.test(location.pathname) && document.querySelector(".tool-guide-path")) {
+  if (/^\/guides\/tools(?:\/[^/]+)?\/?$/u.test(location.pathname)) {
     var visualScript = document.createElement("script");
     visualScript.src = "/src/tool-guide-visuals.js";
     visualScript.defer = true;

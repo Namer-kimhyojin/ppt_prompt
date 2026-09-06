@@ -85,13 +85,79 @@
   var guide = guides[slug];
   var content = document.querySelector(".guide-content");
   var steps = document.getElementById("steps");
-  if (!guide || !content || !steps) return;
+  if (!guide || !content || !steps) {
+    if (/^\/guides\/tools\/(?:index\.html)?$/u.test(location.pathname)) enhanceToolHub();
+    return;
+  }
 
   function create(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
     if (text) node.textContent = text;
     return node;
+  }
+
+  function enhanceToolHub() {
+    document.querySelectorAll('a.guide-card[href^="/guides/tools/"]').forEach(function (card) {
+      var href = card.getAttribute("href") || "";
+      var cardSlug = href.replace(/\/+$/u, "").split("/").pop();
+      var cardGuide = guides[cardSlug];
+      if (!cardGuide || card.querySelector(".tool-guide-card-thumb")) return;
+      var media = create("span", "tool-guide-card-thumb");
+      var image = create("img");
+      image.src = `/assets/guides/tools/${cardSlug}-overview.jpg`;
+      image.alt = `${cardGuide.name} 실제 화면 미리보기`;
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.width = 1440;
+      image.height = 900;
+      media.append(image, create("span", "", "실제 화면 미리보기"));
+      card.insertBefore(media, card.firstChild);
+    });
+  }
+
+  function installLightbox() {
+    if (typeof HTMLDialogElement === "undefined") return;
+    var dialog = create("dialog", "tool-screen-dialog");
+    dialog.setAttribute("aria-labelledby", "toolScreenDialogTitle");
+    var panel = create("div", "tool-screen-dialog-panel");
+    var head = create("header", "tool-screen-dialog-head");
+    var title = create("strong");
+    title.id = "toolScreenDialogTitle";
+    var close = create("button", "", "닫기");
+    close.type = "button";
+    close.setAttribute("aria-label", "확대 화면 닫기");
+    var image = create("img");
+    var caption = create("p");
+    head.append(title, close);
+    panel.append(head, image, caption);
+    dialog.appendChild(panel);
+    document.body.appendChild(dialog);
+    var lastTrigger = null;
+
+    content.addEventListener("click", function (event) {
+      var link = event.target.closest(".tool-screen-image-link");
+      if (!link) return;
+      event.preventDefault();
+      var source = link.querySelector("img");
+      var figureCaption = link.closest("figure")?.querySelector("figcaption span")?.textContent || "";
+      if (!source) return;
+      lastTrigger = link;
+      image.src = source.src;
+      image.alt = source.alt;
+      title.textContent = source.alt;
+      caption.textContent = figureCaption;
+      dialog.showModal();
+      close.focus();
+    });
+    close.addEventListener("click", function () { dialog.close(); });
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", function () {
+      image.removeAttribute("src");
+      lastTrigger?.focus();
+    });
   }
 
   function screenFigure(kind, caption, width, height) {
@@ -101,6 +167,7 @@
     link.href = src;
     link.target = "_blank";
     link.rel = "noopener";
+    link.dataset.toolScreen = kind;
     link.setAttribute("aria-label", `${guide.name} ${kind === "overview" ? "전체 화면" : "세부 화면"} 원본 크기로 보기`);
     var img = create("img");
     img.src = src;
@@ -161,4 +228,5 @@
     toc.insertBefore(screenLink, stepLink);
     toc.insertBefore(conceptLink, stepLink);
   }
+  installLightbox();
 })();
