@@ -209,13 +209,20 @@
     const grammarId = visualGrammarId();
     const grammar = getVisualGrammar();
     const direct = CATALOG.listByGrammar?.(grammarId);
-    if (Array.isArray(direct) && direct.length) return direct;
     const ids = new Set(grammar?.recommendedThemeIds || []);
-    const matches = CATALOG.themes.filter((theme) => (theme.recommendedGrammarIds || []).includes(grammarId) || ids.has(theme.id));
+    const matches = Array.isArray(direct) && direct.length
+      ? direct
+      : CATALOG.themes.filter((theme) => (theme.recommendedGrammarIds || []).includes(grammarId) || ids.has(theme.id));
     return matches.length ? matches : CATALOG.themes.slice();
   }
   function visibleThemes() {
-    if (activeCategory === "recommended") return recommendedThemes();
+    if (activeCategory === "recommended") {
+      const recommended = recommendedThemes();
+      const selected = getTheme(state.themeId);
+      return selected && !recommended.some((theme) => theme.id === selected.id)
+        ? [selected, ...recommended]
+        : recommended;
+    }
     return CATALOG.list(activeCategory);
   }
 

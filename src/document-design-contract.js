@@ -188,7 +188,7 @@
     const colorPlacement = { ...DEFAULT_COLOR_PLACEMENT, ...asObject(visualGrammar.colorPlacement, "strategy"), ...asObject(theme.colorPlacement, "strategy"), ...asObject(input?.adjustments?.colorPlacement, "strategy") };
     const typographyScope = { ...DEFAULT_TYPE_SCOPE, ...asObject(visualGrammar.typographyScope || visualGrammar.typeSystem, "visualGrammar"), ...asObject(theme.typographyScope), ...asObject(input?.adjustments?.typographyScope) };
     const grammarPageRules = {
-      cover: { rule: `${visualGrammar.visualTone || visualGrammar.description || "선택한 시각 어조"}를 대표 색상·이미지·제목 배치로 명확히 보여준다.` },
+      cover: { rule: `‘${visualGrammar.visualTone || visualGrammar.description || "선택한 시각 어조"}’의 인상을 대표 색상·이미지·제목 배치로 명확히 보여준다.` },
       chapter: { rule: `${visualGrammar.pageRhythm || "문서 전체 리듬"}을 이어가며 장 번호·장 제목·전환 배경을 같은 체계로 반복한다.` },
       body: { rule: `${visualGrammar.typeSystem || "제목·본문·주석 위계"}와 ${visualGrammar.layoutSystem || "반복 가능한 그리드"}를 적용해 긴 읽기의 안정성을 유지한다.` },
       image: { rule: `${visualGrammar.imageSystem || "사진·삽화·도식 체계"}을 적용하고 캡션·출처·텍스트 안전 영역을 일관되게 배치한다.` },
