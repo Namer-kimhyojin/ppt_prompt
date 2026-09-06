@@ -20,6 +20,142 @@
     Object.freeze({ id: "landscape", label: "가로형" }),
   ]);
 
+  const PAGE_ARCHETYPES = Object.freeze([
+    Object.freeze({ id: "cover", label: "표지", shortLabel: "표지", previewKey: "cover", visualScope: "대표 색상·이미지·서체의 첫인상과 제목 영역의 위치를 정의" }),
+    Object.freeze({ id: "chapter", label: "장 시작", shortLabel: "장 시작", previewKey: "cover", visualScope: "장 번호·장 제목·전환 배경의 반복 규칙을 정의" }),
+    Object.freeze({ id: "body", label: "본문", shortLabel: "본문", previewKey: "content", visualScope: "본문 열·문단·제목·캡션·쪽번호의 읽기 리듬을 정의" }),
+    Object.freeze({ id: "image", label: "이미지", shortLabel: "이미지", previewKey: "content", visualScope: "사진·일러스트·도식과 캡션의 크기·비율·배치를 정의" }),
+    Object.freeze({ id: "data", label: "표·차트", shortLabel: "표·차트", previewKey: "data", visualScope: "표·그래프·범례·단위·출처의 공통 조형 규칙을 정의" }),
+    Object.freeze({ id: "special", label: "특수 페이지", shortLabel: "특수", previewKey: "data", visualScope: "문서 유형별 문제·해설·인용·펼침면 등 별도 화면의 시각 규칙을 정의" }),
+  ]);
+
+  const VISUAL_GRAMMARS = Object.freeze([
+    Object.freeze({
+      id: "report-analysis", label: "보고·분석형", description: "결론, 근거, 수치가 빠르게 구분되는 정돈된 업무 문법",
+      visualTone: "신뢰감 있고 절제된 정보 중심", layoutSystem: "결론 영역과 근거 영역을 분리한 모듈 그리드", typeSystem: "제목은 단단하게, 본문과 주석은 중립적으로",
+      imageSystem: "근거 사진과 구조 도식만 제한적으로 사용", tableChartSystem: "비교 기준·단위·출처가 먼저 보이는 데이터 표현", colorPlacement: "주색은 제목·머리행, 강조색은 결론·핵심 수치, 중립색은 본문·보조선에 배치",
+      pageRhythm: "짧은 요약 화면과 근거 화면을 규칙적으로 교차", specialPageLabel: "요약·의사결정", recommendedThemeIds: Object.freeze(["public-brief", "executive-summary", "consulting-strategy", "proposal-win", "data-evidence", "minimal-office"]),
+    }),
+    Object.freeze({
+      id: "professional-explanation", label: "전문·해설형", description: "복잡한 전문 정보를 장·절·도식 위계로 안정적으로 안내하는 문법",
+      visualTone: "정밀하고 차분한 해설 중심", layoutSystem: "본문과 주석·용어·도식을 함께 읽는 다층 그리드", typeSystem: "장·절·항목과 캡션·각주를 명확히 분리",
+      imageSystem: "실사·구조도·주석 이미지를 동일한 프레임 체계로 관리", tableChartSystem: "세부 비교와 기술 수치를 촘촘하지만 읽기 쉽게 정렬", colorPlacement: "주색은 장·절 표식, 보조색은 해설 면, 강조색은 핵심 용어와 참조 연결에 배치",
+      pageRhythm: "해설 본문과 도식 중심 화면을 번갈아 구성", specialPageLabel: "용어·사례 해설", recommendedThemeIds: Object.freeze(["research-policy", "technology-industry", "data-evidence", "education-guide"]),
+    }),
+    Object.freeze({
+      id: "textbook-learning", label: "교과·학습형", description: "학습 요소와 도움말이 단계적으로 구분되는 교육 출판 문법",
+      visualTone: "친절하고 체계적인 학습 안내", layoutSystem: "본문·예시·활동·도움말을 반복 가능한 학습 블록으로 배치", typeSystem: "학습 제목·본문·핵심 용어·참고 상자의 역할을 서체와 굵기로 구분",
+      imageSystem: "설명 그림·화면 캡처·개념 도식을 본문 인접 위치에 배치", tableChartSystem: "과정·비교·정리 목적에 맞춘 단순한 표와 그래프", colorPlacement: "주색은 단원 표식, 보조색은 학습 상자, 강조색은 핵심 개념과 행동 신호에 배치",
+      pageRhythm: "개념·예시·활동·정리 화면의 시각 밀도를 단계적으로 조절", specialPageLabel: "활동·핵심 정리", recommendedThemeIds: Object.freeze(["education-guide", "research-policy", "warm-human", "minimal-office"]),
+    }),
+    Object.freeze({
+      id: "exam-practice", label: "수험·문제형", description: "문제, 선택지, 해설, 정답을 즉시 구별하는 반복 학습 문법",
+      visualTone: "집중감 있고 명확한 훈련 중심", layoutSystem: "문제 번호·본문·선택지·해설·정답 영역을 고정 위치에 반복", typeSystem: "문제 번호와 정답 신호는 강하게, 긴 해설은 편안하게",
+      imageSystem: "문제 해결에 필요한 도식과 자료 이미지만 번호·캡션과 함께 사용", tableChartSystem: "문제 자료와 해설 근거를 구분하는 얇은 선 중심", colorPlacement: "주색은 문제 번호, 보조색은 해설 면, 강조색은 정답·주의·빈출 표식에 배치",
+      pageRhythm: "문제 화면과 해설 화면의 규칙을 고정해 탐색 부담을 줄임", specialPageLabel: "문제·정답·해설", recommendedThemeIds: Object.freeze(["education-guide", "data-evidence", "minimal-office", "technology-industry"]),
+    }),
+    Object.freeze({
+      id: "literary-reading", label: "문학·읽기형", description: "긴 글의 호흡과 문장 감상을 여백·행간·장 전환으로 살리는 문법",
+      visualTone: "차분하고 몰입감 있는 읽기 중심", layoutSystem: "안정된 판면과 넉넉한 바깥 여백, 절제된 장식", typeSystem: "본문 가독성과 인용·장 제목의 감정적 대비를 함께 유지",
+      imageSystem: "작품 분위기를 돕는 사진·삽화를 장 도입부와 간지에 제한 사용", tableChartSystem: "필요한 경우에도 본문 리듬을 해치지 않는 최소 선과 낮은 대비", colorPlacement: "종이색 계열 배경과 짙은 본문색을 기본으로 하고 강조색은 장 표식·인용에만 배치",
+      pageRhythm: "긴 읽기 화면 사이에 장 시작·인용·여백 화면을 배치", specialPageLabel: "인용·작가 노트", recommendedThemeIds: Object.freeze(["editorial-premium", "warm-human", "minimal-office", "research-policy"]),
+    }),
+    Object.freeze({
+      id: "illustrated-narrative", label: "그림·서사형", description: "글과 그림이 장면 단위로 함께 흐르는 이야기 출판 문법",
+      visualTone: "감정과 장면 전환이 분명한 서사 중심", layoutSystem: "단면·펼침면을 오가며 텍스트 안전 영역과 시선 흐름을 고정", typeSystem: "이야기 본문·대화·효과음·캡션을 서로 다른 역할로 표현",
+      imageSystem: "캐릭터·배경·색감·광원의 일관성을 전 페이지에서 유지", tableChartSystem: "정보 요소가 필요할 때는 이야기 그림과 충돌하지 않는 단순 픽토그램으로 대체", colorPlacement: "장면의 감정색을 넓은 면에 사용하고 읽기 영역은 충분한 대비를 확보",
+      pageRhythm: "전면 그림·부분 그림·여백 중심 화면을 서사 속도에 맞춰 교차", specialPageLabel: "장면 펼침면", recommendedThemeIds: Object.freeze(["warm-human", "editorial-premium", "education-guide"]),
+    }),
+    Object.freeze({
+      id: "editorial", label: "에디토리얼형", description: "사진, 대형 제목, 비대칭 여백으로 편집 의도를 선명하게 드러내는 문법",
+      visualTone: "세련되고 개성 있는 편집 중심", layoutSystem: "유연한 다단 그리드와 의도적인 비대칭·크롭", typeSystem: "대형 제목·짧은 부제·본문·캡션의 크기 대비를 적극 활용",
+      imageSystem: "대표 이미지의 크롭과 여백을 핵심 구성 요소로 사용", tableChartSystem: "편집 색상과 조화를 이루되 수치 판독성과 범례 규칙은 유지", colorPlacement: "주색은 넓은 면과 장 표식, 강조색은 인용·숫자·탐색 신호에 선택적으로 배치",
+      pageRhythm: "강한 비주얼 화면과 조용한 읽기 화면을 교차", specialPageLabel: "포토 에세이·인포그래픽", recommendedThemeIds: Object.freeze(["editorial-premium", "consulting-strategy", "warm-human", "dark-innovation"]),
+    }),
+  ]);
+
+  const PUBLICATION_TYPES = Object.freeze([
+    Object.freeze({ id: "business-report", label: "일반 보고서", grammarId: "report-analysis", bestFor: "업무 현황·성과·결과 보고" }),
+    Object.freeze({ id: "business-plan", label: "기획서·사업계획서", grammarId: "report-analysis", bestFor: "사업 기획·실행 계획·예산 설명" }),
+    Object.freeze({ id: "proposal", label: "제안서", grammarId: "report-analysis", bestFor: "입찰·협업·서비스 제안" }),
+    Object.freeze({ id: "policy-research", label: "정책·연구보고서", grammarId: "report-analysis", bestFor: "정책 분석·실태 조사·연구 결과" }),
+    Object.freeze({ id: "annual-report", label: "연차·성과보고서", grammarId: "report-analysis", bestFor: "기관·기업의 연간 활동과 성과" }),
+    Object.freeze({ id: "market-report", label: "시장·산업분석서", grammarId: "report-analysis", bestFor: "시장 규모·경쟁·산업 동향" }),
+    Object.freeze({ id: "presentation", label: "발표자료", grammarId: "report-analysis", bestFor: "회의·브리핑·설명 발표" }),
+    Object.freeze({ id: "meeting-results", label: "회의·결과자료", grammarId: "report-analysis", bestFor: "안건·결정·후속 조치 기록" }),
+    Object.freeze({ id: "whitepaper", label: "전문 백서", grammarId: "professional-explanation", bestFor: "전문 분야의 구조적 해설" }),
+    Object.freeze({ id: "technical-report", label: "기술 보고서", grammarId: "professional-explanation", bestFor: "기술 구조·시험·개발 결과" }),
+    Object.freeze({ id: "professional-guide", label: "전문 실무서", grammarId: "professional-explanation", bestFor: "직무 지식·실무 방법 해설" }),
+    Object.freeze({ id: "manual", label: "매뉴얼·가이드", grammarId: "professional-explanation", bestFor: "절차·화면·주의사항 안내" }),
+    Object.freeze({ id: "handbook", label: "핸드북·편람", grammarId: "professional-explanation", bestFor: "빠른 참조용 전문 정보" }),
+    Object.freeze({ id: "reference-book", label: "참고서·사전형 도서", grammarId: "professional-explanation", bestFor: "용어·개념·사례 참조" }),
+    Object.freeze({ id: "textbook", label: "교과서", grammarId: "textbook-learning", bestFor: "정규 학습 과정과 단원 구성" }),
+    Object.freeze({ id: "study-guide", label: "자습서", grammarId: "textbook-learning", bestFor: "개념·예시·활동·정리 학습" }),
+    Object.freeze({ id: "learning-workbook", label: "학습 워크북", grammarId: "textbook-learning", bestFor: "쓰기·활동·점검 중심 학습" }),
+    Object.freeze({ id: "lecture-notes", label: "강의 교재", grammarId: "textbook-learning", bestFor: "강의 흐름과 필기·참고 영역" }),
+    Object.freeze({ id: "teacher-guide", label: "교사용 지도서", grammarId: "textbook-learning", bestFor: "수업 운영·지도 포인트·자료" }),
+    Object.freeze({ id: "certification-book", label: "자격증 도서", grammarId: "exam-practice", bestFor: "핵심 이론·문제·해설 반복" }),
+    Object.freeze({ id: "exam-prep", label: "수험서", grammarId: "exam-practice", bestFor: "시험 범위·빈출 개념·실전 훈련" }),
+    Object.freeze({ id: "question-bank", label: "문제집", grammarId: "exam-practice", bestFor: "문제·선택지·정답 체계" }),
+    Object.freeze({ id: "solution-book", label: "해설집", grammarId: "exam-practice", bestFor: "풀이 단계·정답 근거·오답 안내" }),
+    Object.freeze({ id: "essay-collection", label: "수필집", grammarId: "literary-reading", bestFor: "긴 글과 짧은 장의 감상" }),
+    Object.freeze({ id: "prose-collection", label: "산문집", grammarId: "literary-reading", bestFor: "문장 중심의 연속 읽기" }),
+    Object.freeze({ id: "memoir", label: "회고록·자서전", grammarId: "literary-reading", bestFor: "시간 흐름·사진·기록 결합" }),
+    Object.freeze({ id: "poetry-collection", label: "시집", grammarId: "literary-reading", bestFor: "짧은 텍스트와 넓은 여백" }),
+    Object.freeze({ id: "fairy-tale", label: "동화책", grammarId: "illustrated-narrative", bestFor: "글과 삽화가 함께 흐르는 이야기" }),
+    Object.freeze({ id: "picture-book", label: "그림책", grammarId: "illustrated-narrative", bestFor: "펼침면 중심의 시각 서사" }),
+    Object.freeze({ id: "storybook", label: "스토리북", grammarId: "illustrated-narrative", bestFor: "장면·대화·서술의 반복" }),
+    Object.freeze({ id: "children-learning", label: "어린이 학습책", grammarId: "illustrated-narrative", bestFor: "그림·활동·짧은 설명 결합" }),
+    Object.freeze({ id: "magazine", label: "매거진", grammarId: "editorial", bestFor: "기사·사진·인포그래픽 편집" }),
+    Object.freeze({ id: "brand-book", label: "브랜드북", grammarId: "editorial", bestFor: "브랜드 원칙·사례·이미지 체계" }),
+    Object.freeze({ id: "catalogue", label: "카탈로그", grammarId: "editorial", bestFor: "제품·작품·서비스 이미지 편집" }),
+    Object.freeze({ id: "brochure", label: "브로슈어", grammarId: "editorial", bestFor: "짧은 소개와 강한 대표 이미지" }),
+  ]);
+
+  const PRODUCTION_OPTIONS = Object.freeze({
+    mediums: Object.freeze([
+      Object.freeze({ id: "print", label: "인쇄물", rule: "실물 출력 기준으로 색상·선·여백·재단 안전 영역을 관리" }),
+      Object.freeze({ id: "screen", label: "화면 열람", rule: "RGB 화면 대비와 확대·축소 시 가독성을 우선" }),
+      Object.freeze({ id: "hybrid", label: "인쇄+화면", rule: "인쇄 안정성과 화면 가독성을 함께 충족" }),
+    ]),
+    bindings: Object.freeze([
+      Object.freeze({ id: "none", label: "제본 없음", gutterMm: 0 }),
+      Object.freeze({ id: "perfect", label: "무선 제본", gutterMm: 6 }),
+      Object.freeze({ id: "saddle", label: "중철 제본", gutterMm: 3 }),
+      Object.freeze({ id: "hardcover", label: "양장 제본", gutterMm: 8 }),
+      Object.freeze({ id: "spiral", label: "스프링 제본", gutterMm: 10 }),
+    ]),
+    duplexModes: Object.freeze([
+      Object.freeze({ id: "single", label: "단면", rule: "모든 페이지의 안쪽·바깥쪽 여백을 동일하게 적용" }),
+      Object.freeze({ id: "duplex-long", label: "양면·긴쪽 넘김", rule: "홀수·짝수 페이지의 안쪽 여백과 페이지 요소를 좌우 대칭" }),
+      Object.freeze({ id: "duplex-short", label: "양면·짧은쪽 넘김", rule: "상하 넘김 방향에 맞춰 뒷면의 읽기 방향을 유지" }),
+    ]),
+    spreadModes: Object.freeze([
+      Object.freeze({ id: "single-pages", label: "낱장 보기", rule: "각 페이지를 독립된 판면으로 구성" }),
+      Object.freeze({ id: "facing-pages", label: "맞쪽 보기", rule: "좌우 페이지의 기준선·여백·시각 무게를 한 펼침면으로 조정" }),
+      Object.freeze({ id: "cover-spread", label: "표지 펼침면", rule: "뒤표지·책등·앞표지를 하나의 연속된 인쇄면으로 구성" }),
+    ]),
+    bleeds: Object.freeze([
+      Object.freeze({ id: "none", label: "도련 없음", bleedMm: 0 }),
+      Object.freeze({ id: "3mm", label: "도련 3mm", bleedMm: 3 }),
+    ]),
+  });
+
+  const THEME_GRAMMAR_MAP = Object.freeze({
+    "public-brief": Object.freeze(["report-analysis", "professional-explanation"]),
+    "executive-summary": Object.freeze(["report-analysis"]),
+    "consulting-strategy": Object.freeze(["report-analysis", "editorial"]),
+    "proposal-win": Object.freeze(["report-analysis"]),
+    "research-policy": Object.freeze(["report-analysis", "professional-explanation", "textbook-learning", "literary-reading"]),
+    "technology-industry": Object.freeze(["professional-explanation", "exam-practice"]),
+    "data-evidence": Object.freeze(["report-analysis", "professional-explanation", "exam-practice"]),
+    "minimal-office": Object.freeze(["report-analysis", "exam-practice", "literary-reading"]),
+    "editorial-premium": Object.freeze(["literary-reading", "illustrated-narrative", "editorial"]),
+    "education-guide": Object.freeze(["professional-explanation", "textbook-learning", "exam-practice", "illustrated-narrative"]),
+    "warm-human": Object.freeze(["textbook-learning", "literary-reading", "illustrated-narrative", "editorial"]),
+    "dark-innovation": Object.freeze(["professional-explanation", "editorial"]),
+  });
+
   const base = {
     typography: { fontPreset: "corporate", headingSizePt: 25, bodySizePt: 11, footnoteSizePt: 8.5, headingWeight: 700, bodyWeight: 400, lineHeightPercent: 155, letterSpacingEm: -0.015 },
     layout: { density: "balanced", grid: "12열 모듈 그리드", marginMm: 18, marginTopMm: 18, marginRightMm: 18, marginBottomMm: 18, marginLeftMm: 18, paragraphGapPt: 7, sectionGapPt: 18, headerDistanceMm: 10, footerDistanceMm: 10, header: true, footer: true },
@@ -205,8 +341,18 @@
     typography.fallback = definition.typography?.fallback || preset.fallback;
     const hierarchy = { ...base.hierarchy, ...(categoryProfile.hierarchy || {}), ...definition.hierarchy };
     const tableRules = { ...base.tableRules, ...(categoryProfile.tableRules || {}), ...definition.tableRules };
+    const previews = Object.freeze({
+      cover: `${PREVIEW_ROOT}/${definition.id}-cover.png?v=1`,
+      content: `${PREVIEW_ROOT}/${definition.id}-content.png?v=1`,
+      data: `${PREVIEW_ROOT}/${definition.id}-data.png?v=1`,
+    });
+    const pagePreviews = Object.freeze(PAGE_ARCHETYPES.reduce((result, page) => {
+      result[page.id] = previews[page.previewKey];
+      return result;
+    }, {}));
     return Object.freeze({
       ...definition,
+      recommendedGrammarIds: THEME_GRAMMAR_MAP[definition.id] || Object.freeze(["report-analysis"]),
       typography: Object.freeze(typography),
       layout: Object.freeze(layout),
       hierarchy: Object.freeze(hierarchy),
@@ -215,11 +361,8 @@
       components: Object.freeze({ ...base.components, ...definition.components }),
       visualAssets: Object.freeze({ ...base.visualAssets, ...(VISUAL_PROFILES[definition.id] || {}), ...definition.visualAssets }),
       creativeDegrees: degreeProfile(typography, layout, hierarchy, tableRules, definition.creativeDegrees),
-      previews: Object.freeze({
-        cover: `${PREVIEW_ROOT}/${definition.id}-cover.png?v=1`,
-        content: `${PREVIEW_ROOT}/${definition.id}-content.png?v=1`,
-        data: `${PREVIEW_ROOT}/${definition.id}-data.png?v=1`,
-      }),
+      previews,
+      pagePreviews,
     });
   }
 
@@ -333,10 +476,10 @@
   ]);
 
   const outputFormats = Object.freeze([
-    { id: "PPTX", label: "PPTX", rule: "16:9, 제목 28pt 이상, 본문 16pt 이상, 슬라이드당 핵심 메시지 하나" },
-    { id: "DOCX", label: "DOCX", rule: "A4 세로, 인쇄 여백, 문단 간격, 표 반복 머리행, 페이지 나눔 제어" },
-    { id: "HWPX", label: "HWPX", rule: "A4 세로, 한글 문단·표 구조, 공공기관 출력 안정성" },
-    { id: "PDF", label: "PDF", rule: "문서 종류의 판형 상속, 글꼴 포함, 링크와 페이지 잘림 검수" },
+    { id: "PPTX", label: "PPTX", rule: "지정한 완성 크기와 방향을 슬라이드 크기에 적용하고 화면·인쇄에서 요소 잘림을 검수" },
+    { id: "DOCX", label: "DOCX", rule: "지정한 판형·방향·제본 여백을 적용하고 문단 간격, 표 반복 머리행, 페이지 나눔을 제어" },
+    { id: "HWPX", label: "HWPX", rule: "지정한 판형·방향·제본 여백을 적용하고 한글 문단·표 구조와 출력 안정성을 검수" },
+    { id: "PDF", label: "PDF", rule: "지정한 판형·방향·도련을 유지하고 글꼴 포함, 링크와 페이지 잘림을 검수" },
     { id: "HTML", label: "화면용 HTML", rule: "반응형 재배치, 접근성 대비, 키보드 사용, 별도 인쇄 스타일" },
   ]);
 
@@ -350,15 +493,26 @@
   ]);
 
   window.PromptDeckDocumentDesignCatalog = Object.freeze({
-    version: 3,
+    version: 4,
     themes,
     categories,
     documentKinds,
+    publicationTypes: PUBLICATION_TYPES,
+    visualGrammars: VISUAL_GRAMMARS,
+    pageArchetypes: PAGE_ARCHETYPES,
+    productionOptions: PRODUCTION_OPTIONS,
     outputFormats,
     fontPresets: BASE_FONTS,
     pageSizes: PAGE_SIZES,
     pageOrientations: PAGE_ORIENTATIONS,
     get(id) { return themes.find((item) => item.id === id) || null; },
     list(category = "all") { return category === "all" ? themes.slice() : themes.filter((item) => item.category === category); },
+    getPublicationType(id) { return PUBLICATION_TYPES.find((item) => item.id === id) || null; },
+    getVisualGrammar(id) { return VISUAL_GRAMMARS.find((item) => item.id === id) || null; },
+    resolveVisualGrammar(publicationTypeId) {
+      const publicationType = PUBLICATION_TYPES.find((item) => item.id === publicationTypeId);
+      return publicationType ? VISUAL_GRAMMARS.find((item) => item.id === publicationType.grammarId) || null : null;
+    },
+    listByGrammar(grammarId) { return themes.filter((item) => item.recommendedGrammarIds.includes(grammarId)); },
   });
 })();
