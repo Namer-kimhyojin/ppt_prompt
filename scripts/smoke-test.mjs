@@ -249,6 +249,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
 
     const regressionSelectors = {
       tabBtnCommonPrompt: [".cpd-btn.primary", ".cpd-journey-panel-head > span"],
+      tabBtnDocumentDesign: [".document-design-kicker", ".doc-design-theme-card strong"],
       tabBtnFormImage: [".form-image-prompt-viewer", ".form-image-step-head b"],
       tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-flow-step[aria-current='step']"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],
@@ -498,7 +499,7 @@ async function runSmokeTest() {
     record((await page.locator(".app-tab-group").count()) === 3, "Primary tools were not organized into three purpose groups", failures);
     record((await page.locator("[data-tab-group-filter]").count()) === 3, "Purpose-group switcher was incomplete", failures);
     record((await page.locator('[data-tab-group-filter="deck"]').textContent()).trim() === "슬라이드" && (await page.locator('[data-tab-group-filter="special"]').textContent()).trim() === "업무 이미지" && (await page.locator('[data-tab-group-filter="visual"]').textContent()).trim() === "일반 이미지", "Purpose-group switcher labels were incorrect", failures);
-    record((await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').count()) === 4 && (await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').last().getAttribute("id")) === "tabBtnDesigner", "Slide-production group did not include the legacy tool at the end", failures);
+    record((await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').count()) === 5 && (await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').last().getAttribute("id")) === "tabBtnDesigner", "Slide-production group did not include the document-design tool and the legacy tool at the end", failures);
     record((await page.locator('.app-tab-group[data-tab-group="special"] .app-tab-btn').count()) === 7, "Business-image group did not include the expected tools", failures);
     record((await page.locator('.app-tab-group[data-tab-group="visual"] .app-tab-btn').count()) === 3, "General-image group did not include the expected tools", failures);
     record(!(await page.locator("#paneDesigner").evaluate((element) => element.classList.contains("active"))), "Legacy designer remained the default start screen", failures);
@@ -5070,7 +5071,7 @@ SLIDE-TWO-CONTENT`);
     );
 
     const typographyTabIds = [
-      "tabBtnDesigner", "tabBtnCommonPrompt", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnMapPrompt",
+      "tabBtnDesigner", "tabBtnCommonPrompt", "tabBtnDocumentDesign", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnMapPrompt",
       "tabBtnDataDiagram", "tabBtnSlideDocument", "tabBtnPromotionPlanner", "tabBtnConceptMixer", "tabBtnPhotoTransform", "tabBtnFormImage", "tabBtnLabelSheet", "tabBtnPromotion", "tabBtnQrGenerator",
     ];
     for (const tabId of typographyTabIds) {

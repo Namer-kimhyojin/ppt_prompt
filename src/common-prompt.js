@@ -6693,6 +6693,26 @@
     event.target.value = "";
   });
 
+  function receiveDocumentDesign(payload) {
+    const text = typeof payload?.text === "string" ? payload.text : "";
+    if (!text) return false;
+    let panel = document.getElementById("cpdDocumentDesignTransfer");
+    if (!panel) {
+      panel = document.createElement("section");
+      panel.id = "cpdDocumentDesignTransfer";
+      panel.className = "cpd-document-transfer";
+      root.prepend(panel);
+    }
+    panel.innerHTML = `<div><span>문서 디자인에서 전달됨</span><strong>원문과 디자인 지침이 결합된 프롬프트</strong><p>아래 내용은 문서 제작 AI에 바로 붙여넣을 수 있습니다. 공통 슬라이드 디자인 설정은 별도로 유지됩니다.</p></div><div class="cpd-document-transfer-actions"><button type="button" class="cpd-btn primary" data-document-transfer-copy>전체 복사</button><button type="button" class="cpd-btn" data-document-transfer-close>닫기</button></div><textarea class="cpd-output" readonly data-document-transfer-output>${escapeHtml(text)}</textarea>`;
+    panel.querySelector("[data-document-transfer-copy]")?.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(text); toast("전달된 문서 프롬프트를 복사했습니다."); }
+      catch (_) { panel.querySelector("textarea")?.select(); toast("문구를 선택했습니다. Ctrl+C로 복사해주세요."); }
+    });
+    panel.querySelector("[data-document-transfer-close]")?.addEventListener("click", () => panel.remove());
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
+  }
+
   renderShell();
   window.PromptDeckCommonPrompt = {
     getState: () => clone(state),
@@ -6702,6 +6722,7 @@
       const style = SLIDE_STYLE_CATALOG?.get?.(styleId);
       return style ? buildSlideStyleCopyPrompt(style, palette || slideStylePromptColors(style, "preset"), style.settings?.colors?.paletteNameKo) : "";
     },
+    receiveDocumentDesign,
     sendToGenerator,
   };
   refresh({ full: true });

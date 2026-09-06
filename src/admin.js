@@ -12,6 +12,7 @@
   ];
   var FALLBACK_TABS = [
     { id: 'tabBtnCommonPrompt',     name: '공통 프롬프트', group: 'deck' },
+    { id: 'tabBtnDocumentDesign',   name: '문서 디자인', group: 'deck' },
     { id: 'tabBtnGenerator',        name: '슬라이드 분리기', group: 'deck' },
     { id: 'tabBtnSlideImage',       name: '슬라이드 이미지 생성', group: 'deck' },
     { id: 'tabBtnPromotionPlanner', name: '컨셉 제안', group: 'visual' },

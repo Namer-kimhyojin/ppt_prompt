@@ -94,6 +94,14 @@
       actionHost: ".form-image-result-stack",
       stickyActionPanel: false,
     },
+    documentDesign: {
+      button: document.getElementById("tabBtnDocumentDesign"),
+      pane: document.getElementById("paneDocumentDesign"),
+      group: "deck",
+      actions: "documentDesign",
+      actionHost: ".doc-design-result-stack",
+      stickyActionPanel: false,
+    },
     labelSheet: {
       button: document.getElementById("tabBtnLabelSheet"),
       pane: document.getElementById("paneLabelSheet"),
@@ -164,6 +172,14 @@
       { label: "기관용 랜덤 비주얼", targetId: "formImageRandomInstitutionBtnResult", className: "btn secondary", placement: "more" },
       { label: "초기화", targetId: "formImageResetBtn", className: "btn ghost", placement: "more" },
     ],
+    documentDesign: [
+      { label: "디자인 지침 생성", targetId: "documentDesignGenerateBtn", className: "btn primary" },
+      { label: "전체 프롬프트 복사", targetId: "documentDesignCopyBtn", className: "btn secondary" },
+      { label: "공통 프롬프트로 전달", targetId: "documentDesignSendCommonBtn", className: "btn secondary" },
+      { label: "JSON 다운로드", targetId: "documentDesignDownloadBtn", className: "btn ghost", placement: "more" },
+      { label: "샘플 채우기", targetId: "documentDesignSampleBtn", className: "btn ghost", placement: "more" },
+      { label: "초기화", targetId: "documentDesignResetBtn", className: "btn ghost", placement: "more" },
+    ],
     labelSheet: [
       { label: "프롬프트 생성", targetId: "labelSheetGeneratePromptBtn", className: "btn primary" },
       { label: "PDF 저장", targetId: "labelSheetExportPdfBtn", className: "btn primary" },
@@ -208,6 +224,7 @@
   };
 
   const mobilePrimaryTargets = {
+    documentDesign: "documentDesignCopyBtn",
     generator: "genGenerateBtn",
     promotion: "promotionCopyPromptBtn",
     conceptMixer: "btnMixerRandom",

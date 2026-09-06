@@ -10,6 +10,8 @@
     "dev:gemini": "node server/start-gemini.js",
     "smoke:test": "node scripts/smoke-test.mjs",
     "diagram:test": "node scripts/data-diagram-smoke-test.mjs",
+    "document-design:previews": "node scripts/generate-document-design-previews.mjs",
+    "document-design:test": "node scripts/document-design-smoke-test.mjs",
     "promotion:test": "node scripts/promotion-parser-test.mjs",
     "label:test": "node scripts/label-sheet-engine-test.mjs && node scripts/label-sheet-data-mapping-test.mjs && node scripts/label-sheet-assets-test.mjs && node scripts/label-sheet-package-test.mjs",
     "label:data:test": "node scripts/label-sheet-data-flow-test.mjs",
