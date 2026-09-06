@@ -33,12 +33,15 @@ const slideContext = { window: {} };
 loadBrowserScript("src/slide-style-catalog.js", slideContext);
 const slideCatalog = slideContext.window.PromptDeckSlideStyleCatalog;
 
-record(catalog.version === 2, "Document design catalog version is not 2");
+record(catalog.version === 3, "Document design catalog version is not 3");
 record(catalog.themes.length === 12, `Expected 12 themes, found ${catalog.themes.length}`);
 record(new Set(catalog.themes.map((item) => item.id)).size === 12, "Theme ids are not unique");
 record(catalog.themes.every((item) => slideCatalog.get(item.sourceVisualStyleId)), "A document theme references a missing slide visual style");
 record(catalog.themes.every((item) => ["cover", "content", "data"].every((view) => item.previews[view])), "A document theme is missing a preview view");
 record(catalog.themes.every((item) => ["backgroundUsage", "backgroundStyle", "iconUsage", "iconStyle", "pictogramUsage", "pictogramStyle", "typographyScope"].every((key) => String(item.visualAssets?.[key] || "").trim())), "A document theme is missing a complete visual-asset profile");
+record(catalog.themes.every((item) => ["colorIntensity", "contrast", "titlePresence", "bodyScale", "notePresence", "lineSpacing", "headingEmphasis", "hierarchyDepth", "pageWhitespace", "marginBalance", "paragraphRhythm", "sectionSeparation", "headerFooterBreathing", "tableInformationAmount", "cellBreathing"].every((key) => String(item.creativeDegrees?.[key] || "").trim())), "A document theme is missing a complete qualitative degree profile");
+record(catalog.pageSizes.some((item) => item.id === "A4" && item.widthMm === 210 && item.heightMm === 297), "A4 210x297mm page specification is missing");
+record(catalog.pageOrientations.some((item) => item.id === "portrait") && catalog.pageOrientations.some((item) => item.id === "landscape"), "Portrait or landscape orientation is missing");
 record(catalog.themes.every((item) => ["marginTopMm", "marginRightMm", "marginBottomMm", "marginLeftMm"].every((key) => item.layout[key] === item.layout.marginMm)), "A theme margin preset is not applied to all four sides");
 
 for (const theme of catalog.themes) {
@@ -60,8 +63,13 @@ record(built.fullPrompt.startsWith(sourcePrompt), "The source prompt was changed
 record(built.fullPrompt.slice(0, sourcePrompt.length) === sourcePrompt, "The exact source prompt prefix was not preserved");
 record(built.designPrompt.includes("HWPX 규칙:") && built.designPrompt.includes("PDF 규칙:"), "Format-specific rules are missing");
 record(built.designPrompt.includes("표 규칙:") && built.designPrompt.includes("그래프 규칙:") && built.designPrompt.includes("정보 위계:"), "Detailed document-element rules are missing");
-record(built.spec.schema === "promptdeck-document-design/1.1", "DocumentDesignSpec schema is incorrect");
-record(Boolean(built.spec.tableRules?.repeatHeader) && built.spec.chartRules?.threeD === false && built.spec.hierarchy?.levels >= 3, "Structured table, chart, or hierarchy rules are incomplete");
+record(built.spec.schema === "promptdeck-document-design/1.2", "DocumentDesignSpec schema is incorrect");
+record(built.spec.document.page.sizeId === "A4" && built.spec.document.page.orientation === "portrait" && built.spec.document.page.widthMm === 210 && built.spec.document.page.heightMm === 297, "Default page specification is not A4 portrait 210x297mm");
+record(Boolean(built.spec.tableRules?.repeatHeader) && built.spec.chartRules?.threeD === false && String(built.spec.hierarchy?.depth || "").length > 0, "Structured table, chart, or hierarchy rules are incomplete");
+record(["headingSizePt", "bodySizePt", "noteSizePt", "lineHeightPercent"].every((key) => !(key in built.spec.typography)), "Numeric typography values leaked into the AI specification");
+record(["marginTopMm", "marginRightMm", "marginBottomMm", "marginLeftMm", "paragraphGapPt", "sectionGapPt"].every((key) => !(key in built.spec.layout)), "Numeric spacing values leaked into the AI specification");
+record(!("levels" in built.spec.hierarchy) && !("maxColumns" in built.spec.tableRules) && !("cellPaddingMm" in built.spec.tableRules), "Numeric hierarchy or table values leaked into the AI specification");
+record(built.designPrompt.includes("PromptDeck DocumentDesignSpec 1.2") && built.designPrompt.includes("문서 규격: A4 · 세로형 · 완성 크기 210×297mm") && built.designPrompt.includes("pt·mm·% 값을 기계적으로 고정하지 않는다"), "Qualitative AI guidance or exact page-size rule is missing");
 record(Boolean(built.spec.visualAssets?.backgroundStyle && built.spec.visualAssets?.iconStyle && built.spec.visualAssets?.pictogramStyle && built.spec.visualAssets?.typographyScope), "Structured background, icon, pictogram, or typography-scope rules are incomplete");
 record(["배경 이미지:", "아이콘:", "픽토그램:", "타이포그래피 적용 범위:"].every((label) => built.designPrompt.includes(label)), "Visual-asset rules are missing from the design prompt");
 
@@ -98,7 +106,10 @@ try {
   record((await page.locator(".doc-design-theme-card").first().locator("img").count()) === 3, "A theme card does not show cover, body, and chart previews together");
   record((await page.locator(".doc-design-theme-card").first().locator(".doc-design-theme-set").textContent()).replace(/\s+/g, " ").includes("표지 본문 표·차트"), "A theme card does not label the three-page set clearly");
   record((await page.locator("#docDesignStep2 [data-gallery-view]").count()) === 0, "The theme gallery still splits cover, body, and chart into separate views");
-  record((await page.locator("#documentDesignMarginTop").count()) === 1 && (await page.locator("#documentDesignTableStyle").count()) === 1 && (await page.locator("#documentDesignChartType").count()) === 1 && (await page.locator("#documentDesignHierarchyLevels").count()) === 1, "Detailed margin, table, chart, or hierarchy controls are missing");
+  record((await page.locator('#documentDesignApp input[type="number"], #documentDesignApp input[type="range"]').count()) === 0, "Numeric detail controls are still exposed");
+  record((await page.locator("[data-degree-key]").count()) === 15 && (await page.locator("#documentDesignTableStyle").count()) === 1 && (await page.locator("#documentDesignChartType").count()) === 1, "Qualitative degree, table, or chart controls are missing");
+  record((await page.locator("#documentDesignPageSize").inputValue()) === "A4" && (await page.locator('[name="documentDesignOrientation"]:checked').inputValue()) === "portrait", "Default browser page specification is not A4 portrait");
+  record((await page.locator("#documentDesignPaperSummary").textContent()).includes("A4 · 세로형 · 210×297mm"), "Default page-size summary is unclear");
   record((await page.locator("#documentDesignBackgroundUsage").count()) === 1 && (await page.locator("#documentDesignIconStyle").count()) === 1 && (await page.locator("#documentDesignPictogramStyle").count()) === 1 && (await page.locator("#documentDesignTypographyScope").count()) === 1, "Background, icon, pictogram, or typography-scope controls are missing");
   record((await page.locator("#paneDocumentDesign .doc-design-result-stack > #tabActions").count()) === 1, "Quick actions are not mounted in the result column");
   record((await page.locator("#tabActions [data-proxy-target]").count()) === 6, "Document design quick action count is incorrect");
@@ -127,7 +138,11 @@ try {
   await page.locator("#documentDesignTypographyScope").fill("제목·본문·표·차트·캡션 전체에 적용");
   await page.locator("#documentDesignTableStyle").selectOption({ label: "비교 매트릭스" });
   await page.locator("#documentDesignChartType").selectOption({ label: "막대·선 복합" });
-  await page.locator("#documentDesignMarginLeft").fill("24");
+  await page.locator("#documentDesignTitlePresence").selectOption("매우 강하게");
+  await page.locator("#documentDesignPageWhitespace").selectOption("매우 여유롭게");
+  await page.locator("#documentDesignTableInformationAmount").selectOption("핵심만 간결하게");
+  await page.locator("#documentDesignPageSize").selectOption("A3");
+  await page.locator('[name="documentDesignOrientation"][value="landscape"]').check();
   await page.locator('[data-adjust-group="colors"][data-adjust-key="accent"]').evaluate((input) => {
     input.value = "#ff3355";
     input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -136,7 +151,8 @@ try {
   await page.evaluate(() => document.getElementById("documentDesignGenerateBtn").click());
   const output = await page.locator("#documentDesignOutput").inputValue();
   record(output.startsWith(sampleSource), "Generated browser output does not preserve the source prompt prefix");
-  record(output.includes("## 문서 디자인 및 출력 지침") && output.includes("다크 이노베이션") && output.includes("비교 매트릭스형") && output.includes("막대·선 복합 차트") && output.includes("좌 24mm"), "Generated browser output is missing detailed design instructions");
+  record(output.includes("## 문서 디자인 및 출력 지침") && output.includes("다크 이노베이션") && output.includes("비교 매트릭스형") && output.includes("막대·선 복합 차트") && output.includes("문서 규격: A3 · 가로형 · 완성 크기 420×297mm") && output.includes("제목 존재감 매우 강하게") && output.includes("페이지 여백 매우 여유롭게") && output.includes("정보량 핵심만 간결하게"), "Generated browser output is missing exact paper or qualitative design instructions");
+  record(!/제목 \d+(?:\.\d+)?pt|여백 (?:상|우|하|좌)|최대 \d+열|셀 안쪽 여백 \d+(?:\.\d+)?mm/.test(output), "Generated browser output still contains fixed numeric design values");
   record(output.includes("2색 선형 아이콘, 핵심 기능에만 적용") && output.includes("제목·본문·표·차트·캡션 전체에 적용"), "Generated browser output is missing customized visual-asset instructions");
   record((await page.locator("#documentDesignResultState").textContent()).trim() === "최신 상태", "Generated result was not marked current");
 
@@ -197,12 +213,15 @@ try {
       })(),
       globalActionHidden: document.getElementById("mobileTabActions")?.hidden,
       touchTargets: [...document.querySelectorAll(".doc-design-mobile-steps button, .doc-design-mobile-bar button")].map((button) => button.getBoundingClientRect().height),
+      pageSpec: `${document.getElementById("documentDesignPageSize")?.value}/${document.querySelector('[name="documentDesignOrientation"]:checked')?.value}`,
+      pageControlHeights: [document.getElementById("documentDesignPageSize"), ...document.querySelectorAll('[name="documentDesignOrientation"]')].map((control) => control.closest("label")?.getBoundingClientRect().height || control.getBoundingClientRect().height),
     };
   });
   record(mobileStart.overflow <= 1, `Mobile pane overflows horizontally by ${mobileStart.overflow}px`);
   record(mobileStart.step === "1" && mobileStart.stepOneVisible && !mobileStart.stepTwoVisible, `Mobile journey did not start with only step 1 visible: ${JSON.stringify(mobileStart)}`);
   record(mobileStart.journeyBarVisible && mobileStart.globalActionHidden, `Dedicated mobile journey bar conflicts with the global mobile action bar: ${JSON.stringify(mobileStart)}`);
   record(mobileStart.touchTargets.every((height) => height >= 44), `Mobile journey controls are smaller than 44px: ${JSON.stringify(mobileStart.touchTargets)}`);
+  record(mobileStart.pageSpec === "A3/landscape" && mobileStart.pageControlHeights.every((height) => height >= 44), `Mobile page-size controls are unclear or too small: ${JSON.stringify(mobileStart)}`);
 
   await page.click('[data-mobile-action="next"]');
   const mobileTheme = await page.evaluate(() => {
@@ -267,4 +286,4 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
-console.log("Document design smoke test passed: 12 cover-body-chart theme sets, 36 previews, visual assets, source preservation, live controls, transfer, and four-step mobile journey.");
+console.log("Document design smoke test passed: 12 complete theme sets, qualitative AI controls, exact paper specification, source preservation, transfer, and four-step mobile journey.");

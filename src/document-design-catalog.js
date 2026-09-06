@@ -9,6 +9,16 @@
     technical: { label: "기술 문서", heading: "IBM Plex Sans KR", body: "Pretendard", fallback: "Arial, sans-serif" },
     warm: { label: "친근한 안내", heading: "Noto Sans KR", body: "Noto Sans KR", fallback: "Arial, sans-serif" },
   });
+  const PAGE_SIZES = Object.freeze([
+    Object.freeze({ id: "A4", label: "A4", widthMm: 210, heightMm: 297 }),
+    Object.freeze({ id: "A3", label: "A3", widthMm: 297, heightMm: 420 }),
+    Object.freeze({ id: "B5", label: "B5", widthMm: 182, heightMm: 257 }),
+    Object.freeze({ id: "LETTER", label: "Letter", widthMm: 215.9, heightMm: 279.4 }),
+  ]);
+  const PAGE_ORIENTATIONS = Object.freeze([
+    Object.freeze({ id: "portrait", label: "세로형" }),
+    Object.freeze({ id: "landscape", label: "가로형" }),
+  ]);
 
   const base = {
     typography: { fontPreset: "corporate", headingSizePt: 25, bodySizePt: 11, footnoteSizePt: 8.5, headingWeight: 700, bodyWeight: 400, lineHeightPercent: 155, letterSpacingEm: -0.015 },
@@ -25,6 +35,23 @@
       pictogramUsage: "절차·대상·분류를 설명할 때 사용",
       pictogramStyle: "단순한 정면형 픽토그램, 한 세트의 조형 언어 유지",
       typographyScope: "제목·본문·표·차트·캡션·각주 전체에 같은 서체 체계 적용",
+    },
+    creativeDegrees: {
+      colorIntensity: "균형 있게",
+      contrast: "명확하게",
+      titlePresence: "강하게",
+      bodyScale: "편안하게",
+      notePresence: "은은하게",
+      lineSpacing: "여유롭게",
+      headingEmphasis: "강하게",
+      hierarchyDepth: "균형 있게",
+      pageWhitespace: "균형 있게",
+      marginBalance: "사방 균형 있게",
+      paragraphRhythm: "균형 있게",
+      sectionSeparation: "분명하게",
+      headerFooterBreathing: "균형 있게",
+      tableInformationAmount: "균형 있게",
+      cellBreathing: "균형 있게",
     },
   };
 
@@ -131,6 +158,37 @@
     },
   });
 
+  function degreeProfile(typography, layout, hierarchy, tableRules, overrides = {}) {
+    const titleSize = Number(typography.headingSizePt) || 25;
+    const bodySize = Number(typography.bodySizePt) || 11;
+    const noteSize = Number(typography.footnoteSizePt) || 8.5;
+    const lineHeight = Number(typography.lineHeightPercent) || 155;
+    const headingWeight = Number(typography.headingWeight) || 700;
+    const margin = Number(layout.marginMm) || 18;
+    const paragraphGap = Number(layout.paragraphGapPt) || 7;
+    const sectionGap = Number(layout.sectionGapPt) || 18;
+    const headerDistance = Math.max(Number(layout.headerDistanceMm) || 10, Number(layout.footerDistanceMm) || 10);
+    const hierarchyLevels = Number(hierarchy.levels) || 4;
+    const maxColumns = Number(tableRules.maxColumns) || 8;
+    const cellPadding = Number(tableRules.cellPaddingMm) || 2.5;
+    return Object.freeze({
+      ...base.creativeDegrees,
+      titlePresence: titleSize >= 31 ? "매우 강하게" : titleSize >= 25 ? "강하게" : titleSize >= 22 ? "균형 있게" : "절제되게",
+      bodyScale: bodySize >= 12 ? "넉넉하게" : bodySize >= 10.5 ? "편안하게" : bodySize >= 9.5 ? "균형 있게" : "작고 치밀하게",
+      notePresence: noteSize >= 10 ? "또렷하게" : noteSize >= 9 ? "균형 있게" : noteSize >= 8 ? "절제되게" : "은은하게",
+      lineSpacing: lineHeight >= 175 ? "매우 여유롭게" : lineHeight >= 155 ? "여유롭게" : lineHeight >= 140 ? "균형 있게" : "촘촘하게",
+      headingEmphasis: headingWeight >= 850 ? "매우 강하게" : headingWeight >= 700 ? "강하게" : headingWeight >= 600 ? "균형 있게" : "부드럽게",
+      hierarchyDepth: hierarchyLevels >= 5 ? "깊게" : hierarchyLevels >= 4 ? "균형 있게" : "단순하게",
+      pageWhitespace: margin >= 24 ? "매우 여유롭게" : margin >= 20 ? "여유롭게" : margin >= 16 ? "균형 있게" : "조밀하게",
+      paragraphRhythm: paragraphGap >= 11 ? "여유롭게" : paragraphGap >= 7 ? "균형 있게" : "촘촘하게",
+      sectionSeparation: sectionGap >= 26 ? "매우 분명하게" : sectionGap >= 18 ? "분명하게" : "부드럽게",
+      headerFooterBreathing: headerDistance >= 15 ? "여유롭게" : headerDistance >= 10 ? "균형 있게" : "가깝게",
+      tableInformationAmount: maxColumns >= 10 ? "풍부하게" : maxColumns >= 7 ? "균형 있게" : "핵심만 간결하게",
+      cellBreathing: cellPadding >= 4 ? "매우 여유롭게" : cellPadding >= 3 ? "여유롭게" : cellPadding >= 2 ? "균형 있게" : "조밀하게",
+      ...overrides,
+    });
+  }
+
   function theme(definition) {
     const categoryProfile = CATEGORY_PROFILES[definition.category] || {};
     const typography = { ...base.typography, ...definition.typography };
@@ -145,15 +203,18 @@
     typography.headingFamily = definition.typography?.headingFamily || preset.heading;
     typography.bodyFamily = definition.typography?.bodyFamily || preset.body;
     typography.fallback = definition.typography?.fallback || preset.fallback;
+    const hierarchy = { ...base.hierarchy, ...(categoryProfile.hierarchy || {}), ...definition.hierarchy };
+    const tableRules = { ...base.tableRules, ...(categoryProfile.tableRules || {}), ...definition.tableRules };
     return Object.freeze({
       ...definition,
       typography: Object.freeze(typography),
       layout: Object.freeze(layout),
-      hierarchy: Object.freeze({ ...base.hierarchy, ...(categoryProfile.hierarchy || {}), ...definition.hierarchy }),
-      tableRules: Object.freeze({ ...base.tableRules, ...(categoryProfile.tableRules || {}), ...definition.tableRules }),
+      hierarchy: Object.freeze(hierarchy),
+      tableRules: Object.freeze(tableRules),
       chartRules: Object.freeze({ ...base.chartRules, ...(categoryProfile.chartRules || {}), ...definition.chartRules }),
       components: Object.freeze({ ...base.components, ...definition.components }),
       visualAssets: Object.freeze({ ...base.visualAssets, ...(VISUAL_PROFILES[definition.id] || {}), ...definition.visualAssets }),
+      creativeDegrees: degreeProfile(typography, layout, hierarchy, tableRules, definition.creativeDegrees),
       previews: Object.freeze({
         cover: `${PREVIEW_ROOT}/${definition.id}-cover.png?v=1`,
         content: `${PREVIEW_ROOT}/${definition.id}-content.png?v=1`,
@@ -289,12 +350,14 @@
   ]);
 
   window.PromptDeckDocumentDesignCatalog = Object.freeze({
-    version: 2,
+    version: 3,
     themes,
     categories,
     documentKinds,
     outputFormats,
     fontPresets: BASE_FONTS,
+    pageSizes: PAGE_SIZES,
+    pageOrientations: PAGE_ORIENTATIONS,
     get(id) { return themes.find((item) => item.id === id) || null; },
     list(category = "all") { return category === "all" ? themes.slice() : themes.filter((item) => item.category === category); },
   });
