@@ -19,7 +19,7 @@ const guidePaths = [
   "guides/promotion-image-prompt.html",
 ];
 const toolGuideSlugs = [
-  "common-prompt", "slide-splitter", "form-image", "map-image", "promotion-image", "qr-code",
+  "common-prompt", "document-design", "slide-splitter", "form-image", "map-image", "promotion-image", "qr-code",
   "data-diagram", "label-ticket", "concept-suggest", "visual-mixer", "photo-transform",
 ];
 assert.equal(toolCaptureManifest.sourceOrigin, "https://promptdeck.kr", "tool captures must record their live source");

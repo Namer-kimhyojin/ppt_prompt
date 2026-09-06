@@ -45,7 +45,7 @@ const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const expectedNavLabels = ["실무 가이드", "스킬 다운로드", "소개", "작업 도구 열기"];
 const toolGuides = new Map([
-  ["common-prompt", "commonPrompt"], ["slide-splitter", "generator"], ["form-image", "formImage"],
+  ["common-prompt", "commonPrompt"], ["document-design", "documentDesign"], ["slide-splitter", "generator"], ["form-image", "formImage"],
   ["map-image", "mapPrompt"], ["promotion-image", "promotion"], ["qr-code", "qrGenerator"],
   ["data-diagram", "dataDiagram"], ["label-ticket", "labelSheet"], ["concept-suggest", "promotionPlanner"],
   ["visual-mixer", "conceptMixer"], ["photo-transform", "photoTransform"],
@@ -200,7 +200,7 @@ try {
     if (errors.length) throw new Error(`browser errors at ${viewport.width}px: ${errors.join(" | ")}`);
     await page.close();
   }
-  console.log("Guide smoke test passed: public pages and 11 practical tool guides have valid navigation, actions, and responsive layouts");
+  console.log("Guide smoke test passed: public pages and 12 practical tool guides have valid navigation, actions, and responsive layouts");
 } finally {
   await browser.close();
   server.closeIdleConnections?.();

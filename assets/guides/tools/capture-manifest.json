@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-09-06T01:04:03.501Z",
+  "capturedAt": "2026-09-06T10:38:40.398Z",
   "sourceOrigin": "https://promptdeck.kr",
   "viewport": {
     "width": 1440,
@@ -19,6 +19,20 @@
         "detail": {
           "path": "common-prompt-detail.jpg",
           "bytes": 87509
+        }
+      }
+    },
+    {
+      "slug": "document-design",
+      "tab": "documentDesign",
+      "files": {
+        "overview": {
+          "path": "document-design-overview.jpg",
+          "bytes": 165710
+        },
+        "detail": {
+          "path": "document-design-detail.jpg",
+          "bytes": 53474
         }
       }
     },
