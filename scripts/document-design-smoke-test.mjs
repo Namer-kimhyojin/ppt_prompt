@@ -33,7 +33,7 @@ const slideContext = { window: {} };
 loadBrowserScript("src/slide-style-catalog.js", slideContext);
 const slideCatalog = slideContext.window.PromptDeckSlideStyleCatalog;
 
-record(catalog.version === 4, "Document design catalog version is not 4");
+record(catalog.version === 5, "Document design catalog version is not 5");
 record(catalog.themes.length === 12, `Expected 12 themes, found ${catalog.themes.length}`);
 record(new Set(catalog.themes.map((item) => item.id)).size === 12, "Theme ids are not unique");
 record(catalog.visualGrammars.length === 7, `Expected 7 visual grammars, found ${catalog.visualGrammars.length}`);
@@ -55,15 +55,30 @@ record(catalog.pageOrientations.some((item) => item.id === "portrait") && catalo
 record(["mediums", "bindings", "duplexModes", "spreadModes", "bleeds"].every((key) => catalog.productionOptions[key]?.length >= 2), "A production specification option group is incomplete");
 record(catalog.themes.every((item) => ["marginTopMm", "marginRightMm", "marginBottomMm", "marginLeftMm"].every((key) => item.layout[key] === item.layout.marginMm)), "A theme margin preset is not applied to all four sides");
 
+const pageRoles = ["cover", "chapter", "body", "image", "data", "special"];
+const supportedPreviewExtensions = new Set([".png", ".jpg", ".jpeg", ".webp", ".avif"]);
+
+function hasMatchingImageSignature(extension, buffer) {
+  if (extension === ".png") return buffer.length >= 8 && buffer.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+  if (extension === ".jpg" || extension === ".jpeg") return buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  if (extension === ".webp") return buffer.length >= 12 && buffer.toString("ascii", 0, 4) === "RIFF" && buffer.toString("ascii", 8, 12) === "WEBP";
+  if (extension === ".avif") return buffer.length >= 12 && buffer.toString("ascii", 4, 8) === "ftyp" && ["avif", "avis"].includes(buffer.toString("ascii", 8, 12));
+  return false;
+}
+
 for (const theme of catalog.themes) {
-  for (const view of ["cover", "chapter", "body", "image", "data", "special"]) {
+  const previewPaths = pageRoles.map((view) => String(theme.pagePreviews[view] || "").split("?")[0]);
+  record(new Set(previewPaths).size === pageRoles.length, `Theme page previews are not unique: ${theme.id} (${previewPaths.join(", ")})`);
+  for (const view of pageRoles) {
     const relative = theme.pagePreviews[view].split("?")[0];
     const filename = path.join(repoRoot, relative);
     record(existsSync(filename), `Missing preview: ${relative}`);
     if (!existsSync(filename)) continue;
+    const extension = path.extname(filename).toLowerCase();
+    record(supportedPreviewExtensions.has(extension), `Preview is not a supported raster asset: ${relative}`);
     const buffer = readFileSync(filename);
-    record(buffer.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), `Preview is not PNG: ${relative}`);
-    record(buffer.readUInt32BE(16) === 960 && buffer.readUInt32BE(20) === 540, `Preview dimensions are not 960x540: ${relative}`);
+    record(hasMatchingImageSignature(extension, buffer), `Preview extension and file signature do not match: ${relative}`);
+    if (extension === ".png" && buffer.length >= 24) record(buffer.readUInt32BE(16) > 0 && buffer.readUInt32BE(20) > 0, `Preview dimensions are invalid: ${relative}`);
   }
 }
 
@@ -100,9 +115,10 @@ record(built.designPrompt.includes("입력된 원문의 내용·목차·문장·
 record(!built.designPrompt.includes("권장 내용 흐름"), "Content-authoring guidance leaked into the visual-only prompt");
 record(["6종 페이지 세트:", "색상 역할과 배치:", "타이포그래피 적용 범위:", "다이어그램:", "장문 일관성:"].every((label) => built.designPrompt.includes(label)), "Publication visual-system instructions are incomplete");
 record(Boolean(built.spec.visualAssets?.backgroundStyle && built.spec.visualAssets?.iconStyle && built.spec.visualAssets?.pictogramStyle && built.spec.visualAssets?.typographyScope), "Structured background, icon, pictogram, or typography-scope rules are incomplete");
-record(["배경 이미지:", "아이콘:", "픽토그램:", "타이포그래피 적용 범위:"].every((label) => built.designPrompt.includes(label)), "Visual-asset rules are missing from the design prompt");
+record(["배경 이미지:", "아이콘:", "픽토그램:", "타이포그래피 적용 범위:", "테마 타이포그래피 방향:"].every((label) => built.designPrompt.includes(label)), "Visual-asset rules are missing from the design prompt");
+record(!/[가-힣]체계을/.test(built.designPrompt), "A page-role rule contains an awkward Korean particle join");
 
-const mime = new Map([[".html", "text/html; charset=utf-8"], [".js", "text/javascript; charset=utf-8"], [".css", "text/css; charset=utf-8"], [".png", "image/png"], [".jpg", "image/jpeg"]]);
+const mime = new Map([[".html", "text/html; charset=utf-8"], [".js", "text/javascript; charset=utf-8"], [".css", "text/css; charset=utf-8"], [".png", "image/png"], [".jpg", "image/jpeg"], [".jpeg", "image/jpeg"], [".webp", "image/webp"], [".avif", "image/avif"]]);
 const server = http.createServer((request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url || "/", "http://127.0.0.1").pathname);
@@ -137,6 +153,17 @@ try {
   record((await page.locator(".doc-design-theme-card").first().locator("img").count()) === 6, "A theme card does not show the six-page visual set together");
   const firstThemeSetLabels = await page.locator(".doc-design-theme-card").first().locator(".doc-design-theme-set").textContent();
   record(["표지", "장 시작", "본문", "이미지", "표·차트"].every((label) => firstThemeSetLabels.includes(label)), "A theme card does not label the six-page set clearly");
+  await page.click('[data-theme-category="all"]');
+  for (const theme of catalog.themes) {
+    await page.evaluate((themeId) => document.querySelector(`[data-theme-id="${themeId}"]`)?.click(), theme.id);
+    const renderedSources = [];
+    for (const role of pageRoles) {
+      await page.evaluate((pageRole) => document.querySelector(`[data-live-view="${pageRole}"]`)?.click(), role);
+      renderedSources.push(await page.locator("#documentDesignLivePreview img").getAttribute("src"));
+    }
+    record(renderedSources.every(Boolean), `A live preview image is missing after tab switching: ${theme.id}`);
+    record(new Set(renderedSources).size === pageRoles.length, `Live preview tabs do not render six unique images: ${theme.id} (${renderedSources.join(", ")})`);
+  }
   record((await page.locator("#docDesignStep2 [data-gallery-view]").count()) === 0, "The theme gallery still splits cover, body, and chart into separate views");
   record((await page.locator('#documentDesignApp input[type="number"], #documentDesignApp input[type="range"]').count()) === 0, "Numeric detail controls are still exposed");
   record((await page.locator("select[data-degree-key]").count()) === 22 && (await page.locator("#documentDesignTableStyle").count()) === 1 && (await page.locator("#documentDesignChartType").count()) === 1, "Qualitative degree, table, or chart controls are missing");

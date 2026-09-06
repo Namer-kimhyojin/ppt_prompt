@@ -189,10 +189,10 @@
     const typographyScope = { ...DEFAULT_TYPE_SCOPE, ...asObject(visualGrammar.typographyScope || visualGrammar.typeSystem, "visualGrammar"), ...asObject(theme.typographyScope), ...asObject(input?.adjustments?.typographyScope) };
     const grammarPageRules = {
       cover: { rule: `‘${visualGrammar.visualTone || visualGrammar.description || "선택한 시각 어조"}’의 인상을 대표 색상·이미지·제목 배치로 명확히 보여준다.` },
-      chapter: { rule: `${visualGrammar.pageRhythm || "문서 전체 리듬"}을 이어가며 장 번호·장 제목·전환 배경을 같은 체계로 반복한다.` },
-      body: { rule: `${visualGrammar.typeSystem || "제목·본문·주석 위계"}와 ${visualGrammar.layoutSystem || "반복 가능한 그리드"}를 적용해 긴 읽기의 안정성을 유지한다.` },
-      image: { rule: `${visualGrammar.imageSystem || "사진·삽화·도식 체계"}을 적용하고 캡션·출처·텍스트 안전 영역을 일관되게 배치한다.` },
-      data: { rule: `${visualGrammar.tableChartSystem || "표·차트 조형 체계"}을 적용하고 단위·기준일·출처가 즉시 읽히게 한다.` },
+      chapter: { rule: `페이지 사이의 리듬은 ‘${visualGrammar.pageRhythm || "문서 전체의 안정된 흐름"}’으로 유지한다. 장 번호·장 제목·전환 배경은 같은 체계로 반복한다.` },
+      body: { rule: `긴 읽기의 안정성을 우선한다. 타이포그래피는 ‘${visualGrammar.typeSystem || "제목·본문·주석의 명확한 위계"}’, 레이아웃은 ‘${visualGrammar.layoutSystem || "반복 가능한 그리드"}’를 적용한다.` },
+      image: { rule: `이미지·도식에는 ‘${visualGrammar.imageSystem || "사진·삽화·도식의 일관된 체계"}’를 적용한다. 캡션·출처·텍스트 안전 영역은 같은 위치와 간격으로 배치한다.` },
+      data: { rule: `표·차트에는 ‘${visualGrammar.tableChartSystem || "판독하기 쉬운 표·차트 조형 체계"}’를 적용한다. 단위·기준일·출처가 즉시 읽히게 한다.` },
       special: { label: visualGrammar.specialPageLabel || DEFAULT_PAGE_RULES.special.label, rule: `${visualGrammar.specialPageLabel || "특수 페이지"}의 목적에 맞게 기본 테마를 변주하되 색상 역할·서체 위계·그리드는 유지한다.` },
     };
     const pageRules = mergePageRules(grammarPageRules, visualGrammar.pageRules, publicationType.pageRules, theme.pageRules, input?.adjustments?.pageRules);
@@ -401,6 +401,7 @@
       `- 색상 역할과 배치: ${Object.entries(spec.colorPlacement).map(([role, value]) => `${role}=${value}`).join("; ")}. 색은 장식이 아니라 정보 위계와 페이지 역할을 구분하는 데 사용한다.`,
       `- 글꼴 방향: 제목 ${type.headingFamily}, 본문 ${type.bodyFamily}; 제목 존재감 ${type.titlePresence}, 본문 크기감 ${type.bodyScale}, 주석 존재감 ${type.notePresence}, 행간 ${type.lineSpacing}, 제목 무게감 ${type.headingEmphasis}`,
       `- 타이포그래피 적용 범위: ${inlineScope(type.scope)}. 같은 의미의 요소에는 페이지 유형이 달라도 같은 서체 역할을 적용한다.`,
+      `- 테마 타이포그래피 방향: ${visual.typographyScope || "제목·본문·표·차트·캡션·각주 전체에 같은 서체 체계를 적용"}.`,
       `- 레이아웃 방향: ${layout.grid}, 정보 밀도 ${densityLabel(layout.density)}, 페이지 여백 ${layout.pageWhitespace}, 여백 배분 ${layout.marginBalance}, 머리말·꼬리말 거리감 ${layout.headerFooterBreathing}, 문단 호흡 ${layout.paragraphRhythm}, 페이지 리듬 ${direction.pageRhythm}, 절 구분 ${layout.sectionSeparation}, 장식 정도 ${direction.decorationPresence}`,
       `- 정보 위계: 깊이 ${hierarchy.depth}, ${hierarchy.method}; 제목은 ${hierarchy.headlineStyle}, 번호 체계 ${hierarchy.numbering}, 강조 ${hierarchy.emphasis}, ${hierarchy.alignment}`,
       `- 문서 요소: 표지 ${yesNo(component.cover)}, 목차 ${yesNo(component.toc)}, 간지 ${yesNo(component.sectionDividers)}, 쪽번호 ${yesNo(component.pageNumber)}, 표 ${yesNo(component.table)}, 차트 ${yesNo(component.chart)}, 이미지 정책 ‘${component.images}’`,

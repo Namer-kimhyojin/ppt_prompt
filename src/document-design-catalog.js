@@ -22,11 +22,11 @@
 
   const PAGE_ARCHETYPES = Object.freeze([
     Object.freeze({ id: "cover", label: "표지", shortLabel: "표지", previewKey: "cover", visualScope: "대표 색상·이미지·서체의 첫인상과 제목 영역의 위치를 정의" }),
-    Object.freeze({ id: "chapter", label: "장 시작", shortLabel: "장 시작", previewKey: "cover", visualScope: "장 번호·장 제목·전환 배경의 반복 규칙을 정의" }),
+    Object.freeze({ id: "chapter", label: "장 시작", shortLabel: "장 시작", previewKey: "chapter", visualScope: "장 번호·장 제목·전환 배경의 반복 규칙을 정의" }),
     Object.freeze({ id: "body", label: "본문", shortLabel: "본문", previewKey: "content", visualScope: "본문 열·문단·제목·캡션·쪽번호의 읽기 리듬을 정의" }),
-    Object.freeze({ id: "image", label: "이미지", shortLabel: "이미지", previewKey: "content", visualScope: "사진·일러스트·도식과 캡션의 크기·비율·배치를 정의" }),
+    Object.freeze({ id: "image", label: "이미지", shortLabel: "이미지", previewKey: "image", visualScope: "사진·일러스트·도식과 캡션의 크기·비율·배치를 정의" }),
     Object.freeze({ id: "data", label: "표·차트", shortLabel: "표·차트", previewKey: "data", visualScope: "표·그래프·범례·단위·출처의 공통 조형 규칙을 정의" }),
-    Object.freeze({ id: "special", label: "특수 페이지", shortLabel: "특수", previewKey: "data", visualScope: "문서 유형별 문제·해설·인용·펼침면 등 별도 화면의 시각 규칙을 정의" }),
+    Object.freeze({ id: "special", label: "특수 페이지", shortLabel: "특수", previewKey: "special", visualScope: "문서 유형별 문제·해설·인용·펼침면 등 별도 화면의 시각 규칙을 정의" }),
   ]);
 
   const VISUAL_GRAMMARS = Object.freeze([
@@ -343,13 +343,20 @@
     const tableRules = { ...base.tableRules, ...(categoryProfile.tableRules || {}), ...definition.tableRules };
     const previews = Object.freeze({
       cover: `${PREVIEW_ROOT}/${definition.id}-cover.png?v=1`,
+      chapter: `${PREVIEW_ROOT}/${definition.id}-chapter.png?v=1`,
       content: `${PREVIEW_ROOT}/${definition.id}-content.png?v=1`,
+      image: `${PREVIEW_ROOT}/${definition.id}-image.png?v=1`,
       data: `${PREVIEW_ROOT}/${definition.id}-data.png?v=1`,
+      special: `${PREVIEW_ROOT}/${definition.id}-special.png?v=1`,
     });
-    const pagePreviews = Object.freeze(PAGE_ARCHETYPES.reduce((result, page) => {
-      result[page.id] = previews[page.previewKey];
-      return result;
-    }, {}));
+    const pagePreviews = Object.freeze({
+      cover: previews.cover,
+      chapter: previews.chapter,
+      body: previews.content,
+      image: previews.image,
+      data: previews.data,
+      special: previews.special,
+    });
     return Object.freeze({
       ...definition,
       recommendedGrammarIds: THEME_GRAMMAR_MAP[definition.id] || Object.freeze(["report-analysis"]),
@@ -493,7 +500,7 @@
   ]);
 
   window.PromptDeckDocumentDesignCatalog = Object.freeze({
-    version: 4,
+    version: 5,
     themes,
     categories,
     documentKinds,
