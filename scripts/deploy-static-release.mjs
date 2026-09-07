@@ -278,7 +278,6 @@ async function verifyAssetHashes(origin, head) {
     "assets/document-design-icons/book.svg",
     "assets/fonts/document-design/NotoSansKR-OFL.txt",
     "assets/fonts/document-design/NotoSerifKR-OFL.txt",
-    "assets/fonts/document-design/README.md",
     "assets/vendor/html2canvas-LICENSE.txt",
     "styles/label-sheet.css",
     "styles/label-sheet-workspace.css",
