@@ -12,10 +12,12 @@
     },
     "document-design": {
       name: "문서 디자인",
-      overview: "왼쪽에서 요청과 테마·세부 규칙을 정하고 오른쪽에서 실제 문서 미리보기와 생성 프롬프트를 확인합니다.",
-      detail: "색상·서체·여백·위계·표·그래프를 직접 조정하는 영역입니다. 테마 기본값에서 필요한 규칙만 바꾸면 일관성을 유지할 수 있습니다.",
-      detailSize: [706, 720],
-      nodes: [["요청", "원문·문서 형식"], ["테마", "표지·본문·데이터 비교"], ["정의", "표·그래프·서체·여백·위계"], ["결과", "원문+디자인 지침"]]
+      overview: "선택한 문서의 실제 지면을 보면서 색상·여백·이미지 비중·제목·장식을 조정합니다. 표지부터 특수 지면까지 하나의 디자인 세트입니다.",
+      detail: "모바일의 느낌 조정창입니다. 조정창을 닫으면 문서 전체를 확인하고 다른 페이지로 넘길 수 있습니다.",
+      overviewImage: "/assets/guides/document-design-workbench-desktop.webp",
+      detailImage: "/assets/guides/document-design-workbench-controls.webp",
+      detailSize: [390, 844],
+      nodes: [["선택", "분야별 디자인 세트"], ["조정", "지면을 보며 느낌 변경"], ["받기", "디자인 지침+참고 이미지"], ["제작 요청", "별도 원문과 함께 AI에 전달"]]
     },
     "slide-splitter": {
       name: "슬라이드 분리기",
@@ -112,7 +114,7 @@
       if (!cardGuide || card.querySelector(".tool-guide-card-thumb")) return;
       var media = create("span", "tool-guide-card-thumb");
       var image = create("img");
-      image.src = `/assets/guides/tools/${cardSlug}-overview.jpg`;
+      image.src = guides[cardSlug]?.overviewImage || `/assets/guides/tools/${cardSlug}-overview.jpg`;
       image.alt = `${cardGuide.name} 실제 화면 미리보기`;
       image.loading = "lazy";
       image.decoding = "async";
@@ -170,7 +172,7 @@
   function screenFigure(kind, caption, width, height) {
     var figure = create("figure", `tool-screen-figure tool-screen-${kind}`);
     var link = create("a", "tool-screen-image-link");
-    var src = `/assets/guides/tools/${slug}-${kind}.jpg`;
+    var src = guide[`${kind}Image`] || `/assets/guides/tools/${slug}-${kind}.jpg`;
     link.href = src;
     link.target = "_blank";
     link.rel = "noopener";
@@ -200,7 +202,7 @@
   var detailHeight = guide.detailSize[1];
   var screenGrid = create("div", "tool-screen-grid");
   screenGrid.append(
-    screenFigure("overview", guide.overview, 1440, 900),
+    screenFigure("overview", guide.overview, 1440, slug === "document-design" ? 1000 : 900),
     screenFigure("detail", guide.detail, detailWidth, detailHeight)
   );
   visualSection.append(screenHeading, screenIntro, screenGrid);
@@ -218,7 +220,7 @@
     if (index < guide.nodes.length - 1) flow.appendChild(create("i", "", "→"));
   });
   diagram.appendChild(flow);
-  var diagramCaption = create("figcaption", "", `${guide.name}은 입력을 먼저 확정하고, 중간 검토를 거쳐 재사용 가능한 결과로 내보내는 흐름입니다.`);
+  var diagramCaption = create("figcaption", "", slug === "document-design" ? "견본 선택 → 보면서 조정 → 디자인 받기를 마친 뒤, 별도 원문과 참고 자료를 제작 AI에 함께 전달합니다." : `${guide.name}은 입력을 먼저 확정하고, 중간 검토를 거쳐 재사용 가능한 결과로 내보내는 흐름입니다.`);
   diagram.appendChild(diagramCaption);
   diagramSection.append(diagramHeading, diagram);
 

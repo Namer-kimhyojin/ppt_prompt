@@ -78,6 +78,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
       ".qr-code-stage",
       ".qr-print-preview-sheet",
       ".print-label-card",
+      ".dd-page",
     ].join(",");
     const inactiveSelector = ":disabled,[aria-disabled='true'],.disabled,.is-disabled,.is-incompatible,[hidden]";
 
@@ -249,7 +250,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
 
     const regressionSelectors = {
       tabBtnCommonPrompt: [".cpd-btn.primary", ".cpd-journey-panel-head > span"],
-      tabBtnDocumentDesign: [".document-design-kicker", "#docDesignInputTitle"],
+      tabBtnDocumentDesign: [".dw-eyebrow", ".dw-workbench h2"],
       tabBtnFormImage: [".form-image-prompt-viewer", ".form-image-step-head b"],
       tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-flow-step[aria-current='step']"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],
@@ -5076,6 +5077,7 @@ SLIDE-TWO-CONTENT`);
     ];
     for (const tabId of typographyTabIds) {
       await page.click(`#${tabId}`);
+      if (tabId === "tabBtnDocumentDesign") await page.locator('#documentDesignApp .dw-steps [data-step="2"]').click();
       const controlledPaneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
       record(Boolean(controlledPaneId) && (await page.locator(`#${controlledPaneId}.active`).count()) === 1, `${tabId} did not activate its controlled pane`, failures);
       record((await page.locator(".tab-pane.active").count()) === 1, `${tabId} left more than one top-level pane active`, failures);
@@ -5092,7 +5094,7 @@ SLIDE-TWO-CONTENT`);
       }
       const undersizedUiText = await page.evaluate(() => {
         const pane = document.querySelector(".tab-pane.active");
-        const previewSelector = ".cpd-preview, .qr-print-preview-sheet, .print-label-card, #previewCanvas, .preview-canvas, .slide-preview-canvas, [aria-hidden='true']";
+        const previewSelector = ".cpd-preview, .qr-print-preview-sheet, .print-label-card, #previewCanvas, .preview-canvas, .slide-preview-canvas, .dd-page, [aria-hidden='true']";
         return Array.from(pane?.querySelectorAll("*") || []).filter((element) => {
           if (element.matches("script, style") || element.closest(previewSelector)) return false;
           const style = getComputedStyle(element);

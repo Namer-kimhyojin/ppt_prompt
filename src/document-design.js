@@ -4,7 +4,7 @@
   const root = document.getElementById("documentDesignApp");
   const CATALOG = window.PromptDeckDocumentDesignCatalog;
   const CONTRACT = window.PromptDeckDocumentDesignContract;
-  if (!root || !CATALOG || !CONTRACT) return;
+  if (!root || !CATALOG || !CONTRACT || root.dataset.workbench === "ready") return;
 
   const STORAGE_KEY = "promptdeck.documentDesign.v1";
   const TRANSFER_KEY = "promptdeck.documentDesign.transfer.v1";

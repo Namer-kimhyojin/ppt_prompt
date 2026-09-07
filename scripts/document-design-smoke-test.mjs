@@ -146,6 +146,11 @@ try {
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.click("#tabBtnDocumentDesign");
   await page.waitForSelector("#paneDocumentDesign.active");
+  if (await page.locator('#documentDesignApp[data-workbench="ready"]').count()) {
+    record(await page.locator("#documentDesignApp").isVisible(), "Document workbench is not visible");
+    record(await page.evaluate(() => window.PromptDeckDocumentDesign.build().spec.schema === "promptdeck-document-design/3.0"), "Workbench contract is not active");
+    console.log("Legacy catalog/contract regression passed; current UI is covered by document-design:workbench:test.");
+  } else {
   record(await page.locator("#documentDesignApp .document-design-shell").isVisible(), "Document design shell is not visible");
   record((await page.locator("[data-visual-grammar]").count()) === 7, "The visual-grammar picker does not show 7 choices");
   record((await page.locator("[data-publication-type]").count()) === 8, "The default report-analysis type list is not focused");
@@ -349,6 +354,7 @@ try {
   }));
   record(mobileResult.step === "4" && !mobileResult.inputVisible && mobileResult.resultVisible && mobileResult.outputVisible, `Mobile result step visibility is incorrect: ${JSON.stringify(mobileResult)}`);
   record(mobileResult.primaryLabel === "전체 복사", `Mobile result action did not reflect the generated state: ${mobileResult.primaryLabel}`);
+  }
   record(pageErrors.length === 0, `Browser page errors: ${pageErrors.join(" | ")}`);
 } finally {
   await browser?.close();
@@ -360,4 +366,4 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
-console.log("Document design smoke test passed: 35 publication types, 7 visual grammars, 12 six-page theme sets, qualitative controls, exact production specs, source preservation, transfer, and four-step mobile journey.");
+console.log("Document design legacy compatibility smoke test passed.");

@@ -173,11 +173,11 @@
       { label: "초기화", targetId: "formImageResetBtn", className: "btn ghost", placement: "more" },
     ],
     documentDesign: [
-      { label: "디자인 지침 생성", targetId: "documentDesignGenerateBtn", className: "btn primary" },
-      { label: "전체 복사", targetId: "documentDesignCopyBtn", className: "btn secondary" },
+      { label: "디자인 받기", targetId: "documentDesignGenerateBtn", className: "btn primary" },
+      { label: "지침 복사", targetId: "documentDesignCopyBtn", className: "btn secondary" },
       { label: "공통 탭으로 전달", targetId: "documentDesignSendCommonBtn", className: "btn secondary" },
       { label: "JSON 다운로드", targetId: "documentDesignDownloadBtn", className: "btn ghost", placement: "more" },
-      { label: "샘플 채우기", targetId: "documentDesignSampleBtn", className: "btn ghost", placement: "more" },
+      { label: "견본 둘러보기", targetId: "documentDesignSampleBtn", className: "btn ghost", placement: "more" },
       { label: "초기화", targetId: "documentDesignResetBtn", className: "btn ghost", placement: "more" },
     ],
     labelSheet: [

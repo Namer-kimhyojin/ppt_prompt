@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "createdAt": "2026-09-08",
+  "sourceKind": "ai-image-generation",
+  "tool": "image_gen.imagegen",
+  "purpose": "Document design sample artwork only; not user document content",
+  "reviewStatus": "visual-review-passed",
+  "assets": [
+    {
+      "file": "story-watercolor.webp",
+      "prompt": "Landscape picture-book watercolor. Brown rabbit in mustard scarf and white bird beside woodland stream; warm ivory paper, sage, ochre, soft blue. Quiet upper space. No text or page mockup.",
+      "original": "exec-36b65606-6d73-4738-9d45-37602aad0c82.png",
+      "sha256": "d351c17471ca5890688f896f54603d0fb637d52a2f65658f8b1911520566d8d1"
+    },
+    {
+      "file": "story-papercut.webp",
+      "prompt": "Landscape tactile paper-cut picture-book illustration. Same brown rabbit in mustard scarf and white bird beside woodland stream; cream, rust, forest green, teal, gold. No text or page mockup.",
+      "original": "exec-7b12b28f-1890-4c62-85e3-d54c9abbe58f.png",
+      "sha256": "492af9b000791fa4f8432d91e6e033eb9d94ec018c0899205e7040796a64e33f"
+    },
+    {
+      "file": "workspace.jpg",
+      "prompt": "Photorealistic editorial research and learning workspace, oak table, blank notebooks, closed laptop, plants, architectural windows, soft daylight. No people, logos, text, or identifiable institution.",
+      "original": "exec-2c969144-679b-4b2c-80f3-1792c28dbfc3.png",
+      "sha256": "d661db2b50bcc965e6c6e6577b1f863ff28475ac6352e1aba0ecbb1d00b2868a"
+    },
+    {
+      "file": "forest.jpg",
+      "prompt": "Photorealistic quiet early morning forest path, mist, ferns and layered trees; muted greens and ivory light. No people, text, or logo.",
+      "original": "exec-7a6caa71-990b-40fb-8723-1020e5178511.png",
+      "sha256": "00f4ac29b960ff57fc41b12ba2127421c9668d4e222d73947c5b078b6b577c6d"
+    }
+  ]
+}

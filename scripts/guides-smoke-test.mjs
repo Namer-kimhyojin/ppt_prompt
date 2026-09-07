@@ -140,7 +140,7 @@ try {
     const toolHubMetrics = await page.evaluate(() => ({
       h1Count: document.querySelectorAll("h1").length,
       cardCount: document.querySelectorAll('a.guide-card[href^="/guides/tools/"]').length,
-      thumbnailCount: document.querySelectorAll('.tool-guide-card-thumb img[alt][src*="-overview.jpg"]').length,
+      thumbnailCount: [...document.querySelectorAll('.tool-guide-card-thumb img[alt]')].filter((img) => /\.(?:jpg|webp)(?:\?|$)/.test(img.getAttribute("src") || "")).length,
       overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
     }));
     if (toolHubMetrics.h1Count !== 1 || toolHubMetrics.cardCount !== toolGuides.size || toolHubMetrics.thumbnailCount !== toolGuides.size || toolHubMetrics.overflow) {
@@ -164,7 +164,8 @@ try {
         hasExactCta: Array.from(document.querySelectorAll("a.guide-cta")).some((link) => new URL(link.href).searchParams.get("tab") === expectedTab),
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       }), tab);
-      if (metrics.h1Count !== 1 || metrics.stepCount < 4 || !metrics.hasChecklist || !metrics.hasResult || metrics.screenCount !== 2 || metrics.diagramNodeCount !== 4 || metrics.visualTocCount !== 2 || !metrics.hasScreenDialog || !metrics.hasExactCta || metrics.overflow) {
+      const minimumSteps = slug === "document-design" ? 3 : 4;
+      if (metrics.h1Count !== 1 || metrics.stepCount < minimumSteps || !metrics.hasChecklist || !metrics.hasResult || metrics.screenCount !== 2 || metrics.diagramNodeCount !== 4 || metrics.visualTocCount !== 2 || !metrics.hasScreenDialog || !metrics.hasExactCta || metrics.overflow) {
         throw new Error(`${route} failed practical guide contract: ${JSON.stringify(metrics)}`);
       }
       if (slug === "common-prompt") {

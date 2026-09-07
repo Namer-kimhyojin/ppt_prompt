@@ -9,7 +9,7 @@ const outputDir = path.join(repoRoot, "assets", "guides", "tools");
 const origin = String(process.argv[2] || "https://promptdeck.kr").replace(/\/+$/u, "");
 const tools = [
   { slug: "common-prompt", tab: "commonPrompt", pane: "#paneCommonPrompt", focus: ".cpd-main-column" },
-  { slug: "document-design", tab: "documentDesign", pane: "#paneDocumentDesign", focus: '.doc-design-card[aria-labelledby="docDesignAdjustTitle"]' },
+  { slug: "document-design", tab: "documentDesign", pane: "#paneDocumentDesign", focus: '#dwDesktopControls' },
   { slug: "slide-splitter", tab: "generator", pane: "#paneGenerator", focus: "#genInputSection" },
   { slug: "form-image", tab: "formImage", pane: "#paneFormImage", focus: ".form-image-work-panel" },
   { slug: "map-image", tab: "mapPrompt", pane: "#paneMapPrompt", focus: ".map-builder-section" },
@@ -48,6 +48,7 @@ try {
     });
     await page.waitForSelector(tool.pane, { state: "visible", timeout: 30_000 });
     await page.evaluate((tab) => window.PromptDeckTabs?.switchTab?.(tab), tool.tab);
+    if (tool.tab === "documentDesign") await page.locator('#documentDesignApp .dw-steps [data-step="2"]').click();
     await page.waitForTimeout(1_200);
     if (tool.sampleProject) {
       await page.locator("#labelSheetWorkspaceEntry button").filter({ hasText: "샘플 프로젝트 열기" }).first().click();
