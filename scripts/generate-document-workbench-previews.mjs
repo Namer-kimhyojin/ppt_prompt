@@ -6,6 +6,7 @@ import http from "node:http";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
+import { setTimeout as pause } from "node:timers/promises";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outputRelative = "assets/document-design-workbench-previews";
@@ -13,8 +14,8 @@ const outputDir = path.join(root, outputRelative);
 const guideDir = path.join(root, "assets/guides");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".woff2": "font/woff2" };
-const rendererSources = ["src/document-design-bundles.js", "src/document-design-samples.js", "src/document-design-resolver.js", "src/document-design-renderer.js", "styles/document-design-pages.css", "styles/document-design-variants.css", "styles/document-design-fonts.css"];
-const uiSources = ["index.html", "src/document-design-workbench.js", "styles/document-design-workbench.css"];
+const rendererSources = ["src/document-design-bundles.js", "src/document-design-samples.js", "src/document-design-palettes.js", "src/document-design-resolver.js", "src/document-design-renderer.js", "styles/document-design-pages.css", "styles/document-design-variants.css", "styles/document-design-fonts.css"];
+const uiSources = ["index.html", "src/document-design-workbench.js", "src/document-design-palette-modal.js", "styles/document-design-workbench.css", "styles/document-design-palette-modal.css"];
 const shell = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="/styles/document-design-fonts.css"><link rel="stylesheet" href="/styles/document-design-pages.css"><link rel="stylesheet" href="/styles/document-design-variants.css"><style>body{margin:0;background:#e9eef0}#sheet{display:flex;gap:18px;padding:24px;width:1200px;box-sizing:border-box;align-items:flex-start;background:#e9eef0}.sample{width:372px;margin:0;flex:none}.sample-label{font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:20px;color:#38505b;padding:12px 2px 0}.page-slot{position:relative;background:#fff}.page-slot>.dd-page{transform-origin:top left;position:absolute;left:0;top:0}</style></head><body><div id="sheet"></div>${rendererSources.filter((file) => file.endsWith(".js")).map((file) => `<script src="/${file}"></script>`).join("")}</body></html>`;
 const server = http.createServer((request, response) => {
   const requested = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
@@ -48,7 +49,17 @@ async function asWebp(page, png) {
 async function writeImage(page, locator, filename) {
   const png = locator ? await locator.screenshot({ type: "png", animations: "disabled" }) : await page.screenshot({ type: "png", animations: "disabled" });
   const bytes = await asWebp(page, png);
-  await fs.writeFile(filename, bytes);
+  // Avoid rewriting identical captures; Windows image indexing can briefly lock changed files.
+  const previous = await fs.readFile(filename).catch(() => null);
+  if (!previous?.equals(bytes)) {
+    for (let attempt = 0; ; attempt += 1) {
+      try { await fs.writeFile(filename, bytes); break; }
+      catch (error) {
+        if (attempt >= 4 || !["UNKNOWN", "EBUSY", "EPERM"].includes(error.code)) throw error;
+        await pause(100 * (attempt + 1));
+      }
+    }
+  }
   return { bytes: bytes.length, sha256: sha256(bytes) };
 }
 

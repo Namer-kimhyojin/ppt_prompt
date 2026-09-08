@@ -49,7 +49,7 @@
 .dd-document-table { width: 100%; border-collapse: collapse; font-family: var(--dd-table-font); font-size: .87em; line-height: 1.55; table-layout: fixed; }
 .dd-table-caption { text-align: left; font-size: .86em; font-weight: 600; color: var(--dd-primary); margin-bottom: .9em; padding-bottom: .65em; font-family: var(--dd-heading-font); }
 .dd-document-table th, .dd-document-table td { padding: var(--dd-cell) calc(var(--dd-cell) * .8); text-align: left; vertical-align: top; overflow-wrap: anywhere; border-bottom: 1px solid var(--dd-border); }
-.dd-document-table thead th { background: var(--dd-primary); color: #fff; font-size: .86em; font-weight: 600; }
+.dd-document-table thead th { background: var(--dd-primary); color: var(--dd-on-primary, #fff); font-size: .86em; font-weight: 600; }
 .dd-document-table tbody th { color: var(--dd-primary); font-weight: 600; }
 .dd-page[data-table-style="striped"] .dd-document-table tbody tr:nth-child(even) { background: var(--dd-tint); }
 .dd-page[data-table-style="plain"] .dd-document-table th, .dd-page[data-table-style="plain"] .dd-document-table td { border: 0; }
@@ -77,12 +77,12 @@
 .dd-diagram-node { display: flex; align-items: center; gap: 1em; min-height: calc(2.7em + var(--dd-image-ratio) * 4em); padding: .9em 1em; background: var(--dd-tint); border: 1px solid var(--dd-border); }
 .dd-diagram-node strong { font-size: 1.04em; color: var(--dd-primary); font-family: var(--dd-heading-font); }
 .dd-symbol { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.3em; height: 2.3em; border: 1px solid var(--dd-primary); border-radius: 50%; font-family: var(--dd-numeral-font); font-size: .82em; font-weight: 700; color: var(--dd-primary); background: var(--dd-paper); }
-.dd-page[data-icon-style="solid"] .dd-symbol { color: #fff; background: var(--dd-primary); }
+.dd-page[data-icon-style="solid"] .dd-symbol { color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-flow-arrow { display: block; text-align: center; line-height: 1.5; font-size: 1.2em; color: var(--dd-secondary); }
 .dd-diagram-hierarchy { display: flex; flex-wrap: wrap; gap: 1em; justify-content: center; border-left: var(--dd-decoration-width) solid var(--dd-secondary); padding-left: 1em; }
 .dd-diagram-hierarchy .dd-diagram-node { width: calc(50% - .5em); }
 .dd-diagram-hierarchy .dd-diagram-parent { width: 100%; background: var(--dd-primary); }
-.dd-diagram-hierarchy .dd-diagram-parent strong { color: #fff; }
+.dd-diagram-hierarchy .dd-diagram-parent strong { color: var(--dd-on-primary, #fff); }
 .dd-roadmap-row { display: flex; gap: 1.3em; margin-bottom: 1.5em; border-bottom: 1px solid var(--dd-border); padding-bottom: 1em; }
 .dd-roadmap-detail { flex: 1; min-width: 0; }
 .dd-roadmap-detail > strong { color: var(--dd-primary); font-family: var(--dd-heading-font); }
@@ -118,7 +118,7 @@
 .dd-variant-public .dd-section-heading { border-top: var(--dd-color-area) solid var(--dd-primary); padding-top: 1.2em; }
 .dd-variant-data .dd-section-heading { border-left: var(--dd-color-area) solid var(--dd-primary); padding-left: 1.2em; }
 .dd-variant-data .dd-kind-body, .dd-variant-data .dd-callout { border-left: 0; border-top: var(--dd-decoration-width) solid var(--dd-accent); }
-.dd-variant-data.dd-kind-cover .dd-cover-title { padding: 1em .6em; color: #fff; background: var(--dd-primary); }
+.dd-variant-data.dd-kind-cover .dd-cover-title { padding: 1em .6em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-data .dd-stats { flex-direction: column; gap: .7em; }
 .dd-variant-data .dd-stat { display: flex; justify-content: space-between; align-items: center; padding: .6em 1em; }
 .dd-variant-data .dd-stat-number { margin-top: 0; }
@@ -151,7 +151,7 @@
 .dd-variant-watercolor .dd-cover-title { text-align: center; font-size: calc(var(--dd-title) * 1.4); margin-top: .6em !important; }
 .dd-variant-watercolor .dd-cover-subtitle, .dd-variant-watercolor .dd-cover-main > .dd-kicker { text-align: center; }
 .dd-variant-watercolor .dd-photo-frame { border-radius: calc(var(--dd-decoration) * 5em); border: var(--dd-decoration-width) solid var(--dd-secondary); }
-.dd-variant-papercut .dd-cover-title { display: inline-block; padding: .35em .5em; background: var(--dd-primary); color: #fff; margin-top: .4em !important; font-size: calc(var(--dd-title) * 1.35); }
+.dd-variant-papercut .dd-cover-title { display: inline-block; padding: .35em .5em; background: var(--dd-primary); color: var(--dd-on-primary, #fff); margin-top: .4em !important; font-size: calc(var(--dd-title) * 1.35); }
 .dd-variant-papercut .dd-photo-frame { border-bottom: calc(2px + var(--dd-decoration) * 12px) solid var(--dd-accent); }
 .dd-variant-papercut .dd-dialogue-line { border-radius: 0; border-left: .4em solid var(--dd-accent); }
 .dd-page[data-background-scope="all"] { background: var(--dd-tint); }

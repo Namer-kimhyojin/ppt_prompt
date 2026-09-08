@@ -205,6 +205,13 @@
       "--dd-primary": design.palette.primary, "--dd-secondary": design.palette.secondary, "--dd-accent": design.palette.accent, "--dd-paper": design.palette.background, "--dd-surface": design.palette.surface, "--dd-ink": design.palette.text, "--dd-muted": design.palette.muted, "--dd-border": design.palette.border, "--dd-tint": tint(design.palette.primary, .96 - color * .15), "--dd-heading-fill": color > .75 ? tint(design.palette.primary, .93) : "transparent", "--dd-color-area": `${4 + color * 12}px`, "--dd-decoration": decoration, "--dd-decoration-width": `${decoration < .1 ? 0 : 1 + decoration * 4}px`, "--dd-image-ratio": clamp(numeric(tokens.imageRatio, .5), .2, .8),
       "--dd-heading-font": `"${fontValue(fonts.heading, design.fonts.heading)}", sans-serif`, "--dd-body-font": `"${fontValue(fonts.body, design.fonts.body)}", sans-serif`, "--dd-numeral-font": `"${fontValue(fonts.numeral, design.fonts.body)}", sans-serif`, "--dd-table-font": `"${fontValue(fonts.table, design.fonts.body)}", sans-serif`, "--dd-caption-font": `"${fontValue(fonts.caption, design.fonts.body)}", sans-serif`, "--dd-quote-font": `"${fontValue(fonts.quote, design.fonts.heading)}", serif`,
     };
+    if (window.PromptDeckDocumentPalettes) {
+      vars["--dd-tint"] = window.PromptDeckDocumentPalettes.mix(design.palette.background, design.palette.primary, .04 + color * .15);
+      vars["--dd-heading-fill"] = color > .75 ? window.PromptDeckDocumentPalettes.mix(design.palette.background, design.palette.primary, .07) : "transparent";
+      vars["--dd-on-primary"] = window.PromptDeckDocumentPalettes.inkOn(design.palette.primary);
+      vars["--dd-on-accent"] = window.PromptDeckDocumentPalettes.inkOn(design.palette.accent);
+      node.dataset.paletteCustom = String(!!design.colorScheme?.presetId || !!design.colorScheme?.customizedRoles?.length || Object.entries(design.colorScheme?.feel || {}).some(([key, value]) => value !== window.PromptDeckDocumentPalettes.defaultFeel[key]));
+    }
     Object.entries(vars).forEach(([key, value]) => node.style.setProperty(key, value));
     node.style.width = `${tokens.widthPx}px`; node.style.height = `${tokens.heightPx}px`;
     const styles = design.componentStyles || {};

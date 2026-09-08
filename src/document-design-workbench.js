@@ -19,7 +19,6 @@
     { key: "decorationPresence", label: "장식의 정도", hint: "배경과 안내 요소의 존재감", options: [["minimal", "최소한"], ["balanced", "적당히"], ["rich", "풍부하게"]] },
   ];
   const SIZES = { A4: [210, 297], A3: [297, 420], A5: [148, 210], B5: [182, 257], Letter: [215.9, 279.4] };
-  const COLOR_OPTIONS = [["primary", "주색"], ["secondary", "보조색"], ["accent", "강조색"], ["background", "배경색"], ["surface", "내용 면"], ["text", "본문색"], ["muted", "보조 글자"], ["border", "구분선"]];
   const BINDINGS = [["none", "제본 없음"], ["left", "좌철"], ["top", "상철"], ["saddle", "중철"], ["perfect", "무선 제본"], ["hardcover", "양장"], ["spiral", "스프링"]];
   const DUPLEX = [["single", "단면"], ["duplex", "양면"], ["duplex-long", "양면 · 긴 쪽"], ["duplex-short", "양면 · 짧은 쪽"]];
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -54,6 +53,7 @@
   let statusTimer;
   let previewFrame = 0;
   let fontPair = "default";
+  let paletteModal;
   const fontScopes = new Set();
 
   function syncFontSelection() {
@@ -129,6 +129,16 @@
     updateMeta();
     updateResult();
     bind();
+    paletteModal = window.PromptDeckDocumentPaletteModal?.create({ root, getState: () => state, renderFrame, fitAll, apply(next) {
+      undoState = clone(state);
+      state.colorPresetId = next.colorPresetId;
+      state.colorBaseBundleId = next.colorBaseBundleId || (!next.colorPresetId && next.keepPaletteOnBundleChange ? next.bundleId : "");
+      state.colorFeel = clone(next.colorFeel);
+      state.keepPaletteOnBundleChange = next.keepPaletteOnBundleChange;
+      state.overrides.colors = clone(next.overrides.colors);
+      state.feel.colorPresence = next.feel.colorPresence;
+      settle("색상 조합을 문서 전체와 디자인 지침에 적용했습니다.");
+    } });
     status(loaded.notice || "마음에 드는 디자인을 펼쳐 보고 한 세트를 선택하세요.");
   }
 
@@ -170,7 +180,7 @@
     const height = Number(frame.dataset.naturalHeight || 1123);
     const kind = frame.dataset.fit;
     const availableWidth = Math.max(1, frame.parentElement.clientWidth - (kind === "main" ? 36 : 0));
-    const maxHeight = kind === "main" ? Math.max(360, Math.min(850, window.innerHeight - 185)) : kind === "thumb" ? 105 : kind === "card" ? 310 : 520;
+    const maxHeight = kind === "main" ? Math.max(360, Math.min(850, window.innerHeight - 185)) : kind === "thumb" ? 105 : kind === "palette-card" ? 220 : kind === "palette" ? 230 : kind === "palette-large" ? 520 : kind === "card" ? 310 : 520;
     const factor = Math.min(availableWidth / width, maxHeight / height, 1);
     frame.style.width = `${width * factor}px`;
     frame.style.height = `${height * factor}px`;
@@ -344,7 +354,6 @@
   function controlsMarkup(prefix) {
     const overrides = state.overrides || {};
     const components = { ...(resolved.design.componentStyles || {}), ...(overrides.components || {}) };
-    const colors = resolved.design.colors || resolved.design.palette || getBundle(state.bundleId).colors || {};
     const physical = state.physicalSpec;
     const pages = pagesOf(resolved.design);
     const tablePage = pages.find((page) => ["table", "answers", "data-question"].includes(page.kind));
@@ -354,8 +363,8 @@
     const iconPage = pages.find((page) => ["diagram", "roadmap", "example", "activity"].includes(page.kind));
     const relevant = (page, label) => page && page.id !== state.activePageId ? `<button type="button" class="dw-related-page" data-page="${esc(page.id)}">${esc(label)}에서 확인 ${icon("arrow")}</button>` : "";
     const custom = Object.values(overrides).some((value) => value && Object.keys(value).length);
-    return `<div class="dw-feel-fields">${FEEL.map((field) => `<fieldset class="dw-field"><legend>${field.label}</legend><p>${field.hint}</p><div class="dw-segmented">${field.options.map(([value, label]) => `<label><input type="radio" name="${prefix}-feel-${field.key}" data-feel="${field.key}" value="${value}" ${state.feel[field.key] === value ? "checked" : ""}><span>${label}</span></label>`).join("")}</div>${feelPageCue(field, pages)}</fieldset>`).join("")}</div>${custom ? '<div class="dw-custom-note">개별 조정 적용 중 <button type="button" data-action="clear-overrides">개별 조정 해제</button></div>' : ''}
-      <details class="dw-control-details"><summary>색상 · 서체</summary><div class="dw-detail-content"><div class="dw-color-pair">${COLOR_OPTIONS.map(([key, label]) => `<label>${label}<input type="color" aria-label="${label}" data-color="${key}" value="${esc(overrides.colors?.[key] || colors[key] || "#ffffff")}"></label>`).join("")}</div><label class="dw-select-label">서체 조합<select data-font-pair><option value="default">디자인 기본 서체</option><option value="sans">명료한 고딕</option><option value="serif">차분한 명조</option><option value="mixed">고딕 제목 · 명조 본문</option></select></label><p class="dw-help">서체를 바꿀 범위를 선택하세요.</p><div class="dw-scope-checks">${[["heading", "제목"], ["body", "본문"], ["numeral", "숫자"], ["table", "표"], ["caption", "캡션"], ["quote", "인용"]].map(([key, label]) => `<label class="dw-check"><input type="checkbox" data-font-scope="${key}" ${fontScopes.has(key) ? "checked" : ""}>${label}</label>`).join("")}</div></div></details>
+    return `${window.PromptDeckDocumentPaletteModal?.summary(state) || ""}<div class="dw-feel-fields">${FEEL.map((field) => `<fieldset class="dw-field"><legend>${field.label}</legend><p>${field.hint}</p><div class="dw-segmented">${field.options.map(([value, label]) => `<label><input type="radio" name="${prefix}-feel-${field.key}" data-feel="${field.key}" value="${value}" ${state.feel[field.key] === value ? "checked" : ""}><span>${label}</span></label>`).join("")}</div>${feelPageCue(field, pages)}</fieldset>`).join("")}</div>${custom ? '<div class="dw-custom-note">개별 조정 적용 중 <button type="button" data-action="clear-overrides">개별 조정 해제</button></div>' : ''}
+      <details class="dw-control-details"><summary>서체</summary><div class="dw-detail-content"><label class="dw-select-label">서체 조합<select data-font-pair><option value="default">디자인 기본 서체</option><option value="sans">명료한 고딕</option><option value="serif">차분한 명조</option><option value="mixed">고딕 제목 · 명조 본문</option></select></label><p class="dw-help">서체를 바꿀 범위를 선택하세요.</p><div class="dw-scope-checks">${[["heading", "제목"], ["body", "본문"], ["numeral", "숫자"], ["table", "표"], ["caption", "캡션"], ["quote", "인용"]].map(([key, label]) => `<label class="dw-check"><input type="checkbox" data-font-scope="${key}" ${fontScopes.has(key) ? "checked" : ""}>${label}</label>`).join("")}</div></div></details>
       ${tablePage || chartPage || imagePage || diagramPage ? `<details class="dw-control-details"><summary>표 · 차트 · 이미지</summary><div class="dw-detail-content">${tablePage ? choices(prefix, "표 표현", "tableStyle", [["rules", "가로선"], ["striped", "줄무늬"], ["plain", "무테"]], components.tableStyle || "rules") + relevant(tablePage, pageName(tablePage)) : ""}${chartPage ? choices(prefix, "차트 표현", "chartType", [["bar", "비교"], ["line", "추세"], ["donut", "구성비"]], components.chartType || "bar") + relevant(chartPage, pageName(chartPage)) : ""}${imagePage ? choices(prefix, "이미지 색감", "imageStyle", [["original", "원본 색감"], ["muted", "차분한 색감"]], components.imageStyle || "original") + relevant(imagePage, pageName(imagePage)) : ""}${diagramPage ? choices(prefix, "도식 표현", "diagramStyle", [["flow", "흐름"], ["hierarchy", "계층"]], components.diagramStyle || "flow") + relevant(diagramPage, pageName(diagramPage)) : ""}</div></details>` : ""}
       <details class="dw-control-details"><summary>${iconPage ? "배경 · 안내 아이콘" : "배경"}</summary><div class="dw-detail-content">${choices(prefix, "배경 적용 범위", "backgroundScope", [["none", "없음"], ["cover", "표지"], ["chapter", "표지·장"], ["all", "전체"]], components.backgroundScope || "cover")}${iconPage ? choices(prefix, "안내 아이콘", "iconStyle", [["line", "가는 선"], ["solid", "채운 형태"]], components.iconStyle || "line") + relevant(iconPage, pageName(iconPage)) : ""}<p class="dw-help">장식의 정도가 최소이면 장식 표현을 절제합니다. 배경과 본문은 읽기 쉬운 대비를 유지하세요.</p></div></details>
       <details class="dw-control-details"><summary>문서 규격 <span>${esc(physical.sizeId)} · ${physical.orientation === "landscape" ? "가로" : "세로"}</span></summary><div class="dw-detail-content"><label class="dw-select-label">완성 용지 크기<select data-physical="sizeId">${Object.entries(SIZES).map(([id, dims]) => `<option value="${id}" ${physical.sizeId === id ? "selected" : ""}>${id} · ${dims[0]} × ${dims[1]} mm</option>`).join("")}</select></label>${choices(prefix, "용지 방향", "orientation", [["portrait", "세로형"], ["landscape", "가로형"]], physical.orientation, "physical")}<div class="dw-two-fields"><label class="dw-select-label">제본<select data-physical="bindingId">${BINDINGS.map(([id, label]) => `<option value="${id}" ${physical.bindingId === id ? "selected" : ""}>${label}</option>`).join("")}</select></label><label class="dw-select-label">면 구성<select data-physical="duplex">${DUPLEX.map(([id, label]) => `<option value="${id}" ${physical.duplex === id ? "selected" : ""}>${label}</option>`).join("")}</select></label><label class="dw-select-label">페이지 구성<select data-physical="spreadMode">${[["single-pages", "낱쪽"], ["facing", "맞쪽"], ["facing-pages", "맞쪽 · 기존 설정"]].filter(([id]) => id !== "facing-pages" || physical.spreadMode === id).map(([id, label]) => `<option value="${id}" ${physical.spreadMode === id ? "selected" : ""}>${label}</option>`).join("")}</select></label><label class="dw-select-label">도련<select data-physical="bleedMm"><option value="0" ${!physical.bleedMm ? "selected" : ""}>없음</option><option value="3" ${physical.bleedMm === 3 ? "selected" : ""}>3 mm</option></select></label></div><p class="dw-help">용지 크기는 정확한 규격으로 전달됩니다. 디자인이나 출력 형식을 바꿔도 유지됩니다.</p></div></details>
@@ -509,6 +518,7 @@
       if (button.hasAttribute("data-close-dialog")) return closeDialogs();
       const action = button.dataset.action || { documentDesignGenerateBtn: "generate", documentDesignCopyBtn: "copy-design", documentDesignSendCommonBtn: "send-common", documentDesignDownloadBtn: "download-json", documentDesignSampleBtn: "sample", documentDesignResetBtn: "reset-design" }[button.id];
       if (action === "resume") return setStep(2);
+      if (action === "open-palette") return paletteModal?.open();
       if (action === "use-candidate" && candidateId) return selectBundle(candidateId);
       if (action === "previous-page") return movePage(-1);
       if (action === "next-page") return movePage(1);

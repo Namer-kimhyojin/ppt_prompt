@@ -1,6 +1,7 @@
 (function () {
   "use strict";
   const bundles = window.PromptDeckDocumentBundles;
+  const palettes = window.PromptDeckDocumentPalettes;
   if (!bundles) return;
   const clone = (value) => JSON.parse(JSON.stringify(value));
   const sizes = { A4: [210, 297], A3: [297, 420], A5: [148, 210], B5: [182, 257], Letter: [215.9, 279.4] };
@@ -24,6 +25,7 @@
     return {
       stateVersion: 3, bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId,
       activePageId: bundle.pages[0].id, feel: clone(bundle.defaultFeel),
+      colorPresetId: "", colorBaseBundleId: "", colorFeel: { ...palettes?.defaultFeel }, keepPaletteOnBundleChange: true,
       overrides: { colors: {}, fonts: {}, typographyScope: {}, components: {} },
       physicalSpec: { sizeId: "A4", widthMm: 210, heightMm: 297, orientation: "portrait", bindingId: "none", duplex: "single", spreadMode: "single-pages", bleedMm: 0 },
       formats: ["PDF"], sourcePrompt: "",
@@ -52,6 +54,10 @@
       ...base, bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId,
       activePageId: bundle.pages.some((p) => p.id === raw.activePageId) ? raw.activePageId : bundle.pages[0].id,
       feel, overrides, formats: formats.length ? formats : base.formats,
+      colorPresetId: palettes?.get(raw.colorPresetId)?.id || "",
+      colorBaseBundleId: bundles.get(raw.colorBaseBundleId)?.id || "",
+      colorFeel: palettes?.normalizeFeel(raw.colorFeel) || {},
+      keepPaletteOnBundleChange: raw.keepPaletteOnBundleChange !== false,
       sourcePrompt: typeof raw.sourcePrompt === "string" ? raw.sourcePrompt : "",
       physicalSpec: {
         sizeId, widthMm, heightMm, orientation,
@@ -74,7 +80,10 @@
   function resolve(input) {
     const state = normalize(input);
     const bundle = bundles.get(state.bundleId);
-    const palette = { ...bundle.palette, ...state.overrides.colors };
+    const preset = palettes?.get(state.colorPresetId);
+    const colorBundle = bundles.get(state.colorBaseBundleId) || bundle;
+    const basePalette = preset?.colors || colorBundle.palette;
+    const palette = { ...(palettes?.applyFeel(basePalette, state.colorFeel) || basePalette), ...state.overrides.colors };
     const colorLevel = { low: .18, balanced: .55, high: 1 }[state.feel.colorPresence];
     // Color degree changes large surfaces; explicit palette swatches remain exact.
     const fonts = { ...bundle.fonts, ...state.overrides.fonts };
@@ -126,14 +135,23 @@
     const lo = Math.min(luminance(palette.text), luminance(palette.background));
     const issues = [];
     if ((hi + .05) / (lo + .05) < 4.5) issues.push({ level: "warning", code: "low-contrast", message: "본문과 배경의 색이 비슷합니다. 읽기 쉬운 대비로 조정해 주세요." });
+    if (palettes) {
+      const pairs = [["text", "surface", "본문·내용 면", 4.5], ["muted", "background", "보조 글자·배경", 4.5], ["muted", "surface", "보조 글자·내용 면", 4.5], ["primary", "background", "제목·배경", 4.5], ["primary", "surface", "제목·내용 면", 4.5]];
+      const weak = pairs.filter(([a, b, , limit]) => palettes.contrast(palette[a], palette[b]) < limit).map(([, , label]) => label);
+      if (weak.length) issues.push({ level: "warning", code: "palette-contrast", message: `${weak.join(", ")}의 대비가 낮습니다. 직접 지정한 색상을 확인해 주세요.` });
+    }
     const design = { bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId, label: bundle.label, variant: bundle.variant, pages: clone(bundle.pages), palette, fonts, typographyScope: scope, feel: clone(state.feel), componentStyles, physicalSpec: clone(physical), image: bundle.image, rules: bundle.rules.slice() };
+    design.colorScheme = { presetId: state.colorPresetId, label: preset?.label || (state.colorBaseBundleId ? `${colorBundle.label} 색상` : "견본 기본 색상"), feel: { ...state.colorFeel }, direction: palettes?.describe(state.colorFeel) || "", customizedRoles: Object.keys(state.overrides.colors), keepOnBundleChange: state.keepPaletteOnBundleChange };
     return { state, design, previewTokens, issues };
   }
   function changeBundle(input, id) {
     const state = normalize(input);
     const bundle = bundles.get(id) || bundles.bundles[0];
-    return normalize({ ...state, bundleId: bundle.id, feel: bundle.defaultFeel, activePageId: bundle.pages[0].id, overrides: defaults().overrides });
+    const keep = state.keepPaletteOnBundleChange && (state.colorPresetId || state.colorBaseBundleId || Object.keys(state.overrides.colors).length || Object.entries(state.colorFeel).some(([k, v]) => v !== palettes?.defaultFeel[k]));
+    const overrides = defaults().overrides;
+    if (keep) overrides.colors = { ...state.overrides.colors };
+    return normalize({ ...state, bundleId: bundle.id, feel: { ...bundle.defaultFeel, ...(keep ? { colorPresence: state.feel.colorPresence } : {}) }, activePageId: bundle.pages[0].id, overrides, colorPresetId: keep ? state.colorPresetId : "", colorBaseBundleId: keep && !state.colorPresetId ? state.colorBaseBundleId || state.bundleId : "", colorFeel: keep ? state.colorFeel : palettes?.defaultFeel });
   }
-  function restore(input) { const state = normalize(input); return changeBundle(state, state.bundleId); }
+  function restore(input) { const state = normalize(input); return changeBundle({ ...state, colorPresetId: "", colorBaseBundleId: "", colorFeel: palettes?.defaultFeel, overrides: defaults().overrides }, state.bundleId); }
   window.PromptDeckDocumentResolver = Object.freeze({ defaults, normalize, resolve, changeBundle, restore, sizes, options, componentOptions, fontNames });
 })();

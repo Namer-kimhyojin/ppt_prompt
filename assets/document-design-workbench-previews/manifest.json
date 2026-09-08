@@ -3,21 +3,24 @@
   "designSchema": "DocumentDesignSpec/3.0",
   "bundleVersion": 3,
   "rendererVersion": 3,
-  "generatedAt": "2026-09-07T23:21:38.431Z",
+  "generatedAt": "2026-09-08T09:26:31.016Z",
   "generator": "scripts/generate-document-workbench-previews.mjs",
   "captureEngine": "Chromium browser screenshots, converted to WebP",
-  "rendererHash": "df9232526090d501c296f67bef6bdbbbb3747d40349f742930e1644f50dc1e62",
+  "rendererHash": "97aa726bae93130f6a88b216fce6358417c89116174682f6633f1e8305176fb8",
   "sourceHashes": {
     "src/document-design-bundles.js": "31c8db6815fe50023f975e84d8fa33349b42f93f6a7c478090899cb178fb3d0a",
     "src/document-design-samples.js": "6a1f4827cfaec610d4de0889317bf5ef97cd9dee05a91136bf5dc7ae69e3c772",
-    "src/document-design-resolver.js": "7c995a29f08747b0a4dbb1b280cb17fb1d820b6780b2c4b8109a6717c0fed0b5",
-    "src/document-design-renderer.js": "239a8973209311f751bd3e27c17f562667c990b1b9fb9788c8da2339e1726de8",
-    "styles/document-design-pages.css": "edac657ad3124215b1ca8bbb796e60169e99114f34db185d782f299c6dc4255f",
-    "styles/document-design-variants.css": "be3ed9b50491262f16bc43bf6c30abf2a076e47e34fbfb14c25c7a0703bd97d4",
+    "src/document-design-palettes.js": "3cd82b26380d57b7ede704cdeea85d64112cb6fad14e7c090e52c129ab4c2651",
+    "src/document-design-resolver.js": "db779a0771c0aa299bde83d709a743644d26e8e43edc0966296af779f7d5dd81",
+    "src/document-design-renderer.js": "7d11e2bdf545e4b54fbd1576fe75367b8f170dd0ecb232f54aeda6646b9caf4f",
+    "styles/document-design-pages.css": "11f78ce6ce493a3d6e82d3eaef03338b243bf03c534a965ec9ca3054b5952544",
+    "styles/document-design-variants.css": "b05e8b27b2634b942ec9b6ae97680125eeef5c7b0678a21192c0aa406307fed1",
     "styles/document-design-fonts.css": "9dea58f58852824db94545ec4317482b0ec2bc55e59d642360619a8a5d06dee0",
-    "index.html": "fe2023cfa6fecd3e1cbc0128cad01beefcdaa1a2a038196c88db1aefff5504d0",
-    "src/document-design-workbench.js": "c5e373b22861cd89a40e1fe0e53a49f6786dd7abcb26a6094c9c5ef5eec88d4e",
+    "index.html": "f5534cec22ffe4c7de20bf2b49c9bbc1926f72085b6d5ab7a57ed00990b8ec8d",
+    "src/document-design-workbench.js": "13a0bc7f3fa5fa2b7ed3da11da51886bbd363a0921570c561ac80eec029eed38",
+    "src/document-design-palette-modal.js": "0afd82037be20d524034efede6c711ffe9822b9fd38832f58bda55235cbc9680",
     "styles/document-design-workbench.css": "6a7b32baa2f82adfbf13d165f462d2d7c61250f6c6ea53ebac37b8e461490bd5",
+    "styles/document-design-palette-modal.css": "90844e07dd21469a64c05010b03b72100e12c37dfd822b6a53f9bfede2edb7ca",
     "assets/document-design-icons/arrow-counterclockwise.svg": "632527a2ee2386b829fc7227937de40af6e2594d120a723d3341089cd3aca3da",
     "assets/document-design-icons/arrows-fullscreen.svg": "2d67bc427f2e766795ec029cd2ef24b3ebbd306ff76ae7297508da7b6a6081bf",
     "assets/document-design-icons/book.svg": "ae330ec1609b0a49ba94635e80eeffaf380e1a619affcc3881066407fadcdafb",
@@ -32,7 +35,7 @@
     "assets/document-design-icons/LICENSE.txt": "0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969",
     "assets/document-design-icons/sliders.svg": "38986f0874b63e3a34e5f489a39b23579f31cbd0c43b79d17e95b50312ac21fc",
     "assets/document-design-icons/x-lg.svg": "5ac6965c9989afaad195dc0fe739bd7443a7e94e52f8530b9b7d664d20c5d9e5",
-    "scripts/generate-document-workbench-previews.mjs": "1a52c1a89fdbe4f0913b44e66ed5babafac6650f19c503ac560bfb9a0a35bc46",
+    "scripts/generate-document-workbench-previews.mjs": "8c5fc0e2ba85a109b8bae1594bca14ff4c7792fa8951a751b56d240ab30acf41",
     "assets/document-design-images/workspace.jpg": "d661db2b50bcc965e6c6e6577b1f863ff28475ac6352e1aba0ecbb1d00b2868a",
     "assets/document-design-images/forest.jpg": "00f4ac29b960ff57fc41b12ba2127421c9668d4e222d73947c5b078b6b577c6d",
     "assets/document-design-images/story-watercolor.webp": "d351c17471ca5890688f896f54603d0fb637d52a2f65658f8b1911520566d8d1",
@@ -72,6 +75,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -93,8 +105,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "567bb06a2edb0690db012dccc745fbbaf5c9e3314ba10763878ce98364581653",
-      "designHash": "dd428a87f44ad7a3b13ca1fcc3e5671179d11c6873d5c1789ee820e87e8a88a6",
+      "settingsHash": "c406def9663cfafffb70a1841d1382c14fc489925863a458f0eaddd82d45015d",
+      "designHash": "0e12cfd5b33f4eb0ac936da9b22ea333e05c5da9117e49c69e7d2e18c6692591",
       "previewTokensHash": "112dc46fae53f80e483c85d2c4013ec315cc17dd16a6db75e8a4acee2607c882",
       "width": 1200,
       "height": 606,
@@ -129,6 +141,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -150,13 +171,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "0088554cf6da94843bb9647c2ce4df875e5377bc560c15ae8be9490499c1e2ef",
-      "designHash": "339afbbc65b588b9e58a8a98356de7c74230d010b800fd7fd3fb012def9e7f5e",
+      "settingsHash": "58f36a9ad772bdfddf012a78f8bea0034633158101df9b086e55513a6f947948",
+      "designHash": "838746613b05e95eda68067ea7a3301514e880cf799b8d2cba73796cbf2fb59a",
       "previewTokensHash": "84a0300f5b1f6dc2f2b7228031f4d154f4482c7e90e6d30d3fbd8344dc2ac74f",
       "width": 1200,
       "height": 606,
-      "bytes": 39632,
-      "sha256": "28f5016ed7aae726b5c544bd95e02f552beef085b6023d4899b010f43df377ea"
+      "bytes": 38958,
+      "sha256": "9818e099346da8aa7593c518740dbc2a3d73bf43098c5a9ca668c5972a08f009"
     },
     {
       "bundleId": "proposal-strategy",
@@ -186,6 +207,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -207,8 +237,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "4fc9200e8de3597fbe2299d08958b5dd3395f8f266f534363038b35ee71df738",
-      "designHash": "8039b9d108659e8476c445d322150615333e76838405a867db79eeff073cdd5e",
+      "settingsHash": "b0fe49657a4341b04c870e64cc43cdc69443d5f4fe60eefcd3a5764a80df1434",
+      "designHash": "8b2759ea3ca712c5d88d930263630713859ded7152d2ecb7af9ac4ac955eef79",
       "previewTokensHash": "d4b5f8fba6d17bf2fb2ea87fb0e250d43280cec424d92f702bfc52cf71902b0f",
       "width": 1200,
       "height": 606,
@@ -243,6 +273,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -264,13 +303,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "195a570f817ac572e7ee1ae37f60d256594d933ca10c36f2acc313cc068850e1",
-      "designHash": "42acbc265dd22d318de7a0d02f87931e4178607410d9c75254fa0e9f48a0a52a",
+      "settingsHash": "30eac5965170c0d1f8579a43ab1858f6386f4daa51da8d60162c02a166ccb703",
+      "designHash": "b219d31b90fb4db775d197fb45092de88b37c70c01e90f38eebd9792f72efbfb",
       "previewTokensHash": "5a5892d33e40e0cabbe6e4c9824e755d806db926a2586175b4150acb186ca3fb",
       "width": 1200,
       "height": 606,
-      "bytes": 50366,
-      "sha256": "da003ec928ca46a4f142cea8cb2d58e1b7647c44da1c2faac364d202c865df0c"
+      "bytes": 50280,
+      "sha256": "5ad702a754ef2bb3545558467d1364144349d540f512296bc4e3b0b7ef1c0e57"
     },
     {
       "bundleId": "learning-step",
@@ -300,6 +339,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -321,13 +369,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "40611930ce8cb971708876ce228a8d431721fe06344b4a3a40ddafa048fc66b4",
-      "designHash": "984abcdbae093815c0e23becd43c0bff8e46d1f2ece94a14cff2075e0f8892c9",
+      "settingsHash": "a158e6933c63680d2e05185d7a4a8623658a34eb8de37458c1719734f40639e0",
+      "designHash": "13d4a16338bedb5008baedc7f7203b5eb3eef735ef010ab89cdc9828374bee9c",
       "previewTokensHash": "5779221f645fe215ae880c981d13c80733748ffb1a246faa1b31033d648fa42e",
       "width": 1200,
       "height": 606,
-      "bytes": 30758,
-      "sha256": "40fe5404dac249adadcddd5ffbf3ccfb5ccf77c5103c6f8ba98cc21e515bcf56"
+      "bytes": 30908,
+      "sha256": "b05626c69fb34865b9d518e7b367c37afb32b5bed34335ab56cfac05fcd63ad6"
     },
     {
       "bundleId": "learning-visual",
@@ -357,6 +405,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -378,13 +435,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "d698291d850e184efe4650a501b09959e8d233c354fcfe6f17b02b8de4d8ac94",
-      "designHash": "c3bd5682a1bb2c80ac60422b7fdfc6e259aaf52e2adef575911b5bdf47551f6b",
+      "settingsHash": "aacc7d55e7e87532412ef1e5b3381cb5d5ff0bbaef7e136516cfaf63e642c2df",
+      "designHash": "5b7205e6c575a0345ffd093aaa8ec6b734826a13fdbad9f72320f0743dc27462",
       "previewTokensHash": "0eaca3ec59f239a331679f20eacb31ee961f56ee7df2fa5d6b2cf517d81b8985",
       "width": 1200,
       "height": 606,
-      "bytes": 61426,
-      "sha256": "72e9e88df0c7d4ef4714e61d88487ab5d978b14d720fd14aba3ad869ef60fbea"
+      "bytes": 61340,
+      "sha256": "aed73ffc441e9a1b2423d53c9521c4aa71c4c6cf93be3b3c2fd0292b8106e0c8"
     },
     {
       "bundleId": "exam-theory",
@@ -414,6 +471,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -435,8 +501,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "cf7dc1a7d3f9d7f5f0d7811484f88e6677903a69d84653c0cccd29053b98c202",
-      "designHash": "3dd8cb11e1eefdf3ba456ce36b599315b16484a5024337c80208a03fdfb9ec07",
+      "settingsHash": "a50210f67563c30d163e8f9050c9baa530f228f66f1a6cd93ce4c301ec95855a",
+      "designHash": "4f4b5945a625d472ec2c924aa4814803cb3a6db7cd3c390183767cebf80e6068",
       "previewTokensHash": "86a21bbea249190b70b12e4a429f6f8adc7eb2792e485355528b5effbece2f27",
       "width": 1200,
       "height": 606,
@@ -471,6 +537,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -492,13 +567,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "83224aad26adbd824e2b1b66faecf6a2ebe3e65374e3912d996c31f0940a67ec",
-      "designHash": "1959ae59aa30a0495ebf44f63d283df2df799f0b9d996863af7480d6dadf1ca5",
+      "settingsHash": "a6c92c3a59aa44161a54d749fb75c09a9a1115846b879f40bc93824ccf7c0b43",
+      "designHash": "6a3e26769085a9271a2f478d688620eb65e50b1802328b5d55267b44a2e442db",
       "previewTokensHash": "65968e4cde2548af599ba5696d586914d40cb6ebc3a1cb38aa593c99b0182dc0",
       "width": 1200,
       "height": 606,
-      "bytes": 27926,
-      "sha256": "fc2ea3fadad6ca690d13ce93e4eabd2f2deb720025109fa162cb7c94760c3ff0"
+      "bytes": 27888,
+      "sha256": "3729afbec7d75752f827b425d62de312c3873d5d490d85e842a9b867c06dc6ce"
     },
     {
       "bundleId": "prose-quiet",
@@ -528,6 +603,15 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -549,13 +633,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "2ae35a2aba6d3612031c3c6f5068a5adbf660e4936496ea1dc5e111d5afdc276",
-      "designHash": "bf45b64d503d9eb88ecfdb14e32c3682c7a474bed1edeed6e20d043be5c63ed1",
+      "settingsHash": "4f9b1a52d5024a430635f4c4c847d46cd2f6aa07b0ebf5ec1cb388ee79cc058c",
+      "designHash": "acd15680b5c02c62742c107a8385a88f619ec49ac693b6ec2adaf4c1bc2c75b1",
       "previewTokensHash": "3a94252ba9b46e7f8dc6a4cd84f739c42fcd23a255e6daeb2621204cd7ca350e",
       "width": 1200,
       "height": 606,
-      "bytes": 27564,
-      "sha256": "20bac6d9f4530bff40054648d397ff8e499eea8cf7110f14ec91345a0915ad93"
+      "bytes": 27644,
+      "sha256": "e000bbf0d7954169c08c8c2134e78b717591f20f68c2022a3ab8047f39c7b043"
     },
     {
       "bundleId": "prose-photo",
@@ -585,6 +669,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -606,13 +699,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "62f5c13b4dc4252dd853f54aa89f508612f230de2320518a424aaf08a7741615",
-      "designHash": "b7f74cbe65a954efe4a76ec8231873253312f7bc36b489e8efd5d2963e6afad5",
+      "settingsHash": "033258c869f922a5299ea6e96ef6c0da62957f95148b020c4f9b5a26bb133991",
+      "designHash": "09e1ee0de0ac412acdbc3a0db01fb1ba014c6860ade816fa433a4210bae94d2d",
       "previewTokensHash": "8a347ec5309403784b0572c1b6cde0998fdca7a06458014858e5ff9655e00bc1",
       "width": 1200,
       "height": 606,
-      "bytes": 59822,
-      "sha256": "a46f1faca2dce00ec1d2df711da06d33e029f06ee120757da00f634bd801596a"
+      "bytes": 60022,
+      "sha256": "f8f0e16541b412758e8d85a86a2fc576fb8e91f5e429391738c4e8fee63fbd43"
     },
     {
       "bundleId": "story-watercolor",
@@ -642,6 +735,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -663,13 +765,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "e902c9c79292121e8bbf009b41b8cdb32666dc7d1ff6bd9b220cf501587ca195",
-      "designHash": "53e9b81b5d0599173cc6079998fbe99e2c939f10db769af852cbdc91089e2ebb",
+      "settingsHash": "05b9e751735073f91b92fe0acbb9645996dc7375a6a7c6c3d859b0edf71b881c",
+      "designHash": "7c2a920739761e115f507dfbb36aa2ebae35539cd2a3cef47eec0060396f2dc4",
       "previewTokensHash": "0b003ab8a76d026e1cba5e8d08675dd6e11603da495c2eadef2c328f1cfec3f1",
       "width": 1200,
       "height": 606,
-      "bytes": 73066,
-      "sha256": "944e9e472707d50f0056821d9469ab302a8184a782334fd0300ad123291db863"
+      "bytes": 73022,
+      "sha256": "0091cb6135d205edcb4b7192b5c2be71afca6c4f0e07ca8c143a3be2c2ce4f30"
     },
     {
       "bundleId": "story-papercut",
@@ -699,6 +801,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -720,13 +831,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "5de233864b9e38d0bca19aab8180aacdfb146ac97f1cb5e76b5761571e81433a",
-      "designHash": "2c4951d9d51cffd4042e21d7154a4db50e7e4fcff0d86b3659d5d6040cfa406b",
+      "settingsHash": "7c2ae1993b863cc2df47c2f3a3c7bd6c9a59942e89fd81d09a29f2340595ceb7",
+      "designHash": "461d6354ea4d69f4b25209b06ff3e87d06ecc9c1e80b4c62b96a6ec282b84d02",
       "previewTokensHash": "6b4e5294189bf921220eab3b127c719f45782487019f00c5d5b19735a5979254",
       "width": 1200,
       "height": 606,
-      "bytes": 81002,
-      "sha256": "7c7d0e1fefed3a63ee7dde251bfbe47f966e2136848e16af7d9ab6092a3a6a30"
+      "bytes": 81274,
+      "sha256": "222de586f5266551d52c1deb42524085d30d312cd782f4fd84d6bcb40e60d8a8"
     },
     {
       "bundleId": "report-editorial-grid",
@@ -756,6 +867,15 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -777,13 +897,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "334093e55537eb1c94d8c3643ac4ec8fe99bced5aacdc1d08ba68a5f950da7ac",
-      "designHash": "467daded5f55dd45e4e5402fc6bf203d7cbb7d159689761fe61adf9245a805fc",
+      "settingsHash": "a11cbae78f38ee37e529590e112565bf04206f3cbd091b304e4765359f18e001",
+      "designHash": "e2e942c44b67cb97a491433805df36afb21d16b157490a790d445268c85fe252",
       "previewTokensHash": "d5ed3402093e006d708948d00a607a3f09988c795a3f50d9eb27a4400aa09f7f",
       "width": 1200,
       "height": 606,
-      "bytes": 38564,
-      "sha256": "82a6f780148219192e38786ad68219f6f8d86ba41cc38fec4cae155cdbfe03f2"
+      "bytes": 38546,
+      "sha256": "24849db94752e6097ceb36eb4c2c6189a67ff7949951c5a1da776a1852463716"
     },
     {
       "bundleId": "report-field-ledger",
@@ -813,6 +933,15 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -834,13 +963,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "32a0a40fcea4f80dab48d0c915f9000a86cb128d2523981096dbbb5ab1e33b24",
-      "designHash": "7636ae948d16046635c0d4a9fa9c6ae9b50f4cd65c72b289144a3e456b39e843",
+      "settingsHash": "1c23b7c03b4c414129ca5ce37edfa527dd69ca60cabf69ad602cd00afd4b8add",
+      "designHash": "27b462081779ce324c0e33ce5c75da676ba58eded69b5058f5e6f22c8293edce",
       "previewTokensHash": "94db5e74a26c8396ea22d26bccc1d321f367fce6ac931df5fc09ae9beccd74c8",
       "width": 1200,
       "height": 606,
-      "bytes": 35128,
-      "sha256": "6187856627f9c28ff7e9126e06723ef9725ba999b5fe6ef502d4b47eeeb62800"
+      "bytes": 35058,
+      "sha256": "f81fd1d8ba46599cb4de16a230ba57b57ffb59b688cd5540c1bd8f170854a031"
     },
     {
       "bundleId": "proposal-brand-story",
@@ -870,6 +999,15 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -891,13 +1029,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "20f2d3a679bd7aa50166a0092e6a137da4fab4df59c5b187133e8137df4da604",
-      "designHash": "0d6a79ddb40cbb89b627491a6c7e763dad13574bf52a79235c17cd196f00022d",
+      "settingsHash": "c641a077c2faec6cbc70a84e138c35cb880c1d1de944281111845ce42770cead",
+      "designHash": "3ed2568de2149a008f16edd370c60486840129d28360fc4845f3bce355cbec5e",
       "previewTokensHash": "361b055525002700bb2550f062d7a5fb41d19d11ad161b867c6dd641ed289bc7",
       "width": 1200,
       "height": 606,
-      "bytes": 45786,
-      "sha256": "e8633ec63361deab22dd185d76f6ee279ee188e95f21039e4b21f35a62f0a9f0"
+      "bytes": 45590,
+      "sha256": "a925d6bf791e7641a6477f56c2af97f4d09ec4dcaf77bae21dadeebc0f608598"
     },
     {
       "bundleId": "proposal-sprint-canvas",
@@ -927,6 +1065,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -948,13 +1095,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "5ad51815dd43558224a185989667885d983e2b2e3cfef52fb8e3a01a64a035d5",
-      "designHash": "214f6d3c6675b2c5ff1d89441610af7fc30dc2d6b8b8dc47a2a231eece323247",
+      "settingsHash": "6560da8e0fe818c3bb52bd569808ce5c756a91ff9ef6d3a17d35d95ad887f621",
+      "designHash": "16d2bc34988ea3fd7f4b00e58652d701bd95c8b18197394be4720b9dde8ba37d",
       "previewTokensHash": "123327df3863a7f00d3b37cd800cfa8100ce98f8fb629028bfdd6b2eccab7c4b",
       "width": 1200,
       "height": 606,
-      "bytes": 30472,
-      "sha256": "838531cf1389ee5cd51aa1b679677b3049c61f3e7cbdffca36707bf6e6802e8d"
+      "bytes": 30296,
+      "sha256": "6746e17cb2ed87b884c3d3cdfa419e300c56c7a54552eda8476cd4df8faab4e5"
     },
     {
       "bundleId": "learning-visual-atlas",
@@ -984,6 +1131,15 @@
           "titlePresence": "clear",
           "decorationPresence": "rich"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1005,13 +1161,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "fcec4f97b79ae6786e1e136220acbd9ac553fc38b87002dd36314cc2247ff554",
-      "designHash": "61d0f5c84bf7025cf4281e4eabf75829947e865d80103b12cbd35c1c5cd46ecf",
+      "settingsHash": "bd245920b20214b5da840e9592612508e5387846667cbbac3031a048fea66450",
+      "designHash": "4560e6ff832314851bf1e9c4b37036b8004c319a2ecc5bf2ef01af8a8c6ffae5",
       "previewTokensHash": "7f5b79ef60111ec5961d3aea5b59f186c4f4956b2af702aeff258618974727fb",
       "width": 1200,
       "height": 606,
-      "bytes": 60342,
-      "sha256": "bf042de48a44ee5dbddbe79f898bc001366d65f87961c03381e887aafdb65fc6"
+      "bytes": 60232,
+      "sha256": "bcf791743eb88bdbe5a907c991a829c6db5220c4f91fd4775242f0a8b39704e6"
     },
     {
       "bundleId": "learning-write-workbook",
@@ -1041,6 +1197,15 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1062,13 +1227,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "a7191cc6fa134688d891af03205a3b6b987128a74cc1d0e19be00ddaf4e6bee1",
-      "designHash": "39636fbd3e4f09cdb25d81f020c0677f3f19c859c3f09e55a5f15e2e2a19b950",
+      "settingsHash": "6fb8b7cde6daa517bfb1395856f93c315dd8eed425403ef0f590c61280a1f834",
+      "designHash": "9c2b30f5ab4a868450759a0e63d1f9f663876cf2773d2c12297eddcea5d42118",
       "previewTokensHash": "ad72867dae74ba1ebf012ec7d5d73d1f649c00880c3876d4da841f3ae2a35125",
       "width": 1200,
       "height": 606,
-      "bytes": 30270,
-      "sha256": "bea0611dd9b90ef0cf9becebf50eb5a6ca8330bd41d8b33f49d9caadec7a0f81"
+      "bytes": 30144,
+      "sha256": "076a0d2b0da2160d76369db78d023e6d2b04de66a1ebd2d135637bf81e0d814d"
     },
     {
       "bundleId": "exam-quick-review",
@@ -1098,6 +1263,15 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1119,13 +1293,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "8e5dc9ea92dba9ceaee176535d6ee07fbc9227310941b45eab614de4a53589af",
-      "designHash": "e1bae891935a263c5fd7f99013d7b5c09f866450e790d6d422ad37114e71052b",
+      "settingsHash": "6c84d8c20ea5ace0b80b17804403a1ab6d55d0a9a3a00de53ae696f781ca8091",
+      "designHash": "2a381f7e611a9cee89c0f2d79c7282e5bc328db412bb2a402b59f68e8224a686",
       "previewTokensHash": "c1f148cf49fda08f32cd7faf08fdac814e4ea4ff5d3f8c437b5f93f145f9e436",
       "width": 1200,
       "height": 606,
-      "bytes": 29790,
-      "sha256": "f527bdeacea11cac131c269c75e98f28f41e2e10cc36a54b3f56d679139422f2"
+      "bytes": 29844,
+      "sha256": "9c91fcd5735d6d49f8b588f6668fb3adb5427b0caf1f821e9ef4d9ae49d396cb"
     },
     {
       "bundleId": "exam-question-bank",
@@ -1155,6 +1329,15 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1176,13 +1359,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "aff790bde81a596eb05fcb240c9edfcad5b57f153393af3f661bc8dab3d2ca4c",
-      "designHash": "175e744ae900ba286fe5505692476066ccfa2db158c197fe84ad91a3e402c95b",
+      "settingsHash": "940d7b5b05f7be8f55e542e105cddaa0b54354f73ea2f6c0a8b9fd208ebd53d2",
+      "designHash": "952114b0a01edf04d163bda704d1dca435e59efac63d055da7b39b375e0c619d",
       "previewTokensHash": "ad92becfc89c3cac10090d9d9fd251310ec7c6b6c7e0d09512f6b8dc5a5bac87",
       "width": 1200,
       "height": 606,
-      "bytes": 30110,
-      "sha256": "63cb897711aa46fc85abf0329cdec06ec6cd6454bf0c4a78f29a06da60739452"
+      "bytes": 30104,
+      "sha256": "985a41f14892e096ee2066939bf10a4cdf70e71f212f11a06b31016f8e3cd27e"
     },
     {
       "bundleId": "prose-letterpress",
@@ -1212,6 +1395,15 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1233,8 +1425,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "6f6e57bfbe233b3ca482bd6e6428607afc56eca23761cf0058296910e3124b0f",
-      "designHash": "88ccde610c174d51b569bac5ef18a07f9845873613e87f20afc064ecdd5bec5f",
+      "settingsHash": "a4eb11088c532b07bff956a80a7b97b0c2c569880fb8d6719f0a6567431b5cc6",
+      "designHash": "7a6209746fbb9172699398e5381450a7fd7f558bcb00ae363088177de3600d9e",
       "previewTokensHash": "c6734bf32173b460da0bec415e1aba89d75e375c6913412627cf69fdf81654c2",
       "width": 1200,
       "height": 606,
@@ -1269,6 +1461,15 @@
           "titlePresence": "quiet",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1290,13 +1491,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "0be547a72d201c1a4b943a3856def15cc93455dfae79309c4ca844e5772f5c7d",
-      "designHash": "4fee2d97fdf4bf354ff5147a1ae714813ce92500d73006ecc8abe6e490846417",
+      "settingsHash": "057552999014ea38f99e86a6b83ac1fc2420f71b1bbd3f88b8fd06cf33d9af44",
+      "designHash": "3b7f5db2804d382c0742ebf6a2157e004f2222fb9b0404276512f0b039545501",
       "previewTokensHash": "baf69d150d882639a3fcb5e17c95fdb66acc86b4e6241b91719843bb8738cbb1",
       "width": 1200,
       "height": 606,
-      "bytes": 46726,
-      "sha256": "ca2db58e508e1336e90bac8203acbb9ff3eba936c6d7121d79be7bd2c199cb43"
+      "bytes": 46586,
+      "sha256": "50e5d84fae71cf9d473a2bc95ede9f818f69a715ed8c36b49222d2a7964e2631"
     },
     {
       "bundleId": "story-night-adventure",
@@ -1326,6 +1527,15 @@
           "titlePresence": "strong",
           "decorationPresence": "rich"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1347,13 +1557,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "89823308caf3c0f75d19fe217fde21918560794a8b14979dd19b6bac1d8deac1",
-      "designHash": "fb3ff0e6fedb628c07e9b3fa53ef5396c157ca8990cf05141b7db6afb4b0fc77",
+      "settingsHash": "9b9a8a9a70b87a9dcd055c313cd2764399fdaa0e9be5edda9e593c4b7dae4cba",
+      "designHash": "90fb07816a1353b1ff0c9ae38bce0e1140c47b247ee075d3d04fba3f8c5cf7bd",
       "previewTokensHash": "388d4572c608dee3df81cc12661b4189c10a6db89cdc25b5406e5447efaad497",
       "width": 1200,
       "height": 606,
-      "bytes": 89008,
-      "sha256": "a70f528428fa85bb38920705cfbb3a91c2b7322ebe3c1f545562a566b217788c"
+      "bytes": 89398,
+      "sha256": "0d858d9131e1ee189ebc060c3bba6e634f01e349c0c85078c944ede9add08707"
     },
     {
       "bundleId": "story-comic-panels",
@@ -1383,6 +1593,15 @@
           "titlePresence": "strong",
           "decorationPresence": "rich"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1404,13 +1623,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "8b73f177f89fce9ff8e13054487f0185933b0d631e6d463f1ab19279813446e8",
-      "designHash": "f619042cac7b81ce34cd12554dcac2c50df9ea81a4f1cbb7ed6ed5607180e79d",
+      "settingsHash": "6a28b92c90d5be17365fc7866c5a932e52c7f70a78583909a2f11a15c15a77a6",
+      "designHash": "96851c3c20d3e4fd5d39e80cf0f3453471b27d51aa72e1c20317cffdaff4fb91",
       "previewTokensHash": "3528e07ebf62c5b53580bc79575e26aad0ef2b6c6e9f945e086b66630311642c",
       "width": 1200,
       "height": 606,
-      "bytes": 116244,
-      "sha256": "e0086e0c9dfcb680ac27ef5afc6a78d2f25e537c5a27e72f9d51594dbc2aa8a7"
+      "bytes": 116784,
+      "sha256": "8f999936557f4db676bed892cec43d86bc56f6b63e3a809eefbe95b373e4398e"
     },
     {
       "bundleId": "report-executive-brief",
@@ -1440,6 +1659,15 @@
           "titlePresence": "strong",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1461,13 +1689,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "9643544a6821525656ec33fe02a3c98ec1ae8203cf7dac3c1e5403b5f7c60695",
-      "designHash": "c0a96a9c795211d2229e4c8e9057c75546705850f4a5d87bc53b60b00aeaa2e8",
+      "settingsHash": "e7c85b94fe20f3041bfbfa6544ce61158cbc336f2693a96ade538e12bea1a257",
+      "designHash": "fa839c5f7d1ff65603735349bbe4faf973e2ef3a0792e91d619a8a805b7bbe66",
       "previewTokensHash": "c70e1dc7d9347ec56b263de8ad1bd7c1f6db1dcc8d8e0330556aae783b6cb838",
       "width": 1200,
       "height": 606,
-      "bytes": 40568,
-      "sha256": "9fbfd8f2503ff99ba3cb201f01874dc555d7fef39a8742f0cbcc75f3a1558a37"
+      "bytes": 40636,
+      "sha256": "d944c3bc07d1bebee65f0e15abbfd0c98bd0c07f72e95a397014df06f0b9356c"
     },
     {
       "bundleId": "report-audit-matrix",
@@ -1497,6 +1725,15 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1518,13 +1755,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "1fa58de23e95277d8c2c4fe15351cae974b3da1add5f66d869f6bec80c3ed9b9",
-      "designHash": "fed135c09ca44cd191102e7d4d29b279bb7098d771dacd43bc4762f9048cb802",
+      "settingsHash": "bea64793767275b14a4d7e53b40abcec5f7cba117f062aa41fdb691ac3415776",
+      "designHash": "88134a047f10b5c7c5b715c7655fe388745f4293c1851aa6ad24939da8b73e65",
       "previewTokensHash": "536a7925bb71db2823b5032ee40de5dfdeb5b34286502caf22cde124bacb182c",
       "width": 1200,
       "height": 606,
-      "bytes": 35852,
-      "sha256": "1ee2ffa703ec8c4aa193c7785d6307cb4c47e7c03c4f4300955592b2974597c1"
+      "bytes": 35878,
+      "sha256": "59247901346d4394af6e151f7eb53ade8d71147649834920ba722d87f1faf095"
     },
     {
       "bundleId": "report-research-monograph",
@@ -1554,6 +1791,15 @@
           "titlePresence": "quiet",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1575,13 +1821,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "bf0f21143e973bbacc244743c0d54ab45f851c48c4380715924acf3425727a23",
-      "designHash": "0e357aaa77a71a887473217fcb8b95a1559d86365f75cabc1c0ad32096c36cd5",
+      "settingsHash": "ede011dd59c9b0c4a1c6ea1141d2f02352dee3997a2a477fba69944b6f25b9d4",
+      "designHash": "8f68d78bf380679ea87f02cda7380441bb03eef0c4cec4b7fd01f4c28548cc26",
       "previewTokensHash": "5a038bc1a60c3f79fe8dba93008f1cc1c99e7b94ce8449712d7f823a7ec5d3eb",
       "width": 1200,
       "height": 606,
-      "bytes": 34784,
-      "sha256": "fc3ab2851648139826a8d186b8702fec4796ad150e7ac2adc7733ebcb3353ecc"
+      "bytes": 34762,
+      "sha256": "3ddbdc7f92fa829f6bf0aae0874f95db1588e10843c11e50e85296846540674b"
     },
     {
       "bundleId": "report-operations-dashboard",
@@ -1611,6 +1857,15 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1632,13 +1887,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "2c46f3b0f6e468aa62cb0c04580d799a936e3875752dea4f73a266c50bea44aa",
-      "designHash": "47836b993fbeca3092540f1057d0439c6ce969dc0ae470b9a192d960fc00e5ea",
+      "settingsHash": "6c0c4361b78abc2d4f5254897f18af089d41c00729d25e17602ee1db08e916de",
+      "designHash": "93370a1c95a6f795732986138bd1a442227f8a8b4c9c77c63e6094110c650187",
       "previewTokensHash": "02065f456c5a44f08eadf955887abd9ac14f437c16ee307df35793c078f2fe30",
       "width": 1200,
       "height": 606,
-      "bytes": 41282,
-      "sha256": "add7b3e8dd32914e8da1bbce2795c3dd6765271c484e4b2ba1ff326b5217cc8c"
+      "bytes": 41486,
+      "sha256": "d733363f9dee9ba0df94ff3e0b70ce54c1fb8a5566a98d11099e0ea498d557a0"
     },
     {
       "bundleId": "proposal-tender-response",
@@ -1668,6 +1923,15 @@
           "titlePresence": "strong",
           "decorationPresence": "minimal"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1689,13 +1953,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "015516df58572cd58503d1e2f2820a0c439273fc9e711b6d9c294a4b4d8dbd61",
-      "designHash": "9e964b246f54bf95b8bf37c13aa965940ea994af967e213adf141ceab0155e35",
+      "settingsHash": "35eeadfeb63d076046b181d8acdc9fb1fd730c02711a640340a2564f2936b3af",
+      "designHash": "219fd9c14400c8e53db0b75788a468587d96912abb5c78d8fe7f911642873107",
       "previewTokensHash": "5b23151c3b710c59471b0b6237727797505784b7f2343aa91023cab2fd0af60c",
       "width": 1200,
       "height": 606,
-      "bytes": 34616,
-      "sha256": "24649fa145697be91c6052a1d91ad9dd203c6fe3758f0c749809b0ec40e32133"
+      "bytes": 34676,
+      "sha256": "ce1a1962c92f1da3dc12a095f7db10df8ba2dfe638b560b9bc272f58bb94b716"
     },
     {
       "bundleId": "proposal-investment-case",
@@ -1725,6 +1989,15 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1746,13 +2019,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "be5d4f6f6769635f5cc3cead0c5f74bd4d8175e478189b0c19d2be8b769d5cb2",
-      "designHash": "bd2f3d45052da17dcf8f9c2de329e0ba85c7151db53bd675ac54f5353096270d",
+      "settingsHash": "b0fcbdd6ac89fb8913b55af7c59fa3bd66a16eb0d1e16caff55bc26d603836e3",
+      "designHash": "d55488822b9a1866c557eba453feb86ed53bf22ed52c7dc2225f1f435ef4139d",
       "previewTokensHash": "e375fc3da9f0da3bf8a33caeea2c9a9e04aa606715bc650a12e5e4389d53eba7",
       "width": 1200,
       "height": 606,
-      "bytes": 35776,
-      "sha256": "d7be8eda740b652463639d826dbc26fb27caab00c08754fb805a8892d501a480"
+      "bytes": 36232,
+      "sha256": "6c4161f95e23147cdefa190198f70551ef68519bc3a5d9611bc35b0848e12ca5"
     },
     {
       "bundleId": "proposal-service-blueprint",
@@ -1782,6 +2055,15 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1803,13 +2085,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "63546ca19293a9f430df5a442f105b2327a07fcd77290abed48ec572b6cf4026",
-      "designHash": "e333795ed32ce60ed83b4c4061d1c528bb48e91ee1014bc07017a74bc33ddb40",
+      "settingsHash": "06137efc0051a71ef5f96798b2f60cae08dee6c2c65ab6a9aaa415115d6298a2",
+      "designHash": "7240b9bfb192ec9fc55dcf9fc2414d4529e11209618b930bae6e1f00e224f1ab",
       "previewTokensHash": "9651afa9f79dc35884950f2f3c22185eb78c3f5e2a45921f92c8d7e899cf9af9",
       "width": 1200,
       "height": 606,
-      "bytes": 29964,
-      "sha256": "706bb97d0da228eed2ad1c9e4a082677e5ad02c47bedf07faa5d561fdde7cd40"
+      "bytes": 30886,
+      "sha256": "d6fdd48d7cd72ea3931fb6a0c66f3fa8d3d5ed990b520e321ce18b17bf0988c7"
     },
     {
       "bundleId": "proposal-creative-concept",
@@ -1839,6 +2121,15 @@
           "titlePresence": "strong",
           "decorationPresence": "rich"
         },
+        "colorPresetId": "",
+        "colorBaseBundleId": "",
+        "colorFeel": {
+          "temperature": "neutral",
+          "vividness": "balanced",
+          "brightness": "balanced",
+          "contrast": "clear"
+        },
+        "keepPaletteOnBundleChange": true,
         "overrides": {
           "colors": {},
           "fonts": {},
@@ -1860,13 +2151,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "f67c8b8bceb366bb69f07767d93cf9077223719561bb89938e15b61666121c2e",
-      "designHash": "09897e4525c733d5f4f7c469a1885f674ddc97aa0ab1c3af70b234950e38e54d",
+      "settingsHash": "b4afb6214f4979f868ba6f8a8bfd63807c35554348cfa84c28afb314501f6430",
+      "designHash": "98077a0427d9ef488700c05860b2fda1be8de51d14c33dcf1324223f4a1f03ba",
       "previewTokensHash": "e9e2dcaaa464c0f62ba332f6c43487e77c53bc1fa946d7e72bdf06a7072b3ee7",
       "width": 1200,
       "height": 606,
-      "bytes": 40192,
-      "sha256": "c26a1f02dc477703288dc62e54ca0db58a5bc1e4222e6a08b351b2808b7c7560"
+      "bytes": 40108,
+      "sha256": "73766c738d4b76e70b4e3fe79cbf99baa3e0bc92ab7173f8210d09d60600b43c"
     }
   ],
   "guides": [
@@ -1877,8 +2168,8 @@
         "width": 1440,
         "height": 1000
       },
-      "bytes": 89068,
-      "sha256": "831dbbe1bdfe9549fb18d6eba48004919ed5e841904ae31003236987e58035ad"
+      "bytes": 86786,
+      "sha256": "d42c0a133a0b3e5a7c5f0c2ba5984595f8f29bbcc827d18ebf80f7327c17c519"
     },
     {
       "file": "assets/guides/document-design-workbench-mobile.webp",
@@ -1887,8 +2178,8 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 29092,
-      "sha256": "2a5569b9b24e1e47979679daa5fd720870783f3daf936870355ff7d46d941ad4"
+      "bytes": 30766,
+      "sha256": "b602e89223f04729e8f4d6aadc26663a2a715cc5e7464620520b6141b9ef804b"
     },
     {
       "file": "assets/guides/document-design-workbench-controls.webp",
@@ -1897,8 +2188,8 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 29016,
-      "sha256": "4a270f646788833b42fd1bc63262f4a5ea7cde18643003f6a8b044c0d135e0f8"
+      "bytes": 27386,
+      "sha256": "055f8767b430a33c7db3288f16b29d08407a73f4dbc64c62b01bbfe1e040468f"
     }
   ]
 }

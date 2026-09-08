@@ -11,7 +11,7 @@
 .dd-variant-editorial-report.dd-kind-body .dd-paragraph { break-inside: avoid; }
 .dd-variant-editorial-report .dd-stats { align-items: stretch; }
 .dd-variant-editorial-report .dd-stat:first-child { flex: 1.55; background: var(--dd-primary); }
-.dd-variant-editorial-report .dd-stat:first-child :is(.dd-stat-label, .dd-stat-number strong, .dd-unit) { color: #fff; }
+.dd-variant-editorial-report .dd-stat:first-child :is(.dd-stat-label, .dd-stat-number strong, .dd-unit) { color: var(--dd-on-primary, #fff); }
 .dd-variant-editorial-report .dd-chart { border-width: 0 0 1px; padding-inline: 0; }
 
 /* Report · field ledger */
@@ -20,7 +20,7 @@
 .dd-variant-field-ledger .dd-cover-index { display: grid; grid-template-columns: 1fr 2.4fr; background: var(--dd-tint); padding: 1.2em; border-top: 0; }
 .dd-variant-field-ledger .dd-section-heading { display: grid; grid-template-columns: 8em 1fr; gap: 1em; align-items: end; padding-bottom: 1em; border-bottom: 1px solid var(--dd-primary); }
 .dd-variant-field-ledger .dd-section-heading .dd-kicker { margin: 0; }
-.dd-variant-field-ledger .dd-table-caption { display: inline-block; padding: .45em .7em; color: #fff; background: var(--dd-primary); }
+.dd-variant-field-ledger .dd-table-caption { display: inline-block; padding: .45em .7em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-field-ledger .dd-document-table { font-size: .82em; }
 .dd-variant-field-ledger .dd-photo-frame { border: 1px solid var(--dd-primary); padding: .55em; background: var(--dd-surface); }
 .dd-variant-field-ledger .dd-caption { padding-left: 1em; border-left: 2px solid var(--dd-accent); }
@@ -40,9 +40,9 @@
 .dd-variant-brand-story.dd-kind-image :is(.dd-lead, .dd-paragraph) { grid-column: 2; }
 
 /* Proposal · sprint canvas */
-.dd-variant-sprint-canvas .dd-cover-title { padding: .65em; color: #fff; background: var(--dd-primary); }
+.dd-variant-sprint-canvas .dd-cover-title { padding: .65em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-sprint-canvas .dd-cover-index { border: 0; background: var(--dd-accent); padding: 1em; }
-.dd-variant-sprint-canvas .dd-cover-index :is(.dd-cover-number, .dd-cover-index-label) { color: #fff; }
+.dd-variant-sprint-canvas .dd-cover-index :is(.dd-cover-number, .dd-cover-index-label) { color: var(--dd-on-accent, #fff); }
 .dd-variant-sprint-canvas.dd-kind-message .dd-page-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1em; }
 .dd-variant-sprint-canvas.dd-kind-message :is(.dd-section-heading, .dd-message, .dd-stats) { grid-column: 1 / -1; margin: 0; }
 .dd-variant-sprint-canvas.dd-kind-message > .dd-page-content > .dd-paragraph { padding: 1em; background: var(--dd-tint); border-top: 3px solid var(--dd-primary); }
@@ -59,8 +59,8 @@
 .dd-variant-executive-brief .dd-section-heading .dd-kicker { margin: 0; }
 .dd-variant-executive-brief .dd-message { max-width: 14em; padding: 0 0 .7em; border: 0; border-bottom: 5px solid var(--dd-accent); }
 .dd-variant-executive-brief .dd-stats { display: grid; grid-template-columns: 1.4fr repeat(2, 1fr); }
-.dd-variant-executive-brief .dd-stat:first-child { color: #fff; background: var(--dd-primary); }
-.dd-variant-executive-brief .dd-stat:first-child :is(.dd-stat-label, .dd-stat-number strong, .dd-unit) { color: #fff; }
+.dd-variant-executive-brief .dd-stat:first-child { color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
+.dd-variant-executive-brief .dd-stat:first-child :is(.dd-stat-label, .dd-stat-number strong, .dd-unit) { color: var(--dd-on-primary, #fff); }
 .dd-variant-executive-brief .dd-callout { margin-left: 18%; border-left-width: 6px; }
 
 /* Report · audit and inspection matrix */
@@ -70,7 +70,7 @@
 .dd-variant-audit-matrix .dd-cover-index { display: grid; grid-template-columns: 7em 1fr; padding: 1em; border: 1px solid var(--dd-border); background: var(--dd-tint); }
 .dd-variant-audit-matrix .dd-cover-number { white-space: nowrap; }
 .dd-variant-audit-matrix .dd-section-heading { padding: .85em 1em; border: 1px solid var(--dd-border); border-left: 6px solid var(--dd-primary); background: var(--dd-tint); }
-.dd-variant-audit-matrix .dd-table-caption { display: flex; justify-content: space-between; padding: .55em .8em; color: #fff; background: var(--dd-primary); }
+.dd-variant-audit-matrix .dd-table-caption { display: flex; justify-content: space-between; padding: .55em .8em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-audit-matrix .dd-document-table { font-size: .8em; }
 .dd-variant-audit-matrix .dd-document-table tbody td:first-child { font-weight: 800; border-right: 2px solid var(--dd-primary); }
 .dd-variant-audit-matrix .dd-callout { border: 1px solid var(--dd-border); border-left: 6px solid var(--dd-accent); background: transparent; }
@@ -92,7 +92,7 @@
 /* Report · operations dashboard */
 .dd-variant-operations-dashboard .dd-page-content { padding: calc(var(--dd-margin) * .68); background: var(--dd-tint); }
 .dd-variant-operations-dashboard .dd-running-head { padding-bottom: .65em; border-bottom: 4px solid var(--dd-primary); }
-.dd-variant-operations-dashboard .dd-cover-title { padding: .55em .65em; color: #fff; background: var(--dd-primary); }
+.dd-variant-operations-dashboard .dd-cover-title { padding: .55em .65em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-operations-dashboard .dd-cover-index { padding: 1em; border: 0; background: var(--dd-surface); box-shadow: 0 .2em .7em #18394c18; }
 .dd-variant-operations-dashboard .dd-section-heading { padding: .85em 1em; background: var(--dd-surface); border-left: 5px solid var(--dd-accent); }
 .dd-variant-operations-dashboard .dd-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -107,22 +107,23 @@
 .dd-variant-tender-response .dd-cover-index { display: grid; grid-template-columns: 7em minmax(0, 1fr); padding: 1em 0; border-block: 1px solid var(--dd-border); }
 .dd-variant-tender-response .dd-cover-number { white-space: nowrap; }
 .dd-variant-tender-response .dd-section-heading { display: grid; grid-template-columns: 8.5em 1fr; gap: 1em; align-items: start; padding-bottom: 1em; border-bottom: 2px solid var(--dd-primary); }
-.dd-variant-tender-response .dd-section-heading .dd-kicker { margin: 0; padding: .45em .6em; color: #fff; background: var(--dd-primary); }
+.dd-variant-tender-response .dd-section-heading .dd-kicker { margin: 0; padding: .45em .6em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-tender-response .dd-document-table { font-size: .8em; }
 .dd-variant-tender-response .dd-document-table th:first-child, .dd-variant-tender-response .dd-document-table td:first-child { width: 22%; font-weight: 800; }
 .dd-variant-tender-response .dd-roadmap-row { border-left: 4px solid var(--dd-primary); padding-left: 1em; }
 .dd-variant-tender-response .dd-callout { border: 1px solid var(--dd-primary); background: transparent; }
 
 /* Proposal · investment case */
-.dd-variant-investment-case.dd-kind-cover { color: #fff; background: #12243d; }
-.dd-variant-investment-case.dd-kind-cover :is(.dd-cover-title, .dd-cover-subtitle, .dd-cover-author, .dd-kicker, .dd-cover-number, .dd-cover-index-label) { color: #fff; }
+.dd-variant-investment-case.dd-kind-cover { color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
+.dd-variant-investment-case.dd-kind-cover :is(.dd-cover-title, .dd-cover-subtitle, .dd-cover-author, .dd-kicker, .dd-cover-number, .dd-cover-index-label) { color: var(--dd-on-primary, #fff); }
+.dd-variant-investment-case.dd-kind-cover :is(.dd-page-footer, .dd-page-number) { color: var(--dd-on-primary, #fff); }
 .dd-variant-investment-case .dd-cover-title { max-width: 7.5em; font-size: calc(var(--dd-title) * 1.78); }
 .dd-variant-investment-case .dd-cover-index { width: 60%; margin-left: 40%; border-top: 5px solid var(--dd-accent); }
 .dd-variant-investment-case .dd-section-heading { padding-left: 1em; border-left: 7px solid var(--dd-accent); }
 .dd-variant-investment-case .dd-message { max-width: 10em; font-size: calc(var(--dd-title) * 1.42); border: 0; }
 .dd-variant-investment-case .dd-stats { display: grid; grid-template-columns: 1.35fr repeat(2, minmax(0, 1fr)); }
 .dd-variant-investment-case .dd-stat:first-child { background: var(--dd-primary); }
-.dd-variant-investment-case .dd-stat:first-child :is(.dd-stat-label, .dd-stat-number strong, .dd-unit) { color: #fff; }
+.dd-variant-investment-case .dd-stat:first-child :is(.dd-stat-label, .dd-stat-number strong, .dd-unit) { color: var(--dd-on-primary, #fff); }
 .dd-variant-investment-case .dd-chart { border: 0; border-bottom: 5px solid var(--dd-accent); border-radius: 0; }
 
 /* Proposal · service blueprint */
@@ -145,7 +146,7 @@
 .dd-variant-creative-concept .dd-cover-main > .dd-figure { grid-column: 2; grid-row: 2 / 5; margin: 0 !important; }
 .dd-variant-creative-concept .dd-cover-main > .dd-figure .dd-photo-frame { min-height: calc(var(--dd-height) * .5); }
 .dd-variant-creative-concept .dd-cover-author { grid-column: 1; grid-row: 4; align-self: end; padding-top: .8em; border-top: 1px solid var(--dd-accent); }
-.dd-variant-creative-concept .dd-message { display: inline-block; width: auto; max-width: 11em; padding: .65em; color: #fff; background: var(--dd-primary); border: 0; }
+.dd-variant-creative-concept .dd-message { display: inline-block; width: auto; max-width: 11em; padding: .65em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); border: 0; }
 .dd-variant-creative-concept.dd-kind-image .dd-page-content { display: grid; grid-template-columns: 1.35fr .65fr; gap: 1.3em; }
 .dd-variant-creative-concept.dd-kind-image :is(.dd-section-heading, .dd-figure) { grid-column: 1; }
 .dd-variant-creative-concept.dd-kind-image :is(.dd-lead, .dd-paragraph, .dd-callout) { grid-column: 2; }
@@ -169,7 +170,7 @@
 .dd-variant-write-workbook .dd-example-steps { padding: 1.2em; background: var(--dd-tint); }
 .dd-variant-write-workbook .dd-activity { margin-bottom: 1.4em; padding: 1em; border: 1px solid var(--dd-border); border-radius: .7em; }
 .dd-variant-write-workbook .dd-writing-line { height: 3em; border-bottom-style: dashed; }
-.dd-variant-write-workbook .dd-symbol { background: var(--dd-accent); border-color: var(--dd-accent); color: #fff; }
+.dd-variant-write-workbook .dd-symbol { background: var(--dd-accent); border-color: var(--dd-accent); color: var(--dd-on-accent, #fff); }
 
 /* Exam · quick review */
 .dd-variant-quick-review .dd-page-content { border-left: calc(var(--dd-margin) * .18) solid var(--dd-primary); padding-left: calc(var(--dd-margin) * .32); }
@@ -182,9 +183,9 @@
 
 /* Exam · question bank */
 .dd-variant-question-bank .dd-cover-index { justify-content: space-between; padding: 1.2em; background: var(--dd-primary); border: 0; }
-.dd-variant-question-bank .dd-cover-index :is(.dd-cover-number, .dd-cover-index-label) { color: #fff; }
+.dd-variant-question-bank .dd-cover-index :is(.dd-cover-number, .dd-cover-index-label) { color: var(--dd-on-primary, #fff); }
 .dd-variant-question-bank .dd-question { padding: 1.2em; border: 2px solid var(--dd-primary); background: var(--dd-surface); }
-.dd-variant-question-bank .dd-question-number { display: inline-flex; width: 1.7em; height: 1.7em; align-items: center; justify-content: center; color: #fff; background: var(--dd-primary); }
+.dd-variant-question-bank .dd-question-number { display: inline-flex; width: 1.7em; height: 1.7em; align-items: center; justify-content: center; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-question-bank .dd-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .3em 1.3em; padding-left: 0; }
 .dd-variant-question-bank .dd-option { padding: .55em 0; border-bottom: 1px solid var(--dd-border); }
 .dd-variant-question-bank.dd-kind-answers .dd-document-table { font-size: .76em; }
@@ -226,7 +227,13 @@
 .dd-variant-night-adventure .dd-speaker-2 { color: #20294a; background: #fff5d9; border-color: #f2b343; }
 
 /* Story · four-panel storybook */
-.dd-variant-comic-panels .dd-cover-title { display: inline-block; width: max-content; max-width: 100%; padding: .3em .5em; color: #fff; background: var(--dd-primary); }
+.dd-variant-night-adventure[data-palette-custom="true"].dd-kind-cover,
+.dd-variant-night-adventure[data-palette-custom="true"] :is(.dd-story-spread-text, .dd-dialogue-line) { background: var(--dd-primary); color: var(--dd-on-primary); border-color: var(--dd-secondary); }
+.dd-variant-night-adventure[data-palette-custom="true"].dd-kind-cover :is(.dd-cover-title, .dd-cover-subtitle, .dd-cover-author, .dd-kicker) { color: var(--dd-on-primary); }
+.dd-variant-night-adventure[data-palette-custom="true"].dd-kind-cover :is(.dd-page-footer, .dd-page-number) { color: var(--dd-on-primary); }
+.dd-variant-night-adventure[data-palette-custom="true"] .dd-speaker-2 { color: var(--dd-ink); background: var(--dd-surface); border-color: var(--dd-accent); }
+.dd-variant-night-adventure[data-palette-custom="true"] .dd-cover-main > .dd-figure { border-color: var(--dd-accent); box-shadow: none; }
+.dd-variant-comic-panels .dd-cover-title { display: inline-block; width: max-content; max-width: 100%; padding: .3em .5em; color: var(--dd-on-primary, #fff); background: var(--dd-primary); }
 .dd-variant-comic-panels .dd-cover-main > .dd-figure { border: 3px solid var(--dd-ink); box-shadow: .65em .65em 0 var(--dd-accent); }
 .dd-variant-comic-panels.dd-kind-cover .dd-cover-main > .dd-figure .dd-photo-frame { height: calc(var(--dd-height) * .32) !important; min-height: 0; }
 .dd-variant-comic-panels .dd-photo-frame { border: 3px solid var(--dd-ink); border-radius: .45em; }
