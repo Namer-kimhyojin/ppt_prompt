@@ -12,7 +12,8 @@
   };
   const componentOptions = {
     tableStyle: ["rules", "striped", "plain"], chartType: ["bar", "line", "donut"],
-    iconStyle: ["line", "solid"], backgroundScope: ["cover", "chapter", "all", "none"],
+    iconStyle: ["line", "solid", "square"], backgroundScope: ["cover", "chapter", "all", "none"],
+    backgroundStyle: ["wash", "band", "frame", "grid"],
     imageStyle: ["original", "muted"], diagramStyle: ["flow", "hierarchy"],
   };
   const fontNames = ["Noto Sans KR", "Noto Serif KR"];
@@ -24,11 +25,11 @@
     const bundle = bundles.bundles[0];
     return {
       stateVersion: 3, bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId,
-      activePageId: bundle.pages[0].id, feel: clone(bundle.defaultFeel),
+      activePageId: bundle.pages[0].id, feel: clone(bundle.defaultFeel), pageLayouts: {},
       colorPresetId: "", colorBaseBundleId: "", colorFeel: { ...palettes?.defaultFeel }, keepPaletteOnBundleChange: true,
       overrides: { colors: {}, fonts: {}, typographyScope: {}, components: {} },
       physicalSpec: { sizeId: "A4", widthMm: 210, heightMm: 297, orientation: "portrait", bindingId: "none", duplex: "single", spreadMode: "single-pages", bleedMm: 0 },
-      formats: ["PDF"], sourcePrompt: "",
+      formats: ["PDF"], sourcePrompt: "", interpretation: "balanced",
     };
   }
   function normalize(input) {
@@ -54,6 +55,8 @@
       ...base, bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId,
       activePageId: bundle.pages.some((p) => p.id === raw.activePageId) ? raw.activePageId : bundle.pages[0].id,
       feel, overrides, formats: formats.length ? formats : base.formats,
+      interpretation: pick(raw.interpretation, ["faithful", "balanced", "creative"], "balanced"),
+      pageLayouts: window.PromptDeckDocumentLayouts?.normalize(bundle.id, raw.pageLayouts) || {},
       colorPresetId: palettes?.get(raw.colorPresetId)?.id || "",
       colorBaseBundleId: bundles.get(raw.colorBaseBundleId)?.id || "",
       colorFeel: palettes?.normalizeFeel(raw.colorFeel) || {},
@@ -112,7 +115,7 @@
     };
     const componentStyles = {
       tableStyle: bundle.variant === "data" ? "striped" : "rules", chartType: "bar", iconStyle: "line",
-      backgroundScope: "cover", imageStyle: "original", diagramStyle: "flow",
+      backgroundScope: "cover", backgroundStyle: "wash", imageStyle: "original", diagramStyle: "flow",
       ...(variantComponents[bundle.variant] || {}), ...state.overrides.components,
     };
     const physical = state.physicalSpec;
@@ -141,6 +144,12 @@
       if (weak.length) issues.push({ level: "warning", code: "palette-contrast", message: `${weak.join(", ")}의 대비가 낮습니다. 직접 지정한 색상을 확인해 주세요.` });
     }
     const design = { bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId, label: bundle.label, variant: bundle.variant, pages: clone(bundle.pages), palette, fonts, typographyScope: scope, feel: clone(state.feel), componentStyles, physicalSpec: clone(physical), image: bundle.image, rules: bundle.rules.slice() };
+    design.pageLayouts = clone(state.pageLayouts);
+    design.interpretation = state.interpretation;
+    design.pages.forEach((page) => {
+      const layout = window.PromptDeckDocumentLayouts?.get(bundle.id, page.id, state.pageLayouts[page.id] || "default");
+      if (layout) page.layout = { ...layout };
+    });
     design.colorScheme = { presetId: state.colorPresetId, label: preset?.label || (state.colorBaseBundleId ? `${colorBundle.label} 색상` : "견본 기본 색상"), feel: { ...state.colorFeel }, direction: palettes?.describe(state.colorFeel) || "", customizedRoles: Object.keys(state.overrides.colors), keepOnBundleChange: state.keepPaletteOnBundleChange };
     return { state, design, previewTokens, issues };
   }
@@ -150,8 +159,9 @@
     const keep = state.keepPaletteOnBundleChange && (state.colorPresetId || state.colorBaseBundleId || Object.keys(state.overrides.colors).length || Object.entries(state.colorFeel).some(([k, v]) => v !== palettes?.defaultFeel[k]));
     const overrides = defaults().overrides;
     if (keep) overrides.colors = { ...state.overrides.colors };
+    if (bundle.id !== state.bundleId) state.pageLayouts = {};
     return normalize({ ...state, bundleId: bundle.id, feel: { ...bundle.defaultFeel, ...(keep ? { colorPresence: state.feel.colorPresence } : {}) }, activePageId: bundle.pages[0].id, overrides, colorPresetId: keep ? state.colorPresetId : "", colorBaseBundleId: keep && !state.colorPresetId ? state.colorBaseBundleId || state.bundleId : "", colorFeel: keep ? state.colorFeel : palettes?.defaultFeel });
   }
-  function restore(input) { const state = normalize(input); return changeBundle({ ...state, colorPresetId: "", colorBaseBundleId: "", colorFeel: palettes?.defaultFeel, overrides: defaults().overrides }, state.bundleId); }
+  function restore(input) { const state = normalize(input); return changeBundle({ ...state, pageLayouts: {}, colorPresetId: "", colorBaseBundleId: "", colorFeel: palettes?.defaultFeel, overrides: defaults().overrides }, state.bundleId); }
   window.PromptDeckDocumentResolver = Object.freeze({ defaults, normalize, resolve, changeBundle, restore, sizes, options, componentOptions, fontNames });
 })();

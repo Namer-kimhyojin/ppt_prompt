@@ -102,7 +102,7 @@
       const style = doc.createElement("style");
       style.textContent = "html,body{margin:0;padding:0;background:transparent;color-scheme:light}body{width:max-content;}";
       doc.head.append(base, style);
-      await withSignal(Promise.all(["document-design-fonts.css", "document-design-pages.css", "document-design-variants.css"].map((filename) => new Promise((resolve, reject) => {
+      await withSignal(Promise.all(["document-design-fonts.css", "document-design-pages.css", "document-design-variants.css", "document-design-layouts.css"].map((filename) => new Promise((resolve, reject) => {
         const current = [...document.querySelectorAll("link[rel='stylesheet']")].find((link) => new URL(link.href).pathname.endsWith(`/${filename}`));
         const link = doc.createElement("link");
         link.rel = "stylesheet";
@@ -281,6 +281,7 @@
       files.push(
         { name: "design-prompt.txt", data: encoder.encode(built.designPrompt) },
         { name: "design-spec.json", data: encoder.encode(JSON.stringify(built.spec, null, 2)) },
+        { name: "design-settings.json", data: encoder.encode(JSON.stringify(window.PromptDeckDocumentLibrary.pack(designOnlyState, resolved.design.label), null, 2)) },
         { name: "README.txt", data: encoder.encode([
           "PromptDeck 문서 디자인 참고 자료",
           "",
@@ -289,6 +290,7 @@
           "2. design-prompt.txt의 디자인 지침을 요청 뒤에 붙입니다.",
           "3. reference-sheet.png 또는 pages 폴더의 이미지를 함께 첨부합니다.",
           "4. 이미지의 예시 문장·숫자·문제·정답을 실제 자료로 옮기지 않도록 안내합니다.",
+          "5. design-settings.json은 PromptDeck의 ‘내 디자인 저장함 → 설정 파일 가져오기’에서 다시 불러올 수 있습니다.",
           "",
           "이미지는 디자인 참조용입니다. 실제 내용과 분량에 맞춘 최종 문서는 제작 AI가 구성합니다.",
           "용지 크기·방향은 design-spec.json의 물리 규격을 따르고 실제 문서에서 다시 확인합니다.",

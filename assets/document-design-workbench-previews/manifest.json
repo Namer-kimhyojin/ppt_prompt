@@ -3,24 +3,31 @@
   "designSchema": "DocumentDesignSpec/3.0",
   "bundleVersion": 3,
   "rendererVersion": 3,
-  "generatedAt": "2026-09-08T09:26:31.016Z",
+  "generatedAt": "2026-09-08T13:31:35.573Z",
   "generator": "scripts/generate-document-workbench-previews.mjs",
   "captureEngine": "Chromium browser screenshots, converted to WebP",
-  "rendererHash": "97aa726bae93130f6a88b216fce6358417c89116174682f6633f1e8305176fb8",
+  "rendererHash": "6da98b7221618b9fd7a0454f5e321288cd275e0fea90e1d0c9aa639441496198",
   "sourceHashes": {
     "src/document-design-bundles.js": "31c8db6815fe50023f975e84d8fa33349b42f93f6a7c478090899cb178fb3d0a",
-    "src/document-design-samples.js": "6a1f4827cfaec610d4de0889317bf5ef97cd9dee05a91136bf5dc7ae69e3c772",
+    "src/document-design-samples.js": "5b474ff3140892f488521e2a4b2be523b3c047a5c5ab0a7b9e628cde4df91c7c",
     "src/document-design-palettes.js": "3cd82b26380d57b7ede704cdeea85d64112cb6fad14e7c090e52c129ab4c2651",
-    "src/document-design-resolver.js": "db779a0771c0aa299bde83d709a743644d26e8e43edc0966296af779f7d5dd81",
-    "src/document-design-renderer.js": "7d11e2bdf545e4b54fbd1576fe75367b8f170dd0ecb232f54aeda6646b9caf4f",
-    "styles/document-design-pages.css": "11f78ce6ce493a3d6e82d3eaef03338b243bf03c534a965ec9ca3054b5952544",
+    "src/document-design-layouts.js": "b5ef75e7ec4b03902982d4e4717f0f93f0eb1a5b797ac4310b8e9ea38b6efe3d",
+    "src/document-design-resolver.js": "704e59b3d418dd800db1b1332794118dad37c1058f36c71ff1b7705d9aaee2af",
+    "src/document-design-renderer.js": "1f9798d2d5508b3408e0c791d6c8a8a3cadeb7681ef4187048b632d98a9f8447",
+    "styles/document-design-pages.css": "4fefce185fd11d14f33595aff096c8ece501fec86bf71affa94cd86f76a0ce19",
     "styles/document-design-variants.css": "b05e8b27b2634b942ec9b6ae97680125eeef5c7b0678a21192c0aa406307fed1",
+    "styles/document-design-layouts.css": "0d844dd9a21b2ee678f4182c4ea24f9f91a379eb1c31995fdd334f3ea74ad0b0",
     "styles/document-design-fonts.css": "9dea58f58852824db94545ec4317482b0ec2bc55e59d642360619a8a5d06dee0",
-    "index.html": "f5534cec22ffe4c7de20bf2b49c9bbc1926f72085b6d5ab7a57ed00990b8ec8d",
-    "src/document-design-workbench.js": "13a0bc7f3fa5fa2b7ed3da11da51886bbd363a0921570c561ac80eec029eed38",
+    "index.html": "898ae7ad9537d7f7cf0b7862c7317ca1fb3169446d17211d3c711bb0e974b662",
+    "src/document-design-workbench.js": "96ded0a1dee2fdcf43c6f39dc9b52d4932885f2e3fc026d48ac1421cc95eef02",
     "src/document-design-palette-modal.js": "0afd82037be20d524034efede6c711ffe9822b9fd38832f58bda55235cbc9680",
+    "src/document-design-layout-workbench.js": "f9ca3e5e10266e857210fb2911122a29b9785f684be891fbb51c770667a545ed",
+    "src/document-design-studio.js": "0fb8aa6249623af029a3daa0c73e5b5ffc0aa1d054aa0f7ebcac6a33680b8a3f",
+    "src/document-design-library.js": "fb7055724d61a2e561c96b6d9760009d7d6026de058e756bfb9c1027130fea85",
     "styles/document-design-workbench.css": "6a7b32baa2f82adfbf13d165f462d2d7c61250f6c6ea53ebac37b8e461490bd5",
     "styles/document-design-palette-modal.css": "90844e07dd21469a64c05010b03b72100e12c37dfd822b6a53f9bfede2edb7ca",
+    "styles/document-design-layout-workbench.css": "81c5b7311c3b11c7d5ea394f4308b6d06369dd6a65a5454be456a867a75e5b6c",
+    "styles/document-design-studio.css": "13739e3e05fd61d7e2abfcd18a8fb1c30773f63aa21657eec6088898f623c140",
     "assets/document-design-icons/arrow-counterclockwise.svg": "632527a2ee2386b829fc7227937de40af6e2594d120a723d3341089cd3aca3da",
     "assets/document-design-icons/arrows-fullscreen.svg": "2d67bc427f2e766795ec029cd2ef24b3ebbd306ff76ae7297508da7b6a6081bf",
     "assets/document-design-icons/book.svg": "ae330ec1609b0a49ba94635e80eeffaf380e1a619affcc3881066407fadcdafb",
@@ -35,7 +42,7 @@
     "assets/document-design-icons/LICENSE.txt": "0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969",
     "assets/document-design-icons/sliders.svg": "38986f0874b63e3a34e5f489a39b23579f31cbd0c43b79d17e95b50312ac21fc",
     "assets/document-design-icons/x-lg.svg": "5ac6965c9989afaad195dc0fe739bd7443a7e94e52f8530b9b7d664d20c5d9e5",
-    "scripts/generate-document-workbench-previews.mjs": "8c5fc0e2ba85a109b8bae1594bca14ff4c7792fa8951a751b56d240ab30acf41",
+    "scripts/generate-document-workbench-previews.mjs": "ba0b5c941a2ecf4ec047f988fab8f3ae6608060780fb219cf2a96cf8f6887cab",
     "assets/document-design-images/workspace.jpg": "d661db2b50bcc965e6c6e6577b1f863ff28475ac6352e1aba0ecbb1d00b2868a",
     "assets/document-design-images/forest.jpg": "00f4ac29b960ff57fc41b12ba2127421c9668d4e222d73947c5b078b6b577c6d",
     "assets/document-design-images/story-watercolor.webp": "d351c17471ca5890688f896f54603d0fb637d52a2f65658f8b1911520566d8d1",
@@ -75,6 +82,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -103,10 +111,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "c406def9663cfafffb70a1841d1382c14fc489925863a458f0eaddd82d45015d",
-      "designHash": "0e12cfd5b33f4eb0ac936da9b22ea333e05c5da9117e49c69e7d2e18c6692591",
+      "settingsHash": "605665966a7b4567409fb0cbb6f9c44756a8813920f0ca3de7add0ee39fd325d",
+      "designHash": "cca8d5252fefcfd1a6536be8022a511419f6e6d2effda6dd5dd8f0ded6cc0662",
       "previewTokensHash": "112dc46fae53f80e483c85d2c4013ec315cc17dd16a6db75e8a4acee2607c882",
       "width": 1200,
       "height": 606,
@@ -141,6 +150,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -169,10 +179,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "58f36a9ad772bdfddf012a78f8bea0034633158101df9b086e55513a6f947948",
-      "designHash": "838746613b05e95eda68067ea7a3301514e880cf799b8d2cba73796cbf2fb59a",
+      "settingsHash": "a93f6b41fee4572202deab3d289883da58728db5ca03884b6173f31be19fefa9",
+      "designHash": "482cd44e3915dfcd6ccc0f5518ffe7429fdd7cb504b2997e3a8b9ba55d4dc4f8",
       "previewTokensHash": "84a0300f5b1f6dc2f2b7228031f4d154f4482c7e90e6d30d3fbd8344dc2ac74f",
       "width": 1200,
       "height": 606,
@@ -207,6 +218,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -235,10 +247,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "b0fe49657a4341b04c870e64cc43cdc69443d5f4fe60eefcd3a5764a80df1434",
-      "designHash": "8b2759ea3ca712c5d88d930263630713859ded7152d2ecb7af9ac4ac955eef79",
+      "settingsHash": "691496de84871ae57575f51058cda3553fcd2d6a42e0e29a917577a8c78484cb",
+      "designHash": "1601d4d840aefac58acbd2fde1489b5f9495a790119e114303d2e98ecf7cd79e",
       "previewTokensHash": "d4b5f8fba6d17bf2fb2ea87fb0e250d43280cec424d92f702bfc52cf71902b0f",
       "width": 1200,
       "height": 606,
@@ -273,6 +286,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -301,10 +315,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "30eac5965170c0d1f8579a43ab1858f6386f4daa51da8d60162c02a166ccb703",
-      "designHash": "b219d31b90fb4db775d197fb45092de88b37c70c01e90f38eebd9792f72efbfb",
+      "settingsHash": "6399cb757057eba83da1e58bc4b1d817ca15a854c743fdb2cb0a7c91cd4d22a1",
+      "designHash": "8cfdf10443193a38a083d01104fc69612400abe8b0b8966ea1598012c159b6f0",
       "previewTokensHash": "5a5892d33e40e0cabbe6e4c9824e755d806db926a2586175b4150acb186ca3fb",
       "width": 1200,
       "height": 606,
@@ -339,6 +354,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -367,10 +383,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "a158e6933c63680d2e05185d7a4a8623658a34eb8de37458c1719734f40639e0",
-      "designHash": "13d4a16338bedb5008baedc7f7203b5eb3eef735ef010ab89cdc9828374bee9c",
+      "settingsHash": "73b44225eae2912b055892a1f0456f0eb251c64d69d86c2cf3d7e7aad3674190",
+      "designHash": "29b5b2396c13c2cfbaa3e3c391d7a9be191b2f3258adb74114530ac4febdbe46",
       "previewTokensHash": "5779221f645fe215ae880c981d13c80733748ffb1a246faa1b31033d648fa42e",
       "width": 1200,
       "height": 606,
@@ -405,6 +422,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -433,10 +451,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "aacc7d55e7e87532412ef1e5b3381cb5d5ff0bbaef7e136516cfaf63e642c2df",
-      "designHash": "5b7205e6c575a0345ffd093aaa8ec6b734826a13fdbad9f72320f0743dc27462",
+      "settingsHash": "08c82290bb7e70b6d594515fe71b8042d7d526146a5fc414e17cf3630dfb8653",
+      "designHash": "25a37fab7fe8bb7e9311785c85192651a579d03d5d7b4adba3c91f6b225c5fa5",
       "previewTokensHash": "0eaca3ec59f239a331679f20eacb31ee961f56ee7df2fa5d6b2cf517d81b8985",
       "width": 1200,
       "height": 606,
@@ -471,6 +490,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -499,10 +519,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "a50210f67563c30d163e8f9050c9baa530f228f66f1a6cd93ce4c301ec95855a",
-      "designHash": "4f4b5945a625d472ec2c924aa4814803cb3a6db7cd3c390183767cebf80e6068",
+      "settingsHash": "1b92eee6527dc41b418ea123b06c2aa32b54d327bf799a8463d3e22cb4d529d6",
+      "designHash": "f2091d2aeb4897896f1e7193009fc7ee0cbb89c022fd1753cf49bd020f79d095",
       "previewTokensHash": "86a21bbea249190b70b12e4a429f6f8adc7eb2792e485355528b5effbece2f27",
       "width": 1200,
       "height": 606,
@@ -537,6 +558,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -565,10 +587,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "a6c92c3a59aa44161a54d749fb75c09a9a1115846b879f40bc93824ccf7c0b43",
-      "designHash": "6a3e26769085a9271a2f478d688620eb65e50b1802328b5d55267b44a2e442db",
+      "settingsHash": "cea3038ed6307d8c8d14c25cc0020f73ca47bb4d9540ea0c014a0351cec1a592",
+      "designHash": "ef88279b8653716f178463468a96fb8dc71bb8f18e9113cc3efe3e8f23d930e2",
       "previewTokensHash": "65968e4cde2548af599ba5696d586914d40cb6ebc3a1cb38aa593c99b0182dc0",
       "width": 1200,
       "height": 606,
@@ -603,6 +626,7 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -631,10 +655,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "4f9b1a52d5024a430635f4c4c847d46cd2f6aa07b0ebf5ec1cb388ee79cc058c",
-      "designHash": "acd15680b5c02c62742c107a8385a88f619ec49ac693b6ec2adaf4c1bc2c75b1",
+      "settingsHash": "d06726708450470d8e211a5736757ba45db54e1ca706b90cc657f2efee94e4e2",
+      "designHash": "3c838e39201bac65f28a001aaf0a5e7e59c1db08955ba95aa6a517f96df9d2d2",
       "previewTokensHash": "3a94252ba9b46e7f8dc6a4cd84f739c42fcd23a255e6daeb2621204cd7ca350e",
       "width": 1200,
       "height": 606,
@@ -669,6 +694,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -697,10 +723,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "033258c869f922a5299ea6e96ef6c0da62957f95148b020c4f9b5a26bb133991",
-      "designHash": "09e1ee0de0ac412acdbc3a0db01fb1ba014c6860ade816fa433a4210bae94d2d",
+      "settingsHash": "03c46cba97c6636eb18f86d7b7781819928b6a494daa7ecc8d27d95593837992",
+      "designHash": "fd2bdc9a23b6e77f15710a99de094d3b41b9ee36409083e6de5d7138b3b32e8a",
       "previewTokensHash": "8a347ec5309403784b0572c1b6cde0998fdca7a06458014858e5ff9655e00bc1",
       "width": 1200,
       "height": 606,
@@ -735,6 +762,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -763,10 +791,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "05b9e751735073f91b92fe0acbb9645996dc7375a6a7c6c3d859b0edf71b881c",
-      "designHash": "7c2a920739761e115f507dfbb36aa2ebae35539cd2a3cef47eec0060396f2dc4",
+      "settingsHash": "a8c1ab63b5f35384c5e0dabfe5e52388684e0c656e016bcd4fb5d0d8468cd2b9",
+      "designHash": "081c6d08bc7c3eed43eb47343c849719db4fd65344a5f9838aa4f4987ba36d95",
       "previewTokensHash": "0b003ab8a76d026e1cba5e8d08675dd6e11603da495c2eadef2c328f1cfec3f1",
       "width": 1200,
       "height": 606,
@@ -801,6 +830,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -829,15 +859,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "7c2ae1993b863cc2df47c2f3a3c7bd6c9a59942e89fd81d09a29f2340595ceb7",
-      "designHash": "461d6354ea4d69f4b25209b06ff3e87d06ecc9c1e80b4c62b96a6ec282b84d02",
+      "settingsHash": "d2579909457a299ade778c79c39b6ede70d9f40011e2de2bac5a2817f226d8ea",
+      "designHash": "3298dba66a064d656b601f66e18bf47fd50b0f1bb37f8a7db4f55b94e67ae7eb",
       "previewTokensHash": "6b4e5294189bf921220eab3b127c719f45782487019f00c5d5b19735a5979254",
       "width": 1200,
       "height": 606,
-      "bytes": 81274,
-      "sha256": "222de586f5266551d52c1deb42524085d30d312cd782f4fd84d6bcb40e60d8a8"
+      "bytes": 82730,
+      "sha256": "41e1187963e583e58d999a1f6fa5d92f46cfcf66a3183b29d8af4839d08f82bb"
     },
     {
       "bundleId": "report-editorial-grid",
@@ -867,6 +898,7 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -895,15 +927,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "a11cbae78f38ee37e529590e112565bf04206f3cbd091b304e4765359f18e001",
-      "designHash": "e2e942c44b67cb97a491433805df36afb21d16b157490a790d445268c85fe252",
+      "settingsHash": "dc3ab0f9d8e17534b1292bcec9f982ce175881c989a63cadf4aa7711b52def28",
+      "designHash": "22dac9def3e26e058f3cd732f5ee2c10f2c57d4de440b3f5914dfe17c35a94d7",
       "previewTokensHash": "d5ed3402093e006d708948d00a607a3f09988c795a3f50d9eb27a4400aa09f7f",
       "width": 1200,
       "height": 606,
-      "bytes": 38546,
-      "sha256": "24849db94752e6097ceb36eb4c2c6189a67ff7949951c5a1da776a1852463716"
+      "bytes": 38104,
+      "sha256": "3a1f4c0ea4e28141e76641c233f7f7d158bfa27a02298f321360c7c33febc8b6"
     },
     {
       "bundleId": "report-field-ledger",
@@ -933,6 +966,7 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -961,10 +995,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "1c23b7c03b4c414129ca5ce37edfa527dd69ca60cabf69ad602cd00afd4b8add",
-      "designHash": "27b462081779ce324c0e33ce5c75da676ba58eded69b5058f5e6f22c8293edce",
+      "settingsHash": "2d1fd724c2ce2e1c5dff0e762d7cd850792267fa2ca1a8ba6198edee5c7cf210",
+      "designHash": "5fdc50b96a8caa01372976eacd4ad09fd12804185550bdfc2f2ba6ec37238990",
       "previewTokensHash": "94db5e74a26c8396ea22d26bccc1d321f367fce6ac931df5fc09ae9beccd74c8",
       "width": 1200,
       "height": 606,
@@ -999,6 +1034,7 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1027,15 +1063,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "c641a077c2faec6cbc70a84e138c35cb880c1d1de944281111845ce42770cead",
-      "designHash": "3ed2568de2149a008f16edd370c60486840129d28360fc4845f3bce355cbec5e",
+      "settingsHash": "121911cbe5ba76d8d15ff2b725d0fabd85fed38b608e6b8395d2bb541abf1698",
+      "designHash": "901b4d79d541828a29f4c4d19abea96d2d0d317a03d7a6c9716c0b211443849f",
       "previewTokensHash": "361b055525002700bb2550f062d7a5fb41d19d11ad161b867c6dd641ed289bc7",
       "width": 1200,
       "height": 606,
-      "bytes": 45590,
-      "sha256": "a925d6bf791e7641a6477f56c2af97f4d09ec4dcaf77bae21dadeebc0f608598"
+      "bytes": 45120,
+      "sha256": "ae19c46ae067e72cc5b66675239cc7f439d3e3366ded39e43bc3d6f637d36702"
     },
     {
       "bundleId": "proposal-sprint-canvas",
@@ -1065,6 +1102,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1093,10 +1131,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "6560da8e0fe818c3bb52bd569808ce5c756a91ff9ef6d3a17d35d95ad887f621",
-      "designHash": "16d2bc34988ea3fd7f4b00e58652d701bd95c8b18197394be4720b9dde8ba37d",
+      "settingsHash": "f8ebe49c3a742e138c17bdd8a89edfd218d41e51c4389a59af41531d388e487b",
+      "designHash": "d26381cace8bacf7417c7768176d098a008fd8c71ea4cd04a0c85f3cad2f9698",
       "previewTokensHash": "123327df3863a7f00d3b37cd800cfa8100ce98f8fb629028bfdd6b2eccab7c4b",
       "width": 1200,
       "height": 606,
@@ -1131,6 +1170,7 @@
           "titlePresence": "clear",
           "decorationPresence": "rich"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1159,15 +1199,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "bd245920b20214b5da840e9592612508e5387846667cbbac3031a048fea66450",
-      "designHash": "4560e6ff832314851bf1e9c4b37036b8004c319a2ecc5bf2ef01af8a8c6ffae5",
+      "settingsHash": "e6006cc8c1a83fe09fc838567040eb19fc581e009f93769ad2ebb914f2c2559c",
+      "designHash": "19b97417d3c266a7575edaf8eb3368d1a83bc3572f11a3a0de75c1889af731e6",
       "previewTokensHash": "7f5b79ef60111ec5961d3aea5b59f186c4f4956b2af702aeff258618974727fb",
       "width": 1200,
       "height": 606,
-      "bytes": 60232,
-      "sha256": "bcf791743eb88bdbe5a907c991a829c6db5220c4f91fd4775242f0a8b39704e6"
+      "bytes": 59856,
+      "sha256": "f79c4265bb898209013205396d64528a20d78b9f4b79cb534aa07013e2e93ffe"
     },
     {
       "bundleId": "learning-write-workbook",
@@ -1197,6 +1238,7 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1225,10 +1267,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "6fb8b7cde6daa517bfb1395856f93c315dd8eed425403ef0f590c61280a1f834",
-      "designHash": "9c2b30f5ab4a868450759a0e63d1f9f663876cf2773d2c12297eddcea5d42118",
+      "settingsHash": "fa04a3105bbdb9a77dd38d3748dc109eb3f94c253d9ee1ede0cd23a08e7c556d",
+      "designHash": "066068c3e6d25b659d8d6b5c9fba2888c6f82b6fe1470ec4a5b615a043380011",
       "previewTokensHash": "ad72867dae74ba1ebf012ec7d5d73d1f649c00880c3876d4da841f3ae2a35125",
       "width": 1200,
       "height": 606,
@@ -1263,6 +1306,7 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1291,15 +1335,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "6c84d8c20ea5ace0b80b17804403a1ab6d55d0a9a3a00de53ae696f781ca8091",
-      "designHash": "2a381f7e611a9cee89c0f2d79c7282e5bc328db412bb2a402b59f68e8224a686",
+      "settingsHash": "4f88f8de6326ec37e6136ce2885c55b28cef25c0c6de7d0f6e43c87619600bf5",
+      "designHash": "3acc21d065dbe673e3fd9ed81d6f0dddd1ae9c70698d95cdba06f201759d696c",
       "previewTokensHash": "c1f148cf49fda08f32cd7faf08fdac814e4ea4ff5d3f8c437b5f93f145f9e436",
       "width": 1200,
       "height": 606,
-      "bytes": 29844,
-      "sha256": "9c91fcd5735d6d49f8b588f6668fb3adb5427b0caf1f821e9ef4d9ae49d396cb"
+      "bytes": 29100,
+      "sha256": "2d294379fc3295c6348f2360f9199e63678306049215aed9d314ace89625c384"
     },
     {
       "bundleId": "exam-question-bank",
@@ -1329,6 +1374,7 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1357,10 +1403,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "940d7b5b05f7be8f55e542e105cddaa0b54354f73ea2f6c0a8b9fd208ebd53d2",
-      "designHash": "952114b0a01edf04d163bda704d1dca435e59efac63d055da7b39b375e0c619d",
+      "settingsHash": "fdb91b1e937042ab94d6b184942d4c92b3ac614cb2a2a6a1ae85bad073c27a97",
+      "designHash": "213a3825df9845018e20c7389d7126878cf4661c625137c52951d15c1f5c43ae",
       "previewTokensHash": "ad92becfc89c3cac10090d9d9fd251310ec7c6b6c7e0d09512f6b8dc5a5bac87",
       "width": 1200,
       "height": 606,
@@ -1395,6 +1442,7 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1423,10 +1471,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "a4eb11088c532b07bff956a80a7b97b0c2c569880fb8d6719f0a6567431b5cc6",
-      "designHash": "7a6209746fbb9172699398e5381450a7fd7f558bcb00ae363088177de3600d9e",
+      "settingsHash": "f4933165908c8adf46bdf48d0a0bd289e172910182bdf8a592e17f184e6ffdea",
+      "designHash": "bfd698bc94224bb3fbca5659d45f3de7256397486cae6fe60ea740dde9a3b37c",
       "previewTokensHash": "c6734bf32173b460da0bec415e1aba89d75e375c6913412627cf69fdf81654c2",
       "width": 1200,
       "height": 606,
@@ -1461,6 +1510,7 @@
           "titlePresence": "quiet",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1489,15 +1539,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "057552999014ea38f99e86a6b83ac1fc2420f71b1bbd3f88b8fd06cf33d9af44",
-      "designHash": "3b7f5db2804d382c0742ebf6a2157e004f2222fb9b0404276512f0b039545501",
+      "settingsHash": "69f521ac0b69aec0fa8a4277ab39dedbe587460a1f55cac2d43f0753c1e75608",
+      "designHash": "5d61f7ec1ff8b4a2cd799d69026cccf7db2be7a24e558516b5f15240f72e9176",
       "previewTokensHash": "baf69d150d882639a3fcb5e17c95fdb66acc86b4e6241b91719843bb8738cbb1",
       "width": 1200,
       "height": 606,
-      "bytes": 46586,
-      "sha256": "50e5d84fae71cf9d473a2bc95ede9f818f69a715ed8c36b49222d2a7964e2631"
+      "bytes": 46364,
+      "sha256": "9895e77e3a285801f399ae37f43c314d6be95a3dd8d14597668f74c0ae4b8215"
     },
     {
       "bundleId": "story-night-adventure",
@@ -1527,6 +1578,7 @@
           "titlePresence": "strong",
           "decorationPresence": "rich"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1555,10 +1607,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "9b9a8a9a70b87a9dcd055c313cd2764399fdaa0e9be5edda9e593c4b7dae4cba",
-      "designHash": "90fb07816a1353b1ff0c9ae38bce0e1140c47b247ee075d3d04fba3f8c5cf7bd",
+      "settingsHash": "1a8510d45b7e0ddb02ad211fe8c1d5f5ae9461f06d5eaa565a659be18f8bdf45",
+      "designHash": "54ae401c93acf9618f0e90a6fa872feef614f2bdebccc4baa2ab2666f585e11b",
       "previewTokensHash": "388d4572c608dee3df81cc12661b4189c10a6db89cdc25b5406e5447efaad497",
       "width": 1200,
       "height": 606,
@@ -1593,6 +1646,7 @@
           "titlePresence": "strong",
           "decorationPresence": "rich"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1621,15 +1675,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "6a28b92c90d5be17365fc7866c5a932e52c7f70a78583909a2f11a15c15a77a6",
-      "designHash": "96851c3c20d3e4fd5d39e80cf0f3453471b27d51aa72e1c20317cffdaff4fb91",
+      "settingsHash": "2ebdd28159acbf00eb948bd688866f7ce79959044a0a679f932231434691f178",
+      "designHash": "605cc68e71723867524060f1eaac0b5088a4e98684fca4b3267dd70dfd7a5d54",
       "previewTokensHash": "3528e07ebf62c5b53580bc79575e26aad0ef2b6c6e9f945e086b66630311642c",
       "width": 1200,
       "height": 606,
-      "bytes": 116784,
-      "sha256": "8f999936557f4db676bed892cec43d86bc56f6b63e3a809eefbe95b373e4398e"
+      "bytes": 116242,
+      "sha256": "831c325df625434f0f96db2b39b3592ba64c77890d51305cd26ae8af2947de41"
     },
     {
       "bundleId": "report-executive-brief",
@@ -1659,6 +1714,7 @@
           "titlePresence": "strong",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1687,15 +1743,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "e7c85b94fe20f3041bfbfa6544ce61158cbc336f2693a96ade538e12bea1a257",
-      "designHash": "fa839c5f7d1ff65603735349bbe4faf973e2ef3a0792e91d619a8a805b7bbe66",
+      "settingsHash": "9ae6fc831d5458ff608e76d0b4560f6118e8666220f3f8293253036daf1e13ab",
+      "designHash": "dccab27bf9b6b25810d8d9ac9a1358799cb8bdd80e9e9e64ba6dc890da09c502",
       "previewTokensHash": "c70e1dc7d9347ec56b263de8ad1bd7c1f6db1dcc8d8e0330556aae783b6cb838",
       "width": 1200,
       "height": 606,
-      "bytes": 40636,
-      "sha256": "d944c3bc07d1bebee65f0e15abbfd0c98bd0c07f72e95a397014df06f0b9356c"
+      "bytes": 40240,
+      "sha256": "1b94c4559766545aa1c10d978dfc1c3296473d2da143b8e9a229233eab12d961"
     },
     {
       "bundleId": "report-audit-matrix",
@@ -1725,6 +1782,7 @@
           "titlePresence": "clear",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1753,10 +1811,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "bea64793767275b14a4d7e53b40abcec5f7cba117f062aa41fdb691ac3415776",
-      "designHash": "88134a047f10b5c7c5b715c7655fe388745f4293c1851aa6ad24939da8b73e65",
+      "settingsHash": "d181a3085b8432cada74089337ba7ec5a398d107b1d01e0a6ceebd7b8edb67b7",
+      "designHash": "66f0afcf61f4e46cac28492352554221efac4300ec2ca6cd9daa7dcce771c44f",
       "previewTokensHash": "536a7925bb71db2823b5032ee40de5dfdeb5b34286502caf22cde124bacb182c",
       "width": 1200,
       "height": 606,
@@ -1791,6 +1850,7 @@
           "titlePresence": "quiet",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1819,10 +1879,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "ede011dd59c9b0c4a1c6ea1141d2f02352dee3997a2a477fba69944b6f25b9d4",
-      "designHash": "8f68d78bf380679ea87f02cda7380441bb03eef0c4cec4b7fd01f4c28548cc26",
+      "settingsHash": "7eda4fd57442e64875fb352a4753a188508ffd8e690ca71fed03b5fe456a6387",
+      "designHash": "038d9cb2346d21fcdb4c62a8951f738e49efeae4bb288d462df83c8d8dbf18dc",
       "previewTokensHash": "5a038bc1a60c3f79fe8dba93008f1cc1c99e7b94ce8449712d7f823a7ec5d3eb",
       "width": 1200,
       "height": 606,
@@ -1857,6 +1918,7 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1885,15 +1947,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "6c0c4361b78abc2d4f5254897f18af089d41c00729d25e17602ee1db08e916de",
-      "designHash": "93370a1c95a6f795732986138bd1a442227f8a8b4c9c77c63e6094110c650187",
+      "settingsHash": "5c5c782e80bd9552020edb17bda945d5d25a1c822bfa932a52d3a987010be05d",
+      "designHash": "fcfde271e571cd1895dee7954afb08a450cfe5f7ca9d731b4a8b8c4ba824982a",
       "previewTokensHash": "02065f456c5a44f08eadf955887abd9ac14f437c16ee307df35793c078f2fe30",
       "width": 1200,
       "height": 606,
-      "bytes": 41486,
-      "sha256": "d733363f9dee9ba0df94ff3e0b70ce54c1fb8a5566a98d11099e0ea498d557a0"
+      "bytes": 40790,
+      "sha256": "5c1400e098f0eb306113c50e1eb2d915eb785e5325ac15e9312c9de5f24202a3"
     },
     {
       "bundleId": "proposal-tender-response",
@@ -1923,6 +1986,7 @@
           "titlePresence": "strong",
           "decorationPresence": "minimal"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -1951,10 +2015,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "35eeadfeb63d076046b181d8acdc9fb1fd730c02711a640340a2564f2936b3af",
-      "designHash": "219fd9c14400c8e53db0b75788a468587d96912abb5c78d8fe7f911642873107",
+      "settingsHash": "ff0cb2fc9ee5bc6690dab6a73e562096176e342307214aa158f0a1d51462ccd2",
+      "designHash": "ac1a7604b7f02716c2d491cbfabcb4629679fcc25a6e13788087ea509db951e7",
       "previewTokensHash": "5b23151c3b710c59471b0b6237727797505784b7f2343aa91023cab2fd0af60c",
       "width": 1200,
       "height": 606,
@@ -1989,6 +2054,7 @@
           "titlePresence": "strong",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -2017,15 +2083,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "b0fcbdd6ac89fb8913b55af7c59fa3bd66a16eb0d1e16caff55bc26d603836e3",
-      "designHash": "d55488822b9a1866c557eba453feb86ed53bf22ed52c7dc2225f1f435ef4139d",
+      "settingsHash": "c44f70f9b5dd062cae05558f2e1b076ea75b447df8ce0146728a99ae978bd33d",
+      "designHash": "3d3208a1f96501deb0c1dd4bcb4e82c44d7c3ffd75e57131d695a9307fe1f123",
       "previewTokensHash": "e375fc3da9f0da3bf8a33caeea2c9a9e04aa606715bc650a12e5e4389d53eba7",
       "width": 1200,
       "height": 606,
-      "bytes": 36232,
-      "sha256": "6c4161f95e23147cdefa190198f70551ef68519bc3a5d9611bc35b0848e12ca5"
+      "bytes": 31372,
+      "sha256": "76e717849184c30249402338c37216bcc0b0fad33cdcb9d75f0d002a2709ad2e"
     },
     {
       "bundleId": "proposal-service-blueprint",
@@ -2055,6 +2122,7 @@
           "titlePresence": "clear",
           "decorationPresence": "balanced"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -2083,15 +2151,16 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "06137efc0051a71ef5f96798b2f60cae08dee6c2c65ab6a9aaa415115d6298a2",
-      "designHash": "7240b9bfb192ec9fc55dcf9fc2414d4529e11209618b930bae6e1f00e224f1ab",
+      "settingsHash": "663006668aa4d1ea38b2e22c516d3240712d1fa0d7a9381e85dd7280c708d96f",
+      "designHash": "bac2b747583dbc2cea2d2d6956d625ba83a19afbba536b85094ba2428c7afaa7",
       "previewTokensHash": "9651afa9f79dc35884950f2f3c22185eb78c3f5e2a45921f92c8d7e899cf9af9",
       "width": 1200,
       "height": 606,
-      "bytes": 30886,
-      "sha256": "d6fdd48d7cd72ea3931fb6a0c66f3fa8d3d5ed990b520e321ce18b17bf0988c7"
+      "bytes": 30640,
+      "sha256": "075fd72b3848f4d76ee9879e3a4a7aca98afa6821d253d22ce3b5bc3ed1ce46d"
     },
     {
       "bundleId": "proposal-creative-concept",
@@ -2121,6 +2190,7 @@
           "titlePresence": "strong",
           "decorationPresence": "rich"
         },
+        "pageLayouts": {},
         "colorPresetId": "",
         "colorBaseBundleId": "",
         "colorFeel": {
@@ -2149,10 +2219,11 @@
         "formats": [
           "PDF"
         ],
-        "sourcePrompt": ""
+        "sourcePrompt": "",
+        "interpretation": "balanced"
       },
-      "settingsHash": "b4afb6214f4979f868ba6f8a8bfd63807c35554348cfa84c28afb314501f6430",
-      "designHash": "98077a0427d9ef488700c05860b2fda1be8de51d14c33dcf1324223f4a1f03ba",
+      "settingsHash": "4cc92ca2b1a124787aefd48ae61039212ade1e967223745b1b2417fb6cb077cd",
+      "designHash": "2ef8bf60b7d70fa576c3bb1e88da602877a46f7c38a40ad52b5d72de4104e89f",
       "previewTokensHash": "e9e2dcaaa464c0f62ba332f6c43487e77c53bc1fa946d7e72bdf06a7072b3ee7",
       "width": 1200,
       "height": 606,
@@ -2168,8 +2239,38 @@
         "width": 1440,
         "height": 1000
       },
-      "bytes": 86786,
-      "sha256": "d42c0a133a0b3e5a7c5f0c2ba5984595f8f29bbcc827d18ebf80f7327c17c519"
+      "bytes": 93266,
+      "sha256": "b77b38038085391dc5e23d21f70cff205c9662ffe60d3bff136d64efdf9bff2b"
+    },
+    {
+      "file": "assets/guides/document-design-workbench-layouts.webp",
+      "description": "1440px desktop comparison of three body arrangements with identical content, colors and paper",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bytes": 74178,
+      "sha256": "01e7e1e47a5706c5272f140cf69b4c34a2ea5946ad52f17c097a80a73dd24989"
+    },
+    {
+      "file": "assets/guides/document-design-workbench-overview.webp",
+      "description": "Current document set with the selected two-column body arrangement",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bytes": 56386,
+      "sha256": "6b3aa89097a71a21cdef512e6e4f06de2abbc85ac314b7cf5f6afda9848f94e9"
+    },
+    {
+      "file": "assets/guides/document-design-workbench-studio.webp",
+      "description": "Desktop component specimen modal showing striped table rendering before application",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bytes": 44084,
+      "sha256": "2b8cf6a3d275529c3fd91475ca971909773186469ea4cb1b1b781fd3e82762d2"
     },
     {
       "file": "assets/guides/document-design-workbench-mobile.webp",
@@ -2178,8 +2279,8 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 30766,
-      "sha256": "b602e89223f04729e8f4d6aadc26663a2a715cc5e7464620520b6141b9ef804b"
+      "bytes": 31828,
+      "sha256": "bd79802340a7a90751fb77cd3d5f51fdca6828979122ba580cfc711b0d2d45a4"
     },
     {
       "file": "assets/guides/document-design-workbench-controls.webp",
@@ -2188,8 +2289,38 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 27386,
-      "sha256": "055f8767b430a33c7db3288f16b29d08407a73f4dbc64c62b01bbfe1e040468f"
+      "bytes": 28318,
+      "sha256": "bac50c690806f8bbb5c27d2d18fd90242e28483cfc426c474f331efc1e6624b7"
+    },
+    {
+      "file": "assets/guides/document-design-workbench-layouts-mobile.webp",
+      "description": "390px mobile layout choice showing one full document at a time",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "bytes": 28232,
+      "sha256": "2fe4a5714f76bbffaa4148607c3ba1c8aa3112b698fe3ec89bfe031ccfe26b3f"
+    },
+    {
+      "file": "assets/guides/document-design-workbench-density-mobile.webp",
+      "description": "390px mobile inspection of a multi-page sample table; example density is not saved as design settings",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "bytes": 25206,
+      "sha256": "c26d181e81765e63b72de532083dd800afe20f3a0a012d58ca8bc3e7fca38f8d"
+    },
+    {
+      "file": "assets/guides/document-design-workbench-library-mobile.webp",
+      "description": "390px mobile named design library with reusable settings import and export",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "bytes": 32176,
+      "sha256": "a3c14b8679710950175f516a109f470e89e13d0f6120ec5e4a95eff4c5c3a553"
     }
   ]
 }

@@ -63,6 +63,7 @@
       const tr = document.createElement("tr");
       row.forEach((value, index) => {
         const cell = text(index === 0 ? "th" : "td", "", value);
+        cell.dataset.columnLabel = data.headers[index] || "";
         if (!index) cell.scope = "row";
         tr.append(cell);
       });
@@ -78,7 +79,7 @@
   function chart(design, sample, tokens) {
     const values = sample.chart || [{ label: "A", value: 30 }, { label: "B", value: 50 }, { label: "C", value: 80 }];
     const type = design.componentStyles?.chartType || "bar";
-    const plot = text("figure", `dd-chart dd-chart-${type}`);
+    const plot = text("figure", `dd-chart dd-chart-type-${type}`);
     plot.append(text("figcaption", "dd-table-caption", sample.chartTitle || "변화를 한눈에 살펴보기"));
     const max = Math.max(...values.map((item) => item.value));
     if (type === "bar") {
@@ -171,7 +172,7 @@
     if (kind === "body") return body(design, sample, tokens);
     if (kind === "table") return [heading(sample, design.familyId === "proposal" ? "04 · 실행 계획" : "02 · 비교와 점검", design.familyId === "proposal" ? "실행을 구체적으로 준비합니다" : "항목별 차이를 읽는 기준"), text("p", "dd-lead", sample.lead), table(sample), callout(sample.note, "표를 읽는 기준")];
     if (kind === "chart") return [heading(sample, "03 · 주요 성과", "작은 변화가 쌓인 결과"), stats(sample), chart(design, sample, tokens), callout(sample.note, "변화의 맥락")];
-    if (kind === "message") return [heading(sample, "01 · 제안의 방향", sample.section), text("p", "dd-message", sample.quote), stats(sample), ...paragraphs(sample, 2)];
+    if (kind === "message") return [heading(sample, "01 · 제안의 방향", sample.section), text("p", "dd-message", sample.quote), stats(sample), ...paragraphs(sample, sample.previewVariant === "long" ? undefined : 2)];
     if (kind === "diagram") return [heading(sample, design.familyId === "learning" ? "02 · 그림으로 이해하기" : "02 · 전략의 구조", design.familyId === "learning" ? sample.chapter : "하나의 흐름으로 연결합니다"), text("p", "dd-lead", sample.lead), diagram(design, sample), callout(sample.note, design.familyId === "learning" ? "그림을 읽어 보세요" : "연결의 원칙")];
     if (kind === "roadmap") return [heading(sample, "03 · 실행 로드맵", "작은 실험에서 꾸준한 확장으로"), group("dd-roadmap", (sample.steps || []).map((step, index) => group("dd-roadmap-row", text("span", "dd-symbol", `0${index + 1}`), group("dd-roadmap-detail", text("strong", "", step), text("p", "dd-paragraph", sample.paragraphs[index % sample.paragraphs.length]))))), callout(sample.note, "실행의 기준")];
     if (kind === "example") return [heading(sample, "03 · 함께 풀어보기", "배운 개념을 일상에 연결해요"), question(sample), group("dd-example-steps", text("h3", "dd-small-title", "차근차근 생각해 보기"), ...["무엇이 달라졌는지 먼저 관찰해요.", "배운 핵심어와 관찰한 장면을 연결해요.", sample.answer].map((value, index) => group("dd-example-step", text("span", "dd-symbol", index + 1), text("p", "dd-paragraph", value)))), callout(sample.note, "한 번 더 확인해요")];
@@ -195,6 +196,8 @@
     const tokens = { widthPx: 600, heightPx: 848.57, marginPx: 48, fontPx: 13, titlePx: 29, lineHeight: 1.8, paragraphGap: 14, cellPadding: 10, imageRatio: .5, decorationLevel: .5, colorLevel: .5, titleWeight: 700, ...previewTokens };
     const node = text("article", `dd-page dd-family-${design.familyId} dd-variant-${design.variant} dd-kind-${definition.kind}`);
     node.dataset.pageId = definition.id; node.dataset.pageKind = definition.kind; node.dataset.bundleId = design.bundleId || "";
+    const layoutId = definition.layout?.id || design.pageLayouts?.[definition.id] || "default";
+    node.dataset.pageLayout = layoutId;
     node.setAttribute("aria-label", `${design.label} · ${definition.label}`);
     const color = clamp(numeric(tokens.colorLevel, .5), 0, 1);
     const decoration = clamp(numeric(tokens.decorationLevel, .5), 0, 1);
@@ -219,12 +222,22 @@
     node.dataset.iconStyle = styles.iconStyle || "line";
     node.dataset.imageStyle = styles.imageStyle || "original";
     node.dataset.backgroundScope = styles.backgroundScope || "cover";
+    node.dataset.backgroundStyle = styles.backgroundStyle || "wash";
     node.dataset.orientation = tokens.widthPx > tokens.heightPx ? "landscape" : "portrait";
     node.dataset.binding = design.physicalSpec?.bindingId || "none";
     node.dataset.duplex = design.physicalSpec?.duplex || "single";
     node.dataset.pageSide = design.pages.indexOf(definition) % 2 === 0 ? "right" : "left";
     if (decoration < .1) node.classList.add("dd-decoration-minimal");
-    const content = group("dd-page-content", contentFor(design, sample, tokens, definition));
+    let blocks = contentFor(design, sample, tokens, definition);
+    if (layoutId.startsWith("body-")) {
+      const note = callout(sample.note, "읽는 관점");
+      if (layoutId === "body-sidebar") note.classList.add("dd-side-note");
+      blocks = [heading(sample, "01 · 배경과 방향"), text("p", "dd-lead", sample.lead), ...(layoutId === "body-sidebar" ? [note, ...paragraphs(sample)] : [...paragraphs(sample), note])];
+    }
+    if (layoutId === "chart-focus") blocks = [blocks[0], chart(design, sample, { ...tokens, imageRatio: Math.max(.65, tokens.imageRatio) }), blocks[1], blocks[3]];
+    if (layoutId === "chart-sidebar") blocks = [blocks[0], group("dd-chart-pair", blocks[1], blocks[2]), blocks[3]];
+    if (layoutId.startsWith("message-")) blocks = [blocks[0], group("dd-message-composition", blocks[1], group("dd-message-evidence", ...blocks.slice(3))), blocks[2]];
+    const content = group("dd-page-content", blocks);
     content.querySelectorAll(".dd-callout-label").forEach((label) => {
       const icon = document.createElement("img");
       icon.src = `assets/document-design-icons/check-circle${styles.iconStyle === "solid" ? "-fill" : ""}.svg`;
@@ -322,6 +335,14 @@
     if (caption) caption.textContent = caption.textContent.replace(/ · 이어서$/, "") + " · 이어서";
     return rest;
   }
+  function splitRoadmap(block, content) {
+    if (!block.matches(".dd-roadmap") || block.children.length < 2) return null;
+    const remaining = [];
+    while (!fits(content) && block.children.length > 1) remaining.unshift(block.removeChild(block.lastElementChild));
+    if (!fits(content)) { remaining.forEach((node) => block.append(node)); return null; }
+    const rest = block.cloneNode(false); rest.append(...remaining);
+    return rest;
+  }
   function paginate(element) {
     const originalParent = element.parentNode;
     let stage;
@@ -343,7 +364,7 @@
       guard += 1;
       const block = queue.shift(); currentContent.append(block);
       if (fits(currentContent)) continue;
-      const remainder = splitText(block, currentContent) || splitTable(block, currentContent);
+      const remainder = splitText(block, currentContent) || splitTable(block, currentContent) || splitRoadmap(block, currentContent);
       if (remainder) { queue.unshift(remainder); nextPage(); continue; }
       if (currentContent.children.length > 1) { block.remove(); queue.unshift(block); nextPage(); continue; }
       // A compound sample block may be taller than the available page area.

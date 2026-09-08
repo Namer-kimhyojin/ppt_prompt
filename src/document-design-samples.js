@@ -44,9 +44,18 @@
     get(familyId, long = false) {
       const value = JSON.parse(JSON.stringify(samples[familyId] || samples.report));
       value.isSample = true;
-      if (long) {
+      value.previewVariant = typeof long === "string" ? long : "standard";
+      if (long === true || long === "long") {
         value.paragraphs = Array.from({ length: 5 }, () => value.paragraphs).flat();
-        if (value.table) value.table.rows = Array.from({ length: 8 }, (_, block) => value.table.rows.map((row) => row.map((cell, column) => column === 0 ? `${cell} ${block + 1}` : cell))).flat();
+      }
+      if ((long === true || long === "table") && value.table) {
+        value.table.rows = Array.from({ length: 8 }, (_, block) => value.table.rows.map((row) => row.map((cell, column) => column === 0 ? `${cell} ${block + 1}` : cell))).flat();
+      }
+      if (long === "short") {
+        value.paragraphs = value.paragraphs.slice(0, 2).map((paragraph) => paragraph.split(". ")[0] + ".");
+      }
+      if (long === "title") {
+        value.title = value.section = value.chapter = "지역과 사람의 경험을 연결하며 지속 가능한 변화를 함께 만들어 가는 새로운 운영 방향과 실천의 기록";
       }
       return value;
     },

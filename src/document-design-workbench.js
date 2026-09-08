@@ -54,6 +54,9 @@
   let previewFrame = 0;
   let fontPair = "default";
   let paletteModal;
+  let layoutWorkbench;
+  let studio;
+  let designLibrary;
   const fontScopes = new Set();
 
   function syncFontSelection() {
@@ -121,6 +124,9 @@
       <dialog class="dw-dialog dw-candidate-dialog" id="dwCandidateDialog" aria-labelledby="dwCandidateTitle"><div class="dw-dialog-heading"><div><span class="dw-eyebrow">DESIGN PREVIEW</span><h3 id="dwCandidateTitle"></h3></div><button type="button" class="dw-icon-button" data-close-dialog aria-label="견본 미리보기 닫기">${icon("close")}</button></div><div class="dw-dialog-content"><p id="dwCandidateDescription"></p><div class="dw-candidate-pages" id="dwCandidatePages"></div></div><div class="dw-dialog-footer"><span id="dwCandidateMeta"></span><button type="button" class="dw-button dw-primary" data-action="use-candidate">이 디자인 사용 ${icon("check")}</button></div></dialog>
       <dialog class="dw-dialog dw-zoom-dialog" id="dwZoomDialog" aria-labelledby="dwZoomTitle"><div class="dw-dialog-heading"><h3 id="dwZoomTitle">문서 확대 보기</h3><button type="button" class="dw-icon-button" data-close-dialog aria-label="확대 보기 닫기">${icon("close")}</button></div><div class="dw-zoom-canvas" id="dwZoomCanvas"></div><p class="dw-help">확대한 문서는 가로·세로로 이동해서 볼 수 있습니다.</p></dialog>
       <div hidden><button type="button" id="documentDesignGenerateBtn"></button><button type="button" id="documentDesignCopyBtn"></button><button type="button" id="documentDesignSendCommonBtn"></button><button type="button" id="documentDesignDownloadBtn"></button><button type="button" id="documentDesignSampleBtn"></button><button type="button" id="documentDesignResetBtn"></button></div>`;
+    root.querySelector(".dw-preview-toolbar").insertAdjacentHTML("afterend", '<div class="dw-layout-actions"><span class="dw-current-layout" id="dwCurrentLayout"></span><button type="button" class="dw-button" data-action="open-layout" hidden>다른 배치 · 3안</button><button type="button" class="dw-button" data-action="open-overview">문서 세트 전체 보기</button></div>');
+    root.querySelector(".dw-save-note").insertAdjacentHTML("beforebegin", '<button type="button" class="dw-button" data-action="open-library">내 디자인 저장함</button>');
+    root.querySelector(".dw-layout-actions").insertAdjacentHTML("beforeend", '<button type="button" class="dw-button" data-action="open-density">분량 점검</button>');
     referencePageIds = new Set(representativePages(getBundle(state.bundleId)));
     root.querySelector("#documentDesignSource").value = state.sourcePrompt || "";
     renderControls();
@@ -139,6 +145,28 @@
       state.feel.colorPresence = next.feel.colorPresence;
       settle("색상 조합을 문서 전체와 디자인 지침에 적용했습니다.");
     } });
+    layoutWorkbench = window.PromptDeckDocumentLayoutWorkbench?.create({ root, getState: () => state, renderFrame, fitAll, selectPage, apply(pageId, layoutId) {
+      undoState = clone(state);
+      state.pageLayouts = { ...state.pageLayouts, [pageId]: layoutId };
+      referencePageIds.add(pageId);
+      settle("선택한 배치를 미리보기·참고 이미지·디자인 지침에 적용했습니다.");
+    } });
+    studio = window.PromptDeckDocumentStudio?.create({ root, getState: () => state, renderFrame, fitAll, apply(next) {
+      undoState = clone(state);
+      state.overrides = clone(next.overrides);
+      syncFontSelection();
+      settle("선택한 요소 표현을 문서 전체·참고 이미지·디자인 지침에 적용했습니다.");
+    } });
+    designLibrary = window.PromptDeckDocumentLibrary?.create({ root, getState: () => state, renderFrame, fitAll, downloadText, apply(next) {
+      undoState = clone(state);
+      const sourcePrompt = state.sourcePrompt;
+      state = RESOLVER.normalize({ ...next, sourcePrompt });
+      browseFamily = state.familyId;
+      syncFontSelection();
+      referencePageIds = new Set(representativePages(getBundle(state.bundleId)));
+      settle("저장한 디자인을 불러왔습니다. 기존 작성 요청은 그대로 유지됩니다.");
+      setStep(2);
+    } });
     status(loaded.notice || "마음에 드는 디자인을 펼쳐 보고 한 세트를 선택하세요.");
   }
 
@@ -148,7 +176,7 @@
   }
 
   async function renderFrame(parent, design, tokens, pageId, options = {}) {
-    const node = RENDERER.renderPage(design, tokens, pageId);
+    const node = RENDERER.renderPage(design, tokens, pageId, options.sampleContent);
     if (!node) return;
     if (options.kind !== "main") node.setAttribute("aria-hidden", "true");
     const frame = document.createElement("div");
@@ -179,8 +207,10 @@
     const width = Number(frame.dataset.naturalWidth || 794);
     const height = Number(frame.dataset.naturalHeight || 1123);
     const kind = frame.dataset.fit;
-    const availableWidth = Math.max(1, frame.parentElement.clientWidth - (kind === "main" ? 36 : 0));
-    const maxHeight = kind === "main" ? Math.max(360, Math.min(850, window.innerHeight - 185)) : kind === "thumb" ? 105 : kind === "palette-card" ? 220 : kind === "palette" ? 230 : kind === "palette-large" ? 520 : kind === "card" ? 310 : 520;
+    const parentStyle = kind === "studio" ? getComputedStyle(frame.parentElement) : null;
+    const horizontalPadding = parentStyle ? parseFloat(parentStyle.paddingLeft) + parseFloat(parentStyle.paddingRight) : 0;
+    const availableWidth = Math.max(1, frame.parentElement.clientWidth - (kind === "main" ? 36 : horizontalPadding));
+    const maxHeight = kind === "main" ? Math.max(360, Math.min(850, window.innerHeight - 185)) : kind === "studio" ? Math.max(200, Math.min(580, window.innerHeight - 300)) : kind === "thumb" ? 105 : kind === "layout-large" ? 800 : kind === "layout" ? 510 : kind === "overview" ? 330 : kind === "palette-card" ? 220 : kind === "palette" ? 230 : kind === "palette-large" ? 520 : kind === "card" ? 310 : 520;
     const factor = Math.min(availableWidth / width, maxHeight / height, 1);
     frame.style.width = `${width * factor}px`;
     frame.style.height = `${height * factor}px`;
@@ -275,6 +305,7 @@
     save();
     renderMain();
     renderControls();
+    layoutWorkbench?.refresh();
   }
 
   function movePage(direction) {
@@ -329,9 +360,11 @@
     root.querySelector("#dwResultMeta").textContent = `${root.querySelector("#dwPhysicalSummary").textContent} · ${(state.formats || []).join(" · ")}`;
     const source = root.querySelector("#documentDesignSource");
     if (source.value !== state.sourcePrompt) source.value = state.sourcePrompt;
+    layoutWorkbench?.refresh();
   }
 
   function choices(prefix, label, key, items, value, group = "component") {
+    if (key === "iconStyle") items = [...items, ["square", "사각 배지"]];
     return `<fieldset class="dw-field"><legend>${esc(label)}</legend><div class="dw-segmented">${items.map(([id, text]) => `<label><input type="radio" name="${prefix}-${group}-${esc(key)}" data-${group}="${esc(key)}" value="${esc(id)}" ${value === id ? "checked" : ""}><span>${esc(text)}</span></label>`).join("")}</div></fieldset>`;
   }
 
@@ -378,7 +411,7 @@
       const focusKey = active ? [...active.attributes].find((attr) => attr.name.startsWith("data-")) : null;
       const focusValue = active?.value;
       const opened = [...host.querySelectorAll("details")].map((detail) => detail.open);
-      host.innerHTML = controlsMarkup(prefix);
+      host.innerHTML = '<div class="dw-studio-entry"><button type="button" class="dw-button" data-action="open-studio">요소 견본으로 고르기</button><button type="button" class="dw-button" data-action="open-library">디자인 저장·불러오기</button></div>' + controlsMarkup(prefix) + `<fieldset class="dw-field dw-interpretation"><legend>AI가 해석할 범위</legend><p>규격·원문·지정 색상과 서체는 항상 유지됩니다.</p>${[["faithful", "견본에 가깝게", "선택한 배치와 표현을 충실히"], ["balanced", "분위기를 유지하며 조정", "내용량에 맞춰 비율·여백을 자연스럽게"], ["creative", "폭넓게 재해석", "배치 의도를 살려 장식·리듬을 창의적으로"]].map(([id, label, hint]) => `<label><input type="radio" name="${prefix}-interpretation" data-interpretation value="${id}" ${state.interpretation === id ? "checked" : ""}> ${label}<span>${hint}</span></label>`).join("")}</fieldset>`;
       host.querySelectorAll("details").forEach((detail, index) => { detail.open = !!opened[index]; });
       const pair = host.querySelector("[data-font-pair]");
       if (pair) pair.value = fontPair;
@@ -518,7 +551,12 @@
       if (button.hasAttribute("data-close-dialog")) return closeDialogs();
       const action = button.dataset.action || { documentDesignGenerateBtn: "generate", documentDesignCopyBtn: "copy-design", documentDesignSendCommonBtn: "send-common", documentDesignDownloadBtn: "download-json", documentDesignSampleBtn: "sample", documentDesignResetBtn: "reset-design" }[button.id];
       if (action === "resume") return setStep(2);
+      if (action === "open-studio") return studio?.open();
+      if (action === "open-density") return studio?.open("density");
+      if (action === "open-library") return designLibrary?.open();
       if (action === "open-palette") return paletteModal?.open();
+      if (action === "open-layout") return layoutWorkbench?.open();
+      if (action === "open-overview") return layoutWorkbench?.openOverview();
       if (action === "use-candidate" && candidateId) return selectBundle(candidateId);
       if (action === "previous-page") return movePage(-1);
       if (action === "next-page") return movePage(1);
@@ -532,7 +570,7 @@
       if (action === "copy-design") return copyText(generate(false).designPrompt, "디자인 지침을 복사했습니다.");
       if (action === "copy-full") return copyText(generate(false).fullPrompt, "작성 요청과 디자인 지침을 함께 복사했습니다.");
       if (action === "send-common") return sendCommon();
-      if (action === "download-json") return downloadText(JSON.stringify(generate(false).spec, null, 2), "design-spec.json", "application/json;charset=utf-8");
+      if (action === "download-json") return downloadText(JSON.stringify(window.PromptDeckDocumentLibrary.pack(state, resolved.design.label), null, 2), "design-settings.json", "application/json;charset=utf-8");
       if (action === "download-text") return downloadText(generate(false).designPrompt, "design-prompt.txt");
       if (action?.startsWith("export-")) return exportDesign(action.slice(7));
       if (action === "cancel-export") return exportController?.abort();
@@ -546,6 +584,7 @@
     root.addEventListener("change", (event) => {
       const target = event.target;
       if (target.dataset.color) { renderControls(); return; }
+      if (target.hasAttribute("data-interpretation")) { state.interpretation = target.value; settle("AI가 디자인을 해석할 범위를 지침에 반영했습니다.", { preview: false }); return; }
       if (target.dataset.feel) { state.feel[target.dataset.feel] = target.value; settle("느낌을 페이지와 디자인 지침에 반영했습니다."); return; }
       if (target.dataset.component) { state.overrides.components[target.dataset.component] = target.value; settle("요소별 표현을 반영했습니다."); return; }
       if (target.hasAttribute("data-font-pair")) { fontPair = target.value; applyFontPair(); settle("선택한 범위에 서체 조합을 적용했습니다."); return; }

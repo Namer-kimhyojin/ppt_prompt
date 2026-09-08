@@ -158,6 +158,16 @@
 .dd-page[data-background-scope="cover"].dd-kind-cover { background: var(--dd-tint); }
 .dd-page[data-background-scope="chapter"].dd-kind-chapter { background: var(--dd-tint); }
 .dd-page[data-background-scope="none"] { background: var(--dd-paper); }
+.dd-page[data-background-scope="chapter"].dd-kind-cover { background: var(--dd-tint); }
+.dd-page:is([data-background-scope="all"], [data-background-scope="cover"].dd-kind-cover, [data-background-scope="chapter"].dd-kind-cover, [data-background-scope="chapter"].dd-kind-chapter)::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  opacity: var(--dd-background-opacity, calc(.25 + var(--dd-decoration) * .65));
+}
+.dd-page[data-background-style="band"]::before { border-left: calc(var(--dd-margin) * .25) solid var(--dd-primary); border-top: calc(var(--dd-margin) * .12) solid var(--dd-accent); }
+.dd-page[data-background-style="frame"]::before { margin: calc(var(--dd-margin) * .2); border: 1.5px solid var(--dd-primary); }
+.dd-page[data-background-style="grid"] { --dd-background-opacity: calc(.09 + var(--dd-decoration) * .14); }
+.dd-page[data-background-style="grid"]::before { background-image: linear-gradient(var(--dd-primary) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--dd-primary) 1.5px, transparent 1.5px); background-size: 40px 40px; }
+.dd-page[data-icon-style="square"] .dd-symbol { border-radius: .2em; border-width: 2px; background: var(--dd-tint); }
 .dd-decoration-minimal .dd-cover-index { border-top: 0; }
 .dd-decoration-minimal .dd-symbol { border-radius: 0; }
 .dd-decoration-minimal .dd-chapter-footnote { border-top: 0; }
