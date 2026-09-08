@@ -140,7 +140,7 @@
     return group("dd-question", group("dd-question-title", text("strong", "dd-question-number", number), text("p", "dd-question-text", sample.question || "이 장면에서 어떤 관계를 찾을 수 있을까요?")), sample.values ? text("p", "dd-question-data", sample.values) : null, group("dd-options", (sample.options || []).map((option, index) => text("p", "dd-option", `${["①", "②", "③", "④", "⑤"][index]} ${option}`))));
   }
   function cover(design, sample, tokens) {
-    const visual = ["visual", "visual-learning", "photo", "watercolor", "papercut"].includes(design.variant);
+    const visual = ["visual", "visual-learning", "visual-atlas", "photo", "seasonal-journal", "brand-story", "creative-concept", "watercolor", "papercut", "night-adventure", "comic-panels"].includes(design.variant);
     const main = group("dd-cover-main", text("div", "dd-kicker", sample.eyebrow), text("h1", "dd-cover-title", sample.title), text("p", "dd-cover-subtitle", sample.subtitle));
     if (visual) main.append(picture(design, sample, { height: Math.round(tokens.heightPx * tokens.imageRatio * .62), caption: false }));
     else main.append(group("dd-cover-index", text("span", "dd-cover-number", design.familyId === "exam" ? "01" : "2026"), text("span", "dd-cover-index-label", sample.chapter)));
@@ -155,7 +155,7 @@
     const output = [heading(sample, family === "learning" ? "01 · 개념 알아보기" : family === "exam" ? "핵심 이론 · 01" : family === "prose" ? "첫 번째 이야기" : "01 · 배경과 방향")];
     if (family === "story") return [picture(design, sample, { height: Math.round(tokens.heightPx * tokens.imageRatio * .65), caption: false }), text("h2", "dd-page-title", sample.section), ...paragraphs(sample)];
     output.push(text("p", "dd-lead", sample.lead));
-    if (["visual-learning", "photo"].includes(design.variant)) output.push(picture(design, sample, { height: Math.round(tokens.heightPx * tokens.imageRatio * .3), caption: false }));
+    if (["visual-learning", "visual-atlas", "photo", "seasonal-journal"].includes(design.variant)) output.push(picture(design, sample, { height: Math.round(tokens.heightPx * tokens.imageRatio * .3), caption: false }));
     if (design.variant === "data") {
       const note = callout(sample.note, "읽는 관점");
       note.classList.add("dd-side-note"); output.push(note);
@@ -358,5 +358,5 @@
     }
     return result;
   }
-  window.PromptDeckDocumentRenderer = { version: 1, renderPage, ready, paginate };
+  window.PromptDeckDocumentRenderer = { version: 3, renderPage, ready, paginate };
 })();

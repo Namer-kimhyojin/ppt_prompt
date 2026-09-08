@@ -102,7 +102,7 @@
       const style = doc.createElement("style");
       style.textContent = "html,body{margin:0;padding:0;background:transparent;color-scheme:light}body{width:max-content;}";
       doc.head.append(base, style);
-      await withSignal(Promise.all(["document-design-fonts.css", "document-design-pages.css"].map((filename) => new Promise((resolve, reject) => {
+      await withSignal(Promise.all(["document-design-fonts.css", "document-design-pages.css", "document-design-variants.css"].map((filename) => new Promise((resolve, reject) => {
         const current = [...document.querySelectorAll("link[rel='stylesheet']")].find((link) => new URL(link.href).pathname.endsWith(`/${filename}`));
         const link = doc.createElement("link");
         link.rel = "stylesheet";

@@ -17,6 +17,7 @@ async function loadPlaywright() {
 
 const { chromium } = await loadPlaywright();
 const root = path.resolve(import.meta.dirname, "..");
+const expectedFamilyCounts = { report: 8, proposal: 8, learning: 4, exam: 4, prose: 4, story: 4 };
 const csp = readFileSync(path.join(root, "static-pages/_headers"), "utf8").match(/Content-Security-Policy: (.+)/)?.[1]?.trim();
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".woff2": "font/woff2" };
 const server = http.createServer((request, response) => {
@@ -60,7 +61,7 @@ try {
       bundles: catalog.bundles.length,
       pages: catalog.bundles.reduce((sum, bundle) => sum + bundle.pages.length, 0),
       uniqueIds: new Set(catalog.bundles.map((bundle) => bundle.id)).size,
-      familyCounts: catalog.families.map((family) => catalog.bundles.filter((bundle) => bundle.familyId === family.id).length),
+      familyCounts: Object.fromEntries(catalog.families.map((family) => [family.id, catalog.bundles.filter((bundle) => bundle.familyId === family.id).length])),
       genrePages: catalog.bundles.filter((bundle) => ["prose", "story"].includes(bundle.familyId)).every((bundle) => !bundle.pages.some((entry) => ["table", "chart"].includes(entry.kind))),
       physical: state.physicalSpec,
       schema: built.spec.schema,
@@ -74,10 +75,10 @@ try {
     };
   });
   assert.equal(contractCheck.families, 6, "Six document families must be available");
-  assert.equal(contractCheck.bundles, 12, "Twelve complete design bundles must be available");
-  assert.equal(contractCheck.pages, 72, "The catalog must offer 72 genre-specific page models");
-  assert.equal(contractCheck.uniqueIds, 12, "Bundle ids must be unique");
-  assert.ok(contractCheck.familyCounts.every((count) => count === 2), "Each family must have two distinct bundles");
+  assert.equal(contractCheck.bundles, 32, "Thirty-two complete design bundles must be available");
+  assert.equal(contractCheck.pages, 192, "The catalog must offer 192 genre-specific page models");
+  assert.equal(contractCheck.uniqueIds, 32, "Bundle ids must be unique");
+  assert.deepEqual(contractCheck.familyCounts, expectedFamilyCounts, "Report/proposal must each have eight bundles and the remaining families four");
   assert.ok(contractCheck.genrePages, "Literary and story bundles must not force report tables/charts");
   assert.equal(contractCheck.physical.sizeId, "A4");
   assert.equal(contractCheck.physical.orientation, "portrait");
@@ -136,6 +137,20 @@ try {
       const style = getComputedStyle(firstParagraph || content);
       return { width: rect.width, height: rect.height, text: content.textContent, paragraphLineHeight: style.lineHeight, paragraphFont: style.fontFamily, titleFont: heading ? getComputedStyle(heading).fontFamily : "", html: content.innerHTML, tokens: resolved.previewTokens };
     }
+    function layoutSignature(node) {
+      const origin = node.getBoundingClientRect();
+      // Compare rendered typography and layout with a common paper/feeling state.
+      // Bundle ids, class names, palette colors, text and artwork URLs cannot
+      // make two otherwise identical templates appear distinct in this check.
+      return JSON.stringify([node, ...node.querySelectorAll("*:not(img)")].map((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return [element.tagName, element.childElementCount,
+          ...[rect.left - origin.left, rect.top - origin.top, rect.width, rect.height].map((value) => Math.round(value * 10) / 10),
+          ...["display", "position", "fontFamily", "fontSize", "fontWeight", "fontStyle", "lineHeight", "letterSpacing", "textAlign", "columnCount", "columnGap", "gridTemplateColumns", "flexDirection", "justifyContent", "alignItems", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "borderRadius"].map((property) => style[property]),
+        ];
+      }));
+    }
     try {
       const compact = await metrics({ ...initial, feel: { ...initial.feel, breathing: "compact" } });
       const airy = await metrics({ ...initial, feel: { ...initial.feel, breathing: "airy" } });
@@ -144,13 +159,16 @@ try {
       const scopedFont = await metrics({ ...initial, feel: { ...initial.feel, breathing: "compact" }, overrides: { ...initial.overrides, typographyScope: { heading: "Noto Serif KR" } } });
       const bundles = window.PromptDeckDocumentBundles.bundles;
       const all = [];
+      const bundleLayouts = [];
       for (const bundle of bundles) {
         const resolved = resolver.resolve({ ...initial, bundleId: bundle.id, familyId: bundle.familyId });
         const signatures = [];
+        const pageLayouts = {};
         for (const definition of bundle.pages) {
           const node = renderer.renderPage(resolved.design, resolved.previewTokens, definition.id);
           stage.replaceChildren(node);
           await renderer.ready(node);
+          pageLayouts[definition.id] = layoutSignature(node);
           const fragments = await renderer.paginate(node);
           let overflow = 0;
           for (const fragment of fragments) {
@@ -163,7 +181,19 @@ try {
           all.push({ bundle: bundle.id, page: definition.id, fragmentCount: fragments.length, overflow });
         }
         if (new Set(signatures).size !== bundle.pages.length) throw new Error(`Repeated page markup in ${bundle.id}`);
+        bundleLayouts.push({ id: bundle.id, familyId: bundle.familyId, pages: pageLayouts });
       }
+      const familyVariants = window.PromptDeckDocumentBundles.families.map((family) => {
+        const variants = bundleLayouts.filter((bundle) => bundle.familyId === family.id);
+        const pairs = [];
+        for (let left = 0; left < variants.length; left += 1) {
+          for (let right = left + 1; right < variants.length; right += 1) {
+            const sharedPages = Object.keys(variants[left].pages).filter((id) => Object.hasOwn(variants[right].pages, id));
+            pairs.push({ left: variants[left].id, right: variants[right].id, changedPages: sharedPages.filter((id) => variants[left].pages[id] !== variants[right].pages[id]) });
+          }
+        }
+        return { familyId: family.id, count: variants.length, uniqueLayouts: new Set(variants.map((variant) => JSON.stringify(variant.pages))).size, pairs };
+      });
       const longSamples = [];
       for (const scenario of [{ bundleId: "report-public-calm", familyId: "report", pageId: "body" }, { bundleId: "report-public-calm", familyId: "report", pageId: "table" }, { bundleId: "prose-quiet", familyId: "prose", pageId: "body" }]) {
         const resolved = resolver.resolve({ ...initial, ...scenario });
@@ -209,7 +239,7 @@ try {
           feelChecks.push({ familyId: family.id, key, pageId, visiblyChanged: snapshots[0].actual !== snapshots[1].actual, sourcePreserved: snapshots[0].text === snapshots[1].text });
         }
       }
-      return { compact, airy, a5, landscape, scopedFont, all, longSamples, feelChecks };
+      return { compact, airy, a5, landscape, scopedFont, all, longSamples, feelChecks, familyVariants };
     } finally { stage.remove(); }
   });
   assert.notEqual(rendering.compact.paragraphLineHeight, rendering.airy.paragraphLineHeight, "Breathing must change the actual paragraph line height");
@@ -221,11 +251,12 @@ try {
   assert.notEqual(rendering.a5.width, rendering.compact.width, "Paper selection must change the layout width");
   assert.notEqual(rendering.scopedFont.titleFont, rendering.compact.titleFont, "The title font scope must update actual title typography");
   assert.equal(rendering.scopedFont.paragraphFont, rendering.compact.paragraphFont, "Changing title typography must leave the body font unchanged");
-  assert.equal(rendering.all.length, 72);
+  assert.equal(rendering.all.length, 192);
   assert.ok(rendering.all.every((item) => item.fragmentCount >= 1 && item.overflow <= 2), `Page overflow after pagination: ${JSON.stringify(rendering.all.filter((item) => item.overflow > 2))}`);
+  assert.ok(rendering.familyVariants.every((family) => family.count === expectedFamilyCounts[family.familyId] && family.uniqueLayouts === family.count && family.pairs.length === family.count * (family.count - 1) / 2 && family.pairs.every((pair) => pair.changedPages.length >= 2)), `Same-family templates must differ in actual layout/typography on at least two page roles: ${JSON.stringify(rendering.familyVariants.filter((family) => family.uniqueLayouts !== expectedFamilyCounts[family.familyId] || family.pairs.some((pair) => pair.changedPages.length < 2)))}`);
   assert.ok(rendering.longSamples.every((item) => item.fragments > 1 && item.paragraphsPreserved && item.rowsPreserved && item.overflow <= 2), `Long sample pagination lost or clipped content: ${JSON.stringify(rendering.longSamples)}`);
   assert.ok(rendering.feelChecks.every((item) => item.visiblyChanged && item.sourcePreserved), `A feeling control has no actual visual effect or changed sample content: ${JSON.stringify(rendering.feelChecks.filter((item) => !item.visiblyChanged || !item.sourcePreserved))}`);
-  console.log("All 72 live pages, scoped typography, physical reflow and long-sample pagination passed.");
+  console.log("All 192 live pages, distinct layouts within every family, scoped typography, physical reflow and long-sample pagination passed.");
 
   // Exercise the visible controls and make sure a bundle change keeps the exact paper specification.
   await page.locator('[data-action="resume"]').click();
@@ -311,6 +342,28 @@ try {
       chartPngs.push(chartFiles[0].data);
     }
     const canvasChartsPreserved = chartPngs[0].length !== chartPngs[1].length || chartPngs[0].some((byte, index) => byte !== chartPngs[1][index]);
+    const renderer = window.PromptDeckDocumentRenderer;
+    const variantState = { ...base, bundleId: "report-editorial-grid", activePageId: "cover" };
+    const variantResolved = window.PromptDeckDocumentResolver.resolve(variantState);
+    const referenceHost = document.createElement("div");
+    referenceHost.style.cssText = "position:fixed;left:-20000px;top:0;";
+    const referenceNode = renderer.renderPage(variantResolved.design, variantResolved.previewTokens, "cover");
+    referenceHost.append(referenceNode);
+    document.body.append(referenceHost);
+    let referenceTitleSize;
+    let captureTitleSize;
+    const variantReady = renderer.ready;
+    try {
+      await renderer.ready(referenceNode);
+      referenceTitleSize = getComputedStyle(referenceNode.querySelector(".dd-cover-title")).fontSize;
+      renderer.ready = async (node) => {
+        const result = await variantReady(node);
+        if (node.ownerDocument !== document && node.dataset.bundleId === variantState.bundleId) captureTitleSize = node.ownerDocument.defaultView.getComputedStyle(node.querySelector(".dd-cover-title")).fontSize;
+        return result;
+      };
+      await exporter.createFiles(variantState, { kind: "page", pageIds: ["cover"] });
+    } finally { renderer.ready = variantReady; referenceHost.remove(); }
+    const variantStylesPreserved = Boolean(referenceTitleSize) && referenceTitleSize === captureTitleSize;
     const controller = new AbortController();
     let cancelled = false;
     try {
@@ -323,10 +376,11 @@ try {
       await exporter.createFiles(base, { kind: "page", pageIds: ["body"] });
     } catch (error) { failed = error.message === "TEST_FONT_IMAGE_FAILURE"; }
     finally { window.PromptDeckDocumentRenderer.ready = originalReady; }
-    return { names: files.map((file) => file.name), pngs, zipNames, canvasChartsPreserved, bodyPng: [...files.find((file) => file.name.endsWith("-body.png")).data], noSourceLeak: textFiles.every((file) => !decoder.decode(file.data).includes("SECRET ORIGINAL") && !decoder.decode(file.data).includes("MUTATED SOURCE")), snapshotPreserved: JSON.stringify(spec).includes("compact") && !JSON.stringify(spec).includes('"breathing":"airy"'), exactSource: decoder.decode(sourceFile.data), earlyCancelled, cancelled, failed, cleaned: document.querySelectorAll("[data-document-export-stage], iframe.html2canvas-container").length === 0, before };
+    return { names: files.map((file) => file.name), pngs, zipNames, canvasChartsPreserved, variantStylesPreserved, referenceTitleSize, captureTitleSize, bodyPng: [...files.find((file) => file.name.endsWith("-body.png")).data], noSourceLeak: textFiles.every((file) => !decoder.decode(file.data).includes("SECRET ORIGINAL") && !decoder.decode(file.data).includes("MUTATED SOURCE")), snapshotPreserved: JSON.stringify(spec).includes("compact") && !JSON.stringify(spec).includes('"breathing":"airy"'), exactSource: decoder.decode(sourceFile.data), earlyCancelled, cancelled, failed, cleaned: document.querySelectorAll("[data-document-export-stage], iframe.html2canvas-container").length === 0, before };
   });
   assert.ok(exported.noSourceLeak && exported.snapshotPreserved, "Export must freeze settings and exclude the source unless requested");
   assert.ok(exported.canvasChartsPreserved, "Canvas-based line and donut charts must retain their distinct content after iframe adoption and PNG capture");
+  assert.ok(exported.variantStylesPreserved, `Expanded specimen CSS must match the preview in the export iframe: preview=${exported.referenceTitleSize}, export=${exported.captureTitleSize}`);
   assert.equal(exported.exactSource, "  exact source\n마지막 공백  ", "Explicit source export must preserve every character");
   assert.ok(exported.earlyCancelled && exported.cancelled && exported.failed && exported.cleaned, "Cancellation and asset failure must reject without partial success or leftover DOM/iframes");
   assert.deepEqual(exported.zipNames, exported.names, "Every requested file must be present in the ZIP archive");
@@ -343,7 +397,7 @@ try {
   const downloaded = readFileSync(await download.path());
   assert.ok(downloaded.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), "The UI download must contain a real PNG");
   assert.equal(errors.length, 0, `Browser errors: ${errors.join(" | ")}`);
-  console.log("Document design workbench passed: 12 bundles / 72 live pages, paper reflow, qualitative editing, source isolation, responsive UI, export snapshots, PNG/ZIP, cancellation and cleanup.");
+  console.log("Document design workbench passed: 32 bundles / 192 live pages, distinct layouts within every family, paper reflow, qualitative editing, source isolation, responsive UI, export snapshots, PNG/ZIP, cancellation and cleanup.");
 } finally {
   await browser?.close();
   await new Promise((resolve) => server.close(resolve));

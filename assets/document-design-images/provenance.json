@@ -29,6 +29,18 @@
       "prompt": "Photorealistic quiet early morning forest path, mist, ferns and layered trees; muted greens and ivory light. No people, text, or logo.",
       "original": "exec-7a6caa71-990b-40fb-8723-1020e5178511.png",
       "sha256": "00f4ac29b960ff57fc41b12ba2127421c9668d4e222d73947c5b078b6b577c6d"
+    },
+    {
+      "file": "story-night-adventure.webp",
+      "prompt": "Use case: illustration-story. Reusable 3:2 landscape Korean children's storybook illustration of a curious forest child and gentle rabbit following fireflies through a moonlit woodland toward a glowing lantern. Premium gouache and colored-pencil texture, indigo and warm amber light, flexible negative space, no text, logo, watermark, frame, or horror elements.",
+      "original": "exec-33465baf-b4dc-4caa-b399-d81a3a4b5cb7.png",
+      "sha256": "67577b0249c349c4f5ce4ed696f46d58428faf3f3ceb81ab0fe6fc5658866c9d"
+    },
+    {
+      "file": "story-comic-panels.webp",
+      "prompt": "Use case: illustration-story. Reusable 3:2 landscape four-panel children's publishing illustration of a fox cub and blue bird retrieving a red scarf in an autumn park. Crisp ink, flat screen-print color, tactile paper, consistent characters and meaningful sequential beats, no speech balloons, text, logo, watermark, manga tone, or glossy 3D treatment.",
+      "original": "exec-cd282702-041a-46e9-9ab4-9bb48dbb4813.png",
+      "sha256": "8caf1292f112c1803a25b3a27d9d9c48b7dc800454bd74828b03b8ab4816f023"
     }
   ]
 }

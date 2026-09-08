@@ -13,9 +13,9 @@ const outputDir = path.join(root, outputRelative);
 const guideDir = path.join(root, "assets/guides");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".woff2": "font/woff2" };
-const rendererSources = ["src/document-design-bundles.js", "src/document-design-samples.js", "src/document-design-resolver.js", "src/document-design-renderer.js", "styles/document-design-pages.css", "styles/document-design-fonts.css"];
+const rendererSources = ["src/document-design-bundles.js", "src/document-design-samples.js", "src/document-design-resolver.js", "src/document-design-renderer.js", "styles/document-design-pages.css", "styles/document-design-variants.css", "styles/document-design-fonts.css"];
 const uiSources = ["index.html", "src/document-design-workbench.js", "styles/document-design-workbench.css"];
-const shell = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="/styles/document-design-fonts.css"><link rel="stylesheet" href="/styles/document-design-pages.css"><style>body{margin:0;background:#e9eef0}#sheet{display:flex;gap:18px;padding:24px;width:1200px;box-sizing:border-box;align-items:flex-start;background:#e9eef0}.sample{width:372px;margin:0;flex:none}.sample-label{font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:20px;color:#38505b;padding:12px 2px 0}.page-slot{position:relative;background:#fff}.page-slot>.dd-page{transform-origin:top left;position:absolute;left:0;top:0}</style></head><body><div id="sheet"></div>${rendererSources.filter((file) => file.endsWith(".js")).map((file) => `<script src="/${file}"></script>`).join("")}</body></html>`;
+const shell = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="/styles/document-design-fonts.css"><link rel="stylesheet" href="/styles/document-design-pages.css"><link rel="stylesheet" href="/styles/document-design-variants.css"><style>body{margin:0;background:#e9eef0}#sheet{display:flex;gap:18px;padding:24px;width:1200px;box-sizing:border-box;align-items:flex-start;background:#e9eef0}.sample{width:372px;margin:0;flex:none}.sample-label{font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:20px;color:#38505b;padding:12px 2px 0}.page-slot{position:relative;background:#fff}.page-slot>.dd-page{transform-origin:top left;position:absolute;left:0;top:0}</style></head><body><div id="sheet"></div>${rendererSources.filter((file) => file.endsWith(".js")).map((file) => `<script src="/${file}"></script>`).join("")}</body></html>`;
 const server = http.createServer((request, response) => {
   const requested = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
   if (requested === "/__document-preview") { response.writeHead(200, { "Content-Type": mime[".html"] }).end(shell); return; }
@@ -64,6 +64,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1200, height: 720 }, deviceScaleFactor: 1 });
   await page.goto(`${origin}/__document-preview`, { waitUntil: "networkidle" });
   const definitions = await page.evaluate(() => PromptDeckDocumentBundles.bundles.map((bundle) => ({ id: bundle.id, familyId: bundle.familyId, image: bundle.image })));
+  const versions = await page.evaluate(() => ({ bundle: PromptDeckDocumentBundles.version, renderer: PromptDeckDocumentRenderer.version }));
   const iconFiles = (await fs.readdir(path.join(root, "assets/document-design-icons"))).map((name) => `assets/document-design-icons/${name}`);
   const inputs = [...new Set([...rendererSources, ...uiSources, ...iconFiles, "scripts/generate-document-workbench-previews.mjs", ...definitions.map((bundle) => bundle.image), "assets/fonts/document-design/NotoSansKR.woff2", "assets/fonts/document-design/NotoSerifKR.woff2"])];
   const sourceHashes = Object.fromEntries(await Promise.all(inputs.map(async (filename) => [filename, sha256(await fs.readFile(path.join(root, filename)))])));
@@ -115,15 +116,17 @@ try {
   await saveGuide("desktop", "1440px desktop editor, default public report, live page and adjustment controls");
   await guidePage.setViewportSize({ width: 390, height: 844 });
   await guidePage.locator('.dw-steps [data-step="1"]').click();
-  await guidePage.waitForSelector('.dw-bundle-card .dd-page');
-  await guidePage.locator('.dw-section-heading').first().scrollIntoViewIfNeeded();
-  await saveGuide("mobile", "390px mobile gallery showing the two report bundles");
+  await guidePage.waitForFunction(() => [...document.querySelectorAll('.dw-card-pages')].every((host) => host.querySelectorAll('.dd-page').length === 3 && [...host.querySelectorAll('.dw-paper-frame')].every((frame) => frame.style.height)));
+  await guidePage.locator('.dw-family-filters').evaluate((element) => {
+    window.scrollTo({ top: window.scrollY + element.getBoundingClientRect().top - 120, behavior: "instant" });
+  });
+  await saveGuide("mobile", "390px mobile gallery showing the report bundle collection");
   await guidePage.locator('[data-use-bundle="report-public-calm"]').click();
   await guidePage.waitForFunction(() => document.querySelector('#documentDesignLivePreview[aria-busy="false"] .dd-page'));
   await guidePage.locator('.dw-mobile-bar [data-action="mobile-next"]').click();
   await guidePage.waitForSelector('#dwControlDialog[open]');
   await saveGuide("controls", "390px mobile bottom sheet showing live degree controls over the selected document");
-  const manifest = { schema: "PromptDeckDocumentWorkbenchPreviewManifest/1.0", designSchema: "DocumentDesignSpec/3.0", bundleVersion: 1, rendererVersion: 1, generatedAt: new Date().toISOString(), generator: "scripts/generate-document-workbench-previews.mjs", captureEngine: "Chromium browser screenshots, converted to WebP", rendererHash, sourceHashes, settingsPolicy: "Default resolved bundle settings, exact A4 portrait. Contact sheets show the first physical page of each representative role; continuation counts are recorded.", previews, guides };
+  const manifest = { schema: "PromptDeckDocumentWorkbenchPreviewManifest/1.0", designSchema: "DocumentDesignSpec/3.0", bundleVersion: versions.bundle, rendererVersion: versions.renderer, generatedAt: new Date().toISOString(), generator: "scripts/generate-document-workbench-previews.mjs", captureEngine: "Chromium browser screenshots, converted to WebP", rendererHash, sourceHashes, settingsPolicy: "Default resolved bundle settings, exact A4 portrait. Contact sheets show the first physical page of each representative role; continuation counts are recorded.", previews, guides };
   await fs.writeFile(path.join(outputDir, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n", "utf8");
   console.log(`Generated ${previews.length} renderer-derived WebP previews and ${guides.length} actual UI guide screenshots.`);
   console.log(`Manifest: ${outputRelative}/manifest.json`);

@@ -1,21 +1,22 @@
 {
   "schema": "PromptDeckDocumentWorkbenchPreviewManifest/1.0",
   "designSchema": "DocumentDesignSpec/3.0",
-  "bundleVersion": 1,
-  "rendererVersion": 1,
-  "generatedAt": "2026-09-07T17:14:49.046Z",
+  "bundleVersion": 3,
+  "rendererVersion": 3,
+  "generatedAt": "2026-09-07T23:21:38.431Z",
   "generator": "scripts/generate-document-workbench-previews.mjs",
   "captureEngine": "Chromium browser screenshots, converted to WebP",
-  "rendererHash": "08f6de7fb5855618d98617bea70e4a219d2d4c8fef2538e92577eb10a5f1e6a6",
+  "rendererHash": "df9232526090d501c296f67bef6bdbbbb3747d40349f742930e1644f50dc1e62",
   "sourceHashes": {
-    "src/document-design-bundles.js": "b93c87669a1f4df20818d3ab1cb7f671206a9e66e9918c6983f26d96ad42990d",
-    "src/document-design-samples.js": "da29e9a0945530ec2c2459d0384856c968e97a097ea8b10b7ff0ea9ab6318b58",
-    "src/document-design-resolver.js": "a01dbd1f696914037fde757679b9362a1aa4f5d82f648fb233ec130c4bf4070b",
-    "src/document-design-renderer.js": "519ebad7bf0d7401be1e5c4f527eaa93475ecfc05ca1d732654dd8f9cf168b4d",
+    "src/document-design-bundles.js": "31c8db6815fe50023f975e84d8fa33349b42f93f6a7c478090899cb178fb3d0a",
+    "src/document-design-samples.js": "6a1f4827cfaec610d4de0889317bf5ef97cd9dee05a91136bf5dc7ae69e3c772",
+    "src/document-design-resolver.js": "7c995a29f08747b0a4dbb1b280cb17fb1d820b6780b2c4b8109a6717c0fed0b5",
+    "src/document-design-renderer.js": "239a8973209311f751bd3e27c17f562667c990b1b9fb9788c8da2339e1726de8",
     "styles/document-design-pages.css": "edac657ad3124215b1ca8bbb796e60169e99114f34db185d782f299c6dc4255f",
+    "styles/document-design-variants.css": "be3ed9b50491262f16bc43bf6c30abf2a076e47e34fbfb14c25c7a0703bd97d4",
     "styles/document-design-fonts.css": "9dea58f58852824db94545ec4317482b0ec2bc55e59d642360619a8a5d06dee0",
-    "index.html": "3a79ead9cf5df9ca5b70bb59b88ae6caca2e85c1841590ff24bc0804e9a0c5aa",
-    "src/document-design-workbench.js": "bd49b1b986b844384908518b9cde8dbfad33d3aa0472ebe8d1c9f2e08eabfe34",
+    "index.html": "fe2023cfa6fecd3e1cbc0128cad01beefcdaa1a2a038196c88db1aefff5504d0",
+    "src/document-design-workbench.js": "c5e373b22861cd89a40e1fe0e53a49f6786dd7abcb26a6094c9c5ef5eec88d4e",
     "styles/document-design-workbench.css": "6a7b32baa2f82adfbf13d165f462d2d7c61250f6c6ea53ebac37b8e461490bd5",
     "assets/document-design-icons/arrow-counterclockwise.svg": "632527a2ee2386b829fc7227937de40af6e2594d120a723d3341089cd3aca3da",
     "assets/document-design-icons/arrows-fullscreen.svg": "2d67bc427f2e766795ec029cd2ef24b3ebbd306ff76ae7297508da7b6a6081bf",
@@ -31,11 +32,13 @@
     "assets/document-design-icons/LICENSE.txt": "0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969",
     "assets/document-design-icons/sliders.svg": "38986f0874b63e3a34e5f489a39b23579f31cbd0c43b79d17e95b50312ac21fc",
     "assets/document-design-icons/x-lg.svg": "5ac6965c9989afaad195dc0fe739bd7443a7e94e52f8530b9b7d664d20c5d9e5",
-    "scripts/generate-document-workbench-previews.mjs": "df24ddb381511b9e05016e1992a67ebef0a360232d15dd1f6c219ff61b102178",
+    "scripts/generate-document-workbench-previews.mjs": "1a52c1a89fdbe4f0913b44e66ed5babafac6650f19c503ac560bfb9a0a35bc46",
     "assets/document-design-images/workspace.jpg": "d661db2b50bcc965e6c6e6577b1f863ff28475ac6352e1aba0ecbb1d00b2868a",
     "assets/document-design-images/forest.jpg": "00f4ac29b960ff57fc41b12ba2127421c9668d4e222d73947c5b078b6b577c6d",
     "assets/document-design-images/story-watercolor.webp": "d351c17471ca5890688f896f54603d0fb637d52a2f65658f8b1911520566d8d1",
     "assets/document-design-images/story-papercut.webp": "492af9b000791fa4f8432d91e6e033eb9d94ec018c0899205e7040796a64e33f",
+    "assets/document-design-images/story-night-adventure.webp": "67577b0249c349c4f5ce4ed696f46d58428faf3f3ceb81ab0fe6fc5658866c9d",
+    "assets/document-design-images/story-comic-panels.webp": "8caf1292f112c1803a25b3a27d9d9c48b7dc800454bd74828b03b8ab4816f023",
     "assets/fonts/document-design/NotoSansKR.woff2": "d7e7f78bbd3d983e726b64e84615a40330986fa60eba634916d4eab8a351b57f",
     "assets/fonts/document-design/NotoSerifKR.woff2": "b14b7f78ef422bfea31627bae56b14679d23b9244b425dcb58c3c1eadb7941fd"
   },
@@ -59,7 +62,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "report-public-calm",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "report",
         "activePageId": "cover",
         "feel": {
@@ -90,8 +93,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "a38b05d6a6b7eda0cd27183046aacd9cd343bd0103e43604eae20d11022b93b2",
-      "designHash": "2eba444a3f664fd2f90e2822e41931e5e016713ef092d3ed32d6b27ac9157531",
+      "settingsHash": "567bb06a2edb0690db012dccc745fbbaf5c9e3314ba10763878ce98364581653",
+      "designHash": "dd428a87f44ad7a3b13ca1fcc3e5671179d11c6873d5c1789ee820e87e8a88a6",
       "previewTokensHash": "112dc46fae53f80e483c85d2c4013ec315cc17dd16a6db75e8a4acee2607c882",
       "width": 1200,
       "height": 606,
@@ -116,7 +119,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "report-data-clear",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "report",
         "activePageId": "cover",
         "feel": {
@@ -147,8 +150,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "ba7c89bcca685172561163a657359f193cce10c0d42c87e2919362c9044d2f00",
-      "designHash": "590e4e0fef5373f4d3c63daa26182e302a917dbea3c6ef53e2368d71ae381c7c",
+      "settingsHash": "0088554cf6da94843bb9647c2ce4df875e5377bc560c15ae8be9490499c1e2ef",
+      "designHash": "339afbbc65b588b9e58a8a98356de7c74230d010b800fd7fd3fb012def9e7f5e",
       "previewTokensHash": "84a0300f5b1f6dc2f2b7228031f4d154f4482c7e90e6d30d3fbd8344dc2ac74f",
       "width": 1200,
       "height": 606,
@@ -173,7 +176,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "proposal-strategy",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "proposal",
         "activePageId": "cover",
         "feel": {
@@ -204,8 +207,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "dcf6dfcd345b9120065bbfd409e78ef4e9dc9d00344cc4063f4da139207826d1",
-      "designHash": "3842655333dde5fc099d87759c288832adeb4512a10ad0d9415c681eef14ac7f",
+      "settingsHash": "4fc9200e8de3597fbe2299d08958b5dd3395f8f266f534363038b35ee71df738",
+      "designHash": "8039b9d108659e8476c445d322150615333e76838405a867db79eeff073cdd5e",
       "previewTokensHash": "d4b5f8fba6d17bf2fb2ea87fb0e250d43280cec424d92f702bfc52cf71902b0f",
       "width": 1200,
       "height": 606,
@@ -230,7 +233,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "proposal-visual",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "proposal",
         "activePageId": "cover",
         "feel": {
@@ -261,8 +264,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "5a86d4399b631418901a8c202b7d9658008193822b3e1c56ba03199860d3c534",
-      "designHash": "c6dddbec495551671cd93e82baf4f963a2cb28398fe88b3423ffad81ec1aacf1",
+      "settingsHash": "195a570f817ac572e7ee1ae37f60d256594d933ca10c36f2acc313cc068850e1",
+      "designHash": "42acbc265dd22d318de7a0d02f87931e4178607410d9c75254fa0e9f48a0a52a",
       "previewTokensHash": "5a5892d33e40e0cabbe6e4c9824e755d806db926a2586175b4150acb186ca3fb",
       "width": 1200,
       "height": 606,
@@ -287,7 +290,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "learning-step",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "learning",
         "activePageId": "cover",
         "feel": {
@@ -318,8 +321,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "80b2521cc46e27ff59c333cced328d212daeee75e66cc10ba56bcfb29cc4b981",
-      "designHash": "9c610220248f29b75d4ece274b114fa6e23797a2464988cf64bab28a07ee066e",
+      "settingsHash": "40611930ce8cb971708876ce228a8d431721fe06344b4a3a40ddafa048fc66b4",
+      "designHash": "984abcdbae093815c0e23becd43c0bff8e46d1f2ece94a14cff2075e0f8892c9",
       "previewTokensHash": "5779221f645fe215ae880c981d13c80733748ffb1a246faa1b31033d648fa42e",
       "width": 1200,
       "height": 606,
@@ -344,7 +347,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "learning-visual",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "learning",
         "activePageId": "cover",
         "feel": {
@@ -375,8 +378,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "9ac8a7990cd5b8214e863f1fe353224da06a50783b73ce70115e00f1fc3ce700",
-      "designHash": "f2ad9f34e3628df03cc26101f4419e2bcab15907e3bf2ef41ef818fa426cc42c",
+      "settingsHash": "d698291d850e184efe4650a501b09959e8d233c354fcfe6f17b02b8de4d8ac94",
+      "designHash": "c3bd5682a1bb2c80ac60422b7fdfc6e259aaf52e2adef575911b5bdf47551f6b",
       "previewTokensHash": "0eaca3ec59f239a331679f20eacb31ee961f56ee7df2fa5d6b2cf517d81b8985",
       "width": 1200,
       "height": 606,
@@ -401,7 +404,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "exam-theory",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "exam",
         "activePageId": "cover",
         "feel": {
@@ -432,8 +435,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "b5f8d2d2221ff4cc4caaf1905ef98a1778655acb30ededddc5b2fd84ce056819",
-      "designHash": "f54fbd6f4a57056f5ff3dd4957e567712823f1cd038621630e0af648f5270312",
+      "settingsHash": "cf7dc1a7d3f9d7f5f0d7811484f88e6677903a69d84653c0cccd29053b98c202",
+      "designHash": "3dd8cb11e1eefdf3ba456ce36b599315b16484a5024337c80208a03fdfb9ec07",
       "previewTokensHash": "86a21bbea249190b70b12e4a429f6f8adc7eb2792e485355528b5effbece2f27",
       "width": 1200,
       "height": 606,
@@ -458,7 +461,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "exam-practice",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "exam",
         "activePageId": "cover",
         "feel": {
@@ -489,8 +492,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "cb8c4088221eb5874f4ec7bfc23ccf0997cfca31d11016e3767e518ff8749c86",
-      "designHash": "658f1b562bad8da3d953e53fe82d621f1543de9dc9351e9c837904b1bcf0a61d",
+      "settingsHash": "83224aad26adbd824e2b1b66faecf6a2ebe3e65374e3912d996c31f0940a67ec",
+      "designHash": "1959ae59aa30a0495ebf44f63d283df2df799f0b9d996863af7480d6dadf1ca5",
       "previewTokensHash": "65968e4cde2548af599ba5696d586914d40cb6ebc3a1cb38aa593c99b0182dc0",
       "width": 1200,
       "height": 606,
@@ -515,7 +518,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "prose-quiet",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "prose",
         "activePageId": "cover",
         "feel": {
@@ -546,8 +549,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "09ab6715844af79e0d6e35b7a54368ab280f2129794055d666d2f80fb45b89fe",
-      "designHash": "60d119e3079931bce47aa9f1b611c06994017101c0be90692ac8ea8738b7c498",
+      "settingsHash": "2ae35a2aba6d3612031c3c6f5068a5adbf660e4936496ea1dc5e111d5afdc276",
+      "designHash": "bf45b64d503d9eb88ecfdb14e32c3682c7a474bed1edeed6e20d043be5c63ed1",
       "previewTokensHash": "3a94252ba9b46e7f8dc6a4cd84f739c42fcd23a255e6daeb2621204cd7ca350e",
       "width": 1200,
       "height": 606,
@@ -572,7 +575,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "prose-photo",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "prose",
         "activePageId": "cover",
         "feel": {
@@ -603,8 +606,8 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "64269da75414ae320cbdb98556161f72ea07b5a95ae5ca9d3b4ff38b229b2ce7",
-      "designHash": "7a72a9e2dd9ff9b2d44f2da024583ced7f085d7b81fed96cab852cac17e18064",
+      "settingsHash": "62f5c13b4dc4252dd853f54aa89f508612f230de2320518a424aaf08a7741615",
+      "designHash": "b7f74cbe65a954efe4a76ec8231873253312f7bc36b489e8efd5d2963e6afad5",
       "previewTokensHash": "8a347ec5309403784b0572c1b6cde0998fdca7a06458014858e5ff9655e00bc1",
       "width": 1200,
       "height": 606,
@@ -629,7 +632,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "story-watercolor",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "story",
         "activePageId": "cover",
         "feel": {
@@ -660,13 +663,13 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "3d70370230328f9911375b800a99aefa96a8efd92d58e3037db9e5a95cd81bdc",
-      "designHash": "21dc17bcdeae8ed91017880998309f5bd912708cb0495ca0fdfc461b76ed10a5",
+      "settingsHash": "e902c9c79292121e8bbf009b41b8cdb32666dc7d1ff6bd9b220cf501587ca195",
+      "designHash": "53e9b81b5d0599173cc6079998fbe99e2c939f10db769af852cbdc91089e2ebb",
       "previewTokensHash": "0b003ab8a76d026e1cba5e8d08675dd6e11603da495c2eadef2c328f1cfec3f1",
       "width": 1200,
       "height": 606,
-      "bytes": 73350,
-      "sha256": "9fd0d830c0e828d3ddfff742828402d6fabe07e3db769a4e67c9383632d63d95"
+      "bytes": 73066,
+      "sha256": "944e9e472707d50f0056821d9469ab302a8184a782334fd0300ad123291db863"
     },
     {
       "bundleId": "story-papercut",
@@ -686,7 +689,7 @@
       "settings": {
         "stateVersion": 3,
         "bundleId": "story-papercut",
-        "bundleVersion": 1,
+        "bundleVersion": 3,
         "familyId": "story",
         "activePageId": "cover",
         "feel": {
@@ -717,13 +720,1153 @@
         ],
         "sourcePrompt": ""
       },
-      "settingsHash": "fdfb66d7f9a952c9bbcc05710bf98d3d01f26f971091697813cc2a520ed49be0",
-      "designHash": "1139267ab99d7e8fd30e3099d52396ad24c886ac75014fb8b773a650f45b814c",
+      "settingsHash": "5de233864b9e38d0bca19aab8180aacdfb146ac97f1cb5e76b5761571e81433a",
+      "designHash": "2c4951d9d51cffd4042e21d7154a4db50e7e4fcff0d86b3659d5d6040cfa406b",
       "previewTokensHash": "6b4e5294189bf921220eab3b127c719f45782487019f00c5d5b19735a5979254",
       "width": 1200,
       "height": 606,
-      "bytes": 82864,
-      "sha256": "9d4b11c9d4b5fa21fd77ab9801cd5fb9260990f684f076be21b3cd7eed10f41c"
+      "bytes": 81002,
+      "sha256": "7c7d0e1fefed3a63ee7dde251bfbe47f966e2136848e16af7d9ab6092a3a6a30"
+    },
+    {
+      "bundleId": "report-editorial-grid",
+      "familyId": "report",
+      "label": "편집형 인사이트 리포트",
+      "file": "assets/document-design-workbench-previews/report-editorial-grid.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "table"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "table": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "report-editorial-grid",
+        "bundleVersion": 3,
+        "familyId": "report",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "airy",
+          "imagePresence": "balanced",
+          "titlePresence": "strong",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "334093e55537eb1c94d8c3643ac4ec8fe99bced5aacdc1d08ba68a5f950da7ac",
+      "designHash": "467daded5f55dd45e4e5402fc6bf203d7cbb7d159689761fe61adf9245a805fc",
+      "previewTokensHash": "d5ed3402093e006d708948d00a607a3f09988c795a3f50d9eb27a4400aa09f7f",
+      "width": 1200,
+      "height": 606,
+      "bytes": 38564,
+      "sha256": "82a6f780148219192e38786ad68219f6f8d86ba41cc38fec4cae155cdbfe03f2"
+    },
+    {
+      "bundleId": "report-field-ledger",
+      "familyId": "report",
+      "label": "현장 기록형 실무 보고",
+      "file": "assets/document-design-workbench-previews/report-field-ledger.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "table"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "table": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "report-field-ledger",
+        "bundleVersion": 3,
+        "familyId": "report",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "compact",
+          "imagePresence": "balanced",
+          "titlePresence": "clear",
+          "decorationPresence": "minimal"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "32a0a40fcea4f80dab48d0c915f9000a86cb128d2523981096dbbb5ab1e33b24",
+      "designHash": "7636ae948d16046635c0d4a9fa9c6ae9b50f4cd65c72b289144a3e456b39e843",
+      "previewTokensHash": "94db5e74a26c8396ea22d26bccc1d321f367fce6ac931df5fc09ae9beccd74c8",
+      "width": 1200,
+      "height": 606,
+      "bytes": 35128,
+      "sha256": "6187856627f9c28ff7e9126e06723ef9725ba999b5fe6ef502d4b47eeeb62800"
+    },
+    {
+      "bundleId": "proposal-brand-story",
+      "familyId": "proposal",
+      "label": "브랜드 스토리 제안",
+      "file": "assets/document-design-workbench-previews/proposal-brand-story.webp",
+      "pageIds": [
+        "cover",
+        "message",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "message": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "proposal-brand-story",
+        "bundleVersion": 3,
+        "familyId": "proposal",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "airy",
+          "imagePresence": "image",
+          "titlePresence": "strong",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "20f2d3a679bd7aa50166a0092e6a137da4fab4df59c5b187133e8137df4da604",
+      "designHash": "0d6a79ddb40cbb89b627491a6c7e763dad13574bf52a79235c17cd196f00022d",
+      "previewTokensHash": "361b055525002700bb2550f062d7a5fb41d19d11ad161b867c6dd641ed289bc7",
+      "width": 1200,
+      "height": 606,
+      "bytes": 45786,
+      "sha256": "e8633ec63361deab22dd185d76f6ee279ee188e95f21039e4b21f35a62f0a9f0"
+    },
+    {
+      "bundleId": "proposal-sprint-canvas",
+      "familyId": "proposal",
+      "label": "스프린트 실행 캔버스",
+      "file": "assets/document-design-workbench-previews/proposal-sprint-canvas.webp",
+      "pageIds": [
+        "cover",
+        "message",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "message": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "proposal-sprint-canvas",
+        "bundleVersion": 3,
+        "familyId": "proposal",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "compact",
+          "imagePresence": "balanced",
+          "titlePresence": "clear",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "5ad51815dd43558224a185989667885d983e2b2e3cfef52fb8e3a01a64a035d5",
+      "designHash": "214f6d3c6675b2c5ff1d89441610af7fc30dc2d6b8b8dc47a2a231eece323247",
+      "previewTokensHash": "123327df3863a7f00d3b37cd800cfa8100ce98f8fb629028bfdd6b2eccab7c4b",
+      "width": 1200,
+      "height": 606,
+      "bytes": 30472,
+      "sha256": "838531cf1389ee5cd51aa1b679677b3049c61f3e7cbdffca36707bf6e6802e8d"
+    },
+    {
+      "bundleId": "learning-visual-atlas",
+      "familyId": "learning",
+      "label": "탐구형 비주얼 아틀라스",
+      "file": "assets/document-design-workbench-previews/learning-visual-atlas.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "learning-visual-atlas",
+        "bundleVersion": 3,
+        "familyId": "learning",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "balanced",
+          "imagePresence": "image",
+          "titlePresence": "clear",
+          "decorationPresence": "rich"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "fcec4f97b79ae6786e1e136220acbd9ac553fc38b87002dd36314cc2247ff554",
+      "designHash": "61d0f5c84bf7025cf4281e4eabf75829947e865d80103b12cbd35c1c5cd46ecf",
+      "previewTokensHash": "7f5b79ef60111ec5961d3aea5b59f186c4f4956b2af702aeff258618974727fb",
+      "width": 1200,
+      "height": 606,
+      "bytes": 60342,
+      "sha256": "bf042de48a44ee5dbddbe79f898bc001366d65f87961c03381e887aafdb65fc6"
+    },
+    {
+      "bundleId": "learning-write-workbook",
+      "familyId": "learning",
+      "label": "쓰기 중심 탐구 워크북",
+      "file": "assets/document-design-workbench-previews/learning-write-workbook.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "learning-write-workbook",
+        "bundleVersion": 3,
+        "familyId": "learning",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "airy",
+          "imagePresence": "text",
+          "titlePresence": "clear",
+          "decorationPresence": "minimal"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "a7191cc6fa134688d891af03205a3b6b987128a74cc1d0e19be00ddaf4e6bee1",
+      "designHash": "39636fbd3e4f09cdb25d81f020c0677f3f19c859c3f09e55a5f15e2e2a19b950",
+      "previewTokensHash": "ad72867dae74ba1ebf012ec7d5d73d1f649c00880c3876d4da841f3ae2a35125",
+      "width": 1200,
+      "height": 606,
+      "bytes": 30270,
+      "sha256": "bea0611dd9b90ef0cf9becebf50eb5a6ca8330bd41d8b33f49d9caadec7a0f81"
+    },
+    {
+      "bundleId": "exam-quick-review",
+      "familyId": "exam",
+      "label": "한눈에 보는 핵심 요약",
+      "file": "assets/document-design-workbench-previews/exam-quick-review.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "question"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "question": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "exam-quick-review",
+        "bundleVersion": 3,
+        "familyId": "exam",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "compact",
+          "imagePresence": "text",
+          "titlePresence": "strong",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "8e5dc9ea92dba9ceaee176535d6ee07fbc9227310941b45eab614de4a53589af",
+      "designHash": "e1bae891935a263c5fd7f99013d7b5c09f866450e790d6d422ad37114e71052b",
+      "previewTokensHash": "c1f148cf49fda08f32cd7faf08fdac814e4ea4ff5d3f8c437b5f93f145f9e436",
+      "width": 1200,
+      "height": 606,
+      "bytes": 29790,
+      "sha256": "f527bdeacea11cac131c269c75e98f28f41e2e10cc36a54b3f56d679139422f2"
+    },
+    {
+      "bundleId": "exam-question-bank",
+      "familyId": "exam",
+      "label": "고밀도 문제은행",
+      "file": "assets/document-design-workbench-previews/exam-question-bank.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "question"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "question": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "exam-question-bank",
+        "bundleVersion": 3,
+        "familyId": "exam",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "compact",
+          "imagePresence": "text",
+          "titlePresence": "strong",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "aff790bde81a596eb05fcb240c9edfcad5b57f153393af3f661bc8dab3d2ca4c",
+      "designHash": "175e744ae900ba286fe5505692476066ccfa2db158c197fe84ad91a3e402c95b",
+      "previewTokensHash": "ad92becfc89c3cac10090d9d9fd251310ec7c6b6c7e0d09512f6b8dc5a5bac87",
+      "width": 1200,
+      "height": 606,
+      "bytes": 30110,
+      "sha256": "63cb897711aa46fc85abf0329cdec06ec6cd6454bf0c4a78f29a06da60739452"
+    },
+    {
+      "bundleId": "prose-letterpress",
+      "familyId": "prose",
+      "label": "활판 인쇄 문학판",
+      "file": "assets/document-design-workbench-previews/prose-letterpress.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "quote"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "quote": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "prose-letterpress",
+        "bundleVersion": 3,
+        "familyId": "prose",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "low",
+          "breathing": "airy",
+          "imagePresence": "text",
+          "titlePresence": "clear",
+          "decorationPresence": "minimal"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "6f6e57bfbe233b3ca482bd6e6428607afc56eca23761cf0058296910e3124b0f",
+      "designHash": "88ccde610c174d51b569bac5ef18a07f9845873613e87f20afc064ecdd5bec5f",
+      "previewTokensHash": "c6734bf32173b460da0bec415e1aba89d75e375c6913412627cf69fdf81654c2",
+      "width": 1200,
+      "height": 606,
+      "bytes": 26868,
+      "sha256": "25748c564866c36560aca33c2a1df2a62b8ba112501d9844f8c823bf56dc1baa"
+    },
+    {
+      "bundleId": "prose-seasonal-journal",
+      "familyId": "prose",
+      "label": "계절 사진 산문",
+      "file": "assets/document-design-workbench-previews/prose-seasonal-journal.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "quote"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 2,
+        "quote": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "prose-seasonal-journal",
+        "bundleVersion": 3,
+        "familyId": "prose",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "airy",
+          "imagePresence": "image",
+          "titlePresence": "quiet",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "0be547a72d201c1a4b943a3856def15cc93455dfae79309c4ca844e5772f5c7d",
+      "designHash": "4fee2d97fdf4bf354ff5147a1ae714813ce92500d73006ecc8abe6e490846417",
+      "previewTokensHash": "baf69d150d882639a3fcb5e17c95fdb66acc86b4e6241b91719843bb8738cbb1",
+      "width": 1200,
+      "height": 606,
+      "bytes": 46726,
+      "sha256": "ca2db58e508e1336e90bac8203acbb9ff3eba936c6d7121d79be7bd2c199cb43"
+    },
+    {
+      "bundleId": "story-night-adventure",
+      "familyId": "story",
+      "label": "달빛 모험 그림책",
+      "file": "assets/document-design-workbench-previews/story-night-adventure.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "dialogue"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "dialogue": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "story-night-adventure",
+        "bundleVersion": 3,
+        "familyId": "story",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "balanced",
+          "imagePresence": "image",
+          "titlePresence": "strong",
+          "decorationPresence": "rich"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "89823308caf3c0f75d19fe217fde21918560794a8b14979dd19b6bac1d8deac1",
+      "designHash": "fb3ff0e6fedb628c07e9b3fa53ef5396c157ca8990cf05141b7db6afb4b0fc77",
+      "previewTokensHash": "388d4572c608dee3df81cc12661b4189c10a6db89cdc25b5406e5447efaad497",
+      "width": 1200,
+      "height": 606,
+      "bytes": 89008,
+      "sha256": "a70f528428fa85bb38920705cfbb3a91c2b7322ebe3c1f545562a566b217788c"
+    },
+    {
+      "bundleId": "story-comic-panels",
+      "familyId": "story",
+      "label": "네 컷 이야기책",
+      "file": "assets/document-design-workbench-previews/story-comic-panels.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "dialogue"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "dialogue": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "story-comic-panels",
+        "bundleVersion": 3,
+        "familyId": "story",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "balanced",
+          "imagePresence": "image",
+          "titlePresence": "strong",
+          "decorationPresence": "rich"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "8b73f177f89fce9ff8e13054487f0185933b0d631e6d463f1ab19279813446e8",
+      "designHash": "f619042cac7b81ce34cd12554dcac2c50df9ea81a4f1cbb7ed6ed5607180e79d",
+      "previewTokensHash": "3528e07ebf62c5b53580bc79575e26aad0ef2b6c6e9f945e086b66630311642c",
+      "width": 1200,
+      "height": 606,
+      "bytes": 116244,
+      "sha256": "e0086e0c9dfcb680ac27ef5afc6a78d2f25e537c5a27e72f9d51594dbc2aa8a7"
+    },
+    {
+      "bundleId": "report-executive-brief",
+      "familyId": "report",
+      "label": "임원 의사결정 브리프",
+      "file": "assets/document-design-workbench-previews/report-executive-brief.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "table"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "table": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "report-executive-brief",
+        "bundleVersion": 3,
+        "familyId": "report",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "balanced",
+          "imagePresence": "text",
+          "titlePresence": "strong",
+          "decorationPresence": "minimal"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "9643544a6821525656ec33fe02a3c98ec1ae8203cf7dac3c1e5403b5f7c60695",
+      "designHash": "c0a96a9c795211d2229e4c8e9057c75546705850f4a5d87bc53b60b00aeaa2e8",
+      "previewTokensHash": "c70e1dc7d9347ec56b263de8ad1bd7c1f6db1dcc8d8e0330556aae783b6cb838",
+      "width": 1200,
+      "height": 606,
+      "bytes": 40568,
+      "sha256": "9fbfd8f2503ff99ba3cb201f01874dc555d7fef39a8742f0cbcc75f3a1558a37"
+    },
+    {
+      "bundleId": "report-audit-matrix",
+      "familyId": "report",
+      "label": "감사·점검 결과 보고",
+      "file": "assets/document-design-workbench-previews/report-audit-matrix.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "table"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "table": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "report-audit-matrix",
+        "bundleVersion": 3,
+        "familyId": "report",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "compact",
+          "imagePresence": "text",
+          "titlePresence": "clear",
+          "decorationPresence": "minimal"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "1fa58de23e95277d8c2c4fe15351cae974b3da1add5f66d869f6bec80c3ed9b9",
+      "designHash": "fed135c09ca44cd191102e7d4d29b279bb7098d771dacd43bc4762f9048cb802",
+      "previewTokensHash": "536a7925bb71db2823b5032ee40de5dfdeb5b34286502caf22cde124bacb182c",
+      "width": 1200,
+      "height": 606,
+      "bytes": 35852,
+      "sha256": "1ee2ffa703ec8c4aa193c7785d6307cb4c47e7c03c4f4300955592b2974597c1"
+    },
+    {
+      "bundleId": "report-research-monograph",
+      "familyId": "report",
+      "label": "연구·분석 보고서",
+      "file": "assets/document-design-workbench-previews/report-research-monograph.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "table"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "table": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "report-research-monograph",
+        "bundleVersion": 3,
+        "familyId": "report",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "low",
+          "breathing": "airy",
+          "imagePresence": "balanced",
+          "titlePresence": "quiet",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "bf0f21143e973bbacc244743c0d54ab45f851c48c4380715924acf3425727a23",
+      "designHash": "0e357aaa77a71a887473217fcb8b95a1559d86365f75cabc1c0ad32096c36cd5",
+      "previewTokensHash": "5a038bc1a60c3f79fe8dba93008f1cc1c99e7b94ce8449712d7f823a7ec5d3eb",
+      "width": 1200,
+      "height": 606,
+      "bytes": 34784,
+      "sha256": "fc3ab2851648139826a8d186b8702fec4796ad150e7ac2adc7733ebcb3353ecc"
+    },
+    {
+      "bundleId": "report-operations-dashboard",
+      "familyId": "report",
+      "label": "운영 성과 대시보드",
+      "file": "assets/document-design-workbench-previews/report-operations-dashboard.webp",
+      "pageIds": [
+        "cover",
+        "body",
+        "table"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "body": 1,
+        "table": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "report-operations-dashboard",
+        "bundleVersion": 3,
+        "familyId": "report",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "compact",
+          "imagePresence": "text",
+          "titlePresence": "strong",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "2c46f3b0f6e468aa62cb0c04580d799a936e3875752dea4f73a266c50bea44aa",
+      "designHash": "47836b993fbeca3092540f1057d0439c6ce969dc0ae470b9a192d960fc00e5ea",
+      "previewTokensHash": "02065f456c5a44f08eadf955887abd9ac14f437c16ee307df35793c078f2fe30",
+      "width": 1200,
+      "height": 606,
+      "bytes": 41282,
+      "sha256": "add7b3e8dd32914e8da1bbce2795c3dd6765271c484e4b2ba1ff326b5217cc8c"
+    },
+    {
+      "bundleId": "proposal-tender-response",
+      "familyId": "proposal",
+      "label": "공모·입찰 제안서",
+      "file": "assets/document-design-workbench-previews/proposal-tender-response.webp",
+      "pageIds": [
+        "cover",
+        "message",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "message": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "proposal-tender-response",
+        "bundleVersion": 3,
+        "familyId": "proposal",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "compact",
+          "imagePresence": "text",
+          "titlePresence": "strong",
+          "decorationPresence": "minimal"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "015516df58572cd58503d1e2f2820a0c439273fc9e711b6d9c294a4b4d8dbd61",
+      "designHash": "9e964b246f54bf95b8bf37c13aa965940ea994af967e213adf141ceab0155e35",
+      "previewTokensHash": "5b23151c3b710c59471b0b6237727797505784b7f2343aa91023cab2fd0af60c",
+      "width": 1200,
+      "height": 606,
+      "bytes": 34616,
+      "sha256": "24649fa145697be91c6052a1d91ad9dd203c6fe3758f0c749809b0ec40e32133"
+    },
+    {
+      "bundleId": "proposal-investment-case",
+      "familyId": "proposal",
+      "label": "투자·사업성 제안",
+      "file": "assets/document-design-workbench-previews/proposal-investment-case.webp",
+      "pageIds": [
+        "cover",
+        "message",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "message": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "proposal-investment-case",
+        "bundleVersion": 3,
+        "familyId": "proposal",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "balanced",
+          "imagePresence": "balanced",
+          "titlePresence": "strong",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "be5d4f6f6769635f5cc3cead0c5f74bd4d8175e478189b0c19d2be8b769d5cb2",
+      "designHash": "bd2f3d45052da17dcf8f9c2de329e0ba85c7151db53bd675ac54f5353096270d",
+      "previewTokensHash": "e375fc3da9f0da3bf8a33caeea2c9a9e04aa606715bc650a12e5e4389d53eba7",
+      "width": 1200,
+      "height": 606,
+      "bytes": 35776,
+      "sha256": "d7be8eda740b652463639d826dbc26fb27caab00c08754fb805a8892d501a480"
+    },
+    {
+      "bundleId": "proposal-service-blueprint",
+      "familyId": "proposal",
+      "label": "서비스 설계 제안",
+      "file": "assets/document-design-workbench-previews/proposal-service-blueprint.webp",
+      "pageIds": [
+        "cover",
+        "message",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "message": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "proposal-service-blueprint",
+        "bundleVersion": 3,
+        "familyId": "proposal",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "balanced",
+          "breathing": "airy",
+          "imagePresence": "balanced",
+          "titlePresence": "clear",
+          "decorationPresence": "balanced"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "63546ca19293a9f430df5a442f105b2327a07fcd77290abed48ec572b6cf4026",
+      "designHash": "e333795ed32ce60ed83b4c4061d1c528bb48e91ee1014bc07017a74bc33ddb40",
+      "previewTokensHash": "9651afa9f79dc35884950f2f3c22185eb78c3f5e2a45921f92c8d7e899cf9af9",
+      "width": 1200,
+      "height": 606,
+      "bytes": 29964,
+      "sha256": "706bb97d0da228eed2ad1c9e4a082677e5ad02c47bedf07faa5d561fdde7cd40"
+    },
+    {
+      "bundleId": "proposal-creative-concept",
+      "familyId": "proposal",
+      "label": "브랜드·콘텐츠 콘셉트북",
+      "file": "assets/document-design-workbench-previews/proposal-creative-concept.webp",
+      "pageIds": [
+        "cover",
+        "message",
+        "diagram"
+      ],
+      "continuationCounts": {
+        "cover": 1,
+        "message": 1,
+        "diagram": 1
+      },
+      "settings": {
+        "stateVersion": 3,
+        "bundleId": "proposal-creative-concept",
+        "bundleVersion": 3,
+        "familyId": "proposal",
+        "activePageId": "cover",
+        "feel": {
+          "colorPresence": "high",
+          "breathing": "airy",
+          "imagePresence": "image",
+          "titlePresence": "strong",
+          "decorationPresence": "rich"
+        },
+        "overrides": {
+          "colors": {},
+          "fonts": {},
+          "typographyScope": {},
+          "components": {}
+        },
+        "physicalSpec": {
+          "sizeId": "A4",
+          "widthMm": 210,
+          "heightMm": 297,
+          "orientation": "portrait",
+          "bindingId": "none",
+          "duplex": "single",
+          "spreadMode": "single-pages",
+          "bleedMm": 0
+        },
+        "formats": [
+          "PDF"
+        ],
+        "sourcePrompt": ""
+      },
+      "settingsHash": "f67c8b8bceb366bb69f07767d93cf9077223719561bb89938e15b61666121c2e",
+      "designHash": "09897e4525c733d5f4f7c469a1885f674ddc97aa0ab1c3af70b234950e38e54d",
+      "previewTokensHash": "e9e2dcaaa464c0f62ba332f6c43487e77c53bc1fa946d7e72bdf06a7072b3ee7",
+      "width": 1200,
+      "height": 606,
+      "bytes": 40192,
+      "sha256": "c26a1f02dc477703288dc62e54ca0db58a5bc1e4222e6a08b351b2808b7c7560"
     }
   ],
   "guides": [
@@ -739,13 +1882,13 @@
     },
     {
       "file": "assets/guides/document-design-workbench-mobile.webp",
-      "description": "390px mobile gallery showing the two report bundles",
+      "description": "390px mobile gallery showing the report bundle collection",
       "viewport": {
         "width": 390,
         "height": 844
       },
-      "bytes": 29164,
-      "sha256": "9a38052b9ef36bbc784741e019ec7f0eaff05013632557463f403f3d4566d525"
+      "bytes": 29092,
+      "sha256": "2a5569b9b24e1e47979679daa5fd720870783f3daf936870355ff7d46d941ad4"
     },
     {
       "file": "assets/guides/document-design-workbench-controls.webp",
@@ -754,8 +1897,8 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 28998,
-      "sha256": "c5e52bc79f9d4ae9d21276e5d4b2592d61b1cf54f5aa78f4a3284046347174ef"
+      "bytes": 29016,
+      "sha256": "4a270f646788833b42fd1bc63262f4a5ea7cde18643003f6a8b044c0d135e0f8"
     }
   ]
 }

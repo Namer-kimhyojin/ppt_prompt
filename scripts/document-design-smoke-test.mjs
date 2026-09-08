@@ -149,6 +149,14 @@ try {
   if (await page.locator('#documentDesignApp[data-workbench="ready"]').count()) {
     record(await page.locator("#documentDesignApp").isVisible(), "Document workbench is not visible");
     record(await page.evaluate(() => window.PromptDeckDocumentDesign.build().spec.schema === "promptdeck-document-design/3.0"), "Workbench contract is not active");
+    const bundleCounts = await page.evaluate(() => {
+      const catalog = window.PromptDeckDocumentBundles;
+      return { bundles: catalog.bundles.length, pages: catalog.bundles.reduce((sum, bundle) => sum + bundle.pages.length, 0), families: Object.fromEntries(catalog.families.map((family) => [family.id, catalog.bundles.filter((bundle) => bundle.familyId === family.id).length])) };
+    });
+    const expectedFamilies = { report: 8, proposal: 8, learning: 4, exam: 4, prose: 4, story: 4 };
+    record(bundleCounts.bundles === 32 && bundleCounts.pages === 192 && Object.keys(bundleCounts.families).length === 6 && Object.entries(expectedFamilies).every(([id, count]) => bundleCounts.families[id] === count), `Workbench does not provide 32 bundles / 192 pages with the expected family counts: ${JSON.stringify(bundleCounts)}`);
+    await page.locator("#dwBundleGrid .dw-bundle-card").first().waitFor();
+    record((await page.locator("#dwBundleGrid .dw-bundle-card").count()) === 8, "The default report family does not display its eight design specimens");
     console.log("Legacy catalog/contract regression passed; current UI is covered by document-design:workbench:test.");
   } else {
   record(await page.locator("#documentDesignApp .document-design-shell").isVisible(), "Document design shell is not visible");

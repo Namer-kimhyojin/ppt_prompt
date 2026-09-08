@@ -79,9 +79,32 @@
     // Color degree changes large surfaces; explicit palette swatches remain exact.
     const fonts = { ...bundle.fonts, ...state.overrides.fonts };
     const scope = { heading: fonts.heading, body: fonts.body, numeral: fonts.heading, table: fonts.body, caption: fonts.body, quote: fonts.body, ...state.overrides.typographyScope };
+    const variantComponents = {
+      "editorial-report": { tableStyle: "plain", chartType: "line", backgroundScope: "chapter" },
+      "field-ledger": { tableStyle: "striped", chartType: "bar", imageStyle: "muted" },
+      "brand-story": { tableStyle: "plain", chartType: "donut", backgroundScope: "chapter" },
+      "sprint-canvas": { tableStyle: "striped", chartType: "bar", diagramStyle: "hierarchy" },
+      "visual-atlas": { tableStyle: "plain", chartType: "donut", diagramStyle: "hierarchy", backgroundScope: "chapter" },
+      "write-workbook": { tableStyle: "rules", chartType: "bar", backgroundScope: "none" },
+      "quick-review": { tableStyle: "plain", chartType: "line", backgroundScope: "chapter" },
+      "question-bank": { tableStyle: "striped", chartType: "bar", backgroundScope: "none" },
+      letterpress: { tableStyle: "plain", backgroundScope: "none", imageStyle: "muted" },
+      "seasonal-journal": { tableStyle: "plain", imageStyle: "muted", backgroundScope: "chapter" },
+      "night-adventure": { backgroundScope: "all", imageStyle: "original" },
+      "comic-panels": { backgroundScope: "all", imageStyle: "original", iconStyle: "solid" },
+      "executive-brief": { tableStyle: "plain", chartType: "donut", backgroundScope: "chapter" },
+      "audit-matrix": { tableStyle: "striped", chartType: "bar", backgroundScope: "none" },
+      "research-monograph": { tableStyle: "rules", chartType: "line", imageStyle: "muted", backgroundScope: "none" },
+      "operations-dashboard": { tableStyle: "striped", chartType: "bar", iconStyle: "solid", backgroundScope: "chapter" },
+      "tender-response": { tableStyle: "striped", chartType: "bar", diagramStyle: "hierarchy", backgroundScope: "none" },
+      "investment-case": { tableStyle: "plain", chartType: "line", iconStyle: "solid", backgroundScope: "chapter" },
+      "service-blueprint": { tableStyle: "rules", chartType: "bar", diagramStyle: "flow", backgroundScope: "chapter" },
+      "creative-concept": { tableStyle: "plain", chartType: "donut", imageStyle: "original", backgroundScope: "all" },
+    };
     const componentStyles = {
       tableStyle: bundle.variant === "data" ? "striped" : "rules", chartType: "bar", iconStyle: "line",
-      backgroundScope: "cover", imageStyle: "original", diagramStyle: "flow", ...state.overrides.components,
+      backgroundScope: "cover", imageStyle: "original", diagramStyle: "flow",
+      ...(variantComponents[bundle.variant] || {}), ...state.overrides.components,
     };
     const physical = state.physicalSpec;
     const px = 96 / 25.4;
