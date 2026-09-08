@@ -7,7 +7,7 @@ import path from "node:path";
 import { chromium } from "playwright";
 const root = path.resolve(import.meta.dirname, "..");
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css", ".svg": "image/svg+xml", ".webp": "image/webp", ".woff2": "font/woff2", ".png": "image/png" };
-const csp = readFileSync(path.join(root, "static-pages/_headers"), "utf8").match(/Content-Security-Policy: (.+)/)?.[1]?.trim();
+const csp = readFileSync(path.join(root, "static-pages/_headers"), "utf8").match(/Content-Security-Policy: (.+)/)?.[1]?.trim().replace("base-uri 'self'", "base-uri 'none'");
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, "http://localhost"), file = path.resolve(root, ["/", "/app"].includes(url.pathname) ? "index.html" : `.${decodeURIComponent(url.pathname)}`);
   if (!file.startsWith(root + path.sep) || !existsSync(file)) { res.writeHead(404).end(); return; }
@@ -21,6 +21,8 @@ try {
   try { browser = await chromium.launch({ channel: "msedge", headless: true }); } catch { browser = await chromium.launch({ headless: true }); }
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   const errors = []; page.on("pageerror", (e) => errors.push(e.message));
+  // This asset-only server omits application APIs; enforce CSP regressions here.
+  page.on("console", (message) => { if (message.type() === "error" && /Content Security Policy|base-uri|Refused to/.test(message.text())) errors.push(message.text()); });
   await page.goto(`http://127.0.0.1:${server.address().port}/app?tab=documentDesign`, { waitUntil: "networkidle" });
   const model = await page.evaluate(() => {
     const r = PromptDeckDocumentResolver, l = PromptDeckDocumentLibrary, s = PromptDeckDocumentStudio;

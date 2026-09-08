@@ -3,7 +3,7 @@
   "designSchema": "DocumentDesignSpec/3.0",
   "bundleVersion": 3,
   "rendererVersion": 3,
-  "generatedAt": "2026-09-08T13:31:35.573Z",
+  "generatedAt": "2026-09-08T13:55:20.604Z",
   "generator": "scripts/generate-document-workbench-previews.mjs",
   "captureEngine": "Chromium browser screenshots, converted to WebP",
   "rendererHash": "6da98b7221618b9fd7a0454f5e321288cd275e0fea90e1d0c9aa639441496198",
@@ -18,7 +18,7 @@
     "styles/document-design-variants.css": "b05e8b27b2634b942ec9b6ae97680125eeef5c7b0678a21192c0aa406307fed1",
     "styles/document-design-layouts.css": "0d844dd9a21b2ee678f4182c4ea24f9f91a379eb1c31995fdd334f3ea74ad0b0",
     "styles/document-design-fonts.css": "9dea58f58852824db94545ec4317482b0ec2bc55e59d642360619a8a5d06dee0",
-    "index.html": "898ae7ad9537d7f7cf0b7862c7317ca1fb3169446d17211d3c711bb0e974b662",
+    "index.html": "d2e265eb759c1a6da2c144fed6ec47f597539e3de703877292532103b5e1cb0c",
     "src/document-design-workbench.js": "96ded0a1dee2fdcf43c6f39dc9b52d4932885f2e3fc026d48ac1421cc95eef02",
     "src/document-design-palette-modal.js": "0afd82037be20d524034efede6c711ffe9822b9fd38832f58bda55235cbc9680",
     "src/document-design-layout-workbench.js": "f9ca3e5e10266e857210fb2911122a29b9785f684be891fbb51c770667a545ed",
@@ -867,8 +867,8 @@
       "previewTokensHash": "6b4e5294189bf921220eab3b127c719f45782487019f00c5d5b19735a5979254",
       "width": 1200,
       "height": 606,
-      "bytes": 82730,
-      "sha256": "41e1187963e583e58d999a1f6fa5d92f46cfcf66a3183b29d8af4839d08f82bb"
+      "bytes": 81274,
+      "sha256": "222de586f5266551d52c1deb42524085d30d312cd782f4fd84d6bcb40e60d8a8"
     },
     {
       "bundleId": "report-editorial-grid",
@@ -2279,8 +2279,8 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 31828,
-      "sha256": "bd79802340a7a90751fb77cd3d5f51fdca6828979122ba580cfc711b0d2d45a4"
+      "bytes": 32100,
+      "sha256": "af48c884ed537d9c7e932748d4236a6aee962c8a2b88ef258e7f961cbf9efba0"
     },
     {
       "file": "assets/guides/document-design-workbench-controls.webp",
@@ -2289,8 +2289,8 @@
         "width": 390,
         "height": 844
       },
-      "bytes": 28318,
-      "sha256": "bac50c690806f8bbb5c27d2d18fd90242e28483cfc426c474f331efc1e6624b7"
+      "bytes": 28966,
+      "sha256": "61393eaddff70d2d7d00c8fe07bda66f77dd72d6e8ce4ada87c108203f301ba5"
     },
     {
       "file": "assets/guides/document-design-workbench-layouts-mobile.webp",

@@ -5,6 +5,7 @@ import { existsSync, readFileSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
@@ -114,11 +115,38 @@ function sha256(buffer) {
 }
 
 function releaseAssetHash(filename, buffer) {
+  if (["about.html", "ai-policy.html", "privacy.html"].includes(filename)) {
+    return sha256(Buffer.from(restoreProtectedEmails(Buffer.from(buffer).toString("utf8")), "utf8"));
+  }
   if (filename !== "app.html") return sha256(buffer);
   const normalizedHtml = Buffer.from(buffer)
     .toString("utf8")
     .replace(/\snonce=(?:"[^"]*"|'[^']*')/gu, "");
   return sha256(Buffer.from(normalizedHtml, "utf8"));
+}
+
+function restoreProtectedEmails(html) {
+  let restored = 0;
+  const decode = (hex) => {
+    assert(/^[0-9a-f]{2}(?:[0-9a-f]{2})+$/u.test(hex), "Invalid Cloudflare email encoding");
+    const key = parseInt(hex.slice(0, 2), 16);
+    return Buffer.from(hex.slice(2).match(/../gu).map((pair) => parseInt(pair, 16) ^ key)).toString("utf8");
+  };
+  const escape = (value) => value.replace(/[&<>"']/gu, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+  html = html.replace(/<a href="\/cdn-cgi\/l\/email-protection#([0-9a-f]+)"><span class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email&#160;protected\]<\/span><\/a>/gu, (_, href, display) => {
+    const email = decode(href);
+    assert(email === decode(display), "Protected email link and display disagree");
+    restored += 1;
+    return `<a href="mailto:${escape(email)}">${escape(email)}</a>`;
+  });
+  html = html.replace(/<a href="\/cdn-cgi\/l\/email-protection" class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email&#160;protected\]<\/a>/gu, (_, value) => { restored += 1; return escape(decode(value)); });
+  assert(!/__cf_email__|\/cdn-cgi\/l\/email-protection/u.test(html), "Unrecognized Cloudflare email protection markup");
+  if (restored) {
+    let scripts = 0;
+    html = html.replace(/<script data-cfasync="false" src="\/cdn-cgi\/scripts\/[0-9a-f]+\/cloudflare-static\/email-decode\.min\.js"><\/script>/gu, () => { scripts += 1; return ""; });
+    assert(scripts === 1, "Unexpected Cloudflare email decoder count");
+  }
+  return html;
 }
 
 function sleep(milliseconds) {
@@ -743,6 +771,7 @@ async function main() {
   console.log(`[release] Releasing ${head} (${commitMessage})`);
   if (previous) console.log(`[release] Previous production: ${previous.Source} ${previous.Deployment}`);
 
+  run(process.execPath, ["scripts/static-release-hash-test.mjs"]);
   for (const script of ["diagram:test", "document-design:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
     runNpm(["run", script]);
   }
@@ -805,7 +834,9 @@ async function main() {
   console.log(JSON.stringify(report, null, 2));
 }
 
-main().catch((error) => {
+export { releaseAssetHash, getDeployments, verifyAssetHashes, verifyHttpContracts, verifyBrowsers };
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(`\n[release] FAILED: ${error.stack || error.message}`);
   process.exitCode = 1;
 });

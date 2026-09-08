@@ -97,11 +97,9 @@
       doc.open();
       doc.write("<!doctype html><html lang='ko'><head><meta charset='utf-8'></head><body></body></html>");
       doc.close();
-      const base = doc.createElement("base");
-      base.href = document.baseURI;
       const style = doc.createElement("style");
       style.textContent = "html,body{margin:0;padding:0;background:transparent;color-scheme:light}body{width:max-content;}";
-      doc.head.append(base, style);
+      doc.head.append(style);
       await withSignal(Promise.all(["document-design-fonts.css", "document-design-pages.css", "document-design-variants.css", "document-design-layouts.css"].map((filename) => new Promise((resolve, reject) => {
         const current = [...document.querySelectorAll("link[rel='stylesheet']")].find((link) => new URL(link.href).pathname.endsWith(`/${filename}`));
         const link = doc.createElement("link");
@@ -140,6 +138,8 @@
         options.onProgress?.(`참고 이미지 ${index + 1}/${pageIds.length} · ${definition.label || definition.title || id}`);
         const original = renderer.renderPage(resolved.design, resolved.previewTokens, id);
         if (!(original instanceof HTMLElement)) throw new Error("문서 페이지를 표시하지 못했습니다.");
+        // Resolve image references before adoption; production forbids <base>.
+        original.querySelectorAll("img[src]").forEach((image) => { image.src = new URL(image.getAttribute("src"), document.baseURI).href; });
         stage.replaceChildren(original);
         await readyForCapture(renderer, original, doc, options.signal);
         checkCancelled(options.signal);

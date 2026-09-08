@@ -18,7 +18,7 @@ async function loadPlaywright() {
 const { chromium } = await loadPlaywright();
 const root = path.resolve(import.meta.dirname, "..");
 const expectedFamilyCounts = { report: 8, proposal: 8, learning: 4, exam: 4, prose: 4, story: 4 };
-const csp = readFileSync(path.join(root, "static-pages/_headers"), "utf8").match(/Content-Security-Policy: (.+)/)?.[1]?.trim();
+const csp = readFileSync(path.join(root, "static-pages/_headers"), "utf8").match(/Content-Security-Policy: (.+)/)?.[1]?.trim().replace("base-uri 'self'", "base-uri 'none'");
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".woff2": "font/woff2" };
 const server = http.createServer((request, response) => {
   const requested = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
@@ -38,6 +38,7 @@ try {
   const errors = [];
   const documentAssets = [];
   page.on("pageerror", (error) => errors.push(error.stack || error.message));
+  page.on("console", (message) => { if (message.type() === "error" && /base-uri/.test(message.text())) errors.push(message.text()); });
   page.on("request", (request) => { if (/\/assets\/(?:document-design-images|fonts\/document-design)\//.test(request.url())) documentAssets.push(request.url()); });
   await page.goto(`http://127.0.0.1:${server.address().port}/index.html`, { waitUntil: "networkidle" });
   assert.equal(documentAssets.length, 0, `Inactive document design loaded image/font assets: ${documentAssets.join(", ")}`);
