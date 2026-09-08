@@ -237,6 +237,9 @@ async function verifyAssetHashes(origin, head) {
     "src/slide-style-presets/visual-spectrum.js",
     "src/slide-style-presets/proposal-planning.js",
     "src/slide-style-catalog.js",
+    "src/pptx-prompt-contract.js",
+    "src/pptx-prompt.js",
+    "styles/pptx-prompt.css",
     "styles/data-diagram.css",
     "src/static-mode.js",
     "src/admin.js",
@@ -772,7 +775,7 @@ async function main() {
   if (previous) console.log(`[release] Previous production: ${previous.Source} ${previous.Deployment}`);
 
   run(process.execPath, ["scripts/static-release-hash-test.mjs"]);
-  for (const script of ["diagram:test", "document-design:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
+  for (const script of ["pptx-prompt:test", "diagram:test", "document-design:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
     runNpm(["run", script]);
   }
   run(process.execPath, ["scripts/workers-ai-mixer-test.mjs"]);

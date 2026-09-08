@@ -94,6 +94,14 @@
       actionHost: ".form-image-result-stack",
       stickyActionPanel: false,
     },
+    pptxPrompt: {
+      button: document.getElementById("tabBtnPptxPrompt"),
+      pane: document.getElementById("panePptxPrompt"),
+      group: "deck",
+      actions: "pptxPrompt",
+      actionHost: ".pp-result-stack",
+      stickyActionPanel: false,
+    },
     documentDesign: {
       button: document.getElementById("tabBtnDocumentDesign"),
       pane: document.getElementById("paneDocumentDesign"),
@@ -136,6 +144,12 @@
   const designerActions = tabActions ? Array.from(tabActions.children) : [];
   let currentActionHost = tabActions?.parentElement || null;
   const actionSets = {
+    pptxPrompt: [
+      { label: "프롬프트 보기", targetId: "pptxPromptGenerateBtn", className: "btn secondary" },
+      { label: "프롬프트 복사", targetId: "pptxPromptCopyBtn", className: "btn primary" },
+      { label: "TXT 저장", targetId: "pptxPromptDownloadBtn", className: "btn secondary" },
+      { label: "초기화", targetId: "pptxPromptResetBtn", className: "btn ghost", placement: "more" },
+    ],
     commonPrompt: [
       { label: "디자인 가이드 생성", targetId: "commonPromptGenerateBtn", className: "btn primary" },
       { label: "분리기로 보내기", targetId: "commonPromptSendGeneratorBtn", className: "btn secondary" },
@@ -224,6 +238,7 @@
   };
 
   const mobilePrimaryTargets = {
+    pptxPrompt: "pptxPromptCopyBtn",
     generator: "genGenerateBtn",
     promotion: "promotionCopyPromptBtn",
     conceptMixer: "btnMixerRandom",
