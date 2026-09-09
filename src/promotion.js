@@ -104,6 +104,22 @@
   let recommendationRefreshTimer = null;
   let quickFillLastParsed = null;
   let quickFillParsedRaw = null;
+  let workspace = null;
+  let undoSnapshot = null;
+  let quickFillReturnFocus = null;
+  let statusTimer = null;
+
+  function rememberUndo() {
+    undoSnapshot = createSnapshot();
+  }
+
+  function undoLastChange() {
+    if (!undoSnapshot) return;
+    const previous = undoSnapshot;
+    undoSnapshot = createSnapshot();
+    applyLoadedSettings(previous);
+    status("이전 작업 상태로 되돌렸습니다.", "success");
+  }
   // ─────────────────────────────────────────────────────────────
 
   const LAYOUT_CHOICE_LABELS = {
@@ -149,28 +165,28 @@
       id: "support-recruit",
       label: "모집·접수 전환",
       keywords: ["지원사업", "모집", "참가기업", "참여기업", "수혜기업", "지원대상", "신청", "접수", "접수기간", "신청기간", "신청방법", "바우처", "보조금", "지원금", "사업비", "공고", "모집공고", "마감", "마감일", "선착순", "소상공인", "중소기업", "중견기업", "스타트업", "창업", "예비창업", "입주기업", "참여자", "대상자", "선발", "선정", "혜택", "자격", "요건"],
-      mediums: ["med-photo-3d-icons", "med-real-cgi-keyvisual", "med-ar-interface-composite", "med-pub-grant-recruit-card"],
+      mediums: ["med-pub-grant-recruit-card", "med-pub-grant-announce", "med-pub-photo-clean", "med-pub-application-step-guide"],
       reason: "신청 행동과 핵심 혜택을 빠르게 읽히게 하는 홍보형 구성이 잘 맞습니다.",
     },
     {
       id: "technology-innovation",
       label: "기술·혁신 홍보",
       keywords: ["기술", "ai", "a.i", "인공지능", "생성형", "데이터", "빅데이터", "클라우드", "스마트", "디지털", "디지털전환", "dx", "ict", "it", "플랫폼", "솔루션", "시스템", "서비스형", "r&d", "연구", "개발", "실증", "검증", "고도화", "혁신", "전환", "자동화", "로봇", "iot", "사물인터넷", "메타버스", "ar", "vr", "xr", "블록체인", "보안", "사이버", "핀테크", "바이오", "헬스케어", "스마트시티", "스마트공장", "제조혁신"],
-      mediums: ["med-real-hologram-hybrid", "med-human-3d-data", "med-arch-photo-3d-overlay", "med-real-cgi-keyvisual"],
-      reason: "실사 기반 신뢰감에 3D 데이터·인터페이스를 더해 기술성을 직관적으로 보여줍니다.",
+      mediums: ["med-pub-tech-node", "med-public-geometric-modern", "med-pub-photo-cool", "med-real-cgi-keyvisual"],
+      reason: "기술 구조와 연결 관계를 보여주는 그래픽으로 혁신 메시지를 전달합니다.",
     },
     {
       id: "event-conference",
       label: "행사·포럼 안내",
       keywords: ["행사", "포럼", "컨퍼런스", "콘퍼런스", "세미나", "웨비나", "설명회", "간담회", "토론회", "공청회", "워크숍", "박람회", "전시", "전시회", "페어", "데모데이", "피칭", "IR", "네트워킹", "밋업", "상담회", "매칭데이", "참가", "참석", "초청", "초대", "등록", "사전등록", "일정", "장소", "연사", "패널", "부스", "현장", "온오프라인", "온라인", "오프라인"],
-      mediums: ["med-3d-motion-still", "med-real-cgi-keyvisual", "med-human-3d-data", "med-pub-conference-dark"],
+      mediums: ["med-pub-event-bold", "med-pub-conference-dark", "med-pub-photo-warm", "med-pub-local-program-poster"],
       reason: "행사의 스케일과 현장감을 살리면서 날짜·장소·CTA를 분리하기 쉽습니다.",
     },
     {
       id: "education-training",
       label: "교육·훈련 모집",
       keywords: ["교육", "훈련", "강의", "강좌", "특강", "세션", "클래스", "과정", "커리큘럼", "교육원", "캠프", "부트캠프", "워크숍", "워크샵", "수강", "수강생", "교육생", "학습", "실습", "멘토링", "코칭", "컨설팅", "자격증", "역량강화", "취업", "채용", "진로", "청년", "대학생", "재직자", "예비창업자", "창업교육"],
-      mediums: ["med-real-clay-hybrid", "med-photo-3d-icons", "med-human-3d-data", "med-pub-edu-bright"],
+      mediums: ["med-pub-edu-bright", "med-pub-youth-business-support", "med-public-soft-color", "med-pub-photo-warm"],
       reason: "친근한 입체 오브젝트와 명확한 정보 블록으로 참여 장벽을 낮춥니다.",
     },
     {
@@ -184,7 +200,7 @@
       id: "product-service",
       label: "제품·서비스 런칭",
       keywords: ["출시", "런칭", "론칭", "오픈", "개시", "공개", "서비스", "서비스오픈", "앱", "어플", "웹", "웹사이트", "플랫폼", "포털", "제품", "상품", "브랜드", "솔루션", "툴", "기능", "업데이트", "리뉴얼", "베타", "사전예약", "예약", "체험", "무료체험", "시범서비스", "구독", "멤버십", "패키지", "프로모션", "할인", "이벤트", "혜택"],
-      mediums: ["med-product-photo-cgi", "med-ar-interface-composite", "med-3d-motion-still", "med-real-cgi-keyvisual"],
+      mediums: ["med-pub-service-launch-guide", "med-pub-photo-clean", "med-public-minimal-brand", "med-product-photo-cgi"],
       reason: "제품·서비스의 사용 장면과 기능을 상업 광고처럼 선명하게 보여줍니다.",
     },
     {
@@ -198,7 +214,7 @@
       id: "public-notice",
       label: "공지·안내",
       keywords: ["공지", "안내", "알림", "공문", "고지", "통보", "안내문", "안내사항", "절차", "방법", "이용방법", "신청방법", "제출방법", "기간", "운영기간", "대상", "자격", "조건", "문의", "문의처", "연락처", "유의", "주의", "필독", "확인", "체크", "체크리스트", "준비물", "서류", "제출서류", "증빙", "FAQ", "자주묻는질문", "변경", "연장", "취소", "휴무", "점검", "안전", "예방"],
-      mediums: ["med-photo-3d-icons", "med-pub-safety-notice", "med-pub-application-step-guide", "med-ar-interface-composite"],
+      mediums: ["med-pub-safety-notice", "med-pub-application-step-guide", "med-pub-faq-notice-card", "med-pub-deadline-alert"],
       reason: "복잡한 안내 정보를 아이콘·단계·카드 구조로 정리하기 좋습니다.",
     },
   ];
@@ -243,8 +259,8 @@
     {
       id: "numbers-proof",
       label: "수치·성과 근거 강조",
-      keywords: ["성과", "실적", "선정", "수상", "인증", "평가", "증가", "상승", "개선", "감소", "절감", "달성", "돌파", "누적", "kpi", "통계", "지표", "데이터", "분석", "만족도", "성장률", "전년대비", "전월대비", "명", "개사", "개소", "건", "회", "팀", "억", "억원", "만원", "원", "퍼센트", "%", "배"],
-      pattern: /(\d[\d,.]*(?:%|퍼센트|명|개사|개소|건|억|억원|만원|원|회|개|곳|팀|배|년)?)|([+▲]\s*\d)/i,
+      keywords: ["성과", "실적", "수상", "인증", "증가", "상승", "절감", "달성", "돌파", "누적", "kpi", "통계", "지표", "만족도", "성장률", "전년대비", "전월대비"],
+      pattern: /(?:증가|상승|절감|달성|성장률|만족도|전년대비)[^\n]{0,16}\d[\d,.]*(?:%|퍼센트|배)|\d[\d,.]*\s*%\s*(?:증가|상승|절감|달성)/i,
       fields: ["headline", "subheadline", "bodyCopy"],
       mediums: ["med-pub-performance-report-card", "med-arch-photo-3d-overlay", "med-human-3d-data", "med-pub-benefit-comparison"],
       reason: "수치·성과 근거가 보여 리포트형 정보 구조와 데이터 오버레이 화풍이 더 잘 맞습니다.",
@@ -803,7 +819,7 @@
     const fields = getPromotionRecommendationFieldTexts();
     const contextText = String(fields.all || "").toLowerCase();
     const scoredRules = PROMOTION_STYLE_RECOMMENDATION_RULES
-      .map((rule) => ({ rule, score: scoreRecommendationRule(rule, contextText) }))
+      .map((rule) => ({ rule, score: scoreRecommendationRule(rule, contextText) + scoreRecommendationRule(rule, String(fields.goal || "").toLowerCase()) * 4 }))
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score);
     const activeRules = scoredRules.length
@@ -831,7 +847,7 @@
           ruleLabel: signal.label,
           reason: signal.reason,
           palette: getRecommendationPaletteByKey(signal.palette),
-          score: (score * signal.weight) + ((signal.mediums.length - index) * 2),
+          score: (score * Math.min(signal.weight, 6)) + ((signal.mediums.length - index) * 2),
         });
       });
     });
@@ -922,6 +938,8 @@
     if (!node) return;
     node.textContent = message || "";
     node.className = `promo-status ${message ? `is-${type}` : ""}`.trim();
+    clearTimeout(statusTimer);
+    if (message && type !== "error") statusTimer = setTimeout(() => { node.textContent = ""; }, 6500);
   }
 
   function attachStaticFieldBadges() {
@@ -1139,6 +1157,8 @@
       sizeMode: "ratio",
       ratio: state.ratio,
       orientation: state.orientation,
+      customRatioW: state.customRatioW,
+      customRatioH: state.customRatioH,
     };
   }
 
@@ -1147,7 +1167,8 @@
       return `${snap.directSizeW || "?"}×${snap.directSizeH || "?"} ${snap.directSizeUnit || "px"}`;
     }
     const orient = snap.orientation === "horizontal" ? "가로" : "세로";
-    return `${snap.ratio} ${orient}`;
+    const ratio = snap.ratio === "custom" ? `${snap.customRatioW || "?"}:${snap.customRatioH || "?"}` : snap.ratio;
+    return `${ratio} ${orient}`;
   }
 
   function applySizePreset(snap) {
@@ -1159,6 +1180,8 @@
     } else {
       state.ratio = snap.ratio || "4:5";
       state.orientation = snap.orientation || "vertical";
+      state.customRatioW = snap.customRatioW || "";
+      state.customRatioH = snap.customRatioH || "";
     }
     syncStaticFields();
     renderPreview();
@@ -1250,6 +1273,10 @@
         const name = nameInput ? nameInput.value.trim() : "";
         if (!name) { if (nameInput) nameInput.focus(); return; }
         const snap = currentSizeSnapshot();
+        if (validateState().fieldErrors.customRatio || validateState().fieldErrors.directSize) {
+          status("너비와 높이에 0보다 큰 숫자를 입력한 뒤 규격을 저장해 주세요.", "error");
+          return;
+        }
         sizePresets.push({ name, ...snap });
         persistSizePresets();
         renderSizePresetList();
@@ -1365,8 +1392,9 @@
           promptDirty,
         })
       );
+      workspace?.saved(true);
     } catch (error) {
-      // Ignore storage failures and keep the tab usable.
+      workspace?.saved(false);
     }
   }
 
@@ -1377,7 +1405,7 @@
       const parsed = JSON.parse(raw);
       assignState(parsed.promotionState || parsed);
       promptDraft = typeof parsed.promptDraft === "string" ? parsed.promptDraft : "";
-      promptDirty = Boolean(parsed.promptDirty && promptDraft);
+      promptDirty = Boolean(parsed.promptDirty && typeof parsed.promptDraft === "string");
       return true;
     } catch (error) {
       return false;
@@ -2006,7 +2034,7 @@
     }
 
     if (!String(state.headline || "").trim()) {
-      addError("headline", "헤드라인을 입력해야 프롬프트를 복사할 수 있습니다.");
+      addError("headline", "제목을 입력해 주세요. 제목이 없으면 미완성 초안으로 복사됩니다.");
     }
     if (!String(state.goal || "").trim()) {
       addError("goal", "홍보 목적을 입력해야 메시지 방향이 분명해집니다.");
@@ -2379,7 +2407,7 @@
             </div>
           </div>
           <div class="promo-quickfill-modal-body" id="promotionQuickFillStepPreview" hidden>
-            <p class="promo-quickfill-guide">추출 정보와 생성한 요약을 구분했습니다. 근거를 확인한 뒤 반영할 항목만 선택하세요. 신뢰도가 낮은 항목은 기본 선택에서 제외됩니다.</p>
+            <p class="promo-quickfill-guide">선택한 항목으로 기존 입력을 바꾸고 사용 상태도 켭니다. 신뢰도가 낮은 항목은 기본 선택에서 제외됩니다. 적용 후 실행 취소할 수 있습니다.</p>
             <div class="promo-quickfill-analysis" id="promotionQuickFillAnalysisSummary" role="status" aria-live="polite"></div>
             <label class="promo-quickfill-compress-row">
               <input type="checkbox" id="promotionQuickFillCompressToggle" checked />
@@ -2410,9 +2438,13 @@
     const previewEl = $("promotionQuickFillStepPreview");
     if (pasteEl) pasteEl.hidden = step !== "paste";
     if (previewEl) previewEl.hidden = step !== "preview";
+    $("promotionQuickFillModalTitle").textContent = step === "paste" ? "1. 원문 붙여넣기" : "2. 내용 확인 후 적용";
+    if (step === "preview") $("promotionQuickFillApplyBtn")?.focus();
+    else $("promotionQuickFillTextarea")?.focus();
   }
 
   function showQuickFillModal() {
+    quickFillReturnFocus = document.activeElement;
     const { modal, textarea, result } = ensureQuickFillModal();
     if (!modal) return;
     if (result) result.textContent = "";
@@ -2426,9 +2458,22 @@
     const modal = $("promotionQuickFillModal");
     if (modal) modal.setAttribute("hidden", "");
     document.body.classList.remove("modal-open");
+    quickFillReturnFocus?.focus();
   }
 
   function bindQuickFillModalEvents() {
+    $("promotionQuickFillModal")?.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        hideQuickFillModal();
+      }
+      if (event.key !== "Tab") return;
+      const focusable = [...$("promotionQuickFillModal").querySelectorAll("button, input, textarea, summary, [tabindex='0']")]
+        .filter((el) => !el.disabled && el.getClientRects().length);
+      const first = focusable[0], last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    });
     $("promotionQuickFillModalCloseBtn")?.addEventListener("click", hideQuickFillModal);
     $("promotionQuickFillCancelBtn")?.addEventListener("click", hideQuickFillModal);
     $("promotionQuickFillModalBackdrop")?.addEventListener("click", hideQuickFillModal);
@@ -3149,6 +3194,9 @@
                 const checked = previousSelection.has(field.key)
                   ? previousSelection.get(field.key)
                   : confidence >= 0.72;
+                const replaces = trimValue(state[field.key]) ? "기존 문구 교체" : "새 문구 추가";
+                const activates = (field.toggleMode && !isEnabled(state[`${field.key}Enabled`]))
+                  || (field.key === "qrUrl" && !isEnabled(state.qrEnabled));
                 return `
         <div class="promo-quickfill-preview-row${confidence < 0.72 ? " is-review" : ""}">
           <label class="promo-quickfill-preview-choice">
@@ -3157,13 +3205,15 @@
               <strong>${field.label}</strong>
               <small>
                 <span class="promo-quickfill-origin is-${kind}">${getQuickFillKindLabel(kind)}</span>
-                <span class="promo-quickfill-confidence${confidence < 0.72 ? " is-review" : ""}">신뢰도 ${confidenceLabel}</span>
               </small>
             </span>
           </label>
           <div class="promo-quickfill-preview-content">
             <span class="promo-quickfill-preview-value">${escapeQuickFillHtml(parsed[field.key])}</span>
+            <p class="promo-quickfill-apply-note">선택 시 ${replaces}${activates ? " · 항목 사용 켜기" : ""}${field.toggleMode ? " · 직접 입력으로 적용" : ""}</p>
+            <details class="promo-quickfill-confidence-detail"><summary>분석 정보 · 신뢰도 ${confidenceLabel}</summary>
             ${renderQuickFillEvidence(fieldMeta)}
+            </details>
           </div>
         </div>`;
               }
@@ -3216,6 +3266,7 @@
     const list = $("promotionQuickFillPreviewList");
     const previewResult = $("promotionQuickFillPreviewResult");
     if (!parsed || !list) return;
+    rememberUndo();
 
     const filledLabels = [];
     QUICK_FILL_PREVIEW_FIELDS.forEach((field) => {
@@ -3223,7 +3274,11 @@
       if (!checkbox || !checkbox.checked) return;
       const value = parsed[field.key];
       if (!value) return;
-      if (field.toggleMode) setQuickFillManualMode(field.key);
+      if (field.toggleMode) {
+        state[`${field.key}Enabled`] = "true";
+        state[`${field.key}Mode`] = "manual";
+      }
+      if (field.key === "qrUrl") state.qrEnabled = "true";
       if (setQuickFillFieldValue(field.key, value)) filledLabels.push(field.label);
     });
 
@@ -3238,6 +3293,7 @@
         : "선택된 항목이 없습니다.",
       filledLabels.length ? "success" : "info"
     );
+    syncStaticFields();
     renderPreview();
     if (filledLabels.length) hideQuickFillModal();
   }
@@ -3347,7 +3403,7 @@
                   ${hasToggle ? renderAiToggleHeader(field.key) : hasEnableToggle ? renderFieldEnableHeader(field.key) : ""}
                 </div>
                 <p class="gen-config-guide">${escapeHtml(field.guide || "")}</p>
-                ${inputDisabled ? `<div class="promo-ai-placeholder">${isAiMode ? "AI가 자동으로 생성합니다" : "사용 안 함"}</div>` : renderControl(field)}
+                ${inputDisabled ? `<div class="promo-ai-placeholder">${isAiMode ? "이미지 생성 시 AI가 작성합니다" : "사용 안 함"}</div>` : renderControl(field)}
               </section>
             `;
           })
@@ -3380,7 +3436,6 @@
       checkbox.addEventListener("change", () => {
         const field = checkbox.dataset.toggleField;
         state[`${field}Enabled`] = String(checkbox.checked);
-        promptDirty = false;
         if (STATIC_TOGGLE_SYNC[field]) {
           STATIC_TOGGLE_SYNC[field]();
         } else {
@@ -3398,7 +3453,6 @@
           return;
         }
         state[`${field}Mode`] = btn.dataset.mode;
-        promptDirty = false;
         if (STATIC_TOGGLE_SYNC[field]) {
           STATIC_TOGGLE_SYNC[field]();
         } else {
@@ -3414,7 +3468,6 @@
       checkbox.addEventListener("change", () => {
         const field = checkbox.dataset.fieldToggle;
         state[`${field}Enabled`] = String(checkbox.checked);
-        promptDirty = false;
         renderTypeFields();
         renderPreview();
       });
@@ -3426,7 +3479,6 @@
       const handler = () => {
         const fieldKey = input.dataset.promoField;
         state[fieldKey] = input.type === "checkbox" ? String(input.checked) : input.value;
-        promptDirty = false;
         if (input.id === "promotionTargetEngine") {
           state.targetEngine = normalizeTargetEngine(input.value);
           const changed = forceGeminiManualTextModes();
@@ -3527,7 +3579,6 @@
           ...state.logoRoleLabels,
           [role]: labelInput.value,
         });
-        promptDirty = false;
         return;
       }
 
@@ -3536,7 +3587,6 @@
         const role = String(nameInput.dataset.logoRoleName || "");
         if (!PROMOTION_LOGO_ROLE_OPTIONS.some((item) => item.value === role)) return;
         upsertPromotionLogoItem(role, nameInput.value);
-        promptDirty = false;
         renderPreview();
         return;
       }
@@ -3581,7 +3631,6 @@
     const palette = COLOR_MODE_PALETTES[normalizedMode];
     state.colorMode = normalizedMode;
     Object.assign(state, palette);
-    promptDirty = false;
     syncStaticFields();
     syncColorFieldUI();
     renderPreview();
@@ -3683,7 +3732,6 @@
   function pruneEmptyFields() {
     sanitizeStateValues();
     state.omitEmptyFields = "true";
-    promptDirty = false;
     renderPreview();
     status("빈 항목 제거 기준으로 프롬프트를 다시 정리했습니다.", "success");
   }
@@ -3701,7 +3749,6 @@
     ].forEach((key) => {
       if (key in state) state[key] = "";
     });
-    promptDirty = false;
     syncStaticFields();
     renderPreview();
     status("직접 노출 텍스트 항목을 초기화했습니다.", "info");
@@ -3732,7 +3779,6 @@
     state.snsVisualFocusEnabled = DEFAULT_STATE.snsVisualFocusEnabled;
     state.snsPlacementNotesEnabled = DEFAULT_STATE.snsPlacementNotesEnabled;
     state.backgroundMode = "solid";
-    promptDirty = false;
     syncStaticFields();
     renderPreview();
     status("스타일/연출 지시를 초기화했습니다.", "info");
@@ -3743,7 +3789,6 @@
       if (key in state) state[key] = "";
     });
     state.backgroundMode = "solid";
-    promptDirty = false;
     syncStaticFields();
     renderPreview();
     status("색상과 배경 설정을 초기화했습니다.", "info");
@@ -3753,7 +3798,6 @@
 
   function rerunOptimization() {
     sanitizeStateValues();
-    promptDirty = false;
     renderPreview();
     status("현재 설정으로 프롬프트를 다시 정리했습니다.", "success");
   }
@@ -4295,9 +4339,9 @@
     if (viewer) viewer.classList.toggle("promo-mode-hidden", editMode);
     if (textarea) textarea.classList.toggle("promo-mode-hidden", !editMode);
     if (toggleBtn) {
-      toggleBtn.textContent = editMode ? "← 미리보기" : "✎ 편집";
+      toggleBtn.textContent = editMode ? "프롬프트 보기" : "직접 편집";
       toggleBtn.classList.toggle("is-editing", editMode);
-      toggleBtn.title = editMode ? "미리보기 모드로 전환" : "직접 편집 모드로 전환";
+      toggleBtn.title = editMode ? "수정한 프롬프트 보기" : "프롬프트 직접 편집";
     }
   }
 
@@ -4330,9 +4374,9 @@
         .join("");
       return "<div class=\"promo-viewer-section\">" +
         (section.title ? "<div class=\"promo-viewer-section-title\">" + escapeHtml(section.title) + "</div>" : "") +
-        "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 편집\">Edit</button>" +
-        "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"편집 취소\" style=\"display:none\">Cancel</button>" +
-        "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"이 섹션 복사\">Copy</button>" +
+        "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 편집\">편집</button>" +
+        "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"편집 취소\" style=\"display:none\">취소</button>" +
+        "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"이 섹션 복사\">복사</button>" +
         "<div class=\"promo-section-lines-container\">" + linesHtml + "</div>" +
         "</div>";
     }).join("");
@@ -4361,7 +4405,7 @@
       if (promptDirty && _viewerEditMode) {
         previewBadge.textContent = "직접 편집 중";
       } else if (promptDirty) {
-        previewBadge.textContent = "자동 초안 표시";
+        previewBadge.textContent = "직접 수정본";
       } else if (validation.errors.length) {
         previewBadge.textContent = "입력 보완 필요";
       } else if (validation.warnings.length) {
@@ -4419,8 +4463,10 @@
       updateStatsBar(_viewerEditMode ? preview.value : autoPrompt);
     }
 
-    // 섹션 뷰어는 직접 편집 초안과 분리해서 항상 최신 자동 프롬프트를 보여준다.
-    renderPromptViewer(validation, autoPrompt);
+    // 뷰어와 복사·저장은 같은 현재 프롬프트를 사용한다.
+    renderPromptViewer(validation, promptDirty ? promptDraft : autoPrompt);
+    updateStatsBar(getCurrentPromptText());
+    workspace?.render({ state: deepClone(state), prompt: getCurrentPromptText(), autoPrompt, dirty: promptDirty, canUndo: Boolean(undoSnapshot), validation });
 
     persistDraft();
   }
@@ -4448,7 +4494,7 @@
     if (inputWrap) inputWrap.style.display = enabled && !isAi ? "" : "none";
     if (aiPlaceholder) {
       aiPlaceholder.style.display = !enabled || isAi ? "" : "none";
-      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "AI가 자동으로 생성합니다";
+      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "이미지 생성 시 AI가 작성합니다";
     }
 
     const section = $("promotionCtaSection");
@@ -4620,7 +4666,7 @@
     if (inputWrap) inputWrap.style.display = enabled && !isAi ? "" : "none";
     if (aiPlaceholder) {
       aiPlaceholder.style.display = !enabled || isAi ? "" : "none";
-      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "AI가 자동으로 생성합니다";
+      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "이미지 생성 시 AI가 작성합니다";
     }
 
     const section = $("promotionPosterOfferSection");
@@ -4650,7 +4696,7 @@
     if (inputWrap) inputWrap.style.display = enabled && !isAi ? "" : "none";
     if (aiPlaceholder) {
       aiPlaceholder.style.display = !enabled || isAi ? "" : "none";
-      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "AI가 자동으로 생성합니다";
+      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "이미지 생성 시 AI가 작성합니다";
     }
 
     const section = $("promotionSnsHookSection");
@@ -4680,7 +4726,7 @@
     if (inputWrap) inputWrap.style.display = enabled && !isAi ? "" : "none";
     if (aiPlaceholder) {
       aiPlaceholder.style.display = !enabled || isAi ? "" : "none";
-      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "AI가 자동으로 생성합니다";
+      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "이미지 생성 시 AI가 작성합니다";
     }
 
     const section = $("promotionSnsHashtagsSection");
@@ -4709,7 +4755,7 @@
     if (inputWrap) inputWrap.style.display = enabled && !isAi ? "" : "none";
     if (aiPlaceholder) {
       aiPlaceholder.style.display = !enabled || isAi ? "" : "none";
-      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "AI가 자동으로 생성합니다";
+      aiPlaceholder.textContent = !enabled ? "사용 안 함" : "이미지 생성 시 AI가 작성합니다";
     }
 
     const inputNode = $(`promotion${fieldCamel}`);
@@ -4924,7 +4970,7 @@
   }
 
   function resetAll() {
-    if (!confirm("모든 입력값을 초기화합니다. 되돌릴 수 없습니다. 계속할까요?")) return;
+    rememberUndo();
     assignState(DEFAULT_STATE);
     visitedAssetTypes = new Set([DEFAULT_STATE.assetType]);
     promptDraft = "";
@@ -5019,7 +5065,6 @@
         window.applyMixerSamplePalette(mixerStyle.palette, mixerStyle.nameKo);
       }
     } else {
-      promptDirty = false;
       syncStaticFields();
       renderPreview();
     }
@@ -5028,11 +5073,14 @@
   let _lastSampleIndex = -1;
 
   function applySample() {
+    const previous = createSnapshot();
     const pool = (window.PROMO_DATA && SAMPLE_PROFILES && SAMPLE_PROFILES.length > 0) ? SAMPLE_PROFILES : [DEFAULT_SAMPLE_PROFILE];
     let idx;
     do { idx = Math.floor(Math.random() * pool.length); } while (pool.length > 1 && idx === _lastSampleIndex);
     _lastSampleIndex = idx;
     applySampleProfile(pool[idx]);
+    undoSnapshot = previous;
+    renderPreview();
     status(`샘플 ${idx + 1}/${pool.length} — 내용을 수정해 사용하세요.`, "success");
   }
 
@@ -5092,13 +5140,15 @@
       mode: "promotion",
       savedAt: data.savedAt || new Date().toISOString(),
       promotionState: normalizePromotionState(promotionState),
+      promptDraft: typeof data.promptDraft === "string" ? data.promptDraft : "",
+      promptDirty: Boolean(data.promptDirty && typeof data.promptDraft === "string"),
     };
   }
 
   function applyLoadedSettings(data) {
     assignState(data.promotionState);
     promptDraft = typeof data.promptDraft === "string" ? data.promptDraft : "";
-    promptDirty = Boolean(data.promptDirty && promptDraft);
+    promptDirty = Boolean(data.promptDirty && typeof data.promptDraft === "string");
     visitedAssetTypes.add(state.assetType);
     syncStaticFields();
     renderTypeFields();
@@ -5132,14 +5182,12 @@
   }
 
   function getCurrentPromptText() {
-    const preview = $("promotionPromptPreview");
-    if (_viewerEditMode && preview && typeof preview.value === "string") {
-      return preview.value;
-    }
+    if (promptDirty) return promptDraft;
     return buildPromptPreview(validateState());
   }
 
   function resetPromptDraft() {
+    rememberUndo();
     promptDirty = false;
     promptDraft = buildPromptPreview(validateState());
     renderPreview();
@@ -5178,6 +5226,8 @@
       promptDraft = preview.value;
       promptDirty = preview.value !== autoPrompt;
       updateStatsBar(preview.value);
+      renderPromptViewer(validateState(), promptDraft);
+      workspace?.render({ state: deepClone(state), prompt: getCurrentPromptText(), autoPrompt, dirty: promptDirty, canUndo: Boolean(undoSnapshot), validation: validateState() });
       persistDraft();
       const previewBadge = $("promotionPreviewBadge");
       if (previewBadge && promptDirty) {
@@ -5230,7 +5280,6 @@
         } else {
           state.antiAiStyle = selectedId;
         }
-        promptDirty = false;
         syncAntiAiPresetUI();
         renderPreview();
       });
@@ -5537,7 +5586,6 @@
     $("promotionConceptClearPaletteBtn")?.addEventListener("click", () => {
       state.appliedConceptPalette = "";
       state.appliedConceptPaletteStrategy = "Derive palette from the selected visual style";
-      promptDirty = false;
       syncStaticFields();
       renderPreview();
       status("컬러 팔레트가 삭제되어 기본 색상으로 설정되었습니다.", "success");
@@ -5590,11 +5638,11 @@
 
         navigator.clipboard.writeText(textToCopy)
           .then(() => {
-            copyBtn.textContent = "Copied!";
+            copyBtn.textContent = "복사됨";
             const sectionTitle = sectionEl.querySelector(".promo-viewer-section-title")?.textContent || "섹션";
             status("'" + sectionTitle + "'" + " 텍스트를 복사했습니다.", "success");
             setTimeout(() => {
-              copyBtn.textContent = "Copy";
+              copyBtn.textContent = "복사";
             }, 1500);
           })
           .catch((err) => {
@@ -5619,7 +5667,7 @@
           linesContainer.style.display = "";
         }
         if (editBtn) {
-          editBtn.textContent = "Edit";
+          editBtn.textContent = "편집";
           editBtn.classList.remove("is-active");
         }
         cancelBtn.style.display = "none";
@@ -5650,7 +5698,7 @@
           const cancelBtn = sectionEl.querySelector(".promo-section-cancel-btn");
           if (cancelBtn) cancelBtn.style.display = "none";
 
-          editBtn.textContent = "Edit";
+          editBtn.textContent = "편집";
           editBtn.classList.remove("is-active");
           status("섹션 변경 사항을 저장했습니다. (메인 프롬프트에 실시간 반영)", "success");
 
@@ -5692,6 +5740,8 @@
           if (shuffleBtn) shuffleBtn.style.display = "none";
           
           updateStatsBar(finalPrompt);
+          persistDraft();
+          workspace?.render({ state: deepClone(state), prompt: finalPrompt, autoPrompt: buildPromptPreview(validateState()), dirty: true, canUndo: Boolean(undoSnapshot), validation: validateState() });
 
         } else {
           if (linesContainer) {
@@ -5717,7 +5767,7 @@
           const cancelBtn = sectionEl.querySelector(".promo-section-cancel-btn");
           if (cancelBtn) cancelBtn.style.display = "inline-block";
 
-          editBtn.textContent = "Save";
+          editBtn.textContent = "적용";
           editBtn.classList.add("is-active");
         }
         return;
@@ -5751,7 +5801,6 @@
         input.value = DEFAULT_STATE.qualityNotes;
       }
       syncToggleFieldUI("qualityNotes");
-      promptDirty = false;
       renderPreview();
       status("품질 조건이 기본값으로 초기화되었습니다.", "success");
     });
@@ -5764,7 +5813,6 @@
       state.layoutComposition = newKey;
       state.layoutCompositionEnabled = "true";
       state.layoutCompositionMode = "manual";
-      promptDirty = false;
       syncStaticFields();
       syncToggleFieldUI("layoutComposition");
       renderPreview();
@@ -5781,7 +5829,8 @@
       if (_viewerEditMode) {
         // 편집 → 뷰어: 뷰어 내용은 이미 최신 상태이므로 바로 전환
         setViewerMode(false);
-        updateStatsBar(buildPromptPreview(validateState()));
+        renderPromptViewer(validateState(), getCurrentPromptText());
+        updateStatsBar(getCurrentPromptText());
       } else {
         // 뷰어 → 편집 모드
         setViewerMode(true);
@@ -5795,7 +5844,18 @@
     visitedAssetTypes = new Set([state.assetType]);
     syncStaticFields();
     renderTypeFields();
-    // 직접 편집 초안이 복원되어도 기본 화면은 최신 자동 프롬프트 뷰어로 시작한다.
+    // 복원한 수정본이 있으면 해당 프롬프트를 기본 결과로 표시한다.
+    workspace = window.PromptDeckPromotionWorkspace?.create({
+      getSnapshot: createSnapshot,
+      getPrompt: getCurrentPromptText,
+      applySnapshot: (data) => { rememberUndo(); applyLoadedSettings(migratePromotionData(data)); },
+      recommendations: getPromotionStyleRecommendations,
+      applyRecommendation: (item) => window.applyPromotionConceptStyle(buildRecommendedPromotionStyle(item)),
+      regenerate: resetPromptDraft,
+      undo: undoLastChange,
+      copy: copyPrompt,
+      status,
+    });
     _viewerEditMode = false;
     setViewerMode(_viewerEditMode);
     renderPreview();
@@ -5803,6 +5863,7 @@
 
   window.applyPromotionConceptStyle = function (style) {
     if (!style) return;
+    rememberUndo();
 
     const previousConceptStripValues = conceptStripValuesFromState();
     const nextConceptStripValues = conceptStripValuesFromStyle(style);
@@ -5831,7 +5892,6 @@
         applyConceptPartsToState(conceptParts);
     scrubConceptFromDetailPlanningFields(conceptStripValues);
 
-    promptDirty = false;
     syncStaticFields();
     renderPreview();
 
@@ -5867,10 +5927,10 @@
     state.appliedConceptCompositionId = "";
     state.appliedConceptTypographyId = "";
 
-    promptDirty = false;
     syncStaticFields();
     renderPreview();
   };
 
   init();
+  window.getCurrentPromotionPrompt = getCurrentPromptText;
 })();

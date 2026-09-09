@@ -255,7 +255,7 @@ async function auditActivePaneAccessibility(page, { tabId, theme, viewport }) {
       tabBtnLabelSheet: [".label-sheet-workspace-mark", ".label-sheet-workspace-flow-step[aria-current='step']"],
       tabBtnMapPrompt: [".map-readiness-badge", ".map-readiness-list li > span"],
       tabBtnDataDiagram: [".diagram-readiness-head span", ".diagram-result-tab.active"],
-      tabBtnPromotion: [".promo-step-num", ".promo-stat-chip"],
+      tabBtnPromotion: [".promo-step-num", "#promotionSaveState"],
       tabBtnConceptMixer: [".mixer-step-tab.active .step-num", ".mixer-pal-filter-btn.active"],
       tabBtnPhotoTransform: [".pt-field-label", ".pt-card-copy-ko"],
     };
@@ -1069,7 +1069,8 @@ async function runSmokeTest() {
     await page.click("#tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
     record(await page.locator("#promotionCopyPromptBtn").isHidden(), "Promotion result duplicated its copy action inside the mobile output card", failures);
-    record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="promotionCopyPromptBtn"]').isVisible(), "Promotion mobile copy action was not kept in the global action bar", failures);
+    record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="promotionMobilePrimaryBtn"]').isVisible(), "Promotion mobile result action was not kept in the global action bar", failures);
+    record((await page.locator("#mobileTabActions").textContent()).includes("결과 확인"), "Promotion did not start with the result-review action", failures);
 
     await page.click("#appToolMenuBtn");
     await page.click('[data-tab-group-filter="visual"]');
@@ -2291,6 +2292,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#promotionHeadline").inputValue()).includes("미래차 부품전환"), "Promotion parser did not apply the extracted headline", failures);
     record((await page.locator("#promotionBodyCopy").inputValue()).includes("2,000만원"), "Promotion parser did not apply the grounded body summary", failures);
 
+    await page.locator("#promotionStepStart > summary").click();
     await page.locator("#promotionSizeMode").selectOption("direct");
     await page.locator("#promotionDirectSizeW").fill("1080");
     await page.locator("#promotionDirectSizeH").fill("1920");
@@ -2303,8 +2305,8 @@ SLIDE-TWO-CONTENT`);
     record(directSizePreview.includes("Size: 1080×1920 px"), "Promotion prompt preview did not reflect the direct size input", failures);
     record((directSizePreview.match(/컨텐츠 유형:/g) || []).length <= 1, "Promotion prompt preview repeated the content type line", failures);
 
-    if (await hasLocator(page, "#promotionRandomPresetBtn")) {
-      await page.click("#promotionRandomPresetBtn");
+    if (await hasLocator(page, ".promo-recommend-option")) {
+      await page.locator(".promo-recommend-option").first().click();
       await page.waitForTimeout(200);
       record((await page.locator("#promotionHeadline").inputValue()) === "주말 설명회 사전 신청", "Random preset button changed the headline", failures);
       record((await page.locator("#promotionSizeMode").inputValue()) === "direct", "Random preset button changed the size mode", failures);
@@ -2312,10 +2314,12 @@ SLIDE-TWO-CONTENT`);
       record((await page.locator("#promotionDirectSizeH").inputValue()) === "1920", "Random preset button changed the direct height", failures);
     }
 
+    await page.locator(".promo-optional-copy > summary").click();
     const enableManualMode = async (field) => {
-      const selector = `[data-toggle-mode='${field}'][data-mode='manual']`;
-      if (await hasLocator(page, selector)) {
-        await page.click(selector);
+      const selector = `.promo-copy-mode`;
+      const control = page.locator(`[data-toggle-field='${field}']`).locator("xpath=ancestor::*[contains(@class,'gen-config-label-row')]").locator(selector);
+      if (await control.count()) {
+        await control.selectOption("manual");
         await page.waitForTimeout(50);
       }
     };
@@ -2392,6 +2396,7 @@ SLIDE-TWO-CONTENT`);
     record(customEmphasisPreview.includes("adapt locally to actual copy volume"), "Custom promotion prompt did not harmonize requested emphasis with real content volume", failures);
     record(!/(?:% of canvas|occupy approximately|Canvas allocation target)/i.test(customEmphasisPreview), "Custom promotion prompt still converted emphasis scores into rigid canvas acreage", failures);
 
+    await page.click("#promotionPromptViewBtn");
     await page.click("#promotionViewerToggleBtn");
     await page.waitForTimeout(150);
     await page.locator("#promotionPromptPreview").fill(`${basicPreview}\n\n## 메모\n직접 편집 테스트`);

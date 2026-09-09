@@ -1,0 +1,134 @@
+/* Promotion task flow. All rules stay inside the promotion workspace. */
+#panePromotion.promo-workspace [hidden],
+#promotionQuickFillModal [hidden] { display: none !important; }
+#panePromotion.promo-workspace .promo-proxy-source { display: none !important; }
+#panePromotion.promo-workspace .promo-main { align-items: start; }
+#panePromotion.promo-workspace .promo-builder-section { min-width: 0; }
+#panePromotion.promo-workspace .promo-workspace-state {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 20px; border-bottom: 1px solid var(--line); color: var(--ink-soft); font-size: 12px;
+}
+#panePromotion.promo-workspace .promo-step-disclosure { background: var(--surface); }
+#panePromotion.promo-workspace #promotionStepMessage > summary { display: none; }
+#panePromotion.promo-workspace #promotionStepMessage { border: 0; }
+#panePromotion.promo-workspace #promotionStepMessage > .promo-step-body { padding: 0; }
+#panePromotion.promo-workspace .gen-config-fields > .gen-config-group {
+  background: transparent; border: 0; padding: 0; box-shadow: none;
+}
+#panePromotion.promo-workspace #promotionHeadline { font-size: 18px; font-weight: 650; }
+#panePromotion.promo-workspace #promotionBodyCopy { min-height: 112px; }
+#panePromotion.promo-workspace #promotionSubheadline { min-height: 64px; }
+#panePromotion.promo-workspace .promo-field-badge { display: none; }
+#panePromotion.promo-workspace .gen-config-guide { margin: 5px 0 9px; }
+#panePromotion.promo-workspace .promo-optional-copy,
+#panePromotion.promo-workspace .promo-workspace-templates { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 14px; }
+#panePromotion.promo-workspace .promo-optional-copy > summary,
+#panePromotion.promo-workspace .promo-workspace-templates > summary { min-height: 44px; cursor: pointer; font-weight: 650; color: var(--ink); }
+#panePromotion.promo-workspace .promo-optional-body { display: grid; gap: 16px; padding-top: 12px; }
+#panePromotion.promo-workspace .promo-phrase-examples { margin: 8px 0; }
+#panePromotion.promo-workspace .promo-phrase-examples summary { font-size: 12px; color: var(--ink-soft); cursor: pointer; min-height: 28px; }
+#panePromotion.promo-workspace .promo-unified-choice { flex-wrap: wrap; align-items: center; }
+#panePromotion.promo-workspace .promo-unified-choice .promo-ai-toggle-switch,
+#panePromotion.promo-workspace .promo-unified-choice .promo-ai-mode-btns { display: none !important; }
+#panePromotion.promo-workspace .promo-copy-mode { width: auto; min-width: 140px; min-height: 44px; margin-left: auto; }
+#panePromotion.promo-workspace .promo-result-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 20px; border-bottom: 1px solid var(--line); }
+#panePromotion.promo-workspace .promo-result-head h2 { margin: 0 0 6px; font-size: 18px; }
+#panePromotion.promo-workspace .promo-result-head p { margin: 0; font-size: 12px; color: var(--ink-soft); }
+#panePromotion.promo-workspace .promo-result-modes { display: flex; gap: 6px; }
+#panePromotion.promo-workspace .promo-result-modes [aria-pressed="true"],
+#panePromotion.promo-workspace .promo-mobile-nav [aria-pressed="true"] { background: var(--accent); color: var(--on-accent, #fff); border-color: var(--accent); }
+#panePromotion.promo-workspace .promo-output-summary { padding: 20px; }
+#panePromotion.promo-workspace .promo-summary-spec { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; font-size: 12px; color: var(--ink-soft); }
+#panePromotion.promo-workspace .promo-summary-spec span { max-width: 65%; overflow-wrap: anywhere; }
+#panePromotion.promo-workspace .promo-composition {
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "top top" "title title" "visual body" "footer footer";
+  gap: 16px; padding: 24px; min-height: 280px; background: var(--surface-alt); border: 1px solid var(--line); border-radius: 12px;
+}
+#panePromotion.promo-workspace .promo-composition button { border: 1px solid var(--control-border, var(--line)); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 12px; text-align: left; font: inherit; cursor: pointer; overflow-wrap: anywhere; }
+#panePromotion.promo-workspace .promo-composition-title { grid-area: title; font-size: 22px !important; font-weight: 750 !important; }
+#panePromotion.promo-workspace .promo-composition-visual { grid-area: visual; min-height: 120px; display: grid; place-items: center; border-radius: 12px; color: var(--ink-soft); background: repeating-linear-gradient(135deg, transparent 0 10px, var(--line) 10px 11px); }
+#panePromotion.promo-workspace .promo-composition-visual span { background: var(--surface); padding: 8px; font-size: 12px; }
+#panePromotion.promo-workspace .promo-composition-body { grid-area: body; white-space: pre-line; font-size: 13px !important; max-height: 260px; overflow: auto; }
+#panePromotion.promo-workspace .promo-composition-footer,
+#panePromotion.promo-workspace .promo-composition-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; }
+#panePromotion.promo-workspace .promo-composition-footer { grid-area: footer; }
+#panePromotion.promo-workspace .promo-composition-top { grid-area: top; }
+#panePromotion.promo-workspace .promo-composition-footer > span,
+#panePromotion.promo-workspace .promo-composition-top > span { border: 1px dashed var(--ink-soft); padding: 10px; border-radius: 4px; }
+#panePromotion.promo-workspace .promo-composition[data-layout="visual_focus"] { grid-template-columns: 1.5fr 1fr; }
+#panePromotion.promo-workspace .promo-composition[data-layout="info_focus"] { grid-template-columns: 1fr 1.5fr; }
+#panePromotion.promo-workspace .promo-composition-caption { font-size: 12px; line-height: 1.6; color: var(--ink-soft); margin: 10px 0 18px; }
+#panePromotion.promo-workspace .promo-copy-review-row { display: grid; grid-template-columns: 90px 1fr 38px; gap: 12px; width: 100%; padding: 13px 0; color: var(--ink); text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; font: inherit; font-size: 13px; }
+#panePromotion.promo-workspace .promo-copy-review-row > span { white-space: pre-line; overflow-wrap: anywhere; min-width: 0; }
+#panePromotion.promo-workspace .promo-copy-review-row > span:last-child { color: var(--ink-soft); font-size: 12px; white-space: nowrap; }
+#panePromotion.promo-workspace .promo-edited-notice { display: grid; gap: 6px; border-left: 3px solid var(--accent); padding: 14px 20px; margin: 16px; background: var(--surface-alt); font-size: 13px; line-height: 1.6; }
+#panePromotion.promo-workspace .promo-prompt-explanation { font-size: 12px; color: var(--ink-soft); padding: 0 20px; }
+#panePromotion.promo-workspace[data-result-view="summary"] .promo-stats-bar,
+#panePromotion.promo-workspace[data-result-view="summary"] .promo-prompt-body,
+#panePromotion.promo-workspace[data-result-view="summary"] .promo-prompt-explanation,
+#panePromotion.promo-workspace[data-result-view="prompt"] .promo-output-summary { display: none; }
+#panePromotion.promo-workspace .promo-token-gauge,
+#panePromotion.promo-workspace #promotionStatTransfer,
+#panePromotion.promo-workspace #promotionStatTokens { display: none; }
+#panePromotion.promo-workspace .promo-stats-actions { flex-wrap: wrap; }
+#panePromotion.promo-workspace .promo-prompt-viewer { max-height: none; }
+#panePromotion.promo-workspace .promo-section-edit-btn,
+#panePromotion.promo-workspace .promo-section-copy-btn { opacity: 1; }
+#panePromotion.promo-workspace .promo-recommend-hint { font-size: 13px; color: var(--ink-soft); }
+#panePromotion.promo-workspace .promo-recommend-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+#panePromotion.promo-workspace .promo-recommend-option { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 10px; text-align: left; font: inherit; color: var(--ink); border: 1px solid var(--control-border, var(--line)); border-radius: 10px; background: var(--surface); cursor: pointer; }
+#panePromotion.promo-workspace .promo-recommend-option:hover { border-color: var(--accent); background: var(--surface-alt); }
+#panePromotion.promo-workspace .promo-recommend-option img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; }
+#panePromotion.promo-workspace .promo-recommend-option strong { font-size: 13px; }
+#panePromotion.promo-workspace .promo-recommend-option span { font-size: 12px; line-height: 1.5; color: var(--ink-soft); overflow-wrap: anywhere; }
+#panePromotion.promo-workspace .promo-template-new { display: flex; gap: 8px; flex-wrap: wrap; }
+#panePromotion.promo-workspace .promo-template-new input { flex: 1; min-width: 140px; min-height: 44px; background: var(--surface); color: var(--ink); border: 1px solid var(--control-border, var(--line)); border-radius: 8px; padding: 8px; }
+#panePromotion.promo-workspace .promo-template-row { display: flex; gap: 8px; margin-top: 8px; }
+#panePromotion.promo-workspace .promo-template-row > button:first-child { flex: 1; text-align: left; overflow-wrap: anywhere; }
+#panePromotion.promo-workspace #promotionTemplateList { margin-top: 12px; font-size: 13px; color: var(--ink-soft); }
+#panePromotion.promo-workspace .promo-workspace-templates p { color: var(--ink-soft); font-size: 12px; }
+#panePromotion.promo-workspace #promotionStatus:empty { display: none; }
+#panePromotion.promo-workspace #promotionStatus:not(:empty) { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 1100; width: max-content; max-width: min(680px, calc(100vw - 40px)); padding: 12px 18px; border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow-soft); background: var(--surface); color: var(--ink); line-height: 1.5; }
+#panePromotion.promo-workspace:not(.active) #promotionStatus { display: none !important; }
+#panePromotion.promo-workspace.promo-workspace-empty .promo-warning-trigger,
+#panePromotion.promo-workspace.promo-workspace-empty #promotionValidation { display: none; }
+#panePromotion.promo-workspace .promo-send-help { background: var(--surface-alt); margin: 16px; padding: 16px; border-radius: 8px; }
+#panePromotion.promo-workspace .promo-mobile-nav { display: none; }
+#panePromotion.promo-workspace button:focus-visible,
+#panePromotion.promo-workspace input:focus-visible,
+#panePromotion.promo-workspace select:focus-visible,
+#panePromotion.promo-workspace summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; box-shadow: 0 0 0 3px var(--surface); }
+@media (min-width: 721px) {
+  #panePromotion.promo-workspace .promo-proxy-source-desktop { display: none; }
+}
+@media (max-width: 720px) {
+  #panePromotion.promo-workspace .promo-main { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  #panePromotion.promo-workspace .promo-mobile-nav { display: flex; gap: 8px; }
+  #panePromotion.promo-workspace .promo-mobile-nav button { flex: 1; }
+  #panePromotion.promo-workspace[data-mobile-view="input"] .promo-result-stack,
+  #panePromotion.promo-workspace[data-mobile-view="result"] .promo-builder-section { display: none; }
+  #panePromotion.promo-workspace .promo-builder-section > .gen-section-head { gap: 12px; padding: 14px; }
+  #panePromotion.promo-workspace .promo-builder-section > .gen-content { padding: 14px; }
+  #panePromotion.promo-workspace .promo-section-head-actions { display: flex; width: 100%; gap: 8px; }
+  #panePromotion.promo-workspace .promo-section-head-actions button { flex: 1; }
+  #panePromotion.promo-workspace .promo-workspace-state { padding: 8px 14px; gap: 8px; }
+  #panePromotion.promo-workspace button,
+  #panePromotion.promo-workspace .promo-sqp-chip,
+  #panePromotion.promo-workspace select { min-height: 44px; }
+  #panePromotion.promo-workspace .promo-result-head,
+  #panePromotion.promo-workspace .promo-output-summary { padding: 14px; }
+  #panePromotion.promo-workspace .promo-composition { gap: 8px; padding: 12px; }
+  #panePromotion.promo-workspace .promo-composition-title { font-size: 18px !important; }
+  #panePromotion.promo-workspace .promo-copy-review-row { grid-template-columns: 75px 1fr 30px; gap: 8px; }
+  #panePromotion.promo-workspace .promo-recommend-options { grid-template-columns: minmax(0, 1fr); }
+  #panePromotion.promo-workspace .promo-recommend-option { display: grid; grid-template-columns: 80px 1fr; gap: 6px 12px; }
+  #panePromotion.promo-workspace .promo-recommend-option img { grid-row: span 2; }
+  #panePromotion.promo-workspace #promotionStatus:not(:empty) { bottom: 86px; font-size: 13px; }
+  #panePromotion.promo-workspace #promotionSendImageBtn { margin: 14px; width: calc(100% - 28px); }
+  #panePromotion.promo-workspace .promo-copy-prompt-mobile { display: none; }
+}
+#promotionQuickFillModal .promo-quickfill-modal-card { max-height: min(90dvh, 900px); overflow-y: auto; }
+#promotionQuickFillModal .promo-quickfill-modal-body { min-height: 0; }
+#promotionQuickFillModal button { min-height: 44px; }
+#promotionQuickFillModal .promo-quickfill-apply-note,
+#promotionQuickFillModal .promo-quickfill-confidence-detail { font-size: 12px; color: var(--ink-soft); line-height: 1.6; }

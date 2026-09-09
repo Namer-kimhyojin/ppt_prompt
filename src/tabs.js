@@ -164,9 +164,11 @@
       { label: "초기화", targetId: "genClearBtn", className: "btn ghost", placement: "more" },
     ],
     promotion: [
-      { label: "레이아웃 바꾸기", targetId: "promotionShuffleLayoutBtn", className: "btn secondary" },
-      { label: "기관용 비주얼 바꾸기", targetId: "btnMixerInstRandom", className: "btn secondary" },
       { label: "프롬프트 복사", targetId: "promotionCopyPromptBtn", className: "btn primary" },
+      { label: "이미지 생성으로 보내기", targetId: "promotionSendImageBtn", className: "btn secondary" },
+      { label: "작업 파일 저장", targetId: "promotionSaveBtn", className: "btn secondary", placement: "more" },
+      { label: "작업 파일 열기", targetId: "promotionLoadBtn", className: "btn secondary", placement: "more" },
+      { label: "초기화", targetId: "promotionResetBtn", className: "btn ghost", placement: "more" },
     ],
     promotionPlanner: [
       // 컨셉 제안 탭: 카드별 복사 버튼으로 동작 — 헤더 액션 없음
@@ -256,6 +258,7 @@
       const target = document.getElementById(button.dataset.proxyTarget);
       button.hidden = !target || target.hidden;
       button.disabled = !target || target.disabled;
+      if (target?.dataset.proxyLabel) button.textContent = target.dataset.proxyLabel;
     }));
   }
 
@@ -351,6 +354,14 @@
 
   function renderMobileActions(actionKey) {
     if (!mobileTabActions) return;
+    if (actionKey === "promotion") {
+      const label = document.getElementById("panePromotion")?.dataset.mobileView === "result" ? "프롬프트 복사" : "결과 확인";
+      mobileTabActions.replaceChildren(makeProxyAction({ label, targetId: "promotionMobilePrimaryBtn", className: "btn primary" }));
+      mobileTabActions.hidden = false;
+      document.body.classList.add("has-mobile-tab-actions");
+      syncHeaderActionStates();
+      return;
+    }
     if (actionKey === "labelSheet") {
       mobileTabActions.replaceChildren();
       mobileTabActions.hidden = true;

@@ -1050,7 +1050,7 @@ function organizerLogoPromptLines() {
   const canUseSplit = requestedArrangement === LOGO_ARRANGEMENT_SPEC.split && splitLeftCount > 0 && splitRightCount > 0;
   const arrangementSpec = canUseSplit
     ? requestedArrangement
-    : (logoItems.length >= 6 ? LOGO_ARRANGEMENT_SPEC.grid : LOGO_ARRANGEMENT_SPEC.row);
+    : (_s.logoArrangement === "grid" ? LOGO_ARRANGEMENT_SPEC.grid : LOGO_ARRANGEMENT_SPEC.row);
   const roleLabels = normalizeLogoRoleLabels(_s.logoRoleLabels);
   const activeRoleLabels = Object.keys(LOGO_ROLE_SPEC)
     .filter((role) => logoItems.some((item) => item.role === role))

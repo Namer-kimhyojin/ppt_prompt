@@ -158,6 +158,7 @@
   }
 
   function getPromotionPrompt() {
+    if (typeof window.getCurrentPromotionPrompt === "function") return window.getCurrentPromotionPrompt();
     return document.getElementById("promotionPromptPreview")?.value?.trim() || "";
   }
 

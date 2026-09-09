@@ -128,6 +128,7 @@
   <link rel="stylesheet" href="styles/document-design-hierarchy.css?v=1" />
   <link rel="stylesheet" href="styles/generator.css?v=6" />
   <link rel="stylesheet" href="styles/promotion.css?v=3" />
+  <link rel="stylesheet" href="styles/promotion-workspace.css?v=1" />
   <link rel="stylesheet" href="styles/concept-suggest.css" />
   <link rel="stylesheet" href="styles/photo-transform.css?v=12" />
   <link rel="stylesheet" href="styles/image-generation.css" />
@@ -713,9 +714,9 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
                   <button type="button" class="promo-sqp-chip" data-sqp-mode="direct" data-sqp-unit="px" data-sqp-w="800" data-sqp-h="600" title="카카오 메시지 (800×600 px)">메시지</button>
                 </div>
                 <div class="promo-sqp-group">
-                  <span class="promo-sqp-label">복사용지 (A4, B4 등)</span>
-                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="5:7" data-sqp-orientation="vertical" title="일반 복사용지 세로 (A4·A3·A5 등 공통 비율)">세로</button>
-                  <button type="button" class="promo-sqp-chip" data-sqp-mode="ratio" data-sqp-ratio="7:5" data-sqp-orientation="horizontal" title="일반 복사용지 가로 (A4·A3·A5 등 공통 비율)">가로</button>
+                  <span class="promo-sqp-label">A4 용지</span>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="direct" data-sqp-unit="cm" data-sqp-w="21" data-sqp-h="29.7" title="A4 세로 · 21 × 29.7 cm">A4 세로</button>
+                  <button type="button" class="promo-sqp-chip" data-sqp-mode="direct" data-sqp-unit="cm" data-sqp-w="29.7" data-sqp-h="21" title="A4 가로 · 29.7 × 21 cm">A4 가로</button>
                 </div>
               </div>
               <div id="promotionRatioModeBox">
@@ -6055,15 +6056,16 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/skill-preset-contract.js?v=1"></script>
   <script src="app.js?v=5"></script>
   <script src="src/promptdeck-api-globals.js"></script>
-  <script src="src/tabs.js?v=16"></script>
+  <script src="src/tabs.js?v=17"></script>
   <script src="src/theme.js?v=2"></script>
   <script src="src/generator.js?v=7"></script>
-  <script src="src/promotion-data.js?v=2"></script>
+  <script src="src/promotion-data.js?v=3"></script>
   <script src="src/promotion-utils.js"></script>
   <script src="src/promotion-i18n.js"></script>
-  <script src="src/promotion-prompt-engine.js?v=3"></script>
+  <script src="src/promotion-prompt-engine.js?v=4"></script>
   <script src="src/promotion-parser.js?v=2"></script>
-  <script src="src/promotion.js?v=4"></script>
+  <script src="src/promotion-workspace.js?v=1"></script>
+  <script src="src/promotion.js?v=5"></script>
   <script src="src/concept-styles.js"></script>
   <script src="src/concept-suggest.js"></script>
   <script src="src/photo-transform.js?v=22"></script>
@@ -6115,7 +6117,7 @@ appendix|^##\s+부록\s+([A-Z]\d+)\.\s*(.+)$</textarea>
   <script src="src/image-generation-client.js"></script>
   <script src="src/deck-quality-loop.js?v=3"></script>
   <script src="src/generation-queue.js"></script>
-  <script src="src/slide-image-generation.js?v=3"></script>
+  <script src="src/slide-image-generation.js?v=4"></script>
   <script src="src/map-prompt.js?v=3"></script>
   <script src="src/data-diagram-presets.js?v=1"></script>
   <script src="src/data-diagram.js?v=3"></script>

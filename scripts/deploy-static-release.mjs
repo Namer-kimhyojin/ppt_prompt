@@ -257,6 +257,11 @@ async function verifyAssetHashes(origin, head) {
     "src/label-sheet-workspace.js",
     "src/label-sheet-renderer.js",
     "src/tabs.js",
+    "src/promotion.js",
+    "src/promotion-data.js",
+    "src/promotion-prompt-engine.js",
+    "src/promotion-workspace.js",
+    "styles/promotion-workspace.css",
     "src/qr-batch.js",
     "src/qr-generator.js",
     "src/zip-writer.js",
@@ -788,7 +793,7 @@ async function main() {
   if (previous) console.log(`[release] Previous production: ${previous.Source} ${previous.Deployment}`);
 
   run(process.execPath, ["scripts/static-release-hash-test.mjs"]);
-  for (const script of ["pptx-prompt:test", "diagram:test", "document-design:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
+  for (const script of ["pptx-prompt:test", "promotion:test", "diagram:test", "document-design:test", "label:test", "smoke:test", "build:static", "seo:test", "guides:test", "static:test", "pages:admin:test"]) {
     runNpm(["run", script]);
   }
   run(process.execPath, ["scripts/workers-ai-mixer-test.mjs"]);
