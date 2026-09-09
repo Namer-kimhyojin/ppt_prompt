@@ -99,6 +99,7 @@ try {
       styleContractVersion: window.PromptDeckVisualStyleContract?.version,
       fullStyleCount: window.PromptDeckVisualStyleContract?.listDiagramStyles({ mode: "all" }).length,
       styleCounts: window.PromptDeckVisualStyleContract?.counts,
+      expectedStyleCount: window.PromptDeckSlideStyleCatalog?.release?.expectedTotal,
     };
   });
   record(contract.schema === "promptdeck-data-diagram/2.0", "DiagramSpec v2 schema is missing");
@@ -109,11 +110,11 @@ try {
   record(contract.svg.includes('width="1920"') && contract.svg.includes('height="1080"'), "16:9 SVG export size is incorrect");
   record(contract.registry === "dataDiagram", "Data Diagram prompt source was not registered");
   record(contract.styleContractVersion === "1.1", "Shared VisualStyleContract v1.1 was not loaded");
-  record(contract.fullStyleCount === 204 && contract.styleCounts?.total === 204, "Data Diagram did not expose the complete 204-style slide gallery");
+  record(contract.expectedStyleCount > 0 && contract.fullStyleCount === contract.expectedStyleCount && contract.styleCounts?.total === contract.expectedStyleCount, "Data Diagram did not expose the complete slide gallery");
   record(contract.styleCounts?.compatible > 10, "Diagram-compatible style count was still limited to the 10-card preview");
   record((await page.locator("#diagramBestMatch svg").textContent()).includes("참여기업 모집"), "Expected match did not use source labels");
 
-  record((await page.locator("#diagramSlideStyleCount").textContent()).includes("전체 갤러리 204개"), "Compact DNA gallery did not disclose the full catalog size");
+  record((await page.locator("#diagramSlideStyleCount").textContent()).includes(`전체 갤러리 ${contract.expectedStyleCount}개`), "Compact DNA gallery did not disclose the full catalog size");
   await page.click("#diagramOpenSlideStyleGalleryBtn");
   record(await page.locator("#diagramSlideStyleDialog").isVisible(), "Full slide-style gallery dialog did not open");
   const desktopGalleryGeometry = await page.locator("#diagramSlideStyleDialog").evaluate((backdrop) => {
@@ -137,7 +138,9 @@ try {
     "Full gallery heading or close control was clipped above the desktop viewport",
   );
   record((await page.locator("#diagramSlideStyleAllGrid .diagram-style-browser-card").count()) === 24, "Full gallery did not render its first 24-style batch");
-  record((await page.locator("#diagramSlideStyleCategories [role=tab]").count()) === 15, "Full gallery category navigation is incomplete");
+  const expectedCategoryIds = await page.evaluate(() => ["all", "recommended", "compatible", ...window.PromptDeckSlideStyleCatalog.categories.map(category => category.id)]);
+  const actualCategoryIds = await page.locator("#diagramSlideStyleCategories [role=tab]").evaluateAll(tabs => tabs.map(tab => tab.dataset.slideStyleCategory));
+  record(JSON.stringify(actualCategoryIds) === JSON.stringify(expectedCategoryIds), "Full gallery category navigation is incomplete");
   const desktopCategoryLayout = await page.locator("#diagramSlideStyleCategories").evaluate((categoryHost) => {
     const hostRect = categoryHost.getBoundingClientRect();
     const categories = [...categoryHost.querySelectorAll("[role=tab]")];
@@ -155,6 +158,13 @@ try {
   );
   await page.click("#diagramSlideStyleLoadMoreBtn");
   record((await page.locator("#diagramSlideStyleAllGrid .diagram-style-browser-card").count()) === 48, "Full gallery did not reveal the next style batch");
+  await page.locator('#diagramSlideStyleCategories [data-slide-style-category="trend-2026"]').click();
+  record((await page.locator("#diagramSlideStyleAllGrid .diagram-style-browser-card").count()) === 6, "Shared gallery omitted 2026 trend styles");
+  const trendPreview = page.locator('#diagramSlideStyleAllGrid [data-slide-style-id="soft-glass-data"] img');
+  await trendPreview.scrollIntoViewIfNeeded();
+  await trendPreview.evaluate(image => image.decode());
+  record(await trendPreview.evaluate(image => image.naturalWidth === 960 && image.naturalHeight === 540), "Trend preview failed to load");
+  await page.locator('#diagramSlideStyleCategories [data-slide-style-category="all"]').click();
   const nonDiagramStyle = await page.evaluate(() => {
     const bridge = window.PromptDeckVisualStyleContract;
     const style = window.PromptDeckSlideStyleCatalog.styles.find((candidate) => !bridge.isDiagramCompatible(candidate));

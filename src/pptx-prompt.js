@@ -26,6 +26,7 @@
     <div class="pp-workspace-grid">
       <section class="pp-gallery" aria-labelledby="ppGalleryHeading">
         <div class="pp-section-title"><div><span class="pp-step">01 / STYLE LIBRARY</span><h3 id="ppGalleryHeading">어떤 느낌으로 만들까요?</h3></div><span class="pp-total">${catalog.styles.length}개 스타일</span></div>
+        <div class="pp-trend-entry"><div><strong>2026 트렌드</strong><p>촉감 있는 재질부터 대담한 타이포까지, 새로운 발표 스타일 ${catalog.list({ category: "trend-2026" }).length}종</p></div><button type="button" id="ppBrowseTrends" class="pp-button" aria-pressed="false">트렌드 보기</button></div>
         <div class="pp-search-row"><label class="pp-field pp-search">스타일 검색<input id="ppSearch" type="search" placeholder="예: 제안서, 미니멀, 기술" autocomplete="off"></label><label class="pp-field">분야<select id="ppCategory"><option value="recommended">추천 스타일</option><option value="all">전체 스타일</option>${options(Object.fromEntries(catalog.categories.map((item) => [item.id, item.label])))}</select></label></div>
         <div class="pp-gallery-meta"><span id="ppMatchCount" role="status"></span><button type="button" class="pp-text-button" id="ppImportStyle">공통 탭 스타일·색상 가져오기</button></div>
         <div id="ppStyleGrid" class="pp-style-grid" role="group" aria-label="발표자료 스타일"></div>
@@ -98,6 +99,7 @@
   }
   function renderGallery() {
     const matches = catalog.list({ category, query });
+    q("#ppBrowseTrends").setAttribute("aria-pressed", String(category === "trend-2026"));
     q("#ppMatchCount").textContent = `${matches.length}개 중 ${Math.min(visible, matches.length)}개 표시`;
     q("#ppStyleGrid").innerHTML = matches.length ? matches.slice(0, visible).map((style) => `<button type="button" class="pp-style-card" data-pp-style="${esc(style.id)}" aria-pressed="${style.id === state.styleId}" aria-label="${esc(style.nameKo)} 스타일 선택"><span class="pp-card-image"><img src="${esc(style.previewImage)}" alt="" loading="lazy" decoding="async" width="960" height="540"><span class="pp-card-selected">선택됨</span></span><span class="pp-card-body"><strong>${esc(style.nameKo)}</strong><span class="pp-card-english">${esc(style.nameEn)}</span><span class="pp-card-description">${esc(style.description)}</span><span class="pp-card-use">${esc(style.bestFor)}</span></span></button>`).join("") : '<div class="pp-empty"><strong>검색 결과가 없습니다.</strong><p>검색어를 바꾸거나 전체 스타일을 확인해 보세요.</p><button type="button" class="pp-button" id="ppClearSearch">전체 스타일 보기</button></div>';
     q("#ppLoadMore").hidden = matches.length <= visible;
@@ -161,6 +163,10 @@
     }
   });
   q("#ppCategory").addEventListener("change", (event) => { category = event.target.value; visible = 12; renderGallery(); });
+  q("#ppBrowseTrends").addEventListener("click", () => {
+    category = "trend-2026"; query = ""; visible = 12;
+    q("#ppCategory").value = category; q("#ppSearch").value = ""; renderGallery();
+  });
   root.addEventListener("click", (event) => {
     const card = event.target.closest("[data-pp-style]");
     if (card) selectStyle(card.dataset.ppStyle);

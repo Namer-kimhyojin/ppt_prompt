@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "pack": "trend2026",
+  "sourceKind": "ai-image-generation",
+  "generator": "OpenAI imagegen",
+  "reviewStatus": "visual-review-passed",
+  "reviewedOn": "2026-09-09",
+  "qualityGate": [
+    "generated visual rather than HTML/SVG fallback",
+    "16:9 source at least 1280x720",
+    "visual composition and readable key copy reviewed",
+    "normalized to 960x540 JPEG quality 92"
+  ],
+  "assets": [
+    {
+      "id": "calm-index-editorial",
+      "file": "calm-index-editorial.jpg",
+      "catalogAnchor": "Room to think.",
+      "sourceFile": "calm-index-editorial.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceBytes": 1594405,
+      "width": 960,
+      "height": 540,
+      "bytes": 95442,
+      "sha256": "f8756ce6ee970fc21b922fc614b4cfccf7a979fbe4fd0ecfd3c87a95aefac39b"
+    },
+    {
+      "id": "field-notes-briefing",
+      "file": "field-notes-briefing.jpg",
+      "catalogAnchor": "What the field revealed",
+      "sourceFile": "field-notes-briefing.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceBytes": 2133281,
+      "width": 960,
+      "height": 540,
+      "bytes": 131403,
+      "sha256": "26d9ff6178464d5073b3e0370677e6a74295dd8ec1fd053b6d68342438bc5731"
+    },
+    {
+      "id": "soft-glass-data",
+      "file": "soft-glass-data.jpg",
+      "catalogAnchor": "A clearer view of progress",
+      "sourceFile": "soft-glass-data.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceBytes": 1251241,
+      "width": 960,
+      "height": 540,
+      "bytes": 70271,
+      "sha256": "ef267ff32f85f4ebcfcf02075648ff8535429a856360de1f538a184d7ec1193e"
+    },
+    {
+      "id": "retro-window-story",
+      "file": "retro-window-story.jpg",
+      "catalogAnchor": "From idea to working model",
+      "sourceFile": "retro-window-story.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceBytes": 1165795,
+      "width": 960,
+      "height": 540,
+      "bytes": 84931,
+      "sha256": "d513adb60d92af3948b7b38740b1286bd6c1a049fb826ebc4d34023c107ee4a4"
+    },
+    {
+      "id": "cinematic-contact-sheet",
+      "file": "cinematic-contact-sheet.jpg",
+      "catalogAnchor": "One place. Many possibilities.",
+      "sourceFile": "cinematic-contact-sheet.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceBytes": 2208107,
+      "width": 960,
+      "height": 540,
+      "bytes": 175342,
+      "sha256": "0be01356ed1e3104c20b17de28af7096142a37cf3aab04d2dc4059f512404154"
+    },
+    {
+      "id": "chromatic-type-story",
+      "file": "chromatic-type-story.jpg",
+      "catalogAnchor": "MAKE IT MATTER",
+      "sourceFile": "chromatic-type-story.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceBytes": 1487685,
+      "width": 960,
+      "height": 540,
+      "bytes": 102617,
+      "sha256": "bbbc2113aa80e89eee4465d4f4eca4fd5c577a9e6ee6a4cc35b2060c36d0e0cb"
+    }
+  ]
+}

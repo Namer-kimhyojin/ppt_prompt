@@ -3218,6 +3218,9 @@
     try {
       const parsed = new URL(value, window.location.origin);
       if (parsed.origin !== window.location.origin) return null;
+      if (parsed.pathname === '/api/mixer-reference' && /^[a-f0-9]{32}$/i.test(parsed.searchParams.get('asset') || '')) {
+        return `/api/mixer-reference?asset=${parsed.searchParams.get('asset').toLowerCase()}`;
+      }
       if (!parsed.pathname.startsWith('/outputs/mixer_samples/')) return null;
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;
     } catch (_) {

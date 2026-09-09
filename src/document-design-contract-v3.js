@@ -49,6 +49,7 @@
       `색상: 주색 ${spec.palette.primary}, 보조색 ${spec.palette.secondary}, 강조색 ${spec.palette.accent}, 바탕 ${spec.palette.background}, 본문 ${spec.palette.text}, 보조 글자 ${spec.palette.muted}, 면 ${spec.palette.surface}, 선 ${spec.palette.border}. 주색은 제목·구획, 강조색은 핵심 포인트, 보조색은 연결 정보에 일관되게 배치한다.`,
       ...(spec.colorScheme ? [`색상 조합: ${spec.colorScheme.label}${spec.colorScheme.customizedRoles.length ? " (일부 색상 직접 조정)" : ""}. ${spec.colorScheme.direction}. 이 느낌은 색상 배치와 사용 면적에 창의적으로 반영하되 위에 지정한 최종 색상값을 기준으로 한다.`, "표지·본문·표·차트·도식에서 같은 색상 역할을 유지한다. 색면 위의 글자는 읽기 쉬운 밝거나 어두운 색을 선택하고, 차트의 구분은 색과 직접 표기·선 모양을 함께 사용한다. 원본 사진이나 삽화는 팔레트 변경만을 이유로 다시 채색하지 않는다."] : []),
       `서체 범위: ${Object.entries(spec.typographyScope).map(([k, v]) => `${scopeNames[k]}=${v}`).join("; ")}. 한글 글리프와 사용 권한을 확인하고 동일 서체를 포함할 수 없으면 유사한 서체로 대체한 사실을 알린다.`,
+      ...(window.PromptDeckDocumentHierarchy?.prompt(spec.hierarchy) || []),
       `요소 표현: ${Object.entries(spec.componentStyles).map(([key, value]) => componentLabels[key]?.[value]).filter(Boolean).join("; ")}.`,
       "표는 머리행·단위·수치 정렬을 명확히 하고 다음 면에 이어질 때 머리행을 반복한다. 차트는 원본 데이터의 의미를 우선하며, 선택 형식이 부적합하면 왜곡 없이 적합한 형식으로 조정한다. 단위·기준일·출처는 제공된 경우만 표시한다.",
       "이미지는 제공된 이미지나 권리가 확인된 자료만 활용한다. 그림의 중요 부분을 임의로 자르지 않고 캡션·출처를 인접 배치한다. 배경·아이콘·픽토그램·도식은 내용의 이해를 돕는 위치에 배치하고 스타일을 통일한다.",

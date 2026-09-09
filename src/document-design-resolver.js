@@ -29,7 +29,7 @@
       colorPresetId: "", colorBaseBundleId: "", colorFeel: { ...palettes?.defaultFeel }, keepPaletteOnBundleChange: true,
       overrides: { colors: {}, fonts: {}, typographyScope: {}, components: {} },
       physicalSpec: { sizeId: "A4", widthMm: 210, heightMm: 297, orientation: "portrait", bindingId: "none", duplex: "single", spreadMode: "single-pages", bleedMm: 0 },
-      formats: ["PDF"], sourcePrompt: "", interpretation: "balanced",
+      formats: ["PDF"], sourcePrompt: "", interpretation: "balanced", hierarchy: window.PromptDeckDocumentHierarchy?.defaults(),
     };
   }
   function normalize(input) {
@@ -56,6 +56,7 @@
       activePageId: bundle.pages.some((p) => p.id === raw.activePageId) ? raw.activePageId : bundle.pages[0].id,
       feel, overrides, formats: formats.length ? formats : base.formats,
       interpretation: pick(raw.interpretation, ["faithful", "balanced", "creative"], "balanced"),
+      hierarchy: window.PromptDeckDocumentHierarchy?.normalize(raw.hierarchy),
       pageLayouts: window.PromptDeckDocumentLayouts?.normalize(bundle.id, raw.pageLayouts) || {},
       colorPresetId: palettes?.get(raw.colorPresetId)?.id || "",
       colorBaseBundleId: bundles.get(raw.colorBaseBundleId)?.id || "",
@@ -146,6 +147,7 @@
     const design = { bundleId: bundle.id, bundleVersion: bundle.version, familyId: bundle.familyId, label: bundle.label, variant: bundle.variant, pages: clone(bundle.pages), palette, fonts, typographyScope: scope, feel: clone(state.feel), componentStyles, physicalSpec: clone(physical), image: bundle.image, rules: bundle.rules.slice() };
     design.pageLayouts = clone(state.pageLayouts);
     design.interpretation = state.interpretation;
+    if (window.PromptDeckDocumentHierarchy?.enabled(state.hierarchy)) design.hierarchy = clone(state.hierarchy);
     design.pages.forEach((page) => {
       const layout = window.PromptDeckDocumentLayouts?.get(bundle.id, page.id, state.pageLayouts[page.id] || "default");
       if (layout) page.layout = { ...layout };

@@ -56,6 +56,7 @@
   let paletteModal;
   let layoutWorkbench;
   let studio;
+  let hierarchyModal;
   let designLibrary;
   const fontScopes = new Set();
 
@@ -156,6 +157,11 @@
       state.overrides = clone(next.overrides);
       syncFontSelection();
       settle("선택한 요소 표현을 문서 전체·참고 이미지·디자인 지침에 적용했습니다.");
+    } });
+    hierarchyModal = window.PromptDeckDocumentHierarchyModal?.create({ root, getState: () => state, apply(hierarchy) {
+      undoState = clone(state);
+      state.hierarchy = hierarchy;
+      settle(hierarchy.presetId === "none" ? "번호·기호의 추가 지정을 해제했습니다." : "선택한 위계를 제목·목록 견본과 디자인 지침에 적용했습니다.");
     } });
     designLibrary = window.PromptDeckDocumentLibrary?.create({ root, getState: () => state, renderFrame, fitAll, downloadText, apply(next) {
       undoState = clone(state);
@@ -397,6 +403,7 @@
     const relevant = (page, label) => page && page.id !== state.activePageId ? `<button type="button" class="dw-related-page" data-page="${esc(page.id)}">${esc(label)}에서 확인 ${icon("arrow")}</button>` : "";
     const custom = Object.values(overrides).some((value) => value && Object.keys(value).length);
     return `${window.PromptDeckDocumentPaletteModal?.summary(state) || ""}<div class="dw-feel-fields">${FEEL.map((field) => `<fieldset class="dw-field"><legend>${field.label}</legend><p>${field.hint}</p><div class="dw-segmented">${field.options.map(([value, label]) => `<label><input type="radio" name="${prefix}-feel-${field.key}" data-feel="${field.key}" value="${value}" ${state.feel[field.key] === value ? "checked" : ""}><span>${label}</span></label>`).join("")}</div>${feelPageCue(field, pages)}</fieldset>`).join("")}</div>${custom ? '<div class="dw-custom-note">개별 조정 적용 중 <button type="button" data-action="clear-overrides">개별 조정 해제</button></div>' : ''}
+      ${window.PromptDeckDocumentHierarchyModal?.summary(state) || ""}
       <details class="dw-control-details"><summary>서체</summary><div class="dw-detail-content"><label class="dw-select-label">서체 조합<select data-font-pair><option value="default">디자인 기본 서체</option><option value="sans">명료한 고딕</option><option value="serif">차분한 명조</option><option value="mixed">고딕 제목 · 명조 본문</option></select></label><p class="dw-help">서체를 바꿀 범위를 선택하세요.</p><div class="dw-scope-checks">${[["heading", "제목"], ["body", "본문"], ["numeral", "숫자"], ["table", "표"], ["caption", "캡션"], ["quote", "인용"]].map(([key, label]) => `<label class="dw-check"><input type="checkbox" data-font-scope="${key}" ${fontScopes.has(key) ? "checked" : ""}>${label}</label>`).join("")}</div></div></details>
       ${tablePage || chartPage || imagePage || diagramPage ? `<details class="dw-control-details"><summary>표 · 차트 · 이미지</summary><div class="dw-detail-content">${tablePage ? choices(prefix, "표 표현", "tableStyle", [["rules", "가로선"], ["striped", "줄무늬"], ["plain", "무테"]], components.tableStyle || "rules") + relevant(tablePage, pageName(tablePage)) : ""}${chartPage ? choices(prefix, "차트 표현", "chartType", [["bar", "비교"], ["line", "추세"], ["donut", "구성비"]], components.chartType || "bar") + relevant(chartPage, pageName(chartPage)) : ""}${imagePage ? choices(prefix, "이미지 색감", "imageStyle", [["original", "원본 색감"], ["muted", "차분한 색감"]], components.imageStyle || "original") + relevant(imagePage, pageName(imagePage)) : ""}${diagramPage ? choices(prefix, "도식 표현", "diagramStyle", [["flow", "흐름"], ["hierarchy", "계층"]], components.diagramStyle || "flow") + relevant(diagramPage, pageName(diagramPage)) : ""}</div></details>` : ""}
       <details class="dw-control-details"><summary>${iconPage ? "배경 · 안내 아이콘" : "배경"}</summary><div class="dw-detail-content">${choices(prefix, "배경 적용 범위", "backgroundScope", [["none", "없음"], ["cover", "표지"], ["chapter", "표지·장"], ["all", "전체"]], components.backgroundScope || "cover")}${iconPage ? choices(prefix, "안내 아이콘", "iconStyle", [["line", "가는 선"], ["solid", "채운 형태"]], components.iconStyle || "line") + relevant(iconPage, pageName(iconPage)) : ""}<p class="dw-help">장식의 정도가 최소이면 장식 표현을 절제합니다. 배경과 본문은 읽기 쉬운 대비를 유지하세요.</p></div></details>
@@ -552,6 +559,7 @@
       const action = button.dataset.action || { documentDesignGenerateBtn: "generate", documentDesignCopyBtn: "copy-design", documentDesignSendCommonBtn: "send-common", documentDesignDownloadBtn: "download-json", documentDesignSampleBtn: "sample", documentDesignResetBtn: "reset-design" }[button.id];
       if (action === "resume") return setStep(2);
       if (action === "open-studio") return studio?.open();
+      if (action === "open-hierarchy") return hierarchyModal?.open();
       if (action === "open-density") return studio?.open("density");
       if (action === "open-library") return designLibrary?.open();
       if (action === "open-palette") return paletteModal?.open();

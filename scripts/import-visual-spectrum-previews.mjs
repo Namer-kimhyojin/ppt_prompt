@@ -31,6 +31,7 @@ const sourceFiles = [
   "src/slide-style-presets/event-guidance.js",
   "src/slide-style-presets/visual-spectrum.js",
   "src/slide-style-presets/proposal-planning.js",
+  "src/slide-style-presets/trend-2026.js",
   "src/slide-style-catalog.js",
 ];
 const context = { console };
@@ -146,6 +147,7 @@ for (const asset of assets) {
   fs.copyFileSync(path.join(stageDir, asset.file), path.join(outputDir, asset.file));
 }
 fs.copyFileSync(path.join(stageDir, path.basename(manifestPath)), manifestPath);
+if (!path.resolve(stageDir).startsWith(path.resolve("tmp") + path.sep)) throw new Error("Import cleanup must remain inside the workspace tmp folder");
 fs.rmSync(stageDir, { recursive: true, force: true });
 console.log(`imported ${assets.length} reviewed AI previews for ${packKey}`);
 console.log(`wrote ${path.relative(process.cwd(), manifestPath)}`);

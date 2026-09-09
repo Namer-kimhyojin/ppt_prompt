@@ -236,6 +236,7 @@ async function verifyAssetHashes(origin, head) {
     "src/visual-style-contract.js",
     "src/slide-style-presets/visual-spectrum.js",
     "src/slide-style-presets/proposal-planning.js",
+    "src/slide-style-presets/trend-2026.js",
     "src/slide-style-catalog.js",
     "src/pptx-prompt-contract.js",
     "src/pptx-prompt.js",
@@ -267,6 +268,8 @@ async function verifyAssetHashes(origin, head) {
     "src/document-design-layouts.js",
     "src/document-design-layout-workbench.js",
     "src/document-design-studio.js",
+    "src/document-design-hierarchy.js",
+    "src/document-design-hierarchy-modal.js",
     "src/document-design-library.js",
     "src/document-design-migration.js",
     "src/document-design-contract-v3.js",
@@ -281,6 +284,7 @@ async function verifyAssetHashes(origin, head) {
     "styles/document-design-layouts.css",
     "styles/document-design-layout-workbench.css",
     "styles/document-design-studio.css",
+    "styles/document-design-hierarchy.css",
     "assets/vendor/html2canvas.min.js",
     "assets/fonts/document-design/NotoSansKR.woff2",
     "assets/fonts/document-design/NotoSerifKR.woff2",
@@ -331,6 +335,7 @@ async function verifyAssetHashes(origin, head) {
     "assets/guides/document-design-workbench-overview.webp",
     "assets/guides/document-design-workbench-layouts-mobile.webp",
     "assets/guides/document-design-workbench-studio.webp",
+    "assets/guides/document-design-workbench-hierarchy.webp",
     "assets/guides/document-design-workbench-density-mobile.webp",
     "assets/guides/document-design-workbench-library-mobile.webp",
     "assets/document-design-icons/LICENSE.txt",
@@ -355,6 +360,7 @@ async function verifyAssetHashes(origin, head) {
     "assets/slide-style-previews/annual-business-plan.jpg",
     "assets/slide-style-previews/visual-spectrum-provenance.json",
     "assets/slide-style-previews/proposal-planning-provenance.json",
+    "assets/slide-style-previews/trend-2026-provenance.json",
   ];
   const hashes = {};
   for (const filename of files) {
@@ -366,11 +372,11 @@ async function verifyAssetHashes(origin, head) {
     assert(remoteHash === localHash, `${origin}/${filename} hash mismatch`);
     hashes[filename] = localHash;
   }
-  for (const [manifestFile, packKey] of [["visual-spectrum-provenance.json", "visualSpectrum"], ["proposal-planning-provenance.json", "proposalPlanning"]]) {
+  for (const [manifestFile, packKey, expectedCount] of [["visual-spectrum-provenance.json", "visualSpectrum", 24], ["proposal-planning-provenance.json", "proposalPlanning", 24], ["trend-2026-provenance.json", "trend2026", 6]]) {
     const provenance = JSON.parse(await fs.readFile(path.join(distDir, "assets", "slide-style-previews", manifestFile), "utf8"));
     assert(provenance.pack === packKey, `${manifestFile} pack mismatch`);
     assert(provenance.sourceKind === "ai-image-generation" && provenance.reviewStatus === "visual-review-passed", `${manifestFile} is not release-approved`);
-    assert(Array.isArray(provenance.assets) && provenance.assets.length === 24, `${manifestFile} must contain 24 assets`);
+    assert(Array.isArray(provenance.assets) && provenance.assets.length === expectedCount, `${manifestFile} must contain ${expectedCount} assets`);
     for (const asset of provenance.assets) {
       const filename = `assets/slide-style-previews/${asset.file}`;
       const local = await fs.readFile(path.join(distDir, ...filename.split("/")));
@@ -478,6 +484,11 @@ async function verifyHttpContracts(origin) {
   });
   assert(response.status === 403, `${origin}/api/mixer-reference accepted a cross-origin request`);
 
+  response = await fetchChecked(`${origin}/api/mixer-reference?asset=00000000000000000000000000000000`);
+  assert(response.status === 404, `${origin}/api/mixer-reference stored-image lookup returned ${response.status}`);
+  const missingMixerImage = await response.json();
+  assert(/찾을 수 없|보관기간/u.test(String(missingMixerImage?.error || "")), `${origin}/api/mixer-reference returned an unexpected stored-image error`);
+
   response = await fetchChecked(`${origin}/outputs/mixer_samples/manifest.json`);
   assert(response.status === 200, `${origin}/outputs/mixer_samples/manifest.json returned ${response.status}`);
   const manifest = await response.json();
@@ -567,9 +578,10 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
     const reviewedPreviewState = await reviewedPreview.evaluate((image) => ({
       loaded: image.complete && image.naturalWidth === 960 && image.naturalHeight === 540,
       revision: new URL(image.currentSrc || image.src).searchParams.get("v"),
+      expectedRevision: String(window.PromptDeckSlideStyleCatalog?.release?.previewRevision),
     }));
     assert(reviewedPreviewState.loaded, `${origin} reviewed AI preview did not load at 960x540`);
-    assert(reviewedPreviewState.revision === "14", `${origin} reviewed AI preview did not use revision 14`);
+    assert(reviewedPreviewState.revision === reviewedPreviewState.expectedRevision, `${origin} reviewed AI preview did not use the current revision`);
     await page.locator("#diagramSlideStyleSearch").fill("Annual Business Plan");
     await page.waitForFunction(() => document.querySelectorAll('#diagramSlideStyleAllGrid [data-slide-style-id="annual-business-plan"]').length === 1);
     const proposalPreview = page.locator('#diagramSlideStyleAllGrid [data-slide-style-id="annual-business-plan"] img');
@@ -580,13 +592,14 @@ async function verifyBrowserSurface(browser, origin, viewport, cacheToken) {
       const body = dialog.querySelector(".diagram-style-dialog-body");
       return {
         count: window.PromptDeckVisualStyleContract?.counts?.total,
+        expectedCount: window.PromptDeckSlideStyleCatalog?.release?.expectedTotal,
         dialogWidth: dialog.getBoundingClientRect().width,
         viewportWidth: window.innerWidth,
         bodyOverflow: body.scrollWidth > body.clientWidth + 1,
         pageOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
       };
     });
-    assert(layout.count === 204, `${origin} browser did not load the 204-style catalog`);
+    assert(layout.expectedCount > 0 && layout.count === layout.expectedCount, `${origin} browser did not load the complete ${layout.expectedCount}-style catalog`);
     assert(layout.dialogWidth <= layout.viewportWidth + 1, `${origin} gallery dialog overflowed ${viewport.width}px viewport`);
     assert(!layout.bodyOverflow && !layout.pageOverflow, `${origin} gallery produced horizontal overflow at ${viewport.width}px`);
     await page.locator("#diagramSlideStyleDialog [data-diagram-style-dialog-close]").last().click();

@@ -12,6 +12,7 @@ const sourceFiles = [
   "src/slide-style-presets/event-guidance.js",
   "src/slide-style-presets/visual-spectrum.js",
   "src/slide-style-presets/proposal-planning.js",
+  "src/slide-style-presets/trend-2026.js",
   "src/slide-style-catalog.js",
 ];
 const context = { console };
@@ -38,6 +39,7 @@ const requiredColorRoles = ["primary", "secondary", "accent", "background", "sur
 const reviewedPreviewPacks = [
   { key: "visualSpectrum", manifest: "visual-spectrum-provenance.json" },
   { key: "proposalPlanning", manifest: "proposal-planning-provenance.json" },
+  { key: "trend2026", manifest: "trend-2026-provenance.json" },
 ];
 const reviewedDefinitions = new Map();
 const reviewedAssets = new Map();

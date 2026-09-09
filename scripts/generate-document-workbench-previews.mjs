@@ -14,8 +14,8 @@ const outputDir = path.join(root, outputRelative);
 const guideDir = path.join(root, "assets/guides");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".woff2": "font/woff2" };
-const rendererSources = ["src/document-design-bundles.js", "src/document-design-samples.js", "src/document-design-palettes.js", "src/document-design-layouts.js", "src/document-design-resolver.js", "src/document-design-renderer.js", "styles/document-design-pages.css", "styles/document-design-variants.css", "styles/document-design-layouts.css", "styles/document-design-fonts.css"];
-const uiSources = ["index.html", "src/document-design-workbench.js", "src/document-design-palette-modal.js", "src/document-design-layout-workbench.js", "src/document-design-studio.js", "src/document-design-library.js", "styles/document-design-workbench.css", "styles/document-design-palette-modal.css", "styles/document-design-layout-workbench.css", "styles/document-design-studio.css"];
+const rendererSources = ["src/document-design-bundles.js", "src/document-design-samples.js", "src/document-design-palettes.js", "src/document-design-layouts.js", "src/document-design-hierarchy.js", "src/document-design-resolver.js", "src/document-design-renderer.js", "styles/document-design-pages.css", "styles/document-design-variants.css", "styles/document-design-layouts.css", "styles/document-design-fonts.css"];
+const uiSources = ["index.html", "src/document-design-workbench.js", "src/document-design-palette-modal.js", "src/document-design-layout-workbench.js", "src/document-design-studio.js", "src/document-design-library.js", "src/document-design-hierarchy-modal.js", "styles/document-design-workbench.css", "styles/document-design-palette-modal.css", "styles/document-design-layout-workbench.css", "styles/document-design-studio.css", "styles/document-design-hierarchy.css"];
 const shell = `<!doctype html><html lang="ko"><head><meta charset="utf-8">${rendererSources.filter((file) => file.endsWith(".css")).map((file) => `<link rel="stylesheet" href="/${file}">`).join("")}<style>body{margin:0;background:#e9eef0}#sheet{display:flex;gap:18px;padding:24px;width:1200px;box-sizing:border-box;align-items:flex-start;background:#e9eef0}.sample{width:372px;margin:0;flex:none}.sample-label{font-family:'Noto Sans KR',sans-serif;font-size:13px;line-height:20px;color:#38505b;padding:12px 2px 0}.page-slot{position:relative;background:#fff}.page-slot>.dd-page{transform-origin:top left;position:absolute;left:0;top:0}</style></head><body><div id="sheet"></div>${rendererSources.filter((file) => file.endsWith(".js")).map((file) => `<script src="/${file}"></script>`).join("")}</body></html>`;
 const server = http.createServer((request, response) => {
   const requested = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
@@ -143,6 +143,10 @@ try {
   await guidePage.waitForSelector('#dwStudioPreview[aria-busy="false"] .dd-page');
   await saveGuide("studio", "Desktop component specimen modal showing striped table rendering before application");
   await guidePage.locator('#dwStudioDialog [data-studio-close]').first().click();
+  await guidePage.locator('#dwDesktopControls [data-action="open-hierarchy"]').click();
+  await guidePage.locator('[data-hierarchy-preset="korean"]').click();
+  await saveGuide("hierarchy", "Optional Korean heading and list hierarchy presets with current theme colors and fonts");
+  await guidePage.locator('#dwHierarchyDialog [data-hierarchy-close]').first().click();
   await guidePage.setViewportSize({ width: 390, height: 844 });
   await guidePage.locator('.dw-steps [data-step="1"]').click();
   await guidePage.waitForFunction(() => [...document.querySelectorAll('.dw-card-pages')].every((host) => host.querySelectorAll('.dd-page').length === 3 && [...host.querySelectorAll('.dw-paper-frame')].every((frame) => frame.style.height)));

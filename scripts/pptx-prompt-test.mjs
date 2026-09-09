@@ -28,6 +28,7 @@ for (const style of catalog.styles) {
   assert.ok(result.prompt.includes(style.nameKo), `${style.id}: style identity`);
   assert.ok(result.prompt.includes(style.prompt.ko), `${style.id}: style grammar`);
   for (const rule of style.distinctiveRules) assert.ok(result.prompt.includes(rule), `${style.id}: distinctive rule`);
+  for (const rule of style.pptxGuidance || []) assert.ok(result.prompt.includes(rule), `${style.id}: editable style adaptation`);
   assert.match(result.prompt, /#aa11bb/);
   assert.match(result.prompt, /총 12장/);
   assert.match(result.prompt, /29\.7 × 21cm/);
@@ -41,6 +42,13 @@ assert.ok(contract.build({}).prompt, "Style-only workflow requires no source");
 assert.equal(contract.normalize({ styleId: "missing", ratio: "__proto__", purpose: "constructor", notes: "false" }).ratio, "16:9");
 assert.equal(Object.keys(contract.normalize({ colorOverrides: { primary: "red", background: "#aabbcc", evil: "#ffffff" } }).colorOverrides).length, 1);
 console.log(`PASS: ${catalog.styles.length} styles preserve identity, source, color overrides and editable PPTX instructions`);
+const trendStyles = catalog.list({ category: "trend-2026" });
+assert.equal(trendStyles.length, 6);
+assert.equal(new Set(trendStyles.map(style => style.settings.composition.grid)).size, 6, "Trend layouts must differ structurally");
+for (const style of trendStyles) {
+  assert.ok(style.pptxGuidance.length >= 2);
+  assert.ok(catalog.list({ category: "all", query: "2026 트렌드" }).some(item => item.id === style.id));
+}
 
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
 const csp = fs.readFileSync(path.join(root, staticBuild ? "_headers" : "static-pages/_headers"), "utf8").match(/Content-Security-Policy: (.+)/)?.[1]?.trim();
@@ -69,7 +77,26 @@ try {
   assert.equal(await page.locator(".app-tabs-bar #tabActions").count(), 0);
   assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 12);
   await page.screenshot({ path: path.join(artifacts, "desktop-gallery.png") });
+  await page.locator("#ppSearch").fill("NO-STYLE-EXISTS-86743");
+  await page.locator("#ppBrowseTrends").click();
+  assert.equal(await page.locator("#ppSearch").inputValue(), "", "Trend shortcut clears stale search");
+  assert.equal(await page.locator("#ppCategory").inputValue(), "trend-2026");
+  assert.equal(await page.locator("#ppBrowseTrends").getAttribute("aria-pressed"), "true");
+  assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 6);
+  assert.ok(await page.locator("#ppLoadMore").isHidden());
+  for (const style of trendStyles) {
+    const card = page.locator(`[data-pp-style="${style.id}"]`);
+    await card.scrollIntoViewIfNeeded();
+    await card.locator("img").evaluate(image => image.decode());
+    assert.equal(await card.locator("img").evaluate(image => image.naturalWidth), 960);
+    await card.click();
+    assert.equal(await page.locator("#ppSelectedName").textContent(), style.nameKo);
+    for (const rule of style.pptxGuidance) assert.ok((await page.locator("#ppOutput").inputValue()).includes(rule));
+  }
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.screenshot({ path: path.join(artifacts, "desktop-trends.png") });
   await page.locator("#ppCategory").selectOption("all");
+  assert.equal(await page.locator("#ppBrowseTrends").getAttribute("aria-pressed"), "false");
   await page.locator("#ppLoadMore").click();
   assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 24);
   await page.locator("#ppSearch").fill("NO-STYLE-EXISTS-86743");

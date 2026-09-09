@@ -16,6 +16,7 @@ const sourceFiles = [
   "src/slide-style-presets/event-guidance.js",
   "src/slide-style-presets/visual-spectrum.js",
   "src/slide-style-presets/proposal-planning.js",
+  "src/slide-style-presets/trend-2026.js",
   "src/slide-style-catalog.js",
 ];
 const context = { console };

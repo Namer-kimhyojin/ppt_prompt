@@ -247,6 +247,7 @@
       label.prepend(icon);
     });
     content.setAttribute("data-dd-content", "");
+    window.PromptDeckDocumentHierarchy?.decorate(content, design.hierarchy, definition.kind);
     const running = group("dd-running-head", text("span", "", sample.author), text("span", "", definition.label));
     const footer = group("dd-page-footer", text("span", "dd-page-foot-title", sample.subtitle), text("span", "dd-page-number", String(design.pages.indexOf(definition) + 1).padStart(2, "0")));
     node.append(running, content, footer);
@@ -369,7 +370,7 @@
       if (currentContent.children.length > 1) { block.remove(); queue.unshift(block); nextPage(); continue; }
       // A compound sample block may be taller than the available page area.
       // Unwrap its flow children instead of hiding content or reducing type size.
-      if (block.children.length > 1 && !["TABLE", "FIGURE"].includes(block.tagName)) {
+      if (block.children.length > 1 && !["TABLE", "FIGURE", "H1", "H2", "H3"].includes(block.tagName)) {
         const pieces = [...block.children]; block.remove(); queue.unshift(...pieces); continue;
       }
       const frame = block.querySelector(".dd-photo-frame");

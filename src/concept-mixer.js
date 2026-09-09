@@ -91,24 +91,28 @@
       if (!/^image\/(png|jpeg|webp)$/i.test(blob.type) || !blob.size) {
         throw new Error('Cloudflare가 유효한 이미지 파일을 반환하지 않았습니다.');
       }
+      const savedUrl = String(response.headers.get('X-PromptDeck-Saved-Url') || '').trim();
+      if (!savedUrl) {
+        throw new Error('이미지는 생성됐지만 서버 저장 주소를 확인하지 못했습니다. 다시 시도해 주세요.');
+      }
       const bitmap = await createImageBitmap(blob);
-      let dataUrl;
+      let previewUrl;
       try {
         const canvas = document.createElement('canvas');
         const scale = Math.min(1, 768 / Math.max(bitmap.width, bitmap.height));
         canvas.width = Math.max(1, Math.round(bitmap.width * scale));
         canvas.height = Math.max(1, Math.round(bitmap.height * scale));
         canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-        dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        previewUrl = canvas.toDataURL('image/jpeg', 0.88);
       } finally {
         bitmap.close();
       }
       try {
-        if (!setCustomSample(itemId, 0, dataUrl)) throw new Error('invalid sample');
+        if (!setCustomSample(itemId, 0, savedUrl)) throw new Error('invalid sample');
       } catch {
-        throw new Error('생성 이미지의 브라우저 저장 공간이 부족하거나 저장이 차단되었습니다. 기존 참조 이미지는 유지됩니다.');
+        throw new Error('서버 저장 주소를 이 브라우저에 기록하지 못했습니다. 기존 참조 이미지는 유지됩니다.');
       }
-      return dataUrl;
+      return { previewUrl, savedUrl };
     } catch (error) {
       if (error.name === 'AbortError') throw new Error('이미지 생성 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.');
       if (error instanceof TypeError) throw new Error('이미지 생성 서버에 연결하지 못했습니다. 네트워크 연결을 확인해 주세요.');
@@ -145,6 +149,9 @@
     try {
       const parsed = new URL(raw, window.location.origin);
       if (parsed.origin !== window.location.origin) return '';
+      if (parsed.pathname === '/api/mixer-reference' && /^[a-f0-9]{32}$/i.test(parsed.searchParams.get('asset') || '')) {
+        return `/api/mixer-reference?asset=${parsed.searchParams.get('asset').toLowerCase()}`;
+      }
       if (!parsed.pathname.startsWith('/outputs/mixer_samples/')) return '';
       return `${parsed.pathname}${parsed.search}${parsed.hash}`;
     } catch (_) {
@@ -10008,10 +10015,10 @@
           return;
         }
         if (window.PROMPTDECK_STATIC_MODE) {
-          const dataUrl = await generateStaticCloudflareSample(prompt, subject.id);
-          if (subjectImg) subjectImg.src = dataUrl;
+          const generated = await generateStaticCloudflareSample(prompt, subject.id);
+          if (subjectImg) subjectImg.src = generated.previewUrl;
           isSubjectOverlayOpen = false;
-          showMixerResultOverlay('참조 이미지 생성 성공', dataUrl, 'Cloudflare Workers AI로 생성한 주제 참조 이미지를 이 브라우저에 저장했습니다.');
+          showMixerResultOverlay('참조 이미지 생성·저장 성공', generated.previewUrl, 'Cloudflare Workers AI로 생성한 주제 참조 이미지를 서버에 저장했습니다. 저장 주소는 이 브라우저에 연결되며 30일간 보관됩니다.');
           return;
         }
         const response = await fetch('/api/generate-photo-preview', {
@@ -10247,10 +10254,10 @@
           return;
         }
         if (window.PROMPTDECK_STATIC_MODE) {
-          const dataUrl = await generateStaticCloudflareSample(prompt, medium.id);
-          if (mediumImg) mediumImg.src = dataUrl;
+          const generated = await generateStaticCloudflareSample(prompt, medium.id);
+          if (mediumImg) mediumImg.src = generated.previewUrl;
           isMediumOverlayOpen = false;
-          showMixerResultOverlay('참조 이미지 생성 성공', dataUrl, 'Cloudflare Workers AI로 생성한 화풍 참조 이미지를 이 브라우저에 저장했습니다.');
+          showMixerResultOverlay('참조 이미지 생성·저장 성공', generated.previewUrl, 'Cloudflare Workers AI로 생성한 화풍 참조 이미지를 서버에 저장했습니다. 저장 주소는 이 브라우저에 연결되며 30일간 보관됩니다.');
           return;
         }
         const response = await fetch('/api/generate-photo-preview', {

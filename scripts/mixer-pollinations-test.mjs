@@ -58,7 +58,18 @@ try {
     let requests = 0;
     let status = 200;
     let invalidImage = false;
-    await page.route('**/api/mixer-reference', async route => {
+    let omitSavedUrl = false;
+    const savedImages = new Map();
+    await page.route('**/api/mixer-reference*', async route => {
+      if (route.request().method() === 'GET') {
+        const asset = new URL(route.request().url()).searchParams.get('asset');
+        if (!savedImages.has(asset)) {
+          await route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ ok: false }) });
+          return;
+        }
+        await route.fulfill({ status: 200, contentType: 'image/png', body: Buffer.from(savedImages.get(asset), 'base64') });
+        return;
+      }
       requests += 1;
       assert.equal(route.request().method(), 'POST');
       assert.equal(route.request().headers().authorization, undefined);
@@ -70,7 +81,14 @@ try {
         await route.fulfill({ status, contentType: 'application/json', body: JSON.stringify({ ok: false, error: '오늘의 무료 이미지 생성 한도를 사용했습니다.' }) });
         return;
       }
-      await route.fulfill({ status: 200, contentType: invalidImage ? 'text/html' : 'image/png', body: invalidImage ? '<html>not an image</html>' : Buffer.from(image, 'base64') });
+      const asset = requests.toString(16).padStart(32, '0');
+      savedImages.set(asset, image);
+      await route.fulfill({
+        status: 200,
+        contentType: invalidImage ? 'text/html' : 'image/png',
+        headers: invalidImage || omitSavedUrl ? {} : { 'X-PromptDeck-Saved-Url': `/api/mixer-reference?asset=${asset}` },
+        body: invalidImage ? '<html>not an image</html>' : Buffer.from(image, 'base64')
+      });
     });
     for (const [kind, label, itemId] of [['Subject', 'subject', 'mix-steel-hot-rolling'], ['Medium', 'medium', 'med-3d']]) {
       await page.locator(`#btn${kind}SampleSettings`).click();
@@ -83,15 +101,15 @@ try {
       const box = await button.boundingBox();
       assert.ok(box.x >= 0 && box.x + box.width <= viewport.width + 1, 'generation button must fit viewport');
       await button.click();
-      await page.locator('#mixerResultOverlay').getByText('참조 이미지 생성 성공', { exact: true }).waitFor();
-      assert.match(await page.evaluate(id => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(id)[0], itemId), /^data:image\/jpeg;base64,/u);
+      await page.locator('#mixerResultOverlay').getByText('참조 이미지 생성·저장 성공', { exact: true }).waitFor();
+      assert.match(await page.evaluate(id => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(id)[0], itemId), /^\/api\/mixer-reference\?asset=[a-f0-9]{32}$/u);
       await page.locator('#btnMixerResultConfirm').click();
       await page.waitForFunction(id => document.getElementById(id)?.getAttribute('aria-expanded') === 'false', `btn${kind}SampleSettings`);
     }
     assert.equal(requests, 2);
     await page.reload();
     await openMixer();
-    for (const id of ['mix-steel-hot-rolling', 'med-3d']) assert.match(await page.evaluate(itemId => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(itemId)[0], id), /^data:image\/jpeg;base64,/u);
+    for (const id of ['mix-steel-hot-rolling', 'med-3d']) assert.match(await page.evaluate(itemId => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(itemId)[0], id), /^\/api\/mixer-reference\?asset=[a-f0-9]{32}$/u);
     await page.locator('#btnSubjectSampleSettings').click();
     const closeError = async text => {
       await page.locator('#mixerResultOverlay').getByText(text, { exact: false }).waitFor();
@@ -109,7 +127,11 @@ try {
     invalidImage = true;
     await page.locator('#btnSubjectSampleGenerate').click();
     await closeError('유효한 이미지 파일을 반환하지 않았습니다');
-    assert.match(await page.evaluate(() => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed('mix-steel-hot-rolling')[0]), /^data:image\/jpeg;base64,/u);
+    invalidImage = false;
+    omitSavedUrl = true;
+    await page.locator('#btnSubjectSampleGenerate').click();
+    await closeError('서버 저장 주소를 확인하지 못했습니다');
+    assert.match(await page.evaluate(() => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed('mix-steel-hot-rolling')[0]), /^\/api\/mixer-reference\?asset=[a-f0-9]{32}$/u);
     assert.deepEqual(pageErrors, []);
     console.log(`PASS ${viewport.width}px: generation, persistence, no browser key, cancellation and errors`);
     await context.close();
