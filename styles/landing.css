@@ -327,12 +327,14 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
 .landing-home .landing-hero h1 { font-size: clamp(36px, 4vw, 56px); line-height: 1.2; }
 .landing-home .landing-section { padding-block: 56px; }
 .landing-home .landing-process { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.landing-home [data-promotion-update] .landing-process { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .landing-home .landing-start-grid small { margin-top: 0; font-size: 12px; }
 .landing-start-grid b { margin-top: auto; padding-top: 12px; color: var(--landing-blue-dark); font-size: 14px; }
 #features-overview, #examples, #main-content { scroll-margin-top: 90px; }
 @media (max-width: 900px) {
   .landing-home .landing-hero { gap: 24px; }
   .landing-home .workbench-card { padding: 16px; }
+  .landing-home [data-promotion-update] .landing-process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   .landing-home .landing-hero { padding-block: 32px; }
@@ -349,6 +351,7 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
   .landing-home .landing-section-heading { margin-bottom: 24px; }
   .landing-home .landing-section-heading h2 { font-size: 30px; }
   .landing-home .landing-process { grid-template-columns: 1fr; }
+  .landing-home [data-promotion-update] .landing-process { grid-template-columns: 1fr; }
   .landing-home .landing-guide-card { min-height: 220px; }
 }
 @media (prefers-reduced-motion: reduce) {

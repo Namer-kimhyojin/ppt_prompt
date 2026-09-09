@@ -1,12 +1,12 @@
 {
-  "capturedAt": "2026-09-06T10:38:40.398Z",
+  "capturedAt": "2026-09-09T06:30:01.106Z",
   "sourceOrigin": "https://promptdeck.kr",
   "viewport": {
     "width": 1440,
     "height": 900,
     "deviceScaleFactor": 1
   },
-  "state": "Public default data; label-ticket uses the built-in sample project.",
+  "state": "Public default data; promotion-image and label-ticket use their built-in samples.",
   "tools": [
     {
       "slug": "common-prompt",
@@ -84,11 +84,11 @@
       "files": {
         "overview": {
           "path": "promotion-image-overview.jpg",
-          "bytes": 216337
+          "bytes": 177778
         },
         "detail": {
           "path": "promotion-image-detail.jpg",
-          "bytes": 72969
+          "bytes": 69245
         }
       }
     },

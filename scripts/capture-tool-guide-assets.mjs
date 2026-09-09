@@ -49,6 +49,7 @@ try {
     await page.waitForSelector(tool.pane, { state: "visible", timeout: 30_000 });
     await page.evaluate((tab) => window.PromptDeckTabs?.switchTab?.(tab), tool.tab);
     if (tool.tab === "documentDesign") await page.locator('#documentDesignApp .dw-steps [data-step="2"]').click();
+    if (tool.tab === "promotion") await page.evaluate(() => document.getElementById("promotionSampleBtn")?.click());
     await page.waitForTimeout(1_200);
     if (tool.sampleProject) {
       await page.locator("#labelSheetWorkspaceEntry button").filter({ hasText: "샘플 프로젝트 열기" }).first().click();
@@ -99,7 +100,7 @@ const manifest = {
   capturedAt: new Date().toISOString(),
   sourceOrigin: origin,
   viewport: { width: 1440, height: 900, deviceScaleFactor: 1 },
-  state: "Public default data; label-ticket uses the built-in sample project.",
+  state: "Public default data; promotion-image and label-ticket use their built-in samples.",
   tools: [],
 };
 for (const tool of tools) {

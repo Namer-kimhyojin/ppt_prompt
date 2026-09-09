@@ -109,6 +109,12 @@ try {
       if (["/guides/", "/guides/ppt-slide-planner-skill"].includes(route) && metrics.uniqueDownloadCount !== 2) {
         throw new Error(`${route} must expose two skill ZIP downloads: ${JSON.stringify(metrics)}`);
       }
+      if (route === "/guides/promotion-image-prompt") {
+        const promotionGuideText = await page.locator(".guide-content").innerText();
+        for (const required of ["원문으로 채우기", "구성 참고도", "추천 스타일 3개", "복사 후 ChatGPT 열기", "최대 20개 작업 템플릿"]) {
+          if (!promotionGuideText.includes(required)) throw new Error(`Promotion guide is missing the updated workflow: ${required}`);
+        }
+      }
       if (route === "/guides/ppt-slide-planner-skill") {
         for (const id of ["install", "codex-check", "claude-install", "claude-code-install", "install-help"]) {
           if (await page.locator(`#${id}`).count() !== 1) throw new Error(`Missing skill registration section: ${id}`);
@@ -174,6 +180,12 @@ try {
         await page.keyboard.press("Escape");
         if (await page.locator(".tool-screen-dialog").evaluate((dialog) => dialog.open)) throw new Error("tool screen lightbox did not close with Escape");
       }
+      if (slug === "promotion-image") {
+        const promotionToolText = await page.locator(".guide-content").innerText();
+        for (const required of ["원문으로 채우기", "분석 결과 검토", "구성 참고도", "직접 편집", "복사 후 ChatGPT 열기", "최대 20개 작업 템플릿"]) {
+          if (!promotionToolText.includes(required)) throw new Error(`Promotion tool guide is missing the updated workflow: ${required}`);
+        }
+      }
       const publicNav = await readPublicNav(page);
       const expectedVisibleLinkCount = viewport.width <= 820 ? 0 : 4;
       if (publicNav.brandPath !== "/" || publicNav.featureDropdown !== "기능" || publicNav.visibleLinkCount !== expectedVisibleLinkCount) {
@@ -191,6 +203,18 @@ try {
           await page.goto(`${origin}/features`, { waitUntil: 'networkidle' });
         }
         if (await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Features skill registration section overflowed');
+        const promotionFeatureText = await page.locator('[data-tool="promotion"]').textContent();
+        for (const required of ['원문 입력·검토', '구성 참고도', '추천 스타일 3개', '브라우저 자동 저장']) {
+          if (!promotionFeatureText.includes(required)) throw new Error(`Features page is missing the promotion update: ${required}`);
+        }
+      }
+      if (route === '/') {
+        const promotionUpdate = page.locator('[data-promotion-update]');
+        if (await promotionUpdate.count() !== 1) throw new Error('Homepage is missing the promotion update section');
+        const promotionUpdateText = await promotionUpdate.innerText();
+        for (const required of ['원문으로 시작', '구성 바로 확인', '추천 스타일 적용', '편집하고 재사용']) {
+          if (!promotionUpdateText.includes(required)) throw new Error(`Homepage promotion update is missing: ${required}`);
+        }
       }
       const publicNav = await readPublicNav(page);
       const expectedVisibleLinkCount = viewport.width <= 820 ? 0 : 4;
