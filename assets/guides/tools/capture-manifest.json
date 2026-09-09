@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-09-09T09:47:09.464Z",
+  "capturedAt": "2026-09-09T10:12:04.160Z",
   "sourceOrigin": "https://promptdeck.kr",
   "viewport": {
     "width": 1440,
@@ -28,11 +28,11 @@
       "files": {
         "overview": {
           "path": "pptx-request-overview.jpg",
-          "bytes": 182123
+          "bytes": 190890
         },
         "detail": {
           "path": "pptx-request-detail.jpg",
-          "bytes": 83947
+          "bytes": 83001
         }
       }
     },
