@@ -4,6 +4,7 @@
 #panePromotion.promo-workspace .promo-proxy-source { display: none !important; }
 #panePromotion.promo-workspace .promo-main { align-items: start; }
 #panePromotion.promo-workspace .promo-builder-section { min-width: 0; }
+#panePromotion.promo-workspace .promo-preview-section { position: static; height: auto; max-height: none; overflow: visible; }
 #panePromotion.promo-workspace .promo-workspace-state {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 10px 20px; border-bottom: 1px solid var(--line); color: var(--ink-soft); font-size: 12px;
@@ -35,6 +36,8 @@
 #panePromotion.promo-workspace .promo-result-head h2 { margin: 0 0 6px; font-size: 18px; }
 #panePromotion.promo-workspace .promo-result-head p { margin: 0; font-size: 12px; color: var(--ink-soft); }
 #panePromotion.promo-workspace .promo-result-modes { display: flex; gap: 6px; }
+#panePromotion.promo-workspace .promo-result-modes button { flex: 0 0 auto; width: auto; white-space: nowrap; }
+#panePromotion.promo-workspace #promotionSendImageBtn { flex: 0 0 auto; }
 #panePromotion.promo-workspace .promo-result-modes [aria-pressed="true"],
 #panePromotion.promo-workspace .promo-mobile-nav [aria-pressed="true"] { background: var(--accent); color: var(--on-accent, #fff); border-color: var(--accent); }
 #panePromotion.promo-workspace .promo-output-summary { padding: 20px; }

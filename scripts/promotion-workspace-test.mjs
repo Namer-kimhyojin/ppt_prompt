@@ -194,6 +194,11 @@ try {
     assert(await page.locator(".promo-builder-section").isHidden());
     assert(await page.locator("#tabActions").isHidden());
     assert((await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)) <= 1);
+    assert((await page.locator("#promotionSendImageBtn").boundingBox()).height <= 60, "The next-step action must remain a compact button");
+    assert(await page.locator("#promotionSummaryViewBtn").evaluate(el => {
+      const range = document.createRange(); range.selectNodeContents(el);
+      return range.getClientRects().length === 1;
+    }), "Result-mode labels must fit on one line");
     await page.screenshot({ path: path.join(tempDir, `result-${width}.png`) });
   }
   assert.deepEqual(errors, [], "Promotion flow emitted JavaScript errors");
