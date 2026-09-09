@@ -135,7 +135,7 @@
         "prompts/pages/: 출력 순서대로 분리된 A4 페이지 프롬프트",
         "assets/: 업로드하거나 생성한 원본 래스터 이미지",
         "",
-        "PromptDeck의 라벨·티켓 제작 탭에서 이 ZIP을 다시 불러올 수 있습니다.",
+      "PromptDeck의 라벨·티켓 메뉴에서 이 ZIP을 다시 불러올 수 있습니다.",
       ].join("\r\n")) },
       { name: "manifest.json", data: toBytes(JSON.stringify(manifest, null, 2)) },
       { name: "project.json", data: toBytes(JSON.stringify(project, null, 2)) },

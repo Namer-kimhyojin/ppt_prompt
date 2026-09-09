@@ -5,9 +5,10 @@
   packs.trend2026 = [
     {
       id: "calm-index-editorial", nameKo: "차분한 인덱스 에디토리얼", nameEn: "Calm Index Editorial",
+      category: "branding",
       aliases: ["Explorecore", "Opt-Out Era", "조용한 편집", "인덱스 편집", "2026 트렌드"],
       description: "좁은 장 번호 열과 넓은 여백, 세리프 제목으로 자료를 차분하게 탐색하게 합니다.",
-      bestFor: "연구 인사이트 · 경영 브리핑 · 정책 방향", tags: ["2026", "차분함", "인덱스", "에디토리얼"], recommended: true,
+      bestFor: "연구 인사이트 · 경영 브리핑 · 정책 방향", tags: ["여백", "차분함", "인덱스", "에디토리얼"], recommended: true,
       facets: { useCases: ["report", "research", "strategy"], moods: ["calm", "refined"], media: ["typography", "photo", "data"] },
       distinctiveRules: ["좁은 세로 인덱스와 넓은 본문 영역을 분리", "세리프 제목과 산세리프 근거·캡션의 대비", "사진 한 장과 핵심 수치 한 묶음을 비대칭으로 배치"],
       avoidRules: ["여백을 채우기 위한 장식 카드 추가", "세리프 본문을 작게 압축", "핵심 자료보다 큰 무관한 사진"],
@@ -24,9 +25,10 @@
     },
     {
       id: "field-notes-briefing", nameKo: "현장 메모 브리핑", nameEn: "Field Notes Briefing",
+      category: "reporting",
       aliases: ["Notes App Chic", "현장 기록", "필드 노트", "관찰 브리핑", "2026 트렌드"],
       description: "맥락 사진과 세부 사진, 번호를 붙인 관찰 메모를 연결해 현장의 목소리를 전달합니다.",
-      bestFor: "현장 조사 · 사용자 인터뷰 · 프로젝트 회고", tags: ["2026", "기록", "사진", "손그림 주석"], recommended: true,
+      bestFor: "현장 조사 · 사용자 인터뷰 · 프로젝트 회고", tags: ["현장 조사", "기록", "사진", "손그림 주석"], recommended: true,
       facets: { useCases: ["report", "research", "story"], moods: ["human", "authentic", "warm"], media: ["photo", "typography", "illustration"] },
       distinctiveRules: ["맥락 사진과 세부 사진을 서로 다른 크기로 배치", "관찰 내용을 번호·출처와 함께 정렬", "핵심 관찰에만 손그림 밑줄·원을 제한적으로 사용"],
       avoidRules: ["모든 문장에 손글씨·스티커 사용", "연출된 사진을 실제 조사 증거로 표시", "주석이 원문이나 피사체를 가림"],
@@ -43,9 +45,10 @@
     },
     {
       id: "soft-glass-data", nameKo: "소프트 글래스 데이터", nameEn: "Soft Glass Data",
+      category: "startup",
       aliases: ["Texture Check", "촉감 데이터", "프로스티드 글래스", "유리 데이터", "2026 트렌드"],
       description: "얕은 반투명 재질 위에 수치와 차트를 또렷하게 올려 감각과 데이터 가독성을 함께 살립니다.",
-      bestFor: "제품 성과 · 서비스 지표 · 기술 브리핑", tags: ["2026", "유리", "촉감", "데이터"], recommended: true,
+      bestFor: "제품 성과 · 서비스 지표 · 기술 브리핑", tags: ["서비스 지표", "유리", "촉감", "데이터"], recommended: true,
       facets: { useCases: ["report", "product", "technology"], moods: ["clear", "sensory", "refined"], media: ["data", "3d"] },
       distinctiveRules: ["넓은 반투명 면 한 장에 핵심 수치와 차트를 결합", "얕은 굴절과 흐림은 데이터 면의 가장자리·뒤쪽에 한정", "수치·축·단위는 단색의 또렷한 글자로 유지"],
       avoidRules: ["글자 뒤의 강한 굴절과 과도한 투명도", "중첩 유리 카드·홀로그램 남발", "차트 높이·축을 장식 때문에 왜곡"],
@@ -62,9 +65,10 @@
     },
     {
       id: "retro-window-story", nameKo: "레트로 윈도 스토리", nameEn: "Retro Window Story",
+      category: "startup",
       aliases: ["Prompt Playground", "레트로 컴퓨팅", "윈도 프레임", "lo-fi tech", "2026 트렌드"],
       description: "예전 컴퓨터의 창 모양을 단계별 정보 틀로 바꿔 과정과 아이디어를 경쾌하게 설명합니다.",
-      bestFor: "제품 개발 · 교육 과정 · 실험·프로토타입 소개", tags: ["2026", "레트로", "윈도", "과정"],
+      bestFor: "제품 개발 · 교육 과정 · 실험·프로토타입 소개", tags: ["제품 개발", "레트로", "윈도", "과정"],
       facets: { useCases: ["product", "education", "planning"], moods: ["playful", "nostalgic"], media: ["diagram", "typography", "ui"] },
       distinctiveRules: ["각진 창 프레임을 진행 순서에 따라 계단식으로 배치", "제목 막대에 실제 단계 이름을 표시", "창 안에는 단순한 도식과 짧은 메시지만 배치"],
       avoidRules: ["실제 앱 화면·운영체제 브랜드를 그대로 복제", "작동하지 않는 버튼·메뉴를 설명 없이 배치", "창 중첩으로 내용이나 연결선이 가려짐"],
@@ -81,9 +85,10 @@
     },
     {
       id: "cinematic-contact-sheet", nameKo: "시네마틱 콘택트 시트", nameEn: "Cinematic Contact Sheet",
+      category: "branding",
       aliases: ["Drama Club", "영화 스틸", "콘택트 시트", "사진 시퀀스", "2026 트렌드"],
       description: "대표 장면과 두 개의 세부 장면을 사진 시퀀스로 엮어 장소·사람·변화를 전달합니다.",
-      bestFor: "공간·사업 소개 · 브랜드 사례 · 성과 스토리", tags: ["2026", "시네마틱", "사진", "스토리"],
+      bestFor: "공간·사업 소개 · 브랜드 사례 · 성과 스토리", tags: ["브랜드 사례", "시네마틱", "사진", "스토리"],
       facets: { useCases: ["brand", "story", "report"], moods: ["cinematic", "human", "dramatic"], media: ["photo", "typography"] },
       distinctiveRules: ["대표 장면 하나와 서로 크기가 다른 보조 장면을 연결", "장면 번호와 짧은 사실 캡션으로 서사를 형성", "사진의 색온도·명암을 통일하고 바탕은 깊은 잉크색 유지"],
       avoidRules: ["사진 전체를 동일한 카드 크기로 나열", "연출된 장면을 실제 성과나 현장 증거로 제시", "효과를 위한 과도한 레터박스·필름 구멍"],
@@ -100,9 +105,10 @@
     },
     {
       id: "chromatic-type-story", nameKo: "대형 컬러 타이포", nameEn: "Chromatic Type Story",
+      category: "creative",
       aliases: ["Zinegeist", "Zinegiest", "컬러 타이포", "대형 글자", "bold type", "2026 트렌드"],
       description: "대형 제목과 강한 색면 옆에 차분한 근거 영역을 두어 메시지와 설득을 동시에 잡습니다.",
-      bestFor: "캠페인 제안 · 비전 발표 · 브랜드 키노트", tags: ["2026", "대형 타이포", "컬러 블록", "인쇄 질감"],
+      bestFor: "캠페인 제안 · 비전 발표 · 브랜드 키노트", tags: ["캠페인", "대형 타이포", "컬러 블록", "인쇄 질감"],
       facets: { useCases: ["campaign", "brand", "proposal"], moods: ["bold", "energetic", "expressive"], media: ["typography", "data"] },
       distinctiveRules: ["대형 제목을 두 개의 강한 색면과 결합", "핵심 수치와 짧은 근거는 차분한 세로 영역에 분리", "인쇄 질감은 빈 색면에만 제한적으로 사용"],
       avoidRules: ["한글 글자 폭을 강제로 압축·왜곡", "제목을 자르거나 본문까지 과도하게 확대", "색상 충돌로 수치와 단위의 가독성 저하"],
@@ -118,7 +124,7 @@
       preview: { title: "MAKE IT MATTER", kicker: "IDEAS INTO ACTION", stat: "72%" },
     },
   ].map((definition) => ({
-    category: "trend-2026", introducedIn: 13, presetKind: "visual", compositionProfile: "editorial", typographyPreset: "editorial",
+    introducedIn: 13, presetKind: "visual", compositionProfile: "editorial", typographyPreset: "editorial",
     ...definition,
   }));
 })(window);

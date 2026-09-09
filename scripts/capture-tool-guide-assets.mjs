@@ -9,6 +9,7 @@ const outputDir = path.join(repoRoot, "assets", "guides", "tools");
 const origin = String(process.argv[2] || "https://promptdeck.kr").replace(/\/+$/u, "");
 const tools = [
   { slug: "common-prompt", tab: "commonPrompt", pane: "#paneCommonPrompt", focus: ".cpd-main-column" },
+  { slug: "pptx-request", tab: "pptxPrompt", pane: "#panePptxPrompt", focus: ".pp-result-stack" },
   { slug: "document-design", tab: "documentDesign", pane: "#paneDocumentDesign", focus: '#dwDesktopControls' },
   { slug: "slide-splitter", tab: "generator", pane: "#paneGenerator", focus: "#genInputSection" },
   { slug: "form-image", tab: "formImage", pane: "#paneFormImage", focus: ".form-image-work-panel" },

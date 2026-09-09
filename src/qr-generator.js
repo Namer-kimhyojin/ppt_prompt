@@ -1813,7 +1813,7 @@
     }
     const bridge = window.PromptDeckLabelBridge;
     if (typeof bridge?.send !== "function") {
-      showToast("라벨·티켓 제작 모듈을 불러오지 못했습니다.");
+      showToast("라벨·티켓 모듈을 불러오지 못했습니다.");
       return;
     }
     const template = currentPrintTemplate();
@@ -1839,7 +1839,7 @@
         settings: { documentType: "label" },
         qrSettings: { enabled: true, side: "front", source: "record", position: "right", sizePercent: 30, ...style },
       });
-      showToast("현재 QR과 스타일을 라벨·티켓 제작으로 보냈습니다.");
+      showToast("현재 QR과 스타일을 라벨·티켓으로 보냈습니다.");
     } catch (error) {
       showToast(error.message || "QR 데이터를 라벨로 보내지 못했습니다.");
     }

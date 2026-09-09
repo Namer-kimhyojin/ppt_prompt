@@ -9,7 +9,6 @@
     previewRevision: 15,
   });
   const CATEGORIES = [
-    { id: "trend-2026", label: "2026 트렌드", description: "차분한 편집, 현장 기록, 촉감과 대담한 타이포를 발표자료에 적용" },
     { id: "reporting", label: "보고·컨설팅", description: "의사결정, 정책, 데이터와 근거 전달" },
     { id: "proposal-planning", label: "제안·기획", description: "사업계획, 입찰제안, 실행계획과 서비스·공공 기획" },
     { id: "korea-commercial", label: "한국 실무", description: "국내 기업·기관·산업 현장에서 자주 쓰는 상업 디자인" },

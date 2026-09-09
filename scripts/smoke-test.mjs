@@ -499,11 +499,15 @@ async function runSmokeTest() {
     await page.waitForSelector("#paneCommonPrompt.active");
     record((await page.locator(".app-tab-group").count()) === 3, "Primary tools were not organized into three purpose groups", failures);
     record((await page.locator("[data-tab-group-filter]").count()) === 3, "Purpose-group switcher was incomplete", failures);
-    record((await page.locator('[data-tab-group-filter="deck"]').textContent()).trim() === "슬라이드" && (await page.locator('[data-tab-group-filter="special"]').textContent()).trim() === "업무 이미지" && (await page.locator('[data-tab-group-filter="visual"]').textContent()).trim() === "일반 이미지", "Purpose-group switcher labels were incorrect", failures);
+    record((await page.locator('[data-tab-group-filter="deck"]').textContent()).trim() === "문서·슬라이드" && (await page.locator('[data-tab-group-filter="special"]').textContent()).trim() === "홍보·정보" && (await page.locator('[data-tab-group-filter="visual"]').textContent()).trim() === "스타일·사진", "Purpose-group switcher labels were incorrect", failures);
     const deckToolIds = await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').evaluateAll((buttons) => buttons.map((button) => button.id));
     record(JSON.stringify(deckToolIds) === JSON.stringify(["tabBtnCommonPrompt", "tabBtnPptxPrompt", "tabBtnDocumentDesign", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnDesigner"]), "Slide-production group did not include PPTX and document design with the legacy tool at the end", failures);
     record((await page.locator('.app-tab-group[data-tab-group="special"] .app-tab-btn').count()) === 7, "Business-image group did not include the expected tools", failures);
     record((await page.locator('.app-tab-group[data-tab-group="visual"] .app-tab-btn').count()) === 3, "General-image group did not include the expected tools", failures);
+    record((await page.locator('#tabBtnCommonPrompt').textContent()).trim() === "슬라이드 디자인 설정" && (await page.locator('#tabBtnPptxPrompt').textContent()).trim() === "PPTX 제작 요청문" && (await page.locator('#tabBtnGenerator').textContent()).trim() === "기획안 장별 나누기", "Document-and-slide tool labels were not updated", failures);
+    record((await page.locator('#tabBtnFormImage').textContent()).trim() === "문서 표지·양식" && (await page.locator('#tabBtnMapPrompt').textContent()).trim() === "지도·위치도" && (await page.locator('#tabBtnDataDiagram').textContent()).trim() === "데이터 도식" && (await page.locator('#tabBtnPromotion').textContent()).trim() === "홍보 이미지", "Promotion-and-information tool labels were not updated", failures);
+    record((await page.locator('#tabBtnPromotionPlanner').textContent()).trim() === "스타일 추천" && (await page.locator('#tabBtnConceptMixer').textContent()).trim() === "비주얼 조합" && (await page.locator('#tabBtnPhotoTransform').textContent()).trim() === "사진 스타일 변환", "Style-and-photo tool labels were not updated", failures);
+    record(!(await page.locator('#tabBtnDesigner').isVisible()) && !(await page.locator('#tabBtnSlideDocument').isVisible()), "Previous tools remained visible in the primary navigation", failures);
     record(!(await page.locator("#paneDesigner").evaluate((element) => element.classList.contains("active"))), "Legacy designer remained the default start screen", failures);
     record((await page.locator("#workspaceState").count()) === 0, "Removed workspace status card was still rendered", failures);
 
@@ -562,7 +566,7 @@ async function runSmokeTest() {
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForSelector("#paneGenerator.active");
     record(await page.evaluate(() => localStorage.getItem("promptdeck.activeTab.v1")) === "generator", "Saved workspace location did not persist after reload", failures);
-    await page.click("#tabBtnDesigner");
+    await page.locator("#tabBtnDesigner").evaluate((element) => element.click());
     await page.waitForSelector("#paneDesigner.active");
     record(await page.locator("#paneDesigner .legacy-tool-notice").isVisible(), "Legacy designer did not explain the recommended replacement", failures);
     await page.click("#legacyGoCommonBtn");
@@ -1978,7 +1982,7 @@ async function runSmokeTest() {
     record(allCommonRecords.filter((item) => ["cover", "agenda", "divider", "closing"].includes(item.pageType)).every((item) => item.headerFooterApplied === false && !item.prompt.includes("테스트 기관") && !item.prompt.includes("페이지 번호 표기값")), "Special slides regained header/footer metadata when common-design mode was enabled", failures);
     await page.locator(".gen-special-slide-toggle").click();
 
-    await page.click("#tabBtnDesigner");
+    await page.locator("#tabBtnDesigner").evaluate((element) => element.click());
     await page.waitForSelector("#paneDesigner.active");
 
     const agendaLayoutLabels = await page.evaluate(() => getAllowedOptionsForPageType("content", "agenda").map((item) => item.text));
@@ -5082,7 +5086,11 @@ SLIDE-TWO-CONTENT`);
       "tabBtnDataDiagram", "tabBtnSlideDocument", "tabBtnPromotionPlanner", "tabBtnConceptMixer", "tabBtnPhotoTransform", "tabBtnFormImage", "tabBtnLabelSheet", "tabBtnPromotion", "tabBtnQrGenerator",
     ];
     for (const tabId of typographyTabIds) {
-      await page.click(`#${tabId}`);
+      if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
+        await page.locator(`#${tabId}`).evaluate((element) => element.click());
+      } else {
+        await page.click(`#${tabId}`);
+      }
       if (tabId === "tabBtnDocumentDesign") await page.locator('#documentDesignApp .dw-steps [data-step="2"]').click();
       const controlledPaneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
       record(Boolean(controlledPaneId) && (await page.locator(`#${controlledPaneId}.active`).count()) === 1, `${tabId} did not activate its controlled pane`, failures);
@@ -5122,7 +5130,7 @@ SLIDE-TWO-CONTENT`);
     // ----------------------------------------------------
     // Slide Document Consolidated Tab Test
     // ----------------------------------------------------
-    await page.click("#tabBtnSlideDocument");
+    await page.locator("#tabBtnSlideDocument").evaluate((element) => element.click());
     await page.waitForSelector("#paneSlideDocument.active");
     record((await page.locator("#paneSlideCover.active .slide-doc-preview-section > #tabActions").count()) === 1, "Slide Document quick actions were not mounted in the active cover preview panel", failures);
 
@@ -5257,7 +5265,11 @@ SLIDE-TWO-CONTENT`);
           await groupFilter.waitFor({ state: "visible" });
           await groupFilter.click();
         }
-        await page.click(`#${tabId}`);
+        if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
+          await page.locator(`#${tabId}`).evaluate((element) => element.click());
+        } else {
+          await page.click(`#${tabId}`);
+        }
         const paneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
         await page.waitForSelector(`#${paneId}.active`);
         await page.waitForTimeout(80);
@@ -5317,7 +5329,11 @@ SLIDE-TWO-CONTENT`);
           await groupFilter.waitFor({ state: "visible" });
           await groupFilter.click();
         }
-        await page.click(`#${tabId}`);
+        if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
+          await page.locator(`#${tabId}`).evaluate((element) => element.click());
+        } else {
+          await page.click(`#${tabId}`);
+        }
         const paneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
         await page.waitForSelector(`#${paneId}.active`);
         const paneOverflow = await page.locator(`#${paneId}`).evaluate((element) => Math.max(0, element.scrollWidth - element.clientWidth));

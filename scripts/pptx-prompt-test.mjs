@@ -42,12 +42,18 @@ assert.ok(contract.build({}).prompt, "Style-only workflow requires no source");
 assert.equal(contract.normalize({ styleId: "missing", ratio: "__proto__", purpose: "constructor", notes: "false" }).ratio, "16:9");
 assert.equal(Object.keys(contract.normalize({ colorOverrides: { primary: "red", background: "#aabbcc", evil: "#ffffff" } }).colorOverrides).length, 1);
 console.log(`PASS: ${catalog.styles.length} styles preserve identity, source, color overrides and editable PPTX instructions`);
-const trendStyles = catalog.list({ category: "trend-2026" });
-assert.equal(trendStyles.length, 6);
-assert.equal(new Set(trendStyles.map(style => style.settings.composition.grid)).size, 6, "Trend layouts must differ structurally");
-for (const style of trendStyles) {
+const integratedCategories = {
+  "calm-index-editorial": "branding", "field-notes-briefing": "reporting",
+  "soft-glass-data": "startup", "retro-window-story": "startup",
+  "cinematic-contact-sheet": "branding", "chromatic-type-story": "creative",
+};
+const integratedStyles = Object.keys(integratedCategories).map(id => catalog.styles.find(style => style.id === id));
+assert.ok(!catalog.categories.some(category => category.id === "trend-2026"), "Use existing categories without a separate annual group");
+assert.equal(new Set(integratedStyles.map(style => style.settings.composition.grid)).size, 6, "Integrated layouts must retain their distinct structures");
+for (const style of integratedStyles) {
+  assert.equal(style.category, integratedCategories[style.id]);
+  assert.ok(catalog.list({ category: style.category }).some(item => item.id === style.id));
   assert.ok(style.pptxGuidance.length >= 2);
-  assert.ok(catalog.list({ category: "all", query: "2026 트렌드" }).some(item => item.id === style.id));
 }
 
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json", ".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
@@ -77,26 +83,32 @@ try {
   assert.equal(await page.locator(".app-tabs-bar #tabActions").count(), 0);
   assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 12);
   await page.screenshot({ path: path.join(artifacts, "desktop-gallery.png") });
-  await page.locator("#ppSearch").fill("NO-STYLE-EXISTS-86743");
-  await page.locator("#ppBrowseTrends").click();
-  assert.equal(await page.locator("#ppSearch").inputValue(), "", "Trend shortcut clears stale search");
-  assert.equal(await page.locator("#ppCategory").inputValue(), "trend-2026");
-  assert.equal(await page.locator("#ppBrowseTrends").getAttribute("aria-pressed"), "true");
-  assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 6);
-  assert.ok(await page.locator("#ppLoadMore").isHidden());
-  for (const style of trendStyles) {
-    const card = page.locator(`[data-pp-style="${style.id}"]`);
-    await card.scrollIntoViewIfNeeded();
-    await card.locator("img").evaluate(image => image.decode());
-    assert.equal(await card.locator("img").evaluate(image => image.naturalWidth), 960);
-    await card.click();
-    assert.equal(await page.locator("#ppSelectedName").textContent(), style.nameKo);
-    for (const rule of style.pptxGuidance) assert.ok((await page.locator("#ppOutput").inputValue()).includes(rule));
+  assert.equal(await page.locator('#ppBrowseTrends, #ppCategory option[value="trend-2026"]').count(), 0);
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const style of integratedStyles) {
+      if (width <= 800) await page.locator('[data-pp-view="gallery"]').click();
+      await page.locator("#ppSearch").fill("");
+      await page.locator("#ppCategory").selectOption(style.category);
+      const card = page.locator(`[data-pp-style="${style.id}"]`);
+      while (!await card.count() && await page.locator("#ppLoadMore").isVisible()) await page.locator("#ppLoadMore").click();
+      assert.equal(await card.count(), 1, `${width}: ${style.id} is browsable in its existing category`);
+      await page.locator("#ppSearch").fill(style.nameKo);
+      assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 1);
+      await card.scrollIntoViewIfNeeded();
+      await card.locator("img").evaluate(image => image.decode());
+      assert.equal(await card.locator("img").evaluate(image => image.naturalWidth), 960);
+      await card.click();
+      assert.equal(await page.locator("#ppSelectedName").textContent(), style.nameKo);
+      for (const rule of style.pptxGuidance) assert.ok((await page.locator("#ppOutput").inputValue()).includes(rule));
+    }
   }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.locator("#ppSearch").fill("");
+  await page.locator("#ppCategory").selectOption("branding");
   await page.evaluate(() => scrollTo(0, 0));
-  await page.screenshot({ path: path.join(artifacts, "desktop-trends.png") });
+  await page.screenshot({ path: path.join(artifacts, "desktop-integrated-categories.png") });
   await page.locator("#ppCategory").selectOption("all");
-  assert.equal(await page.locator("#ppBrowseTrends").getAttribute("aria-pressed"), "false");
   await page.locator("#ppLoadMore").click();
   assert.equal(await page.locator("#ppStyleGrid .pp-style-card").count(), 24);
   await page.locator("#ppSearch").fill("NO-STYLE-EXISTS-86743");
@@ -181,7 +193,8 @@ try {
   assert.ok(await page.locator("#ppOutput").evaluate((element) => element.selectionEnd - element.selectionStart === element.value.length));
   await page.setViewportSize({ width: 1440, height: 1000 });
   for (const [tab, active] of [["tabBtnMapPrompt", "paneMapPrompt"], ["tabBtnSlideDocument", "paneSlideDocument"], ["tabBtnDocumentDesign", "paneDocumentDesign"]]) {
-    await page.locator(`#${tab}`).click();
+    if (tab === "tabBtnSlideDocument") await page.locator(`#${tab}`).evaluate((button) => button.click());
+    else await page.locator(`#${tab}`).click();
     assert.ok(await page.locator(`#${active}.active`).isVisible(), `Existing tab ${tab} still works`);
     if (tab === "tabBtnSlideDocument") assert.equal(await page.locator("#paneSlideDocument .slide-sub-tab-btn").count(), 4);
   }

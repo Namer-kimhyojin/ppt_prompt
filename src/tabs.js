@@ -1,4 +1,4 @@
-// 디자이너/생성기/홍보이미지 탭 전환
+// 문서·슬라이드/홍보·정보/스타일·사진 도구 전환
 (function () {
   const tabs = {
     designer: {
@@ -145,8 +145,8 @@
   let currentActionHost = tabActions?.parentElement || null;
   const actionSets = {
     pptxPrompt: [
-      { label: "프롬프트 보기", targetId: "pptxPromptGenerateBtn", className: "btn secondary" },
-      { label: "프롬프트 복사", targetId: "pptxPromptCopyBtn", className: "btn primary" },
+      { label: "요청문 보기", targetId: "pptxPromptGenerateBtn", className: "btn secondary" },
+      { label: "요청문 복사", targetId: "pptxPromptCopyBtn", className: "btn primary" },
       { label: "TXT 저장", targetId: "pptxPromptDownloadBtn", className: "btn secondary" },
       { label: "초기화", targetId: "pptxPromptResetBtn", className: "btn ghost", placement: "more" },
     ],
@@ -171,14 +171,14 @@
       { label: "초기화", targetId: "promotionResetBtn", className: "btn ghost", placement: "more" },
     ],
     promotionPlanner: [
-      // 컨셉 제안 탭: 카드별 복사 버튼으로 동작 — 헤더 액션 없음
+      // 스타일 추천: 카드별 복사 버튼으로 동작 — 헤더 액션 없음
     ],
     photoTransform: [],
     conceptMixer: [
       { label: "새 랜덤 조합", targetId: "btnMixerRandom", className: "btn primary" },
       { label: "현재 프롬프트 복사", targetId: "btnMixerCopy", className: "btn secondary" },
       { label: "홍보 이미지에 적용", targetId: "btnMixerApply", className: "btn secondary" },
-      { label: "양식 이미지에 적용", targetId: "btnMixerFormImage", className: "btn secondary", placement: "more" },
+      { label: "문서 표지·양식에 적용", targetId: "btnMixerFormImage", className: "btn secondary", placement: "more" },
       { label: "주제 고정 랜덤", targetId: "btnMixerRandomFixed", className: "btn ghost", placement: "more" },
       { label: "초기화", targetId: "btnMixerReset", className: "btn ghost", placement: "more" },
     ],

@@ -1908,7 +1908,7 @@
   function assignCurrentQrValue() {
     const currentValue = cleanText(window.QRGeneratorCore?.getCurrentValue?.());
     if (!currentValue) {
-      setElementStatus("labelSheetQrStatus", "QR코드 생성기 탭에서 내용을 입력하고 QR을 만든 뒤 다시 시도해 주세요.", "warning");
+      setElementStatus("labelSheetQrStatus", "QR코드 메뉴에서 내용을 입력하고 QR을 만든 뒤 다시 시도해 주세요.", "warning");
       return { assigned: 0, skipped: 0 };
     }
     return assignQrValues({ constantValue: currentValue });
@@ -2265,7 +2265,7 @@
     const dark = palette?.mode === "dark";
     return {
       id: `mixer-${palette?.id || "none"}-${typography?.id || "none"}-${medium?.id || "none"}`,
-      nameKo: [palette?.name, typography?.nameKo, medium?.nameKo].filter(Boolean).join(" · ") || "비주얼 믹서 스타일",
+      nameKo: [palette?.name, typography?.nameKo, medium?.nameKo].filter(Boolean).join(" · ") || "비주얼 조합 스타일",
       source: "concept-mixer",
       mode: dark ? "dark" : "light",
       colors,
@@ -2288,7 +2288,7 @@
   function applyMixerVisualStyle() {
     const snapshot = mixerVisualSnapshot();
     if (!snapshot) {
-      setElementStatus("labelSheetStyleStatus", "비주얼 믹서에서 색상·글꼴·매체를 먼저 선택해 주세요.", "warning");
+      setElementStatus("labelSheetStyleStatus", "비주얼 조합에서 색상·글꼴·매체를 먼저 선택해 주세요.", "warning");
       return;
     }
     project.settings.visualStyleId = "";
@@ -2298,7 +2298,7 @@
     setElementStatus("labelSheetStyleStatus", snapshot.nameKo, "success");
     renderDnaFeaturedGallery();
     renderDnaDialog();
-    onProjectControlsChanged("현재 비주얼 믹서의 색상·타이포그래피·매체 방향을 적용했습니다.");
+    onProjectControlsChanged("현재 비주얼 조합의 색상·타이포그래피·매체 방향을 적용했습니다.");
   }
 
   function clearVisualStyle() {
@@ -2315,7 +2315,7 @@
   function importQrGeneratorStyle() {
     const core = window.QRGeneratorCore;
     if (!core?.getStyleOptions) {
-      setElementStatus("labelSheetQrStatus", "QR코드 생성기 스타일을 읽을 수 없습니다.", "error");
+      setElementStatus("labelSheetQrStatus", "QR코드 스타일을 읽을 수 없습니다.", "error");
       return;
     }
     const imported = core.getStyleOptions();
@@ -2332,7 +2332,7 @@
     });
     setControl("labelSheetQrMargin", project.settings.qr.margin);
     setElementStatus("labelSheetQrStatus", `QR 탭 스타일 적용 · ${project.settings.qr.ecc} 보정 · 여백 ${project.settings.qr.margin}칸`, "success");
-    onProjectControlsChanged("QR코드 생성기의 색상·점·오류 보정 설정을 가져왔습니다.");
+    onProjectControlsChanged("QR코드의 색상·점·오류 보정 설정을 가져왔습니다.");
   }
 
   function updateSpecSummary() {
@@ -8042,6 +8042,6 @@
   });
 
   initialize().catch((error) => {
-    setStatus(error.message || "라벨·티켓 제작 탭을 초기화하지 못했습니다.", "error");
+    setStatus(error.message || "라벨·티켓 메뉴를 초기화하지 못했습니다.", "error");
   });
 })();

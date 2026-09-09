@@ -16,35 +16,37 @@
 
   var FEATURE_GROUPS = [
     {
-      label: "슬라이드",
+      label: "문서·슬라이드",
       href: "/features#tools-deck",
-      desc: "공통 디자인·장별 프롬프트",
+      desc: "발표·문서 디자인과 제작 요청",
       items: [
-        ["공통 프롬프트", "/features#tool-commonPrompt"],
-        ["슬라이드 분리기", "/features#tool-generator"]
+        ["슬라이드 디자인 설정", "/features#tool-commonPrompt"],
+        ["PPTX 제작 요청문", "/features#tool-pptxPrompt"],
+        ["문서 디자인", "/features#tool-documentDesign"],
+        ["기획안 장별 나누기", "/features#tool-generator"]
       ]
     },
     {
-      label: "업무 이미지",
+      label: "홍보·정보",
       href: "/features#tools-special",
-      desc: "보고·행사·안내·홍보 자료",
+      desc: "홍보물·지도·도식·출력물",
       items: [
-        ["양식 이미지", "/features#tool-formImage"],
-        ["지도 이미지", "/features#tool-mapPrompt"],
-        ["홍보용 이미지", "/features#tool-promotion"],
-        ["QR코드 생성기", "/features#tool-qrGenerator"],
-        ["데이터 다이어그램", "/features#tool-dataDiagram"],
-        ["라벨·티켓 제작", "/features#tool-labelSheet"]
+        ["문서 표지·양식", "/features#tool-formImage"],
+        ["지도·위치도", "/features#tool-mapPrompt"],
+        ["홍보 이미지", "/features#tool-promotion"],
+        ["QR코드", "/features#tool-qrGenerator"],
+        ["데이터 도식", "/features#tool-dataDiagram"],
+        ["라벨·티켓", "/features#tool-labelSheet"]
       ]
     },
     {
-      label: "일반 이미지",
+      label: "스타일·사진",
       href: "/features#tools-visual",
-      desc: "컨셉 탐색·시각 요소 조합",
+      desc: "스타일 탐색·사진 변환",
       items: [
-        ["컨셉 제안", "/features#tool-promotionPlanner"],
-        ["비주얼 믹서", "/features#tool-conceptMixer"],
-        ["사진 변환 프롬프터", "/features#tool-photoTransform"]
+        ["스타일 추천", "/features#tool-promotionPlanner"],
+        ["비주얼 조합", "/features#tool-conceptMixer"],
+        ["사진 스타일 변환", "/features#tool-photoTransform"]
       ]
     }
   ];

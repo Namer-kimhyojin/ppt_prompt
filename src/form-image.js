@@ -648,7 +648,7 @@
   }
 
   function mixerName() {
-    return state.mixerStyle?.nameKo || state.mixerStyle?.nameEn || "비주얼 믹서 스타일";
+    return state.mixerStyle?.nameKo || state.mixerStyle?.nameEn || "비주얼 조합 스타일";
   }
 
   function renderMixerSummary() {
@@ -670,7 +670,7 @@
       state.mixerStyle.typographyGuidance,
     ].filter(Boolean);
     const meta = $("formImageMixerMeta");
-    if (meta) meta.textContent = metaParts.slice(0, 3).join(" · ") || "선택한 비주얼 믹서 스타일을 양식 이미지용으로 변환합니다.";
+    if (meta) meta.textContent = metaParts.slice(0, 3).join(" · ") || "선택한 비주얼 조합 스타일을 문서 표지·양식용으로 변환합니다.";
 
     const palette = $("formImagePalette");
     if (palette) {
@@ -1636,7 +1636,7 @@
       const strength = STRENGTH_LABELS[state.strengths[target]] || "균형";
       quality.innerHTML = [
         `${label} 변환 강도: ${strength}`,
-        state.mixerStyle ? `비주얼 믹서 스타일: ${escapeHtml(mixerName())}` : "비주얼 믹서 스타일: 기본 문서형 스타일",
+        state.mixerStyle ? `비주얼 조합 스타일: ${escapeHtml(mixerName())}` : "비주얼 조합 스타일: 기본 문서형 스타일",
         target === "background" ? "배경은 텍스트 없이 낮은 대비와 넓은 편집 여백을 우선합니다." : "입력한 텍스트 외 임의 문장 생성을 제한합니다.",
       ].map((item) => `<div>${item}</div>`).join("");
     }

@@ -45,7 +45,7 @@ const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const expectedNavLabels = ["실무 가이드", "스킬 다운로드", "소개", "작업 도구 열기"];
 const toolGuides = new Map([
-  ["common-prompt", "commonPrompt"], ["document-design", "documentDesign"], ["slide-splitter", "generator"], ["form-image", "formImage"],
+  ["common-prompt", "commonPrompt"], ["pptx-request", "pptxPrompt"], ["document-design", "documentDesign"], ["slide-splitter", "generator"], ["form-image", "formImage"],
   ["map-image", "mapPrompt"], ["promotion-image", "promotion"], ["qr-code", "qrGenerator"],
   ["data-diagram", "dataDiagram"], ["label-ticket", "labelSheet"], ["concept-suggest", "promotionPlanner"],
   ["visual-mixer", "conceptMixer"], ["photo-transform", "photoTransform"],
@@ -207,6 +207,10 @@ try {
         for (const required of ['원문 입력·검토', '구성 참고도', '추천 스타일 3개', '브라우저 자동 저장']) {
           if (!promotionFeatureText.includes(required)) throw new Error(`Features page is missing the promotion update: ${required}`);
         }
+        const pptxFeatureText = await page.locator('[data-tool="pptxPrompt"]').textContent();
+        for (const required of ['스타일 선택', '제작 조건', '편집 가능한 PPTX 파일 제작 요청문']) {
+          if (!pptxFeatureText.includes(required)) throw new Error(`Features page is missing the PPTX request tool: ${required}`);
+        }
       }
       if (route === '/') {
         const promotionUpdate = page.locator('[data-promotion-update]');
@@ -214,6 +218,12 @@ try {
         const promotionUpdateText = await promotionUpdate.innerText();
         for (const required of ['원문으로 시작', '구성 바로 확인', '추천 스타일 적용', '편집하고 재사용']) {
           if (!promotionUpdateText.includes(required)) throw new Error(`Homepage promotion update is missing: ${required}`);
+        }
+        const productUpdate = page.locator('[data-product-update]');
+        if (await productUpdate.count() !== 1) throw new Error('Homepage is missing the PPTX and document-design update section');
+        const productUpdateText = await productUpdate.innerText();
+        for (const required of ['PPTX 제작 요청문', '제작 조건 정리', '편집 가능한 결과 요청', '문서 지면 직접 조정']) {
+          if (!productUpdateText.includes(required)) throw new Error(`Homepage product update is missing: ${required}`);
         }
       }
       const publicNav = await readPublicNav(page);
@@ -225,7 +235,7 @@ try {
     if (errors.length) throw new Error(`browser errors at ${viewport.width}px: ${errors.join(" | ")}`);
     await page.close();
   }
-  console.log("Guide smoke test passed: public pages and 12 practical tool guides have valid navigation, actions, and responsive layouts");
+  console.log("Guide smoke test passed: public pages and 13 practical tool guides have valid navigation, actions, and responsive layouts");
 } finally {
   await browser.close();
   server.closeIdleConnections?.();

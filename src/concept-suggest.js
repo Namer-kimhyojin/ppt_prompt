@@ -838,7 +838,7 @@
         const tabBtn = document.getElementById('tabBtnPromotion');
         if (tabBtn) tabBtn.click();
       } else {
-        alert('홍보용 이미지 탭이 아직 준비되지 않았습니다.');
+        alert('홍보 이미지 메뉴가 아직 준비되지 않았습니다.');
       }
     });
 

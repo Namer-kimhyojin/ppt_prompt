@@ -397,7 +397,7 @@
         qrSettings: { enabled: true, side: "front", source: "record", position: "right", sizePercent: 30, ...style },
       });
       closeModal();
-      showToastLocal(`QR ${labelRecords.length}건을 라벨·티켓 제작으로 보냈습니다.`);
+      showToastLocal(`QR ${labelRecords.length}건을 라벨·티켓으로 보냈습니다.`);
     } catch (error) {
       showToastLocal(error.message || "QR 일괄 데이터를 라벨로 보내지 못했습니다.", true);
     }

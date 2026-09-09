@@ -5087,7 +5087,7 @@
   function applyRandomMixerPreset() {
     const randomBtn = document.getElementById("btnMixerRandom");
     if (!randomBtn) {
-      status("비주얼 믹서가 아직 로드되지 않았습니다. 비주얼 믹서 탭을 한 번 방문한 뒤 다시 시도하세요.", "error");
+      status("비주얼 조합이 아직 로드되지 않았습니다. 비주얼 조합 메뉴를 한 번 방문한 뒤 다시 시도하세요.", "error");
       return;
     }
     randomBtn.click();
@@ -5095,7 +5095,7 @@
     if (applyBtn) {
       applyBtn.click();
     } else {
-      status("비주얼 믹서 랜덤 조합 후 적용 버튼을 찾지 못했습니다.", "error");
+      status("비주얼 조합에서 랜덤 조합 후 적용 버튼을 찾지 못했습니다.", "error");
     }
   }
 

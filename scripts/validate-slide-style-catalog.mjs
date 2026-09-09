@@ -199,11 +199,11 @@ if (!catalog.list({ category: "all", supportInstrument: "transfer" }).some((styl
 if (catalog.list({ category: "technology-commercialization" }).length !== 16) errors.push("category failed: technology-commercialization");
 if (catalog.list({ category: "event-guidance" }).length !== 12) errors.push("category failed: event-guidance");
 if (catalog.list({ category: "proposal-planning" }).length !== 24) errors.push("category failed: proposal-planning");
-if (catalog.list({ category: "reporting" }).length !== 20) errors.push("category failed: reporting");
-if (catalog.list({ category: "branding" }).length !== 22) errors.push("category failed: branding");
-if (catalog.list({ category: "startup" }).length !== 13) errors.push("category failed: startup");
+if (catalog.list({ category: "reporting" }).length !== 21) errors.push("category failed: reporting");
+if (catalog.list({ category: "branding" }).length !== 24) errors.push("category failed: branding");
+if (catalog.list({ category: "startup" }).length !== 15) errors.push("category failed: startup");
 if (catalog.list({ category: "technology" }).length !== 12) errors.push("category failed: technology");
-if (catalog.list({ category: "creative" }).length !== 20) errors.push("category failed: creative");
+if (catalog.list({ category: "creative" }).length !== 21) errors.push("category failed: creative");
 if (!catalog.list({ category: "all", media: "diagram" }).some((style) => style.id === "system-architecture-map")) errors.push("facet failed: media=diagram for system-architecture-map");
 if (!catalog.list({ category: "all", workStage: "event-delivery" }).some((style) => style.id === "event-hands-on-workshop")) errors.push("facet failed: workStage=event-delivery");
 if (!catalog.list({ category: "all", documentType: "speaker-profile" }).some((style) => style.id === "event-keynote-speaker")) errors.push("facet failed: documentType=speaker-profile");

@@ -9630,7 +9630,7 @@
         <div class="mixer-preview-actions">
           <button type="button" class="mixer-action-btn copy" id="btnMixerCopy">프롬프트 복사</button>
           <button type="button" class="mixer-action-btn apply" id="btnMixerApply">홍보 이미지에 적용</button>
-          <button type="button" class="mixer-action-btn slidedoc" id="btnMixerFormImage">양식 이미지에 적용</button>
+          <button type="button" class="mixer-action-btn slidedoc" id="btnMixerFormImage">문서 표지·양식에 적용</button>
         </div>
       </div>
     `;
@@ -10521,7 +10521,7 @@
         const tabBtn = document.getElementById('tabBtnPromotion');
         if (tabBtn) tabBtn.click();
       } else {
-        alert('홍보용 이미지 탭을 찾을 수 없습니다.');
+        alert('홍보 이미지 메뉴를 찾을 수 없습니다.');
       }
     });
 
@@ -10557,7 +10557,7 @@
           typographyId: typography ? typography.id : 'none'
         });
       } else {
-        alert('양식 이미지 탭을 찾을 수 없습니다.');
+        alert('문서 표지·양식 메뉴를 찾을 수 없습니다.');
       }
     });
 

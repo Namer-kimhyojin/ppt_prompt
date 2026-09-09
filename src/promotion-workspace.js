@@ -108,10 +108,10 @@
     headActions.append($("promotionSampleBtn"));
     $("promotionRandomPresetBtn").classList.add("promo-proxy-source");
     ["promotionConceptInstRandomBtn", "promotionConceptInstRandomBtnApplied"].forEach(id => $(id)?.classList.add("promo-proxy-source"));
-    $("promotionConceptSelectBtn").textContent = "비주얼 믹서에서 선택";
-    $("promotionConceptChangeBtn").textContent = "비주얼 믹서에서 변경";
+    $("promotionConceptSelectBtn").textContent = "비주얼 조합에서 선택";
+    $("promotionConceptChangeBtn").textContent = "비주얼 조합에서 변경";
     const conceptHint = $("promotionConceptSelectBtn").closest(".promo-basic-concept-panel")?.querySelector("p");
-    if (conceptHint) conceptHint.textContent = "추천 스타일을 적용하거나 비주얼 믹서에서 직접 골라 보세요.";
+    if (conceptHint) conceptHint.textContent = "추천 스타일을 적용하거나 비주얼 조합에서 직접 골라 보세요.";
     $("promotionSaveBtn").textContent = "작업 파일 저장";
     $("promotionLoadBtn").textContent = "작업 파일 열기";
     $("promotionResetPromptBtn").textContent = "새 설정으로 다시 만들기";

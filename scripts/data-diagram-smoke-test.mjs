@@ -158,12 +158,16 @@ try {
   );
   await page.click("#diagramSlideStyleLoadMoreBtn");
   record((await page.locator("#diagramSlideStyleAllGrid .diagram-style-browser-card").count()) === 48, "Full gallery did not reveal the next style batch");
-  await page.locator('#diagramSlideStyleCategories [data-slide-style-category="trend-2026"]').click();
-  record((await page.locator("#diagramSlideStyleAllGrid .diagram-style-browser-card").count()) === 6, "Shared gallery omitted 2026 trend styles");
-  const trendPreview = page.locator('#diagramSlideStyleAllGrid [data-slide-style-id="soft-glass-data"] img');
-  await trendPreview.scrollIntoViewIfNeeded();
-  await trendPreview.evaluate(image => image.decode());
-  record(await trendPreview.evaluate(image => image.naturalWidth === 960 && image.naturalHeight === 540), "Trend preview failed to load");
+  record(!actualCategoryIds.includes("trend-2026"), "Shared gallery still separates styles into an annual category");
+  for (const [styleId, category] of [["calm-index-editorial", "branding"], ["field-notes-briefing", "reporting"], ["soft-glass-data", "startup"], ["retro-window-story", "startup"], ["cinematic-contact-sheet", "branding"], ["chromatic-type-story", "creative"]]) {
+    await page.locator(`#diagramSlideStyleCategories [data-slide-style-category="${category}"]`).click();
+    const preview = page.locator(`#diagramSlideStyleAllGrid [data-slide-style-id="${styleId}"] img`);
+    while (!await preview.count() && await page.locator("#diagramSlideStyleLoadMoreBtn").isVisible()) await page.locator("#diagramSlideStyleLoadMoreBtn").click();
+    record((await preview.count()) === 1, `Shared gallery omitted ${styleId} from ${category}`);
+    await preview.scrollIntoViewIfNeeded();
+    await preview.evaluate(image => image.decode());
+    record(await preview.evaluate(image => image.naturalWidth === 960 && image.naturalHeight === 540), `${styleId} preview failed to load`);
+  }
   await page.locator('#diagramSlideStyleCategories [data-slide-style-category="all"]').click();
   const nonDiagramStyle = await page.evaluate(() => {
     const bridge = window.PromptDeckVisualStyleContract;

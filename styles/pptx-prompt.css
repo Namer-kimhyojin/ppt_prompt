@@ -29,11 +29,6 @@
 .pp-section-title h3 { font-size: 20px; font-weight: 750; letter-spacing: -.035em; line-height: 1.4; }
 .pp-total { color: var(--pp-accent-ink); background: var(--pp-accent-soft); padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 750; white-space: nowrap; }
 .pp-search-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(140px, .65fr); gap: 10px; }
-.pp-trend-entry { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px 0 18px; margin: -8px 0 18px; border-bottom: 1px solid var(--line); }
-.pp-trend-entry strong { font-size: 14px; color: var(--pp-accent-ink); }
-.pp-trend-entry p { margin-top: 5px; color: var(--ink-soft); font-size: 12px; line-height: 1.65; max-width: 38ch; word-break: keep-all; }
-.pp-trend-entry .pp-button { flex: none; }
-.pp-trend-entry .pp-button[aria-pressed="true"] { border-color: var(--pp-accent); background: var(--pp-accent-soft); color: var(--pp-accent-ink); }
 .pp-field { display: grid; gap: 7px; min-width: 0; color: var(--ink); font-size: 13px; font-weight: 650; line-height: 1.5; }
 .pp-field input, .pp-field select, .pp-field textarea { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line-control); border-radius: 9px; background: var(--surface); color: var(--ink); font-size: 14px; font-weight: 400; }
 .pp-field textarea { resize: vertical; line-height: 1.7; }

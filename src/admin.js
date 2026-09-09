@@ -6,25 +6,27 @@
   // index.html을 읽을 수 없는 환경(file:// 등)에서만 사용하는 현재 탭 목록입니다.
   // 일반 실행 환경에서는 아래 목록이 아니라 실제 .app-tabs 버튼을 자동으로 읽습니다.
   var TAB_GROUPS = [
-    { id: 'deck', name: '슬라이드 제작' },
-    { id: 'special', name: '업무용 이미지 제작' },
-    { id: 'visual', name: '일반·창작 이미지 제작' }
+    { id: 'deck', name: '문서와 발표자료 만들기' },
+    { id: 'special', name: '홍보물과 정보 전달 이미지 만들기' },
+    { id: 'visual', name: '스타일 찾기와 사진 변환' }
   ];
   var FALLBACK_TABS = [
-    { id: 'tabBtnCommonPrompt',     name: '공통 프롬프트', group: 'deck' },
-    { id: 'tabBtnPptxPrompt',       name: 'PPTX 제작 프롬프트', group: 'deck' },
+    { id: 'tabBtnCommonPrompt',     name: '슬라이드 디자인 설정', group: 'deck' },
+    { id: 'tabBtnPptxPrompt',       name: 'PPTX 제작 요청문', group: 'deck' },
     { id: 'tabBtnDocumentDesign',   name: '문서 디자인', group: 'deck' },
-    { id: 'tabBtnGenerator',        name: '슬라이드 분리기', group: 'deck' },
+    { id: 'tabBtnGenerator',        name: '기획안 장별 나누기', group: 'deck' },
     { id: 'tabBtnSlideImage',       name: '슬라이드 이미지 생성', group: 'deck' },
-    { id: 'tabBtnPromotionPlanner', name: '컨셉 제안', group: 'visual' },
-    { id: 'tabBtnConceptMixer',     name: '비주얼 믹서', group: 'visual' },
-    { id: 'tabBtnPhotoTransform',   name: '사진 변환 프롬프터', group: 'visual' },
-    { id: 'tabBtnMapPrompt',        name: '지도 이미지', group: 'special' },
-    { id: 'tabBtnSlideDocument',    name: '부속 양식', group: 'special' },
-    { id: 'tabBtnFormImage',        name: '양식 이미지', group: 'special' },
-    { id: 'tabBtnPromotion',        name: '홍보용 이미지', group: 'special' },
-    { id: 'tabBtnQrGenerator',      name: 'QR코드 생성기', group: 'special' },
-    { id: 'tabBtnDesigner',         name: '슬라이드 프롬프트(구)', group: 'deck' }
+    { id: 'tabBtnPromotionPlanner', name: '스타일 추천', group: 'visual' },
+    { id: 'tabBtnConceptMixer',     name: '비주얼 조합', group: 'visual' },
+    { id: 'tabBtnPhotoTransform',   name: '사진 스타일 변환', group: 'visual' },
+    { id: 'tabBtnMapPrompt',        name: '지도·위치도', group: 'special' },
+    { id: 'tabBtnSlideDocument',    name: '부속 양식(이전)', group: 'special' },
+    { id: 'tabBtnFormImage',        name: '문서 표지·양식', group: 'special' },
+    { id: 'tabBtnPromotion',        name: '홍보 이미지', group: 'special' },
+    { id: 'tabBtnQrGenerator',      name: 'QR코드', group: 'special' },
+    { id: 'tabBtnDataDiagram',      name: '데이터 도식', group: 'special' },
+    { id: 'tabBtnLabelSheet',       name: '라벨·티켓', group: 'special' },
+    { id: 'tabBtnDesigner',         name: '슬라이드 프롬프트(이전)', group: 'deck' }
   ];
   var DEFAULT_TABS = FALLBACK_TABS.slice();
 

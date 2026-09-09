@@ -1106,7 +1106,7 @@
   function randomizeInstitutionColor() {
     const profile = institutionProfile(institutionRandomState?.profileId);
     const palette = institutionPalette(get("colors.presetId") || get("colors.preset"));
-    if (!palette) { toast("비주얼 믹서의 공공/기관 색상 팔레트가 없습니다."); return; }
+    if (!palette) { toast("비주얼 조합의 공공/기관 색상 팔레트가 없습니다."); return; }
     recordHistory();
     state.sectionEnabled.colors = true;
     assignInstitutionPalette(palette);
@@ -1118,7 +1118,7 @@
   function randomizeInstitutionMedium() {
     const profile = institutionProfile(institutionRandomState?.profileId);
     const medium = institutionMedium(get("visualDirection.mediumId"));
-    if (!medium) { toast("비주얼 믹서의 공공기관 리터칭 기법이 없습니다."); return; }
+    if (!medium) { toast("비주얼 조합의 공공기관 리터칭 기법이 없습니다."); return; }
     recordHistory();
     state.sectionEnabled.direction = true;
     assignMediumToState(medium, "institution-random");
@@ -1543,7 +1543,7 @@
       return clickChoiceGroup(meta.question, path, meta.values.map((title, index) => [index + 1, title]), "cpd-five-options");
     }).join("");
     const currentMedium = get("visualDirection.mediumNameKo") ? `<div class="cpd-direction-current"><div><small>현재 보조 표현 기법</small><strong>${escapeHtml(get("visualDirection.mediumNameKo"))}</strong></div><button type="button" class="cpd-btn" data-action="remove-medium">화풍 해제</button></div>` : '<div class="cpd-inline-note"><strong>보조 표현 기법 없음</strong> 기본 디자인 방향만 사용합니다.</div>';
-    const advanced = `<div class="cpd-design-statement"><span>현재 디자인 방향</span><strong>${escapeHtml(effectiveDesignStatement())}</strong><small>네 가지 인상 선택을 자동으로 한 문장에 합칩니다.</small></div><div class="cpd-form-grid"><label class="cpd-field"><span>이 디자인을 떠올리게 할 단어</span><input class="cpd-input" data-path="visualDirection.conceptKeywords" maxlength="50" value="${escapeHtml(get("visualDirection.conceptKeywords"))}"></label><label class="cpd-field"><span>반복 모티프</span><input class="cpd-input" data-path="visualDirection.signatureMotif" maxlength="60" value="${escapeHtml(get("visualDirection.signatureMotif"))}"></label></div>${currentMedium}<div class="cpd-button-row"><button type="button" class="cpd-btn soft" data-action="import-mixer-medium">현재 화풍 가져오기</button><button type="button" class="cpd-btn" data-action="open-mixer-medium">비주얼 믹서에서 찾기</button></div><div id="cpdInstitutionRandom"></div>`;
+    const advanced = `<div class="cpd-design-statement"><span>현재 디자인 방향</span><strong>${escapeHtml(effectiveDesignStatement())}</strong><small>네 가지 인상 선택을 자동으로 한 문장에 합칩니다.</small></div><div class="cpd-form-grid"><label class="cpd-field"><span>이 디자인을 떠올리게 할 단어</span><input class="cpd-input" data-path="visualDirection.conceptKeywords" maxlength="50" value="${escapeHtml(get("visualDirection.conceptKeywords"))}"></label><label class="cpd-field"><span>반복 모티프</span><input class="cpd-input" data-path="visualDirection.signatureMotif" maxlength="60" value="${escapeHtml(get("visualDirection.signatureMotif"))}"></label></div>${currentMedium}<div class="cpd-button-row"><button type="button" class="cpd-btn soft" data-action="import-mixer-medium">현재 화풍 가져오기</button><button type="button" class="cpd-btn" data-action="open-mixer-medium">비주얼 조합에서 찾기</button></div><div id="cpdInstitutionRandom"></div>`;
     return `${panel("인상 좌표", "공식성·에너지·표현 강도·전달 태도는 서로 다른 축입니다. 각 질문에서 한 지점만 고르세요.", `<div class="cpd-click-question-list">${identity}</div>${renderIdentityOutcome()}`)}${advancedGroup("정체성 고급 편집", "키워드·반복 모티프·보조 화풍", advanced, "journeyDirection")}`;
   }
 
@@ -2509,7 +2509,7 @@
     const grid = mediums.length ? `<div class="cpd-medium-grid">${mediums.slice(0, directionUi.visible).map((medium) => `<button type="button" class="cpd-medium-card${directionDraft?.medium?.id === medium.id ? " selected" : get("visualDirection.mediumId") === medium.id ? " applied" : ""}" data-medium-id="${escapeHtml(medium.id)}"><span class="cpd-medium-card-head"><strong>${escapeHtml(medium.nameKo)}</strong>${medium.recommended ? "<em>추천</em>" : ""}</span><small>${escapeHtml(medium.description)}</small><span>${escapeHtml(medium.groupLabel)} · ${escapeHtml(medium.textureLabel || "기본 질감")}</span></button>`).join("")}</div>${mediums.length > directionUi.visible ? '<div class="cpd-button-row cpd-load-more"><button type="button" class="cpd-btn" data-action="medium-load-more">12개 더 보기</button></div>' : ""}` : '<div class="cpd-palette-empty">조건에 맞는 화풍이 없습니다.</div>';
     const axes = `<div class="cpd-axis-board"><div class="cpd-axis-board-head"><div><span>DESIGN COORDINATES</span><strong>양끝 사이에서 이 발표만의 좌표를 만드세요</strong><small>각 축은 5단계로 조절됩니다. 가운데 값도 ‘미정’이 아니라 두 성격을 의도적으로 균형 잡는 선택입니다.</small></div><button type="button" class="cpd-btn" data-action="reset-design-axes">전체 균형으로</button></div><div class="cpd-design-axis-grid">${designAxis("visualDirection.authority", 1)}${designAxis("visualDirection.energy", 2)}${designAxis("visualDirection.expression", 3)}${designAxis("visualDirection.rationality", 4)}${designAxis("visualDirection.geometry", 5)}${designAxis("visualDirection.depth", 6)}</div></div>`;
     const statement = `<div class="cpd-design-statement"><span>현재 디자인 DNA</span><strong>${escapeHtml(effectiveDesignStatement())}</strong><small>여섯 질문의 답을 자동으로 한 문장에 합칩니다. 필요한 경우에만 짧게 수정하세요.</small></div><div class="cpd-form-grid"><label class="cpd-field"><span>이 디자인을 떠올리게 할 단어</span><input class="cpd-input" data-path="visualDirection.conceptKeywords" maxlength="50" value="${escapeHtml(get("visualDirection.conceptKeywords"))}" placeholder="예: 신뢰, 연결, 정밀, 성장"><small class="cpd-field-note">핵심 감각 3~5개만 적습니다.</small></label><label class="cpd-field"><span>반복해서 기억시킬 모티프</span><input class="cpd-input" data-path="visualDirection.signatureMotif" maxlength="60" value="${escapeHtml(get("visualDirection.signatureMotif"))}" placeholder="예: 연결되는 궤적, 절단면, 확장되는 그리드"><small class="cpd-field-note">선택 항목이며 한 가지 모티프만 권장합니다.</small></label><label class="cpd-field cpd-span-all"><span>디자인 선언 직접 수정</span><textarea class="cpd-textarea" data-path="visualDirection.designStatement" maxlength="180" placeholder="자동 조합을 사용하려면 비워두세요.">${escapeHtml(get("visualDirection.designStatement"))}</textarea><small class="cpd-field-note">한 문장·180자 이내로 작성합니다.</small></label></div>`;
-    const advanced = `<details class="cpd-design-advanced" data-design-advanced="direction"${designAdvancedOpen.has("direction") ? " open" : ""}><summary><span>고급 편집</span><small>특정 화풍을 디자인 DNA의 보조 재료로 연결</small></summary><div class="cpd-design-advanced-body">${current}${toolbar}<div class="cpd-button-row cpd-mixer-link-row"><button type="button" class="cpd-btn soft" data-action="import-mixer-medium">현재 화풍 가져오기</button><button type="button" class="cpd-btn" data-action="open-mixer-medium">비주얼 믹서에서 찾아보기</button><span>${mediums.length}개 화풍</span></div>${grid}${renderDirectionDraft()}</div></details>`;
+    const advanced = `<details class="cpd-design-advanced" data-design-advanced="direction"${designAdvancedOpen.has("direction") ? " open" : ""}><summary><span>고급 편집</span><small>특정 화풍을 디자인 DNA의 보조 재료로 연결</small></summary><div class="cpd-design-advanced-body">${current}${toolbar}<div class="cpd-button-row cpd-mixer-link-row"><button type="button" class="cpd-btn soft" data-action="import-mixer-medium">현재 화풍 가져오기</button><button type="button" class="cpd-btn" data-action="open-mixer-medium">비주얼 조합에서 찾아보기</button><span>${mediums.length}개 화풍</span></div>${grid}${renderDirectionDraft()}</div></details>`;
     return `${panel("슬라이더로 디자인 감각을 조율하세요", "상반되는 성격 사이에서 여섯 개의 좌표를 만들면 고정된 템플릿이 아닌 이 발표만의 디자인 DNA로 합성됩니다.", axes)}${panel("한 문장의 디자인 선언", "AI가 모든 슬라이드에서 유지할 인상과 고유한 기억점을 자연어로 정리합니다.", statement)}${advanced}`;
   }
 
@@ -2891,7 +2891,7 @@
   }
 
   function renderTypography() {
-    const sources = [["common", "빠른 추천", "용도별 조합"], ["mixer", "비주얼 믹서", "표현 스타일 연결"], ["custom", "직접 설정", "세부 값 조정"]];
+    const sources = [["common", "빠른 추천", "용도별 조합"], ["mixer", "비주얼 조합", "표현 스타일 연결"], ["custom", "직접 설정", "세부 값 조정"]];
     const sourceNav = `<div class="cpd-color-source" role="tablist" aria-label="타이포그래피 선택 방식">${sources.map(([key, title, sub]) => `<button type="button" class="cpd-color-source-btn${typographyUi.source === key ? " active" : ""}" data-typography-source="${key}" role="tab" aria-selected="${typographyUi.source === key}"><strong>${title}</strong><small>${sub}</small></button>`).join("")}</div>`;
     let sourceBody = "";
     if (typographyUi.source === "common") {
@@ -2900,13 +2900,13 @@
       const recommended = typographyUi.category === "recommended";
       const styles = TYPOGRAPHY_CATALOG?.list?.({ recommended, category: recommended ? "all" : typographyUi.category }) || [];
       const categories = [["recommended", "발표자료 추천"], ["all", "전체 스타일"], ...(TYPOGRAPHY_CATALOG?.categories || []).map((item) => [item.id, item.label.replace(/^\S+\s*/, "")])];
-      sourceBody = `<div class="cpd-type-mixer-toolbar"><label class="cpd-field"><span>표현 스타일 범위</span><select class="cpd-select" data-typography-filter="category">${categories.map(([value, text]) => option(value, text, typographyUi.category)).join("")}</select><small class="cpd-field-note">본문 가독성을 지키기 위해 안전한 스타일을 먼저 보여줍니다.</small></label><div class="cpd-button-row cpd-mixer-link-row"><button type="button" class="cpd-btn soft" data-action="import-mixer-typography">현재 선택 가져오기</button><button type="button" class="cpd-btn" data-action="open-mixer-typography">비주얼 믹서에서 찾아보기</button><span>${styles.length}개 스타일</span></div></div>${get("typography.visualTypographyNameKo") ? `<div class="cpd-applied-medium"><div><small>현재 적용 스타일</small><strong>${escapeHtml(get("typography.visualTypographyNameKo"))} <span>${escapeHtml(get("typography.visualTypographyNameEn"))}</span></strong></div><button type="button" class="cpd-btn" data-action="remove-typography">스타일 해제</button></div>` : ""}<div class="cpd-type-style-grid">${styles.slice(0, typographyUi.visible).map((item) => `<button type="button" class="cpd-type-style-card${typographyDraft?.id === item.id ? " selected" : get("typography.visualTypographyId") === item.id ? " applied" : ""}" data-typography-id="${escapeHtml(item.id)}"><span><strong>${escapeHtml(item.nameKo)}</strong>${item.recommended ? "<em>추천</em>" : item.highRisk ? "<em class=\"risk\">제목용</em>" : ""}</span><small>${escapeHtml(item.description)}</small><b>${escapeHtml(item.categoryLabel)}</b></button>`).join("")}</div>${styles.length > typographyUi.visible ? '<div class="cpd-button-row cpd-load-more"><button type="button" class="cpd-btn" data-action="typography-load-more">12개 더 보기</button></div>' : ""}${renderTypographyDraft()}`;
+      sourceBody = `<div class="cpd-type-mixer-toolbar"><label class="cpd-field"><span>표현 스타일 범위</span><select class="cpd-select" data-typography-filter="category">${categories.map(([value, text]) => option(value, text, typographyUi.category)).join("")}</select><small class="cpd-field-note">본문 가독성을 지키기 위해 안전한 스타일을 먼저 보여줍니다.</small></label><div class="cpd-button-row cpd-mixer-link-row"><button type="button" class="cpd-btn soft" data-action="import-mixer-typography">현재 선택 가져오기</button><button type="button" class="cpd-btn" data-action="open-mixer-typography">비주얼 조합에서 찾아보기</button><span>${styles.length}개 스타일</span></div></div>${get("typography.visualTypographyNameKo") ? `<div class="cpd-applied-medium"><div><small>현재 적용 스타일</small><strong>${escapeHtml(get("typography.visualTypographyNameKo"))} <span>${escapeHtml(get("typography.visualTypographyNameEn"))}</span></strong></div><button type="button" class="cpd-btn" data-action="remove-typography">스타일 해제</button></div>` : ""}<div class="cpd-type-style-grid">${styles.slice(0, typographyUi.visible).map((item) => `<button type="button" class="cpd-type-style-card${typographyDraft?.id === item.id ? " selected" : get("typography.visualTypographyId") === item.id ? " applied" : ""}" data-typography-id="${escapeHtml(item.id)}"><span><strong>${escapeHtml(item.nameKo)}</strong>${item.recommended ? "<em>추천</em>" : item.highRisk ? "<em class=\"risk\">제목용</em>" : ""}</span><small>${escapeHtml(item.description)}</small><b>${escapeHtml(item.categoryLabel)}</b></button>`).join("")}</div>${styles.length > typographyUi.visible ? '<div class="cpd-button-row cpd-load-more"><button type="button" class="cpd-btn" data-action="typography-load-more">12개 더 보기</button></div>' : ""}${renderTypographyDraft()}`;
     } else {
       sourceBody = `<div class="cpd-form-grid three cpd-type-basic">${selectField("글꼴 계열", "typography.family", [["sans", "산세리프 · 깔끔하고 현대적"], ["serif", "세리프 · 전통적이고 차분함"], ["mixed", "혼합 · 제목과 본문 대비"]])}${textField("선호 글꼴명", "typography.fontName")}${selectField("제목을 어떻게 보이게 할까요?", "typography.headlineCharacter", [["authoritative", "신뢰감 있게"], ["modern", "현대적으로"], ["restrained", "차분하게"], ["friendly", "친근하게"]])}${selectField("본문 읽기 방식", "typography.bodyCharacter", [["neutral", "중립적으로"], ["legible", "읽기 편하게"], ["technical", "기술 문서처럼"]])}${selectField("제목 강조 정도", "typography.headlineScale", [["standard", "보통"], ["large", "크게"], ["xlarge", "매우 크게"]])}${selectField("한 화면의 정보량", "typography.bodyScale", [["compact", "많이 담기"], ["standard", "균형"], ["large", "여유롭게"]])}<label class="cpd-field cpd-span-all"><span>글꼴을 재현하지 못할 때의 대체 특성</span><input class="cpd-input" data-path="typography.fallback" value="${escapeHtml(get("typography.fallback"))}" placeholder="예: clean Korean sans-serif"><small class="cpd-field-note">글꼴명과 함께 시각적 특성을 전달해 생성 모델 호환성을 높입니다.</small></label></div><details class="cpd-type-advanced"><summary>세부 조정 <small>간격과 안전 규칙이 필요할 때만 펼치기</small></summary><div class="cpd-type-advanced-body"><div class="cpd-form-grid three">${selectField("줄 사이 여백", "typography.lineHeight", [["tight", "좁게"], ["standard", "보통"], ["wide", "넓게"]])}${selectField("글자 사이 간격", "typography.letterSpacing", [["tight", "좁게"], ["standard", "보통"], ["wide", "넓게"]])}<div class="cpd-span-all cpd-checks">${check("숫자·단위 강조", "typography.emphasizeNumbers")}${check("프로젝터 거리 가독성 확인", "typography.projectorMode")}${check("세로쓰기 제한", "typography.avoidVerticalText")}${check("도형 내부 장문 금지", "typography.avoidLongTextInShapes")}${check("작은 글자 최소화", "typography.minimizeSmallText")}${check("깨진 한글 금지", "typography.forbidMalformedKorean")}</div></div></div></details>`;
     }
     const voice = `<div class="cpd-form-grid">${selectField("말하는 목소리", "typography.voice", [["institutional", "제도적 · 공식 문서처럼"], ["authoritativeModern", "권위 있는 현대성 · 신뢰와 선명함"], ["editorial", "에디토리얼 · 여백과 대비"], ["technical", "기술적 · 정밀하고 구조적"], ["human", "인간적 · 친근하고 부드럽게"]])}${selectField("위계를 만드는 방식", "typography.hierarchyStyle", [["scaleWeight", "크기와 굵기 대비"], ["scaleSpace", "크기와 여백 대비"], ["weightColor", "굵기와 역할색 대비"], ["editorialContrast", "서체 성격과 크기의 편집적 대비"]])}${selectField("문장 리듬", "typography.rhythm", [["compact", "압축된 정보 리듬"], ["balanced", "균형 잡힌 발표 리듬"], ["airy", "넓은 호흡과 여백"], ["dramatic", "짧고 강한 대비"]])}<label class="cpd-field cpd-span-all"><span>강조 원칙</span><textarea class="cpd-textarea" data-path="typography.emphasisPolicy" maxlength="100">${escapeHtml(get("typography.emphasisPolicy"))}</textarea><small class="cpd-field-note">가장 중요한 대상 한 가지와 강조 방법만 적습니다.</small></label></div>`;
-    const advanced = `<details class="cpd-design-advanced" data-design-advanced="typography"${designAdvancedOpen.has("typography") ? " open" : ""}><summary><span>고급 편집</span><small>추천 조합·글꼴·표현 스타일·자간과 행간을 직접 조정</small></summary><div class="cpd-design-advanced-body">${panel("타이포그래피 선택", "빠른 추천, 비주얼 믹서, 직접 설정 중 편한 방법으로 시작하세요.", `${sourceNav}${sourceBody}`)}</div></details>`;
-    return `${panel("타이포그래피의 목소리", "글꼴명보다 발표가 어떤 태도로 말하고 무엇을 크게 읽히게 할지를 먼저 정합니다.", voice)}${panel("현재 위계 미리보기", "제목·본문·숫자의 관계가 디자인 의도와 맞는지 확인합니다.", `<div class="cpd-type-overview"><div class="cpd-type-summary"><strong>${escapeHtml(typographySummary())}</strong><span>${get("typography.source") === "visual-mixer" ? "비주얼 믹서 연결" : get("typography.source") === "custom" ? "직접 조정" : "추천 조합"}</span></div>${typographySpecimen()}</div>`)}${advanced}`;
+    const advanced = `<details class="cpd-design-advanced" data-design-advanced="typography"${designAdvancedOpen.has("typography") ? " open" : ""}><summary><span>고급 편집</span><small>추천 조합·글꼴·표현 스타일·자간과 행간을 직접 조정</small></summary><div class="cpd-design-advanced-body">${panel("타이포그래피 선택", "빠른 추천, 비주얼 조합, 직접 설정 중 편한 방법으로 시작하세요.", `${sourceNav}${sourceBody}`)}</div></details>`;
+    return `${panel("타이포그래피의 목소리", "글꼴명보다 발표가 어떤 태도로 말하고 무엇을 크게 읽히게 할지를 먼저 정합니다.", voice)}${panel("현재 위계 미리보기", "제목·본문·숫자의 관계가 디자인 의도와 맞는지 확인합니다.", `<div class="cpd-type-overview"><div class="cpd-type-summary"><strong>${escapeHtml(typographySummary())}</strong><span>${get("typography.source") === "visual-mixer" ? "비주얼 조합 연결" : get("typography.source") === "custom" ? "직접 조정" : "추천 조합"}</span></div>${typographySpecimen()}</div>`)}${advanced}`;
   }
 
   function componentPresetChoices(kind, presets) {
@@ -3778,7 +3778,7 @@
     if (compositeActive && [compositePrimary, compositeSecondary].includes("card") && (!isSectionEnabled("components") || get("components.cardEnabled") === false)) push("warning", "imagery", "카드 주변 실사 합성이 선택됐지만 카드 설정은 비설정 상태입니다.", "photoCompositeCard");
     if (compositeActive && Number(get("imagery.photoCompositeMaxAreaPercent")) > 40) push("warning", "imagery", "실사 합성 점유율이 40%를 넘어 텍스트와 데이터 공간이 부족해질 수 있습니다.", "photoCompositeArea");
     if (compositeActive && !get("imagery.photoCompositeProtectData") && isSectionEnabled("components") && (get("components.tableEnabled") !== false || get("components.chartEnabled") !== false)) push("warning", "imagery", "표·차트가 사용되므로 실사와 데이터 영역의 겹침 방지를 켜는 것을 권장합니다.", "photoCompositeData");
-    if (isSectionEnabled("typography") && get("typography.visualTypographyHighRisk") && get("typography.visualTypographyScope") === "all") push("warning", "typography", "장식성이 강한 비주얼 믹서 스타일이 전체 텍스트에 적용되어 본문과 표·차트 라벨의 가독성이 낮아질 수 있습니다.", "typographyScope");
+    if (isSectionEnabled("typography") && get("typography.visualTypographyHighRisk") && get("typography.visualTypographyScope") === "all") push("warning", "typography", "장식성이 강한 비주얼 조합 스타일이 전체 텍스트에 적용되어 본문과 표·차트 라벨의 가독성이 낮아질 수 있습니다.", "typographyScope");
     if (isSectionEnabled("typography") && ["script", "experimental"].includes(get("typography.visualTypographyCategory")) && get("typography.visualTypographyScope") !== "headline") push("warning", "typography", "캘리그라피·실험적 타이포그래피는 제목에만 적용하는 것을 권장합니다.", "typographyScope");
     if (isSectionEnabled("typography") && get("typography.bodyScale") === "compact" && get("typography.lineHeight") === "tight") push("warning", "typography", "정보 밀집형 본문과 좁은 줄 간격이 함께 설정되어 발표 거리에서 읽기 어려울 수 있습니다.", "typographySpacing");
     if (isSectionEnabled("typography") && get("typography.projectorMode") && get("typography.bodyScale") === "compact") push("recommendation", "typography", "프로젝터 발표에서는 본문 정보량을 ‘균형’ 이상으로 설정하는 것이 안전합니다.", "typographyBody");
@@ -3807,7 +3807,7 @@
     if (isSectionEnabled("footer") && get("footer.type") === "none" && get("footer.showPageNumber")) push("error", "footer", "푸터 없음 상태에서 페이지 번호가 활성화되어 있습니다.", "footerNone");
     if (isSectionEnabled("background") && get("background.type") === "geometric" && !get("background.avoidBusyBackground")) push("recommendation", "background", "기하학 배경은 도형 밀도를 낮춰야 제목과 데이터가 먼저 보입니다.", "backgroundDensity");
     if (isSectionEnabled("background") && isBackgroundPhotoActive() && get("background.photoOverlay") === "none" && get("background.photoProtectText")) push("recommendation", "background", "실사 배경을 사용할 때는 크롭·여백·국부 대비 중 한 방식으로 제목과 수치의 읽기 영역을 보호하세요.", "backgroundPhotoOverlay");
-    if (isSectionEnabled("typography") && get("typography.visualTypographyHighRisk") && get("typography.visualTypographyScope") === "all") push("warning", "typography", "장식성이 강한 비주얼 믹서 스타일이 전체 텍스트에 적용되어 본문과 표·차트 라벨의 가독성이 낮아질 수 있습니다.", "typographyScope");
+    if (isSectionEnabled("typography") && get("typography.visualTypographyHighRisk") && get("typography.visualTypographyScope") === "all") push("warning", "typography", "장식성이 강한 비주얼 조합 스타일이 전체 텍스트에 적용되어 본문과 표·차트 라벨의 가독성이 낮아질 수 있습니다.", "typographyScope");
     if (isSectionEnabled("typography") && get("typography.bodyScale") === "compact" && get("typography.lineHeight") === "tight") push("warning", "typography", "정보 밀집형 본문과 좁은 줄 간격이 함께 설정되어 발표 거리에서 읽기 어려울 수 있습니다.", "typographySpacing");
     if (isSectionEnabled("quality") && (!get("quality.preserveExactText") || !get("quality.preserveNumbers"))) push("recommendation", "quality", "슬라이드 분리기 연계 시 문구와 수치 보존을 모두 켜는 것을 권장합니다.", "preserve");
     return issues;
@@ -5272,7 +5272,7 @@
     Object.assign(state.typography, { source: "common", visualTypographyId: "", visualTypographyNameKo: "", visualTypographyNameEn: "", visualTypographyCategory: "", visualTypographyDescription: "", visualTypographyPromptSummary: "", visualTypographyHighRisk: false });
     typographyDraft = null;
     refresh({ full: true });
-    toast("비주얼 믹서 타이포그래피 연결을 해제했습니다.");
+    toast("비주얼 조합 타이포그래피 연결을 해제했습니다.");
   }
 
   function applyMedium(medium) {
@@ -5927,9 +5927,9 @@
       const medium = window.PromptDeckConceptMixer?.getSelectedMedium?.();
       directionDraft = MEDIUM_CATALOG?.normalize?.(medium, medium?.source || "visual-mixer") || null;
       if (directionDraft) directionDraft = { type: "medium", medium: directionDraft };
-      if (!directionDraft) { toast("비주얼 믹서에서 먼저 화풍을 선택해주세요."); return; }
+      if (!directionDraft) { toast("비주얼 조합에서 먼저 화풍을 선택해주세요."); return; }
       refresh({ full: true });
-      toast("현재 비주얼 믹서 화풍을 적용 후보로 불러왔습니다.");
+      toast("현재 비주얼 조합 화풍을 적용 후보로 불러왔습니다.");
       return;
     }
     if (action === "open-mixer-medium") {
@@ -5938,7 +5938,7 @@
         const step = [...document.querySelectorAll("#conceptMixerContainer button")].find((button) => button.textContent.includes("화풍/기법 선택"));
         step?.click();
       }, 0);
-      toast("비주얼 믹서에서 화풍을 고른 뒤 공통 프롬프트로 돌아와 가져오기를 눌러주세요.");
+      toast("비주얼 조합에서 화풍을 고른 뒤 공통 프롬프트로 돌아와 가져오기를 눌러주세요.");
       return;
     }
     if (action === "apply-color-preset") return applyColorPreset();
@@ -5972,12 +5972,12 @@
     if (action === "import-mixer-palette") {
       const palette = window.PromptDeckConceptMixer?.getSelectedPalette?.();
       colorDraft = PALETTE_CATALOG?.toSlidePalette?.(palette) || null;
-      if (!colorDraft) { toast("비주얼 믹서에서 먼저 색상 팔레트를 선택해주세요."); return; }
+      if (!colorDraft) { toast("비주얼 조합에서 먼저 색상 팔레트를 선택해주세요."); return; }
       refresh({ full: true });
-      toast("현재 비주얼 믹서 팔레트를 미리보기에 불러왔습니다.");
+      toast("현재 비주얼 조합 팔레트를 미리보기에 불러왔습니다.");
       return;
     }
-    if (action === "open-mixer-palette") { document.getElementById("tabBtnConceptMixer")?.click(); toast("비주얼 믹서에서 팔레트를 고른 뒤 돌아와 가져오기를 눌러주세요."); return; }
+    if (action === "open-mixer-palette") { document.getElementById("tabBtnConceptMixer")?.click(); toast("비주얼 조합에서 팔레트를 고른 뒤 돌아와 가져오기를 눌러주세요."); return; }
     if (action === "apply-typography-draft" && typographyDraft) return applyTypographyStyle(typographyDraft);
     if (action === "cancel-typography-draft") { typographyDraft = null; typographyUi.scope = get("typography.visualTypographyScope") || "headline"; refresh({ full: true }); return; }
     if (action === "remove-typography") return removeTypographyStyle();
@@ -5985,10 +5985,10 @@
     if (action === "import-mixer-typography") {
       const selected = window.PromptDeckConceptMixer?.getSelectedTypography?.();
       typographyDraft = TYPOGRAPHY_CATALOG?.normalize?.(selected) || null;
-      if (!typographyDraft) { toast("비주얼 믹서에서 먼저 타이포그래피를 선택해주세요."); return; }
+      if (!typographyDraft) { toast("비주얼 조합에서 먼저 타이포그래피를 선택해주세요."); return; }
       typographyUi.scope = typographyDraft.highRisk ? "headline" : (get("typography.visualTypographyScope") || "headline");
       refresh({ full: true });
-      toast("현재 비주얼 믹서 타이포그래피를 적용 후보로 불러왔습니다.");
+      toast("현재 비주얼 조합 타이포그래피를 적용 후보로 불러왔습니다.");
       return;
     }
     if (action === "open-mixer-typography") {
@@ -5997,7 +5997,7 @@
         const step = [...document.querySelectorAll("#conceptMixerContainer button")].find((button) => button.textContent.includes("타이포그래피"));
         step?.click();
       }, 0);
-      toast("비주얼 믹서에서 타이포그래피를 고른 뒤 공통 프롬프트로 돌아와 가져오기를 눌러주세요.");
+      toast("비주얼 조합에서 타이포그래피를 고른 뒤 공통 프롬프트로 돌아와 가져오기를 눌러주세요.");
       return;
     }
     if (action === "recommend-purpose") return recommendPurpose();
