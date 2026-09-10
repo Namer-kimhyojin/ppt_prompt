@@ -43,7 +43,7 @@ try {
     await page.waitForFunction(() => window.CONCEPT_MIXER_PRESETS?.getCustomSamplesForMed?.('mix-steel-hot-rolling')?.[0]);
     const openMixer = async () => {
       if (viewport.width < 720 && !await page.locator('#tabBtnConceptMixer').isVisible()) await page.locator('#appToolMenuBtn').click();
-      if (!await page.locator('#tabBtnConceptMixer').isVisible()) await page.locator('[data-tab-group-filter="visual"]').click();
+      if (!await page.locator('#tabBtnConceptMixer').isVisible()) await page.locator('[data-tab-group-filter="styleHelper"]').click();
       await page.locator('#tabBtnConceptMixer').click();
       await page.locator('#btnSubjectSampleSettings').waitFor({ state: 'visible' });
     };
