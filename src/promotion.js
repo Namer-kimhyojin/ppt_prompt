@@ -4339,9 +4339,10 @@
     if (viewer) viewer.classList.toggle("promo-mode-hidden", editMode);
     if (textarea) textarea.classList.toggle("promo-mode-hidden", !editMode);
     if (toggleBtn) {
-      toggleBtn.textContent = editMode ? "프롬프트 보기" : "직접 편집";
+      toggleBtn.textContent = editMode ? "편집 완료" : "전체 프롬프트 편집";
       toggleBtn.classList.toggle("is-editing", editMode);
-      toggleBtn.title = editMode ? "수정한 프롬프트 보기" : "프롬프트 직접 편집";
+      toggleBtn.setAttribute("aria-pressed", editMode ? "true" : "false");
+      toggleBtn.title = editMode ? "편집 내용을 유지하고 섹션 보기로 돌아갑니다." : "전체 프롬프트를 한 번에 직접 편집합니다.";
     }
   }
 
@@ -4372,11 +4373,16 @@
       const linesHtml = section.lines
         .map((line) => "<div class=\"promo-viewer-line\">" + escapeHtml(line) + "</div>")
         .join("");
-      return "<div class=\"promo-viewer-section\">" +
-        (section.title ? "<div class=\"promo-viewer-section-title\">" + escapeHtml(section.title) + "</div>" : "") +
-        "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 편집\">편집</button>" +
-        "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"편집 취소\" style=\"display:none\">취소</button>" +
-        "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"이 섹션 복사\">복사</button>" +
+      const sectionLabel = section.title || "프롬프트 섹션";
+      return "<div class=\"promo-viewer-section\" data-prompt-title=\"" + escapeHtml(section.title) + "\">" +
+        "<div class=\"promo-viewer-section-head\">" +
+          (section.title ? "<div class=\"promo-viewer-section-title\">" + escapeHtml(section.title) + "</div>" : "<div class=\"promo-viewer-section-title\">프롬프트 섹션</div>") +
+          "<div class=\"promo-section-actions\" role=\"group\" aria-label=\"" + escapeHtml(sectionLabel) + " 작업\">" +
+            "<button type=\"button\" class=\"promo-section-edit-btn\" title=\"이 섹션 내용 편집\" aria-expanded=\"false\">내용 편집</button>" +
+            "<button type=\"button\" class=\"promo-section-cancel-btn\" title=\"저장하지 않고 편집 취소\" hidden>취소</button>" +
+            "<button type=\"button\" class=\"promo-section-copy-btn\" title=\"제목을 포함해 이 섹션 복사\">섹션 복사</button>" +
+          "</div>" +
+        "</div>" +
         "<div class=\"promo-section-lines-container\">" + linesHtml + "</div>" +
         "</div>";
     }).join("");
@@ -5642,7 +5648,7 @@
             const sectionTitle = sectionEl.querySelector(".promo-viewer-section-title")?.textContent || "섹션";
             status("'" + sectionTitle + "'" + " 텍스트를 복사했습니다.", "success");
             setTimeout(() => {
-              copyBtn.textContent = "복사";
+              copyBtn.textContent = "섹션 복사";
             }, 1500);
           })
           .catch((err) => {
@@ -5659,18 +5665,24 @@
         const linesContainer = sectionEl.querySelector(".promo-section-lines-container");
         const inlineTextarea = sectionEl.querySelector(".promo-section-inline-textarea");
         const editBtn = sectionEl.querySelector(".promo-section-edit-btn");
+        const copyBtn = sectionEl.querySelector(".promo-section-copy-btn");
 
         if (inlineTextarea) {
           inlineTextarea.remove();
         }
+        sectionEl.querySelector(".promo-section-edit-note")?.remove();
         if (linesContainer) {
           linesContainer.style.display = "";
         }
         if (editBtn) {
-          editBtn.textContent = "편집";
+          editBtn.textContent = "내용 편집";
           editBtn.classList.remove("is-active");
+          editBtn.setAttribute("aria-expanded", "false");
         }
-        cancelBtn.style.display = "none";
+        cancelBtn.hidden = true;
+        if (copyBtn) copyBtn.hidden = false;
+        sectionEl.classList.remove("is-editing");
+        editBtn?.focus();
         status("섹션 편집을 취소했습니다.", "info");
         return;
       }
@@ -5694,19 +5706,23 @@
             inlineTextarea.remove();
             linesContainer.style.display = "";
           }
+          sectionEl.querySelector(".promo-section-edit-note")?.remove();
 
           const cancelBtn = sectionEl.querySelector(".promo-section-cancel-btn");
-          if (cancelBtn) cancelBtn.style.display = "none";
+          const copyBtn = sectionEl.querySelector(".promo-section-copy-btn");
+          if (cancelBtn) cancelBtn.hidden = true;
+          if (copyBtn) copyBtn.hidden = false;
 
-          editBtn.textContent = "편집";
+          editBtn.textContent = "내용 편집";
           editBtn.classList.remove("is-active");
-          status("섹션 변경 사항을 저장했습니다. (메인 프롬프트에 실시간 반영)", "success");
+          editBtn.setAttribute("aria-expanded", "false");
+          sectionEl.classList.remove("is-editing");
+          status("섹션 변경을 전체 프롬프트에 저장했습니다.", "success");
 
           const viewer = $("promotionPromptViewer");
           const allSections = [];
           viewer.querySelectorAll(".promo-viewer-section").forEach((sec) => {
-            const titleEl = sec.querySelector(".promo-viewer-section-title");
-            const titleText = titleEl ? titleEl.textContent.trim() : "";
+            const titleText = sec.dataset.promptTitle || "";
             
             const secLines = [];
             const secTextarea = sec.querySelector(".promo-section-inline-textarea");
@@ -5757,7 +5773,23 @@
             textarea.className = "promo-section-inline-textarea";
             textarea.value = bodyText;
             textarea.spellcheck = false;
-            sectionEl.appendChild(textarea);
+            const sectionTitle = sectionEl.querySelector(".promo-viewer-section-title")?.textContent?.trim() || "프롬프트 섹션";
+            textarea.setAttribute("aria-label", `${sectionTitle} 내용 편집`);
+            textarea.setAttribute("aria-keyshortcuts", "Control+Enter Escape");
+            linesContainer.after(textarea);
+            const editNote = document.createElement("small");
+            editNote.className = "promo-section-edit-note";
+            editNote.textContent = "이 섹션만 수정됩니다. Ctrl+Enter로 저장하거나 Esc로 취소할 수 있습니다.";
+            textarea.after(editNote);
+            textarea.addEventListener("keydown", (event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                sectionEl.querySelector(".promo-section-cancel-btn")?.click();
+              } else if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                editBtn.click();
+              }
+            });
             textarea.focus();
             
             textarea.style.height = "auto";
@@ -5765,10 +5797,14 @@
           }
 
           const cancelBtn = sectionEl.querySelector(".promo-section-cancel-btn");
-          if (cancelBtn) cancelBtn.style.display = "inline-block";
+          const copyBtn = sectionEl.querySelector(".promo-section-copy-btn");
+          if (cancelBtn) cancelBtn.hidden = false;
+          if (copyBtn) copyBtn.hidden = true;
 
-          editBtn.textContent = "적용";
+          editBtn.textContent = "변경 저장";
           editBtn.classList.add("is-active");
+          editBtn.setAttribute("aria-expanded", "true");
+          sectionEl.classList.add("is-editing");
         }
         return;
       }

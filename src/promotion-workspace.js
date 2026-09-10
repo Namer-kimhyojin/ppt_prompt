@@ -37,6 +37,10 @@
       result.before(stack);
       stack.append(result);
     }
+    const resultActions = node("section", "promo-result-actions");
+    resultActions.setAttribute("aria-label", "완성 프롬프트 활용");
+    resultActions.innerHTML = '<div class="promo-result-actions-copy"><strong>완성 프롬프트 활용</strong><span>복사하거나 이미지 생성 단계로 이어가세요.</span></div>';
+    result.before(resultActions);
     let last = null, inputScroll = 0, recommendationKey = "", recommendationTimer, sampleManifestPromise;
     let recommendationRequest = 0;
     let templates = [];
@@ -114,7 +118,7 @@
     if (conceptHint) conceptHint.textContent = "추천 스타일을 적용하거나 비주얼 조합에서 직접 골라 보세요.";
     $("promotionSaveBtn").textContent = "작업 파일 저장";
     $("promotionLoadBtn").textContent = "작업 파일 열기";
-    $("promotionResetPromptBtn").textContent = "새 설정으로 다시 만들기";
+    $("promotionResetPromptBtn").textContent = "입력값으로 다시 만들기";
     $("promotionResetPromptBtn").title = "현재 수정본을 자동 초안으로 바꿉니다. 실행 취소할 수 있습니다.";
     visual.querySelector(".promo-layout-composition-panel")?.append($("promotionShuffleLayoutBtn"));
     const undo = button("promotionUndoBtn", "실행 취소", api.undo);
@@ -128,10 +132,10 @@
     status.setAttribute("aria-live", "polite");
     root.append(status);
 
-    const resultHead = node("div", "promo-result-head", '<div><h2>홍보 이미지 구성</h2><p>이미지에 들어갈 내용과 배치를 확인하세요.</p></div>');
+    const resultHead = node("div", "promo-result-head", '<div><h2>홍보 이미지 결과</h2><p>구성을 확인한 뒤 프롬프트를 검토·편집하세요.</p></div>');
     const resultModes = node("div", "promo-result-modes");
     resultModes.setAttribute("aria-label", "결과 보기 방식");
-    resultModes.append(button("promotionSummaryViewBtn", "구성 확인", () => setResultView("summary")), button("promotionPromptViewBtn", "프롬프트", () => setResultView("prompt")));
+    resultModes.append(button("promotionSummaryViewBtn", "구성 미리보기", () => setResultView("summary")), button("promotionPromptViewBtn", "프롬프트 검토", () => setResultView("prompt")));
     resultHead.append(resultModes);
     result.prepend(resultHead);
     const editedNotice = node("div", "promo-edited-notice");
@@ -152,7 +156,7 @@
     }
     setResultView("summary");
 
-    const send = button("promotionSendImageBtn", window.PROMPTDECK_STATIC_MODE ? "복사 후 ChatGPT 열기" : "이미지 생성으로 보내기", async () => {
+    const send = button("promotionSendImageBtn", window.PROMPTDECK_STATIC_MODE ? "복사 후 ChatGPT 열기" : "이미지 생성으로 이동", async () => {
       if (!window.PROMPTDECK_STATIC_MODE && window.PromptDeckSlideImageGeneration) {
         window.PromptDeckTabs.switchTab("slideImage");
         window.PromptDeckSlideImageGeneration.loadCurrentPrompt();

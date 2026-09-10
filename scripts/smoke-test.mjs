@@ -2256,8 +2256,8 @@ SLIDE-TWO-CONTENT`);
     await page.waitForSelector("#tabBtnPromotion");
     await page.click("#tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
-    record((await page.locator("#panePromotion .promo-result-stack > #tabActions").count()) === 1, "Promotion quick actions were not mounted in an independent result column", failures);
-    record((await page.locator("#panePromotion .promo-result-stack > .promo-preview-section").count()) === 1, "Promotion result panel was not kept as a sibling of the quick action dock", failures);
+    record((await page.locator("#panePromotion .promo-result-stack > .promo-result-actions > #tabActions").count()) === 1, "Promotion quick actions were not integrated into the result workflow", failures);
+    record((await page.locator("#panePromotion .promo-result-stack > .promo-preview-section").count()) === 1, "Promotion result panel was not kept with the integrated action area", failures);
 
     // 상세 모드 제거에 따라 기본 모드 전용 필드들만 검증하도록 테스트 수정
     record((await page.locator("#promotionAssetBadge").textContent()) === "홍보 이미지", "Promotion tab did not initialize with the unified promotion image mode", failures);
