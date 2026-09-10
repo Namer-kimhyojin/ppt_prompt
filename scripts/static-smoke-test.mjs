@@ -607,13 +607,16 @@ async function verifyLandingMenuLinks(viewport) {
     group: item.closest(".landing-tool-group").id.replace("tools-", ""),
     steps: item.querySelectorAll("ol > li").length,
     output: item.querySelector(".landing-tool-output")?.textContent.trim(),
+    kind: item.querySelector(".landing-tool-kind")?.textContent.trim(),
     href: item.querySelector("[data-tool-link]")?.getAttribute("href"),
   })));
   if (tools.length !== 13 || new Set(tools.map((tool) => tool.key)).size !== 13
-    || tools.filter((tool) => tool.group === "deck").length !== 4
-    || tools.filter((tool) => tool.group === "special").length !== 6
-    || tools.filter((tool) => tool.group === "visual").length !== 3
-    || tools.some((tool) => tool.steps !== 3 || !tool.output || tool.href !== `/app?tab=${tool.key}`)) {
+    || tools.filter((tool) => tool.group === "deckImage").length !== 3
+    || tools.filter((tool) => tool.group === "deckFile").length !== 2
+    || tools.filter((tool) => tool.group === "visualAsset").length !== 4
+    || tools.filter((tool) => tool.group === "printOutput").length !== 2
+    || tools.filter((tool) => tool.group === "styleHelper").length !== 2
+    || tools.some((tool) => tool.steps !== 3 || !tool.output || !tool.kind || tool.href !== `/app?tab=${tool.key}`)) {
     throw new Error(`Homepage menu content contract failed: ${JSON.stringify(tools)}`);
   }
   const summary = page.locator('[data-tool="formImage"] > summary');
