@@ -317,6 +317,7 @@ button:focus-visible {
 .tool-guide-nav a { font-weight: 800; text-decoration: none; }
 .tool-guide-index-heading { margin: 34px 0 16px; color: var(--guide-navy); font-size: 26px; }
 .tool-guide-index-heading:first-of-type { margin-top: 0; }
+.tool-guide-index-heading small { display: block; margin-top: 4px; color: var(--guide-soft, #5a6880); font-size: 13px; font-weight: 600; }
 
 .guide-toc {
   position: sticky;

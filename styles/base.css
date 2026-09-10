@@ -324,13 +324,75 @@ button {
     display: none;
   }
 
-  .app-tabs[data-active-group="deck"] .app-tab-group[data-tab-group="deck"],
-  .app-tabs[data-active-group="visual"] .app-tab-group[data-tab-group="visual"],
-  .app-tabs[data-active-group="special"] .app-tab-group[data-tab-group="special"] {
+  .app-tabs[data-active-group="deckImage"] .app-tab-group[data-tab-group="deckImage"],
+  .app-tabs[data-active-group="deckFile"] .app-tab-group[data-tab-group="deckFile"],
+  .app-tabs[data-active-group="visualAsset"] .app-tab-group[data-tab-group="visualAsset"],
+  .app-tabs[data-active-group="printOutput"] .app-tab-group[data-tab-group="printOutput"],
+  .app-tabs[data-active-group="styleHelper"] .app-tab-group[data-tab-group="styleHelper"] {
     display: flex;
   }
 
   .app-tab-group-label {
+    display: none;
+  }
+}
+
+/* 탭마다 손에 남는 결과물이 다르므로, 탭 바 바로 아래에 한 줄로 알린다. */
+.app-tool-output-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 7px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.app-tool-output-note[hidden] {
+  display: none;
+}
+
+.app-tool-output-badge {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.app-tool-output-badge[data-output-kind="promptFile"] {
+  background: color-mix(in srgb, #7c3aed 12%, var(--surface));
+  color: #6d28d9;
+}
+
+.app-tool-output-badge[data-output-kind="direct"] {
+  background: color-mix(in srgb, #059669 12%, var(--surface));
+  color: #047857;
+}
+
+.app-tool-output-badge[data-output-kind="material"] {
+  background: color-mix(in srgb, #d97706 14%, var(--surface));
+  color: #b45309;
+}
+
+@media (max-width: 720px) {
+  .app-tool-output-note {
+    align-items: flex-start;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+/* 라벨·티켓은 좁은 화면에서 전체 화면 작업대로 열리므로, 탭 바와 마찬가지로 안내 줄도 비운다. */
+@media (max-width: 860px) {
+  body:has(#paneLabelSheet.active) > .app-tool-output-note {
     display: none;
   }
 }
@@ -858,9 +920,11 @@ button {
     display: none;
   }
 
-  .app-tabs[data-active-group="deck"] .app-tab-group[data-tab-group="deck"],
-  .app-tabs[data-active-group="visual"] .app-tab-group[data-tab-group="visual"],
-  .app-tabs[data-active-group="special"] .app-tab-group[data-tab-group="special"] {
+  .app-tabs[data-active-group="deckImage"] .app-tab-group[data-tab-group="deckImage"],
+  .app-tabs[data-active-group="deckFile"] .app-tab-group[data-tab-group="deckFile"],
+  .app-tabs[data-active-group="visualAsset"] .app-tab-group[data-tab-group="visualAsset"],
+  .app-tabs[data-active-group="printOutput"] .app-tab-group[data-tab-group="printOutput"],
+  .app-tabs[data-active-group="styleHelper"] .app-tab-group[data-tab-group="styleHelper"] {
     display: block;
     width: 100%;
     padding-right: 0;

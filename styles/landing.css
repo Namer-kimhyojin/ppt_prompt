@@ -174,6 +174,23 @@ a:focus-visible { outline: 3px solid rgba(31, 94, 255, 0.34); outline-offset: 3p
 .landing-tool summary:hover { background: #f8faff; }
 .landing-tool summary:focus-visible { outline: 3px solid var(--landing-blue); outline-offset: 3px; }
 .landing-tool-path { display: block; color: var(--landing-soft); font-size: 12px; }
+
+/* 메뉴마다 손에 남는 결과물이 다르므로 형식을 뱃지로 명시한다. */
+.landing-tool-kind {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(31, 94, 255, 0.1);
+  color: #1f5eff;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.landing-tool-kind[data-output-kind="promptFile"] { background: rgba(124, 58, 237, 0.12); color: #6d28d9; }
+.landing-tool-kind[data-output-kind="direct"] { background: rgba(5, 150, 105, 0.12); color: #047857; }
+.landing-tool-kind[data-output-kind="material"] { background: rgba(217, 119, 6, 0.14); color: #b45309; }
 .landing-tool h4 { margin: 8px 0; color: var(--landing-navy); font-size: 21px; line-height: 1.4; }
 .landing-tool summary p { margin: 0; color: var(--landing-soft); font-size: 14px; }
 .landing-tool-toggle { display: flex; margin-top: 18px; justify-content: space-between; color: var(--landing-blue-dark); font-size: 13px; font-weight: 750; }

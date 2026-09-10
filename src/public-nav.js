@@ -14,39 +14,54 @@
   var ctaHref = existingCta ? existingCta.getAttribute("href") : "/app";
   var ctaLabel = (existingCta && existingCta.textContent.trim()) || "작업 도구 열기";
 
+  // 작업군은 최종 결과물 형식(이미지 / 편집 가능 문서 파일 / 인쇄물)을 기준으로 나눈다.
   var FEATURE_GROUPS = [
     {
-      label: "문서·슬라이드",
-      href: "/features#tools-deck",
-      desc: "발표·문서 디자인과 제작 요청",
+      label: "슬라이드 이미지",
+      href: "/features#tools-deckImage",
+      desc: "발표 슬라이드를 AI 이미지로",
       items: [
         ["슬라이드 디자인 설정", "/features#tool-commonPrompt"],
-        ["PPTX 제작 요청문", "/features#tool-pptxPrompt"],
-        ["문서 디자인", "/features#tool-documentDesign"],
-        ["기획안 장별 나누기", "/features#tool-generator"]
+        ["기획안 장별 나누기", "/features#tool-generator"],
+        ["문서 표지·양식", "/features#tool-formImage"]
       ]
     },
     {
-      label: "홍보·정보",
-      href: "/features#tools-special",
-      desc: "홍보물·지도·도식·출력물",
+      label: "PPTX·문서 파일",
+      href: "/features#tools-deckFile",
+      desc: "편집 가능한 파일 제작 요청문",
       items: [
-        ["문서 표지·양식", "/features#tool-formImage"],
+        ["PPTX 제작 요청문", "/features#tool-pptxPrompt"],
+        ["문서 디자인", "/features#tool-documentDesign"]
+      ]
+    },
+    {
+      label: "홍보·정보 이미지",
+      href: "/features#tools-visualAsset",
+      desc: "도식·지도·홍보물 낱장 이미지",
+      items: [
+        ["데이터 도식", "/features#tool-dataDiagram"],
         ["지도·위치도", "/features#tool-mapPrompt"],
         ["홍보 이미지", "/features#tool-promotion"],
-        ["QR코드", "/features#tool-qrGenerator"],
-        ["데이터 도식", "/features#tool-dataDiagram"],
-        ["라벨·티켓", "/features#tool-labelSheet"]
+        ["사진 스타일 변환", "/features#tool-photoTransform"]
       ]
     },
     {
-      label: "스타일·사진",
-      href: "/features#tools-visual",
-      desc: "스타일 탐색·사진 변환",
+      label: "인쇄물·QR",
+      href: "/features#tools-printOutput",
+      desc: "바로 내려받는 출력물",
+      items: [
+        ["라벨·티켓", "/features#tool-labelSheet"],
+        ["QR코드", "/features#tool-qrGenerator"]
+      ]
+    },
+    {
+      label: "스타일 도우미",
+      href: "/features#tools-styleHelper",
+      desc: "다른 메뉴에 넣을 스타일 재료",
       items: [
         ["스타일 추천", "/features#tool-promotionPlanner"],
-        ["비주얼 조합", "/features#tool-conceptMixer"],
-        ["사진 스타일 변환", "/features#tool-photoTransform"]
+        ["비주얼 조합", "/features#tool-conceptMixer"]
       ]
     }
   ];

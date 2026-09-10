@@ -1,10 +1,10 @@
-// 문서·슬라이드/홍보·정보/스타일·사진 도구 전환
+// 결과물 형식 기준 작업군 전환: 슬라이드 이미지 / PPTX·문서 파일 / 홍보·정보 이미지 / 인쇄물·QR / 스타일 도우미
 (function () {
   const tabs = {
     designer: {
       button: document.getElementById("tabBtnDesigner"),
       pane: document.getElementById("paneDesigner"),
-      group: "deck",
+      group: "deckImage",
       actions: "designer",
       actionHost: ".preview-panel",
       stickyActionPanel: true,
@@ -12,7 +12,7 @@
     commonPrompt: {
       button: document.getElementById("tabBtnCommonPrompt"),
       pane: document.getElementById("paneCommonPrompt"),
-      group: "deck",
+      group: "deckImage",
       actions: "commonPrompt",
       actionHost: ".cpd-summary-inner",
       stickyActionPanel: false,
@@ -20,7 +20,7 @@
     generator: {
       button: document.getElementById("tabBtnGenerator"),
       pane: document.getElementById("paneGenerator"),
-      group: "deck",
+      group: "deckImage",
       actions: "generator",
       actionHost: ".gen-result-stack",
       stickyActionPanel: false,
@@ -28,7 +28,7 @@
     promotion: {
       button: document.getElementById("tabBtnPromotion"),
       pane: document.getElementById("panePromotion"),
-      group: "special",
+      group: "visualAsset",
       actions: "promotion",
       actionHost: ".promo-result-actions",
       stickyActionPanel: false,
@@ -36,7 +36,7 @@
     slideImage: {
       button: document.getElementById("tabBtnSlideImage"),
       pane: document.getElementById("paneSlideImage"),
-      group: "deck",
+      group: "deckImage",
       actions: "slideImage",
       actionHost: ".slide-image-result-section",
       stickyActionPanel: true,
@@ -44,7 +44,7 @@
     mapPrompt: {
       button: document.getElementById("tabBtnMapPrompt"),
       pane: document.getElementById("paneMapPrompt"),
-      group: "special",
+      group: "visualAsset",
       actions: "mapPrompt",
       actionHost: ".map-result-stack",
       stickyActionPanel: false,
@@ -52,7 +52,7 @@
     dataDiagram: {
       button: document.getElementById("tabBtnDataDiagram"),
       pane: document.getElementById("paneDataDiagram"),
-      group: "special",
+      group: "visualAsset",
       actions: "dataDiagram",
       actionHost: ".diagram-result-stack",
       stickyActionPanel: false,
@@ -60,7 +60,7 @@
     slideDocument: {
       button: document.getElementById("tabBtnSlideDocument"),
       pane: document.getElementById("paneSlideDocument"),
-      group: "special",
+      group: "deckImage",
       actions: "slideDocument",
       actionHost: ".slide-sub-pane.active .slide-doc-preview-section",
       stickyActionPanel: true,
@@ -68,13 +68,13 @@
     promotionPlanner: {
       button: document.getElementById("tabBtnPromotionPlanner"),
       pane: document.getElementById("panePromotionPlanner"),
-      group: "visual",
+      group: "styleHelper",
       actions: "promotionPlanner",
     },
     photoTransform: {
       button: document.getElementById("tabBtnPhotoTransform"),
       pane: document.getElementById("panePhotoTransform"),
-      group: "visual",
+      group: "visualAsset",
       actions: "photoTransform",
       actionHost: ".pt-results-column",
       stickyActionPanel: false,
@@ -82,14 +82,14 @@
     conceptMixer: {
       button: document.getElementById("tabBtnConceptMixer"),
       pane: document.getElementById("paneConceptMixer"),
-      group: "visual",
+      group: "styleHelper",
       actions: "conceptMixer",
       actionHost: ".mixer-right",
     },
     formImage: {
       button: document.getElementById("tabBtnFormImage"),
       pane: document.getElementById("paneFormImage"),
-      group: "special",
+      group: "deckImage",
       actions: "formImage",
       actionHost: ".form-image-result-stack",
       stickyActionPanel: false,
@@ -97,7 +97,7 @@
     pptxPrompt: {
       button: document.getElementById("tabBtnPptxPrompt"),
       pane: document.getElementById("panePptxPrompt"),
-      group: "deck",
+      group: "deckFile",
       actions: "pptxPrompt",
       actionHost: ".pp-result-stack",
       stickyActionPanel: false,
@@ -105,7 +105,7 @@
     documentDesign: {
       button: document.getElementById("tabBtnDocumentDesign"),
       pane: document.getElementById("paneDocumentDesign"),
-      group: "deck",
+      group: "deckFile",
       actions: "documentDesign",
       actionHost: ".doc-design-result-stack",
       stickyActionPanel: false,
@@ -113,7 +113,7 @@
     labelSheet: {
       button: document.getElementById("tabBtnLabelSheet"),
       pane: document.getElementById("paneLabelSheet"),
-      group: "special",
+      group: "printOutput",
       actions: "labelSheet",
       actionHost: ".label-sheet-workspace-actions",
       stickyActionPanel: false,
@@ -121,7 +121,7 @@
     qrGenerator: {
       button: document.getElementById("tabBtnQrGenerator"),
       pane: document.getElementById("paneQrGenerator"),
-      group: "special",
+      group: "printOutput",
       actions: "qrGenerator",
       actionHost: ".qr-result-stack",
       stickyActionPanel: false,
@@ -137,10 +137,59 @@
   const ACTIVE_TAB_STORAGE_KEY = "promptdeck.activeTab.v1";
   const DEFAULT_TAB_KEY = "commonPrompt";
   const defaultTabsByGroup = {
-    deck: "commonPrompt",
-    visual: "promotionPlanner",
-    special: "formImage",
+    deckImage: "commonPrompt",
+    deckFile: "pptxPrompt",
+    visualAsset: "dataDiagram",
+    printOutput: "labelSheet",
+    styleHelper: "promotionPlanner",
   };
+  const FALLBACK_GROUP = "deckImage";
+  // 탭마다 손에 남는 결과물이 다르므로, 탭 바 아래에 한 줄로 명시한다.
+  const OUTPUT_KINDS = {
+    promptImage: { label: "이미지 프롬프트", icon: "🖼" },
+    promptFile: { label: "문서 파일 요청문", icon: "📄" },
+    direct: { label: "바로 생성", icon: "⬇" },
+    material: { label: "스타일 재료", icon: "🎨" },
+  };
+  const outputNotes = {
+    commonPrompt: ["promptImage", "복사해서 이미지 AI에 붙여넣는 공통 디자인 가이드입니다."],
+    generator: ["promptImage", "복사해서 이미지 AI에 붙여넣는 장별 프롬프트입니다."],
+    slideImage: ["direct", "이 화면에서 API로 바로 만드는 슬라이드 이미지 파일입니다."],
+    formImage: ["promptImage", "복사해서 이미지 AI에 붙여넣는 표지·간지·배경 프롬프트입니다."],
+    designer: ["promptImage", "복사해서 이미지 AI에 붙여넣는 슬라이드 프롬프트입니다. 이전 도구입니다."],
+    slideDocument: ["promptImage", "복사해서 이미지 AI에 붙여넣는 부속 양식 프롬프트입니다. 이전 도구입니다."],
+    pptxPrompt: ["promptFile", "복사해서 문서 제작 AI에 전달하면 편집 가능한 PPTX 파일이 만들어집니다."],
+    documentDesign: ["promptFile", "복사해서 문서 제작 AI에 전달하는 문서 디자인·출력 지침입니다."],
+    dataDiagram: ["promptImage", "복사해서 이미지 AI에 붙여넣는 도식 프롬프트입니다."],
+    mapPrompt: ["promptImage", "참조 지도와 함께 이미지 AI에 전달하는 지도 프롬프트입니다."],
+    promotion: ["promptImage", "복사해서 이미지 AI에 붙여넣는 홍보 이미지 프롬프트입니다."],
+    photoTransform: ["promptImage", "참조 사진과 함께 이미지 AI에 전달하는 변환 지시문입니다."],
+    labelSheet: ["direct", "이 화면에서 바로 내려받는 인쇄용 PDF·PNG입니다. 프롬프트 설계도 고를 수 있습니다."],
+    qrGenerator: ["direct", "이 화면에서 바로 내려받는 QR 이미지와 인쇄용 라벨입니다."],
+    promotionPlanner: ["material", "그 자체로는 결과물이 아니라, 다른 메뉴에 넣을 스타일 재료입니다."],
+    conceptMixer: ["material", "그 자체로는 결과물이 아니라, 다른 메뉴에 넣을 스타일 재료입니다."],
+  };
+  const outputNote = document.getElementById("appToolOutputNote");
+
+  function renderOutputNote(tabKey) {
+    if (!outputNote) return;
+    const entry = outputNotes[tabKey];
+    if (!entry) {
+      outputNote.hidden = true;
+      outputNote.replaceChildren();
+      return;
+    }
+    const kind = OUTPUT_KINDS[entry[0]] || OUTPUT_KINDS.promptImage;
+    const badge = document.createElement("strong");
+    badge.className = "app-tool-output-badge";
+    badge.dataset.outputKind = entry[0];
+    badge.textContent = `${kind.icon} ${kind.label}`;
+    const text = document.createElement("span");
+    text.textContent = entry[1];
+    outputNote.dataset.outputKind = entry[0];
+    outputNote.replaceChildren(badge, text);
+    outputNote.hidden = false;
+  }
   const designerActions = tabActions ? Array.from(tabActions.children) : [];
   let currentActionHost = tabActions?.parentElement || null;
   const actionSets = {
@@ -437,7 +486,7 @@
 
   function getTabGroup(tabKey) {
     const entry = tabs[tabKey];
-    return entry?.button?.closest("[data-tab-group]")?.dataset.tabGroup || entry?.group || "deck";
+    return entry?.button?.closest("[data-tab-group]")?.dataset.tabGroup || entry?.group || FALLBACK_GROUP;
   }
 
   function getAvailableTabKeys(groupKey, includeLocked = false) {
@@ -522,6 +571,7 @@
     }
     renderHeaderActions(tabs[nextTab]?.actions || "designer", nextTab);
     renderMobileActions(tabs[nextTab]?.actions || "designer");
+    renderOutputNote(nextTab);
     syncMobileShellLabel(nextTab);
     setMobileToolNavigation(false);
   }

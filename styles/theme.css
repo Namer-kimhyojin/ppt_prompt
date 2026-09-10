@@ -35,6 +35,18 @@
   box-shadow: none;
 }
 
+:root[data-theme="dark"] .app-tool-output-badge[data-output-kind="promptFile"] {
+  color: #c4b5fd;
+}
+
+:root[data-theme="dark"] .app-tool-output-badge[data-output-kind="direct"] {
+  color: #6ee7b7;
+}
+
+:root[data-theme="dark"] .app-tool-output-badge[data-output-kind="material"] {
+  color: #fcd34d;
+}
+
 :root[data-theme="dark"] .gen-section,
 :root[data-theme="dark"] .panel,
 :root[data-theme="dark"] .sidebar-panel,

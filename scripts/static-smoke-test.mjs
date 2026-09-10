@@ -106,6 +106,16 @@ async function verifyViewport(label, viewport) {
     await page.locator("#appToolMenuBtn").click();
     await page.waitForFunction(() => document.body.classList.contains("app-tool-nav-open"));
   };
+  // 작업군이 결과물 형식 기준으로 나뉘어 있으므로, 도구를 열기 전에 그 도구가 속한 작업군으로 먼저 전환한다.
+  const revealTool = async (tabId) => {
+    if (await visible(`#${tabId}`)) return;
+    await openAppToolNavigation();
+    if (await visible(`#${tabId}`)) return;
+    const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deckImage");
+    const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
+    if (await groupFilter.isVisible()) await groupFilter.click();
+  };
+
   const expectOnlyPane = async (expectedId, phase) => {
     const paneIds = await page.locator(".tab-pane").evaluateAll((panes) => panes
       .filter((pane) => {
@@ -127,10 +137,7 @@ async function verifyViewport(label, viewport) {
   if (await visible("#userBar")) failures.push(`${label}: 계정 UI가 노출됩니다.`);
   await expectOnlyPane("paneCommonPrompt", "기본 진입");
 
-  const specialGroupFilter = page.locator('[data-tab-group-filter="special"]');
-  if (!(await visible("#tabBtnDataDiagram")) && await specialGroupFilter.isVisible()) {
-    await specialGroupFilter.click();
-  }
+  await revealTool("tabBtnDataDiagram");
   const diagramTabVisible = await visible("#tabBtnDataDiagram");
   if (!diagramTabVisible) failures.push(`${label}: 데이터 다이어그램 탭이 보이지 않습니다.`);
   if (diagramTabVisible) {
@@ -146,7 +153,7 @@ async function verifyViewport(label, viewport) {
     if (!diagramHint.includes("로컬 서버판")) failures.push(`${label}: 이미지 생성 연결 비활성 사유가 노출되지 않습니다. (${diagramHint.trim()})`);
     if (viewport.width <= 720 && (await page.locator("#paneDataDiagram .diagram-step.is-open").count()) !== 1) failures.push(`${label}: 모바일 데이터 다이어그램 단계가 하나만 열리지 않았습니다.`);
   }
-  if (viewport.width <= 720) await openAppToolNavigation();
+  await revealTool("tabBtnLabelSheet");
   const labelTabVisible = await visible("#tabBtnLabelSheet");
   if (!labelTabVisible) failures.push(`${label}: 라벨·티켓 제작 탭이 보이지 않습니다.`);
   if (labelTabVisible) {
@@ -334,9 +341,7 @@ async function verifyViewport(label, viewport) {
   if (viewport.width <= 860 && await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) {
     await page.locator("#labelSheetWorkspaceAppNavBtn").click();
   }
-  if (!(await visible("#tabBtnQrGenerator")) && await specialGroupFilter.isVisible()) {
-    await specialGroupFilter.click();
-  }
+  await revealTool("tabBtnQrGenerator");
   const qrTabVisible = await visible("#tabBtnQrGenerator");
   if (!qrTabVisible) failures.push(`${label}: QR 탭이 보이지 않습니다.`);
   if (qrTabVisible) {

@@ -179,44 +179,57 @@
 
   <div class="app-tabs-bar" id="appToolNavigation">
     <div class="app-tab-group-switcher" role="group" aria-label="작업군 선택">
-      <button type="button" class="app-tab-group-switch active" data-tab-group-filter="deck" aria-pressed="true">문서·슬라이드</button>
-      <button type="button" class="app-tab-group-switch" data-tab-group-filter="special" aria-pressed="false">홍보·정보</button>
-      <button type="button" class="app-tab-group-switch" data-tab-group-filter="visual" aria-pressed="false">스타일·사진</button>
+      <button type="button" class="app-tab-group-switch active" data-tab-group-filter="deckImage" aria-pressed="true" title="발표 슬라이드를 AI 이미지로 만듭니다">슬라이드 이미지</button>
+      <button type="button" class="app-tab-group-switch" data-tab-group-filter="deckFile" aria-pressed="false" title="편집 가능한 PPTX·DOCX 파일 제작 요청문을 만듭니다">PPTX·문서</button>
+      <button type="button" class="app-tab-group-switch" data-tab-group-filter="visualAsset" aria-pressed="false" title="홍보물·지도·도식 같은 낱장 이미지를 만듭니다">홍보·정보</button>
+      <button type="button" class="app-tab-group-switch" data-tab-group-filter="printOutput" aria-pressed="false" title="이 화면에서 바로 내려받는 인쇄물과 QR을 만듭니다">인쇄물·QR</button>
+      <button type="button" class="app-tab-group-switch" data-tab-group-filter="styleHelper" aria-pressed="false" title="다른 메뉴에 넣을 스타일 재료를 찾습니다">스타일 도우미</button>
     </div>
-    <nav class="app-tabs" aria-label="PromptDeck 작업 도구" data-active-group="deck">
-      <div class="app-tab-group mobile-group-active" data-tab-group="deck" data-tab-group-label="문서와 발표자료 만들기">
-        <span class="app-tab-group-label">문서와 발표자료 만들기</span>
-        <div class="app-tab-group-buttons" role="tablist" aria-label="문서와 발표자료 도구">
+    <nav class="app-tabs" aria-label="PromptDeck 작업 도구" data-active-group="deckImage">
+      <div class="app-tab-group" data-tab-group="deckImage" data-tab-group-label="AI 이미지로 만드는 발표자료">
+        <span class="app-tab-group-label">AI 이미지로 만드는 발표자료</span>
+        <div class="app-tab-group-buttons" role="tablist" aria-label="AI 이미지 발표자료 도구">
           <button type="button" class="app-tab-btn active" id="tabBtnCommonPrompt" role="tab" aria-selected="true" aria-controls="paneCommonPrompt">슬라이드 디자인 설정</button>
-          <button type="button" class="app-tab-btn" id="tabBtnPptxPrompt" role="tab" aria-selected="false" aria-controls="panePptxPrompt">PPTX 제작 요청문</button>
-          <button type="button" class="app-tab-btn" id="tabBtnDocumentDesign" role="tab" aria-selected="false" aria-controls="paneDocumentDesign">문서 디자인</button>
           <button type="button" class="app-tab-btn" id="tabBtnGenerator" role="tab" aria-selected="false" aria-controls="paneGenerator">기획안 장별 나누기</button>
           <button type="button" class="app-tab-btn" id="tabBtnSlideImage" role="tab" aria-selected="false" aria-controls="paneSlideImage">슬라이드 이미지 생성</button>
+          <button type="button" class="app-tab-btn" id="tabBtnFormImage" role="tab" aria-selected="false" aria-controls="paneFormImage">문서 표지·양식</button>
           <button type="button" class="app-tab-btn legacy" id="tabBtnDesigner" role="tab" aria-selected="false" aria-controls="paneDesigner">슬라이드 프롬프트(이전)</button>
+          <button type="button" class="app-tab-btn legacy" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">부속 양식(이전)</button>
         </div>
       </div>
-      <div class="app-tab-group" data-tab-group="special" data-tab-group-label="홍보물과 정보 전달 이미지 만들기">
+      <div class="app-tab-group" data-tab-group="deckFile" data-tab-group-label="편집 가능한 문서 파일로 만들기">
+        <span class="app-tab-group-label">편집 가능한 문서 파일로 만들기</span>
+        <div class="app-tab-group-buttons" role="tablist" aria-label="문서 파일 제작 요청 도구">
+          <button type="button" class="app-tab-btn" id="tabBtnPptxPrompt" role="tab" aria-selected="false" aria-controls="panePptxPrompt">PPTX 제작 요청문</button>
+          <button type="button" class="app-tab-btn" id="tabBtnDocumentDesign" role="tab" aria-selected="false" aria-controls="paneDocumentDesign">문서 디자인</button>
+        </div>
+      </div>
+      <div class="app-tab-group" data-tab-group="visualAsset" data-tab-group-label="홍보물과 정보 전달 이미지 만들기">
         <span class="app-tab-group-label">홍보물과 정보 전달 이미지 만들기</span>
         <div class="app-tab-group-buttons" role="tablist" aria-label="홍보물과 정보 전달 이미지 도구">
-          <button type="button" class="app-tab-btn" id="tabBtnFormImage" role="tab" aria-selected="false" aria-controls="paneFormImage">문서 표지·양식</button>
-          <button type="button" class="app-tab-btn" id="tabBtnLabelSheet" role="tab" aria-selected="false" aria-controls="paneLabelSheet">라벨·티켓</button>
-          <button type="button" class="app-tab-btn legacy" id="tabBtnSlideDocument" role="tab" aria-selected="false" aria-controls="paneSlideDocument">부속 양식(이전)</button>
-          <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">지도·위치도</button>
           <button type="button" class="app-tab-btn" id="tabBtnDataDiagram" role="tab" aria-selected="false" aria-controls="paneDataDiagram">데이터 도식</button>
+          <button type="button" class="app-tab-btn" id="tabBtnMapPrompt" role="tab" aria-selected="false" aria-controls="paneMapPrompt">지도·위치도</button>
           <button type="button" class="app-tab-btn" id="tabBtnPromotion" role="tab" aria-selected="false" aria-controls="panePromotion">홍보 이미지</button>
+          <button type="button" class="app-tab-btn" id="tabBtnPhotoTransform" role="tab" aria-selected="false" aria-controls="panePhotoTransform">사진 스타일 변환</button>
+        </div>
+      </div>
+      <div class="app-tab-group" data-tab-group="printOutput" data-tab-group-label="바로 내려받는 인쇄물 만들기">
+        <span class="app-tab-group-label">바로 내려받는 인쇄물 만들기</span>
+        <div class="app-tab-group-buttons" role="tablist" aria-label="인쇄물과 QR 도구">
+          <button type="button" class="app-tab-btn" id="tabBtnLabelSheet" role="tab" aria-selected="false" aria-controls="paneLabelSheet">라벨·티켓</button>
           <button type="button" class="app-tab-btn" id="tabBtnQrGenerator" role="tab" aria-selected="false" aria-controls="paneQrGenerator">QR코드</button>
         </div>
       </div>
-      <div class="app-tab-group" data-tab-group="visual" data-tab-group-label="스타일 찾기와 사진 변환">
-        <span class="app-tab-group-label">스타일 찾기와 사진 변환</span>
-        <div class="app-tab-group-buttons" role="tablist" aria-label="스타일 찾기와 사진 변환 도구">
+      <div class="app-tab-group" data-tab-group="styleHelper" data-tab-group-label="다른 메뉴에 넣을 스타일 고르기">
+        <span class="app-tab-group-label">다른 메뉴에 넣을 스타일 고르기</span>
+        <div class="app-tab-group-buttons" role="tablist" aria-label="스타일 도우미 도구">
           <button type="button" class="app-tab-btn" id="tabBtnPromotionPlanner" role="tab" aria-selected="false" aria-controls="panePromotionPlanner">스타일 추천</button>
           <button type="button" class="app-tab-btn" id="tabBtnConceptMixer" role="tab" aria-selected="false" aria-controls="paneConceptMixer">비주얼 조합</button>
-          <button type="button" class="app-tab-btn" id="tabBtnPhotoTransform" role="tab" aria-selected="false" aria-controls="panePhotoTransform">사진 스타일 변환</button>
         </div>
       </div>
     </nav>
   </div>
+  <p class="app-tool-output-note" id="appToolOutputNote" role="status" hidden></p>
 
   <div class="tab-pane" id="paneDesigner" role="tabpanel" aria-labelledby="tabBtnDesigner">
     <aside class="legacy-tool-notice" aria-label="이전 도구 안내">

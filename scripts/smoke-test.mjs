@@ -497,13 +497,17 @@ async function runSmokeTest() {
     record(new URL(page.url()).pathname === "/", "PromptDeck brand title click did not open the default homepage", failures);
     await page.goto(`${server.baseUrl}/index.html`, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.waitForSelector("#paneCommonPrompt.active");
-    record((await page.locator(".app-tab-group").count()) === 3, "Primary tools were not organized into three purpose groups", failures);
-    record((await page.locator("[data-tab-group-filter]").count()) === 3, "Purpose-group switcher was incomplete", failures);
-    record((await page.locator('[data-tab-group-filter="deck"]').textContent()).trim() === "문서·슬라이드" && (await page.locator('[data-tab-group-filter="special"]').textContent()).trim() === "홍보·정보" && (await page.locator('[data-tab-group-filter="visual"]').textContent()).trim() === "스타일·사진", "Purpose-group switcher labels were incorrect", failures);
-    const deckToolIds = await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').evaluateAll((buttons) => buttons.map((button) => button.id));
-    record(JSON.stringify(deckToolIds) === JSON.stringify(["tabBtnCommonPrompt", "tabBtnPptxPrompt", "tabBtnDocumentDesign", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnDesigner"]), "Slide-production group did not include PPTX and document design with the legacy tool at the end", failures);
-    record((await page.locator('.app-tab-group[data-tab-group="special"] .app-tab-btn').count()) === 7, "Business-image group did not include the expected tools", failures);
-    record((await page.locator('.app-tab-group[data-tab-group="visual"] .app-tab-btn').count()) === 3, "General-image group did not include the expected tools", failures);
+    record((await page.locator(".app-tab-group").count()) === 5, "Primary tools were not organized into five output-format groups", failures);
+    record((await page.locator("[data-tab-group-filter]").count()) === 5, "Purpose-group switcher was incomplete", failures);
+    record((await page.locator('[data-tab-group-filter="deckImage"]').textContent()).trim() === "슬라이드 이미지" && (await page.locator('[data-tab-group-filter="deckFile"]').textContent()).trim() === "PPTX·문서" && (await page.locator('[data-tab-group-filter="visualAsset"]').textContent()).trim() === "홍보·정보" && (await page.locator('[data-tab-group-filter="printOutput"]').textContent()).trim() === "인쇄물·QR" && (await page.locator('[data-tab-group-filter="styleHelper"]').textContent()).trim() === "스타일 도우미", "Purpose-group switcher labels were incorrect", failures);
+    const deckImageToolIds = await page.locator('.app-tab-group[data-tab-group="deckImage"] .app-tab-btn').evaluateAll((buttons) => buttons.map((button) => button.id));
+    record(JSON.stringify(deckImageToolIds) === JSON.stringify(["tabBtnCommonPrompt", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnFormImage", "tabBtnDesigner", "tabBtnSlideDocument"]), "Slide-image group did not follow the design → split → generate order with legacy tools at the end", failures);
+    const deckFileToolIds = await page.locator('.app-tab-group[data-tab-group="deckFile"] .app-tab-btn').evaluateAll((buttons) => buttons.map((button) => button.id));
+    record(JSON.stringify(deckFileToolIds) === JSON.stringify(["tabBtnPptxPrompt", "tabBtnDocumentDesign"]), "Editable-document-file group did not include the expected tools", failures);
+    record((await page.locator('.app-tab-group[data-tab-group="visualAsset"] .app-tab-btn').count()) === 4, "Business-image group did not include the expected tools", failures);
+    record((await page.locator('.app-tab-group[data-tab-group="printOutput"] .app-tab-btn').count()) === 2, "Print-output group did not include the expected tools", failures);
+    record((await page.locator('.app-tab-group[data-tab-group="styleHelper"] .app-tab-btn').count()) === 2, "Style-helper group did not include the expected tools", failures);
+    record((await page.locator("#appToolOutputNote").isVisible()) && (await page.locator("#appToolOutputNote .app-tool-output-badge").textContent()).includes("이미지 프롬프트"), "Active tool did not state what kind of output it produces", failures);
     record((await page.locator('#tabBtnCommonPrompt').textContent()).trim() === "슬라이드 디자인 설정" && (await page.locator('#tabBtnPptxPrompt').textContent()).trim() === "PPTX 제작 요청문" && (await page.locator('#tabBtnGenerator').textContent()).trim() === "기획안 장별 나누기", "Document-and-slide tool labels were not updated", failures);
     record((await page.locator('#tabBtnFormImage').textContent()).trim() === "문서 표지·양식" && (await page.locator('#tabBtnMapPrompt').textContent()).trim() === "지도·위치도" && (await page.locator('#tabBtnDataDiagram').textContent()).trim() === "데이터 도식" && (await page.locator('#tabBtnPromotion').textContent()).trim() === "홍보 이미지", "Promotion-and-information tool labels were not updated", failures);
     record((await page.locator('#tabBtnPromotionPlanner').textContent()).trim() === "스타일 추천" && (await page.locator('#tabBtnConceptMixer').textContent()).trim() === "비주얼 조합" && (await page.locator('#tabBtnPhotoTransform').textContent()).trim() === "사진 스타일 변환", "Style-and-photo tool labels were not updated", failures);
@@ -513,8 +517,8 @@ async function runSmokeTest() {
 
     await page.setViewportSize({ width: 1366, height: 900 });
     record(await page.locator(".app-tab-group-switcher").isVisible(), "Desktop navigation did not expose the task-group switcher when tabs overflowed", failures);
-    await page.click('[data-tab-group-filter="special"]');
-    await page.waitForSelector("#paneFormImage.active");
+    await page.click('[data-tab-group-filter="visualAsset"]');
+    await page.waitForSelector("#paneDataDiagram.active");
     await page.waitForTimeout(250);
     const desktopActiveTabVisibility = await page.evaluate(() => {
       const tabList = document.querySelector(".app-tabs");
@@ -531,7 +535,7 @@ async function runSmokeTest() {
         });
     });
     record(desktopActiveTabVisibility, "Desktop task-group selection did not reveal every tab in the selected group", failures);
-    await page.click('[data-tab-group-filter="deck"]');
+    await page.click('[data-tab-group-filter="deckImage"]');
     await page.waitForSelector("#paneCommonPrompt.active");
     await page.setViewportSize({ width: 1440, height: 1200 });
 
@@ -540,19 +544,19 @@ async function runSmokeTest() {
       localStorage.setItem("promptdeck_admin", JSON.stringify({
         tabOrder: ["tabBtnQrGenerator", "tabBtnCommonPrompt"],
         tabLabels: { tabBtnQrGenerator: "빠른 QR" },
-        tabGroups: { tabBtnQrGenerator: "deck" },
+        tabGroups: { tabBtnQrGenerator: "deckImage" },
         defaultTab: "tabBtnCommonPrompt"
       }));
       localStorage.removeItem("promptdeck.activeTab.v1");
     });
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForSelector("#paneCommonPrompt.active");
-    record((await page.locator('.app-tab-group[data-tab-group="deck"] #tabBtnQrGenerator').count()) === 1, "Admin tab placement did not move the tab into its configured group", failures);
-    record((await page.locator('.app-tab-group[data-tab-group="deck"] .app-tab-btn').first().getAttribute("id")) === "tabBtnQrGenerator", "Admin tab order was not applied within the configured group", failures);
+    record((await page.locator('.app-tab-group[data-tab-group="deckImage"] #tabBtnQrGenerator').count()) === 1, "Admin tab placement did not move the tab into its configured group", failures);
+    record((await page.locator('.app-tab-group[data-tab-group="deckImage"] .app-tab-btn').first().getAttribute("id")) === "tabBtnQrGenerator", "Admin tab order was not applied within the configured group", failures);
     record((await page.locator("#tabBtnQrGenerator").textContent()).trim() === "빠른 QR", "Admin tab label was not applied to the user page", failures);
     await page.click("#tabBtnQrGenerator");
     await page.waitForSelector("#paneQrGenerator.active");
-    record((await page.locator("#tabBtnQrGenerator").evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup)) === "deck", "Moved tab did not remain in its configured group", failures);
+    record((await page.locator("#tabBtnQrGenerator").evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup)) === "deckImage", "Moved tab did not remain in its configured group", failures);
     await page.evaluate(() => {
       localStorage.removeItem("promptdeck_admin");
       localStorage.removeItem("promptdeck.activeTab.v1");
@@ -855,7 +859,7 @@ async function runSmokeTest() {
     const desktopBriefLayout = await page.locator("#cpdAccordionBody0 .cpd-brief-choice").first().evaluate((element) => ({ columns: getComputedStyle(element).gridTemplateColumns.split(" ").length, overflow: element.scrollWidth - element.clientWidth }));
     record(desktopBriefLayout.columns === 2 && desktopBriefLayout.overflow <= 1, "Design-brief choices did not use a compact two-column desktop row", failures);
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.click('[data-tab-group-filter="visual"]');
+    await page.click('[data-tab-group-filter="visualAsset"]');
     await page.click("#tabBtnPhotoTransform");
     await page.waitForSelector("#panePhotoTransform.active");
     const desktopPhotoControls = await page.locator("#panePhotoTransform .pt-control-column").evaluate((element) => {
@@ -1030,8 +1034,8 @@ async function runSmokeTest() {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.click("#appToolMenuBtn");
     await page.waitForFunction(() => document.body.classList.contains("app-tool-nav-open"));
-    await page.click('[data-tab-group-filter="special"]');
-    record((await page.locator('.app-tabs[data-active-group="special"] .app-tab-group[data-tab-group="special"]:visible').count()) === 1, "Mobile task-group switcher did not reveal the selected tool group", failures);
+    await page.click('[data-tab-group-filter="deckImage"]');
+    record((await page.locator('.app-tabs[data-active-group="deckImage"] .app-tab-group[data-tab-group="deckImage"]:visible').count()) === 1, "Mobile task-group switcher did not reveal the selected tool group", failures);
     record((await page.locator('.app-tabs .app-tab-group:visible').count()) === 1, "Mobile navigation displayed more than one tool group at a time", failures);
     const mobileNavigation = await page.evaluate(() => {
       const header = document.querySelector(".app-header");
@@ -1041,9 +1045,9 @@ async function runSmokeTest() {
         .map((selector) => document.querySelector(selector)?.getBoundingClientRect())
         .filter(Boolean);
       const switches = [...document.querySelectorAll("[data-tab-group-filter]")].filter((element) => element.getClientRects().length);
-      const detailTabs = [...document.querySelectorAll('.app-tabs[data-active-group="special"] .app-tab-btn')].filter((element) => element.getClientRects().length);
+      const detailTabs = [...document.querySelectorAll('.app-tabs[data-active-group="deckImage"] .app-tab-btn')].filter((element) => element.getClientRects().length);
       const switchWidths = switches.map((element) => element.getBoundingClientRect().width);
-      const detailRow = document.querySelector('.app-tabs[data-active-group="special"] .app-tab-group-buttons');
+      const detailRow = document.querySelector('.app-tabs[data-active-group="deckImage"] .app-tab-group-buttons');
       return {
         headerPosition: getComputedStyle(document.querySelector(".app-header")).position,
         headerHeight: headerRect.height,
@@ -1066,7 +1070,7 @@ async function runSmokeTest() {
     await page.click("#tabBtnFormImage");
     await page.waitForSelector("#paneFormImage.active");
     record(!(await page.evaluate(() => document.body.classList.contains("app-tool-nav-open"))), "Mobile tool drawer did not close after selecting a tool", failures);
-    record((await page.locator("#mobileActiveTool").textContent()).trim() === "양식 이미지", "Mobile app bar did not announce the active tool", failures);
+    record((await page.locator("#mobileActiveTool").textContent()).trim() === "문서 표지·양식", "Mobile app bar did not announce the active tool", failures);
     record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="formImageCopyPromptBtn"]').isVisible(), "Mobile primary action did not follow the active business-image tool", failures);
 
     await page.click("#appToolMenuBtn");
@@ -1077,7 +1081,7 @@ async function runSmokeTest() {
     record((await page.locator("#mobileTabActions").textContent()).includes("결과 확인"), "Promotion did not start with the result-review action", failures);
 
     await page.click("#appToolMenuBtn");
-    await page.click('[data-tab-group-filter="visual"]');
+    await page.click('[data-tab-group-filter="visualAsset"]');
     await page.click("#tabBtnPhotoTransform");
     await page.waitForSelector("#panePhotoTransform.active");
     await page.waitForFunction(() => document.querySelectorAll("#photoTransformGallery .pt-style-card").length === 18);
@@ -1086,7 +1090,7 @@ async function runSmokeTest() {
     await page.click("#photoTransformGalleryMoreBtn");
     record((await page.locator("#photoTransformGallery .pt-style-card").count()) === 36, "Photo style gallery did not append the next mobile page", failures);
     await page.click("#appToolMenuBtn");
-    await page.click('[data-tab-group-filter="deck"]');
+    await page.click('[data-tab-group-filter="deckImage"]');
     await page.click("#tabBtnCommonPrompt");
     await page.waitForSelector("#paneCommonPrompt.active");
     record(await page.locator("#mobileTabActions").isHidden(), "Global mobile action bar conflicted with the common-prompt journey bar", failures);
@@ -5081,6 +5085,26 @@ SLIDE-TWO-CONTENT`);
       failures
     );
 
+    // Mobile navigation hides the tool bar between selections, and choosing a group can switch
+    // tools on its own, so reopen the drawer until the requested tool button is actually clickable.
+    const revealMobileTool = async (page, tabId) => {
+      const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deckImage");
+      const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
+      const openToolNavigation = async () => {
+        if (await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) await page.click("#labelSheetWorkspaceAppNavBtn");
+        else await page.click("#appToolMenuBtn");
+      };
+      // Legacy tools stay hidden in the tab bar and are activated directly, so only the group has to be reached.
+      const legacy = ["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId);
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        if (!(await groupFilter.isVisible())) await openToolNavigation();
+        await groupFilter.waitFor({ state: "visible" });
+        await groupFilter.click();
+        if (legacy || await page.locator(`#${tabId}`).isVisible()) return;
+      }
+      await page.locator(`#${tabId}`).waitFor({ state: "visible" });
+    };
+
     const typographyTabIds = [
       "tabBtnDesigner", "tabBtnCommonPrompt", "tabBtnPptxPrompt", "tabBtnDocumentDesign", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnMapPrompt",
       "tabBtnDataDiagram", "tabBtnSlideDocument", "tabBtnPromotionPlanner", "tabBtnConceptMixer", "tabBtnPhotoTransform", "tabBtnFormImage", "tabBtnLabelSheet", "tabBtnPromotion", "tabBtnQrGenerator",
@@ -5256,14 +5280,7 @@ SLIDE-TWO-CONTENT`);
       await page.setViewportSize(viewport);
       for (const tabId of typographyTabIds) {
         if (viewport.width <= 720) {
-          const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deck");
-          const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
-          if (!(await groupFilter.isVisible())) {
-            if (await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) await page.click("#labelSheetWorkspaceAppNavBtn");
-            else await page.click("#appToolMenuBtn");
-          }
-          await groupFilter.waitFor({ state: "visible" });
-          await groupFilter.click();
+          await revealMobileTool(page, tabId);
         }
         if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
           await page.locator(`#${tabId}`).evaluate((element) => element.click());
@@ -5320,14 +5337,7 @@ SLIDE-TWO-CONTENT`);
       await page.setViewportSize(viewport);
       for (const tabId of typographyTabIds) {
         if (viewport.width <= 720) {
-          const group = await page.locator(`#${tabId}`).evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup || "deck");
-          const groupFilter = page.locator(`[data-tab-group-filter="${group}"]`);
-          if (!(await groupFilter.isVisible())) {
-            if (await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) await page.click("#labelSheetWorkspaceAppNavBtn");
-            else await page.click("#appToolMenuBtn");
-          }
-          await groupFilter.waitFor({ state: "visible" });
-          await groupFilter.click();
+          await revealMobileTool(page, tabId);
         }
         if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
           await page.locator(`#${tabId}`).evaluate((element) => element.click());

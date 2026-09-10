@@ -6,27 +6,30 @@
   // index.html을 읽을 수 없는 환경(file:// 등)에서만 사용하는 현재 탭 목록입니다.
   // 일반 실행 환경에서는 아래 목록이 아니라 실제 .app-tabs 버튼을 자동으로 읽습니다.
   var TAB_GROUPS = [
-    { id: 'deck', name: '문서와 발표자료 만들기' },
-    { id: 'special', name: '홍보물과 정보 전달 이미지 만들기' },
-    { id: 'visual', name: '스타일 찾기와 사진 변환' }
+    { id: 'deckImage', name: 'AI 이미지로 만드는 발표자료' },
+    { id: 'deckFile', name: '편집 가능한 문서 파일로 만들기' },
+    { id: 'visualAsset', name: '홍보물과 정보 전달 이미지 만들기' },
+    { id: 'printOutput', name: '바로 내려받는 인쇄물 만들기' },
+    { id: 'styleHelper', name: '다른 메뉴에 넣을 스타일 고르기' }
   ];
+  var DEFAULT_GROUP = 'deckImage';
   var FALLBACK_TABS = [
-    { id: 'tabBtnCommonPrompt',     name: '슬라이드 디자인 설정', group: 'deck' },
-    { id: 'tabBtnPptxPrompt',       name: 'PPTX 제작 요청문', group: 'deck' },
-    { id: 'tabBtnDocumentDesign',   name: '문서 디자인', group: 'deck' },
-    { id: 'tabBtnGenerator',        name: '기획안 장별 나누기', group: 'deck' },
-    { id: 'tabBtnSlideImage',       name: '슬라이드 이미지 생성', group: 'deck' },
-    { id: 'tabBtnPromotionPlanner', name: '스타일 추천', group: 'visual' },
-    { id: 'tabBtnConceptMixer',     name: '비주얼 조합', group: 'visual' },
-    { id: 'tabBtnPhotoTransform',   name: '사진 스타일 변환', group: 'visual' },
-    { id: 'tabBtnMapPrompt',        name: '지도·위치도', group: 'special' },
-    { id: 'tabBtnSlideDocument',    name: '부속 양식(이전)', group: 'special' },
-    { id: 'tabBtnFormImage',        name: '문서 표지·양식', group: 'special' },
-    { id: 'tabBtnPromotion',        name: '홍보 이미지', group: 'special' },
-    { id: 'tabBtnQrGenerator',      name: 'QR코드', group: 'special' },
-    { id: 'tabBtnDataDiagram',      name: '데이터 도식', group: 'special' },
-    { id: 'tabBtnLabelSheet',       name: '라벨·티켓', group: 'special' },
-    { id: 'tabBtnDesigner',         name: '슬라이드 프롬프트(이전)', group: 'deck' }
+    { id: 'tabBtnCommonPrompt',     name: '슬라이드 디자인 설정', group: 'deckImage' },
+    { id: 'tabBtnGenerator',        name: '기획안 장별 나누기', group: 'deckImage' },
+    { id: 'tabBtnSlideImage',       name: '슬라이드 이미지 생성', group: 'deckImage' },
+    { id: 'tabBtnFormImage',        name: '문서 표지·양식', group: 'deckImage' },
+    { id: 'tabBtnDesigner',         name: '슬라이드 프롬프트(이전)', group: 'deckImage' },
+    { id: 'tabBtnSlideDocument',    name: '부속 양식(이전)', group: 'deckImage' },
+    { id: 'tabBtnPptxPrompt',       name: 'PPTX 제작 요청문', group: 'deckFile' },
+    { id: 'tabBtnDocumentDesign',   name: '문서 디자인', group: 'deckFile' },
+    { id: 'tabBtnDataDiagram',      name: '데이터 도식', group: 'visualAsset' },
+    { id: 'tabBtnMapPrompt',        name: '지도·위치도', group: 'visualAsset' },
+    { id: 'tabBtnPromotion',        name: '홍보 이미지', group: 'visualAsset' },
+    { id: 'tabBtnPhotoTransform',   name: '사진 스타일 변환', group: 'visualAsset' },
+    { id: 'tabBtnLabelSheet',       name: '라벨·티켓', group: 'printOutput' },
+    { id: 'tabBtnQrGenerator',      name: 'QR코드', group: 'printOutput' },
+    { id: 'tabBtnPromotionPlanner', name: '스타일 추천', group: 'styleHelper' },
+    { id: 'tabBtnConceptMixer',     name: '비주얼 조합', group: 'styleHelper' }
   ];
   var DEFAULT_TABS = FALLBACK_TABS.slice();
 
@@ -71,7 +74,7 @@
       return {
         id: btn.id,
         name: (btn.textContent || '').replace(/\s+/g, ' ').trim() || btn.id,
-        group: group ? group.getAttribute('data-tab-group') : 'special'
+        group: group ? group.getAttribute('data-tab-group') : DEFAULT_GROUP
       };
     });
   }
@@ -332,7 +335,7 @@
       var id = row.dataset.tabId;
       tabOrder.push(id);
       var groupList = row.closest('[data-tab-group-list]');
-      tabGroups[id] = groupList ? groupList.dataset.tabGroupList : 'special';
+      tabGroups[id] = groupList ? groupList.dataset.tabGroupList : DEFAULT_GROUP;
       var labelInput = row.querySelector('.admin-tm-label');
       var val = labelInput ? labelInput.value.trim() : '';
       if (val) tabLabels[id] = val;
