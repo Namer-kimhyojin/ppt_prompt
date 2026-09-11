@@ -6,11 +6,11 @@
   // index.html을 읽을 수 없는 환경(file:// 등)에서만 사용하는 현재 탭 목록입니다.
   // 일반 실행 환경에서는 아래 목록이 아니라 실제 .app-tabs 버튼을 자동으로 읽습니다.
   var TAB_GROUPS = [
-    { id: 'deckImage', name: 'AI 이미지로 만드는 발표자료' },
-    { id: 'deckFile', name: '편집 가능한 문서 파일로 만들기' },
-    { id: 'visualAsset', name: '홍보물과 정보 전달 이미지 만들기' },
-    { id: 'printOutput', name: '바로 내려받는 인쇄물 만들기' },
-    { id: 'styleHelper', name: '다른 메뉴에 넣을 스타일 고르기' }
+    { id: 'deckImage', name: '슬라이드 이미지' },
+    { id: 'deckFile', name: '문서 파일' },
+    { id: 'visualAsset', name: '홍보 이미지' },
+    { id: 'printOutput', name: '인쇄물' },
+    { id: 'styleHelper', name: '스타일' }
   ];
   var DEFAULT_GROUP = 'deckImage';
   var FALLBACK_TABS = [

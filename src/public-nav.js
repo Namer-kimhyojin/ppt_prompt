@@ -27,7 +27,7 @@
       ]
     },
     {
-      label: "PPTX·문서 파일",
+      label: "문서 파일",
       href: "/features#tools-deckFile",
       desc: "편집 가능한 파일 제작 요청문",
       items: [
@@ -36,7 +36,7 @@
       ]
     },
     {
-      label: "홍보·정보 이미지",
+      label: "홍보 이미지",
       href: "/features#tools-visualAsset",
       desc: "도식·지도·홍보물 낱장 이미지",
       items: [
@@ -47,7 +47,7 @@
       ]
     },
     {
-      label: "인쇄물·QR",
+      label: "인쇄물",
       href: "/features#tools-printOutput",
       desc: "바로 내려받는 출력물",
       items: [
@@ -56,7 +56,7 @@
       ]
     },
     {
-      label: "스타일 도우미",
+      label: "스타일",
       href: "/features#tools-styleHelper",
       desc: "다른 메뉴에 넣을 스타일 재료",
       items: [
