@@ -131,4 +131,27 @@
   .motion-workspace[data-mobile-view="result"] .motion-input-stack { display: none; }
   .motion-workspace[data-mobile-view="brief"] .motion-editor { margin-top: 0; padding-top: 0; border-top: 0; }
 }
+.motion-step-nav { display: flex; gap: 8px; margin-bottom: 24px; scroll-margin-top: calc(var(--app-header-height) + var(--tabs-bar-height) + 20px); }
+.motion-step-nav button { flex: 1; min-height: 44px; padding: 11px 8px; border: 1px solid var(--line-control); border-radius: 8px; color: var(--ink-soft); background: var(--surface); font-size: 13px; font-weight: 650; }
+.motion-step-nav button[aria-pressed="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.motion-step-footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
+.motion-step-footer > .motion-primary { margin-left: auto; min-width: 180px; }
+.motion-request-summary { margin-bottom: 20px !important; padding: 13px 15px; background: var(--surface-alt); border: 1px solid var(--line); border-radius: 8px; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+.motion-workspace > .motion-save-row { max-width: 960px; margin-inline: auto; }
+.motion-workspace[data-mobile-view="brief"] .motion-layout,
+.motion-workspace[data-mobile-view="result"] .motion-layout { grid-template-columns: minmax(0, 1fr); max-width: 960px; margin-inline: auto; }
+.motion-workspace[data-mobile-view="brief"] :is(.motion-library, .motion-result-stack),
+.motion-workspace[data-mobile-view="gallery"] :is(.motion-editor, .motion-ai-handoff, .motion-legacy-scenes, .motion-references),
+.motion-workspace[data-mobile-view="result"] :is(.motion-input-stack, .motion-preview-block),
+.motion-workspace:not([data-mobile-view="result"]) .motion-request-block { display: none; }
+.motion-workspace[data-mobile-view="brief"] .motion-editor { margin-top: 0; padding-top: 0; border-top: 0; }
+.motion-workspace[data-mobile-view="gallery"] .motion-result-stack { grid-row: auto; }
+/* The selected-style preview belongs to step 2 on both desktop and mobile. */
+.motion-workspace[data-mobile-view="gallery"] .motion-result-stack { display: block; }
+@media (max-width: 720px) {
+  .motion-step-nav { gap: 5px; scroll-margin-top: 75px; }
+  .motion-step-nav button { padding: 10px 3px; font-size: 12px; }
+  .motion-step-footer { margin-top: 18px; gap: 8px; }
+  .motion-step-footer > .motion-primary { min-width: 0; flex: 1; }
+}
 @media (prefers-reduced-motion: reduce) { .motion-workspace *, .motion-workspace *::after { animation: none !important; transition: none !important; } }

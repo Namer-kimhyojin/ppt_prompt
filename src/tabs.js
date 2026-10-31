@@ -207,7 +207,7 @@
   let currentActionHost = tabActions?.parentElement || null;
   const actionSets = {
     motionPrompt: [
-      { label: "프롬프트 복사", targetId: "motionCopyBtn", className: "btn primary" },
+      { label: "다음: 스타일 선택", targetId: "motionPrimaryBtn", className: "btn primary" },
       { label: "TXT 저장", targetId: "motionDownloadBtn", className: "btn secondary" },
       { label: "샘플 채우기", targetId: "motionSampleBtn", className: "btn secondary" },
       { label: "초기화", targetId: "motionResetBtn", className: "btn ghost", placement: "more" },
@@ -308,7 +308,7 @@
   };
 
   const mobilePrimaryTargets = {
-    motionPrompt: "motionCopyBtn",
+    motionPrompt: "motionPrimaryBtn",
     pptxPrompt: "pptxPromptCopyBtn",
     generator: "genGenerateBtn",
     promotion: "promotionCopyPromptBtn",

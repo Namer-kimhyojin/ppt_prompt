@@ -29,22 +29,22 @@
     ["GitHub · 브라우저 모션 제작", "https://github.com/RFTaurus/motion-skill/blob/c1aa65e921c970d858705fcb4a53a8294d1a4131/SKILL.md", "대상·장면 연속성, 주제에 맞는 표현 재질, 같은 시점의 재현 가능성 참고"],
   ];
   root.className = "motion-workspace";
-  root.dataset.mobileView = "gallery";
+  root.dataset.mobileView = "brief";
   root.innerHTML = `
     <header class="motion-header"><div><span class="motion-eyebrow">DIRECTION TO AI STORYBOARD</span><h2>방향은 내가, 기획은 AI가.</h2><p>영상의 용도·내용·스타일만 정하세요. AI가 구성안을 제안하고 타임스토리·콘티·대본까지 구체화하도록 요청합니다.</p></div><span class="motion-header-badge">66가지 스타일<span>18가지 용도 · 상세 기획은 AI에게</span></span></header>
-    <div class="motion-mobile-nav" role="group" aria-label="모션 제작 작업 화면"><button type="button" data-motion-view="gallery" aria-pressed="true">스타일 선택</button><button type="button" data-motion-view="brief" aria-pressed="false">구성 방향</button><button type="button" data-motion-view="result" aria-pressed="false">요청문 복사</button></div>
+    <div class="motion-mobile-nav motion-step-nav" role="group" aria-label="영상 기획 진행 단계"><button type="button" data-motion-view="brief" aria-pressed="true" aria-current="step">1 구성 방향</button><button type="button" data-motion-view="gallery" aria-pressed="false">2 스타일 선택</button><button type="button" data-motion-view="result" aria-pressed="false">3 요청문 복사</button></div>
     <div class="motion-layout">
       <div class="motion-input-stack">
         <section class="motion-library" aria-labelledby="motionLibraryTitle">
-          <div class="motion-section-heading"><div><span class="motion-step">01 / VISUAL DIRECTION</span><h3 id="motionLibraryTitle">어떤 느낌으로 보여줄까요?</h3></div><span id="motionTemplateCount" class="motion-count" role="status"></span></div>
+          <div class="motion-section-heading"><div><span class="motion-step">02 / VISUAL STYLE</span><h3 id="motionLibraryTitle">어떤 느낌으로 보여줄까요?</h3></div><span id="motionTemplateCount" class="motion-count" role="status"></span></div>
           <label class="motion-field motion-search">스타일 검색<input id="motionSearch" type="search" placeholder="예: 수채화, 설계도, 픽셀, 뉴스, 유리" autocomplete="off"></label>
           <button type="button" class="motion-button motion-auto-style" id="motionAutoStyleBtn" aria-pressed="true">✦ AI에게 어울리는 스타일 3안 추천받기</button>
           <div class="motion-filters" role="group" aria-label="시각 스타일 필터">${Object.entries(styleCatalog.categories).map(([id, label]) => `<button type="button" data-motion-category="${id}" aria-pressed="${id === "all"}">${label}</button>`).join("")}</div>
           <div id="motionGallery" class="motion-gallery"></div>
-          <p class="motion-help motion-library-note">참고 이미지: <a href="https://github.com/lemomo-ai/lemo-opuscar" target="_blank" rel="noopener noreferrer">LemoLab · Lemo-Opuscar</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. 원본 스틸을 축소해 표시하며, 사용자가 입력한 영상의 생성 결과가 아닙니다.</p><button type="button" class="motion-button motion-mobile-next" data-motion-view="result">선택한 방향과 요청문 보기 →</button>
+          <p class="motion-help motion-library-note">참고 이미지: <a href="https://github.com/lemomo-ai/lemo-opuscar" target="_blank" rel="noopener noreferrer">LemoLab · Lemo-Opuscar</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. 원본 스틸을 축소해 표시하며, 사용자가 입력한 영상의 생성 결과가 아닙니다.</p>
         </section>
         <section class="motion-editor" aria-labelledby="motionBriefTitle">
-          <div class="motion-section-heading"><div><span class="motion-step">02 / YOUR BRIEF</span><h3 id="motionBriefTitle">전할 내용을 넣어주세요</h3></div><button type="button" class="motion-text-btn" id="motionSampleBtn">샘플 채우기</button></div>
+          <div class="motion-section-heading"><div><span class="motion-step">01 / YOUR BRIEF</span><h3 id="motionBriefTitle">먼저 구성 방향을 정해주세요</h3></div><button type="button" class="motion-text-btn" id="motionSampleBtn">샘플 채우기</button></div>
           <div class="motion-fields"><label class="motion-field">영상 용도<select id="motionPurpose" data-motion-field="template">${options({ auto: "AI가 목적에 맞는 영상 용도 제안", ...Object.fromEntries(catalog.templates.map((t) => [t.id, t.name])) })}</select></label><label class="motion-field">영상 주제·제목<input id="motionTitle" data-motion-field="title" maxlength="4000" placeholder="예: 지역기업 지원사업 참여 안내"></label><div class="motion-two"><label class="motion-field">시청 대상<input data-motion-field="audience" maxlength="4000" placeholder="예: 기업 담당자·참가자"></label><label class="motion-field">전달 목표·행동<input data-motion-field="goal" maxlength="4000" placeholder="예: 사업을 이해하고 신청하기"></label></div>
           <label class="motion-field">원문·핵심 내용<textarea id="motionSource" data-motion-field="source" rows="5" maxlength="20000" placeholder="넣을 문구, 실제 일정, 특징, 수치와 출처를 입력하세요. 비워 두면 기본 연출 요청문이 만들어집니다."></textarea></label>
           <label class="motion-field">사용할 자료·보존할 요소<textarea id="motionAssets" data-motion-field="assets" rows="2" maxlength="4000" placeholder="예: 첨부 로고의 형태·색상 보존, 제품 사진 3장, 실제 UI 화면, 원본 인터뷰 음성"></textarea></label><p class="motion-help">원본 파일은 프롬프트와 함께 제작 AI에 첨부하세요. 이 화면에서는 파일을 업로드하지 않습니다.</p>
@@ -58,24 +58,53 @@
           </div></details>
           </div>
         </section>
-        <div class="motion-ai-handoff"><strong>장면 순서와 초 단위 기획은 AI가 작성합니다.</strong><p class="motion-help">스타일과 원문을 담은 요청문을 복사해 AI에 전달하면 구성안·타임스토리·콘티·대본을 받을 수 있습니다.</p><button type="button" class="motion-button motion-primary motion-mobile-next" data-motion-view="result">기획 요청문 확인 →</button></div>
+        <div class="motion-ai-handoff"><strong>다음은 스타일 선택입니다.</strong><p class="motion-help">구성 방향을 정한 뒤 스타일을 고르고, 마지막 단계에서 요청문을 복사하세요. 상세 타임스토리·콘티·대본은 AI가 제안합니다.</p></div>
         <details class="motion-details motion-legacy-scenes"><summary>기존 장면 자료 직접 편집 (선택)</summary><p class="motion-help">이전에 작성한 자료는 보관됩니다. 아래 항목을 켰을 때만 장면 수와 시간을 고정 조건으로 전달합니다.</p><label class="motion-check"><input type="checkbox" id="motionUseManualScenes" data-motion-field="useManualScenes">내가 지정한 장면표를 요청문에 반영</label><section class="motion-scenes-section" aria-labelledby="motionScenesTitle"><div class="motion-section-heading"><h3 id="motionScenesTitle">직접 지정한 장면표</h3><button type="button" class="motion-text-btn" id="motionApplyScenesBtn">용도 예시 적용</button></div><div id="motionScenes" class="motion-scenes"></div><button type="button" id="motionAddSceneBtn" class="motion-button motion-add">+ 장면 추가</button></section></details>
         <details class="motion-details motion-references"><summary>공식 문서·서비스 조사와 구성 원칙</summary><p class="motion-help">확인일 2026-10-31. 공식 문서의 원칙을 요청문에 적용했습니다. 스타일 참고 스틸은 LemoLab의 CC BY 4.0 자료이며, 한국어 스타일 방향과 기획 요청문은 PromptDeck에서 작성했습니다. 기존 SVG 용도 예시는 자체 제작 자료입니다.</p><ul>${sources.map(([label, url, note]) => `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${label} ↗</a><p>${note}</p></li>`).join("")}</ul><p class="motion-help">영상 길이·해상도·음성·참조 이미지 지원 범위는 사용하는 서비스에서 확인하고 설정하세요. 이 도구는 특정 모델의 API에 연결하지 않습니다.</p></details>
+        <div class="motion-step-footer"><button type="button" id="motionBackBtn" class="motion-button" data-motion-view="brief" hidden>← 구성 방향</button><button type="button" id="motionPrimaryBtn" class="motion-button motion-primary" data-proxy-label="다음: 스타일 선택">다음: 스타일 선택 →</button></div>
       </div>
       <aside class="motion-result-stack" aria-label="연출 미리보기와 제작 프롬프트">
-        <div class="motion-result-body"><div class="motion-section-heading"><div><span class="motion-step">SELECTED DIRECTION</span><h3 id="motionSelectedName"></h3></div><span class="motion-example-badge">연출 예시</span></div>
+        <div class="motion-result-body"><div class="motion-preview-block"><div class="motion-section-heading"><div><span class="motion-step">SELECTED DIRECTION</span><h3 id="motionSelectedName"></h3></div><span class="motion-example-badge">연출 예시</span></div>
           <div id="motionStage" class="motion-stage is-paused"></div><div class="motion-player-controls"><button type="button" id="motionPlayBtn" class="motion-button" aria-pressed="false">▶ 용도 예시 보기</button><span id="motionPreviewNote" class="motion-help"></span></div><div id="motionReferenceLinks" class="motion-reference-links"></div><p id="motionDescription" class="motion-help"></p><div id="motionSpecs" class="motion-specs"></div>
           <div id="motionTimeline" class="motion-timeline" aria-label="장면 시간 구성"></div>
+          </div><div class="motion-request-block"><div class="motion-section-heading"><div><span class="motion-step">03 / COPY REQUEST</span><h3>요청문을 확인하고 복사하세요</h3></div><button type="button" class="motion-text-btn" data-motion-view="gallery">← 스타일 선택</button></div><p id="motionRequestSummary" class="motion-request-summary"></p>
           <div class="motion-output-settings"><div class="motion-two"><label class="motion-field">제작을 요청할 AI<select id="motionTarget" data-motion-field="target">${options(engine.targets)}</select></label><label class="motion-field">받을 결과물<select id="motionFormat" data-motion-field="format">${options(engine.formats)}</select></label></div></div>
           <div class="motion-output-tabs" role="tablist" aria-label="프롬프트 종류"><button type="button" id="motionOutputProduction" role="tab" aria-controls="motionOutputPanel" data-motion-output="planning" aria-selected="true">AI 기획 요청</button><button type="button" id="motionOutputVideo" role="tab" aria-controls="motionOutputPanel" data-motion-output="video" aria-selected="false" tabindex="-1">영상 AI 기획</button><button type="button" id="motionOutputBoard" role="tab" aria-controls="motionOutputPanel" data-motion-output="production" aria-selected="false" tabindex="-1">제작까지 요청</button><button type="button" id="motionOutputRevision" role="tab" aria-controls="motionOutputPanel" data-motion-output="revision" aria-selected="false" tabindex="-1">수정 요청</button></div>
           <label id="motionRevisionField" class="motion-field" hidden>기존 영상에서 수정할 점<textarea id="motionRevision" data-motion-field="revision" rows="3" maxlength="4000" placeholder="예: 2번 장면의 자막을 1초 더 유지하고, 로고·색상·나머지 장면은 그대로 유지"></textarea></label>
           <div id="motionOutputPanel" role="tabpanel" aria-labelledby="motionOutputProduction"><p id="motionOutputHelp" class="motion-help"></p><label id="motionShotField" class="motion-field" hidden>복사할 장면<select id="motionShotSelect"></select></label><ul id="motionWarnings" class="motion-warnings"></ul><textarea id="motionOutput" class="motion-output" readonly rows="15" aria-label="모션 영상 제작 프롬프트" spellcheck="false"></textarea><div class="motion-inline-actions"><button type="button" id="motionCopyBtn" class="motion-button motion-primary">프롬프트 복사</button><button type="button" id="motionDownloadBtn" class="motion-button">TXT 저장</button></div><p id="motionUsage" class="motion-help"></p></div>
           <div class="motion-save-row"><span id="motionSaveStatus" class="motion-help"></span><button type="button" id="motionUndoBtn" class="motion-text-btn" hidden>초기화 되돌리기</button><button type="button" id="motionResetBtn" class="motion-text-btn">초기화</button></div>
+          </div>
         </div>
       </aside>
     </div><div id="motionStatus" class="motion-toast" role="status" aria-live="polite"></div>`;
   const q = (selector) => root.querySelector(selector);
   const all = (selector) => Array.from(root.querySelectorAll(selector));
+  // Keep reading and keyboard order aligned with the visible three-step process.
+  q(".motion-input-stack").prepend(q(".motion-editor"));
+  q(".motion-layout").after(q(".motion-save-row"));
+  function setStep(view, focusHeading = false) {
+    const step = ["brief", "gallery", "result"].includes(view) ? view : "brief";
+    root.dataset.mobileView = step;
+    all(".motion-step-nav [data-motion-view]").forEach((button) => {
+      const active = button.dataset.motionView === step;
+      button.setAttribute("aria-pressed", String(active));
+      if (active) button.setAttribute("aria-current", "step"); else button.removeAttribute("aria-current");
+    });
+    const label = step === "brief" ? "다음: 스타일 선택" : step === "gallery" ? "다음: 요청문 복사" : "프롬프트 복사";
+    q("#motionPrimaryBtn").textContent = `${label}${step === "result" ? "" : " →"}`;
+    q("#motionPrimaryBtn").dataset.proxyLabel = label;
+    q("#motionBackBtn").hidden = step !== "gallery";
+    q("#motionCopyBtn").hidden = step !== "result";
+    q("#motionDownloadBtn").hidden = step !== "result";
+    q("#motionSampleBtn").hidden = step !== "brief";
+    if (step !== "gallery") setPlaying(false);
+    window.PromptDeckTabs?.syncHeaderActionStates();
+    q(".motion-step-nav").scrollIntoView({ block: "start" });
+    if (focusHeading) {
+      const heading = step === "brief" ? q("#motionBriefTitle") : step === "gallery" ? q("#motionLibraryTitle") : q(".motion-request-block h3");
+      heading.tabIndex = -1; heading.focus({ preventScroll: true });
+    }
+  }
   function status(message) { clearTimeout(toastTimer); q("#motionStatus").textContent = message; q("#motionStatus").classList.add("is-visible"); toastTimer = setTimeout(() => q("#motionStatus").classList.remove("is-visible"), 5000); }
   function save() {
     clearTimeout(saveTimer);
@@ -137,6 +166,7 @@
     const total = engine.totalSeconds(state);
     const [width, height] = engine.ratios[state.ratio];
     q("#motionSpecs").textContent = `${state.ratio} · ${state.useManualScenes ? `${total}초 · 직접 지정한 ${state.scenes.length}장면` : state.duration === "auto" ? "길이·장면 수는 AI가 제안" : `희망 ${state.duration}초 · 장면 수는 AI가 제안`}${state.fps === "auto" ? "" : ` · ${state.fps}fps`}`;
+    q("#motionRequestSummary").textContent = `${state.title.trim() || "주제는 제공 자료에서 결정"} · ${engine.getTemplate(state.template).name} · ${styleCatalog.get(state.style)?.name || "스타일은 AI 추천"} · ${state.ratio} · ${state.duration === "auto" ? "길이는 AI 제안" : `희망 ${state.duration}초`}`;
     q("#motionTimeline").innerHTML = state.useManualScenes ? engine.timeline(state).map((s) => `<span style="flex:${s.seconds}" title="${esc(s.visual)}"><strong>${s.index}</strong><small>${s.seconds}초</small></span>`).join("") : '<p class="motion-help">AI가 구성안 비교 → 상세 타임스토리 → 콘티·대본을 작성하도록 요청합니다.</p>';
     all("[data-motion-scene]").forEach((element, i) => {
       const entry = engine.timeline(state)[i]; if (!entry) return;
@@ -206,10 +236,7 @@
   root.addEventListener("click", (event) => {
     const view = event.target.closest("[data-motion-view]");
     if (view) {
-      root.dataset.mobileView = view.dataset.motionView;
-      all(".motion-mobile-nav [data-motion-view]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.motionView === root.dataset.mobileView)));
-      if (root.dataset.mobileView !== "result") setPlaying(false);
-      q(".motion-mobile-nav").scrollIntoView({ block: "start" });
+      setStep(view.dataset.motionView);
     }
     const filter = event.target.closest("[data-motion-category]");
     if (filter) { category = filter.dataset.motionCategory; renderGallery(); }
@@ -234,6 +261,11 @@
     buttons[index].click(); buttons[index].focus();
   });
   q("#motionPlayBtn").addEventListener("click", () => setPlaying(!playing));
+  q("#motionPrimaryBtn").addEventListener("click", () => {
+    if (root.dataset.mobileView === "brief") setStep("gallery", true);
+    else if (root.dataset.mobileView === "gallery") setStep("result", true);
+    else q("#motionCopyBtn").click();
+  });
   q("#motionAddSceneBtn").addEventListener("click", () => {
     if (state.scenes.length >= 12) return;
     state.scenes.push({ seconds: 5, visual: "", motion: "", caption: "", voice: "", reference: "" }); renderScenes(); updateOutput(); save();
@@ -274,6 +306,7 @@
   window.addEventListener("pagehide", save);
   document.addEventListener("visibilitychange", () => { if (document.hidden) { setPlaying(false); save(); } });
   refresh();
+  setStep("brief");
   window.PromptDeckTabs?.syncHeaderActionStates();
   if (storageNotice) status(storageNotice);
 })();

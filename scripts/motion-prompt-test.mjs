@@ -98,10 +98,17 @@ try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1100 }, acceptDownloads: true });
   await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin });
   const page = await context.newPage(), pageErrors = [], resourceErrors = [];
+  const goStep = (step) => page.locator(`.motion-step-nav [data-motion-view="${step}"]`).click();
   page.on("pageerror", (e) => pageErrors.push(e.message));
   page.on("response", (r) => { if (r.status() >= 400 && /motion-prompt/.test(r.url())) resourceErrors.push(r.url()); });
   await page.goto(`${origin}/index.html?tab=motionPrompt`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector("#paneMotionPrompt.active");
+  assert.equal(await page.locator("#motionPromptApp").getAttribute("data-mobile-view"), "brief");
+  assert.deepEqual(await page.locator(".motion-step-nav [data-motion-view]").evaluateAll((buttons) => buttons.map((b) => b.dataset.motionView)), ["brief", "gallery", "result"]);
+  assert.equal(await page.locator(".motion-editor").isVisible(), true);
+  assert.equal(await page.locator(".motion-library").isVisible(), false);
+  assert.equal(await page.locator(".motion-result-stack").isVisible(), false);
+  assert.equal(await page.locator("#motionCopyBtn").isVisible(), false);
   assert.equal(await page.locator("[data-motion-style]").count(), 66);
   assert.equal(await page.locator(".motion-scenes-section").isVisible(), false);
   assert.equal(await page.locator("#motionFormat").isVisible(), false);
@@ -109,6 +116,12 @@ try {
   assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /\[장면 1|0–5초/);
   assert.ok(await page.locator("#tabActions").evaluate((el) => el.parentElement.matches(".motion-result-stack") && el === el.parentElement.firstElementChild));
   assert.equal(await page.locator(".app-tabs-bar #tabActions").count(), 0);
+  await page.locator("#motionTitle").fill("순서 확인용 구성 방향");
+  await page.locator("#motionPrimaryBtn").click();
+  assert.equal(await page.locator("#motionPromptApp").getAttribute("data-mobile-view"), "gallery");
+  assert.equal(await page.locator(".motion-editor").isVisible(), false);
+  assert.equal(await page.locator(".motion-library").isVisible(), true);
+  assert.equal(await page.locator(".motion-request-block").isVisible(), false);
   for (const style of styles.styles) {
     await page.locator(`[data-motion-style="${style.id}"]`).click();
     assert.equal(await page.locator("#motionSelectedName").textContent(), style.name);
@@ -123,6 +136,15 @@ try {
   await page.locator("#motionSearch").fill("");
   await page.locator('[data-motion-category="all"]').click();
   await page.locator('[data-motion-style="watercolor"]').click();
+  await page.locator("#motionPrimaryBtn").click();
+  assert.equal(await page.locator("#motionPromptApp").getAttribute("data-mobile-view"), "result");
+  assert.equal(await page.locator(".motion-preview-block").isVisible(), false);
+  assert.equal(await page.locator("#motionCopyBtn").isVisible(), true);
+  assert.match(await page.locator("#motionRequestSummary").textContent(), /순서 확인용 구성 방향.*수채화/);
+  await goStep("gallery");
+  await page.locator("#motionBackBtn").click();
+  assert.equal(await page.locator("#motionTitle").inputValue(), "순서 확인용 구성 방향");
+  assert.equal(await page.locator('#motionAutoStyleBtn').getAttribute("aria-pressed"), "false");
   await page.locator("#motionPurpose").selectOption("ui");
   await page.locator("#motionSampleBtn").click();
   await page.locator("#motionTitle").fill("지역기업 지원사업 <검증>");
@@ -137,7 +159,9 @@ try {
   assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /정확한 한글 안내/);
   await page.locator("#motionUseManualScenes").check();
   assert.match(await page.locator("#motionOutput").inputValue(), /정확한 한글 안내/);
+  await goStep("gallery");
   await page.locator('[data-motion-style="blueprint"]').click();
+  await goStep("brief");
   assert.equal(await page.locator('[data-motion-scene="0"] [data-scene-field="caption"]').inputValue(), "정확한 한글 안내");
   await page.locator("#motionAddSceneBtn").click();
   assert.equal(await page.locator("[data-motion-scene]").count(), 4);
@@ -149,6 +173,7 @@ try {
   assert.equal(await page.locator("[data-motion-scene]").count(), 3);
   await page.locator("#motionVideoMode").selectOption("i2v");
   await page.locator('[data-motion-scene="0"] [data-scene-field="reference"]').fill("원본-01.png");
+  await goStep("result");
   await page.locator("#motionTarget").selectOption("gpt");
   await page.locator("#motionOutputBoard").click();
   await page.locator("#motionFormat").selectOption("remotion");
@@ -186,22 +211,33 @@ try {
   assert.equal(await page.locator("#paneSlideDocument .slide-sub-tab-btn").count(), 4);
   for (const button of await page.locator("#paneSlideDocument .slide-sub-tab-btn").all()) await button.click();
   await page.locator('[data-tab-group-filter="motionVideo"]').click();
+  await goStep("result");
   await page.locator("#motionResetBtn").click();
   for (const theme of ["light", "dark"]) {
     await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme);
     for (const width of [1440, 1024, 810, 720, 390, 360]) {
       await page.setViewportSize({ width, height: 1000 });
-      const views = width <= 720 ? ["gallery", "brief", "result"] : ["desktop"];
+      const views = ["brief", "gallery", "result"];
       for (const view of views) {
-        if (view !== "desktop") await page.locator(`.motion-mobile-nav [data-motion-view="${view}"]`).click();
+        await goStep(view);
+        assert.equal(await page.locator(".motion-editor").isVisible(), view === "brief");
+        assert.equal(await page.locator(".motion-library").isVisible(), view === "gallery");
+        assert.equal(await page.locator(".motion-request-block").isVisible(), view === "result");
         const metrics = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth - innerWidth, paneOverflow: document.getElementById("motionPromptApp").scrollWidth - document.getElementById("motionPromptApp").clientWidth, tabScroll: [...document.querySelectorAll(".app-tabs,.app-tabs-bar")].some((el) => ["auto", "scroll"].includes(getComputedStyle(el).overflowY)) }));
         assert.ok(metrics.overflow <= 1 && metrics.paneOverflow <= 1, `${theme} ${width} ${view}: horizontal overflow ${JSON.stringify(metrics)}`);
         assert.equal(metrics.tabScroll, false);
         if (width <= 720) {
           assert.equal(await page.locator("#tabActions").isVisible(), false);
-          assert.ok(await page.locator('#mobileTabActions [data-proxy-target="motionCopyBtn"]').isVisible());
+          const primary = page.locator('#mobileTabActions [data-proxy-target="motionPrimaryBtn"]');
+          assert.ok(await primary.isVisible());
+          assert.equal((await primary.textContent()).trim(), view === "brief" ? "다음: 스타일 선택" : view === "gallery" ? "다음: 요청문 복사" : "프롬프트 복사");
+          if (view !== "result") {
+            await primary.click();
+            assert.equal(await page.locator("#motionPromptApp").getAttribute("data-mobile-view"), view === "brief" ? "gallery" : "result");
+            await goStep(view);
+          }
         }
-        if ((width === 1440 || width === 390) && (view === "desktop" || view === "gallery" || view === "result")) {
+        if (width === 1440 || width === 390) {
           await page.evaluate(() => scrollTo(0, 0));
           await page.screenshot({ path: path.join(evidence, `${theme}-${width}-${view}.png`) });
         }
@@ -209,6 +245,7 @@ try {
     }
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await goStep("gallery");
   await page.locator("#motionPlayBtn").click();
   assert.equal(await page.locator("#motionStage .motion-art-rise").evaluate((el) => getComputedStyle(el).animationName), "none");
   for (const width of [1440, 390]) {
@@ -238,7 +275,7 @@ try {
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")).version), 2);
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(resourceErrors, []);
-  console.log("PASS: 66 attributed style stills, AI-directed planning without fixed scenes, optional manual scenes, output/copy/download/restore, existing tabs, responsive themes and navigation");
+  console.log("PASS: direction → style → copy on desktop/mobile, next/back and mobile primary actions, preserved inputs, 66 styles, AI planning, migration, themes and existing tabs");
   console.log(`Screenshots: ${evidence}`);
 } finally {
   if (browser) await browser.close();
