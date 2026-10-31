@@ -1743,9 +1743,9 @@
       return `
         <div class="form-image-viewer-section" data-section-index="${index}">
           ${section.title ? `<div class="form-image-viewer-section-title">${escapeHtml(section.title)}</div>` : ""}
-          <button type="button" class="form-image-section-edit-btn" title="이 섹션 편집" onclick="window.handleFormImageSectionAction && window.handleFormImageSectionAction(event)">Edit</button>
-          <button type="button" class="form-image-section-cancel-btn" title="편집 취소" onclick="window.handleFormImageSectionAction && window.handleFormImageSectionAction(event)" hidden>Cancel</button>
-          <button type="button" class="form-image-section-copy-btn" title="이 섹션 복사" onclick="window.handleFormImageSectionAction && window.handleFormImageSectionAction(event)">Copy</button>
+          <button type="button" class="form-image-section-edit-btn" title="이 섹션 편집">Edit</button>
+          <button type="button" class="form-image-section-cancel-btn" title="편집 취소" hidden>Cancel</button>
+          <button type="button" class="form-image-section-copy-btn" title="이 섹션 복사">Copy</button>
           <div class="form-image-section-lines-container">${lineHtml}</div>
         </div>
       `;

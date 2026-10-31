@@ -41,6 +41,19 @@ async function hasLocator(page, selector) {
   return (await page.locator(selector).count()) > 0;
 }
 
+async function selectTool(page, tabId) {
+  const button = page.locator(`#${tabId}`);
+  if (page.viewportSize().width > 720 && !(await button.isVisible())) {
+    const group = await button.evaluate((element) => element.closest("[data-tab-group]").dataset.tabGroup);
+    const filter = page.locator(`[data-tab-group-filter="${group}"]`);
+    if (!(await filter.isVisible()) && await page.locator("#labelSheetWorkspaceAppNavBtn").isVisible()) {
+      await page.locator("#labelSheetWorkspaceAppNavBtn").click();
+    }
+    await filter.click();
+  }
+  await button.click();
+}
+
 async function maxAxisTickAlignmentError(page, selector) {
   return page.locator(selector).evaluateAll((inputs) => Math.max(0, ...inputs.flatMap((input) => {
     const inputBox = input.getBoundingClientRect();
@@ -517,6 +530,24 @@ async function runSmokeTest() {
 
     await page.setViewportSize({ width: 1366, height: 900 });
     record(await page.locator(".app-tab-group-switcher").isVisible(), "Desktop navigation did not expose the task-group switcher when tabs overflowed", failures);
+    for (const width of [721, 1024, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      const desktopMenuFits = await page.evaluate(() => {
+        const navigation = document.getElementById("appToolNavigation");
+        const bounds = navigation.getBoundingClientRect();
+        const controls = [...navigation.querySelectorAll("[data-tab-group-filter], .app-tab-btn")]
+          .filter((button) => button.getClientRects().length > 0);
+        return [...navigation.querySelectorAll("[data-tab-group-filter]")].every((button) => button.getClientRects().length > 0)
+          && controls.every((button) => {
+            const rect = button.getBoundingClientRect();
+            return rect.left >= bounds.left && rect.right <= bounds.right
+              && rect.top >= bounds.top && rect.bottom <= bounds.bottom;
+          })
+          && navigation.scrollHeight <= navigation.clientHeight + 1;
+      });
+      record(desktopMenuFits, `Desktop ${width}px navigation clipped a task group or tool`, failures);
+    }
+    await page.setViewportSize({ width: 1366, height: 900 });
     await page.click('[data-tab-group-filter="visualAsset"]');
     await page.waitForSelector("#paneDataDiagram.active");
     await page.waitForTimeout(250);
@@ -554,7 +585,7 @@ async function runSmokeTest() {
     record((await page.locator('.app-tab-group[data-tab-group="deckImage"] #tabBtnQrGenerator').count()) === 1, "Admin tab placement did not move the tab into its configured group", failures);
     record((await page.locator('.app-tab-group[data-tab-group="deckImage"] .app-tab-btn').first().getAttribute("id")) === "tabBtnQrGenerator", "Admin tab order was not applied within the configured group", failures);
     record((await page.locator("#tabBtnQrGenerator").textContent()).trim() === "빠른 QR", "Admin tab label was not applied to the user page", failures);
-    await page.click("#tabBtnQrGenerator");
+    await selectTool(page, "tabBtnQrGenerator");
     await page.waitForSelector("#paneQrGenerator.active");
     record((await page.locator("#tabBtnQrGenerator").evaluate((element) => element.closest("[data-tab-group]")?.dataset.tabGroup)) === "deckImage", "Moved tab did not remain in its configured group", failures);
     await page.evaluate(() => {
@@ -564,7 +595,7 @@ async function runSmokeTest() {
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForSelector("#paneCommonPrompt.active");
 
-    await page.click("#tabBtnGenerator");
+    await selectTool(page, "tabBtnGenerator");
     await page.waitForSelector("#paneGenerator.active");
     record(await page.evaluate(() => localStorage.getItem("promptdeck.activeTab.v1")) === "generator", "Active workspace location was not saved", failures);
     await page.reload({ waitUntil: "domcontentloaded" });
@@ -580,7 +611,7 @@ async function runSmokeTest() {
     // Common Prompt Institution Preset Regression Test
     // ----------------------------------------------------
     record((await page.locator("#paneCommonPrompt .cpd-page-head").count()) === 0, "Removed common-prompt header summary was still visible", failures);
-    await page.click("#tabBtnCommonPrompt");
+    await selectTool(page, "tabBtnCommonPrompt");
     await page.waitForSelector("#paneCommonPrompt.active");
     record((await page.locator(".app-tabs-bar #tabActions").count()) === 0, "Quick actions were still mounted inside the tab bar", failures);
     record((await page.locator("#paneCommonPrompt .cpd-summary-inner > #tabActions").count()) === 1, "Common Prompt quick actions were not mounted at the top of the right panel", failures);
@@ -860,7 +891,7 @@ async function runSmokeTest() {
     record(desktopBriefLayout.columns === 2 && desktopBriefLayout.overflow <= 1, "Design-brief choices did not use a compact two-column desktop row", failures);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.click('[data-tab-group-filter="visualAsset"]');
-    await page.click("#tabBtnPhotoTransform");
+    await selectTool(page, "tabBtnPhotoTransform");
     await page.waitForSelector("#panePhotoTransform.active");
     const desktopPhotoControls = await page.locator("#panePhotoTransform .pt-control-column").evaluate((element) => {
       const style = getComputedStyle(element);
@@ -1067,14 +1098,14 @@ async function runSmokeTest() {
     record(mobileNavigation.headerItemsInside && mobileNavigation.headerCenterSpread <= 2, "Mobile app bar title or action controls were vertically misaligned", failures);
     record(mobileNavigation.toolButtonHeight >= 44 && mobileNavigation.switchMinHeight >= 44 && mobileNavigation.detailMinHeight >= 44, "Mobile app-shell controls were smaller than the 44px touch target", failures);
     record(mobileNavigation.switchWidthSpread <= 1 && mobileNavigation.detailDisplay === "grid" && mobileNavigation.drawerOpen, "Mobile tool navigation did not use a balanced switcher and two-column drawer", failures);
-    await page.click("#tabBtnFormImage");
+    await selectTool(page, "tabBtnFormImage");
     await page.waitForSelector("#paneFormImage.active");
     record(!(await page.evaluate(() => document.body.classList.contains("app-tool-nav-open"))), "Mobile tool drawer did not close after selecting a tool", failures);
     record((await page.locator("#mobileActiveTool").textContent()).trim() === "문서 표지·양식", "Mobile app bar did not announce the active tool", failures);
     record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="formImageCopyPromptBtn"]').isVisible(), "Mobile primary action did not follow the active business-image tool", failures);
 
     await page.click("#appToolMenuBtn");
-    await page.click("#tabBtnPromotion");
+    await selectTool(page, "tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
     record(await page.locator("#promotionCopyPromptBtn").isHidden(), "Promotion result duplicated its copy action inside the mobile output card", failures);
     record(await page.locator('#mobileTabActions:not([hidden]) [data-proxy-target="promotionMobilePrimaryBtn"]').isVisible(), "Promotion mobile result action was not kept in the global action bar", failures);
@@ -1082,7 +1113,7 @@ async function runSmokeTest() {
 
     await page.click("#appToolMenuBtn");
     await page.click('[data-tab-group-filter="visualAsset"]');
-    await page.click("#tabBtnPhotoTransform");
+    await selectTool(page, "tabBtnPhotoTransform");
     await page.waitForSelector("#panePhotoTransform.active");
     await page.waitForFunction(() => document.querySelectorAll("#photoTransformGallery .pt-style-card").length === 18);
     record((await page.locator("#photoTransformGallery .pt-style-card").count()) === 18, "Photo style gallery did not limit its initial mobile render to 18 cards", failures);
@@ -1091,7 +1122,7 @@ async function runSmokeTest() {
     record((await page.locator("#photoTransformGallery .pt-style-card").count()) === 36, "Photo style gallery did not append the next mobile page", failures);
     await page.click("#appToolMenuBtn");
     await page.click('[data-tab-group-filter="deckImage"]');
-    await page.click("#tabBtnCommonPrompt");
+    await selectTool(page, "tabBtnCommonPrompt");
     await page.waitForSelector("#paneCommonPrompt.active");
     record(await page.locator("#mobileTabActions").isHidden(), "Global mobile action bar conflicted with the common-prompt journey bar", failures);
     const mobileBriefOverflow = await page.locator("#cpdAccordionBody0 .cpd-brief-quick-grid").evaluate((element) => element.scrollWidth - element.clientWidth);
@@ -1430,7 +1461,9 @@ async function runSmokeTest() {
       ];
       for (const [resourceKey, expectedGuidance] of visualResourceGuidanceCases) {
         await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-        await page.locator(`#cpdJourneyPanel [data-path="resources.${resourceKey}"][value="allow"]`).check();
+        const resourceChoice = page.locator(`#cpdJourneyPanel [data-path="resources.${resourceKey}"][value="allow"]`);
+        await resourceChoice.locator("..").click();
+        record(await resourceChoice.isChecked(), `Visual resource ${resourceKey} did not select its visible label`, failures);
         const resourcePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
         record(resourcePrompt.includes("우선 활용 자원:") && resourcePrompt.includes(expectedGuidance), `Visual resource ${resourceKey} omitted its execution guidance`, failures);
       }
@@ -1443,8 +1476,8 @@ async function runSmokeTest() {
       record(resourcePresetPrompt.includes("원근·스케일·조명·그림자·색온도") && resourcePresetPrompt.includes("떠다니는 유리 패널"), "Photo-editorial preset omitted believable compositing constraints", failures);
 
       await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
-      await page.locator('#cpdJourneyPanel [data-path="resources.photo"][value="exclude"]').check();
-      await page.locator('#cpdJourneyPanel [data-path="resources.layeredComposite"][value="allow"]').check();
+      await page.locator('#cpdJourneyPanel [data-path="resources.photo"][value="exclude"]').locator("..").click();
+      await page.locator('#cpdJourneyPanel [data-path="resources.layeredComposite"][value="allow"]').locator("..").click();
       resourcePresetPrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
       record(resourcePresetPrompt.includes("실사를 제외한 다중 레이어") && resourcePresetPrompt.includes("사용 금지 자원: 실사 이미지"), "Non-photo layering did not preserve the photography exclusion", failures);
 
@@ -1483,7 +1516,7 @@ async function runSmokeTest() {
 
       await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
       await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
-      await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
+      await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').locator("..").click();
       const fiveStagePrompt = await page.evaluate(() => window.PromptDeckCommonPrompt.buildPrompt());
       record(fiveStagePrompt.startsWith("## SLIDE IMAGE VISUAL SPECIFICATION") && fiveStagePrompt.includes("### OUTPUT SIZE AND RESERVED AREAS") && fiveStagePrompt.includes("### CONTENT-BASED COMPOSITION"), "Generated prompt did not use the general five-stage image-specification structure", failures);
       record(fiveStagePrompt.includes("Header·Footer·Body·Margin·Safe Area 등 제작 가이드") && fiveStagePrompt.includes("렌더링하지 않는다") && fiveStagePrompt.includes("실제 헤더·푸터 값만 개별 명세에서 표시"), "Common prompt did not hide reference-image layout annotations from the rendered slide", failures);
@@ -1538,7 +1571,7 @@ async function runSmokeTest() {
       await page.click('[data-journey-stage="4"]');
       await page.click('#cpdJourneyPanel [data-resource-preset="automatic"]');
       await page.click('#cpdJourneyPanel [data-resource-preset="photoEditorial"]');
-      await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').check();
+      await page.locator('#cpdJourneyPanel [data-path="resources.dataVisualization"][value="allow"]').locator("..").click();
       if (false) {
       record((await page.locator("#cpdAccordion .cpd-journey-step").count()) === 7, "Common prompt did not render the seven-stage MECE journey", failures);
       record((await page.locator("#cpdQuickSetup").count()) === 1 && await page.locator("#cpdQuickSetup").isVisible(), "Question-reducing quick setup was not visible", failures);
@@ -2008,7 +2041,7 @@ async function runSmokeTest() {
       window.pptState.colorSystem.primary = "#FF0000";
     });
 
-    await page.click("#tabBtnGenerator");
+    await selectTool(page, "tabBtnGenerator");
     await page.waitForSelector("#paneGenerator.active");
     record((await page.locator("#paneGenerator .gen-result-stack > #tabActions").count()) === 1, "Generator quick actions were not mounted in an independent result column", failures);
     record((await page.locator("#paneGenerator .gen-result-stack > .gen-result-section").count()) === 1, "Generator result panel was not kept as a sibling of the quick action dock", failures);
@@ -2229,7 +2262,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#genCommonPrompt").getAttribute("data-prompt-lang")) === "en", "Generator project load did not restore the prompt language", failures);
     record(await page.locator("#genSpecialSlidesOwnDesign").isChecked(), "Generator project load did not restore the special-slide design scope", failures);
 
-    await page.click("#tabBtnSlideImage");
+    await selectTool(page, "tabBtnSlideImage");
     await page.waitForSelector("#paneSlideImage.active");
     await page.click("#slideImageLoadDeckBtn");
     record(!(await page.locator("#slideImageQueueSummary").textContent()).includes("총 0개"), "Slide image queue did not load generated prompts", failures);
@@ -2238,7 +2271,7 @@ SLIDE-TWO-CONTENT`);
     record((await page.locator("#slideImageTitle").inputValue()) === "slide-01", "Slide image prompt clear left the previous slide title behind", failures);
     record((await page.locator("#slideImageQueueSummary").textContent()).includes("총 0개"), "Slide image prompt clear left the previous generation queue behind", failures);
 
-    await page.click("#tabBtnGenerator");
+    await selectTool(page, "tabBtnGenerator");
     await page.waitForSelector("#paneGenerator.active");
     const minimalProjectPath = path.join(tempDir, "minimal-project.json");
     await fs.writeFile(minimalProjectPath, JSON.stringify({ schemaVersion: generatorProject.schemaVersion, records: [] }), "utf8");
@@ -2252,13 +2285,13 @@ SLIDE-TWO-CONTENT`);
     record(await hasLocator(page, "#tabBtnConceptMixer"), "Concept Mixer top-level tab button is missing", failures);
     record(await hasLocator(page, "#paneConceptMixer"), "Concept Mixer top-level pane is missing", failures);
     record(!(await hasLocator(page, "#btnToggleMixer")), "Legacy Concept Mixer toggle still exists inside Concept Suggestion", failures);
-    await page.click("#tabBtnConceptMixer");
+    await selectTool(page, "tabBtnConceptMixer");
     await page.waitForSelector("#paneConceptMixer.active");
     record(await hasLocator(page, "#paneConceptMixer #conceptMixerContainer .mixer-workspace"), "Concept Mixer did not initialize in its top-level pane", failures);
     record((await page.locator("#tabBtnConceptMixer").getAttribute("aria-selected")) === "true", "Concept Mixer tab was not marked selected", failures);
 
-    await page.waitForSelector("#tabBtnPromotion");
-    await page.click("#tabBtnPromotion");
+    await page.waitForSelector("#tabBtnPromotion", { state: "attached" });
+    await selectTool(page, "tabBtnPromotion");
     await page.waitForSelector("#panePromotion.active");
     record((await page.locator("#panePromotion .promo-result-stack > .promo-result-actions > #tabActions").count()) === 1, "Promotion quick actions were not integrated into the result workflow", failures);
     record((await page.locator("#panePromotion .promo-result-stack > .promo-preview-section").count()) === 1, "Promotion result panel was not kept with the integrated action area", failures);
@@ -2474,7 +2507,7 @@ SLIDE-TWO-CONTENT`);
       record(!(await page.locator("#promotionPromptPreview").inputValue()).includes("미입력"), "Promotion prompt preview still showed placeholders after omit-empty-fields", failures);
     }
 
-    await page.click("#tabBtnFormImage");
+    await selectTool(page, "tabBtnFormImage");
     await page.waitForSelector("#paneFormImage.active");
     record((await page.locator("#paneFormImage .form-image-result-stack > #tabActions").count()) === 1, "Form-image quick actions were not mounted in an independent result column", failures);
     record((await page.locator("#paneFormImage .form-image-result-stack > .form-image-result-panel").count()) === 1, "Form-image result panel was not kept as a sibling of the quick action dock", failures);
@@ -2486,7 +2519,7 @@ SLIDE-TWO-CONTENT`);
     record(!(await page.locator("#formImagePromptPreview").inputValue()).includes("GHOST-FORM-TITLE"), "Form image reset retained prior prompt text", failures);
     record(!(await page.locator("#formImagePromptViewer").textContent()).includes("GHOST-FORM-TITLE"), "Form image reset left an inline-edited prompt section visible", failures);
 
-    await page.click("#tabBtnLabelSheet");
+    await selectTool(page, "tabBtnLabelSheet");
     await page.waitForSelector("#paneLabelSheet.active");
     const selectLabelGoal = async (goal) => {
       const openDrawer = page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])");
@@ -3874,7 +3907,7 @@ SLIDE-TWO-CONTENT`);
     await page.click("#labelSheetFocusBackBtn");
     await page.waitForFunction(() => document.querySelector("#labelSheetPreviewSurface canvas")?.getAttribute("aria-label")?.includes("뒷면"));
     record((await page.locator("#labelSheetDuplexStepState").textContent()).includes("양면"), "Label-sheet back preview did not keep the duplex state", failures);
-    await page.click("#tabBtnQrGenerator");
+    await selectTool(page, "tabBtnQrGenerator");
     await page.waitForSelector("#paneQrGenerator.active");
     await page.click('.qr-type-btn[data-type="text"]');
     await page.locator("#qrInputText").fill("https://example.kr/from-qr-tab");
@@ -4750,7 +4783,7 @@ SLIDE-TWO-CONTENT`);
     );
     await page.setViewportSize({ width: 1440, height: 1200 });
 
-    await page.click("#tabBtnMapPrompt");
+    await selectTool(page, "tabBtnMapPrompt");
     await page.waitForSelector("#paneMapPrompt.active");
     record((await page.locator("#paneMapPrompt .map-result-stack > #tabActions").count()) === 1, "Map quick actions were not mounted in an independent result column", failures);
     record((await page.locator("#paneMapPrompt .map-result-stack > .map-preview-section").count()) === 1, "Map result panel was not kept as a sibling of the quick action dock", failures);
@@ -4845,7 +4878,7 @@ SLIDE-TWO-CONTENT`);
     record(!(await page.locator(".map-preference-details").getAttribute("open")), "Map preference details opened by default and crowded the mobile flow", failures);
     await page.setViewportSize({ width: 1440, height: 1200 });
 
-    await page.click("#tabBtnDataDiagram");
+    await selectTool(page, "tabBtnDataDiagram");
     await page.waitForSelector("#paneDataDiagram.active");
     record((await page.locator("#diagramTypeGrid .diagram-choice-card").count()) === 8, "Data Diagram did not render the eight supported diagram families", failures);
     record((await page.locator("#diagramLivePreview svg").count()) === 1, "Data Diagram did not render the live structure preview", failures);
@@ -5113,7 +5146,7 @@ SLIDE-TWO-CONTENT`);
       if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
         await page.locator(`#${tabId}`).evaluate((element) => element.click());
       } else {
-        await page.click(`#${tabId}`);
+        await selectTool(page, tabId);
       }
       if (tabId === "tabBtnDocumentDesign") await page.locator('#documentDesignApp .dw-steps [data-step="2"]').click();
       const controlledPaneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
@@ -5285,7 +5318,7 @@ SLIDE-TWO-CONTENT`);
         if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
           await page.locator(`#${tabId}`).evaluate((element) => element.click());
         } else {
-          await page.click(`#${tabId}`);
+          await selectTool(page, tabId);
         }
         const paneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
         await page.waitForSelector(`#${paneId}.active`);
@@ -5342,7 +5375,7 @@ SLIDE-TWO-CONTENT`);
         if (["tabBtnDesigner", "tabBtnSlideDocument"].includes(tabId)) {
           await page.locator(`#${tabId}`).evaluate((element) => element.click());
         } else {
-          await page.click(`#${tabId}`);
+          await selectTool(page, tabId);
         }
         const paneId = await page.locator(`#${tabId}`).getAttribute("aria-controls");
         await page.waitForSelector(`#${paneId}.active`);

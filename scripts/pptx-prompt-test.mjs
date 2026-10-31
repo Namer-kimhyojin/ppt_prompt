@@ -77,6 +77,7 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(url, { waitUntil: "networkidle" });
   assert.equal(await page.locator("#ppStyleGrid img").count(), 0, "Inactive tab must not load its gallery");
+  await page.locator('[data-tab-group-filter="deckFile"]').click();
   await page.locator("#tabBtnPptxPrompt").click();
   await page.locator("#panePptxPrompt.active .pp-style-card").first().waitFor();
   assert.equal(await page.locator(".pp-result-stack > #tabActions").count(), 1);
@@ -194,7 +195,11 @@ try {
   await page.setViewportSize({ width: 1440, height: 1000 });
   for (const [tab, active] of [["tabBtnMapPrompt", "paneMapPrompt"], ["tabBtnSlideDocument", "paneSlideDocument"], ["tabBtnDocumentDesign", "paneDocumentDesign"]]) {
     if (tab === "tabBtnSlideDocument") await page.locator(`#${tab}`).evaluate((button) => button.click());
-    else await page.locator(`#${tab}`).click();
+    else {
+      const group = await page.locator(`#${tab}`).evaluate((button) => button.closest("[data-tab-group]").dataset.tabGroup);
+      await page.locator(`[data-tab-group-filter="${group}"]`).click();
+      await page.locator(`#${tab}`).click();
+    }
     assert.ok(await page.locator(`#${active}.active`).isVisible(), `Existing tab ${tab} still works`);
     if (tab === "tabBtnSlideDocument") assert.equal(await page.locator("#paneSlideDocument .slide-sub-tab-btn").count(), 4);
   }

@@ -144,6 +144,7 @@ try {
   await page.goto(`${baseUrl}/index.html`, { waitUntil: "domcontentloaded", timeout: 30_000 });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: "domcontentloaded" });
+  await page.click('[data-tab-group-filter="deckFile"]');
   await page.click("#tabBtnDocumentDesign");
   await page.waitForSelector("#paneDocumentDesign.active");
   if (await page.locator('#documentDesignApp[data-workbench="ready"]').count()) {

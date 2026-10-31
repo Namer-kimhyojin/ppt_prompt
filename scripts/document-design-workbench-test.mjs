@@ -42,6 +42,7 @@ try {
   page.on("request", (request) => { if (/\/assets\/(?:document-design-images|fonts\/document-design)\//.test(request.url())) documentAssets.push(request.url()); });
   await page.goto(`http://127.0.0.1:${server.address().port}/index.html`, { waitUntil: "networkidle" });
   assert.equal(documentAssets.length, 0, `Inactive document design loaded image/font assets: ${documentAssets.join(", ")}`);
+  await page.locator('[data-tab-group-filter="deckFile"]').click();
   await page.locator("#tabBtnDocumentDesign").click();
   await page.locator("#paneDocumentDesign.active .dw-bundle-card").first().waitFor();
   await page.waitForFunction(() => window.PromptDeckDocumentDesign?.getState && window.PromptDeckDocumentResolver?.resolve && window.PromptDeckDocumentRenderer?.renderPage);

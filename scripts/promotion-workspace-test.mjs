@@ -50,6 +50,7 @@ async function openDetails(selector) {
 }
 try {
   await page.goto(url, { waitUntil: "domcontentloaded" });
+  await page.locator('[data-tab-group-filter="visualAsset"]').click();
   await page.locator("#tabBtnPromotion").click();
   await page.locator("#panePromotion.promo-workspace").waitFor();
   assert.equal(await page.locator("#tabActions").getAttribute("aria-label"), "완성 프롬프트 주요 작업");
@@ -140,6 +141,7 @@ try {
     await page.locator('#tabActions [data-proxy-target="promotionSendImageBtn"]').click();
     await page.locator("#paneSlideImage.active").waitFor();
     assert.equal(await page.locator("#slideImagePrompt").inputValue(), effective, "Generation handoff must match copy");
+    await page.locator('[data-tab-group-filter="visualAsset"]').click();
     await page.locator("#tabBtnPromotion").click();
   } else {
     await page.locator('#tabActions [data-proxy-target="promotionSendImageBtn"]').click();

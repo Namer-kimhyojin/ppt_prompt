@@ -191,8 +191,8 @@ button {
 
 .app-tab-group-switcher { display: none; }
 
-/* 탭 전체가 한 줄에 들어가지 않는 데스크톱에서도 모든 작업군에 접근할 수 있게 한다. */
-@media (min-width: 721px) and (max-width: 1399px) {
+/* 데스크톱에서는 화면 폭과 관계없이 같은 작업군 탐색 방식을 사용한다. */
+@media (min-width: 721px) {
   .app-tab-group-switcher {
     display: flex;
     flex: 0 0 auto;
@@ -319,7 +319,7 @@ button {
   outline-offset: 2px;
 }
 
-@media (min-width: 721px) and (max-width: 1399px) {
+@media (min-width: 721px) {
   .app-tab-group {
     display: none;
   }
@@ -1169,6 +1169,71 @@ button {
   border-color: color-mix(in srgb, var(--accent) 18%, transparent);
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+/* 작업군과 도구가 가로 공간을 나눠 쓰지 않도록 두 줄로 배치한다. */
+@media (min-width: 721px) {
+  :root {
+    --tabs-bar-height: 98px;
+  }
+
+  #appToolNavigation {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    min-height: 98px;
+    max-height: none;
+    gap: 4px;
+    padding: 6px 20px;
+  }
+
+  .app-tab-group-switcher {
+    flex-wrap: wrap;
+    min-width: 0;
+    gap: 4px;
+    padding: 0 0 5px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app-tab-group-switcher button {
+    min-height: 36px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
+
+  .app-tabs {
+    height: auto;
+    min-height: 36px;
+    padding: 4px;
+    overflow-x: hidden;
+  }
+
+  .app-tab-group {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    border-right: 0;
+  }
+
+  .app-tab-group-buttons {
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    gap: 4px;
+    padding: 2px 0;
+  }
+
+  .app-tab-btn {
+    height: auto;
+    min-height: 36px;
+    max-width: 100%;
+    padding: 7px 12px;
+    color: var(--ink-soft);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+  }
 }
 
 @media (max-width: 720px) {

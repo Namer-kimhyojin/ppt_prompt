@@ -131,7 +131,9 @@
   const tabActions = document.getElementById("tabActions");
   const mobileTabActions = document.getElementById("mobileTabActions");
   const tabList = document.querySelector(".app-tabs");
+  const toolNavigation = document.getElementById("appToolNavigation");
   const groupFilters = Array.from(document.querySelectorAll("[data-tab-group-filter]"));
+  const lastTabsByGroup = new Map();
   const appToolMenuButton = document.getElementById("appToolMenuBtn");
   const mobileActiveTool = document.getElementById("mobileActiveTool");
   const ACTIVE_TAB_STORAGE_KEY = "promptdeck.activeTab.v1";
@@ -492,7 +494,7 @@
   function getAvailableTabKeys(groupKey, includeLocked = false) {
     return Object.keys(tabs).filter((key) => {
       const button = tabs[key]?.button;
-      if (!button || getTabGroup(key) !== groupKey) return false;
+      if (!button || button.hidden || button.disabled || getTabGroup(key) !== groupKey) return false;
       if (!includeLocked && button.classList.contains("tab-locked")) return false;
       return window.getComputedStyle(button).display !== "none";
     });
@@ -561,10 +563,13 @@
       const isActive = key === nextTab;
       entry.button.classList.toggle("active", isActive);
       entry.button.setAttribute("aria-selected", isActive ? "true" : "false");
+      entry.button.tabIndex = isActive ? 0 : -1;
       entry.pane.classList.toggle("active", isActive);
     });
 
-    updateGroupNavigation(getTabGroup(nextTab));
+    const groupKey = getTabGroup(nextTab);
+    lastTabsByGroup.set(groupKey, nextTab);
+    updateGroupNavigation(groupKey);
     revealActiveTab(nextTab, options.initial === true);
     if (options.persist !== false && (previousTabKey !== nextTab || options.forcePersist)) {
       persistActiveTab(nextTab);
@@ -590,8 +595,11 @@
       }
       const availableTabs = getAvailableTabKeys(groupKey);
       const currentTabInGroup = getTabGroup(activeTabKey) === groupKey && availableTabs.includes(activeTabKey) ? activeTabKey : null;
+      const rememberedTab = lastTabsByGroup.get(groupKey);
       const configuredDefault = defaultTabsByGroup[groupKey];
-      const nextTab = currentTabInGroup || (availableTabs.includes(configuredDefault) ? configuredDefault : availableTabs[0]);
+      const nextTab = currentTabInGroup
+        || (availableTabs.includes(rememberedTab) ? rememberedTab : null)
+        || (availableTabs.includes(configuredDefault) ? configuredDefault : availableTabs[0]);
       if (nextTab) switchTab(nextTab);
     });
   });
@@ -602,10 +610,12 @@
 
   document.getElementById("legacyGoCommonBtn")?.addEventListener("click", () => switchTab(DEFAULT_TAB_KEY));
 
-  tabList?.addEventListener("keydown", (event) => {
-    if (!event.target.matches("[role='tab']")) return;
+  toolNavigation?.addEventListener("keydown", (event) => {
+    const isTab = event.target.matches("[role='tab']");
+    if (!isTab && !event.target.matches("[data-tab-group-filter]")) return;
     const group = event.target.closest("[data-tab-group]");
-    const buttons = Array.from(group?.querySelectorAll("[role='tab']") || []);
+    const buttons = (isTab ? Array.from(group?.querySelectorAll("[role='tab']") || []) : groupFilters)
+      .filter((button) => !button.hidden && !button.disabled && button.getClientRects().length > 0);
     const currentIndex = buttons.indexOf(event.target);
     if (currentIndex < 0) return;
     let nextIndex = null;
@@ -615,7 +625,7 @@
     if (event.key === "End") nextIndex = buttons.length - 1;
     if (nextIndex === null) return;
     event.preventDefault();
-    buttons[nextIndex].focus();
+    buttons[nextIndex].focus({ preventScroll: true });
     buttons[nextIndex].click();
   });
 
@@ -646,6 +656,19 @@
     revealActiveTabAfterResize();
     if (!window.matchMedia("(max-width: 720px)").matches) setMobileToolNavigation(false);
   }, { passive: true });
+
+  // 줄바꿈이나 관리자 메뉴명 변경 후에도 본문 고정 영역이 메뉴와 겹치지 않게 한다.
+  if (toolNavigation && window.ResizeObserver) {
+    const navigationObserver = new ResizeObserver(() => {
+      if (!window.matchMedia("(min-width: 721px)").matches) {
+        document.documentElement.style.removeProperty("--tabs-bar-height");
+        return;
+      }
+      const height = Math.ceil(toolNavigation.getBoundingClientRect().height);
+      document.documentElement.style.setProperty("--tabs-bar-height", `${height}px`);
+    });
+    navigationObserver.observe(toolNavigation);
+  }
 
   const slideDocumentPane = tabs.slideDocument.pane;
   if (slideDocumentPane) {

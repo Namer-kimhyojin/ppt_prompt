@@ -1,5 +1,5 @@
 /* PromptDeck UI system final layer
-   Action docks belong to the right-side work panel and must never float over content. */
+   Action docks remain inside the right-side work panel, below the app navigation. */
 :root {
   --type-min: 12px;
   --type-caption: 12px;
@@ -220,6 +220,12 @@ body {
 }
 
 @media (min-width: 961px) {
+  #tabActions.tab-action-dock {
+    position: sticky !important;
+    top: calc(var(--app-header-height) + var(--tabs-bar-height) + 8px) !important;
+    z-index: 18;
+  }
+
   #paneDesigner .preview-panel.tab-action-host,
   #paneCommonPrompt .cpd-summary-inner.tab-action-host,
   #paneGenerator .gen-result-stack.tab-action-host,
