@@ -360,7 +360,7 @@ try {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto(`${origin}/features`, { waitUntil: "domcontentloaded" });
-    assert.equal(await page.locator(".landing-tool").count(), 14);
+    assert.equal(await page.locator(".landing-tool").count(), 15);
     assert.equal(await page.locator('#tool-motionPrompt ol > li').count(), 3);
     assert.equal(await page.locator('.public-nav a[href="/features#tool-motionPrompt"]').count(), 1);
     await page.locator("#tool-motionPrompt summary").click();

@@ -614,11 +614,11 @@ async function verifyLandingMenuLinks(viewport) {
     kind: item.querySelector(".landing-tool-kind")?.textContent.trim(),
     href: item.querySelector("[data-tool-link]")?.getAttribute("href"),
   })));
-  if (tools.length !== 14 || new Set(tools.map((tool) => tool.key)).size !== 14
+  if (tools.length !== 15 || new Set(tools.map((tool) => tool.key)).size !== 15
     || tools.filter((tool) => tool.group === "deckImage").length !== 3
     || tools.filter((tool) => tool.group === "deckFile").length !== 2
     || tools.filter((tool) => tool.group === "visualAsset").length !== 4
-    || tools.filter((tool) => tool.group === "motionVideo").length !== 1
+    || tools.filter((tool) => tool.group === "motionVideo").length !== 2
     || tools.filter((tool) => tool.group === "printOutput").length !== 2
     || tools.filter((tool) => tool.group === "styleHelper").length !== 2
     || tools.some((tool) => tool.steps !== 3 || !tool.output || !tool.kind || tool.href !== `/app?tab=${tool.key}`)) {

@@ -51,7 +51,8 @@
       href: "/features#tools-motionVideo",
       desc: "연출 샘플과 영상 제작 프롬프트",
       items: [
-        ["모션 애니메이션", "/features#tool-motionPrompt"]
+        ["모션 애니메이션", "/features#tool-motionPrompt"],
+        ["영상 에셋", "/features#tool-videoAssets"]
       ]
     },
     {

@@ -1,6 +1,14 @@
 // 결과물 형식 기준 작업군 전환: 슬라이드 이미지 / 문서 파일 / 홍보 이미지 / 영상·모션 / 인쇄물 / 스타일
 (function () {
   const tabs = {
+    videoAssets: {
+      button: document.getElementById("tabBtnVideoAssets"),
+      pane: document.getElementById("paneVideoAssets"),
+      group: "motionVideo",
+      actions: "videoAssets",
+      actionHost: ".va-result-stack",
+      stickyActionPanel: false,
+    },
     motionPrompt: {
       button: document.getElementById("tabBtnMotionPrompt"),
       pane: document.getElementById("paneMotionPrompt"),
@@ -164,6 +172,7 @@
     material: { label: "스타일 재료", icon: "🎨" },
   };
   const outputNotes = {
+    videoAssets: ["promptImage", "같은 영상의 공통 화풍을 적용한 인물·배경·도구 시트 이미지 프롬프트입니다. 기준 이미지는 이미지 AI에 함께 첨부하세요."],
     motionPrompt: ["promptVideo", "영상의 구성 방향과 스타일을 정하면, Claude·GPT에게 상세 타임스토리·콘티·대본을 요청하는 프롬프트를 만듭니다."],
     commonPrompt: ["promptImage", "복사해서 이미지 AI에 붙여넣는 공통 디자인 가이드입니다."],
     generator: ["promptImage", "복사해서 이미지 AI에 붙여넣는 장별 프롬프트입니다."],
@@ -206,6 +215,13 @@
   const designerActions = tabActions ? Array.from(tabActions.children) : [];
   let currentActionHost = tabActions?.parentElement || null;
   const actionSets = {
+    videoAssets: [
+      { label: "현재 시트 복사", targetId: "vaCopyBtn", className: "btn primary" },
+      { label: "3종 모두 복사", targetId: "vaCopyAllBtn", className: "btn secondary" },
+      { label: "샘플 채우기", targetId: "vaSampleBtn", className: "btn secondary" },
+      { label: "TXT 저장", targetId: "vaDownloadBtn", className: "btn ghost", placement: "more" },
+      { label: "초기화", targetId: "vaResetBtn", className: "btn ghost", placement: "more" },
+    ],
     motionPrompt: [
       { label: "다음: 스타일 선택", targetId: "motionPrimaryBtn", className: "btn primary" },
       { label: "TXT 저장", targetId: "motionDownloadBtn", className: "btn secondary" },
@@ -308,6 +324,7 @@
   };
 
   const mobilePrimaryTargets = {
+    videoAssets: "vaCopyBtn",
     motionPrompt: "motionPrimaryBtn",
     pptxPrompt: "pptxPromptCopyBtn",
     generator: "genGenerateBtn",
