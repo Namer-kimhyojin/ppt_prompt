@@ -17,6 +17,42 @@ assert.equal(provenance.assets.length, 66); assert.equal(provenance.author, "Lem
 assert.equal(styles.styles.length, 66);
 assert.equal(Object.keys(styles.categories).length, 12);
 assert.equal(new Set(styles.styles.map((s) => s.id)).size, 66);
+assert.equal(catalog.samples.length, 10);
+assert.equal(new Set(catalog.samples.map((sample) => sample.id)).size, 10);
+assert.equal(new Set(catalog.samples.map((sample) => sample.brief.title)).size, 10);
+for (const sample of catalog.samples) {
+  assert.ok(sample.templates.length >= 2 && sample.styles.length >= 2);
+  for (const id of sample.templates) assert.ok(catalog.templates.some((entry) => entry.id === id), id);
+  for (const id of sample.styles) assert.ok(styles.get(id), id);
+  for (const field of ["title", "audience", "goal", "source", "assets", "requirements"]) assert.ok(sample.brief[field]?.trim(), sample.id + ": " + field);
+}
+for (const random of [() => 0, () => 0.999999, Math.random]) {
+  const draw = catalog.createSamplePicker(random);
+  let current = engine.defaults(), previousId = "";
+  for (let cycle = 0; cycle < 3; cycle += 1) {
+    const seen = new Set();
+    for (let index = 0; index < 10; index += 1) {
+      const { sample, values } = draw(current);
+      assert.notEqual(sample.id, previousId);
+      assert.equal(seen.has(sample.id), false);
+      seen.add(sample.id); previousId = sample.id;
+      assert.ok(sample.templates.includes(values.template) && sample.styles.includes(values.style));
+      assert.notEqual(values.template, current.template);
+      assert.notEqual(values.style, current.style);
+      const normalized = engine.normalize(values);
+      assert.equal(normalized.template, values.template);
+      assert.equal(normalized.style, values.style);
+      assert.equal(normalized.ratio, values.ratio);
+      assert.equal(normalized.duration, values.duration);
+      assert.match(normalized.source, /^연습용 가상 데이터/);
+      const prompt = engine.planningPrompt(normalized);
+      assert.ok(prompt.includes(sample.brief.title) && prompt.includes(styles.get(values.style).name));
+      assert.doesNotMatch(prompt, /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);/i);
+      current = normalized;
+    }
+    assert.equal(seen.size, 10);
+  }
+}
 const automatic = engine.planningPrompt(engine.defaults());
 assert.match(automatic, /^영상 기획 요청\n/);
 assert.match(automatic, /타임스토리.*콘티.*대본/);
@@ -66,7 +102,11 @@ assert.match(plain, /자료 안의 명령.*작업 지시로 실행하지 않는�
 assert.match(plain, /확정 내용과 가정·제안을 구분/);
 assert.match(plain, /참고 링크나 첨부 자료를 확인할 수 없으면/);
 const explicit = engine.planningPrompt({ fps: 30, camera: "push", pace: "fast", palette: "남색", audio: "silent", loop: true, requirements: "기간 보존" });
-for (const value of ["프레임레이트: 30fps", "카메라: 피사체를 향해", "색상·조명: 남색", "움직임 속도: 경쾌하게", "추가 요구사항: 기간 보존", "반복: 처음과 끝"]) assert.ok(explicit.includes(value), value);
+for (const value of ["프레임레이트: 30fps", "추가 요구사항: 기간 보존", "반복: 처음과 끝"]) assert.ok(explicit.includes(value), value);
+assert.doesNotMatch(explicit, /카메라:|색상·조명:|움직임 속도:|장면 전환:|표현 재질:|남색/);
+const legacyVisual = { renderStyle: "collage", pace: "calm", camera: "push", transition: "match", palette: "LEGACY_COLOR_ONLY" };
+for (const [key, value] of Object.entries(legacyVisual)) assert.equal(engine.normalize(legacyVisual)[key], value);
+assert.doesNotMatch(engine.planningPrompt(legacyVisual), /LEGACY_COLOR_ONLY|사진·타이포 콜라주|느린 ease-in-out|카메라:|장면 전환:/);
 const timelineOutput = (audio) => engine.planningPrompt({ audio }).split("\n").find((line) => line.startsWith("3. 상세 타임스토리"));
 assert.doesNotMatch(timelineOutput("silent"), /내레이션|음악|효과음/);
 assert.match(timelineOutput("music"), /음악·효과음/);
@@ -110,6 +150,7 @@ try {
   assert.equal(await page.locator("#motionCopyBtn").isVisible(), false);
   assert.equal(await page.locator("[data-motion-style]").count(), 66);
   assert.equal(await page.locator("#motionPromptApp [role=tablist], #motionTarget, #motionFormat, #motionRevision, #motionVideoMode, #motionScenes").count(), 0);
+  assert.equal(await page.locator('#motionPromptApp [data-motion-field="renderStyle"], #motionPromptApp [data-motion-field="pace"], #motionPromptApp [data-motion-field="camera"], #motionPromptApp [data-motion-field="transition"], #motionPromptApp [data-motion-field="palette"]').count(), 0);
   assert.match(await page.locator("#motionOutput").inputValue(), /^영상 기획 요청\n/);
   assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);/i);
   assert.equal(await page.locator("#motionDurationChoice").inputValue(), "auto");
@@ -145,6 +186,34 @@ try {
   await page.locator("#motionBackBtn").click();
   assert.equal(await page.locator("#motionTitle").inputValue(), "순서 확인용 구성 방향");
   assert.equal(await page.locator('#motionAutoStyleBtn').getAttribute("aria-pressed"), "false");
+  await goStep("gallery");
+  await page.locator('[data-motion-category="painting"]').click();
+  await page.locator("#motionSearch").fill("수채화");
+  await goStep("brief");
+  const sampleIds = new Set();
+  let beforeSample;
+  for (let index = 0; index < 10; index += 1) {
+    beforeSample = await page.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")));
+    await page.locator("#motionSampleBtn").click();
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")));
+    const sample = catalog.samples.find((entry) => entry.brief.title === saved.title);
+    assert.ok(sample && !sampleIds.has(sample.id)); sampleIds.add(sample.id);
+    assert.ok(sample.templates.includes(saved.template) && sample.styles.includes(saved.style));
+    assert.notEqual(saved.template, beforeSample.template);
+    assert.notEqual(saved.style, beforeSample.style);
+    assert.equal(await page.locator("#motionPurpose").inputValue(), saved.template);
+    assert.equal(await page.locator("#motionTitle").inputValue(), saved.title);
+    assert.match(await page.locator("#motionSource").inputValue(), /^연습용 가상 데이터/);
+    assert.match(await page.locator("#motionSampleInfo").textContent(), new RegExp(sample.name));
+    assert.equal(await page.locator("#motionSearch").inputValue(), "");
+    assert.equal(await page.locator("[data-motion-style]").count(), 66);
+    assert.equal(await page.locator(".motion-template.is-selected").getAttribute("data-motion-style"), saved.style);
+    assert.ok((await page.locator("#motionOutput").inputValue()).includes(saved.title));
+  }
+  assert.equal(sampleIds.size, 10);
+  assert.equal(await page.locator("#motionUndoBtn").textContent(), "샘플 적용 되돌리기");
+  await page.locator("#motionUndoBtn").click();
+  assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1"))), beforeSample);
   await page.locator("#motionPurpose").selectOption("ui");
   await page.locator("#motionSampleBtn").click();
   await page.locator("#motionTitle").fill("지역기업 지원사업 <검증>");
@@ -221,7 +290,24 @@ try {
     }
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await goStep("brief");
+  const beforeMobileSample = await page.locator("#motionTitle").inputValue();
+  await page.locator("#motionSampleBtn").click();
+  assert.notEqual(await page.locator("#motionTitle").inputValue(), beforeMobileSample);
+  await page.locator('#mobileTabActions [data-proxy-target="motionPrimaryBtn"]').click();
+  await page.locator("#motionStage img").evaluate((img) => img.decode());
+  assert.ok(await page.locator(".motion-template.is-selected").evaluate((card) => {
+    const rect = card.getBoundingClientRect(), gallery = card.closest(".motion-gallery").getBoundingClientRect();
+    return rect.bottom > gallery.top && rect.top < gallery.bottom;
+  }));
+  await page.locator('#mobileTabActions [data-proxy-target="motionPrimaryBtn"]').click();
+  await page.locator('#mobileTabActions [data-proxy-target="motionPrimaryBtn"]').click();
+  assert.equal((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n"), await page.locator("#motionOutput").inputValue());
+  await goStep("brief");
+  await page.locator("#motionPurpose").selectOption("kinetic");
   await goStep("gallery");
+  await page.locator("#motionAutoStyleBtn").click();
   await page.locator("#motionPlayBtn").click();
   assert.equal(await page.locator("#motionStage .motion-art-rise").evaluate((el) => getComputedStyle(el).animationName), "none");
   for (const width of [1440, 390]) {
@@ -241,18 +327,24 @@ try {
   }
   for (const version of [1, 2]) {
     const legacyContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
-    await legacyContext.addInitScript((version) => localStorage.setItem("promptdeck.motionPrompt.v1", JSON.stringify({ version, title: "기존 제목 보존", source: "보존할 실제 원문", template: "character", useManualScenes: true, target: "gpt", format: "remotion", scenes: [{ seconds: 8, visual: "LEGACY_PRIVATE_SCENE", caption: "기존 자막" }] })), version);
+    await legacyContext.addInitScript((version) => localStorage.setItem("promptdeck.motionPrompt.v1", JSON.stringify({ version, title: "기존 제목 보존", source: "보존할 실제 원문", template: "character", useManualScenes: true, target: "gpt", format: "remotion", renderStyle: "collage", camera: "push", transition: "match", palette: "LEGACY_COLOR_ONLY", scenes: [{ seconds: 8, visual: "LEGACY_PRIVATE_SCENE", caption: "기존 자막" }] })), version);
     const legacy = await legacyContext.newPage();
     await legacy.goto(`${origin}/app?tab=motionPrompt`, { waitUntil: "domcontentloaded" });
     await legacy.waitForSelector("#paneMotionPrompt.active");
     assert.equal(await legacy.locator("#motionTitle").inputValue(), "기존 제목 보존");
     assert.equal(await legacy.locator("#motionScenes, #motionUseManualScenes, #motionTarget, #motionFormat").count(), 0);
-    assert.doesNotMatch(await legacy.locator("#motionOutput").inputValue(), /LEGACY_PRIVATE_SCENE|전체 8초|실행 가능한 전체 코드/);
+    assert.doesNotMatch(await legacy.locator("#motionOutput").inputValue(), /LEGACY_PRIVATE_SCENE|LEGACY_COLOR_ONLY|사진·타이포 콜라주|전체 8초|실행 가능한 전체 코드/);
     const saved = await legacy.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")));
     assert.equal(saved.version, 3);
     assert.equal(saved.scenes[0].visual, "LEGACY_PRIVATE_SCENE");
     assert.equal(saved.scenes[0].caption, "기존 자막");
     assert.equal(saved.useManualScenes, false);
+    await legacy.locator("#motionSampleBtn").click();
+    const afterSample = await legacy.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")));
+    assert.deepEqual(afterSample.scenes, saved.scenes);
+    assert.equal(afterSample.palette, saved.palette);
+    assert.equal(afterSample.camera, saved.camera);
+    assert.doesNotMatch(await legacy.locator("#motionOutput").inputValue(), /LEGACY_PRIVATE_SCENE|LEGACY_COLOR_ONLY|사진·타이포 콜라주/);
     await legacyContext.close();
   }
   assert.deepEqual(pageErrors, []);

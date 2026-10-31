@@ -4,11 +4,12 @@
   const pane = document.getElementById("paneMotionPrompt");
   if (!root || !pane) return;
   const engine = window.PromptDeckMotionEngine, catalog = window.PromptDeckMotionCatalog, styleCatalog = window.PromptDeckMotionStyles;
-  if (!engine || !catalog || !styleCatalog) { root.textContent = "모션 스타일을 불러오지 못했습니다. 새로고침해 주세요."; return; }
+  if (!engine || !catalog || !styleCatalog || typeof catalog.createSamplePicker !== "function") { root.textContent = "모션 스타일을 불러오지 못했습니다. 새로고침해 주세요."; return; }
   const KEY = "promptdeck.motionPrompt.v1";
   const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const options = (values) => Object.entries(values).map(([value, label]) => `<option value="${esc(value)}">${esc(label)}</option>`).join("");
   let state = engine.defaults(), storageNotice = "", undoState = null;
+  const nextSample = catalog.createSamplePicker();
   try {
     const saved = localStorage.getItem(KEY);
     if (saved) { const value = JSON.parse(saved); if (![1, 2, 3].includes(value?.version)) throw new Error("version"); state = engine.normalize(value); if (value.version < 3) storageNotice = "기존 입력은 보관했습니다. 구성 방향과 스타일을 담은 기획 요청문으로 통합했습니다."; }
@@ -44,15 +45,14 @@
           <p class="motion-help motion-library-note">참고 이미지: <a href="https://github.com/lemomo-ai/lemo-opuscar" target="_blank" rel="noopener noreferrer">LemoLab · Lemo-Opuscar</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. 원본 스틸을 축소해 표시하며, 사용자가 입력한 영상의 생성 결과가 아닙니다.</p>
         </section>
         <section class="motion-editor" aria-labelledby="motionBriefTitle">
-          <div class="motion-section-heading"><div><span class="motion-step">01 / YOUR BRIEF</span><h3 id="motionBriefTitle">먼저 구성 방향을 정해주세요</h3></div><button type="button" class="motion-text-btn" id="motionSampleBtn">샘플 채우기</button></div>
-          <div class="motion-fields"><label class="motion-field">영상 용도<select id="motionPurpose" data-motion-field="template">${options({ auto: "AI가 목적에 맞는 영상 용도 제안", ...Object.fromEntries(catalog.templates.map((t) => [t.id, t.name])) })}</select></label><label class="motion-field">영상 주제·제목<input id="motionTitle" data-motion-field="title" maxlength="4000" placeholder="예: 지역기업 지원사업 참여 안내"></label><div class="motion-two"><label class="motion-field">시청 대상<input data-motion-field="audience" maxlength="4000" placeholder="예: 기업 담당자·참가자"></label><label class="motion-field">전달 목표·행동<input data-motion-field="goal" maxlength="4000" placeholder="예: 사업을 이해하고 신청하기"></label></div>
+          <div class="motion-section-heading"><div><span class="motion-step">01 / YOUR BRIEF</span><h3 id="motionBriefTitle">먼저 구성 방향을 정해주세요</h3></div><button type="button" class="motion-text-btn" id="motionSampleBtn" data-proxy-label="샘플 데이터 채우기">샘플 데이터 채우기</button></div>
+          <div class="motion-fields"><p id="motionSampleInfo" class="motion-help" role="status"></p><label class="motion-field">영상 용도<select id="motionPurpose" data-motion-field="template">${options({ auto: "AI가 목적에 맞는 영상 용도 제안", ...Object.fromEntries(catalog.templates.map((t) => [t.id, t.name])) })}</select></label><label class="motion-field">영상 주제·제목<input id="motionTitle" data-motion-field="title" maxlength="4000" placeholder="예: 지역기업 지원사업 참여 안내"></label><div class="motion-two"><label class="motion-field">시청 대상<input data-motion-field="audience" maxlength="4000" placeholder="예: 기업 담당자·참가자"></label><label class="motion-field">전달 목표·행동<input data-motion-field="goal" maxlength="4000" placeholder="예: 사업을 이해하고 신청하기"></label></div>
           <label class="motion-field">원문·핵심 내용<textarea id="motionSource" data-motion-field="source" rows="5" maxlength="20000" placeholder="넣을 문구, 실제 일정, 특징, 수치와 출처를 입력하세요. 비워 두면 기본 연출 요청문이 만들어집니다."></textarea></label>
           <label class="motion-field">사용할 자료·보존할 요소<textarea id="motionAssets" data-motion-field="assets" rows="2" maxlength="4000" placeholder="예: 첨부 로고의 형태·색상 보존, 제품 사진 3장, 실제 UI 화면, 원본 인터뷰 음성"></textarea></label><p class="motion-help">원본 파일은 기획 요청문과 함께 Claude·GPT에 첨부하세요. 이 화면에서는 파일을 업로드하지 않습니다.</p>
           <div class="motion-two"><label class="motion-field">화면비<select id="motionRatio" data-motion-field="ratio">${options({ "16:9": "16:9 · 가로 영상", "9:16": "9:16 · 쇼츠·릴스", "1:1": "1:1 · 정사각", "4:5": "4:5 · 세로 피드" })}</select></label><label class="motion-field">희망 길이<select id="motionDurationChoice">${options({ auto: "AI가 적정 길이 제안", 15: "약 15초", 30: "약 30초", 60: "약 1분", 90: "약 1분 30초", 120: "약 2분", custom: "직접 지정" })}</select><input id="motionDuration" type="number" min="3" max="600" step="1" aria-label="희망 영상 길이 (초)" hidden></label></div>
-          <details class="motion-details"><summary>연출·오디오 세부 설정</summary><div class="motion-fields">
-            <label class="motion-field">표현 재질<select id="motionRenderStyle" data-motion-field="renderStyle">${options(engine.styles)}</select></label>
-            <div class="motion-two"><label class="motion-field">움직임 속도<select data-motion-field="pace">${options({ calm: "차분하게", balanced: "명료하게", fast: "경쾌하게" })}</select></label><label class="motion-field">프레임레이트<select data-motion-field="fps">${options({ auto: "AI가 표현 방식에 맞춰 제안", 24: "24 fps", 25: "25 fps", 30: "30 fps", 60: "60 fps" })}</select></label><label class="motion-field">카메라<select data-motion-field="camera">${options({ auto: "AI 위임 · 장면에 맞게", locked: "고정", push: "느린 전진", pan: "수평 이동", orbit: "낮은 강도의 선회", overhead: "탑뷰" })}</select></label><label class="motion-field">장면 전환<select data-motion-field="transition">${options(engine.transitions)}</select></label></div>
-            <label class="motion-field">오디오<select id="motionAudio" data-motion-field="audio">${options({ auto: "AI가 적합한 음향·내레이션 제안", silent: "무음", music: "음악·효과음", narration: "내레이션 + 음악", source: "원본 음성 유지" })}</select></label><label class="motion-field">색상·조명<input data-motion-field="palette" maxlength="4000" placeholder="비우면 스타일과 주제에 맞춰 AI가 제안"></label>
+          <details class="motion-details"><summary>오디오·출력 세부 조건</summary><div class="motion-fields">
+            <p class="motion-help">재질·속도·카메라·전환·색상은 다음 단계에서 고른 스타일을 바탕으로 AI가 제안합니다.</p>
+            <div class="motion-two"><label class="motion-field">오디오<select id="motionAudio" data-motion-field="audio">${options({ auto: "AI가 적합한 음향·내레이션 제안", silent: "무음", music: "음악·효과음", narration: "내레이션 + 음악", source: "원본 음성 유지" })}</select></label><label class="motion-field">프레임레이트<select data-motion-field="fps">${options({ auto: "AI가 표현 방식에 맞춰 제안", 24: "24 fps", 25: "25 fps", 30: "30 fps", 60: "60 fps" })}</select></label></div>
             <label class="motion-field">장면 사이에 유지할 요소<input id="motionContinuity" data-motion-field="continuity" maxlength="4000" placeholder="예: 같은 캐릭터·의상, 왼쪽에서 오른쪽으로 이동, 파란 원이 다음 장면의 버튼으로 연결"></label>
             <label class="motion-check"><input id="motionLoop" type="checkbox" data-motion-field="loop">처음과 끝이 이어지는 반복 영상</label><label class="motion-field">추가 요구사항<textarea id="motionRequirements" data-motion-field="requirements" maxlength="4000" rows="2" placeholder="예: 중앙에 로고 여백, 마지막 안내 3초 유지, 과장된 회전 금지"></textarea></label>
           </div></details>
@@ -94,6 +94,10 @@
     q("#motionDownloadBtn").hidden = step !== "result";
     q("#motionSampleBtn").hidden = step !== "brief";
     if (step !== "gallery") setPlaying(false);
+    if (step === "gallery") {
+      const gallery = q("#motionGallery"), selected = q(".motion-template.is-selected");
+      gallery.scrollTop = selected ? gallery.scrollTop + selected.getBoundingClientRect().top - gallery.getBoundingClientRect().top - 3 : 0;
+    }
     window.PromptDeckTabs?.syncHeaderActionStates();
     q(".motion-step-nav").scrollIntoView({ block: "start" });
     if (focusHeading) {
@@ -146,6 +150,9 @@
     setPlaying(false);
   }
   function updateOutput() {
+    const sample = catalog.samples.find((entry) => entry.brief.title === state.title);
+    const sampleInfo = sample ? `가상 샘플: ${sample.name} · ${styleCatalog.get(state.style)?.name || "AI 스타일 추천"}. 실제 사용 전 문구·수치를 교체하세요.` : "10종의 가상 샘플을 무작위로 채우고 영상 용도·스타일도 함께 지정합니다.";
+    if (q("#motionSampleInfo").textContent !== sampleInfo) q("#motionSampleInfo").textContent = sampleInfo;
     q("#motionSpecs").textContent = `${state.ratio} · ${state.duration === "auto" ? "길이·장면 수는 AI가 제안" : `희망 ${state.duration}초 · 장면 수는 AI가 제안`}${state.fps === "auto" ? "" : ` · ${state.fps}fps`}`;
     q("#motionRequestSummary").textContent = `${state.title.trim() || "주제는 제공 자료에서 결정"} · ${engine.getTemplate(state.template).name} · ${styleCatalog.get(state.style)?.name || "스타일은 AI 추천"} · ${state.ratio} · ${state.duration === "auto" ? "길이는 AI 제안" : `희망 ${state.duration}초`}`;
     q("#motionOutput").value = engine.planningPrompt(state);
@@ -202,15 +209,16 @@
     else q("#motionCopyBtn").click();
   });
   q("#motionSampleBtn").addEventListener("click", () => {
-    const template = engine.getTemplate(state.template);
-    state.title = template.sample; state.audience = "이 주제에 관심 있는 일반 시청자"; state.goal = "핵심 내용을 이해하고 다음 행동으로 연결하기";
-    state.source = `영상 주제: ${template.sample}\n포함할 소재: ${template.beats.join(", ")}\n핵심 메시지: 제공한 정보를 쉽고 명확하게 전달합니다.\n실제 일정·수치·기관명·제품명은 확정 자료로 교체하세요.`;
-    state.assets = "사용할 원본 이미지·로고·영상·음원은 기획 요청문과 함께 별도로 첨부 예정";
-    state.ratio = template.ratio || "16:9"; state.loop = template.id === "loop"; if (template.id === "music") state.audio = "music";
-    refresh(); status("선택한 연출의 연습용 샘플을 채웠습니다. 실제 문구와 자료로 바꿔주세요.");
+    const selection = nextSample(state);
+    undoState = JSON.parse(JSON.stringify(state));
+    const archived = Object.fromEntries(["scenes", "revision", "target", "format", "videoMode", "renderStyle", "pace", "camera", "transition", "palette"].map((key) => [key, state[key]]));
+    state = engine.normalize({ ...engine.defaults(), ...archived, ...selection.values });
+    category = "all"; query = ""; q("#motionSearch").value = "";
+    q("#motionUndoBtn").textContent = "샘플 적용 되돌리기"; q("#motionUndoBtn").hidden = false;
+    refresh(); status(`${selection.sample.name} 가상 샘플과 ${engine.getTemplate(state.template).name} · ${styleCatalog.get(state.style).name}를 채웠습니다.`);
   });
-  q("#motionResetBtn").addEventListener("click", () => { undoState = JSON.parse(JSON.stringify(state)); state = engine.defaults(); q("#motionUndoBtn").hidden = false; refresh(); status("입력을 초기화했습니다. ‘초기화 되돌리기’로 복구할 수 있습니다."); });
-  q("#motionUndoBtn").addEventListener("click", () => { if (!undoState) return; state = undoState; undoState = null; q("#motionUndoBtn").hidden = true; refresh(); status("초기화 전 입력을 복구했습니다."); });
+  q("#motionResetBtn").addEventListener("click", () => { undoState = JSON.parse(JSON.stringify(state)); state = engine.defaults(); q("#motionUndoBtn").textContent = "초기화 되돌리기"; q("#motionUndoBtn").hidden = false; refresh(); status("입력을 초기화했습니다. ‘초기화 되돌리기’로 복구할 수 있습니다."); });
+  q("#motionUndoBtn").addEventListener("click", () => { if (!undoState) return; state = undoState; undoState = null; q("#motionUndoBtn").hidden = true; refresh(); status("변경 전 입력과 스타일을 복구했습니다."); });
   q("#motionCopyBtn").addEventListener("click", async () => {
     const text = q("#motionOutput").value;
     try { await navigator.clipboard.writeText(text); status("현재 프롬프트를 복사했습니다."); }
