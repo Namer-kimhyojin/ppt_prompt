@@ -334,6 +334,9 @@ async function verifyViewport(label, viewport) {
     if ((await page.locator("#labelSheetPromptItemSelect option").count()) !== 8) failures.push(`${label}: 정적판 첫 페이지의 개별 라벨 프롬프트가 분리되지 않았습니다.`);
     if (!(await visible("#labelSheetCopyAllPromptsBtn")) || !(await visible("#labelSheetCopyItemPromptBtn"))) failures.push(`${label}: 정적판 전체 페이지·개별 프롬프트 복사 기능이 숨겨졌습니다.`);
   }
+  const labelPageOverflows = await page.evaluate(() => document.documentElement.scrollHeight > window.innerHeight + 1
+    && getComputedStyle(document.body).overflowY !== "hidden");
+  if (labelPageOverflows) failures.push(`${label}: 라벨 작업 화면이 사용 가능한 높이를 넘어 본문에 세로 스크롤을 만듭니다.`);
   if (await page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])").count()) {
     await page.locator("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden]) [data-label-workspace-drawer-close]").first().click();
     await page.waitForFunction(() => !document.querySelector("#paneLabelSheet .label-sheet-workspace-drawer:not([hidden])"));
@@ -677,6 +680,7 @@ try {
   await runPhase("landing menu mobile", () => verifyLandingMenuLinks({ width: 390, height: 844 }));
   await runPhase("wide desktop", () => verifyViewport("wide desktop", { width: 1920, height: 800 }));
   await runPhase("desktop", () => verifyViewport("desktop", { width: 1440, height: 1000 }));
+  await runPhase("short desktop", () => verifyViewport("short desktop", { width: 1280, height: 720 }));
   await runPhase("mobile", () => verifyViewport("mobile", { width: 390, height: 844 }));
   await runPhase("compact phone", () => verifyCompactLabelViewport("compact phone", { width: 375, height: 667 }));
   await runPhase("compact landscape", () => verifyCompactLabelViewport("compact landscape", { width: 844, height: 390 }));

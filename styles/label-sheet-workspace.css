@@ -19,7 +19,7 @@
   width: 100%;
   max-width: none;
   height: var(--label-workspace-available-height, calc(100dvh - var(--app-header-height) - var(--tabs-bar-height)));
-  min-height: 560px;
+  min-height: min(560px, var(--label-workspace-available-height, calc(100dvh - var(--app-header-height) - var(--tabs-bar-height))));
   grid-template-rows:
     var(--label-workspace-topbar-height)
     minmax(0, 1fr)
