@@ -545,7 +545,7 @@ async function verifyLandingViewport(label, viewport) {
   const starts = await page.locator('[data-start-tool]').evaluateAll((links) => links.map((link) => ({
     key: link.dataset.startTool, href: link.getAttribute('href'),
   })));
-  if (starts.length !== 8 || new Set(starts.map((link) => link.key)).size !== 8
+  if (starts.length !== 9 || new Set(starts.map((link) => link.key)).size !== 9
     || starts.some((link) => link.href !== `/app?tab=${link.key}`)) {
     failures.push(`${label}: 작업 바로가기 대상이 잘못되었습니다.`);
   }
@@ -614,10 +614,11 @@ async function verifyLandingMenuLinks(viewport) {
     kind: item.querySelector(".landing-tool-kind")?.textContent.trim(),
     href: item.querySelector("[data-tool-link]")?.getAttribute("href"),
   })));
-  if (tools.length !== 13 || new Set(tools.map((tool) => tool.key)).size !== 13
+  if (tools.length !== 14 || new Set(tools.map((tool) => tool.key)).size !== 14
     || tools.filter((tool) => tool.group === "deckImage").length !== 3
     || tools.filter((tool) => tool.group === "deckFile").length !== 2
     || tools.filter((tool) => tool.group === "visualAsset").length !== 4
+    || tools.filter((tool) => tool.group === "motionVideo").length !== 1
     || tools.filter((tool) => tool.group === "printOutput").length !== 2
     || tools.filter((tool) => tool.group === "styleHelper").length !== 2
     || tools.some((tool) => tool.steps !== 3 || !tool.output || !tool.kind || tool.href !== `/app?tab=${tool.key}`)) {

@@ -10,6 +10,7 @@
     "dev:gemini": "node server/start-gemini.js",
     "smoke:test": "node scripts/smoke-test.mjs",
     "pptx-prompt:test": "node scripts/pptx-prompt-test.mjs",
+    "motion:test": "node scripts/motion-prompt-test.mjs",
     "diagram:test": "node scripts/data-diagram-smoke-test.mjs",
     "document-design:previews": "node scripts/generate-document-design-previews.mjs",
     "document-design:workbench:previews": "node scripts/generate-document-workbench-previews.mjs",

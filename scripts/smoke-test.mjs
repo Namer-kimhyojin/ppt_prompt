@@ -510,8 +510,9 @@ async function runSmokeTest() {
     record(new URL(page.url()).pathname === "/", "PromptDeck brand title click did not open the default homepage", failures);
     await page.goto(`${server.baseUrl}/index.html`, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.waitForSelector("#paneCommonPrompt.active");
-    record((await page.locator(".app-tab-group").count()) === 5, "Primary tools were not organized into five output-format groups", failures);
-    record((await page.locator("[data-tab-group-filter]").count()) === 5, "Purpose-group switcher was incomplete", failures);
+    record((await page.locator(".app-tab-group").count()) === 6, "Primary tools were not organized into six output-format groups", failures);
+    record((await page.locator("[data-tab-group-filter]").count()) === 6, "Purpose-group switcher was incomplete", failures);
+    record((await page.locator('[data-tab-group-filter="motionVideo"]').textContent()).trim() === "영상·모션" && (await page.locator('.app-tab-group[data-tab-group="motionVideo"] #tabBtnMotionPrompt').count()) === 1, "Motion-video group was incomplete", failures);
     record((await page.locator('[data-tab-group-filter="deckImage"]').textContent()).trim() === "슬라이드 이미지" && (await page.locator('[data-tab-group-filter="deckFile"]').textContent()).trim() === "문서 파일" && (await page.locator('[data-tab-group-filter="visualAsset"]').textContent()).trim() === "홍보 이미지" && (await page.locator('[data-tab-group-filter="printOutput"]').textContent()).trim() === "인쇄물" && (await page.locator('[data-tab-group-filter="styleHelper"]').textContent()).trim() === "스타일", "Purpose-group switcher labels were incorrect", failures);
     const deckImageToolIds = await page.locator('.app-tab-group[data-tab-group="deckImage"] .app-tab-btn').evaluateAll((buttons) => buttons.map((button) => button.id));
     record(JSON.stringify(deckImageToolIds) === JSON.stringify(["tabBtnCommonPrompt", "tabBtnGenerator", "tabBtnSlideImage", "tabBtnFormImage", "tabBtnDesigner", "tabBtnSlideDocument"]), "Slide-image group did not follow the design → split → generate order with legacy tools at the end", failures);

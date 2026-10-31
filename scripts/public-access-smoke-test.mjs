@@ -122,7 +122,7 @@ try {
     const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await mobilePage.goto(`${origin}/app`, { waitUntil: "domcontentloaded" });
     await mobilePage.waitForFunction(() => document.documentElement.style.visibility !== "hidden");
-    assert.equal(await mobilePage.locator("[data-tab-group-filter]").count(), 5, "모바일 목적 탭은 5개여야 함");
+    assert.equal(await mobilePage.locator("[data-tab-group-filter]").count(), 6, "모바일 목적 탭은 영상·모션을 포함해 6개여야 함");
     assert.equal(await mobilePage.locator(".app-header").evaluate((element) => getComputedStyle(element).position), "sticky", "모바일 브랜드 헤더가 고정 앱 셸로 유지되어야 함");
     await mobilePage.click("#appToolMenuBtn");
     await mobilePage.click('[data-tab-group-filter="visualAsset"]');

@@ -47,6 +47,14 @@
       ]
     },
     {
+      label: "영상·모션",
+      href: "/features#tools-motionVideo",
+      desc: "연출 샘플과 영상 제작 프롬프트",
+      items: [
+        ["모션 애니메이션", "/features#tool-motionPrompt"]
+      ]
+    },
+    {
       label: "인쇄물",
       href: "/features#tools-printOutput",
       desc: "바로 내려받는 출력물",

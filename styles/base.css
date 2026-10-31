@@ -327,6 +327,7 @@ button {
   .app-tabs[data-active-group="deckImage"] .app-tab-group[data-tab-group="deckImage"],
   .app-tabs[data-active-group="deckFile"] .app-tab-group[data-tab-group="deckFile"],
   .app-tabs[data-active-group="visualAsset"] .app-tab-group[data-tab-group="visualAsset"],
+  .app-tabs[data-active-group="motionVideo"] .app-tab-group[data-tab-group="motionVideo"],
   .app-tabs[data-active-group="printOutput"] .app-tab-group[data-tab-group="printOutput"],
   .app-tabs[data-active-group="styleHelper"] .app-tab-group[data-tab-group="styleHelper"] {
     display: flex;
@@ -923,6 +924,7 @@ button {
   .app-tabs[data-active-group="deckImage"] .app-tab-group[data-tab-group="deckImage"],
   .app-tabs[data-active-group="deckFile"] .app-tab-group[data-tab-group="deckFile"],
   .app-tabs[data-active-group="visualAsset"] .app-tab-group[data-tab-group="visualAsset"],
+  .app-tabs[data-active-group="motionVideo"] .app-tab-group[data-tab-group="motionVideo"],
   .app-tabs[data-active-group="printOutput"] .app-tab-group[data-tab-group="printOutput"],
   .app-tabs[data-active-group="styleHelper"] .app-tab-group[data-tab-group="styleHelper"] {
     display: block;
