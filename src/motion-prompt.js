@@ -17,7 +17,7 @@
   const sources = [
     ["Lemo-Opuscar · 스타일 참고", "https://lemomo-ai.github.io/lemo-opuscar/", "66개 스타일의 재질·구도·움직임을 참고. 원본 스틸: LemoLab · CC BY 4.0, 이미지 파일 변경 없음. 한국어 구성 방향은 PromptDeck에서 작성"],
     ["Claude 프롬프트 가이드", "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices", "목표·문맥·입력 자료·예시·출력 형식을 구분"],
-    ["OpenAI 프롬프트 가이드", "https://developers.openai.com/api/docs/guides/prompt-engineering", "역할·지침·자료의 경계를 Markdown/XML로 명시"],
+    ["OpenAI 프롬프트 가이드", "https://developers.openai.com/api/docs/guides/prompt-engineering", "요청 목표·기획 원칙·입력 자료를 제목과 문단으로 구분"],
     ["OpenAI 영상 프롬프트 참고", "https://developers.openai.com/cookbook/examples/sora/sora2_prompting_guide", "샷의 구도·동작·빛·타이밍 참고. 보관 문서이므로 모델·API 규격은 적용하지 않음"],
     ["Runway 영상 프롬프트 가이드", "https://help.runwayml.com/hc/en-us/articles/39789879462419-Gen-4-Video-Prompting-Guide", "영상 AI용 문장은 한 샷의 구체적인 움직임을 긍정형으로 기술"],
     ["Jitter 템플릿", "https://jitter.video/templates/", "이미지로 유형 탐색 후 텍스트·색상·움직임을 조정하는 흐름 참고"],
