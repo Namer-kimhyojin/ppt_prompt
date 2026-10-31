@@ -157,7 +157,7 @@
   const FALLBACK_GROUP = "deckImage";
   // 탭마다 손에 남는 결과물이 다르므로, 탭 바 아래에 한 줄로 명시한다.
   const OUTPUT_KINDS = {
-    promptVideo: { label: "영상 제작 프롬프트", icon: "▶" },
+    promptVideo: { label: "영상 기획 요청문", icon: "▶" },
     promptImage: { label: "이미지 프롬프트", icon: "🖼" },
     promptFile: { label: "문서 파일 요청문", icon: "📄" },
     direct: { label: "바로 생성", icon: "⬇" },

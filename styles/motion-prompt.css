@@ -12,7 +12,7 @@
 .motion-header p { color: var(--ink-soft); font-size: 14px; line-height: 1.8; max-width: 760px; }
 .motion-header-badge { flex: none; padding: 14px 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 18px; font-weight: 800; color: var(--accent); }
 .motion-header-badge span { display: block; margin-top: 5px; color: var(--ink-soft); font-size: 11px; font-weight: 500; }
-.motion-mobile-nav, .motion-mobile-next { display: none; }
+.motion-mobile-nav { display: none; }
 .motion-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(370px, .85fr); gap: 28px; align-items: start; }
 .motion-input-stack, .motion-result-stack { min-width: 0; }
 .motion-section-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 19px; }
@@ -44,8 +44,6 @@
 .motion-auto-style[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 .motion-ai-handoff { margin-top: 22px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 14px; }
 .motion-ai-handoff p { margin-top: 7px; }
-.motion-legacy-scenes { margin-top: 22px; }
-.motion-legacy-scenes > .motion-help, .motion-legacy-scenes > .motion-check { margin-top: 13px; }
 .motion-reference-links { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 13px; font-size: 12px; }
 .motion-reference-links a, .motion-library-note a { color: var(--accent); }
 .motion-stage > img { width: 100%; height: 100%; object-fit: contain; display: block; }
@@ -55,7 +53,7 @@
 .motion-auto-art figcaption { position: absolute; bottom: 5px; left: 5px; padding: 3px 6px; color: #172338; background: #ffffff; border-radius: 4px; font-size: 10px; font-weight: 700; }
 .motion-help { color: var(--ink-soft); font-size: 12px; line-height: 1.75; font-weight: 400; }
 .motion-library-note { margin-top: 13px !important; }
-.motion-editor, .motion-scenes-section { margin-top: 32px; padding-top: 27px; border-top: 1px solid var(--line); }
+.motion-editor { margin-top: 32px; padding-top: 27px; border-top: 1px solid var(--line); }
 .motion-fields { display: grid; gap: 16px; }
 .motion-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
 .motion-details { border-top: 1px solid var(--line); padding-top: 15px; }
@@ -66,19 +64,6 @@
 .motion-text-btn { border: 0; padding: 5px 0; background: transparent; color: var(--accent); font-size: 12px !important; font-weight: 650 !important; min-height: 32px; }
 .motion-button { min-height: 39px; padding: 9px 13px; border: 1px solid var(--line-control); border-radius: 8px; background: var(--surface); color: var(--ink); font-size: 12px !important; line-height: 1.4; font-weight: 650 !important; }
 .motion-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
-.motion-scenes { display: grid; gap: 10px; margin-top: 16px; }
-.motion-scene { min-width: 0; border: 1px solid var(--line-control); border-radius: 9px; background: var(--surface); }
-.motion-scene > summary { display: flex; align-items: center; gap: 9px; cursor: pointer; padding: 13px; font-size: 13px; }
-.motion-scene > summary::after { content: "+"; color: var(--ink-soft); font-size: 16px; }
-.motion-scene[open] > summary::after { content: "−"; }
-.motion-scene > summary strong { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.motion-scene-number { flex: none; display: grid; place-content: center; background: var(--accent-soft); color: var(--accent); border-radius: 6px; width: 27px; height: 27px; font-weight: 750; }
-.motion-scene-time { flex: none; color: var(--ink-soft); font-size: 11px; }
-.motion-scene-fields { display: grid; gap: 13px; padding: 0 15px 16px; }
-.motion-scene-tools { display: flex; gap: 12px; align-items: end; justify-content: space-between; }
-.motion-scene-tools .motion-field { max-width: 105px; }
-.motion-scene-tools > div { display: flex; gap: 6px; }
-.motion-add { width: 100%; margin-top: 12px; border-style: dashed; }
 .motion-references { margin-top: 30px; }
 .motion-references > p { margin: 12px 0; }
 .motion-references ul { padding-left: 18px; display: grid; gap: 12px; }
@@ -92,20 +77,10 @@
 .motion-stage svg { display: block; width: 100%; height: 100%; }
 .motion-stage.is-paused svg * { animation-play-state: paused !important; }
 .motion-stage.is-fresh svg * { animation: none !important; }
-#motionRevisionField { margin-top: 14px; }
 .motion-player-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 11px 0 13px; }
 .motion-player-controls .motion-help { flex: 1; min-width: 125px; font-size: 10px; }
 .motion-specs { margin: 14px 0 12px; font-size: 12px; color: var(--ink-soft); }
-.motion-timeline { display: flex; gap: 4px; padding-bottom: 9px; overflow-x: auto; }
-.motion-timeline > span { min-width: 33px; background: var(--accent-soft); border-top: 3px solid var(--accent); border-radius: 3px; padding: 8px 5px; color: var(--ink); text-align: center; }
-.motion-timeline strong { font-size: 12px; }
-.motion-timeline small { display: block; margin-top: 3px; font-size: 10px; color: var(--ink-soft); }
-.motion-output-settings { margin: 17px 0 23px; }
-.motion-output-tabs { display: flex; border-bottom: 1px solid var(--line-control); gap: 2px; }
-.motion-output-tabs button { flex: 1; min-height: 42px; padding: 10px 3px; background: transparent; border: 0; border-bottom: 3px solid transparent; color: var(--ink-soft); font-size: 12px; font-weight: 650; white-space: nowrap; }
-.motion-output-tabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
-#motionOutputHelp { margin: 13px 0; }
-#motionShotField { margin-bottom: 13px; }
+#motionOutputHelp { margin: 0 0 16px; }
 .motion-warnings { margin: 0 0 13px; padding: 11px 12px 11px 26px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink-soft); background: var(--surface-alt); font-size: 11px; line-height: 1.75; }
 .motion-warnings li + li { margin-top: 5px; }
 .motion-output { display: block; resize: vertical; min-height: 270px; max-height: 640px; font-size: 12px !important; line-height: 1.75; background: var(--surface-alt); }
@@ -125,8 +100,7 @@
   .motion-mobile-nav { display: flex; gap: 5px; margin-bottom: 20px; scroll-margin-top: 75px; }
   .motion-mobile-nav button { flex: 1; padding: 9px 3px; min-height: 42px; border: 1px solid var(--line-control); border-radius: 7px; color: var(--ink-soft); background: var(--surface); font-size: 12px; }
   .motion-mobile-nav button[aria-pressed="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
-  .motion-mobile-next { display: block; width: 100%; margin-top: 15px; }
-  .motion-workspace[data-mobile-view="gallery"] :is(.motion-editor, .motion-scenes-section, .motion-result-stack, .motion-legacy-scenes, .motion-ai-handoff),
+  .motion-workspace[data-mobile-view="gallery"] :is(.motion-editor, .motion-result-stack, .motion-ai-handoff),
   .motion-workspace[data-mobile-view="brief"] :is(.motion-library, .motion-result-stack),
   .motion-workspace[data-mobile-view="result"] .motion-input-stack { display: none; }
   .motion-workspace[data-mobile-view="brief"] .motion-editor { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -141,7 +115,7 @@
 .motion-workspace[data-mobile-view="brief"] .motion-layout,
 .motion-workspace[data-mobile-view="result"] .motion-layout { grid-template-columns: minmax(0, 1fr); max-width: 960px; margin-inline: auto; }
 .motion-workspace[data-mobile-view="brief"] :is(.motion-library, .motion-result-stack),
-.motion-workspace[data-mobile-view="gallery"] :is(.motion-editor, .motion-ai-handoff, .motion-legacy-scenes, .motion-references),
+.motion-workspace[data-mobile-view="gallery"] :is(.motion-editor, .motion-ai-handoff, .motion-references),
 .motion-workspace[data-mobile-view="result"] :is(.motion-input-stack, .motion-preview-block),
 .motion-workspace:not([data-mobile-view="result"]) .motion-request-block { display: none; }
 .motion-workspace[data-mobile-view="brief"] .motion-editor { margin-top: 0; padding-top: 0; border-top: 0; }
