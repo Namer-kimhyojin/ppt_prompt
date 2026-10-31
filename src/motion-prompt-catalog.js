@@ -23,67 +23,66 @@
     { id: "music", name: "음악·비트 비주얼라이저", category: "mood", tag: "리듬·타이틀", art: "music", colors: ["#251532", "#ffaddc", "#ffba70"], sample: "소리를 그리는 움직임", description: "리듬에 맞춘 바·파형·타이틀로 음악 티저와 공연 화면을 구성합니다.", direction: "입력 오디오가 있으면 실제 분석 값에 동기화. 없으면 지정 BPM의 가이드 리듬으로 명시. 과도한 점멸 없이 타이틀 가독성 유지.", beats: ["타이틀과 리듬 도입", "파형과 비트의 변화", "여운을 남기며 마무리"] },
   ];
   const escape = (value) => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const sampleNotice = "연습용 가상 데이터입니다. 기관·제품·행사·수치는 예시이며 실제 홍보 전에 확정 자료로 교체하세요.";
   const samples = [
     {
       id: "startup", name: "사업 모집", templates: ["event", "explainer", "kinetic"], styles: ["swiss-motion", "pictogram-motion", "paper-popup"],
-      brief: { title: "새봄 스타트업 성장 프로그램 모집", audience: "창업 3년 이내의 예비·초기 창업팀", goal: "지원 혜택을 이해하고 프로그램 신청하기", ratio: "16:9", duration: 30, audio: "narration",
-        source: "프로그램: 새봄 스타트업 성장 프로그램\n모집: 20팀 / 접수: 11월 1일~15일\n지원: 시제품 제작비 최대 500만 원, 전문가 멘토링, 시장 검증 워크숍\n신청: 예시 신청 페이지에서 사업 소개서 제출\n핵심 메시지: 아이디어를 실제 고객과 만날 기회로 연결합니다.",
-        assets: "미첨부 예시 자료: 프로그램 로고, 시제품 사진, 신청 페이지 캡처", requirements: "신청 대상·지원 항목·접수 기간을 읽기 쉽게 제안하고 확정되지 않은 웹 주소는 만들지 않기" },
+      brief: { title: "새봄 스타트업 성장 프로그램 모집", audience: "창업 3년 이내의 예비·초기 창업팀", goal: "지원 혜택을 이해하고 프로그램 신청하기", ratio: "16:9", duration: 30, voice: "narration", bgm: "suggest", sfx: "essential", assetMode: "mixed", channel: "기관 홈페이지·사업 설명회", voiceDirection: "한국어, 차분하고 신뢰감 있는 설명",
+        source: "프로그램: 새봄 스타트업 성장 프로그램\n모집: 20팀 / 접수: 11월 1일~15일\n지원: 시제품 제작비 최대 500만 원, 전문가 멘토링, 시장 검증 워크숍\n신청: 신청 페이지에서 사업 소개서 제출\n핵심 메시지: 아이디어를 실제 고객과 만날 기회로 연결합니다.",
+        assets: "프로그램 로고, 시제품 사진, 신청 페이지 캡처", requirements: "신청 대상·지원 항목·접수 기간을 읽기 쉽게 제안하고 확정되지 않은 웹 주소는 만들지 않기" },
     },
     {
       id: "product", name: "제품 소개", templates: ["product", "launch", "social"], styles: ["glass-product", "teardown", "memphis-diorama"],
-      brief: { title: "리프컵, 다시 쓰는 일상", audience: "다회용 컵에 관심 있는 직장인·대학생", goal: "제품의 사용 편의성을 이해하고 상세 소개 확인하기", ratio: "9:16", duration: 15, audio: "music",
-        source: "가상 제품: 리프컵 다회용 컵\n용량: 500mL / 무게: 240g / 예시 가격: 23,000원\n특징: 분리 세척 가능한 뚜껑, 교체형 패킹, 휴대용 스트랩\n제공 색상: 크림·숲색·차콜\n핵심 메시지: 매일 챙기기 편하고 오래 사용하는 나만의 컵",
-        assets: "미첨부 예시 자료: 제품 정면·측면·분해 사진, 브랜드 로고", requirements: "제품 사진이 없으면 필요한 촬영 구도를 제안하고 확인되지 않은 보온·보냉 성능은 추가하지 않기", continuity: "동일한 컵의 비율·뚜껑 구조·색상 유지" },
+      brief: { title: "리프컵, 다시 쓰는 일상", audience: "다회용 컵에 관심 있는 직장인·대학생", goal: "제품의 사용 편의성을 이해하고 상세 소개 확인하기", ratio: "9:16", duration: 15, voice: "none", bgm: "suggest", sfx: "essential", assetMode: "provided", channel: "인스타그램 릴스·쇼츠",
+        source: "제품: 리프컵 다회용 컵\n용량: 500mL / 무게: 240g / 가격: 23,000원\n특징: 분리 세척 가능한 뚜껑, 교체형 패킹, 휴대용 스트랩\n제공 색상: 크림·숲색·차콜\n핵심 메시지: 매일 챙기기 편하고 오래 사용하는 나만의 컵",
+        assets: "제품 정면·측면·분해 사진, 브랜드 로고", requirements: "제품 사진이 없으면 필요한 촬영 구도를 제안하고 확인되지 않은 보온·보냉 성능은 추가하지 않기", continuity: "동일한 컵의 비율·뚜껑 구조·색상 유지" },
     },
     {
       id: "learning", name: "교육 안내", templates: ["education", "whiteboard", "explainer"], styles: ["whiteboard", "chalkboard", "crayon-book"],
-      brief: { title: "처음 시작하는 데이터 읽기", audience: "표와 차트를 업무에 활용하려는 입문자", goal: "교육 내용을 이해하고 수강 신청하기", ratio: "16:9", duration: 60, audio: "narration",
+      brief: { title: "처음 시작하는 데이터 읽기", audience: "표와 차트를 업무에 활용하려는 입문자", goal: "교육 내용을 이해하고 수강 신청하기", ratio: "16:9", duration: 60, voice: "narration", bgm: "none", sfx: "essential", assetMode: "mixed", channel: "교육 안내 페이지·강의 소개", voiceDirection: "한국어, 또렷하고 천천히 설명",
         source: "교육: 처음 시작하는 데이터 읽기\n과정: 표 읽기, 비율 이해, 차트 선택, 한 장 보고서 작성\n운영: 4주 과정, 주 1회 2시간 / 정원: 20명\n준비물: 노트북과 간단한 연습 데이터\n핵심 메시지: 어려운 수식보다 데이터를 읽고 설명하는 방법부터 배웁니다.",
-        assets: "미첨부 예시 자료: 실습용 표, 차트 전후 비교 화면, 교육 안내 로고", requirements: "전문 용어를 풀어 설명하고 초보자가 기대할 학습 결과를 구체화하기" },
+        assets: "실습용 표, 차트 전후 비교 화면, 교육 안내 로고", requirements: "전문 용어를 풀어 설명하고 초보자가 기대할 학습 결과를 구체화하기" },
     },
     {
       id: "festival", name: "축제 홍보", templates: ["event", "photo", "social"], styles: ["risograph", "paper-lantern", "urban-sketch"],
-      brief: { title: "달빛 골목 페스티벌", audience: "주말에 가까운 문화 행사를 찾는 가족·친구", goal: "행사의 분위기를 느끼고 방문 일정 정하기", ratio: "9:16", duration: 30, audio: "music",
-        source: "가상 행사: 달빛 골목 페스티벌\n일시: 10월 두 번째 토요일 18:00~21:00\n장소: 가상 공간인 달빛문화거리\n내용: 골목 공연 3팀, 공예 마켓 12개 부스, 야간 포토존\n입장: 무료 / 일부 체험은 현장 접수\n핵심 메시지: 익숙한 골목에서 만나는 작은 축제",
-        assets: "미첨부 예시 자료: 거리 사진, 공연·공예 이미지, 행사 워드마크", requirements: "실제 장소의 사진이나 지도처럼 단정하지 말고 행사명·시간·입장 정보를 명료하게 전달하기" },
+      brief: { title: "달빛 골목 페스티벌", audience: "주말에 가까운 문화 행사를 찾는 가족·친구", goal: "행사의 분위기를 느끼고 방문 일정 정하기", ratio: "9:16", duration: 30, voice: "none", bgm: "suggest", sfx: "essential", assetMode: "mixed", channel: "SNS 세로 피드", background: "달빛문화거리의 저녁 행사장",
+        source: "행사: 달빛 골목 페스티벌\n일시: 10월 두 번째 토요일 18:00~21:00\n장소: 달빛문화거리\n내용: 골목 공연 3팀, 공예 마켓 12개 부스, 야간 포토존\n입장: 무료 / 일부 체험은 현장 접수\n핵심 메시지: 익숙한 골목에서 만나는 작은 축제",
+        assets: "거리 사진, 공연·공예 이미지, 행사 워드마크", requirements: "실제 장소의 사진이나 지도처럼 단정하지 말고 행사명·시간·입장 정보를 명료하게 전달하기" },
     },
     {
       id: "impact", name: "데이터 성과", templates: ["data", "explainer", "kinetic"], styles: ["dataviz", "data-physical", "iso-infographic"],
-      brief: { title: "우리 동네 자원순환 100일", audience: "지역 활동에 참여하는 주민과 운영 담당자", goal: "활동의 변화를 이해하고 다음 캠페인에 참여하기", ratio: "16:9", duration: 30, audio: "narration",
-        source: "가상 캠페인 실적: 자원순환 활동 100일\n참여 주민: 320명\n수거한 재활용품: 1,850kg\n일회용 컵 사용량: 직전 100일 대비 42% 감소\n비교 기준: 동일한 참여 거점의 이전 100일\n핵심 메시지: 함께 실천한 작은 습관이 눈에 보이는 변화가 됩니다.",
-        assets: "미첨부 예시 자료: 거점별 집계표, 수거 활동 사진, 캠페인 로고", requirements: "참여 인원·수거량·감소율의 단위와 비교 기간을 구분하고 근거 없는 탄소 감축량으로 환산하지 않기" },
+      brief: { title: "우리 동네 자원순환 100일", audience: "지역 활동에 참여하는 주민과 운영 담당자", goal: "활동의 변화를 이해하고 다음 캠페인에 참여하기", ratio: "16:9", duration: 30, voice: "narration", bgm: "suggest", sfx: "none", assetMode: "provided", channel: "성과 발표회·기관 홈페이지", voiceDirection: "한국어, 수치와 단위를 정확히 읽는 설명",
+        source: "캠페인 실적: 자원순환 활동 100일\n참여 주민: 320명\n수거한 재활용품: 1,850kg\n일회용 컵 사용량: 직전 100일 대비 42% 감소\n비교 기준: 동일한 참여 거점의 이전 100일\n핵심 메시지: 함께 실천한 작은 습관이 눈에 보이는 변화가 됩니다.",
+        assets: "거점별 집계표, 수거 활동 사진, 캠페인 로고", requirements: "참여 인원·수거량·감소율의 단위와 비교 기간을 구분하고 근거 없는 탄소 감축량으로 환산하지 않기" },
     },
     {
       id: "app", name: "앱 사용 시연", templates: ["ui", "launch", "explainer"], styles: ["living-screencast", "dark-keynote", "swiss-motion"],
-      brief: { title: "모아노트, 일정과 메모를 한 곳에", audience: "모임 일정과 기록을 함께 관리하는 소규모 팀", goal: "주요 사용 흐름을 이해하고 체험 화면 열기", ratio: "9:16", duration: 30, audio: "silent",
-        source: "가상 앱: 모아노트\n기능: 일정 만들기, 메모 태그 분류, 팀원과 기록 공유\n예시 상황: 독서 모임의 다음 약속과 지난 토론 내용을 한 화면에서 확인\n안내 문구: 일정도 기록도, 모아노트에서\n핵심 메시지: 흩어진 일정과 메모를 하나의 흐름으로 연결합니다.",
-        assets: "미첨부 예시 자료: 일정·메모·공유 화면 캡처와 앱 아이콘", requirements: "무음 시청을 기준으로 자막과 화면 상태 변화만으로 이해되게 기획하기", continuity: "동일한 화면 구성·버튼 위치·앱 아이콘 유지" },
+      brief: { title: "모아노트, 일정과 메모를 한 곳에", audience: "모임 일정과 기록을 함께 관리하는 소규모 팀", goal: "주요 사용 흐름을 이해하고 체험 화면 열기", ratio: "9:16", duration: 30, voice: "none", bgm: "none", sfx: "none", assetMode: "provided", channel: "무음 자동 재생·모바일 앱 소개",
+        source: "앱: 모아노트\n기능: 일정 만들기, 메모 태그 분류, 팀원과 기록 공유\n상황: 독서 모임의 다음 약속과 지난 토론 내용을 한 화면에서 확인\n안내 문구: 일정도 기록도, 모아노트에서\n핵심 메시지: 흩어진 일정과 메모를 하나의 흐름으로 연결합니다.",
+        assets: "일정·메모·공유 화면 캡처와 앱 아이콘", requirements: "무음 시청을 기준으로 자막과 화면 상태 변화만으로 이해되게 기획하기", continuity: "동일한 화면 구성·버튼 위치·앱 아이콘 유지" },
     },
     {
       id: "safety", name: "캐릭터 안전 안내", templates: ["character", "education", "whiteboard"], styles: ["midcentury-toon", "crayon-book", "paper-popup"],
-      brief: { title: "초록이의 안전한 등굣길", audience: "초등학교 저학년 어린이와 보호자", goal: "횡단보도 앞에서 지킬 안전 행동을 기억하기", ratio: "16:9", duration: 60, audio: "narration",
-        source: "가상 캐릭터: 초록색 가방을 멘 작은 새 초록이\n주제: 횡단보도 앞에서 잠깐 멈추는 습관\n전달할 행동: 보도에서 멈추기, 좌우 살피기, 초록불에도 차량이 멈춘 것을 확인하고 걷기\n핵심 문구: 멈추고, 살피고, 천천히 걸어요.\n표현 방향: 친근한 일상 상황에서 어린이가 행동을 이해하도록 설명",
-        assets: "미첨부 예시 자료: 초록이 정면·측면·표정 시트, 횡단보도 배경", requirements: "불안감을 과장하는 사고 묘사보다 올바른 행동을 차분하게 보여 주기", continuity: "초록이의 부리 모양·깃털 색·초록 가방 유지" },
+      brief: { title: "초록이의 안전한 등굣길", audience: "초등학교 저학년 어린이와 보호자", goal: "횡단보도 앞에서 지킬 안전 행동을 기억하기", ratio: "16:9", duration: 60, voice: "narration", bgm: "suggest", sfx: "essential", assetMode: "generate", channel: "초등학교 안전교육", voiceDirection: "한국어, 어린이에게 친근하고 또렷한 목소리", background: "학교 앞 횡단보도",
+        source: "캐릭터: 초록색 가방을 멘 작은 새 초록이\n주제: 횡단보도 앞에서 잠깐 멈추는 습관\n전달할 행동: 보도에서 멈추기, 좌우 살피기, 초록불에도 차량이 멈춘 것을 확인하고 걷기\n핵심 문구: 멈추고, 살피고, 천천히 걸어요.\n표현 방향: 친근한 일상 상황에서 어린이가 행동을 이해하도록 설명",
+        assets: "초록이 정면·측면·표정 시트, 횡단보도 배경", requirements: "불안감을 과장하는 사고 묘사보다 올바른 행동을 차분하게 보여 주기", continuity: "초록이의 부리 모양·깃털 색·초록 가방 유지" },
     },
     {
       id: "brand", name: "브랜드 소개", templates: ["cinematic", "photo", "logo"], styles: ["watercolor", "one-line", "art-deco"],
-      brief: { title: "느린숲 로스터리, 한 잔의 여유", audience: "조용한 공간에서 커피를 즐기는 방문객", goal: "브랜드의 분위기를 기억하고 공간 소개 확인하기", ratio: "4:5", duration: "auto", audio: "music",
-        source: "가상 브랜드: 느린숲 로스터리\n소개: 작은 정원과 함께하는 동네 커피 공간\n핵심 요소: 직접 볶은 원두, 계절별 원두 소개, 개인 컵 사용 안내\n브랜드 문구: 바쁜 하루에 잠깐의 숲\n원하는 인상: 따뜻하고 절제된 여유, 편안한 환대",
-        assets: "미첨부 예시 자료: 로고 원본, 원두·추출·공간 사진", requirements: "확인되지 않은 수상 경력·산지 인증·고객 후기를 추가하지 않기" },
+      brief: { title: "느린숲 로스터리, 한 잔의 여유", audience: "조용한 공간에서 커피를 즐기는 방문객", goal: "브랜드의 분위기를 기억하고 공간 소개 확인하기", ratio: "4:5", duration: "auto", voice: "none", bgm: "suggest", sfx: "none", assetMode: "provided", channel: "SNS 세로 피드·매장 소개", background: "작은 정원과 창가가 있는 커피 공간",
+        source: "브랜드: 느린숲 로스터리\n소개: 작은 정원과 함께하는 동네 커피 공간\n핵심 요소: 직접 볶은 원두, 계절별 원두 소개, 개인 컵 사용 안내\n브랜드 문구: 바쁜 하루에 잠깐의 숲\n원하는 인상: 따뜻하고 절제된 여유, 편안한 환대",
+        assets: "로고 원본, 원두·추출·공간 사진", requirements: "확인되지 않은 수상 경력·산지 인증·고객 후기를 추가하지 않기" },
     },
     {
       id: "route", name: "지도·경로 안내", templates: ["map", "explainer", "whiteboard"], styles: ["transit-map", "iso-infographic", "blueprint"],
-      brief: { title: "바다길 전시관 찾아오는 길", audience: "전시관을 처음 찾는 대중교통 이용객", goal: "이동 경로를 이해하고 방문 동선 준비하기", ratio: "16:9", duration: 30, audio: "silent",
-        source: "가상 장소: 바다길 전시관\n가상 이동 경로: 역 광장 → 관광 안내소 → 전시관 입구\n예시 거리: 650m / 도보 약 8분\n안내 요소: 갈림길 2곳, 전시관 정문, 보행자 이동 방향\n주의: 실제 지리 자료가 아닌 연습용 동선입니다.\n핵심 메시지: 주요 지점을 따라 편안하게 찾아오세요.",
-        assets: "미첨부 예시 자료: 가상 경로 도식, 안내소·입구 사진", requirements: "가상 동선을 실제 지리처럼 단정하지 말고 자료가 제공되면 지점 순서·도로 연결을 보존하기", continuity: "같은 경로선 색상과 지점 표기 유지" },
+      brief: { title: "바다길 전시관 찾아오는 길", audience: "전시관을 처음 찾는 대중교통 이용객", goal: "이동 경로를 이해하고 방문 동선 준비하기", ratio: "16:9", duration: 30, voice: "none", bgm: "none", sfx: "none", assetMode: "provided", channel: "전시장 무음 안내 화면",
+        source: "장소: 바다길 전시관\n이동 경로: 역 광장 → 관광 안내소 → 전시관 입구\n거리: 650m / 도보 약 8분\n안내 요소: 갈림길 2곳, 전시관 정문, 보행자 이동 방향\n핵심 메시지: 주요 지점을 따라 편안하게 찾아오세요.",
+        assets: "경로 도식, 안내소·입구 사진", requirements: "제공 지도의 지점 순서·도로 연결을 보존하기", continuity: "같은 경로선 색상과 지점 표기 유지" },
     },
     {
       id: "concert", name: "공연 홍보", templates: ["music", "event", "loop"], styles: ["countdown", "silkscreen-poster", "swiss-motion"],
-      brief: { title: "오로라 나이트 라이브", audience: "라이브 공연과 새로운 음악을 즐기는 관객", goal: "공연 정보를 기억하고 예매 안내 확인하기", ratio: "9:16", duration: 30, audio: "music",
-        source: "가상 공연: 오로라 나이트 라이브\n운영: 금요일 19:00 시작, 총 90분\n출연: 가상 아티스트 4팀 / 좌석: 120석\n예매: 예시 예매 페이지에서 사전 예약\n음원: 미첨부. 110BPM은 연습용 리듬 가이드입니다.\n핵심 메시지: 서로 다른 소리가 만나는 한밤의 무대",
-        assets: "미첨부 예시 자료: 공연 로고, 아티스트 사진, 사용 허가된 음원", requirements: "실제 음원 분석을 했다고 단정하지 말고 과도한 점멸 없이 공연명·시작 시간·예매 안내를 읽을 수 있게 하기" },
+      brief: { title: "오로라 나이트 라이브", audience: "라이브 공연과 새로운 음악을 즐기는 관객", goal: "공연 정보를 기억하고 예매 안내 확인하기", ratio: "9:16", duration: 30, voice: "none", bgm: "source", sfx: "essential", assetMode: "mixed", channel: "공연 홍보 릴스·현장 화면",
+        source: "공연: 오로라 나이트 라이브\n운영: 금요일 19:00 시작, 총 90분\n출연: 아티스트 4팀 / 좌석: 120석\n예매: 예매 페이지에서 사전 예약\n음원: 미첨부. 리듬 가이드는 110BPM입니다.\n핵심 메시지: 서로 다른 소리가 만나는 한밤의 무대",
+        assets: "공연 로고, 아티스트 사진, 사용 허가된 음원", requirements: "실제 음원 분석을 했다고 단정하지 말고 과도한 점멸 없이 공연명·시작 시간·예매 안내를 읽을 수 있게 하기" },
     },
   ].map((sample) => Object.freeze({ ...sample, templates: Object.freeze(sample.templates), styles: Object.freeze(sample.styles), brief: Object.freeze(sample.brief) }));
   Object.freeze(samples);
@@ -107,7 +106,7 @@
       const sample = remaining.splice(next < 0 ? 0 : next, 1)[0];
       lastId = sample.id;
       const template = pick(sample.templates, current.template), style = pick(sample.styles, current.style);
-      return { sample, values: { ...sample.brief, source: sampleNotice + "\n\n" + sample.brief.source, template, style, loop: template === "loop" } };
+      return { sample, values: { ...sample.brief, template, style, loop: template === "loop" } };
     };
   }
   function artwork(template, animated = false) {

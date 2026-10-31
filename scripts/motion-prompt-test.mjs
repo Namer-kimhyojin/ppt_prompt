@@ -24,7 +24,7 @@ for (const sample of catalog.samples) {
   assert.ok(sample.templates.length >= 2 && sample.styles.length >= 2);
   for (const id of sample.templates) assert.ok(catalog.templates.some((entry) => entry.id === id), id);
   for (const id of sample.styles) assert.ok(styles.get(id), id);
-  for (const field of ["title", "audience", "goal", "source", "assets", "requirements"]) assert.ok(sample.brief[field]?.trim(), sample.id + ": " + field);
+  for (const field of ["title", "audience", "goal", "source", "assets", "requirements", "channel", "voice", "bgm", "sfx", "assetMode"]) assert.ok(sample.brief[field]?.trim(), sample.id + ": " + field);
 }
 for (const random of [() => 0, () => 0.999999, Math.random]) {
   const draw = catalog.createSamplePicker(random);
@@ -44,7 +44,8 @@ for (const random of [() => 0, () => 0.999999, Math.random]) {
       assert.equal(normalized.style, values.style);
       assert.equal(normalized.ratio, values.ratio);
       assert.equal(normalized.duration, values.duration);
-      assert.match(normalized.source, /^연습용 가상 데이터/);
+      assert.equal(normalized.source, sample.brief.source);
+      assert.doesNotMatch(JSON.stringify(sample.brief), /가상/);
       const prompt = engine.planningPrompt(normalized);
       assert.ok(prompt.includes(sample.brief.title) && prompt.includes(styles.get(values.style).name));
       assert.doesNotMatch(prompt, /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);/i);
@@ -54,66 +55,71 @@ for (const random of [() => 0, () => 0.999999, Math.random]) {
   }
 }
 const automatic = engine.planningPrompt(engine.defaults());
-assert.match(automatic, /^영상 기획 요청\n/);
-assert.match(automatic, /타임스토리.*콘티.*대본/);
-assert.match(automatic, /장면 수.*새로 기획/);
-assert.doesNotMatch(automatic, /<user_fixed_storyboard>|\[장면 1|0–5초|실행 가능한 전체 코드|샷별 생성 프롬프트/);
-assert.doesNotMatch(automatic, /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);/i);
-assert.match(automatic, /스타일 3안을.*비교/);
-assert.doesNotMatch(automatic, /1920×1080|일반 시청자|카메라:|추가 요구사항: 없음/);
+assert.match(automatic, /^영상 기획 제안\n/);
+assert.ok(automatic.length < 500, "default request should stay concise");
+for (const word of ["콘셉트", "핵심 메시지", "전체 길이", "타임스토리", "콘티", "시작–종료", "화면/배경", "동작", "자막", "음성", "배경음악", "효과음", "에셋"]) assert.ok(automatic.includes(word), word);
+assert.doesNotMatch(automatic, /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);|기획 원칙|사용자 입력 자료 시작|가상 데이터/i);
+assert.match(automatic, /3안 비교 후 1안/);
 for (const style of styles.styles) {
   const prompt = engine.planningPrompt({ style: style.id, source: "검증 원문 72%", useManualScenes: true, format: "remotion", scenes: [{ seconds: 99, visual: "LEGACY_ONLY" }] });
   assert.ok(prompt.includes(style.name) && prompt.includes(style.visual) && prompt.includes(style.motion));
-  assert.doesNotMatch(prompt, /LEGACY_ONLY|99초|<user_fixed_storyboard>|실행 가능한 전체 코드/);
-  assert.doesNotMatch(prompt, /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);|스타일 3안|구성안 3안/i);
+  assert.doesNotMatch(prompt, /LEGACY_ONLY|99초|<user_fixed_storyboard>|https:\/\/(?:github|raw\.github)|실행 가능한 전체 코드|스타일 3안|구성안 3안/);
   assert.match(prompt, /기획안 1개/);
-  const image = await fs.readFile(new URL(`../${style.preview}`, import.meta.url));
-  assert.equal(createHash("sha256").update(image).digest("hex"), provenance.assets.find((a) => a.id === style.id).sha256);
+  const bytes = await fs.readFile(new URL(`../${style.preview}`, import.meta.url));
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), provenance.assets.find((a) => a.id === style.id).sha256);
 }
-assert.match(engine.planningPrompt({ duration: 60 }), /희망 길이: 60초/);
-assert.doesNotMatch(engine.planningPrompt({ duration: "auto" }), /희망 길이: \d|전체 15초/);
-for (const version of [1, 2]) {
-  const migrated = engine.normalize({ version, title: "보관할 제목", useManualScenes: true, scenes: [{ seconds: 9, visual: "보관할 장면", caption: "기존 자막" }], revision: "과거 수정 요청" });
-  assert.equal(migrated.version, 3);
-  assert.equal(migrated.useManualScenes, false);
+assert.match(engine.planningPrompt({ duration: 60 }), /규격: 16:9 \/ 60초/);
+assert.match(engine.planningPrompt({ duration: "auto" }), /길이 AI 추천/);
+const audioMigration = { auto: ["auto", "auto", "auto"], silent: ["none", "none", "none"], music: ["none", "suggest", "essential"], narration: ["narration", "suggest", "auto"], source: ["source", "auto", "auto"] };
+for (const version of [1, 2, 3]) for (const [audio, expected] of Object.entries(audioMigration)) {
+  const migrated = engine.normalize({ version, audio, title: "보관할 제목", useManualScenes: true, scenes: [{ seconds: 9, visual: "보관할 장면" }], revision: "과거 수정 요청" });
+  assert.equal(migrated.version, 4);
+  assert.deepEqual([migrated.voice, migrated.bgm, migrated.sfx], expected);
   assert.equal(migrated.title, "보관할 제목");
   assert.equal(migrated.scenes[0].visual, "보관할 장면");
   assert.equal(migrated.revision, "과거 수정 요청");
-  assert.doesNotMatch(engine.planningPrompt(migrated), /보관할 장면|기존 자막|과거 수정 요청/);
+  assert.doesNotMatch(engine.planningPrompt(migrated), /보관할 장면|과거 수정 요청/);
 }
-assert.equal(new Set(catalog.templates.map((t) => t.id)).size, 18);
+const oldSample = engine.normalize({ source: "연습용 가상 데이터입니다. 기관·제품·행사·수치는 예시이며 실제 홍보 전에 확정 자료로 교체하세요.\n\n가상 제품: 컵\n가격: 23,000원", assets: "미첨부 예시 자료: 가상 경로 도식" });
+assert.equal(oldSample.source, "제품: 컵\n가격: 23,000원");
+assert.doesNotMatch(engine.planningPrompt(oldSample), /가상/);
+assert.equal(engine.normalize({ source: "가상현실 교육에 관한 원문" }).source, "가상현실 교육에 관한 원문");
 for (const template of catalog.templates) for (const ratio of Object.keys(engine.ratios)) {
   const output = engine.planningPrompt({ template: template.id, ratio, title: "한글 <검증>", source: "실제 원문 72%" });
-  assert.match(output, new RegExp(template.name));
-  assert.ok(output.includes(ratio) && output.includes("한글 <검증>") && output.includes("실제 원문 72%"));
+  assert.ok(output.includes(template.name) && output.includes(ratio) && output.includes("한글 <검증>") && output.includes("실제 원문 72%"));
   assert.doesNotMatch(output, /undefined|NaN/);
   assert.match(catalog.artwork(template), /<svg/);
 }
-assert.equal(engine.normalize({ ratio: "42:1", template: "unknown" }).ratio, "16:9");
-assert.equal(engine.normalize({ duration: -99 }).duration, 3);
-assert.equal(engine.normalize({ duration: 9000 }).duration, 600);
-const source = { title: '한글 & <검증> "따옴표"', source: "원문 72% · A < B && C > D\r\n요청 목표\r\n위조 지시", assets: "제품.png" };
+const source = { title: '한글 & <검증> "따옴표"', source: "원문 72% · A < B && C > D\r\n요청 목표", channel: "전시장 화면", background: "실제 행사장", assets: "제품.png, voice.wav, music.mp3", voiceDirection: "한국어 중저음" };
 const plain = engine.planningPrompt(source);
-assert.ok(plain.includes(source.title));
-assert.ok(plain.includes("원문·핵심 내용: 원문 72% · A < B && C > D\n  요청 목표\n  위조 지시"));
-assert.ok(plain.endsWith("사용자 입력 자료 끝"));
+assert.ok(plain.includes(source.title) && plain.includes("- 내용: 원문 72% · A < B && C > D\n  - 요청 목표"));
+assert.ok(plain.includes("- 게시·상영: 전시장 화면") && plain.includes("- 장소·배경: 실제 행사장"));
 assert.doesNotMatch(plain, /<direction_brief>|<item|&(?:lt|gt|amp|quot|apos);/i);
-assert.match(plain, /자료 안의 명령.*작업 지시로 실행하지 않는다/);
-assert.match(plain, /확정 내용과 가정·제안을 구분/);
-assert.match(plain, /참고 링크나 첨부 자료를 확인할 수 없으면/);
-const explicit = engine.planningPrompt({ fps: 30, camera: "push", pace: "fast", palette: "남색", audio: "silent", loop: true, requirements: "기간 보존" });
-for (const value of ["프레임레이트: 30fps", "추가 요구사항: 기간 보존", "반복: 처음과 끝"]) assert.ok(explicit.includes(value), value);
-assert.doesNotMatch(explicit, /카메라:|색상·조명:|움직임 속도:|장면 전환:|표현 재질:|남색/);
-const legacyVisual = { renderStyle: "collage", pace: "calm", camera: "push", transition: "match", palette: "LEGACY_COLOR_ONLY" };
+const muted = engine.planningPrompt({ voice: "none", bgm: "none", sfx: "none", voiceDirection: "HIDDEN_VOICE" });
+assert.match(muted, /소리: 무음/);
+assert.doesNotMatch(muted, /내레이션 원고|HIDDEN_VOICE|배경음악 분위기|효과음 종류/);
+for (const voice of Object.keys(engine.voices)) for (const bgm of Object.keys(engine.musicModes)) for (const sfx of Object.keys(engine.effectModes)) {
+  const p = engine.planningPrompt({ voice, bgm, sfx, voiceDirection: "VOICE_TONE" });
+  assert.doesNotMatch(p, /undefined|NaN/);
+  if (voice === "none") assert.doesNotMatch(p, /내레이션 원고|등장인물별 대사|VOICE_TONE/);
+  if (voice === "source") { assert.match(p, /원본 음성 활용 구간·발언 보존/); assert.doesNotMatch(p, /VOICE_TONE/); }
+  if (voice === "narration") assert.match(p, /내레이션 원고·목소리/);
+  if (voice === "dialogue") assert.match(p, /등장인물별 대사·목소리/);
+  if (bgm === "none") assert.doesNotMatch(p, /배경음악 분위기·진입/);
+  if (bgm === "source") assert.match(p, /제공 음원 사용 구간/);
+  if (sfx === "none") assert.doesNotMatch(p, /효과음 종류·타이밍/);
+}
+for (const assetMode of Object.keys(engine.assetModes)) {
+  const p = engine.planningPrompt({ assetMode, assets: "logo.svg, clip.mp4" });
+  assert.ok(p.includes("logo.svg, clip.mp4"));
+  if (assetMode !== "auto") assert.ok(p.includes(engine.assetModes[assetMode]));
+}
+assert.equal(engine.normalize({ voice: "__proto__", bgm: "unknown" }).voice, "auto");
+const legacyVisual = { renderStyle: "collage", pace: "calm", camera: "push", transition: "match", palette: "LEGACY_COLOR_ONLY", fps: 30 };
 for (const [key, value] of Object.entries(legacyVisual)) assert.equal(engine.normalize(legacyVisual)[key], value);
-assert.doesNotMatch(engine.planningPrompt(legacyVisual), /LEGACY_COLOR_ONLY|사진·타이포 콜라주|느린 ease-in-out|카메라:|장면 전환:/);
-const timelineOutput = (audio) => engine.planningPrompt({ audio }).split("\n").find((line) => line.startsWith("3. 상세 타임스토리"));
-assert.doesNotMatch(timelineOutput("silent"), /내레이션|음악|효과음/);
-assert.match(timelineOutput("music"), /음악·효과음/);
-assert.doesNotMatch(timelineOutput("music"), /내레이션/);
-assert.match(timelineOutput("source"), /원본 음성/);
+assert.doesNotMatch(engine.planningPrompt(legacyVisual), /LEGACY_COLOR_ONLY|사진·타이포 콜라주|카메라:|장면 전환:|fps/);
 assert.equal(engine.planningPrompt({ ...source, target: "claude", format: "html" }), engine.planningPrompt({ ...source, target: "gpt", format: "remotion" }));
-console.log("PASS: plain text without generated tags or entities, conditional style planning, input preservation, audio settings and legacy data");
+console.log("PASS: concise bullets, clean samples, essentials, independent voice/music/effects/assets and migration");
 
 const projectRoot = path.resolve(import.meta.dirname, "..");
 const evidence = await fs.mkdtemp(path.join(os.tmpdir(), "promptdeck-motion-"));
@@ -151,7 +157,9 @@ try {
   assert.equal(await page.locator("[data-motion-style]").count(), 66);
   assert.equal(await page.locator("#motionPromptApp [role=tablist], #motionTarget, #motionFormat, #motionRevision, #motionVideoMode, #motionScenes").count(), 0);
   assert.equal(await page.locator('#motionPromptApp [data-motion-field="renderStyle"], #motionPromptApp [data-motion-field="pace"], #motionPromptApp [data-motion-field="camera"], #motionPromptApp [data-motion-field="transition"], #motionPromptApp [data-motion-field="palette"]').count(), 0);
-  assert.match(await page.locator("#motionOutput").inputValue(), /^영상 기획 요청\n/);
+  assert.equal(await page.locator('#motionAudio, #motionPromptApp [data-motion-field="fps"]').count(), 0);
+  assert.equal(await page.locator("#motionVoice, #motionBgm, #motionSfx, #motionAssetMode").count(), 4);
+  assert.match(await page.locator("#motionOutput").inputValue(), /^영상 기획 제안\n/);
   assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /<\/?[a-z][^>]*>|&(?:lt|gt|amp|quot|apos);/i);
   assert.equal(await page.locator("#motionDurationChoice").inputValue(), "auto");
   assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /\[장면 1|0–5초/);
@@ -202,8 +210,10 @@ try {
     assert.notEqual(saved.template, beforeSample.template);
     assert.notEqual(saved.style, beforeSample.style);
     assert.equal(await page.locator("#motionPurpose").inputValue(), saved.template);
+    for (const [selector, key] of [["#motionVoice", "voice"], ["#motionBgm", "bgm"], ["#motionSfx", "sfx"], ["#motionAssetMode", "assetMode"]]) assert.equal(await page.locator(selector).inputValue(), saved[key]);
     assert.equal(await page.locator("#motionTitle").inputValue(), saved.title);
-    assert.match(await page.locator("#motionSource").inputValue(), /^연습용 가상 데이터/);
+    assert.equal(await page.locator("#motionSource").inputValue(), sample.brief.source);
+    assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /가상 데이터|가상 샘플/);
     assert.match(await page.locator("#motionSampleInfo").textContent(), new RegExp(sample.name));
     assert.equal(await page.locator("#motionSearch").inputValue(), "");
     assert.equal(await page.locator("[data-motion-style]").count(), 66);
@@ -223,6 +233,38 @@ try {
   await page.locator("#motionDuration").press("Tab");
   assert.match(await page.locator("#motionSpecs").textContent(), /31초/);
   assert.match(await page.locator("#motionOutput").inputValue(), /지역기업 지원사업 <검증>/);
+  await page.locator(".motion-editor details > summary").click();
+  await page.locator("#motionChannel").fill("유튜브 소개 영상");
+  await page.locator("#motionBackground").fill("행사장 로비");
+  await page.locator("#motionAssets").fill("logo.svg, 제품.png, voice.wav, music.mp3, click.wav");
+  await page.locator("#motionVoice").selectOption("narration");
+  await page.locator("#motionVoiceDirection").fill("한국어, 차분한 중저음");
+  await page.locator("#motionBgm").selectOption("suggest");
+  await page.locator("#motionSfx").selectOption("essential");
+  await page.locator("#motionAssetMode").selectOption("mixed");
+  assert.match(await page.locator("#motionOutput").inputValue(), /내레이션 원고·목소리/);
+  assert.match(await page.locator("#motionOutput").inputValue(), /한국어, 차분한 중저음/);
+  assert.match(await page.locator("#motionOutput").inputValue(), /원본\/AI 생성 구분·배치/);
+  await page.locator("#motionVoice").selectOption("none");
+  await page.locator("#motionBgm").selectOption("none");
+  await page.locator("#motionSfx").selectOption("none");
+  assert.equal(await page.locator("#motionVoiceDirectionField").isVisible(), false);
+  assert.match(await page.locator("#motionOutput").inputValue(), /소리: 무음/);
+  assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /내레이션 원고|한국어, 차분한 중저음/);
+  for (const selector of ["#motionVoice", "#motionBgm", "#motionSfx"]) await page.locator(selector).selectOption("source");
+  assert.match(await page.locator("#motionOutput").inputValue(), /원본 음성 활용 구간·발언 보존/);
+  assert.match(await page.locator("#motionOutput").inputValue(), /제공 음원 사용 구간/);
+  assert.match(await page.locator("#motionOutput").inputValue(), /제공 효과음 배치/);
+  await page.locator("#motionVoice").selectOption("dialogue");
+  assert.equal(await page.locator("#motionVoiceDirectionField").isVisible(), true);
+  assert.match(await page.locator("#motionOutput").inputValue(), /등장인물별 대사·목소리/);
+  for (const [value, text] of [["provided", "제공 에셋의 편집"], ["generate", "AI 생성 에셋 목록"], ["mixed", "원본/AI 생성 구분"]]) {
+    await page.locator("#motionAssetMode").selectOption(value);
+    assert.ok((await page.locator("#motionOutput").inputValue()).includes(text));
+  }
+  await page.locator("#motionVoice").selectOption("narration");
+  await page.locator("#motionBgm").selectOption("suggest");
+  await page.locator("#motionSfx").selectOption("essential");
   await goStep("gallery");
   await page.locator('[data-motion-style="blueprint"]').click();
   await goStep("brief");
@@ -247,6 +289,11 @@ try {
   assert.equal(await page.locator("#motionTitle").inputValue(), "지역기업 지원사업 <검증>");
   await goStep("result");
   assert.match(await page.locator("#motionRequestSummary").textContent(), /설계도/);
+  assert.equal(await page.locator("#motionVoice").inputValue(), "narration");
+  assert.equal(await page.locator("#motionBgm").inputValue(), "suggest");
+  assert.equal(await page.locator("#motionSfx").inputValue(), "essential");
+  assert.equal(await page.locator("#motionAssetMode").inputValue(), "mixed");
+  assert.equal(await page.locator("#motionChannel").inputValue(), "유튜브 소개 영상");
   await page.locator('[data-tab-group-filter="visualAsset"]').click();
   await page.locator("#tabBtnMapPrompt").click();
   assert.ok(await page.locator("#paneMapPrompt").evaluate((el) => el.classList.contains("active")));
@@ -325,7 +372,7 @@ try {
     await page.locator('[data-start-tool="motionPrompt"]').click();
     await page.waitForSelector("#paneMotionPrompt.active");
   }
-  for (const version of [1, 2]) {
+  for (const version of [1, 2, 3]) {
     const legacyContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
     await legacyContext.addInitScript((version) => localStorage.setItem("promptdeck.motionPrompt.v1", JSON.stringify({ version, title: "기존 제목 보존", source: "보존할 실제 원문", template: "character", useManualScenes: true, target: "gpt", format: "remotion", renderStyle: "collage", camera: "push", transition: "match", palette: "LEGACY_COLOR_ONLY", scenes: [{ seconds: 8, visual: "LEGACY_PRIVATE_SCENE", caption: "기존 자막" }] })), version);
     const legacy = await legacyContext.newPage();
@@ -335,7 +382,7 @@ try {
     assert.equal(await legacy.locator("#motionScenes, #motionUseManualScenes, #motionTarget, #motionFormat").count(), 0);
     assert.doesNotMatch(await legacy.locator("#motionOutput").inputValue(), /LEGACY_PRIVATE_SCENE|LEGACY_COLOR_ONLY|사진·타이포 콜라주|전체 8초|실행 가능한 전체 코드/);
     const saved = await legacy.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")));
-    assert.equal(saved.version, 3);
+    assert.equal(saved.version, 4);
     assert.equal(saved.scenes[0].visual, "LEGACY_PRIVATE_SCENE");
     assert.equal(saved.scenes[0].caption, "기존 자막");
     assert.equal(saved.useManualScenes, false);
