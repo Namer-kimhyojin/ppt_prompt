@@ -3,15 +3,42 @@ import fs from "node:fs/promises";
 import http from "node:http";
 import os from "node:os";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { chromium } from "playwright";
 import "../src/motion-prompt-catalog.js";
+import "../src/motion-style-catalog.js";
 import "../src/motion-prompt-engine.js";
 
 const engine = globalThis.PromptDeckMotionEngine;
 const catalog = globalThis.PromptDeckMotionCatalog;
+const styles = globalThis.PromptDeckMotionStyles;
+const provenance = JSON.parse(await fs.readFile(new URL("../assets/motion-style-previews/manifest.json", import.meta.url), "utf8"));
+assert.equal(provenance.assets.length, 66); assert.equal(provenance.author, "LemoLab"); assert.equal(provenance.imageLicense, "CC BY 4.0");
+assert.equal(styles.styles.length, 66);
+assert.equal(Object.keys(styles.categories).length, 12);
+assert.equal(new Set(styles.styles.map((s) => s.id)).size, 66);
+const automatic = engine.planningPrompt(engine.defaults());
+assert.match(automatic, /타임스토리|콘티/);
+assert.match(automatic, /장면 수.*직접 설계|장면 수.*새로 기획/);
+assert.doesNotMatch(automatic, /<user_fixed_storyboard>|\[장면 1|전체 15초|0–5초/);
+assert.doesNotMatch(engine.storyboard(engine.defaults()), /\[장면 1|0–5초/);
+for (const style of styles.styles) {
+  const prompt = engine.planningPrompt({ style: style.id, source: "검증 원문 72%", scenes: [{ seconds: 99, visual: "LEGACY_ONLY" }] });
+  assert.ok(prompt.includes(style.name) && prompt.includes(style.visual) && prompt.includes(style.motion));
+  assert.doesNotMatch(prompt, /LEGACY_ONLY|99초|<user_fixed_storyboard>/);
+  assert.match(engine.videoPrompt({ style: style.id }), /샷별 생성 프롬프트/);
+  const image = await fs.readFile(new URL(`../${style.preview}`, import.meta.url));
+  assert.equal(image[0], 255);
+  assert.equal(createHash("sha256").update(image).digest("hex"), provenance.assets.find((a) => a.id === style.id).sha256);
+}
+assert.match(engine.planningPrompt({ duration: 60 }), /희망 전체 길이 60초/);
+assert.doesNotMatch(engine.planningPrompt({ duration: "auto" }), /희망 전체 길이 \d|전체 15초/);
+const migrated = engine.normalize({ version: 1, title: "보관할 제목", scenes: [{ seconds: 9, visual: "보관할 장면" }] });
+assert.equal(migrated.version, 2); assert.equal(migrated.useManualScenes, false);
+assert.equal(migrated.title, "보관할 제목"); assert.equal(migrated.scenes[0].visual, "보관할 장면");
 assert.equal(new Set(catalog.templates.map((t) => t.id)).size, 18);
 for (const template of catalog.templates) {
-  const state = engine.normalize({ template: template.id });
+  const state = engine.normalize({ template: template.id, useManualScenes: true, fps: 30 });
   assert.equal(state.scenes.length, 3);
   assert.equal(engine.totalSeconds(state), 15);
   assert.match(engine.productionPrompt(state), new RegExp(template.name));
@@ -25,7 +52,7 @@ for (const template of catalog.templates) {
   }
 }
 const malformed = engine.normalize({ template: "unknown", target: "__proto__", ratio: "42:1", scenes: [null, { seconds: -99 }, { seconds: "oops" }, { seconds: 9999 }] });
-assert.equal(malformed.template, "kinetic");
+assert.equal(malformed.template, "auto");
 assert.equal(malformed.target, "claude");
 assert.deepEqual(malformed.scenes.map((s) => s.seconds), [5, 1, 5, 120]);
 assert.equal(engine.normalize({ scenes: Array(20).fill({}) }).scenes.length, 12);
@@ -36,7 +63,7 @@ for (const length of [1, 3, 7, 12]) for (const requested of [-9, 1, 15, 91, 359,
   assert.ok(state.scenes.every((s) => Number.isInteger(s.seconds) && s.seconds >= 1 && s.seconds <= 120));
   assert.equal(engine.timeline(state).at(-1).end, engine.totalSeconds(state));
 }
-const source = engine.normalize({ title: "한글 & <검증>", source: "원문 72% · 2026-11-01", assets: "제품.png", scenes: [{ seconds: 7, visual: "테스트 화면", motion: "피사체가 천천히 한 번 고개를 끄덕인다.", caption: "정확한 한글", voice: "안녕하세요", reference: "shot-01.png" }], audio: "narration" });
+const source = engine.normalize({ useManualScenes: true, title: "한글 & <검증>", source: "원문 72% · 2026-11-01", assets: "제품.png", scenes: [{ seconds: 7, visual: "테스트 화면", motion: "피사체가 천천히 한 번 고개를 끄덕인다.", caption: "정확한 한글", voice: "안녕하세요", reference: "shot-01.png" }], audio: "narration" });
 assert.match(engine.productionPrompt(source), /한글 &amp; &lt;검증&gt;/);
 assert.match(engine.videoPrompt(source), /원문 72%/);
 const i2v = engine.videoPrompt({ ...source, videoMode: "i2v" }, 0);
@@ -75,33 +102,42 @@ try {
   page.on("response", (r) => { if (r.status() >= 400 && /motion-prompt/.test(r.url())) resourceErrors.push(r.url()); });
   await page.goto(`${origin}/index.html?tab=motionPrompt`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector("#paneMotionPrompt.active");
-  assert.equal(await page.locator("[data-motion-template]").count(), 18);
-  assert.ok(await page.locator("#motionGallery img").evaluateAll((imgs) => imgs.every((img) => img.complete && img.naturalWidth > 0)));
+  assert.equal(await page.locator("[data-motion-style]").count(), 66);
+  assert.equal(await page.locator(".motion-scenes-section").isVisible(), false);
+  assert.equal(await page.locator("#motionFormat").isVisible(), false);
+  assert.equal(await page.locator("#motionDurationChoice").inputValue(), "auto");
+  assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /\[장면 1|0–5초/);
   assert.ok(await page.locator("#tabActions").evaluate((el) => el.parentElement.matches(".motion-result-stack") && el === el.parentElement.firstElementChild));
   assert.equal(await page.locator(".app-tabs-bar #tabActions").count(), 0);
-  for (const template of catalog.templates) {
-    await page.locator(`[data-motion-template="${template.id}"]`).click();
-    assert.equal(await page.locator("#motionSelectedName").textContent(), template.name);
-    assert.equal(await page.locator("#motionStage svg").count(), 1);
-    await page.locator("#motionPlayBtn").click();
-    assert.equal(await page.locator("#motionPlayBtn").getAttribute("aria-pressed"), "true");
+  for (const style of styles.styles) {
+    await page.locator(`[data-motion-style="${style.id}"]`).click();
+    assert.equal(await page.locator("#motionSelectedName").textContent(), style.name);
+    await page.locator("#motionStage img").evaluate((img) => img.decode());
+    assert.match(await page.locator("#motionOutput").inputValue(), new RegExp(style.name));
+    assert.match(await page.locator("#motionReferenceLinks").textContent(), /원본 참고영상/);
   }
-  await page.locator('[data-motion-category="product"]').click();
-  assert.equal(await page.locator("[data-motion-template]").count(), 3);
+  await page.locator('[data-motion-category="painting"]').click();
+  assert.equal(await page.locator("[data-motion-style]").count(), 8);
   await page.locator("#motionSearch").fill("없는-유형");
-  assert.equal(await page.locator("[data-motion-template]").count(), 0);
+  assert.equal(await page.locator("[data-motion-style]").count(), 0);
   await page.locator("#motionSearch").fill("");
   await page.locator('[data-motion-category="all"]').click();
-  await page.locator('[data-motion-template="ui"]').click();
+  await page.locator('[data-motion-style="watercolor"]').click();
+  await page.locator("#motionPurpose").selectOption("ui");
   await page.locator("#motionSampleBtn").click();
   await page.locator("#motionTitle").fill("지역기업 지원사업 <검증>");
   await page.locator("#motionSource").fill("기간 2026-11-01 ~ 2026-11-10 / 접수: 공식 홈페이지");
+  await page.locator("#motionDurationChoice").selectOption("custom");
   await page.locator("#motionDuration").fill("31");
   await page.locator("#motionDuration").press("Tab");
   assert.match(await page.locator("#motionSpecs").textContent(), /31초/);
   assert.match(await page.locator("#motionOutput").inputValue(), /&lt;검증&gt;/);
+  await page.locator(".motion-legacy-scenes > summary").click();
   await page.locator('[data-motion-scene="0"] [data-scene-field="caption"]').fill("정확한 한글 안내");
-  await page.locator('[data-motion-template="logo"]').click();
+  assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /정확한 한글 안내/);
+  await page.locator("#motionUseManualScenes").check();
+  assert.match(await page.locator("#motionOutput").inputValue(), /정확한 한글 안내/);
+  await page.locator('[data-motion-style="blueprint"]').click();
   assert.equal(await page.locator('[data-motion-scene="0"] [data-scene-field="caption"]').inputValue(), "정확한 한글 안내");
   await page.locator("#motionAddSceneBtn").click();
   assert.equal(await page.locator("[data-motion-scene]").count(), 4);
@@ -114,6 +150,7 @@ try {
   await page.locator("#motionVideoMode").selectOption("i2v");
   await page.locator('[data-motion-scene="0"] [data-scene-field="reference"]').fill("원본-01.png");
   await page.locator("#motionTarget").selectOption("gpt");
+  await page.locator("#motionOutputBoard").click();
   await page.locator("#motionFormat").selectOption("remotion");
   assert.match(await page.locator("#motionOutput").inputValue(), /^# 역할/);
   assert.match(await page.locator("#motionOutput").inputValue(), /중첩 프레임/);
@@ -189,9 +226,19 @@ try {
     await page.locator('[data-start-tool="motionPrompt"]').click();
     await page.waitForSelector("#paneMotionPrompt.active");
   }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.addInitScript(() => localStorage.setItem("promptdeck.motionPrompt.v1", JSON.stringify({ version: 1, title: "기존 제목 보존", source: "보존할 실제 원문", template: "character", scenes: [{ seconds: 8, visual: "LEGACY_PRIVATE_SCENE", caption: "기존 자막" }] })));
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#paneMotionPrompt.active");
+  assert.equal(await page.locator("#motionTitle").inputValue(), "기존 제목 보존");
+  assert.equal(await page.locator("#motionUseManualScenes").isChecked(), false);
+  assert.equal(await page.locator(".motion-scenes-section").isVisible(), false);
+  assert.doesNotMatch(await page.locator("#motionOutput").inputValue(), /LEGACY_PRIVATE_SCENE|전체 8초/);
+  assert.equal(await page.locator('[data-scene-field="visual"]').first().inputValue(), "LEGACY_PRIVATE_SCENE");
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem("promptdeck.motionPrompt.v1")).version), 2);
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(resourceErrors, []);
-  console.log("PASS: 18 sample images/previews, filters, scenes, output modes, copy/download, restore/reset, existing tabs, desktop/mobile, light/dark, reduced motion, homepage/feature navigation");
+  console.log("PASS: 66 attributed style stills, AI-directed planning without fixed scenes, optional manual scenes, output/copy/download/restore, existing tabs, responsive themes and navigation");
   console.log(`Screenshots: ${evidence}`);
 } finally {
   if (browser) await browser.close();

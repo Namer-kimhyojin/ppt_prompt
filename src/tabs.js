@@ -164,7 +164,7 @@
     material: { label: "스타일 재료", icon: "🎨" },
   };
   const outputNotes = {
-    motionPrompt: ["promptVideo", "샘플 연출을 골라 Claude·GPT 제작 요청문과 장면별 영상 프롬프트를 만듭니다. 영상 제작은 선택한 AI에서 진행합니다."],
+    motionPrompt: ["promptVideo", "영상의 구성 방향과 스타일을 정하면, Claude·GPT에게 상세 타임스토리·콘티·대본을 요청하는 프롬프트를 만듭니다."],
     commonPrompt: ["promptImage", "복사해서 이미지 AI에 붙여넣는 공통 디자인 가이드입니다."],
     generator: ["promptImage", "복사해서 이미지 AI에 붙여넣는 장별 프롬프트입니다."],
     slideImage: ["direct", "이 화면에서 API로 바로 만드는 슬라이드 이미지 파일입니다."],

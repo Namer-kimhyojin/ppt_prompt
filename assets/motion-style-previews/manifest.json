@@ -1,0 +1,604 @@
+{
+  "source": "https://github.com/lemomo-ai/lemo-opuscar",
+  "revision": "f17136060781a0068a7951245a3aa7835a7230de",
+  "author": "LemoLab",
+  "imageLicense": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "changes": "Original still files unchanged; displayed as reference thumbnails. Korean direction notes authored by PromptDeck. No audio or video files included.",
+  "assets": [
+    {
+      "id": "archive-lighttable",
+      "file": "archive-lighttable.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/archive-lighttable_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/archive-lighttable/STYLE.md",
+      "sha256": "594f6d15fce4848e086d2adc1218b0e32d5b118cae4a49ef23857fe378d5800b",
+      "styleSourceSha256": "2f18ac9a42822b7a9941866c42b0642e5417dea5431d61f141f6e11b29c1ec14",
+      "changed": false
+    },
+    {
+      "id": "art-deco",
+      "file": "art-deco.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/art-deco_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/art-deco/STYLE.md",
+      "sha256": "306dda677b859ace3cc1a12f372dd84fd5b8b91395852affa7d4b632080b9672",
+      "styleSourceSha256": "d73b30c0fa6d153487549d32d8c6c599733cf5e7576badec862a12da6d284761",
+      "changed": false
+    },
+    {
+      "id": "ascii-crt",
+      "file": "ascii-crt.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/ascii-crt_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/ascii-crt/STYLE.md",
+      "sha256": "543a4acf51a6e7f8c4896f60f847db86f605c6858b9e16c301f71bc3222a10d1",
+      "styleSourceSha256": "cbe0b8957c785a165f85ccb3b8eba61c30c0462b32983db6a16c76046a2bb333",
+      "changed": false
+    },
+    {
+      "id": "backrooms",
+      "file": "backrooms.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/backrooms_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/backrooms/STYLE.md",
+      "sha256": "4133b3587ce009c44cd8d1c10e094c771fe3c47da6e4fd74dda9a21d061332d6",
+      "styleSourceSha256": "2a3697a1ce37d0fbae3281220ae6154eeb9789233f1fae472d55ac169ba26fb4",
+      "changed": false
+    },
+    {
+      "id": "blueprint",
+      "file": "blueprint.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/blueprint_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/blueprint/STYLE.md",
+      "sha256": "28a1e4f35e042d9d5cdbbd8740a57bd5267430320e34fa3eaa72753a7ce93ddf",
+      "styleSourceSha256": "de01fc7fcb38b17b58eb017c9cdbcb36b9242b029435a33587614c93088e1717",
+      "changed": false
+    },
+    {
+      "id": "brick-toy",
+      "file": "brick-toy.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/brick-toy_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/brick-toy/STYLE.md",
+      "sha256": "79d70fe522b57789211616288f64acff3e3aaa140c13dfd13d7ddc8454e9b250",
+      "styleSourceSha256": "29b23e846951856b722a698a03c9458cfc17b4fc71d044f45d773acf2a742768",
+      "changed": false
+    },
+    {
+      "id": "briefing-board",
+      "file": "briefing-board.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/briefing-board_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/briefing-board/STYLE.md",
+      "sha256": "2cf0a4f42dae3b8361a8758c7ee334aab41cacdb6dfb231dd41937dda97931ee",
+      "styleSourceSha256": "44669da808da4ed37e2a4a0f6e5d2b23008775a3c4870add04641d714e9f323d",
+      "changed": false
+    },
+    {
+      "id": "caption-news",
+      "file": "caption-news.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/caption-news_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/caption-news/STYLE.md",
+      "sha256": "b2882dcab4c5a338736cf2334df4dc1b74fb355caf387e3f055424ab8c541df1",
+      "styleSourceSha256": "ba4c0bb5dd13e49c2c2b520af5e42a28112b36354dc445d0f6ade3727b458fd2",
+      "changed": false
+    },
+    {
+      "id": "cel-anime-80s",
+      "file": "cel-anime-80s.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/cel-anime-80s_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/cel-anime-80s/STYLE.md",
+      "sha256": "a0f76f40ce55c6d33b5b3c290bf88c2b5ea7df9adfe221b1a527d47c5d3a707e",
+      "styleSourceSha256": "1e16f5c6f90ebf09556ec94d37434400d309c978e00ee89e9d38dec476664eaf",
+      "changed": false
+    },
+    {
+      "id": "chalkboard",
+      "file": "chalkboard.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/chalkboard_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/chalkboard/STYLE.md",
+      "sha256": "58164c37ccb6501f2bb352a506f59645025865be510bd8c15f7d8cf53033475d",
+      "styleSourceSha256": "7f89f1a4694805e6bc767050007a6b44f2b7ab2474b0e3244032d3a0269b3e1c",
+      "changed": false
+    },
+    {
+      "id": "circuit-board",
+      "file": "circuit-board.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/circuit-board_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/circuit-board/STYLE.md",
+      "sha256": "9030fdbd98587e0396523d4bd3d15ef9eb26d78819f8ac7c94924fa2ed657c3b",
+      "styleSourceSha256": "ffc30ae4080057c6ac5e6ed6d78d5748ee96dfaa463455a27e5a0cdf5cc8f7a0",
+      "changed": false
+    },
+    {
+      "id": "city-symphony",
+      "file": "city-symphony.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/city-symphony_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/city-symphony/STYLE.md",
+      "sha256": "ed5ad70aa40f1cb6584c4e4ea4db3d85e4b69f3a35d63c6999f9ad66a9135fbe",
+      "styleSourceSha256": "8b78d2b08cadb045ac1649cade1e5274fba935b1177c64c176e7567c6e8b31e1",
+      "changed": false
+    },
+    {
+      "id": "countdown",
+      "file": "countdown.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/countdown_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/countdown/STYLE.md",
+      "sha256": "c301b2a73c4e222a83bf044d74310adf42d2b37f8ba1505a74091bf7bb7aa318",
+      "styleSourceSha256": "867cca6e0c9bb0d6fb914cc4e9a2e295623ecd345fda9bd00bc362ff233f220f",
+      "changed": false
+    },
+    {
+      "id": "crayon-book",
+      "file": "crayon-book.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/crayon-book_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/crayon-book/STYLE.md",
+      "sha256": "e47c200812b180a0fb21bc9e5b457de80ead855de2f056a4c62766b13bd9ca8f",
+      "styleSourceSha256": "ba558478fe519fa6777fe28fa7d1980117297c7beb6fe2e366ef6f00688aa175",
+      "changed": false
+    },
+    {
+      "id": "dark-keynote",
+      "file": "dark-keynote.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/dark-keynote_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/dark-keynote/STYLE.md",
+      "sha256": "e69159dcd56d50865f4275b03576b8f53dd6d451cd646456238a2d045e9316e7",
+      "styleSourceSha256": "b0791b5e95f56bf46c621e6064d426ebbee810c7515fb87e951b73668a2a0d24",
+      "changed": false
+    },
+    {
+      "id": "data-physical",
+      "file": "data-physical.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/data-physical_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/data-physical/STYLE.md",
+      "sha256": "778ce5e060fe2a2cdf689913155012a527e929e569eb46237691ae4b8a234714",
+      "styleSourceSha256": "2d2e6685b0dcf8a1e2ba2ff904ab02d51aede1f5dbb246fd2f6e81c8d146f208",
+      "changed": false
+    },
+    {
+      "id": "dataviz",
+      "file": "dataviz.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/dataviz_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/dataviz/STYLE.md",
+      "sha256": "1b504e873efe6c5d8db468298997cbdb5eff4341f463fa51c2b405cb53d6d2cd",
+      "styleSourceSha256": "e94013d5a7c548c8844598a671ff0b49bc78770696cbca0d8d00846336f3c67f",
+      "changed": false
+    },
+    {
+      "id": "desktop-flythrough",
+      "file": "desktop-flythrough.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/desktop-flythrough_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/desktop-flythrough/STYLE.md",
+      "sha256": "60fc1f8ed1bcd529cfc06324ccc17b89b595a6907a5cc0777599cb29695af136",
+      "styleSourceSha256": "d8c9113e10d7b3a5f65bbee86643305a5dc29739d0338091e1d0974ecf6d5eb7",
+      "changed": false
+    },
+    {
+      "id": "engraving",
+      "file": "engraving.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/engraving_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/engraving/STYLE.md",
+      "sha256": "58625715a33d2d7e42758f65981678563745653cf78bebe7f61788e5960474a6",
+      "styleSourceSha256": "0c6816b8b47163d158ae0ea668feecf53dcbef9d1310e27b9e797d9b9e7aac0d",
+      "changed": false
+    },
+    {
+      "id": "game-show",
+      "file": "game-show.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/game-show_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/game-show/STYLE.md",
+      "sha256": "204bd842120beabc6e491f7881c4ecf4807c9a317c5cba3527b3b71c8cf70a53",
+      "styleSourceSha256": "cadee8f0ff8cfc206b49d852e5a0b15d7da432ad497fa8b19ac568ce386ff8e3",
+      "changed": false
+    },
+    {
+      "id": "glass-product",
+      "file": "glass-product.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/glass-product_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/glass-product/STYLE.md",
+      "sha256": "d403e6074cc0e974186482c4d058c4297e5ec889f6c02b97190ea9e535206f75",
+      "styleSourceSha256": "630fa80cde0930154ba64f15bce5c8ee0c8dcf48d921253f8c7e3194712c8fb5",
+      "changed": false
+    },
+    {
+      "id": "halftone-dossier",
+      "file": "halftone-dossier.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/halftone-dossier_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/halftone-dossier/STYLE.md",
+      "sha256": "8a145a2edb7d1b4cfbe289bdf0a606430219f53c2f25c55ba619725158f9a815",
+      "styleSourceSha256": "71b4b8f089836d95f6bd8fc3719ae184cbf2be4a04ecd935c6d55d89a5bb558d",
+      "changed": false
+    },
+    {
+      "id": "hd-2d",
+      "file": "hd-2d.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/hd-2d_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/hd-2d/STYLE.md",
+      "sha256": "e655f50b3c6f26ec8f7354c88bd41b058da878612941244ec168d8840ac77cee",
+      "styleSourceSha256": "bdc5ef4f60d8ba9ff6e5151391a6a62d8da4685d393c242699fd5c6188f0551a",
+      "changed": false
+    },
+    {
+      "id": "hologram-hud",
+      "file": "hologram-hud.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/hologram-hud_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/hologram-hud/STYLE.md",
+      "sha256": "77b9801a82ff1bf619dac25ae5cc1bd826ef976ee5953bae0fde33510d821619",
+      "styleSourceSha256": "81e2c6b0ede2cc211a8dd676417a1ce5efda278514f273c5249165e38ff34573",
+      "changed": false
+    },
+    {
+      "id": "impasto",
+      "file": "impasto.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/impasto_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/impasto/STYLE.md",
+      "sha256": "b32a4ec7026b88b0c71b639bd87bc4b304d6286dfa46f7b73696625ad84d8a22",
+      "styleSourceSha256": "38a0dcb2808c2ff03ef721c1319b9145438b4074ed37ab7a09dcf20b7268e062",
+      "changed": false
+    },
+    {
+      "id": "ink-wash",
+      "file": "ink-wash.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/ink-wash_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/ink-wash/STYLE.md",
+      "sha256": "f12f7f564254ddc2507ab145ee2e2be47df021bfe9c9d440f0d9062a7d90bb20",
+      "styleSourceSha256": "5d71598f0b9cf4034c6461956b0d8bd63bd33750b4045376044f0d956b01d645",
+      "changed": false
+    },
+    {
+      "id": "iso-infographic",
+      "file": "iso-infographic.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/iso-infographic_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/iso-infographic/STYLE.md",
+      "sha256": "37b28287f9f9dee08bb7fcbca378f0631e53a3dc4744a440960548a6941c59d6",
+      "styleSourceSha256": "a3bf89913255043ff2c8616bff9be9f9536efe1eb7a3b98c755cb4189bd7dff1",
+      "changed": false
+    },
+    {
+      "id": "isometric-picture-book",
+      "file": "isometric-picture-book.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/isometric-picture-book_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/isometric-picture-book/STYLE.md",
+      "sha256": "b28b4502a85ad28bc9e8986a01ab46287a8321b826a6adabcf6c65c85c7c2449",
+      "styleSourceSha256": "9e838ed305b5fec5002b9aa452cb28730d13ec84dd529a801fb3b174e81cec83",
+      "changed": false
+    },
+    {
+      "id": "kino-montage",
+      "file": "kino-montage.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/kino-montage_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/kino-montage/STYLE.md",
+      "sha256": "fdb890c5c68dfa4b8dee334712ba2906a06d6eda2809952060f8543f5ee7f591",
+      "styleSourceSha256": "8c63deefda22d4677d286ddfffb243ce6385dfa7ab56fbc493705fe13908f204",
+      "changed": false
+    },
+    {
+      "id": "lidar-survey",
+      "file": "lidar-survey.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/lidar-survey_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/lidar-survey/STYLE.md",
+      "sha256": "9b5ef160d7f2109403b04fa13817bccdb836ecaa464467e4b8e8357509db367b",
+      "styleSourceSha256": "d1b60fda2793932286372e7cf68d62af5723bba14c37e9a437639ea57b1a310d",
+      "changed": false
+    },
+    {
+      "id": "living-screencast",
+      "file": "living-screencast.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/living-screencast_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/living-screencast/STYLE.md",
+      "sha256": "45700b6e0abf87d3325c8a5cdcc4db5782e4c15c544b747cc570d9ce3710e89a",
+      "styleSourceSha256": "02e8e5521fe1f553b0e58dacc2a556aea361dd5823e2ca0996963839d3c7d5c7",
+      "changed": false
+    },
+    {
+      "id": "lowpoly-island",
+      "file": "lowpoly-island.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/lowpoly-island_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/lowpoly-island/STYLE.md",
+      "sha256": "7feaf6cf1ba68b90b78106eeb4386a9881eacd0d6b31b33ed48a32dd13ec7854",
+      "styleSourceSha256": "1ae7bcd6aa3d521f563d8905f8109842fd7252ff8b70c1bd18265105a8a450f9",
+      "changed": false
+    },
+    {
+      "id": "memphis-diorama",
+      "file": "memphis-diorama.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/memphis-diorama_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/memphis-diorama/STYLE.md",
+      "sha256": "4f22ec183f60f0aa9ec2343fccef8252ddb7124122d2286f391596b4aa11c315",
+      "styleSourceSha256": "7f1748f2741d069e074172800d501ec00527db8a018e1e5ab4ecfa630ed6763b",
+      "changed": false
+    },
+    {
+      "id": "microgame",
+      "file": "microgame.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/microgame_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/microgame/STYLE.md",
+      "sha256": "987d734ac7608270e2b039e283bfb47414cdfadfe049f80bc2e9a7273b45cf56",
+      "styleSourceSha256": "ad13d34bd06a65bef81b04f531c4f256bcc0bff4f229f976d52e07d5beef9dd5",
+      "changed": false
+    },
+    {
+      "id": "microscope",
+      "file": "microscope.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/microscope_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/microscope/STYLE.md",
+      "sha256": "bdefb1ae91eac33abc56d8c4f91fa86a7786d2e842068388afac5fe269703428",
+      "styleSourceSha256": "63040631bdc28a3c7f8cf05e2e8523969becd0267741e00dd3e171c22be16e92",
+      "changed": false
+    },
+    {
+      "id": "midcentury-toon",
+      "file": "midcentury-toon.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/midcentury-toon_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/midcentury-toon/STYLE.md",
+      "sha256": "60c5bde99994234d51b125765d2e1583da867fe47500ae42d05a7df88610e8f7",
+      "styleSourceSha256": "e73614b6f9e2f2e8ee279f4909da8429235b96f6d13a12345b6e57d5823c30b8",
+      "changed": false
+    },
+    {
+      "id": "news-package",
+      "file": "news-package.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/news-package_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/news-package/STYLE.md",
+      "sha256": "998a6255361c81565d211453fed7a1be70286e29d02c163d77a32517867da26a",
+      "styleSourceSha256": "6f9d1b6a04878229260ea542fe71f2b77c560ed8e40df68b68e80ac4e21710ce",
+      "changed": false
+    },
+    {
+      "id": "newsreel",
+      "file": "newsreel.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/newsreel_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/newsreel/STYLE.md",
+      "sha256": "d09be02d5efc4a316984833e5dd71bea7fcf95ac94af9540b0483fcf34d89616",
+      "styleSourceSha256": "0f82c1423d2463dfc2700b23dff9ec183f596724a4820757e189c6fa5225e600",
+      "changed": false
+    },
+    {
+      "id": "one-line",
+      "file": "one-line.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/one-line_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/one-line/STYLE.md",
+      "sha256": "da2bd273d62fe7ecf5df216b6e96f21b6a0778ad77c41272252c0c6d81b01de1",
+      "styleSourceSha256": "69d26cb06f48ab6b03c12a76c2390d0945cdaddc38bc109b7d5e292b9af1399b",
+      "changed": false
+    },
+    {
+      "id": "paper-lantern",
+      "file": "paper-lantern.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/paper-lantern_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/paper-lantern/STYLE.md",
+      "sha256": "a2ac99facda434f956076e9508ebdba44406bbeb80064ca9def756d72675918a",
+      "styleSourceSha256": "6f3001ad45657262384b3012f441883ef5ac9c558b82d23e503d14e2f672ac91",
+      "changed": false
+    },
+    {
+      "id": "paper-popup",
+      "file": "paper-popup.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/paper-popup_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/paper-popup/STYLE.md",
+      "sha256": "373ff711470a10d9101cb19c30fd2639197fa7fe8a599a30ba0dd6958ee7bc38",
+      "styleSourceSha256": "8e5c0ca430fd96b75c4d9c2af92a87c84d4d1af8cda64280a189c51279e1ee9b",
+      "changed": false
+    },
+    {
+      "id": "papercut-red",
+      "file": "papercut-red.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/papercut-red_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/papercut-red/STYLE.md",
+      "sha256": "bdc3dc9185d32b8e0ee94dc5d90bd3a384149c780c661304e020330913745e18",
+      "styleSourceSha256": "65e317d83335e0cb34696b643e31ad9e46fb0bb93fd748c2e21d74358aea61ec",
+      "changed": false
+    },
+    {
+      "id": "pictogram-motion",
+      "file": "pictogram-motion.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/pictogram-motion_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/pictogram-motion/STYLE.md",
+      "sha256": "f753b7f26994d63f7d128198ef099d183206edf6bd7492cf23bce7df12b857cb",
+      "styleSourceSha256": "e982606f3d7d132d320abdc1a74c226b1e0642b664a0c41582bc76fec646da1a",
+      "changed": false
+    },
+    {
+      "id": "pixel-rpg",
+      "file": "pixel-rpg.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/pixel-rpg_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/pixel-rpg/STYLE.md",
+      "sha256": "656b16a674c5c142d9a540c5a92cda8469c6e9e758f737494db2152c989e604a",
+      "styleSourceSha256": "f79fac0d9aed03d2a69f17a50b37adca2da84156b3fa525537761c507bcaea8e",
+      "changed": false
+    },
+    {
+      "id": "printed-long-take",
+      "file": "printed-long-take.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/printed-long-take_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/printed-long-take/STYLE.md",
+      "sha256": "c29b67831de5dba020ae61d80bbb53ebdead50b1753e0252460455332f025e31",
+      "styleSourceSha256": "fafef88a98f73d73b578ef8591222d2287ac1b921f594fc08e5588a97d077b2d",
+      "changed": false
+    },
+    {
+      "id": "risograph",
+      "file": "risograph.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/risograph_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/risograph/STYLE.md",
+      "sha256": "b052cd84ed69898732debd293009cab02786b4fc7728dccb9d02a9a1192b47e5",
+      "styleSourceSha256": "c3d85c91a81b0afde091d964482749482adc66c12730afe124708f7b18b331a6",
+      "changed": false
+    },
+    {
+      "id": "rubber-hose",
+      "file": "rubber-hose.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/rubber-hose_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/rubber-hose/STYLE.md",
+      "sha256": "9b332777f058c5914d5fea84b1be445c14faf632c807c9f883cb8fdc899bb098",
+      "styleSourceSha256": "bf850f9cd22e68b2125fed00d1b9804e91479620b44420ba7ec50e570e472a94",
+      "changed": false
+    },
+    {
+      "id": "satellite-briefing",
+      "file": "satellite-briefing.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/satellite-briefing_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/satellite-briefing/STYLE.md",
+      "sha256": "2b445629b72125b3f6a359411def9fde4478294abb8a9c4821e2e219aef9fcbc",
+      "styleSourceSha256": "39fec0c7fda13600de04f1a9631ca636dc8850429033c1f65bb6d3283ec2988d",
+      "changed": false
+    },
+    {
+      "id": "scifi-toon",
+      "file": "scifi-toon.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/scifi-toon_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/scifi-toon/STYLE.md",
+      "sha256": "5ce16fc270baed1e582c801f5db5b1d377f91065872c420c449c26eea9eda328",
+      "styleSourceSha256": "9a720a57ce50dc554e9237e698a979cdf7311527e6e6a0dad803278dfe8ad2ce",
+      "changed": false
+    },
+    {
+      "id": "shadow-puppet",
+      "file": "shadow-puppet.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/shadow-puppet_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/shadow-puppet/STYLE.md",
+      "sha256": "72f7edc86977015ded7ecb11a305c85cf4fcafec1dff5d5a0fd78d2a5264fe7c",
+      "styleSourceSha256": "8be075a8262d5a3deea9b05684d8a9abdc1e54c0d90649bf14609ecb4106c3af",
+      "changed": false
+    },
+    {
+      "id": "silent-film",
+      "file": "silent-film.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/silent-film_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/silent-film/STYLE.md",
+      "sha256": "4911e71060640f3721ca7cafd1079a5fbe3d774071fba9ddae67d27df136dda2",
+      "styleSourceSha256": "44633a4edd4ec6b84be809bd48b38503a75a71531112b3d28a52f27135012b20",
+      "changed": false
+    },
+    {
+      "id": "silkscreen-poster",
+      "file": "silkscreen-poster.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/silkscreen-poster_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/silkscreen-poster/STYLE.md",
+      "sha256": "11a2a9dc043daf3b0b8225bd058268687534a3df520a57772962fa74abeafc18",
+      "styleSourceSha256": "a8b3792efb1476b78493f86a033221b27f60c1927463cc435f8816e4d9eda148",
+      "changed": false
+    },
+    {
+      "id": "spy-titles",
+      "file": "spy-titles.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/spy-titles_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/spy-titles/STYLE.md",
+      "sha256": "f9f4d366156a9b62a4f35911996d846fc663169044508a871e50242785d7f392",
+      "styleSourceSha256": "ea6e9e9073af43ef0bb860e368f60b16ec32a91668386115a142907d92cb1f75",
+      "changed": false
+    },
+    {
+      "id": "stained-glass",
+      "file": "stained-glass.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/stained-glass_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/stained-glass/STYLE.md",
+      "sha256": "425b9c6deed7e39815412b2d9c5f3059f906156669ca8297f8a481076704b2a2",
+      "styleSourceSha256": "0f6551bd109a4127404068aa1e75f18f16b58c80b486c23480b3d193e597b060",
+      "changed": false
+    },
+    {
+      "id": "swiss-motion",
+      "file": "swiss-motion.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/swiss-motion_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/swiss-motion/STYLE.md",
+      "sha256": "45d52af40432e240aa4aa2120060b8311e9c1d56f1bfcd7f5aedafa36bfc2ce6",
+      "styleSourceSha256": "14ddeb6dc495e691a220497069a2ee4827d820f9ee7a3173de5846489ef41f57",
+      "changed": false
+    },
+    {
+      "id": "teardown",
+      "file": "teardown.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/teardown_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/teardown/STYLE.md",
+      "sha256": "c0e7f9dc5a5b415cbe2ff1706dfe6e647c70e212fcee619e25426ef8de6dd803",
+      "styleSourceSha256": "90df05a02a3d33add58e0dd99bef19ca20ea16b10390b3c2350d8483106922ee",
+      "changed": false
+    },
+    {
+      "id": "telestrator",
+      "file": "telestrator.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/telestrator_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/telestrator/STYLE.md",
+      "sha256": "43b6da443f0ac77b2a7717a25bb05083063790a8ad824c4106c3b15f5982e60e",
+      "styleSourceSha256": "7289027728dc5e1b6d095b7c7bc7806790bb579934c81682265c0c1b4897a3d0",
+      "changed": false
+    },
+    {
+      "id": "tilt-shift",
+      "file": "tilt-shift.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/tilt-shift_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/tilt-shift/STYLE.md",
+      "sha256": "3941384751b0c93f72708afd33b272a097de72db09ac4e23b4fbe640e07a5714",
+      "styleSourceSha256": "131ae50c6bddd30922638cbd5f2fae5c047223360a3f6924b074b0db525a5c63",
+      "changed": false
+    },
+    {
+      "id": "transit-map",
+      "file": "transit-map.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/transit-map_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/transit-map/STYLE.md",
+      "sha256": "57e6facff1edf277d39c3829e5d393a0dfe9708af90bda3f4bb18daedd199675",
+      "styleSourceSha256": "e6c62bc75071c86b67c30def595e919910d86245504c8c09882d151a3c719d1c",
+      "changed": false
+    },
+    {
+      "id": "ukiyoe",
+      "file": "ukiyoe.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/ukiyoe_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/ukiyoe/STYLE.md",
+      "sha256": "8304c6b69800e80e2be929c3b86759b73abd8d7e1798789fc19e11d41eeffc39",
+      "styleSourceSha256": "218c48a204f9034d1c2fb7f11698b4834f1faee1ca68c9e336f3d6ab992ff2e4",
+      "changed": false
+    },
+    {
+      "id": "urban-sketch",
+      "file": "urban-sketch.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/urban-sketch_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/urban-sketch/STYLE.md",
+      "sha256": "75e5675cc05e5825e50aaf8ce55c11a554bdec5d8b51cb02882f596434bba5fe",
+      "styleSourceSha256": "2baf1a19f31b06e55d66d62e4c3449c7a2686c689190976f3e3d0cbdce2faa9a",
+      "changed": false
+    },
+    {
+      "id": "visual-investigation",
+      "file": "visual-investigation.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/visual-investigation_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/visual-investigation/STYLE.md",
+      "sha256": "4e0078b2eaac53e8598f09ac8b6a1921d3bd877d5547386f49d59b64293b3253",
+      "styleSourceSha256": "9b39ebaa00c3d77ae544d7453e99b79caf4dfaae1d37798b1f995a5578aac30b",
+      "changed": false
+    },
+    {
+      "id": "watercolor",
+      "file": "watercolor.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/watercolor_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/watercolor/STYLE.md",
+      "sha256": "be138ab3476cd8c7bcafc462ecec99a466a91f5c18b5f9b9fa325170e261fd5f",
+      "styleSourceSha256": "662d57568408a7c82ef8f64980ca85798b8bb239df3dc3a6715283d7f4555ef0",
+      "changed": false
+    },
+    {
+      "id": "white-model",
+      "file": "white-model.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/white-model_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/white-model/STYLE.md",
+      "sha256": "aa6ddde5a18be001340cf20d1e2550fdce5b7e4c9f4392dcad5f03b276be1059",
+      "styleSourceSha256": "02b6423a69ac5a30322997ec9523bd6b6f776b7c8cf14f249eeb996b9d21e2c2",
+      "changed": false
+    },
+    {
+      "id": "whiteboard",
+      "file": "whiteboard.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/whiteboard_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/whiteboard/STYLE.md",
+      "sha256": "aaf08759959faa4c1059e8e97b707228b209457eb2eb345811513e5a54e109b3",
+      "styleSourceSha256": "19f66326257bcafb8aca18af3e209d1fee31d9e23902ce1708bbb606cbf4b718",
+      "changed": false
+    },
+    {
+      "id": "woodcut",
+      "file": "woodcut.jpg",
+      "imageSource": "https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/f17136060781a0068a7951245a3aa7835a7230de/styleboard/img/woodcut_0.jpg",
+      "styleSource": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/woodcut/STYLE.md",
+      "sha256": "896f28e20bdd6c466544a6b137495adf9de04eb4c08bc25b5405cf9905656bc8",
+      "styleSourceSha256": "b96fda6eeac038137310cc0766d979c8d8a5f3ff6acd87bada5aa50d5136a6a0",
+      "changed": false
+    }
+  ]
+}

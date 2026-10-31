@@ -235,9 +235,14 @@ async function verifyAssetHashes(origin, head) {
     "features.html",
     "src/public-nav.js",
     "src/motion-prompt-catalog.js",
+    "src/motion-style-catalog.js",
     "src/motion-prompt-engine.js",
     "src/motion-prompt.js",
     "styles/motion-prompt.css",
+    "assets/motion-style-previews/manifest.json",
+    "assets/motion-style-previews/blueprint.jpg",
+    "assets/motion-style-previews/watercolor.jpg",
+    "assets/motion-style-previews/pixel-rpg.jpg",
     "styles/base.css",
     "src/data-diagram.js",
     "src/visual-style-contract.js",
@@ -400,6 +405,17 @@ async function verifyAssetHashes(origin, head) {
       assert(remoteHash === localHash, `${origin}/${filename} hash mismatch`);
       hashes[filename] = localHash;
     }
+  }
+  const motionManifest = JSON.parse(await fs.readFile(path.join(distDir, "assets/motion-style-previews/manifest.json"), "utf8"));
+  assert(motionManifest.author === "LemoLab" && motionManifest.imageLicense === "CC BY 4.0" && motionManifest.assets.length === 66, "Motion style provenance is incomplete");
+  for (const asset of motionManifest.assets) {
+    assert(/^[a-z0-9-]+\.jpg$/u.test(asset.file), "Invalid motion style asset path");
+    const filename = `assets/motion-style-previews/${asset.file}`;
+    const local = await fs.readFile(path.join(distDir, filename));
+    assert(sha256(local) === asset.sha256, `${filename} does not match source provenance`);
+    const response = await fetchChecked(`${origin}/${filename}?release=${head}`);
+    assert(response.status === 200 && sha256(Buffer.from(await response.arrayBuffer())) === asset.sha256, `${origin}/${filename} motion style hash mismatch`);
+    hashes[filename] = asset.sha256;
   }
   return hashes;
 }

@@ -1,0 +1,6 @@
+Reference stills: LemoLab / Lemo-Opuscar
+Source: https://github.com/lemomo-ai/lemo-opuscar
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Original image files unchanged; scaled/cropped only for gallery display.
+Korean style descriptions and planning prompts: PromptDeck.
+Original films, narration, characters and example storylines are reference material, not PromptDeck-generated outputs.
