@@ -2,9 +2,8 @@
   position: sticky;
   z-index: 20;
   top: 0;
-  border-bottom: 1px solid rgba(219, 228, 241, 0.9);
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
+  border-bottom: 1px solid #dbe4f1;
+  background: #fff;
 }
 
 .public-nav {
@@ -22,7 +21,7 @@
   align-items: center;
   gap: 11px;
   color: #0b1730;
-  font-weight: 900;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -37,7 +36,7 @@
 .public-nav-links a {
   color: #0b1730;
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 500;
   text-decoration: none;
 }
 
@@ -46,15 +45,14 @@
 
 .public-nav-cta {
   display: inline-flex;
-  min-height: 46px;
-  padding: 0 20px;
+  min-height: 36px;
+  padding: 0 16px;
   align-items: center;
   justify-content: center;
-  border-radius: 13px;
+  border-radius: 8px;
   background: #1f5eff;
   color: #fff !important;
-  font-weight: 850 !important;
-  box-shadow: 0 12px 28px rgba(31, 94, 255, 0.22);
+  font-weight: 600 !important;
 }
 
 .public-nav-cta:hover { background: #1548d7; }
@@ -72,7 +70,7 @@
   color: #0b1730;
   font: inherit;
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -103,11 +101,11 @@
   gap: 22px;
   width: max-content;
   max-width: 92vw;
-  padding: 22px;
-  border: 1px solid rgba(219, 228, 241, 0.9);
-  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #dbe4f1;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 26px 60px rgba(15, 30, 60, 0.16);
+  box-shadow: 0 8px 24px rgba(15, 30, 60, 0.08);
 }
 
 .public-nav-panel[hidden] { display: none; }
@@ -129,8 +127,8 @@
   text-decoration: none;
 }
 
-.public-nav-panel-head strong { display: block; color: #0b1730; font-size: 14px; font-weight: 850; }
-.public-nav-panel-head span { display: block; margin-top: 2px; color: #5a6880; font-size: 12px; font-weight: 600; }
+.public-nav-panel-head strong { display: block; color: #0b1730; font-size: 14px; font-weight: 600; }
+.public-nav-panel-head span { display: block; margin-top: 2px; color: #5a6880; font-size: 12px; font-weight: 400; }
 .public-nav-panel-head:hover { background: #f2f6ff; }
 
 .public-nav-panel-col li a {
@@ -139,7 +137,7 @@
   border-radius: 8px;
   color: #29364f;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 500;
   text-decoration: none;
 }
 

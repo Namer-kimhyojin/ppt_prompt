@@ -38,7 +38,7 @@
   --danger-soft: rgba(191, 59, 59, 0.08);
   --shadow: 0 18px 45px rgba(15, 34, 56, 0.08);
   --shadow-soft: 0 10px 24px rgba(15, 34, 56, 0.05);
-  --body-gradient: linear-gradient(180deg, #f7f9fc 0%, #eef2f7 100%);
+  --body-gradient: #f5f7fa;
   --header-bg: rgba(247, 249, 252, 0.9);
   --tabs-bg: rgba(247, 249, 252, 0.96);
   --overlay-bg: rgba(14, 23, 38, 0.44);
@@ -211,7 +211,7 @@ button {
     color: var(--ink-soft);
     font: inherit;
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
   }
@@ -251,7 +251,7 @@ button {
   background: var(--surface-soft);
   color: var(--ink-soft);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -273,7 +273,7 @@ button {
   height: 100%;
   padding: 0 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--ink-faint);
   background: none;
   border: 0;
@@ -363,7 +363,7 @@ button {
   background: color-mix(in srgb, var(--accent) 10%, var(--surface));
   color: var(--accent);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -434,7 +434,7 @@ button {
   background: var(--surface-soft);
   color: var(--ink-soft);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .legacy-tool-notice strong { font-size: 14px; line-height: 1.4; }
@@ -475,12 +475,11 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  background: linear-gradient(135deg, #1f5eff 0%, #0f3fb8 100%);
+  background: #1f5eff;
   color: #fff;
   font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  box-shadow: 0 12px 24px rgba(31, 94, 255, 0.18);
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .brand-copy {
@@ -490,8 +489,8 @@ button {
 .brand-title {
   margin: 0;
   font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .brand-home-link {
@@ -688,22 +687,21 @@ button {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  background: var(--accent);
   color: var(--on-accent);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  text-transform: uppercase;
   letter-spacing: 0;
   margin-right: 2px;
 }
 
 .hub-name {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
   padding: 0 4px 0 2px;
@@ -885,7 +883,7 @@ button {
     color: var(--ink-soft);
     font: inherit;
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 600;
     cursor: pointer;
   }
 
@@ -1010,13 +1008,12 @@ button {
   cursor: pointer;
   transition: var(--transition);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, #1f5eff 0%, #0f3fb8 100%);
+  background: #1f5eff;
   color: #fff;
-  box-shadow: 0 12px 24px rgba(31, 94, 255, 0.18);
 }
 
 .btn.secondary {
@@ -1092,7 +1089,6 @@ button {
   height: 38px;
   border-radius: 12px;
   font-size: 13px;
-  box-shadow: 0 8px 18px rgba(31, 94, 255, 0.16);
 }
 
 .brand-title {
@@ -1108,7 +1104,7 @@ button {
 
 .brand-guide-link {
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
   text-underline-offset: 3px;
 }
@@ -1303,7 +1299,7 @@ button {
     overflow: hidden;
     color: var(--ink-soft);
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1321,7 +1317,7 @@ button {
     background: var(--surface);
     color: var(--ink);
     font-size: 12px;
-    font-weight: 850;
+    font-weight: 600;
     cursor: pointer;
   }
 
