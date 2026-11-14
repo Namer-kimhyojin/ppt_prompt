@@ -1,0 +1,537 @@
+{
+  "source": "https://github.com/lemomo-ai/lemo-opuscar",
+  "revision": "f17136060781a0068a7951245a3aa7835a7230de",
+  "author": "LemoLab",
+  "license": "MIT",
+  "changes": "STYLE.md text kept in English; demo engine sections and DEMO.md pointers removed. Loaded only when a style is selected.",
+  "assets": [
+    {
+      "id": "caption-news",
+      "title": "Caption News",
+      "file": "caption-news.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/caption-news/STYLE.md",
+      "sourceSha256": "ba4c0bb5dd13e49c2c2b520af5e42a28112b36354dc445d0f6ade3727b458fd2",
+      "chars": 15931
+    },
+    {
+      "id": "newsreel",
+      "title": "1920s Newsreel",
+      "file": "newsreel.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/newsreel/STYLE.md",
+      "sourceSha256": "0f82c1423d2463dfc2700b23dff9ec183f596724a4820757e189c6fa5225e600",
+      "chars": 17549
+    },
+    {
+      "id": "countdown",
+      "title": "Live Countdown Split-screen",
+      "file": "countdown.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/countdown/STYLE.md",
+      "sourceSha256": "867cca6e0c9bb0d6fb914cc4e9a2e295623ecd345fda9bd00bc362ff233f220f",
+      "chars": 16081
+    },
+    {
+      "id": "city-symphony",
+      "title": "Time-lapse Symphony",
+      "file": "city-symphony.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/city-symphony/STYLE.md",
+      "sourceSha256": "8b78d2b08cadb045ac1649cade1e5274fba935b1177c64c176e7567c6e8b31e1",
+      "chars": 18254
+    },
+    {
+      "id": "visual-investigation",
+      "title": "Visual Investigation",
+      "file": "visual-investigation.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/visual-investigation/STYLE.md",
+      "sourceSha256": "9b39ebaa00c3d77ae544d7453e99b79caf4dfaae1d37798b1f995a5578aac30b",
+      "chars": 17669
+    },
+    {
+      "id": "kino-montage",
+      "title": "Constructivist Montage",
+      "file": "kino-montage.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/kino-montage/STYLE.md",
+      "sourceSha256": "8c63deefda22d4677d286ddfffb243ce6385dfa7ab56fbc493705fe13908f204",
+      "chars": 18891
+    },
+    {
+      "id": "telestrator",
+      "title": "Sports Telestrator",
+      "file": "telestrator.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/telestrator/STYLE.md",
+      "sourceSha256": "7289027728dc5e1b6d095b7c7bc7806790bb579934c81682265c0c1b4897a3d0",
+      "chars": 16248
+    },
+    {
+      "id": "news-package",
+      "title": "Broadcast News Package",
+      "file": "news-package.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/news-package/STYLE.md",
+      "sourceSha256": "6f9d1b6a04878229260ea542fe71f2b77c560ed8e40df68b68e80ac4e21710ce",
+      "chars": 20207
+    },
+    {
+      "id": "satellite-briefing",
+      "title": "Satellite Briefing",
+      "file": "satellite-briefing.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/satellite-briefing/STYLE.md",
+      "sourceSha256": "39fec0c7fda13600de04f1a9631ca636dc8850429033c1f65bb6d3283ec2988d",
+      "chars": 12012
+    },
+    {
+      "id": "briefing-board",
+      "title": "Engineering Briefing Board",
+      "file": "briefing-board.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/briefing-board/STYLE.md",
+      "sourceSha256": "44669da808da4ed37e2a4a0f6e5d2b23008775a3c4870add04641d714e9f323d",
+      "chars": 13121
+    },
+    {
+      "id": "lidar-survey",
+      "title": "LiDAR Survey",
+      "file": "lidar-survey.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/lidar-survey/STYLE.md",
+      "sourceSha256": "d1b60fda2793932286372e7cf68d62af5723bba14c37e9a437639ea57b1a310d",
+      "chars": 11867
+    },
+    {
+      "id": "white-model",
+      "title": "Projection on White Model",
+      "file": "white-model.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/white-model/STYLE.md",
+      "sourceSha256": "02b6423a69ac5a30322997ec9523bd6b6f776b7c8cf14f249eeb996b9d21e2c2",
+      "chars": 11751
+    },
+    {
+      "id": "data-physical",
+      "title": "Data Physicalization",
+      "file": "data-physical.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/data-physical/STYLE.md",
+      "sourceSha256": "2d2e6685b0dcf8a1e2ba2ff904ab02d51aede1f5dbb246fd2f6e81c8d146f208",
+      "chars": 10858
+    },
+    {
+      "id": "teardown",
+      "title": "Exploded Teardown",
+      "file": "teardown.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/teardown/STYLE.md",
+      "sourceSha256": "90df05a02a3d33add58e0dd99bef19ca20ea16b10390b3c2350d8483106922ee",
+      "chars": 11783
+    },
+    {
+      "id": "microscope",
+      "title": "Microscope Story",
+      "file": "microscope.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/microscope/STYLE.md",
+      "sourceSha256": "63040631bdc28a3c7f8cf05e2e8523969becd0267741e00dd3e171c22be16e92",
+      "chars": 11942
+    },
+    {
+      "id": "archive-lighttable",
+      "title": "Archive Light Table",
+      "file": "archive-lighttable.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/archive-lighttable/STYLE.md",
+      "sourceSha256": "2f18ac9a42822b7a9941866c42b0642e5417dea5431d61f141f6e11b29c1ec14",
+      "chars": 12054
+    },
+    {
+      "id": "crayon-book",
+      "title": "Crayon Picture Book",
+      "file": "crayon-book.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/crayon-book/STYLE.md",
+      "sourceSha256": "ba558478fe519fa6777fe28fa7d1980117297c7beb6fe2e366ef6f00688aa175",
+      "chars": 10655
+    },
+    {
+      "id": "watercolor",
+      "title": "Watercolor Brush",
+      "file": "watercolor.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/watercolor/STYLE.md",
+      "sourceSha256": "662d57568408a7c82ef8f64980ca85798b8bb239df3dc3a6715283d7f4555ef0",
+      "chars": 10359
+    },
+    {
+      "id": "ink-wash",
+      "title": "Chinese Ink Wash",
+      "file": "ink-wash.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/ink-wash/STYLE.md",
+      "sourceSha256": "5d71598f0b9cf4034c6461956b0d8bd63bd33750b4045376044f0d956b01d645",
+      "chars": 10525
+    },
+    {
+      "id": "impasto",
+      "title": "Impasto · Palette Knife",
+      "file": "impasto.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/impasto/STYLE.md",
+      "sourceSha256": "38a0dcb2808c2ff03ef721c1319b9145438b4074ed37ab7a09dcf20b7268e062",
+      "chars": 10319
+    },
+    {
+      "id": "one-line",
+      "title": "One-line Drawing",
+      "file": "one-line.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/one-line/STYLE.md",
+      "sourceSha256": "69d26cb06f48ab6b03c12a76c2390d0945cdaddc38bc109b7d5e292b9af1399b",
+      "chars": 10482
+    },
+    {
+      "id": "whiteboard",
+      "title": "Whiteboard Explainer",
+      "file": "whiteboard.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/whiteboard/STYLE.md",
+      "sourceSha256": "19f66326257bcafb8aca18af3e209d1fee31d9e23902ce1708bbb606cbf4b718",
+      "chars": 10968
+    },
+    {
+      "id": "urban-sketch",
+      "title": "Urban Sketch · Pen & Wash",
+      "file": "urban-sketch.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/urban-sketch/STYLE.md",
+      "sourceSha256": "2baf1a19f31b06e55d66d62e4c3449c7a2686c689190976f3e3d0cbdce2faa9a",
+      "chars": 10981
+    },
+    {
+      "id": "chalkboard",
+      "title": "Chalkboard",
+      "file": "chalkboard.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/chalkboard/STYLE.md",
+      "sourceSha256": "7f89f1a4694805e6bc767050007a6b44f2b7ab2474b0e3244032d3a0269b3e1c",
+      "chars": 12603
+    },
+    {
+      "id": "shadow-puppet",
+      "title": "Shadow Puppetry",
+      "file": "shadow-puppet.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/shadow-puppet/STYLE.md",
+      "sourceSha256": "8be075a8262d5a3deea9b05684d8a9abdc1e54c0d90649bf14609ecb4106c3af",
+      "chars": 11919
+    },
+    {
+      "id": "ukiyoe",
+      "title": "Ukiyo-e",
+      "file": "ukiyoe.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/ukiyoe/STYLE.md",
+      "sourceSha256": "218c48a204f9034d1c2fb7f11698b4834f1faee1ca68c9e336f3d6ab992ff2e4",
+      "chars": 11776
+    },
+    {
+      "id": "papercut-red",
+      "title": "Red Paper-cut",
+      "file": "papercut-red.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/papercut-red/STYLE.md",
+      "sourceSha256": "65e317d83335e0cb34696b643e31ad9e46fb0bb93fd748c2e21d74358aea61ec",
+      "chars": 11653
+    },
+    {
+      "id": "paper-lantern",
+      "title": "Paper-cut Lightbox",
+      "file": "paper-lantern.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/paper-lantern/STYLE.md",
+      "sourceSha256": "6f3001ad45657262384b3012f441883ef5ac9c558b82d23e503d14e2f672ac91",
+      "chars": 11445
+    },
+    {
+      "id": "risograph",
+      "title": "Risograph Print",
+      "file": "risograph.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/risograph/STYLE.md",
+      "sourceSha256": "c3d85c91a81b0afde091d964482749482adc66c12730afe124708f7b18b331a6",
+      "chars": 11253
+    },
+    {
+      "id": "halftone-dossier",
+      "title": "Halftone Dossier",
+      "file": "halftone-dossier.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/halftone-dossier/STYLE.md",
+      "sourceSha256": "71b4b8f089836d95f6bd8fc3719ae184cbf2be4a04ecd935c6d55d89a5bb558d",
+      "chars": 11650
+    },
+    {
+      "id": "woodcut",
+      "title": "Woodcut Print",
+      "file": "woodcut.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/woodcut/STYLE.md",
+      "sourceSha256": "b96fda6eeac038137310cc0766d979c8d8a5f3ff6acd87bada5aa50d5136a6a0",
+      "chars": 11272
+    },
+    {
+      "id": "engraving",
+      "title": "Copperplate Engraving",
+      "file": "engraving.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/engraving/STYLE.md",
+      "sourceSha256": "0c6816b8b47163d158ae0ea668feecf53dcbef9d1310e27b9e797d9b9e7aac0d",
+      "chars": 11499
+    },
+    {
+      "id": "silkscreen-poster",
+      "title": "Silkscreen Travel Poster",
+      "file": "silkscreen-poster.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/silkscreen-poster/STYLE.md",
+      "sourceSha256": "a8b3792efb1476b78493f86a033221b27f60c1927463cc435f8816e4d9eda148",
+      "chars": 12176
+    },
+    {
+      "id": "printed-long-take",
+      "title": "Printed Long Take",
+      "file": "printed-long-take.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/printed-long-take/STYLE.md",
+      "sourceSha256": "fafef88a98f73d73b578ef8591222d2287ac1b921f594fc08e5588a97d077b2d",
+      "chars": 16325
+    },
+    {
+      "id": "swiss-motion",
+      "title": "Swiss Motion Graphics",
+      "file": "swiss-motion.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/swiss-motion/STYLE.md",
+      "sourceSha256": "14ddeb6dc495e691a220497069a2ee4827d820f9ee7a3173de5846489ef41f57",
+      "chars": 10021
+    },
+    {
+      "id": "spy-titles",
+      "title": "60s Spy Title Sequence",
+      "file": "spy-titles.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/spy-titles/STYLE.md",
+      "sourceSha256": "ea6e9e9073af43ef0bb860e368f60b16ec32a91668386115a142907d92cb1f75",
+      "chars": 10674
+    },
+    {
+      "id": "art-deco",
+      "title": "Art Deco",
+      "file": "art-deco.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/art-deco/STYLE.md",
+      "sourceSha256": "d73b30c0fa6d153487549d32d8c6c599733cf5e7576badec862a12da6d284761",
+      "chars": 11471
+    },
+    {
+      "id": "blueprint",
+      "title": "Blueprint",
+      "file": "blueprint.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/blueprint/STYLE.md",
+      "sourceSha256": "de01fc7fcb38b17b58eb017c9cdbcb36b9242b029435a33587614c93088e1717",
+      "chars": 11567
+    },
+    {
+      "id": "stained-glass",
+      "title": "Stained Glass",
+      "file": "stained-glass.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/stained-glass/STYLE.md",
+      "sourceSha256": "0f6551bd109a4127404068aa1e75f18f16b58c80b486c23480b3d193e597b060",
+      "chars": 11304
+    },
+    {
+      "id": "pictogram-motion",
+      "title": "Pictogram Motion",
+      "file": "pictogram-motion.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/pictogram-motion/STYLE.md",
+      "sourceSha256": "e982606f3d7d132d320abdc1a74c226b1e0642b664a0c41582bc76fec646da1a",
+      "chars": 11471
+    },
+    {
+      "id": "ascii-crt",
+      "title": "ASCII / CRT Terminal: Style Prompt",
+      "file": "ascii-crt.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/ascii-crt/STYLE.md",
+      "sourceSha256": "cbe0b8957c785a165f85ccb3b8eba61c30c0462b32983db6a16c76046a2bb333",
+      "chars": 11549
+    },
+    {
+      "id": "dataviz",
+      "title": "Data Storytelling",
+      "file": "dataviz.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/dataviz/STYLE.md",
+      "sourceSha256": "e94013d5a7c548c8844598a671ff0b49bc78770696cbca0d8d00846336f3c67f",
+      "chars": 10794
+    },
+    {
+      "id": "iso-infographic",
+      "title": "Isometric Infographic",
+      "file": "iso-infographic.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/iso-infographic/STYLE.md",
+      "sourceSha256": "a3bf89913255043ff2c8616bff9be9f9536efe1eb7a3b98c755cb4189bd7dff1",
+      "chars": 11270
+    },
+    {
+      "id": "dark-keynote",
+      "title": "Dark Tech Keynote",
+      "file": "dark-keynote.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/dark-keynote/STYLE.md",
+      "sourceSha256": "b0791b5e95f56bf46c621e6064d426ebbee810c7515fb87e951b73668a2a0d24",
+      "chars": 11647
+    },
+    {
+      "id": "living-screencast",
+      "title": "Living Screencast",
+      "file": "living-screencast.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/living-screencast/STYLE.md",
+      "sourceSha256": "02e8e5521fe1f553b0e58dacc2a556aea361dd5823e2ca0996963839d3c7d5c7",
+      "chars": 10786
+    },
+    {
+      "id": "hologram-hud",
+      "title": "Sci-fi Hologram HUD",
+      "file": "hologram-hud.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/hologram-hud/STYLE.md",
+      "sourceSha256": "81e2c6b0ede2cc211a8dd676417a1ce5efda278514f273c5249165e38ff34573",
+      "chars": 11089
+    },
+    {
+      "id": "transit-map",
+      "title": "Transit Map",
+      "file": "transit-map.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/transit-map/STYLE.md",
+      "sourceSha256": "e6c62bc75071c86b67c30def595e919910d86245504c8c09882d151a3c719d1c",
+      "chars": 26251
+    },
+    {
+      "id": "isometric-picture-book",
+      "title": "Isometric Picture Book",
+      "file": "isometric-picture-book.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/isometric-picture-book/STYLE.md",
+      "sourceSha256": "9e838ed305b5fec5002b9aa452cb28730d13ec84dd529a801fb3b174e81cec83",
+      "chars": 16572
+    },
+    {
+      "id": "circuit-board",
+      "title": "Circuit Board",
+      "file": "circuit-board.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/circuit-board/STYLE.md",
+      "sourceSha256": "ffc30ae4080057c6ac5e6ed6d78d5748ee96dfaa463455a27e5a0cdf5cc8f7a0",
+      "chars": 16381
+    },
+    {
+      "id": "rubber-hose",
+      "title": "1930s Rubber Hose Cartoon",
+      "file": "rubber-hose.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/rubber-hose/STYLE.md",
+      "sourceSha256": "bf850f9cd22e68b2125fed00d1b9804e91479620b44420ba7ec50e570e472a94",
+      "chars": 12162
+    },
+    {
+      "id": "cel-anime-80s",
+      "title": "80s Cel Anime",
+      "file": "cel-anime-80s.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/cel-anime-80s/STYLE.md",
+      "sourceSha256": "1e16f5c6f90ebf09556ec94d37434400d309c978e00ee89e9d38dec476664eaf",
+      "chars": 11843
+    },
+    {
+      "id": "scifi-toon",
+      "title": "Sci-Fi Sitcom Toon",
+      "file": "scifi-toon.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/scifi-toon/STYLE.md",
+      "sourceSha256": "9a720a57ce50dc554e9237e698a979cdf7311527e6e6a0dad803278dfe8ad2ce",
+      "chars": 11982
+    },
+    {
+      "id": "midcentury-toon",
+      "title": "Mid-century Cartoon",
+      "file": "midcentury-toon.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/midcentury-toon/STYLE.md",
+      "sourceSha256": "e73614b6f9e2f2e8ee279f4909da8429235b96f6d13a12345b6e57d5823c30b8",
+      "chars": 11770
+    },
+    {
+      "id": "pixel-rpg",
+      "title": "16-bit Pixel RPG",
+      "file": "pixel-rpg.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/pixel-rpg/STYLE.md",
+      "sourceSha256": "f79fac0d9aed03d2a69f17a50b37adca2da84156b3fa525537761c507bcaea8e",
+      "chars": 10484
+    },
+    {
+      "id": "hd-2d",
+      "title": "HD-2D",
+      "file": "hd-2d.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/hd-2d/STYLE.md",
+      "sourceSha256": "bdc5ef4f60d8ba9ff6e5151391a6a62d8da4685d393c242699fd5c6188f0551a",
+      "chars": 11613
+    },
+    {
+      "id": "microgame",
+      "title": "Microgame Frenzy",
+      "file": "microgame.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/microgame/STYLE.md",
+      "sourceSha256": "ad13d34bd06a65bef81b04f531c4f256bcc0bff4f229f976d52e07d5beef9dd5",
+      "chars": 11819
+    },
+    {
+      "id": "game-show",
+      "title": "Game Show Flat",
+      "file": "game-show.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/game-show/STYLE.md",
+      "sourceSha256": "cadee8f0ff8cfc206b49d852e5a0b15d7da432ad497fa8b19ac568ce386ff8e3",
+      "chars": 11670
+    },
+    {
+      "id": "silent-film",
+      "title": "1920s Silent Film",
+      "file": "silent-film.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/silent-film/STYLE.md",
+      "sourceSha256": "44633a4edd4ec6b84be809bd48b38503a75a71531112b3d28a52f27135012b20",
+      "chars": 10828
+    },
+    {
+      "id": "backrooms",
+      "title": "Liminal Found Footage",
+      "file": "backrooms.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/backrooms/STYLE.md",
+      "sourceSha256": "2a3697a1ce37d0fbae3281220ae6154eeb9789233f1fae472d55ac169ba26fb4",
+      "chars": 11863
+    },
+    {
+      "id": "brick-toy",
+      "title": "Brick Toy",
+      "file": "brick-toy.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/brick-toy/STYLE.md",
+      "sourceSha256": "29b23e846951856b722a698a03c9458cfc17b4fc71d044f45d773acf2a742768",
+      "chars": 11749
+    },
+    {
+      "id": "paper-popup",
+      "title": "Paper Pop-up Book",
+      "file": "paper-popup.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/paper-popup/STYLE.md",
+      "sourceSha256": "8e5c0ca430fd96b75c4d9c2af92a87c84d4d1af8cda64280a189c51279e1ee9b",
+      "chars": 11308
+    },
+    {
+      "id": "tilt-shift",
+      "title": "Tilt-Shift Miniature",
+      "file": "tilt-shift.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/tilt-shift/STYLE.md",
+      "sourceSha256": "131ae50c6bddd30922638cbd5f2fae5c047223360a3f6924b074b0db525a5c63",
+      "chars": 11276
+    },
+    {
+      "id": "lowpoly-island",
+      "title": "Low-poly Isometric Island",
+      "file": "lowpoly-island.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/lowpoly-island/STYLE.md",
+      "sourceSha256": "1ae7bcd6aa3d521f563d8905f8109842fd7252ff8b70c1bd18265105a8a450f9",
+      "chars": 11537
+    },
+    {
+      "id": "glass-product",
+      "title": "Glass Product Render",
+      "file": "glass-product.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/glass-product/STYLE.md",
+      "sourceSha256": "630fa80cde0930154ba64f15bce5c8ee0c8dcf48d921253f8c7e3194712c8fb5",
+      "chars": 11496
+    },
+    {
+      "id": "memphis-diorama",
+      "title": "Memphis Diorama",
+      "file": "memphis-diorama.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/memphis-diorama/STYLE.md",
+      "sourceSha256": "7f1748f2741d069e074172800d501ec00527db8a018e1e5ab4ecfa630ed6763b",
+      "chars": 15928
+    },
+    {
+      "id": "desktop-flythrough",
+      "title": "Desktop Flythrough 桌面穿梭",
+      "file": "desktop-flythrough.js",
+      "source": "https://github.com/lemomo-ai/lemo-opuscar/blob/f17136060781a0068a7951245a3aa7835a7230de/styles/desktop-flythrough/STYLE.md",
+      "sourceSha256": "d8c9113e10d7b3a5f65bbee86643305a5dc29739d0338091e1d0974ecf6d5eb7",
+      "chars": 17904
+    }
+  ]
+}

@@ -32,7 +32,7 @@
   root.className = "motion-workspace";
   root.dataset.mobileView = "brief";
   root.innerHTML = `
-    <header class="motion-header"><div><span class="motion-eyebrow">DIRECTION TO AI STORYBOARD</span><h2>방향은 내가, 기획은 AI가.</h2><p>영상의 용도·내용·스타일만 정하세요. AI가 구성안을 제안하고 타임스토리·콘티·대본까지 구체화하도록 요청합니다.</p></div><span class="motion-header-badge">66가지 스타일<span>18가지 용도 · 상세 기획은 AI에게</span></span></header>
+    <header class="motion-header"><div><span class="motion-eyebrow">DIRECTION TO AI PRODUCTION</span><h2>방향은 내가, 제작은 AI가.</h2><p>영상의 용도·내용·스타일만 정하세요. 고른 스타일의 상세 제작 사양을 담아, AI가 프리셋과 같은 방식(코드로 그린 화면·음악·자막)으로 영상을 완성하도록 요청합니다.</p></div><span class="motion-header-badge">66가지 스타일<span>18가지 용도 · 스타일별 제작 사양 포함</span></span></header>
     <div class="motion-mobile-nav motion-step-nav" role="group" aria-label="영상 기획 진행 단계"><button type="button" data-motion-view="brief" aria-pressed="true" aria-current="step">1 구성 방향</button><button type="button" data-motion-view="gallery" aria-pressed="false">2 스타일 선택</button><button type="button" data-motion-view="result" aria-pressed="false">3 요청문 복사</button></div>
     <div class="motion-layout">
       <div class="motion-input-stack">
@@ -68,8 +68,9 @@
         <div class="motion-result-body"><div class="motion-preview-block"><div class="motion-section-heading"><div><span class="motion-step">SELECTED DIRECTION</span><h3 id="motionSelectedName"></h3></div><span class="motion-example-badge">연출 예시</span></div>
           <div id="motionStage" class="motion-stage is-paused"></div><div class="motion-player-controls"><button type="button" id="motionPlayBtn" class="motion-button" aria-pressed="false">▶ 용도 예시 보기</button><span id="motionPreviewNote" class="motion-help"></span></div><div id="motionReferenceLinks" class="motion-reference-links"></div><p id="motionDescription" class="motion-help"></p><div id="motionSpecs" class="motion-specs"></div>
           <p class="motion-help">구체적인 장면과 시간 배분은 AI가 기획합니다.</p>
-          </div><div class="motion-request-block"><div class="motion-section-heading"><div><span class="motion-step">03 / COPY REQUEST</span><h3 id="motionRequestTitle">기획 요청문을 복사하세요</h3></div><button type="button" class="motion-text-btn" data-motion-view="gallery">← 스타일 선택</button></div><p id="motionRequestSummary" class="motion-request-summary"></p>
-          <div id="motionOutputPanel" aria-labelledby="motionRequestTitle"><p id="motionOutputHelp" class="motion-help">구성 방향과 선택한 스타일을 담은 기획 요청문입니다. Claude·GPT에 전달하면 상세 타임스토리·콘티·대본을 제안받을 수 있습니다.</p><ul id="motionWarnings" class="motion-warnings"></ul><textarea id="motionOutput" class="motion-output" readonly rows="15" aria-label="영상 기획 요청문" spellcheck="false"></textarea><div class="motion-inline-actions"><button type="button" id="motionCopyBtn" class="motion-button motion-primary">기획 요청문 복사</button><button type="button" id="motionDownloadBtn" class="motion-button">TXT 저장</button></div><p id="motionUsage" class="motion-help">요청문을 Claude·GPT에 원본 자료와 함께 전달하고 AI가 제안한 기획안을 검토하세요.</p></div>
+          </div><div class="motion-request-block"><div class="motion-section-heading"><div><span class="motion-step">03 / COPY REQUEST</span><h3 id="motionRequestTitle">요청문을 복사하세요</h3></div><button type="button" class="motion-text-btn" data-motion-view="gallery">← 스타일 선택</button></div><p id="motionRequestSummary" class="motion-request-summary"></p>
+          <div id="motionOutputPanel" aria-labelledby="motionRequestTitle"><div class="motion-two motion-output-options"><label class="motion-field">요청문 종류<select id="motionOutputMode" data-motion-field="outputMode">${options(engine.outputModes)}</select></label><label class="motion-field">사용할 AI<select id="motionEnvironment" data-motion-field="environment">${options(engine.environments)}</select></label></div><p id="motionOutputHelp" class="motion-help"></p><ul id="motionWarnings" class="motion-warnings"></ul><textarea id="motionOutput" class="motion-output" readonly rows="15" aria-label="영상 요청문" spellcheck="false"></textarea><div class="motion-inline-actions"><button type="button" id="motionCopyBtn" class="motion-button motion-primary">제작 요청문 복사</button><button type="button" id="motionDownloadBtn" class="motion-button">TXT 저장</button></div><p id="motionUsage" class="motion-help"></p></div>
+          <button type="button" id="motionRetrySpecBtn" class="motion-button" hidden>상세 사양 다시 불러오기</button>
           <div class="motion-save-row"><span id="motionSaveStatus" class="motion-help"></span><button type="button" id="motionUndoBtn" class="motion-text-btn" hidden>초기화 되돌리기</button><button type="button" id="motionResetBtn" class="motion-text-btn">초기화</button></div>
           </div>
         </div>
@@ -88,9 +89,10 @@
       button.setAttribute("aria-pressed", String(active));
       if (active) button.setAttribute("aria-current", "step"); else button.removeAttribute("aria-current");
     });
-    const label = step === "brief" ? "다음: 스타일 선택" : step === "gallery" ? "다음: 요청문 복사" : "기획 요청문 복사";
+    const label = step === "brief" ? "다음: 스타일 선택" : step === "gallery" ? "다음: 요청문 복사" : copyLabel();
     q("#motionPrimaryBtn").textContent = `${label}${step === "result" ? "" : " →"}`;
     q("#motionPrimaryBtn").dataset.proxyLabel = label;
+    q("#motionPrimaryBtn").disabled = step === "result" && !specReady();
     q("#motionBackBtn").hidden = step !== "gallery";
     q("#motionCopyBtn").hidden = step !== "result";
     q("#motionDownloadBtn").hidden = step !== "result";
@@ -106,6 +108,31 @@
       const heading = step === "brief" ? q("#motionBriefTitle") : step === "gallery" ? q("#motionLibraryTitle") : q(".motion-request-block h3");
       heading.tabIndex = -1; heading.focus({ preventScroll: true });
     }
+  }
+  const loadingSpecs = new Map(), failedSpecs = new Set();
+  const copyLabel = () => state.outputMode === "planning" ? "기획 요청문 복사" : "제작 요청문 복사";
+  const specReady = () => state.style === "auto" || Boolean(engine.styleSpec(state.style));
+  // Each style's full spec (10–30 KB) is loaded only when that style is selected.
+  function ensureSpec(id) {
+    if (id === "auto" || engine.styleSpec(id) || loadingSpecs.has(id) || failedSpecs.has(id)) return;
+    const script = document.createElement("script");
+    loadingSpecs.set(id, script);
+    script.src = engine.specFile(id) + "?v=1";
+    const finish = (loaded) => {
+      if (loadingSpecs.get(id) !== script) return;
+      clearTimeout(timer);
+      loadingSpecs.delete(id);
+      const valid = loaded && Boolean(engine.styleSpec(id));
+      if (!valid) { failedSpecs.add(id); script.remove(); }
+      if (state.style === id) {
+        updateOutput();
+        status(valid ? `${styleCatalog.get(id).name} 상세 사양을 요청문에 반영했습니다.` : "스타일 상세 사양을 불러오지 못했습니다. ‘상세 사양 다시 불러오기’를 눌러 주세요.");
+      }
+    };
+    const timer = setTimeout(() => finish(false), 15000);
+    script.onload = () => finish(true);
+    script.onerror = () => finish(false);
+    document.head.append(script);
   }
   function status(message) { clearTimeout(toastTimer); q("#motionStatus").textContent = message; q("#motionStatus").classList.add("is-visible"); toastTimer = setTimeout(() => q("#motionStatus").classList.remove("is-visible"), 5000); }
   function save() {
@@ -147,7 +174,7 @@
     q("#motionStage").innerHTML = style ? `<img src="${style.preview}" alt="${esc(style.name)} 참고 작품 · LemoLab">` : `<div class="motion-auto-art">${["watercolor", "blueprint", "pixel-rpg", "glass-product"].map((id) => { const example = styleCatalog.get(id); return `<figure><img src="${example.preview}" alt="${example.name} 참고 스틸 · LemoLab"><figcaption>${example.name}</figcaption></figure>`; }).join("")}</div>`;
     q("#motionPlayBtn").hidden = Boolean(style);
     q("#motionPreviewNote").textContent = style ? "LemoLab의 참고 작품 스틸 · CC BY 4.0 · 완성 영상 예시" : "스타일 비교 예시: LemoLab · CC BY 4.0. 실제 스타일은 AI가 제안";
-    q("#motionReferenceLinks").innerHTML = style ? `<a href="${style.video}" target="_blank" rel="noopener noreferrer">원본 참고영상 ↗</a><a href="${style.reference}" target="_blank" rel="noopener noreferrer">스타일 설명 원문 ↗</a>` : "";
+    q("#motionReferenceLinks").innerHTML = style ? `<a href="${style.video}" target="_blank" rel="noopener noreferrer">원본 참고영상 ↗</a><a href="${style.reference}" target="_blank" rel="noopener noreferrer">스타일 설명 원문 ↗</a><a href="${style.preview}" download="${style.id}.jpg">참고 스틸 저장</a>` : "";
     q("#motionStage").classList.add("is-fresh");
     setPlaying(false);
   }
@@ -158,17 +185,35 @@
     q("#motionSpecs").textContent = `${state.ratio} · ${state.duration === "auto" ? "길이·장면 수는 AI가 제안" : `희망 ${state.duration}초 · 장면 수는 AI가 제안`}`;
     q("#motionVoiceDirectionField").hidden = ["none", "source"].includes(state.voice);
     q("#motionRequestSummary").textContent = `${state.title.trim() || "주제는 제공 자료에서 결정"} · ${engine.getTemplate(state.template).name} · ${styleCatalog.get(state.style)?.name || "스타일은 AI 추천"} · ${state.ratio} · ${state.duration === "auto" ? "길이는 AI 제안" : `희망 ${state.duration}초`}`;
-    q("#motionOutput").value = engine.planningPrompt(state);
-    q("#motionWarnings").innerHTML = engine.warnings(state).map((message) => `<li>${esc(message)}</li>`).join("");
-    q("#motionWarnings").hidden = !engine.warnings(state).length;
+    ensureSpec(state.style);
+    const production = state.outputMode !== "planning", ready = specReady();
+    q("#motionEnvironment").closest(".motion-field").hidden = !production;
+    q("#motionOutput").value = ready ? engine.prompt(state) : "";
+    const notices = engine.warnings(state).filter((message) => ready || !message.includes("상세 사양"));
+    if (!ready) notices.unshift(loadingSpecs.has(state.style) ? "선택한 스타일의 상세 제작 사양을 불러오는 중입니다." : "선택한 스타일의 상세 사양을 불러오지 못했습니다. 스타일을 다시 선택하세요.");
+    q("#motionWarnings").innerHTML = notices.map((message) => `<li>${esc(message)}</li>`).join("");
+    q("#motionWarnings").hidden = !notices.length;
+    q("#motionCopyBtn").disabled = !ready; q("#motionDownloadBtn").disabled = !ready;
+    q("#motionRetrySpecBtn").hidden = ready || !failedSpecs.has(state.style);
+    q("#motionPrimaryBtn").disabled = root.dataset.mobileView === "result" && !ready;
+    q("#motionCopyBtn").textContent = copyLabel();
+    if (root.dataset.mobileView === "result") { q("#motionPrimaryBtn").textContent = copyLabel(); q("#motionPrimaryBtn").dataset.proxyLabel = copyLabel(); }
+    q("#motionOutputHelp").textContent = production
+      ? (!ready ? "상세 사양을 불러온 뒤 요청문을 복사할 수 있습니다." : state.style === "auto" ? "AI가 스타일 3안을 추천한 뒤 코드로 영상을 제작하도록 요청합니다. 스타일을 직접 고르면 프리셋의 상세 제작 사양이 들어갑니다." : "선택한 스타일의 상세 제작 사양(영문 원문)과 연출·기술 기준을 담았습니다. 프리셋과 같은 방식으로 코드로 영상을 완성하도록 요청합니다.")
+      : "구성 방향과 스타일 사양을 담은 기획 요청문입니다. 샷 리스트·콘티·큐 맵을 받아 검토할 때 사용합니다.";
+    q("#motionUsage").textContent = production
+      ? (state.environment === "agent" ? "Claude Code 같은 코딩 에이전트에 붙여 넣고, 참고 스틸과 로고·사진·음성 등 원본 자료를 프로젝트 폴더에 함께 넣으세요." : "Claude·ChatGPT에 참고 스틸과 원본 자료를 첨부해 전달하세요. 받은 HTML을 브라우저에서 재생하고 render.mjs로 MP4를 만듭니다.")
+      : "요청문을 Claude·GPT에 원본 자료와 함께 전달하고 AI가 제안한 기획안을 검토하세요.";
+    window.PromptDeckTabs?.syncHeaderActionStates();
   }
   function refresh() { syncFields(); renderGallery(); renderPreview(); updateOutput(); save(); }
   function selectTemplate(id) {
-    if (state.style === id) return;
+    if (state.style === id && !failedSpecs.has(id)) return;
+    failedSpecs.delete(id);
     state.style = id;
     renderGallery(); renderPreview(); updateOutput(); save();
     q(`[data-motion-style="${id}"]`)?.focus({ preventScroll: true });
-    status(id === "auto" ? "AI가 적합한 스타일을 추천하도록 요청합니다." : `${styleCatalog.get(id).name} 방향을 적용했습니다. 상세 기획은 AI가 제안합니다.`);
+    status(id === "auto" ? "AI가 적합한 스타일을 추천하도록 요청합니다." : specReady() ? `${styleCatalog.get(id).name} 스타일의 상세 제작 사양을 적용했습니다.` : "선택한 스타일의 상세 사양을 불러오는 중입니다.");
   }
   root.addEventListener("input", (event) => {
     const field = event.target;
@@ -214,7 +259,7 @@
   q("#motionSampleBtn").addEventListener("click", () => {
     const selection = nextSample(state);
     undoState = JSON.parse(JSON.stringify(state));
-    const archived = Object.fromEntries(["scenes", "revision", "target", "format", "videoMode", "renderStyle", "pace", "camera", "transition", "palette", "fps", "audio"].map((key) => [key, state[key]]));
+    const archived = Object.fromEntries(["outputMode", "environment", "scenes", "revision", "target", "format", "videoMode", "renderStyle", "pace", "camera", "transition", "palette", "fps", "audio"].map((key) => [key, state[key]]));
     state = engine.normalize({ ...engine.defaults(), ...archived, ...selection.values });
     category = "all"; query = ""; q("#motionSearch").value = "";
     q("#motionUndoBtn").textContent = "샘플 적용 되돌리기"; q("#motionUndoBtn").hidden = false;
@@ -223,6 +268,7 @@
   q("#motionResetBtn").addEventListener("click", () => { undoState = JSON.parse(JSON.stringify(state)); state = engine.defaults(); q("#motionUndoBtn").textContent = "초기화 되돌리기"; q("#motionUndoBtn").hidden = false; refresh(); status("입력을 초기화했습니다. ‘초기화 되돌리기’로 복구할 수 있습니다."); });
   q("#motionUndoBtn").addEventListener("click", () => { if (!undoState) return; state = undoState; undoState = null; q("#motionUndoBtn").hidden = true; refresh(); status("변경 전 입력과 스타일을 복구했습니다."); });
   q("#motionCopyBtn").addEventListener("click", async () => {
+    if (!specReady()) return;
     const text = q("#motionOutput").value;
     try { await navigator.clipboard.writeText(text); status("현재 프롬프트를 복사했습니다."); }
     catch (_) {
@@ -232,10 +278,12 @@
     }
   });
   q("#motionDownloadBtn").addEventListener("click", () => {
+    if (!specReady()) return;
     const url = URL.createObjectURL(new Blob([q("#motionOutput").value], { type: "text/plain;charset=utf-8" }));
-    const link = document.createElement("a"); link.href = url; link.download = `PromptDeck-motion-${state.template}-planning.txt`; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const link = document.createElement("a"); link.href = url; link.download = `PromptDeck-motion-${state.style === "auto" ? state.template : state.style}-${state.outputMode === "planning" ? "planning" : "production"}.txt`; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
     status("현재 프롬프트를 TXT로 저장했습니다.");
   });
+  q("#motionRetrySpecBtn").addEventListener("click", () => selectTemplate(state.style));
   // Pausing when leaving the tool avoids animation work in hidden panes.
   new MutationObserver(() => { if (!pane.classList.contains("active")) setPlaying(false); }).observe(pane, { attributes: true, attributeFilter: ["class"] });
   window.addEventListener("pagehide", save);

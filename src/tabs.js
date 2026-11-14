@@ -165,7 +165,7 @@
   const FALLBACK_GROUP = "deckImage";
   // 탭마다 손에 남는 결과물이 다르므로, 탭 바 아래에 한 줄로 명시한다.
   const OUTPUT_KINDS = {
-    promptVideo: { label: "영상 기획 요청문", icon: "▶" },
+    promptVideo: { label: "영상 제작 요청문", icon: "▶" },
     promptImage: { label: "이미지 프롬프트", icon: "🖼" },
     promptFile: { label: "문서 파일 요청문", icon: "📄" },
     direct: { label: "바로 생성", icon: "⬇" },
@@ -173,7 +173,7 @@
   };
   const outputNotes = {
     videoAssets: ["promptImage", "같은 영상의 공통 화풍을 적용한 인물·배경·도구 시트 이미지 프롬프트입니다. 기준 이미지는 이미지 AI에 함께 첨부하세요."],
-    motionPrompt: ["promptVideo", "영상의 구성 방향과 스타일을 정하면, Claude·GPT에게 상세 타임스토리·콘티·대본을 요청하는 프롬프트를 만듭니다."],
+    motionPrompt: ["promptVideo", "영상의 구성 방향과 스타일을 정하면, 그 스타일의 상세 제작 사양을 담아 AI가 코드로 영상을 완성하도록 요청하는 프롬프트를 만듭니다."],
     commonPrompt: ["promptImage", "복사해서 이미지 AI에 붙여넣는 공통 디자인 가이드입니다."],
     generator: ["promptImage", "복사해서 이미지 AI에 붙여넣는 장별 프롬프트입니다."],
     slideImage: ["direct", "이 화면에서 API로 바로 만드는 슬라이드 이미지 파일입니다."],
