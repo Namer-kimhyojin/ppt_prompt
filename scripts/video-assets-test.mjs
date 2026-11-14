@@ -32,7 +32,65 @@ assert.equal(engine.normalize({}).sheets.character.ratio, "3:2");
 assert.equal(engine.normalize(state).style.technique, state.style.technique);
 assert.ok(engine.prompt(engine.defaults()).length < 1000);
 assert.match(engine.prompt({ ...state, world: '한글 & <검증> "A"\n두번째 줄' }), /한글 & <검증> "A"\n  - 두번째 줄/);
-console.log("PASS: all 9 sheet layouts, shared style snapshot, per-sheet isolation, transparency, concise plain text");
+// Without listed reference images the prompt must not claim that any image is attached.
+const unreferenced = engine.prompt(engine.defaults());
+assert.doesNotMatch(unreferenced, /첨부한|화풍 참조의/);
+assert.match(unreferenced, /기준 이미지 없음/);
+const referenced = engine.prompt({ ...engine.defaults(), reference: "approved-style.png", sheets: { character: { reference: "person.png" } } });
+assert.match(referenced, /첨부한 화풍 기준 이미지/); assert.match(referenced, /화풍 참조의 인물·사물·구도는 복제하지 않음/); assert.match(referenced, /첨부한 대상 원본의 정체성 유지/);
+assert.doesNotMatch(engine.prompt({ ...engine.defaults(), style: state.style }), /첨부한/);
+console.log("PASS: all 9 sheet layouts, shared style snapshot, per-sheet isolation, transparency, concise plain text, no phantom attachments");
+
+// Older saved sheets remain usable; editing presets keep identity and style intact.
+const migrated = engine.normalize({ version: 1, sheets: { character: { name: "기존 인물", details: "청록 재킷", reference: "approved.png" } } });
+assert.equal(migrated.sheets.character.mode, "sheet");
+const cutout = engine.applyPreset(migrated, "cutout");
+assert.equal(migrated.sheets.character.mode, "sheet");
+assert.equal(cutout.sheets.character.reference, "approved.png");
+assert.match(engine.prompt(cutout), /기존 인물|청록 재킷/);
+assert.match(engine.prompt(cutout), /1080 × 1920 px/);
+assert.match(engine.prompt(cutout), /단일 에셋.*1장/);
+assert.match(engine.prompt(cutout), /실제 알파 투명도/);
+assert.match(engine.prompt(cutout), /하단 20%/);
+assert.doesNotMatch(engine.prompt(cutout), /나란히 배치|별도 칸에 배치/);
+cutout.sheets.character.size = "uhd";
+cutout.sheets.character.shot = "오른손으로 안내하는 전신";
+assert.match(engine.prompt(cutout), /2160 × 3840 px/);
+assert.match(engine.prompt(cutout), /오른손으로 안내하는 전신/);
+cutout.sheets.character.mode = "separate";
+cutout.sheets.character.layout = "expression";
+const expressions = engine.requests(cutout);
+assert.equal(expressions.length, 7);
+assert.equal(new Set(expressions.map((item) => item.filename)).size, 7);
+assert.match(expressions[1].prompt, /기쁜 표정/);
+assert.doesNotMatch(expressions[1].prompt, /슬픈 표정|표정 6종|기본 얼굴과/);
+assert.equal(engine.prompt(cutout).split("파일명 제안:").length - 1, 7);
+assert.equal(engine.allPrompts(cutout).split("파일명 제안:").length - 1, 9);
+const parallax = engine.applyPreset(state, "parallax"), layers = engine.requests(parallax);
+assert.equal(layers.length, 4);
+for (const item of layers) assert.match(item.prompt, /동일 캔버스·카메라·소실점·수평선·원점/);
+assert.match(layers[0].prompt, /기준이 될 전체 전경을 먼저 확정/);
+assert.doesNotMatch(layers[1].prompt, /프레임 중심축 기준|가장자리 15% 여유/);
+for (const index of [1, 2]) assert.match(layers[index].prompt, /실제 알파 투명도/);
+for (const index of [0, 3]) assert.doesNotMatch(layers[index].prompt, /실제 알파 투명도/);
+assert.match(layers[3].prompt, /빈 영역도 자연스럽게 채운 불투명 배경/);
+parallax.sheets.background.negative = "모션 블러와 인물";
+assert.match(engine.prompt(parallax), /제외 요소: 모션 블러와 인물/);
+const portrait = engine.applyPreset(state, "portrait");
+assert.match(engine.prompt(portrait), /중앙 타이틀 영역을 비우고/);
+assert.doesNotMatch(engine.prompt(portrait), /프레임 중심축 기준/);
+const invalid = engine.normalize({ sheets: { character: { mode: "__proto__", safeArea: "oops", size: "oops" } } });
+assert.equal(invalid.sheets.character.mode, "sheet");
+assert.equal(invalid.sheets.character.safeArea, "none");
+for (const type of Object.keys(engine.types)) for (const mode of Object.keys(engine.modes)) for (const layout of Object.keys(engine.layouts[type])) {
+  const input = engine.normalize(state); Object.assign(input.sheets[type], { mode, layout, ratio: "9:16" });
+  for (const item of engine.requests(input, type)) {
+    assert.ok(item.prompt.includes(engine.commonBlock(input)));
+    assert.doesNotMatch(item.prompt, /undefined|NaN/);
+    assert.match(item.prompt, /1080 × 1920 px/);
+  }
+}
+console.log("PASS: legacy migration, presets, single PNG, 7 independent expressions, 4 aligned parallax layers, all mode/layout combinations");
 
 const root = path.resolve(import.meta.dirname, ".."), evidence = await fs.mkdtemp(path.join(os.tmpdir(), "promptdeck-video-assets-"));
 const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".jpg": "image/jpeg", ".png": "image/png", ".svg": "image/svg+xml", ".webp": "image/webp" };
@@ -50,7 +108,7 @@ const origin = process.env.VIDEO_ASSETS_ORIGIN || `http://127.0.0.1:${server.add
 let browser;
 try {
   try { browser = await chromium.launch({ channel: "msedge", headless: true }); } catch (_) { browser = await chromium.launch({ headless: true }); }
-  for (const [width, height] of [[1440, 1000], [390, 844], [375, 667], [844, 390]]) {
+  for (const [width, height] of [[1440, 1000], [1280, 720], [390, 844], [375, 667], [844, 390]]) {
     const context = await browser.newContext({ viewport: { width, height }, acceptDownloads: true });
     await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin });
     const page = await context.newPage(), errors = [], badResources = [];
@@ -112,6 +170,62 @@ try {
     await page.locator("#vaOpenMixerBtn").click();
     assert.equal(await page.locator("#paneConceptMixer").isVisible(), true);
     await page.evaluate(() => window.PromptDeckTabs.switchTab("videoAssets"));
+    const productionStyle = await page.locator("#vaStyleName").textContent();
+    await page.locator('[data-va-preset="cutout"]').click();
+    assert.equal(await page.locator("#vaName").inputValue(), "고정 인물 유나");
+    assert.equal(await page.locator("#vaMode").inputValue(), "single");
+    assert.equal(await page.locator("#vaShotField").isVisible(), true);
+    assert.equal(await page.locator("#vaLayoutField").isVisible(), false);
+    assert.match(await page.locator("#vaOutput").inputValue(), /1080 × 1920 px/);
+    await page.locator("#vaShot").fill("한 손으로 인사하는 전신");
+    await page.locator("#vaSize").selectOption("uhd");
+    await page.locator("#vaComposition summary").click();
+    await page.locator("#vaPlacement").selectOption("right");
+    await page.locator("#vaMovement").selectOption("zoom");
+    assert.match(await page.locator("#vaOutput").inputValue(), /2160 × 3840 px/);
+    assert.match(await page.locator("#vaOutput").inputValue(), /오른쪽 · 왼쪽 여백/);
+    await page.locator("#vaMode").selectOption("separate");
+    await page.locator("#vaLayout").selectOption("expression");
+    assert.match(await page.locator("#vaOutputSummary").textContent(), /현재 7장/);
+    await page.locator("#vaAssetList summary").click();
+    await page.locator('[data-va-copy-asset="1"]').click();
+    const oneExpression = await page.evaluate(() => navigator.clipboard.readText());
+    assert.match(oneExpression, /기쁜 표정/); assert.doesNotMatch(oneExpression, /슬픈 표정|기본 얼굴과/);
+    await page.reload({ waitUntil: "domcontentloaded" }); await page.locator("#vaOutput").waitFor();
+    assert.equal(await page.locator("#vaMode").inputValue(), "separate");
+    assert.equal(await page.locator("#vaShot").inputValue(), "한 손으로 인사하는 전신");
+    await page.locator('[data-va-preset="parallax"]').click();
+    assert.equal(await page.locator("#vaName").inputValue(), "고정 연구소");
+    assert.match(await page.locator("#vaOutputSummary").textContent(), /현재 4장.*3종 전체 12장/);
+    await page.locator("#vaAssetList summary").click();
+    await page.locator('[data-va-copy-asset="3"]').click();
+    const farLayer = await page.evaluate(() => navigator.clipboard.readText());
+    assert.match(farLayer, /후경만 출력/); assert.doesNotMatch(farLayer, /실제 알파 투명도/);
+    await page.locator("#vaCopyAllBtn").click();
+    const productionPackage = (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n");
+    assert.equal(productionPackage.split("파일명 제안:").length - 1, 12);
+    const packageDownload = page.waitForEvent("download"); await page.locator("#vaDownloadBtn").click();
+    assert.equal(await fs.readFile(await (await packageDownload).path(), "utf8"), productionPackage);
+    await page.locator("#vaUndoBtn").click();
+    assert.equal(await page.locator("#vaMode").inputValue(), "separate");
+    assert.equal(await page.locator("#vaLayout").inputValue(), "expression");
+    await page.locator('[data-va-preset="portrait"]').click();
+    assert.equal(await page.locator("#vaRatio").inputValue(), "9:16");
+    assert.match(await page.locator("#vaOutput").inputValue(), /중앙 타이틀 영역을 비우고/);
+    await page.locator('[data-va-preset="product"]').click();
+    assert.equal(await page.locator("#vaName").inputValue(), "고정 측정기");
+    assert.equal(await page.locator("#vaStyleName").textContent(), productionStyle);
+    await page.locator('[data-va-type="character"]').click();
+    assert.equal(await page.locator("#vaMode").inputValue(), "separate");
+    assert.equal(await page.locator("#vaSize").inputValue(), "uhd");
+    await page.locator("#vaComposition summary").click();
+    assert.equal(await page.locator("#vaMovement").inputValue(), "zoom");
+    await page.locator("#vaMode").scrollIntoViewIfNeeded();
+    if (width > 1000) {
+      const dock = await page.locator("#tabActions").boundingBox();
+      assert.ok(dock.y >= 0 && dock.y + dock.height <= height, "action dock remains in the viewport while editing");
+    }
+    await page.screenshot({ path: path.join(evidence, `${width}-production.png`) });
     await page.locator("#vaWorld").fill('<img src=x onerror="window.vaInjected=1">');
     assert.equal(await page.evaluate(() => window.vaInjected), undefined);
     assert.ok((await page.locator("#vaOutput").inputValue()).includes('<img src=x onerror="window.vaInjected=1">'));
@@ -133,7 +247,7 @@ try {
       await page.locator(`#${buttonId}`).click();
       assert.equal(await page.locator(`#${id}`).isVisible(), true);
     }
-    console.log(`PASS: ${width}x${height} inputs, 3 sheets, shared style, copy/TXT, undo/reload, mixer import, layout`);
+    console.log(`PASS: ${width}x${height} sheets/single/separate, presets, 12-file package, per-file copy, undo/reload, shared style, layout`);
     await context.close();
   }
   console.log(`Evidence: ${evidence}`);

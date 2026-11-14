@@ -35,9 +35,24 @@
 .va-sheet-preview svg { width: 100%; height: auto; display: block; }
 .va-output { min-height: 420px; margin-top: 12px; background: var(--surface-alt) !important; font-size: 12px !important; line-height: 1.8 !important; }
 .va-status { min-height: 24px; color: var(--ink-soft); font-size: 12px; line-height: 1.8; margin-top: 16px; }
+.va-output-summary { font-size: 13px; font-weight: 650; line-height: 1.8; overflow-wrap: anywhere; }
+.va-asset-list { margin: 14px 0; }
+.va-asset-list summary { font-size: 13px; padding: 10px 0; cursor: pointer; }
+.va-asset-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+.va-asset-row span { min-width: 0; overflow-wrap: anywhere; }
+.va-asset-row strong, .va-asset-row small { display: block; font-size: 12px; line-height: 1.6; }
+.va-asset-row small { color: var(--ink-soft); font-size: 11px; }
+.va-asset-row button { flex-shrink: 0; }
+.va-sheet-preview svg { max-height: 380px; }
 .va-details { margin-top: 12px; }
 .va-details .va-fields { margin-top: 12px; }
 .va-workspace [hidden] { display: none !important; }
+@media (min-width: 1001px) {
+  .va-result-stack { position: sticky; top: calc(var(--app-header-height) + var(--tabs-bar-height) + 12px); display: flex; flex-direction: column; max-height: calc(100dvh - var(--app-header-height) - var(--tabs-bar-height) - 24px); }
+  .va-result-stack > #tabActions { flex-shrink: 0; }
+  .va-result-body { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; }
+  .va-sheet-preview svg { max-height: 240px; }
+}
 @media (max-width: 1000px) { .va-layout { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: 20px; } .va-style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .va-result-body { padding: 17px; } }
 @media (max-width: 800px) { .va-layout { grid-template-columns: minmax(0, 1fr); } .va-output { min-height: 300px; } }
 @media (max-width: 720px) { .va-workspace { padding-top: 22px; } .va-header h2 { font-size: 25px; } .va-type-nav { gap: 5px; } .va-type-nav button { padding: 10px 5px; } }
