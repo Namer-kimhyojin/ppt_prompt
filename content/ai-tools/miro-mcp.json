@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "miro-mcp",
+  "slug": "miro-mcp",
+  "type": "mcp",
+  "name": "Miro MCP Server",
+  "outcome": "Miro 보드를 AI 대화에서 요약·검색하고 다이어그램·표·문서를 보드에 만든다.",
+  "categories": [
+    "발표·제안서",
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "기획·회의 진행·협업 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code",
+    "ChatGPT",
+    "Codex",
+    "Cursor",
+    "VS Code",
+    "Gemini CLI 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Miro 공식 개발자 문서의 연결 경로를 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://developers.miro.com/docs/miro-mcp",
+  "officialSources": [
+    "https://developers.miro.com/docs/miro-mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://developers.miro.com/docs/miro-mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 무료 팀을 포함한 모든 Miro 플랜에서 사용할 수 있으며 표준 API 호출 한도가 적용된다.",
+  "license": null,
+  "requirements": [
+    "Miro 계정과 대상 보드 권한",
+    "OAuth 2.1을 지원하는 MCP 클라이언트"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "개인이 만든 커뮤니티 Miro MCP 서버 영상은 근거로 합산하지 않았다.",
+    "Enterprise 플랜은 관리자 보안 설정에 따라 사용 범위가 달라질 수 있다.",
+    "대표 영상 중 하나는 제작사 공식 채널이고 다른 하나에는 Miro 제휴 링크가 있다."
+  ],
+  "starterPrompt": "이 회의 메모를 바탕으로 Miro 보드에 회고 보드를 만들어줘. 잘된 점·개선할 점·실행 항목 세 영역으로 나눠줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=5UYzLtFcQt0",
+        "title": "Claude + Miro MCP: Full Tutorial with Claude Code & GitHub",
+        "channel": "Miro",
+        "publishedAt": "2026-02-24",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "제작사 설명과 챕터에서 Miro MCP 서버 기능과 Claude Desktop 커넥터 연결, 코드 구조 시각화를 시연한다.",
+        "timestampSeconds": 443,
+        "timestampLabel": "Demo Part 1: Connecting Miro with Claude Desktop App",
+        "commercialContext": "제작사 공식 채널임.",
+        "videoId": "5UYzLtFcQt0",
+        "mentionSummary": "제작사 설명과 챕터에서 Miro MCP 서버 기능과 Claude Desktop 커넥터 연결, 코드 구조 시각화를 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=5UYzLtFcQt0&t=443s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=72vNlNEbytQ",
+        "title": "I Build a Miro Retrospective Board in 2 Minutes With Claude (Full Setup Guide)",
+        "channel": "David Pereira",
+        "publishedAt": "2026-09-22",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude Desktop에 Miro MCP를 연결해 회고 보드를 만들고 결과를 실행 항목으로 정리하는 흐름을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "Miro 제휴 추적 링크(miro.pxf.io)가 포함되어 있음.",
+        "videoId": "72vNlNEbytQ",
+        "mentionSummary": "설명에서 Claude Desktop에 Miro MCP를 연결해 회고 보드를 만들고 결과를 실행 항목으로 정리하는 흐름을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=72vNlNEbytQ",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

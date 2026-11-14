@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "id": "playground-plugin",
+  "slug": "playground-plugin",
+  "type": "plugin",
+  "name": "Playground",
+  "outcome": "디자인·데이터·개념 정리 같은 복잡한 요구를 조절 가능한 HTML 화면에서 맞춘 뒤 지시문으로 만들기",
+  "categories": [
+    "홍보·디자인",
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "화면 시안을 다듬는 기술 담당자",
+    "개발자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code"
+  ],
+  "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground",
+  "officialSources": [
+    "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground",
+    "https://github.com/anthropics/claude-plugins-official"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "playground 스킬 1개",
+    "design-playground, data-explorer, concept-map, document-critique 템플릿"
+  ],
+  "relationships": {},
+  "caveats": [
+    "만들어진 HTML 화면에서 조절한 결과는 지시문으로 복사해 다시 Claude에 붙여넣는 방식이다.",
+    "말로 설명하기 어려운 시각·구조적 주제에 적합하고 단순한 질문에는 효과가 적다.",
+    "영상마다 템플릿 수를 다르게 소개하므로 현재 구성은 README로 확인한다."
+  ],
+  "starterPrompt": "우리 부서 월간 보고서 표지 레이아웃을 정하려고 해. 제목 크기, 색상, 여백, 로고 위치를 조절하며 미리 볼 수 있는 playground를 만들어줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=_VBmr6Rh56Y",
+        "title": "How to Use the Claude Code Playground Plugin",
+        "channel": "GritAI Studio",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@GritAIStudio",
+        "publishedAt": "2026-02-17",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Playground 플러그인 설치와 화면 구조, 템플릿, 직접 만든 playground 예시를 챕터로 소개하고 공식 플러그인 경로를 링크한다.",
+        "timestampSeconds": 102,
+        "timestampLabel": "Installation - One command setup",
+        "commercialContext": "설명란에 채널 운영자의 웹사이트와 커뮤니티 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "_VBmr6Rh56Y",
+        "mentionSummary": "설명란에서 Playground 플러그인 설치와 화면 구조, 템플릿, 직접 만든 playground 예시를 챕터로 소개하고 공식 플러그인 경로를 링크한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=_VBmr6Rh56Y&t=102s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=HTrs7KCMiQ4",
+        "title": "Claude Code UI Was Painful - Then Anthropic Released Playground (4 Min Tutorial)",
+        "channel": "The Viable Edge",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@ViableEdge",
+        "publishedAt": "2026-01-31",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에 공식 마켓플레이스의 playground 설치 명령을 적고 화면 요소를 직접 조절하는 사용법을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "HTrs7KCMiQ4",
+        "mentionSummary": "설명란에 공식 마켓플레이스의 playground 설치 명령을 적고 화면 요소를 직접 조절하는 사용법을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=HTrs7KCMiQ4",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=m08fWdyGzbI",
+        "title": "this claude code playground plugin is kind of insane",
+        "channel": "Brown Guy AI",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@brownguyai",
+        "publishedAt": "2026-05-15",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_chapters",
+        "mention": "제목과 챕터에서 Playground 플러그인 설치와 개념 지도·템플릿 활용 사례를 소개한다.",
+        "timestampSeconds": 63,
+        "timestampLabel": "Installing and launching the Playground plugin",
+        "commercialContext": "설명란에 채널 운영자의 유료 그룹 가입 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "m08fWdyGzbI",
+        "mentionSummary": "제목과 챕터에서 Playground 플러그인 설치와 개념 지도·템플릿 활용 사례를 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=m08fWdyGzbI&t=63s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

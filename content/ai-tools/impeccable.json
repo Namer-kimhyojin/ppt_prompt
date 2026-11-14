@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "impeccable",
+  "slug": "impeccable",
+  "type": "skill",
+  "name": "Impeccable",
+  "outcome": "디자인 용어·명령과 자동 점검 규칙으로 AI가 만든 화면의 흔한 결함을 찾아 고치기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "웹 화면 제작자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README가 npx impeccable install 설치기와 Claude Code 플러그인 마켓플레이스 경로를 안내하고 Codex·Cursor 등 다수 도구 지원을 밝힌다.",
+  "officialUrl": "https://github.com/pbakaus/impeccable",
+  "officialSources": [
+    "https://github.com/pbakaus/impeccable",
+    "https://impeccable.style"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/pbakaus/impeccable",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 Apache-2.0이다. README는 결함 탐지 규칙이 LLM·API 키 없이 동작한다고 설명한다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [
+    "Node.js(영상 Alex Hitt 기준 22.18 이상)"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-frontend-design",
+      "taste-skill",
+      "ui-ux-pro-max"
+    ],
+    "distributionNote": "설치기는 스킬과 함께 디자인 점검 훅(hook) 설치를 제안한다."
+  },
+  "caveats": [
+    "설치기가 에이전트 훅을 함께 설정할 수 있다. 훅은 편집할 때마다 자동 실행되므로 설치 범위를 확인한다.",
+    "명령·규칙 개수는 버전마다 달라 고정해 안내하지 않는다."
+  ],
+  "starterPrompt": "이 랜딩페이지 HTML을 점검해 여백, 대비, 제목 구조 문제를 찾아 우선순위 표로 정리하고 고칠 부분을 제안해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "WaMEU3kksqc",
+        "url": "https://www.youtube.com/watch?v=WaMEU3kksqc",
+        "title": "Impeccable GitHub Explained: How AI Hooks Enforce Better Frontend Design",
+        "channel": "Alex Hitt",
+        "publishedAt": "2026-09-29",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 pbakaus/impeccable 저장소를 명시하고 설치 경로, 훅, 점검·다듬기 흐름을 해설한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=WaMEU3kksqc",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "0-AosS67IGU",
+        "url": "https://www.youtube.com/watch?v=0-AosS67IGU",
+        "title": "Impeccable Just Fixed Claude Code's Biggest Problem",
+        "channel": "Chase AI",
+        "publishedAt": "2026-04-27",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Impeccable을 Claude Code 디자인 보완용 오픈소스 저장소로 소개하고 새 페이지 제작·기존 사이트 수정을 시연한다.",
+        "timestampSeconds": 51,
+        "timestampLabel": "Impeccable",
+        "commercialContext": "설명에 채널 자체 유료 커뮤니티·컨설팅 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=0-AosS67IGU&t=51s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "GDB6ATIPo4E",
+        "url": "https://www.youtube.com/watch?v=GDB6ATIPo4E",
+        "title": "Impeccable: The #1 Claude Code Design Skill (No More AI Slop)",
+        "channel": "Nuno Tavares | Automated Marketer",
+        "publishedAt": "2026-09-08",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 Impeccable 저장소와 설치·초기화 명령 순서를 명시하고 실제 페이지 재구성을 시연한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=GDB6ATIPo4E",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

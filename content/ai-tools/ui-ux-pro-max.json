@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "ui-ux-pro-max",
+  "slug": "ui-ux-pro-max",
+  "type": "skill",
+  "name": "UI UX Pro Max",
+  "outcome": "업종·용도에 맞는 색상·서체 조합·UX 규칙을 검색해 화면 디자인 시스템을 정하기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "웹 화면 제작자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README가 Claude Code 플러그인 마켓플레이스 설치와 uipro CLI로 Claude Code·Cursor·Codex 등에 설치하는 방법을 안내한다.",
+  "officialUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+  "officialSources": [
+    "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. README는 기본판이 오픈소스이고 브랜드·로고 등 일부 기능은 Premium이라고 안내한다.",
+  "license": null,
+  "requirements": [
+    "Python 3(검색 스크립트, 표준 라이브러리만 사용)"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-frontend-design",
+      "taste-skill",
+      "impeccable"
+    ],
+    "distributionNote": "플러그인 마켓플레이스와 npm CLI(ui-ux-pro-max-cli) 두 경로로 배포된다."
+  },
+  "caveats": [
+    "README는 검색 결과가 디자인 지침일 뿐 앱을 자동으로 고치지 않는다고 밝힌다.",
+    "README에 따르면 저장소 ZIP 전체를 Claude.ai에 올리면 파일 수 제한(200개)을 넘어 실패한다.",
+    "스타일·팔레트 개수는 버전마다 달라 고정해 안내하지 않는다."
+  ],
+  "starterPrompt": "사내 교육 신청 대시보드 화면에 맞는 색상 팔레트와 서체 조합, 표·차트 사용 규칙을 추천하고 이유를 짧게 정리해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "Bu4hShtK7o8",
+        "url": "https://www.youtube.com/watch?v=Bu4hShtK7o8",
+        "title": "UI UX Pro Max for Claude Code: Stop Guessing Design Systems",
+        "channel": "Kvint Labs",
+        "publishedAt": "2026-08-11",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "제목과 설명에서 nextlevelbuilder의 UI UX Pro Max를 소개하고 팔레트·서체·UX 규칙 검색 방식을 다룬다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Bu4hShtK7o8",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "dBCeF1ippi0",
+        "url": "https://www.youtube.com/watch?v=dBCeF1ippi0",
+        "title": "This AI Skill Gives Claude Code a Designer's Brain: UI UX Pro Max Skill Explained",
+        "channel": "Github Trending Repos",
+        "publishedAt": "2026-10-13",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 nextlevelbuilder/ui-ux-pro-max-skill 저장소를 명시하고 작동 방식과 한계를 정리한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=dBCeF1ippi0",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Pc27ThkuBPQ",
+        "url": "https://www.youtube.com/watch?v=Pc27ThkuBPQ",
+        "title": "OpenCode UI/UX Skill: Build 100X Better & Modern Designs (100% Free)",
+        "channel": "AI Stack Engineer",
+        "publishedAt": "2026-02-03",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 UI UX Pro Max 저장소와 공식 사이트를 명시하고 OpenCode 등에서 설치·사용하는 방법을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Pc27ThkuBPQ",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

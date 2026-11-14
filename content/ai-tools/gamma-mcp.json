@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "id": "gamma-mcp",
+  "slug": "gamma-mcp",
+  "type": "mcp",
+  "name": "Gamma MCP Server",
+  "outcome": "AI 대화에서 Gamma 발표자료·문서·웹페이지를 만들고 수정하거나 PDF·PPTX로 내보낸다.",
+  "categories": [
+    "발표·제안서",
+    "홍보·디자인"
+  ],
+  "audience": [
+    "발표자료·제안서 작성 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "ChatGPT",
+    "Slack(Gamma 앱) 및 OAuth 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Gamma 공식 개발자 문서의 커넥터 목록을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://developers.gamma.app/mcp/gamma-mcp-server",
+  "officialSources": [
+    "https://developers.gamma.app/mcp/gamma-mcp-server"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://developers.gamma.app/mcp/gamma-mcp-server",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 모든 Gamma 플랜에서 사용할 수 있고 생성·편집·이미지 생성은 크레딧을 사용한다. 조회·내보내기·복제는 크레딧을 쓰지 않으며 분석 도구는 Pro 이상이 필요하다.",
+  "license": null,
+  "requirements": [
+    "Gamma 계정과 워크스페이스 선택·권한 승인",
+    "OAuth와 동적 클라이언트 등록을 지원하는 클라이언트(직접 연결 시 리디렉션 주소 사전 등록)"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "Gamma 공개 API를 API 키로 감싼 커뮤니티 Gamma MCP 서버들과 다른 공식 호스팅 서버(mcp.gamma.app/mcp) 항목이다.",
+    "공식 문서 기준 Claude용 Gamma 커넥터는 이 MCP 서버를 사용한다.",
+    "대표 영상 일부에 제휴 링크나 제작자 배포 자료 홍보가 있다."
+  ],
+  "starterPrompt": "이 사업 개요를 바탕으로 Gamma에서 10장 내외의 제안 발표자료 초안을 만들어줘. 장표마다 핵심 메시지 한 줄을 먼저 보여줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=kMQ39bEFKTA",
+        "title": "How to Connect Claude to Gamma (MCP Setup + Free Skill) — 4K AI Designs in Minutes",
+        "channel": "Zack Deris",
+        "publishedAt": "2026-08-10",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 Gamma MCP(커넥터)를 Claude에 연결하고 제안 발표자료·인포그래픽 생성과 편집을 시연한다.",
+        "timestampSeconds": 68,
+        "timestampLabel": "Step 1: Connect the Gamma MCP to Claude",
+        "commercialContext": "제작자의 무료 스킬 배포 사이트 링크가 포함되어 있음.",
+        "videoId": "kMQ39bEFKTA",
+        "mentionSummary": "설명과 챕터에서 Gamma MCP(커넥터)를 Claude에 연결하고 제안 발표자료·인포그래픽 생성과 편집을 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=kMQ39bEFKTA&t=68s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=okz1M7V1Spg",
+        "title": "How To Make AI-Powered Slides in Claude with Gamma",
+        "channel": "Lvl 99 TechSkillz",
+        "publishedAt": "2026-03-20",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 Claude 설정의 Gamma 커넥터 연결과 발표자료 생성·수정 흐름을 소개한다.",
+        "timestampSeconds": 0,
+        "timestampLabel": "Connect Gamma",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "okz1M7V1Spg",
+        "mentionSummary": "설명과 챕터에서 Claude 설정의 Gamma 커넥터 연결과 발표자료 생성·수정 흐름을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=okz1M7V1Spg&t=0s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=567Y2qiEUM0",
+        "title": "How to Connect Claude AI to Gamma and Create Presentations Automatically",
+        "channel": "Checkmark Academy",
+        "publishedAt": "2026-03-22",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude의 Connectors에서 Gamma를 켜고 한 번의 요청으로 발표자료를 만드는 과정을 안내한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "567Y2qiEUM0",
+        "mentionSummary": "설명에서 Claude의 Connectors에서 Gamma를 켜고 한 번의 요청으로 발표자료를 만드는 과정을 안내한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=567Y2qiEUM0",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

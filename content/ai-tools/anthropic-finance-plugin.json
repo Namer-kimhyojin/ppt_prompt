@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-finance-plugin",
+  "slug": "anthropic-finance-plugin",
+  "type": "plugin",
+  "name": "Anthropic Finance",
+  "outcome": "분개 준비, 계정 대사, 손익계산서와 차이 분석, 결산 체크리스트 정리하기",
+  "categories": [
+    "엑셀·데이터",
+    "문서·보고서"
+  ],
+  "audience": [
+    "회계·재무 담당자",
+    "결산 실무자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Cowork",
+    "Claude Code"
+  ],
+  "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+  "officialSources": [
+    "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+    "https://github.com/anthropics/knowledge-work-plugins"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 ERP·데이터 웨어하우스 등 연결 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0 (상위 저장소)",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "/journal-entry, /reconciliation, /income-statement, /variance-analysis, /sox-testing 명령",
+    "journal-entry-prep, reconciliation, financial-statements, variance-analysis, close-management, audit-support 스킬",
+    "ERP·데이터 웨어하우스·스프레드시트·BI 연결용 MCP 구성(선택)"
+  ],
+  "relationships": {
+    "related": [
+      "claude-financial-services-plugins"
+    ]
+  },
+  "caveats": [
+    "README에 재무·세무·감사 자문이 아니며 재무 보고나 공시에 쓰기 전 자격 있는 전문가가 검토해야 한다고 명시돼 있다.",
+    "예시와 감사 절차(SOX 등)는 미국 기준이므로 국내 회계 기준과 내부 결산 절차에 맞게 조정해야 한다.",
+    "투자 분석용 Claude for Financial Services 플러그인 묶음과는 다른 플러그인이다.",
+    "Nicolas Boucher 영상은 챕터 제목에서 'Claude Finance plugin'으로만 표기하며, 같은 영상의 Data·Operations·Legal과 함께 소개돼 이 플러그인으로 연결했다."
+  ],
+  "starterPrompt": "첨부한 10월 시산표와 은행 거래내역으로 보통예금 계정 대사표를 만들고, 차이가 나는 항목과 확인이 필요한 거래를 따로 정리해줘. 분개는 제안만 하고 확정하지 말아줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=i0Ctvmxczr4",
+        "title": "4 Claude Plugins Every CFO Must Have",
+        "channel": "Nicolas Boucher",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@nicolasboucherfinance",
+        "publishedAt": "2026-11-12",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Finance 플러그인을 별도 항목으로 소개한다.",
+        "timestampSeconds": 80,
+        "timestampLabel": "Claude Finance plugin",
+        "commercialContext": "설명란에 채널 운영자의 무료 마스터클래스 신청 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "limitations": "챕터 제목 기준이며 영상 본문은 시청하지 않았다.",
+        "videoId": "i0Ctvmxczr4",
+        "mentionSummary": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Finance 플러그인을 별도 항목으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=i0Ctvmxczr4&t=80s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=1P6cTfxc1kU",
+        "title": "Claude AI - Official Anthropic Plugins in CloudCowork",
+        "channel": "HardReset_Pro",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@hardreset_pro",
+        "publishedAt": "2026-05-12",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 15개를 훑으며 Finance 플러그인을 Product Management와 함께 소개한다.",
+        "timestampSeconds": 280,
+        "timestampLabel": "Finance and Product Management bundles",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "1P6cTfxc1kU",
+        "mentionSummary": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 15개를 훑으며 Finance 플러그인을 Product Management와 함께 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=1P6cTfxc1kU&t=280s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

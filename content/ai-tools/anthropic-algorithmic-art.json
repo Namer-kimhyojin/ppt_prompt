@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-algorithmic-art",
+  "slug": "anthropic-algorithmic-art",
+  "type": "skill",
+  "name": "Algorithmic Art (Anthropic)",
+  "outcome": "p5.js 코드로 재현 가능한 생성형 그래픽(패턴·흐름장 등)을 만들고 값을 바꿔 보기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "행사·홍보 그래픽 제작자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/algorithmic-art/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills"
+    ],
+    "related": [
+      "anthropic-canvas-design"
+    ],
+    "distributionNote": "example-skills 묶음에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "결과물은 코드로 그린 추상 그래픽이다. 사진·실사 이미지 생성 도구가 아니다.",
+    "SKILL.md는 기존 작가 작품을 모방하지 말고 독자적인 작품을 만들라고 안내한다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "연말 행사 배경으로 쓸 차분한 파란 계열의 흐름 무늬 그래픽을 p5.js로 만들어줘. 같은 시드 값이면 같은 결과가 나오게 해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "F-3csy0YmMs",
+        "url": "https://www.youtube.com/watch?v=F-3csy0YmMs",
+        "title": "Claude, Seeded. — Inside Anthropic's Algorithmic-Art Skill",
+        "channel": "Nik Bear Brown",
+        "publishedAt": "2026-07-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 Anthropic algorithmic-art 스킬의 2단계 흐름(철학→코드)과 시드 재현 방식을 해설한다.",
+        "timestampSeconds": 45,
+        "timestampLabel": "Act 2 — Organic Turbulence (live flow field, seed 42)",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=F-3csy0YmMs&t=45s",
+        "withinPreferredWindow": true,
+        "channelRelationNote": "'humanitarians ai' 채널 영상 설명이 github.com/nikbearbrown 코드를 링크한다. 두 채널은 운영 주체가 연관되었을 수 있다."
+      },
+      {
+        "videoId": "i8v9e8hzH88",
+        "url": "https://www.youtube.com/watch?v=i8v9e8hzH88",
+        "title": "6 Claude Skills Worth Using, and What You Actually Get",
+        "channel": "Latest Build",
+        "publishedAt": "2026-11-01",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명과 챕터에서 쓸 만한 스킬 6개 중 하나로 Algorithmic art을(를) 명시하고 결과물을 보여준다.",
+        "timestampSeconds": 74,
+        "timestampLabel": "4. Algorithmic art",
+        "commercialContext": "설명에 선정이 벤치마크나 순위가 아니라 편의·결과 기준이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=i8v9e8hzH88&t=74s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Kts-JWEBGeY",
+        "url": "https://www.youtube.com/watch?v=Kts-JWEBGeY",
+        "title": "Claude Code Creative Skills Tested: Four of Five Work, Documents Don't",
+        "channel": "SkipCI",
+        "publishedAt": "2026-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Anthropic의 algorithmic-art와 canvas-design 스킬을 공개 저장소 기준으로 시험한 결과를 다룬다.",
+        "timestampSeconds": 149,
+        "timestampLabel": "Generative art and posters",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Kts-JWEBGeY&t=149s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 Algorithmic Art을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

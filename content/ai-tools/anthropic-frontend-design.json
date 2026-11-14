@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-frontend-design",
+  "slug": "anthropic-frontend-design",
+  "type": "skill",
+  "name": "Frontend Design (Anthropic)",
+  "outcome": "웹페이지·화면을 만들 때 획일적인 AI 기본 디자인을 피하고 디자인 방향을 정하기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "웹페이지·화면 제작자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다. 같은 이름의 스킬이 anthropics/claude-code 저장소의 frontend-design 플러그인으로도 배포된다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json",
+    "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills",
+      "frontend-design-plugin"
+    ],
+    "related": [
+      "anthropic-web-artifacts-builder",
+      "anthropic-theme-factory"
+    ],
+    "distributionNote": "example-skills 묶음과 Claude Code 저장소의 frontend-design 플러그인 두 경로로 배포된다. 같은 이름의 커뮤니티 복제본이 많으므로 공식 경로를 구분한다."
+  },
+  "caveats": [
+    "HTML·React 등 화면 코드를 만드는 작업용이다. 결과물의 접근성·반응형 동작은 별도 확인이 필요하다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "사내 교육 신청 안내 랜딩페이지를 HTML로 만들어줘. 디자인 방향을 먼저 두세 줄로 제안한 뒤 구현해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 5,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "Iup1WlUyj9M",
+        "url": "https://www.youtube.com/watch?v=Iup1WlUyj9M",
+        "title": "How to Use Claude Skills as a Designer",
+        "channel": "Griffin Wooldridge",
+        "publishedAt": "2026-03-09",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "디자이너용 추천 스킬 첫 항목으로 Frontend Design을 명시하고 공식 SKILL.md 링크를 단다.",
+        "timestampSeconds": 27,
+        "timestampLabel": "Frontend Design",
+        "commercialContext": "설명에 Mobbin·Claude·Framer 등 제휴(affiliate) 링크가 있다고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Iup1WlUyj9M&t=27s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "mTkW6RO8moM",
+        "url": "https://www.youtube.com/watch?v=mTkW6RO8moM",
+        "title": "The Best Claude Skills for Brand and Marketing Design",
+        "channel": "Griffin Wooldridge",
+        "publishedAt": "2026-11-04",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에 Anthropic Frontend Design 저장소 링크를 명시하고 스킬 사용 전후 비교를 보여준다고 안내한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "Photoroom 광고(#ad)와 제휴 링크가 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=mTkW6RO8moM",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "i8v9e8hzH88",
+        "url": "https://www.youtube.com/watch?v=i8v9e8hzH88",
+        "title": "6 Claude Skills Worth Using, and What You Actually Get",
+        "channel": "Latest Build",
+        "publishedAt": "2026-11-01",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명과 챕터에서 쓸 만한 스킬 6개 중 하나로 Frontend design을(를) 명시하고 결과물을 보여준다.",
+        "timestampSeconds": 33,
+        "timestampLabel": "2. Frontend design",
+        "commercialContext": "설명에 선정이 벤치마크나 순위가 아니라 편의·결과 기준이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=i8v9e8hzH88&t=33s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "rcRS8-7OgBo",
+        "url": "https://www.youtube.com/watch?v=rcRS8-7OgBo",
+        "title": "Claude Code Skills & skills.sh - Crash Course",
+        "channel": "Alejandro AO",
+        "publishedAt": "2026-01-28",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명과 챕터에서 frontend-design 스킬로 랜딩페이지 디자인을 개선하는 시연을 명시한다.",
+        "timestampSeconds": 183,
+        "timestampLabel": "Demo: Frontend design skill in action",
+        "commercialContext": "YouTube 검색 결과에 'Alejandro AO and Hugging Face' 공동 게시로 표시되었다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=rcRS8-7OgBo&t=183s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 Frontend Design을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

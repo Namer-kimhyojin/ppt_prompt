@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-docx",
+  "slug": "anthropic-docx",
+  "type": "skill",
+  "name": "DOCX (Anthropic)",
+  "outcome": "Word 문서를 목차·머리글·표 등 서식을 갖춰 만들고 기존 문서를 읽거나 고치기",
+  "categories": [
+    "문서·보고서"
+  ],
+  "audience": [
+    "보고서·공문 작성 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 document-skills 묶음 설치 경로를 안내한다. Claude.ai 유료 요금제의 내장 문서 기능과 저장소 구현은 동작이 같다고 보장되지 않는다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/docx",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/docx",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/docx/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json",
+    "https://github.com/anthropics/skills"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/docx",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-document-skills"
+    ],
+    "related": [
+      "anthropic-xlsx",
+      "anthropic-pdf",
+      "anthropic-pptx",
+      "anthropic-doc-coauthoring"
+    ],
+    "distributionNote": "document-skills 묶음(xlsx·docx·pptx·pdf)에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "대상 형식은 .docx·.dotx다. 한글(HWP·HWPX) 문서는 이 스킬의 대상이 아니다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "이 회의 메모를 Word 보고서로 만들어줘. 표지, 목차, 쪽 번호를 넣고 결정 사항은 표로 정리해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "Je7IIfFHoBw",
+        "url": "https://www.youtube.com/watch?v=Je7IIfFHoBw",
+        "title": "10 Free Claude Skills Worth Turning On",
+        "channel": "The Tech Space",
+        "publishedAt": "2026-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명의 추천 목록에 docx을(를) 명시하고 Anthropic 공식 스킬 모음에서 켜는 방법을 다룬다.",
+        "timestampSeconds": 144,
+        "timestampLabel": "Office files",
+        "commercialContext": "설명에 Anthropic과 제휴하지 않은 독립 채널이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Je7IIfFHoBw&t=144s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "LHFPCQih0d4",
+        "url": "https://www.youtube.com/watch?v=LHFPCQih0d4",
+        "title": "How to Install Claude Skills in Claude Code (Official Anthropic Skills)",
+        "channel": "Ai Side Business",
+        "publishedAt": "2026-10-22",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Anthropic 공식 document-skills 설치 후 Word 파일을 만들고 편집할 수 있다고 안내한다.",
+        "timestampSeconds": 17,
+        "timestampLabel": "Document skills (Excel, Word, PowerPoint, PDF)",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=LHFPCQih0d4&t=17s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 DOCX을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

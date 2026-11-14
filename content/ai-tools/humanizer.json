@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "humanizer",
+  "slug": "humanizer",
+  "type": "skill",
+  "name": "Humanizer",
+  "outcome": "AI가 쓴 티가 나는 과장·반복·군더더기 표현을 찾아 내용은 유지한 채 자연스러운 글로 고치기",
+  "categories": [
+    "문서·보고서"
+  ],
+  "audience": [
+    "보고서·홍보 문안 작성자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code",
+    "Codex"
+  ],
+  "platformEvidence": "공식 README가 Claude Code 플러그인, npx skills를 통한 Codex 등 여러 에이전트 설치를 안내한다. Claude.ai에는 저장소를 내려받아 스킬로 올리는 방식이 영상(Sujal Shrestha)에 소개되었다.",
+  "officialUrl": "https://github.com/blader/humanizer",
+  "officialSources": [
+    "https://github.com/blader/humanizer",
+    "https://skills.sh/blader/humanizer"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/blader/humanizer",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-doc-coauthoring"
+    ],
+    "distributionNote": "Claude Code 플러그인과 npx skills 두 경로로 배포된다. 같은 이름의 다른 humanizer 스킬과 구분한다."
+  },
+  "caveats": [
+    "판별 기준은 위키백과의 AI 글쓰기 징후 문서를 바탕으로 한 영어 글 패턴이다. 한국어 문장에 같은 효과가 있는지는 확인하지 않았다.",
+    "AI 탐지기 회피를 보장하는 도구가 아니다. 영상(Alex Hitt)도 편집이 탐지기 통과를 보장하지 않는다고 다룬다.",
+    "영상 설명의 패턴 개수(25·29·35 등)는 시점마다 달라 고정해 안내하지 않는다."
+  ],
+  "starterPrompt": "이 보도자료 초안에서 과장된 표현과 뜻 없는 반복을 찾아 표로 보여주고, 사실 관계는 바꾸지 말고 담백하게 고친 문안을 제안해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "GnFTUThPkYs",
+        "url": "https://www.youtube.com/watch?v=GnFTUThPkYs",
+        "title": "Humanizer GitHub Tutorial: Rewrite AI Prose and Match Your Voice in Claude Code",
+        "channel": "Alex Hitt",
+        "publishedAt": "2026-09-08",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 blader/humanizer 저장소를 명시하고 설치, /humanizer 2단계 고쳐쓰기, 문체 맞추기를 다룬다.",
+        "timestampSeconds": 85,
+        "timestampLabel": "Install the blader/humanizer Agent Skill",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=GnFTUThPkYs&t=85s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6GGMG0iBkpQ",
+        "url": "https://www.youtube.com/watch?v=6GGMG0iBkpQ",
+        "title": "How to Humanize AI Text With One Free Agent Skill (Claude Code)",
+        "channel": "Darius Reed",
+        "publishedAt": "2026-09-26",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 오픈소스 스킬 Humanizer와 GitHub 저장소를 명시하고 초안 고쳐쓰기와 설치를 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6GGMG0iBkpQ",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "ZCQhyS2Ad9U",
+        "url": "https://www.youtube.com/watch?v=ZCQhyS2Ad9U",
+        "title": "Humanizer: The FREE Claude Skill That Fixes AI Writing Slop (Plus the Step Everyone Misses)",
+        "channel": "Superbash (BoxminingAI)",
+        "publishedAt": "2026-08-03",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "제목과 설명에서 Blader가 만든 Humanizer 스킬의 설치와 자체 요약 작업 적용 경험을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=ZCQhyS2Ad9U",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "rrlhKtx0dlE",
+        "url": "https://www.youtube.com/watch?v=rrlhKtx0dlE",
+        "title": "How to Make AI Write Like a Human",
+        "channel": "Sujal Shrestha",
+        "publishedAt": "2026-03-08",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 blader/humanizer 링크를 명시하고 Claude 사용자 지정 스킬로 올려 이메일 문안을 쓰는 과정을 보여준다.",
+        "timestampSeconds": 25,
+        "timestampLabel": "Adding the skill to Claude",
+        "commercialContext": "이메일 마케팅 고객 작업에 쓴다고 밝히는 실무자 채널이다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=rrlhKtx0dlE&t=25s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

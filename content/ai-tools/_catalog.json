@@ -22,21 +22,21 @@
     ]
   },
   "stats": {
-    "itemCount": 13,
-    "exactToolRepeatedItems": 12,
+    "itemCount": 82,
+    "exactToolRepeatedItems": 81,
     "skillFamilyEvidenceItems": 1,
     "byType": {
-      "skill": 4,
-      "plugin": 4,
-      "mcp": 5
+      "skill": 28,
+      "plugin": 28,
+      "mcp": 26
     },
-    "citedUniqueVideoCount": 25,
-    "citedUniqueChannelCount": 24,
-    "mentionLinks": 29,
-    "confirmedWindowVideos": 22,
+    "citedUniqueVideoCount": 201,
+    "citedUniqueChannelCount": 154,
+    "mentionLinks": 249,
+    "confirmedWindowVideos": 198,
     "undatedVideos": 1,
     "outsidePreferredWindowVideos": 2,
-    "supplementalVideos": 1
+    "supplementalVideos": 6
   },
   "groups": {
     "skill": [
@@ -55,6 +55,102 @@
       {
         "id": "remotion-agent-skills",
         "file": "remotion-agent-skills.json"
+      },
+      {
+        "id": "anthropic-xlsx",
+        "file": "anthropic-xlsx.json"
+      },
+      {
+        "id": "anthropic-docx",
+        "file": "anthropic-docx.json"
+      },
+      {
+        "id": "anthropic-pdf",
+        "file": "anthropic-pdf.json"
+      },
+      {
+        "id": "anthropic-brand-guidelines",
+        "file": "anthropic-brand-guidelines.json"
+      },
+      {
+        "id": "anthropic-doc-coauthoring",
+        "file": "anthropic-doc-coauthoring.json"
+      },
+      {
+        "id": "anthropic-canvas-design",
+        "file": "anthropic-canvas-design.json"
+      },
+      {
+        "id": "anthropic-theme-factory",
+        "file": "anthropic-theme-factory.json"
+      },
+      {
+        "id": "anthropic-frontend-design",
+        "file": "anthropic-frontend-design.json"
+      },
+      {
+        "id": "anthropic-web-artifacts-builder",
+        "file": "anthropic-web-artifacts-builder.json"
+      },
+      {
+        "id": "anthropic-webapp-testing",
+        "file": "anthropic-webapp-testing.json"
+      },
+      {
+        "id": "anthropic-mcp-builder",
+        "file": "anthropic-mcp-builder.json"
+      },
+      {
+        "id": "anthropic-algorithmic-art",
+        "file": "anthropic-algorithmic-art.json"
+      },
+      {
+        "id": "anthropic-slack-gif-creator",
+        "file": "anthropic-slack-gif-creator.json"
+      },
+      {
+        "id": "humanizer",
+        "file": "humanizer.json"
+      },
+      {
+        "id": "marketing-skills-corey-haines",
+        "file": "marketing-skills-corey-haines.json"
+      },
+      {
+        "id": "taste-skill",
+        "file": "taste-skill.json"
+      },
+      {
+        "id": "ui-ux-pro-max",
+        "file": "ui-ux-pro-max.json"
+      },
+      {
+        "id": "impeccable",
+        "file": "impeccable.json"
+      },
+      {
+        "id": "last30days-skill",
+        "file": "last30days-skill.json"
+      },
+      {
+        "id": "planning-with-files",
+        "file": "planning-with-files.json"
+      },
+      {
+        "id": "vercel-find-skills",
+        "file": "vercel-find-skills.json"
+      },
+      {
+        "id": "hwpxskill",
+        "file": "hwpxskill.json"
+      },
+      {
+        "id": "prompt-master",
+        "file": "prompt-master.json"
+      },
+      {
+        "id": "grill-me-matt-pocock",
+        "file": "grill-me-matt-pocock.json"
       }
     ],
     "plugin": [
@@ -73,6 +169,102 @@
       {
         "id": "claude-mem-plugin",
         "file": "claude-mem-plugin.json"
+      },
+      {
+        "id": "anthropic-legal-plugin",
+        "file": "anthropic-legal-plugin.json"
+      },
+      {
+        "id": "anthropic-sales-plugin",
+        "file": "anthropic-sales-plugin.json"
+      },
+      {
+        "id": "claude-financial-services-plugins",
+        "file": "claude-financial-services-plugins.json"
+      },
+      {
+        "id": "anthropic-small-business-plugin",
+        "file": "anthropic-small-business-plugin.json"
+      },
+      {
+        "id": "anthropic-data-plugin",
+        "file": "anthropic-data-plugin.json"
+      },
+      {
+        "id": "anthropic-claude-for-legal",
+        "file": "anthropic-claude-for-legal.json"
+      },
+      {
+        "id": "ralph-loop-plugin",
+        "file": "ralph-loop-plugin.json"
+      },
+      {
+        "id": "security-guidance-plugin",
+        "file": "security-guidance-plugin.json"
+      },
+      {
+        "id": "frontend-design-plugin",
+        "file": "frontend-design-plugin.json"
+      },
+      {
+        "id": "pr-review-toolkit-plugin",
+        "file": "pr-review-toolkit-plugin.json"
+      },
+      {
+        "id": "codex-plugin-for-claude-code",
+        "file": "codex-plugin-for-claude-code.json"
+      },
+      {
+        "id": "compound-engineering-plugin",
+        "file": "compound-engineering-plugin.json"
+      },
+      {
+        "id": "everything-claude-code-plugin",
+        "file": "everything-claude-code-plugin.json"
+      },
+      {
+        "id": "ponytail-plugin",
+        "file": "ponytail-plugin.json"
+      },
+      {
+        "id": "playground-plugin",
+        "file": "playground-plugin.json"
+      },
+      {
+        "id": "caveman-plugin",
+        "file": "caveman-plugin.json"
+      },
+      {
+        "id": "code-simplifier-plugin",
+        "file": "code-simplifier-plugin.json"
+      },
+      {
+        "id": "claude-hud-plugin",
+        "file": "claude-hud-plugin.json"
+      },
+      {
+        "id": "understand-anything-plugin",
+        "file": "understand-anything-plugin.json"
+      },
+      {
+        "id": "anthropic-finance-plugin",
+        "file": "anthropic-finance-plugin.json"
+      },
+      {
+        "id": "anthropic-operations-plugin",
+        "file": "anthropic-operations-plugin.json"
+      },
+      {
+        "id": "anthropic-human-resources-plugin",
+        "file": "anthropic-human-resources-plugin.json"
+      },
+      {
+        "id": "hookify-plugin",
+        "file": "hookify-plugin.json"
+      },
+      {
+        "id": "commit-commands-plugin",
+        "file": "commit-commands-plugin.json"
       }
     ],
     "mcp": [
@@ -95,6 +287,90 @@
       {
         "id": "github-mcp",
         "file": "github-mcp.json"
+      },
+      {
+        "id": "zapier-mcp",
+        "file": "zapier-mcp.json"
+      },
+      {
+        "id": "atlassian-rovo-mcp",
+        "file": "atlassian-rovo-mcp.json"
+      },
+      {
+        "id": "canva-ai-connector",
+        "file": "canva-ai-connector.json"
+      },
+      {
+        "id": "figma-mcp",
+        "file": "figma-mcp.json"
+      },
+      {
+        "id": "hubspot-mcp",
+        "file": "hubspot-mcp.json"
+      },
+      {
+        "id": "asana-mcp",
+        "file": "asana-mcp.json"
+      },
+      {
+        "id": "slack-mcp",
+        "file": "slack-mcp.json"
+      },
+      {
+        "id": "airtable-mcp",
+        "file": "airtable-mcp.json"
+      },
+      {
+        "id": "miro-mcp",
+        "file": "miro-mcp.json"
+      },
+      {
+        "id": "exa-mcp",
+        "file": "exa-mcp.json"
+      },
+      {
+        "id": "n8n-instance-mcp",
+        "file": "n8n-instance-mcp.json"
+      },
+      {
+        "id": "linear-mcp",
+        "file": "linear-mcp.json"
+      },
+      {
+        "id": "supabase-mcp",
+        "file": "supabase-mcp.json"
+      },
+      {
+        "id": "stripe-mcp",
+        "file": "stripe-mcp.json"
+      },
+      {
+        "id": "monday-mcp",
+        "file": "monday-mcp.json"
+      },
+      {
+        "id": "granola-mcp",
+        "file": "granola-mcp.json"
+      },
+      {
+        "id": "gamma-mcp",
+        "file": "gamma-mcp.json"
+      },
+      {
+        "id": "webflow-mcp",
+        "file": "webflow-mcp.json"
+      },
+      {
+        "id": "apify-mcp",
+        "file": "apify-mcp.json"
+      },
+      {
+        "id": "vercel-mcp",
+        "file": "vercel-mcp.json"
+      },
+      {
+        "id": "chrome-devtools-mcp",
+        "file": "chrome-devtools-mcp.json"
       }
     ]
   },
@@ -103,5 +379,103 @@
     "docs/research/youtube-plugins-2026-11-14.json",
     "docs/research/youtube-skills-2026-11-14.json"
   ],
-  "report": "docs/ai-tools-youtube-research-2026-11-14.md"
+  "report": "docs/ai-tools-youtube-research-2026-11-14.md",
+  "releases": [
+    {
+      "date": "2026-11-14",
+      "title": "첫 목록 공개",
+      "summary": "공식 출처와 서로 다른 유튜브 채널 2곳 이상의 소개를 대조해 첫 목록을 공개했습니다.",
+      "ids": [
+        "anthropic-skill-creator",
+        "anthropic-pptx",
+        "obsidian-skills",
+        "remotion-agent-skills",
+        "anthropic-productivity-plugin",
+        "anthropic-marketing-plugin",
+        "superpowers-plugin",
+        "claude-mem-plugin",
+        "notion-mcp",
+        "firecrawl-mcp",
+        "playwright-mcp",
+        "context7-mcp",
+        "github-mcp"
+      ]
+    },
+    {
+      "date": "2026-11-14",
+      "title": "목록 확장",
+      "summary": "Anthropic 공식 스킬·업무용 플러그인과 주요 서비스의 공식 MCP를 중심으로, 같은 기준(공식 출처 + 서로 다른 채널 2곳 이상)을 통과한 도구를 추가했습니다.",
+      "ids": [
+        "anthropic-xlsx",
+        "anthropic-docx",
+        "anthropic-pdf",
+        "anthropic-brand-guidelines",
+        "anthropic-doc-coauthoring",
+        "anthropic-canvas-design",
+        "anthropic-theme-factory",
+        "anthropic-frontend-design",
+        "anthropic-web-artifacts-builder",
+        "anthropic-webapp-testing",
+        "anthropic-mcp-builder",
+        "anthropic-algorithmic-art",
+        "anthropic-slack-gif-creator",
+        "humanizer",
+        "marketing-skills-corey-haines",
+        "taste-skill",
+        "ui-ux-pro-max",
+        "impeccable",
+        "last30days-skill",
+        "planning-with-files",
+        "vercel-find-skills",
+        "hwpxskill",
+        "prompt-master",
+        "grill-me-matt-pocock",
+        "anthropic-legal-plugin",
+        "anthropic-sales-plugin",
+        "claude-financial-services-plugins",
+        "anthropic-small-business-plugin",
+        "anthropic-data-plugin",
+        "anthropic-claude-for-legal",
+        "ralph-loop-plugin",
+        "security-guidance-plugin",
+        "frontend-design-plugin",
+        "pr-review-toolkit-plugin",
+        "codex-plugin-for-claude-code",
+        "compound-engineering-plugin",
+        "everything-claude-code-plugin",
+        "ponytail-plugin",
+        "playground-plugin",
+        "caveman-plugin",
+        "code-simplifier-plugin",
+        "claude-hud-plugin",
+        "understand-anything-plugin",
+        "anthropic-finance-plugin",
+        "anthropic-operations-plugin",
+        "anthropic-human-resources-plugin",
+        "hookify-plugin",
+        "commit-commands-plugin",
+        "zapier-mcp",
+        "atlassian-rovo-mcp",
+        "canva-ai-connector",
+        "figma-mcp",
+        "hubspot-mcp",
+        "asana-mcp",
+        "slack-mcp",
+        "airtable-mcp",
+        "miro-mcp",
+        "exa-mcp",
+        "n8n-instance-mcp",
+        "linear-mcp",
+        "supabase-mcp",
+        "stripe-mcp",
+        "monday-mcp",
+        "granola-mcp",
+        "gamma-mcp",
+        "webflow-mcp",
+        "apify-mcp",
+        "vercel-mcp",
+        "chrome-devtools-mcp"
+      ]
+    }
+  ]
 }

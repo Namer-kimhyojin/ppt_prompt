@@ -147,9 +147,9 @@ function detail(record, records) {
   ${related.length ? `<section class="ai-related"><h2>함께 살펴볼 도구</h2><div class="ai-related-list">${related.map((item) => `<a href="/ai-tools/${escapeHtml(item.slug)}/">${badge(item.type)}<strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.outcome)}</span></a>`).join("")}</div></section>` : ""}`;
 }
 
-function startPage() {
+function startPage(counts) {
   return `<section class="ai-hero ai-hero-compact"><p class="ai-eyebrow">처음 시작하기</p><h1>내 AI에 필요한 기능을 더하는 법</h1><p class="ai-lead">할 일을 먼저 정하고, 사용하는 AI에 맞춰 설치하거나 연결하세요.</p></section><article class="ai-article ai-reading">
-    <section><h2>세 가지는 무엇이 다른가요?</h2><div class="ai-definition-list"><div>${badge("skill")}<h3>업무 방법을 알려줍니다</h3><p>문서 작성·자료 정리 같은 업무의 절차와 참고자료를 AI가 읽도록 등록합니다.</p><a href="/ai-tools/?type=skill">스킬 4개 보기 →</a></div><div>${badge("plugin")}<h3>필요한 기능을 묶어 설치합니다</h3><p>스킬, 명령, 외부 도구 연결 등을 하나의 설치 단위로 제공합니다. 대상 플랫폼을 먼저 확인하세요.</p><a href="/ai-tools/?type=plugin">플러그인 4개 보기 →</a></div><div>${badge("mcp")}<h3>외부 자료와 프로그램을 연결합니다</h3><p>AI가 Notion 문서나 브라우저 같은 도구에 접근하도록 연결합니다. 로컬 실행과 원격 연결이 있습니다.</p><a href="/ai-tools/?type=mcp">MCP 5개 보기 →</a></div></div></section>
+    <section><h2>세 가지는 무엇이 다른가요?</h2><div class="ai-definition-list"><div>${badge("skill")}<h3>업무 방법을 알려줍니다</h3><p>문서 작성·자료 정리 같은 업무의 절차와 참고자료를 AI가 읽도록 등록합니다.</p><a href="/ai-tools/?type=skill">스킬 ${counts.skill}개 보기 →</a></div><div>${badge("plugin")}<h3>필요한 기능을 묶어 설치합니다</h3><p>스킬, 명령, 외부 도구 연결 등을 하나의 설치 단위로 제공합니다. 대상 플랫폼을 먼저 확인하세요.</p><a href="/ai-tools/?type=plugin">플러그인 ${counts.plugin}개 보기 →</a></div><div>${badge("mcp")}<h3>외부 자료와 프로그램을 연결합니다</h3><p>AI가 Notion 문서나 브라우저 같은 도구에 접근하도록 연결합니다. 로컬 실행과 원격 연결이 있습니다.</p><a href="/ai-tools/?type=mcp">MCP ${counts.mcp}개 보기 →</a></div></div></section>
     <section><h2>이 순서로 시작하세요</h2><ol class="ai-steps"><li><h3>원하는 결과 정하기</h3><p>‘AI를 잘 쓰기’보다 ‘회의 메모에서 후속 업무를 정리하기’처럼 결과를 정합니다.</p></li><li><h3>사용환경 확인하기</h3><p>도구 상세 페이지에서 현재 사용하는 AI가 안내된 환경인지 확인합니다. 웹 서비스와 데스크톱·CLI는 등록 방법이 다를 수 있습니다.</p></li><li><h3>공식 안내로 설치·연결하기</h3><p>상세 페이지의 공식 설치·연결 안내를 엽니다. 플러그인에 이미 포함된 기능은 다시 설치할 필요가 있는지 확인합니다.</p></li><li><h3>작은 샘플로 첫 요청하기</h3><p>‘예시 요청 복사’를 눌러 자료와 요구사항을 바꿔 전달합니다. 도구가 인식되는지와 결과물이 만들어지는지를 따로 확인합니다.</p></li></ol></section>
     <section><h2>막히면 여기부터 확인하세요</h2><dl class="ai-faq"><div><dt>다운로드했는데 목록에 안 보여요</dt><dd>다운로드와 등록은 별도 단계입니다. 해당 환경의 설치 위치·활성화·세션 갱신 안내를 확인하세요.</dd></div><div><dt>MCP는 연결됐는데 자료를 못 읽어요</dt><dd>로그인한 계정과 대상 자료의 접근권한, 사용 가능한 도구를 확인하세요. 연결 성공이 모든 자료의 접근을 보장하지는 않습니다.</dd></div><div><dt>영상과 화면이 달라요</dt><dd>영상 게시일과 현재 버전이 다를 수 있습니다. 현재 공식 안내를 우선하고 상세 페이지의 확인일을 함께 보세요.</dd></div><div><dt>무료로 사용할 수 있나요?</dt><dd>도구 소스의 공개 여부와 AI 사용료·외부 서비스 요금은 다릅니다. 상세 페이지의 비용 조건과 공식 요금 안내를 확인하세요.</dd></div></dl></section>
     <section><h2>발표 기획부터 시작한다면</h2><p>기존 ppt-slide-planner의 Codex·Claude 패키지와 등록 안내도 계속 이용할 수 있습니다.</p><a href="/guides/ppt-slide-planner-skill" class="ai-button ai-button-subtle">ppt-slide-planner 안내 열기</a></section>
@@ -166,8 +166,18 @@ function workflowsPage() {
 }
 
 function updatesPage(records, manifest) {
-  return `<section class="ai-hero ai-hero-compact"><p class="ai-eyebrow">업데이트 소식</p><h1>무엇이 새로 추가됐나요?</h1><p class="ai-lead">PromptDeck의 안내 변경과 확인 범위를 기록합니다.</p></section><article class="ai-article ai-reading"><section><p class="ai-eyebrow"><time datetime="${escapeHtml(manifest.researchedAt)}">${escapeHtml(manifest.researchedAt)}</time> · 첫 목록 공개</p><h2>스킬 4개·플러그인 4개·MCP 5개를 소개합니다</h2><p>총 ${records.length}개 도구의 업무 용도, 공식 출처, 준비물과 첫 요청 예시를 정리했습니다. 검색으로 발견한 ${Number(manifest.stats.citedUniqueVideoCount)}개 영상·${Number(manifest.stats.citedUniqueChannelCount)}개 채널의 공개 소개를 대조했습니다.</p><div class="ai-update-groups">${TYPES.map((type) => `<div><h3>${TYPE_LABELS[type]}</h3><ul>${records.filter((record) => record.type === type).map((record) => `<li><a href="/ai-tools/${escapeHtml(record.slug)}/">${escapeHtml(record.name)}</a></li>`).join("")}</ul></div>`).join("")}</div><p class="ai-note">이 날짜는 자료 확인과 안내 정리의 기준일입니다. 각 제작사가 같은 날 도구를 업데이트했다는 뜻은 아닙니다.</p></section>
-  <section><h2>근거를 읽는 방법</h2><dl class="ai-facts"><div><dt>확인한 내용</dt><dd>영상 제목·설명·챕터·일부 공개 전사와 공식 배포 자료를 대조했습니다.</dd></div><div><dt>표본 범위</dt><dd>영어 영상 중심이며 일부 다른 언어 자료를 포함합니다. 유튜브 전체 인기순위나 성능 순위가 아닙니다.</dd></div><div><dt>반복 언급</dt><dd>12개는 같은 도구의 반복 언급이며 PPTX는 공개 구현과 내장 기능을 구분한 스킬 계열 보완 항목입니다.</dd></div><div><dt>날짜 예외</dt><dd>22개 영상은 우선 조사 기간(2025-11-14~2026-11-14)에 포함됩니다. 기간 밖 보완 영상 2개, 게시일 미확인 영상 1개는 각 상세 안내에 표시했습니다.</dd></div><div><dt>실행 확인</dt><dd>도구 설치·연결·대표 업무 수행은 아직 검증하지 않았습니다. ‘출처 확인’과 ‘실행 확인’을 구분합니다.</dd></div></dl></section>
+  // Each release lists the tools it introduced; older catalogs without releases count as one first release.
+  const releases = array(manifest.releases).length ? array(manifest.releases) : [{ date: manifest.researchedAt, title: "첫 목록 공개", summary: "", ids: records.map((record) => record.id) }];
+  const stats = manifest.stats || {};
+  const count = (items, type) => items.filter((record) => record.type === type).length;
+  const release = (entry) => {
+    const items = array(entry.ids).map((id) => records.find((record) => record.id === id)).filter(Boolean);
+    const heading = TYPES.filter((type) => count(items, type)).map((type) => `${TYPE_LABELS[type]} ${count(items, type)}개`).join("·");
+    return `<section><p class="ai-eyebrow"><time datetime="${escapeHtml(entry.date)}">${escapeHtml(entry.date)}</time> · ${escapeHtml(entry.title)}</p><h2>${heading}를 소개합니다</h2>${entry.summary ? `<p>${escapeHtml(entry.summary)}</p>` : ""}<div class="ai-update-groups">${TYPES.filter((type) => count(items, type)).map((type) => `<div><h3>${TYPE_LABELS[type]}</h3><ul>${items.filter((record) => record.type === type).map((record) => `<li><a href="/ai-tools/${escapeHtml(record.slug)}/">${escapeHtml(record.name)}</a></li>`).join("")}</ul></div>`).join("")}</div></section>`;
+  };
+  const repeated = Number(stats.exactToolRepeatedItems) || 0, family = Number(stats.skillFamilyEvidenceItems) || 0;
+  return `<section class="ai-hero ai-hero-compact"><p class="ai-eyebrow">업데이트 소식</p><h1>무엇이 새로 추가됐나요?</h1><p class="ai-lead">PromptDeck의 안내 변경과 확인 범위를 기록합니다.</p></section><article class="ai-article ai-reading">${[...releases].reverse().map(release).join("")}<p class="ai-note">날짜는 자료 확인과 안내 정리의 기준일입니다. 각 제작사가 같은 날 도구를 업데이트했다는 뜻은 아닙니다.</p>
+  <section><h2>근거를 읽는 방법</h2><dl class="ai-facts"><div><dt>확인한 내용</dt><dd>영상 제목·설명·챕터·일부 공개 전사와 공식 배포 자료를 대조했습니다. 현재 ${records.length}개 도구에 ${Number(stats.citedUniqueVideoCount) || 0}개 영상·${Number(stats.citedUniqueChannelCount) || 0}개 채널의 공개 소개를 연결했습니다.</dd></div><div><dt>표본 범위</dt><dd>영어 영상 중심이며 일부 다른 언어 자료를 포함합니다. 유튜브 전체 인기순위나 성능 순위가 아닙니다.</dd></div><div><dt>반복 언급</dt><dd>${repeated}개는 서로 다른 채널 2곳 이상이 같은 도구를 소개한 항목입니다.${family ? ` ${family}개는 공개 구현과 내장 기능을 구분한 스킬 계열 보완 항목입니다.` : ""}</dd></div><div><dt>날짜 예외</dt><dd>${Number(stats.confirmedWindowVideos) || 0}개 영상은 우선 조사 기간(${escapeHtml(manifest.preferredPublishedWindow?.from || "")}~${escapeHtml(manifest.preferredPublishedWindow?.to || "")})에 포함됩니다. 기간 밖 보완 영상 ${Number(stats.outsidePreferredWindowVideos) || 0}개, 게시일 미확인 영상 ${Number(stats.undatedVideos) || 0}개는 각 상세 안내에 표시했습니다.</dd></div><div><dt>실행 확인</dt><dd>도구 설치·연결·대표 업무 수행은 아직 검증하지 않았습니다. ‘출처 확인’과 ‘실행 확인’을 구분합니다.</dd></div></dl></section>
   <section><h2>기존 자료도 유지합니다</h2><p>ppt-slide-planner의 설치 가이드와 기존 다운로드 주소는 그대로 이용할 수 있습니다.</p><a href="/guides/ppt-slide-planner-skill">기존 스킬 등록·사용 안내 →</a></section></article>`;
 }
 
@@ -189,6 +199,8 @@ export async function buildAiTools({ repoRoot, outputDir, origin = "https://prom
     }
   }
   if (!records.length) throw new Error("AI tool catalog is empty");
+  // Office-work tools first; developer tools follow, each keeping catalog order.
+  records.sort((a, b) => (a.listingTier === "technical") - (b.listingTier === "technical"));
   const pages = [];
   async function writePage(route, title, description, active, body) {
     const relativePath = route.slice(1) + "index.html";
@@ -197,9 +209,9 @@ export async function buildAiTools({ repoRoot, outputDir, origin = "https://prom
     await fs.writeFile(filename, documentPage({ title, description, route, origin: siteOrigin, active, body }), "utf8");
     pages.push({ path: relativePath, url: siteOrigin + route, title, description, modifiedAt: manifest.researchedAt });
   }
-  await writePage("/ai-tools/", "AI 업무 도구", "업무에 바로 쓰는 스킬·플러그인·MCP 13개를 비교하고 공식 설치·연결 안내와 첫 요청 예시를 확인하세요.", "catalog", catalog(records, manifest));
+  await writePage("/ai-tools/", "AI 업무 도구", `업무에 바로 쓰는 스킬·플러그인·MCP ${records.length}개를 비교하고 공식 설치·연결 안내와 첫 요청 예시를 확인하세요.`, "catalog", catalog(records, manifest));
   for (const record of records) await writePage(`/ai-tools/${record.slug}/`, `${record.name} 사용 안내`, record.outcome, "detail", detail(record, records));
-  await writePage("/ai-tools/start/", "AI 업무 도구 처음 시작하기", "스킬·플러그인·MCP의 차이와 사용환경별 설치·연결·첫 요청 순서를 알아보세요.", "start", startPage());
+  await writePage("/ai-tools/start/", "AI 업무 도구 처음 시작하기", "스킬·플러그인·MCP의 차이와 사용환경별 설치·연결·첫 요청 순서를 알아보세요.", "start", startPage(Object.fromEntries(TYPES.map((type) => [type, records.filter((record) => record.type === type).length]))));
   await writePage("/ai-tools/workflows/", "AI 도구 업무별 활용법", "자료 조사·발표자료·행사 홍보·주간 업무 정리에 AI 도구를 적용하는 순서를 살펴보세요.", "workflows", workflowsPage());
   await writePage("/ai-tools/updates/", "AI 업무 도구 업데이트 소식", "PromptDeck AI 업무 도구 목록의 새 소개, 안내 변경과 자료 확인 범위를 확인하세요.", "updates", updatesPage(records, manifest));
   return { pages, itemCount: records.length };

@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "id": "codex-plugin-for-claude-code",
+  "slug": "codex-plugin-for-claude-code",
+  "type": "plugin",
+  "name": "Codex plugin for Claude Code",
+  "outcome": "Claude Code 작업 중에 OpenAI Codex로 코드 검토를 받거나 작업을 넘기기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "개발자",
+    "여러 AI 코딩 도구를 함께 쓰는 기술 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code"
+  ],
+  "platformEvidence": "OpenAI 공식 저장소 README에 기재된 설치 환경이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/openai/codex-plugin-cc",
+  "officialSources": [
+    "https://github.com/openai/codex-plugin-cc"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/openai/codex-plugin-cc",
+    "directDownloadUrl": null
+  },
+  "costNotes": "README 기준 ChatGPT 구독(무료 포함) 또는 OpenAI API 키가 필요하며 Claude Code 이용 조건이 별도로 적용된다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0",
+  "requirements": [
+    "ChatGPT 계정 또는 OpenAI API 키",
+    "Node.js 18.18 이상"
+  ],
+  "connectionModes": [],
+  "includedComponents": [
+    "/codex:review, /codex:adversarial-review 검토 명령",
+    "/codex:rescue, /codex:transfer 작업 위임 명령",
+    "/codex:status, /codex:result, /codex:cancel, /codex:setup 관리 명령",
+    "선택형 리뷰 게이트"
+  ],
+  "relationships": {},
+  "caveats": [
+    "코드와 변경 내용이 OpenAI Codex로 전달되므로 회사 보안 정책을 먼저 확인한다.",
+    "Claude Code와 Codex 두 서비스의 계정·사용량 조건이 함께 적용된다.",
+    "영상의 정확도 2배 등 성능 주장은 이번 조사에서 검증하지 않았다."
+  ],
+  "starterPrompt": "/codex:review 이번 브랜치에서 바꾼 정산 계산 로직을 검토해줘. 숫자 반올림과 빈 값 처리에서 틀릴 수 있는 부분을 우선 알려줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=v46RSgreLNI",
+        "title": "Codex Plugin for Claude Code",
+        "channel": "Nick Babich",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@babichnick",
+        "publishedAt": "2026-04-01",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 OpenAI가 공개한 Claude Code용 Codex 플러그인과 코드 검토 활용법을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "v46RSgreLNI",
+        "mentionSummary": "설명란에서 OpenAI가 공개한 Claude Code용 Codex 플러그인과 코드 검토 활용법을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=v46RSgreLNI",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Tp0wZIUjtUg",
+        "title": "NEW Official OpenAI Codex Plugin for Claude Code",
+        "channel": "AI Coding Daily",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@AICodingDaily",
+        "publishedAt": "2026-04-01",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "제목과 설명란에서 OpenAI가 공개한 공식 Codex 플러그인을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "Tp0wZIUjtUg",
+        "mentionSummary": "제목과 설명란에서 OpenAI가 공개한 공식 Codex 플러그인을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Tp0wZIUjtUg",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Br2ottfP6jM",
+        "title": "Claude Code + Codex Plugin = 2x Code Accuracy",
+        "channel": "Eric Tech",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@EricWTech",
+        "publishedAt": "2026-04-28",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Codex 플러그인 설치, 슬래시 명령, 교차 검토 시연을 소개하고 공식 저장소를 링크한다.",
+        "timestampSeconds": 90,
+        "timestampLabel": "Install Codex plugin",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "Br2ottfP6jM",
+        "mentionSummary": "설명란에서 Codex 플러그인 설치, 슬래시 명령, 교차 검토 시연을 소개하고 공식 저장소를 링크한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Br2ottfP6jM&t=90s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

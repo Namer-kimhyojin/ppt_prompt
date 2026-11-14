@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "id": "grill-me-matt-pocock",
+  "slug": "grill-me-matt-pocock",
+  "type": "skill",
+  "name": "Grill Me (Matt Pocock)",
+  "outcome": "계획·기획안을 AI가 질문으로 끝까지 캐물어 빠진 결정과 모호한 부분을 정리하기",
+  "categories": [
+    "문서·보고서",
+    "발표·제안서"
+  ],
+  "audience": [
+    "기획안·사업계획 작성자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Code",
+    "Codex"
+  ],
+  "platformEvidence": "공식 README가 Claude Code 플러그인(mattpocock-skills), Codex·Copilot 플러그인, npx skills 설치를 안내한다. 한국어 영상은 skillsmp.com에 등록된 grilling 페이지를 링크했다.",
+  "officialUrl": "https://github.com/mattpocock/skills",
+  "officialSources": [
+    "https://github.com/mattpocock/skills",
+    "https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me",
+    "https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/mattpocock/skills",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "grill-me",
+    "grilling"
+  ],
+  "relationships": {
+    "includes": [
+      "grill-me",
+      "grilling"
+    ],
+    "includedBy": [
+      "mattpocock-skills"
+    ],
+    "related": [
+      "superpowers-plugin",
+      "anthropic-doc-coauthoring"
+    ],
+    "distributionNote": "mattpocock/skills 묶음의 productivity 스킬이다. 코드 작업용 grill-with-docs와 구분한다."
+  },
+  "caveats": [
+    "저장소 전체는 개발자용 워크플로 중심이다. 일반 기획에는 productivity 폴더의 grill-me·grilling만 해당한다.",
+    "README는 설치 후 저장소마다 /setup-matt-pocock-skills를 한 번 실행하라고 안내한다. 이는 개발 저장소 설정용이다.",
+    "질문 수가 많아질 수 있어 범위를 먼저 정하는 것이 좋다고 제작자 영상이 다룬다."
+  ],
+  "starterPrompt": "내년 신규 교육사업 계획 초안을 첨부할게. 실행 전에 결정해야 할 것들을 한 번에 하나씩 질문하고, 답이 쌓이면 결정 사항 목록으로 정리해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 5,
+    "uniqueChannelCount": 5,
+    "confirmedPreferredWindowChannelCount": 5,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "puRP9UmF0nw",
+        "url": "https://www.youtube.com/watch?v=puRP9UmF0nw",
+        "title": "I've Tried NEW /grill-me v1.2 by Matt Pocock",
+        "channel": "AI Coding Daily",
+        "publishedAt": "2026-08-05",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "제목과 설명에서 Matt Pocock의 grill-me v1.2와 grilling 스킬을 시험하고 공식 저장소를 링크한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 도구 목록 페이지 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=puRP9UmF0nw",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "HYlcTeH9VXE",
+        "url": "https://www.youtube.com/watch?v=HYlcTeH9VXE",
+        "title": "Trying Out Matt Pocock's /grill-me Skill in Hermes Agent",
+        "channel": "Tonbi's AI Garage",
+        "publishedAt": "2026-07-16",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "제목과 설명에서 Matt Pocock의 /grill-me 스킬을 실제 기획 아이디어에 적용해 본다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 운영자의 유료 서비스(Agent Wikis Pro) 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=HYlcTeH9VXE",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "aR97E7aKEgg",
+        "url": "https://www.youtube.com/watch?v=aR97E7aKEgg",
+        "title": "700 萬人下載的 /grill-me，Matt Pocock 到底寫了什麼？",
+        "channel": "Gary Chen",
+        "publishedAt": "2026-07-22",
+        "language": "zh-Hant",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 /grill-me와 mattpocock/skills 저장소를 다루고 AI가 사용자를 질문하는 방식을 챕터로 설명한다.",
+        "timestampSeconds": 84,
+        "timestampLabel": "grill-me 讓 AI 拷問你",
+        "commercialContext": "설명에 채널 자체 Skool 커뮤니티 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=aR97E7aKEgg&t=84s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "i8v9e8hzH88",
+        "url": "https://www.youtube.com/watch?v=i8v9e8hzH88",
+        "title": "6 Claude Skills Worth Using, and What You Actually Get",
+        "channel": "Latest Build",
+        "publishedAt": "2026-11-01",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명과 챕터에서 쓸 만한 스킬 6개 중 하나로 Grill me을(를) 명시하고 결과물을 보여준다.",
+        "timestampSeconds": 100,
+        "timestampLabel": "6. Grill me",
+        "commercialContext": "설명에 선정이 벤치마크나 순위가 아니라 편의·결과 기준이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=i8v9e8hzH88&t=100s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "fJRmL7I_lp4",
+        "url": "https://www.youtube.com/watch?v=fJRmL7I_lp4",
+        "title": "클로드 쓴다면 이 스킬 3개는 무조건 설치하세요 (비개발자용)",
+        "channel": "유튜브신쌤",
+        "publishedAt": "2026-08-30",
+        "language": "ko",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Matt Pocock grilling 스킬 링크를 명시하고 무엇을 써야 할지 질문해 주는 스킬로 소개한다.",
+        "timestampSeconds": 192,
+        "timestampLabel": "두 번째 — 뭘 써야 할지 물어봐 주는 그릴링",
+        "commercialContext": "설명에 채널 운영자의 강의·출강 문의 안내가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=fJRmL7I_lp4&t=192s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

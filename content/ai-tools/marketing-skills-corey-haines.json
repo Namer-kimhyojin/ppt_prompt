@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "marketing-skills-corey-haines",
+  "slug": "marketing-skills-corey-haines",
+  "type": "skill",
+  "name": "Marketing Skills (Corey Haines)",
+  "outcome": "전환율 개선·카피·SEO·광고·이메일 등 마케팅 업무별 스킬로 기획안과 문안을 만들기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "마케팅·홍보 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README가 npx skills 설치(Claude Code 등 감지된 에이전트)와 Claude Code 플러그인 설치를 안내한다.",
+  "officialUrl": "https://github.com/coreyhaines31/marketingskills",
+  "officialSources": [
+    "https://github.com/coreyhaines31/marketingskills",
+    "https://marketing-skills.com"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/coreyhaines31/marketingskills",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 README는 무료·MIT 라이선스라고 밝히며, 검증 파트너(Verified Partners) 도구 연동이 운영 재원이라고 공개한다. 연동 도구의 요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-marketing-plugin"
+    ],
+    "distributionNote": "여러 마케팅 스킬 묶음이다. 개별 스킬만 골라 설치할 수도 있어 하위 개수를 고정하지 않는다."
+  },
+  "caveats": [
+    "영상마다 스킬 개수(39·40개 이상 등)가 달라 현재 구성은 저장소에서 확인해야 한다.",
+    "영어권 B2B SaaS 마케팅 관행 중심이다. 국내 채널·규제(표시광고 등)는 별도 검토가 필요하다.",
+    "이미 등록된 Anthropic Marketing 플러그인과는 다른 제작자의 묶음이다."
+  ],
+  "starterPrompt": "우리 교육 프로그램 소개 페이지 문구를 전환율 관점에서 점검하고, 제목·첫 문단·신청 버튼 문구 수정안을 각각 3개씩 제안해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "YajqB9RDdzI",
+        "url": "https://www.youtube.com/watch?v=YajqB9RDdzI",
+        "title": "Just give Claude these skills",
+        "channel": "The Next New Thing",
+        "publishedAt": "2026-02-11",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 coreyhaines31/marketingskills 저장소를 명시하고 제작자가 직접 SEO·이메일·랜딩페이지 작업을 시연한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "Zapier 제공(Presented by Zapier) 표기가 있다. 저장소 제작자 Corey Haines가 출연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=YajqB9RDdzI",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "G1YcfZKlpUU",
+        "url": "https://www.youtube.com/watch?v=G1YcfZKlpUU",
+        "title": "How I Automate 80% of My Marketing with Claude Code",
+        "channel": "Rory Ridgers",
+        "publishedAt": "2026-02-26",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 marketingskills 저장소를 명시하고 설치와 처음부터 끝까지의 활용 시연을 다룬다.",
+        "timestampSeconds": 40,
+        "timestampLabel": "Github repo",
+        "commercialContext": "설명에 채널 운영자의 컨설팅 상담 예약 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=G1YcfZKlpUU&t=40s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "oBAIg9_L53s",
+        "url": "https://www.youtube.com/watch?v=oBAIg9_L53s",
+        "title": "How This Free Tool Saves You $5K/Month on Marketing",
+        "channel": "Alick - AI Automation",
+        "publishedAt": "2026-03-31",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Corey Haines의 marketingskills 저장소를 소개하고 SEO 감사·카피·콜드메일 스킬을 시연한다.",
+        "timestampSeconds": 25,
+        "timestampLabel": "The GitHub Repository",
+        "commercialContext": "스킬 내려받기 링크가 공식 저장소가 아닌 채널 자체 자료 페이지로 연결된다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=oBAIg9_L53s&t=25s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "yjj1RedLMmc",
+        "url": "https://www.youtube.com/watch?v=yjj1RedLMmc",
+        "title": "What Happens When You Give Claude 40 Marketing Skills | Corey Haines",
+        "channel": "Gerrid Smith",
+        "publishedAt": "2026-06-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "제목과 설명에서 Corey Haines가 만든 40여 개 마케팅 스킬 저장소와 주요 스킬을 다룬다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "저장소 제작자 Corey Haines 인터뷰다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=yjj1RedLMmc",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

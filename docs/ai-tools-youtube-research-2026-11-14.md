@@ -126,3 +126,24 @@
 - [통합 카탈로그 읽기 안내](../content/ai-tools/README.md)
 
 공개 페이지에 연결할 때에는 이 근거를 표시하고 대상 환경별 설치·연결과 대표 업무를 확인한 후 실제 사용 확인일을 기록한다. 이번 작업에서 확인하지 않은 설치 성공·연결 성공·성과 수치를 표시하지 않는다.
+
+
+## 2차 목록 확장 (2026-11-14)
+
+첫 목록과 같은 기준(공식 출처 확인 + 서로 다른 유튜브 채널 2곳 이상의 명시적 소개, 우선 기간 2025-11-14~2026-11-14)으로 유형별 20개 이상을 추가 조사했다. 후보마다 공식 문서·저장소를 확인하고, 영상 제목·채널·게시일·설명을 YouTube 공개 페이지와 oEmbed로 대조했다. 리드 검토에서 유형별 영상 표본을 oEmbed로 다시 대조했고(25건 모두 일치), 목록형·카탈로그형·AI 생성 채널을 빼고 다시 센 결과 기준에 못 미친 Internal Comms 스킬과 Sentry MCP를 제외했다.
+
+| 추가 | 항목 |
+| --- | --- |
+| 스킬 24개 | XLSX (Anthropic), DOCX (Anthropic), PDF (Anthropic), Brand Guidelines (Anthropic), Doc Co-Authoring (Anthropic), Canvas Design (Anthropic), Theme Factory (Anthropic), Frontend Design (Anthropic) (개발), Web Artifacts Builder (Anthropic) (개발), Webapp Testing (Anthropic) (개발), MCP Builder (Anthropic) (개발), Algorithmic Art (Anthropic) (개발), Slack GIF Creator (Anthropic), Humanizer, Marketing Skills (Corey Haines), Taste Skill (개발), UI UX Pro Max (개발), Impeccable (개발), last30days, Planning with Files (개발), find-skills (Vercel) (개발), HWPX Skill (Canine89), Prompt Master, Grill Me (Matt Pocock) |
+| 플러그인 24개 | Anthropic Legal, Anthropic Sales, Claude for Financial Services, Anthropic Small Business, Anthropic Data, Claude for Legal, Ralph Loop (개발), Security Guidance (개발), Frontend Design (개발), PR Review Toolkit (개발), Codex plugin for Claude Code (개발), Compound Engineering (개발), Everything Claude Code (ECC) (개발), Ponytail (개발), Playground (개발), Caveman (개발), Code Simplifier (개발), Claude HUD (개발), Understand-Anything (개발), Anthropic Finance, Anthropic Operations, Anthropic Human Resources, Hookify (개발), Commit Commands (개발) |
+| MCP 21개 | Zapier MCP, Atlassian Rovo MCP Server, Canva AI Connector (Canva MCP), Figma MCP Server (개발), HubSpot MCP Server, Asana MCP Server, Slack MCP Server, Airtable MCP Server, Miro MCP Server, Exa MCP, n8n 인스턴스 MCP 서버 (개발), Linear MCP Server (개발), Supabase MCP Server (개발), Stripe MCP Server (개발), monday.com MCP, Granola MCP, Gamma MCP Server, Webflow MCP Server, Apify MCP Server, Vercel MCP (개발), Chrome DevTools MCP (개발) |
+
+- 추가 69개, 전체 82개(스킬 28 · 플러그인 28 · MCP 26).
+- 전체 근거: 고유 영상 201개, 서로 다른 채널 154개, 도구–영상 연결 249건.
+- 제외 후보 35개와 사유는 조사 원본의 `rejected`에 기록했다. 공식 Google Workspace MCP 부재, Microsoft 365 계열의 제품 혼재, 동명 커뮤니티 구현과의 구분 불가, 채널 1곳뿐인 경우가 주된 사유다.
+- 일부 항목은 근거가 상대적으로 약하다(목록형 영상 위주, 두 채널의 독립성 불확실, 제목 수준 근거 등). 각 기록의 `caveats`와 영상 메모에 표시했다.
+- 설치·연결·실행은 이번에도 검증하지 않았다.
+
+- [스킬 2차 조사 원본](research/ai-tools-expansion-2026-11-14-skills.json)
+- [플러그인 2차 조사 원본](research/ai-tools-expansion-2026-11-14-plugins.json)
+- [MCP 2차 조사 원본](research/ai-tools-expansion-2026-11-14-mcp.json)

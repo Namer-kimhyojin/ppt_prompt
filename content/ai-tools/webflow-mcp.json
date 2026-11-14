@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "id": "webflow-mcp",
+  "slug": "webflow-mcp",
+  "type": "mcp",
+  "name": "Webflow MCP Server",
+  "outcome": "AI 도구에서 Webflow 사이트의 페이지·CMS·SEO 설정을 조회하고 수정한다.",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "웹사이트 운영·마케팅 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Code",
+    "Claude Desktop",
+    "ChatGPT",
+    "Codex",
+    "Cursor 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Webflow 공식 MCP 문서의 클라이언트 목록을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://developers.webflow.com/mcp",
+  "officialSources": [
+    "https://developers.webflow.com/mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://developers.webflow.com/mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 페이지 브랜치·팀 관리는 Enterprise, 분석·최적화 기능은 유료 사이트 플랜의 추가 기능이 필요하다. 그 밖의 비용 조건은 도입 시 확인한다.",
+  "license": null,
+  "requirements": [
+    "Webflow 계정과 대상 워크스페이스·사이트 권한",
+    "Designer 작업 일부는 Designer에서 MCP Bridge App 실행"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "공식 문서 기준 새 사이트 생성, 클래식 인터랙션 제작 등은 MCP로 자동화할 수 없다.",
+    "한 번의 인증은 하나의 워크스페이스에만 적용된다.",
+    "대표 영상 중 하나는 Webflow 에이전시 채널이며 제작사 공식 채널 영상은 보조 근거로만 둔다."
+  ],
+  "starterPrompt": "우리 Webflow 사이트의 페이지별 SEO 제목과 메타 설명을 표로 정리하고, 빠졌거나 너무 긴 항목만 표시해줘. 사이트는 수정하지 마.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=icjPi7on7j0",
+        "title": "How to Use Claude Code with Webflow (Webflow MCP Tutorial 2026)",
+        "channel": "Flowout",
+        "publishedAt": "2026-10-14",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에 공식 MCP 문서 링크를 두고 Claude Code에 Webflow MCP를 연결해 페이지 수정·CMS 구성·SEO 설정을 시연한다.",
+        "timestampSeconds": 60,
+        "timestampLabel": "How to connect the Webflow MCP to Claude Code",
+        "commercialContext": "Webflow 에이전시 채널이며 자사 서비스 안내가 포함되어 있음.",
+        "videoId": "icjPi7on7j0",
+        "mentionSummary": "설명에 공식 MCP 문서 링크를 두고 Claude Code에 Webflow MCP를 연결해 페이지 수정·CMS 구성·SEO 설정을 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=icjPi7on7j0&t=60s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=AfflFlSuj_c",
+        "title": "Webflow MCP Update: I’ll never use webflow the same...",
+        "channel": "Richard Pines",
+        "publishedAt": "2026-04-02",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude·Claude Code가 Webflow Designer를 더 직접 다루게 한 Webflow MCP 업데이트를 시험한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "AfflFlSuj_c",
+        "mentionSummary": "설명에서 Claude·Claude Code가 Webflow Designer를 더 직접 다루게 한 Webflow MCP 업데이트를 시험한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=AfflFlSuj_c",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": [
+      {
+        "url": "https://www.youtube.com/watch?v=r2Az8ajekAQ",
+        "title": "Manage Webflow with AI: Things you can do with Webflow MCP and Claude",
+        "channel": "Webflow",
+        "publishedAt": "2026-04-22",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "제작사 설명에서 Webflow MCP와 Claude 커넥터로 사이트 개요 조회, SEO 제목 점검·수정을 시연한다.",
+        "timestampSeconds": null,
+        "commercialContext": "제작사 공식 채널임.",
+        "videoId": "r2Az8ajekAQ",
+        "mentionSummary": "제작사 설명에서 Webflow MCP와 Claude 커넥터로 사이트 개요 조회, SEO 제목 점검·수정을 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=r2Az8ajekAQ",
+        "withinPreferredWindow": true
+      }
+    ]
+  }
+}

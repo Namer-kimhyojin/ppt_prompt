@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "id": "zapier-mcp",
+  "slug": "zapier-mcp",
+  "type": "mcp",
+  "name": "Zapier MCP",
+  "outcome": "Zapier에 연결된 메일·캘린더·메신저 등 여러 앱의 작업을 AI 대화에서 실행한다.",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "반복 업무 자동화·사무 운영 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "ChatGPT",
+    "Gemini",
+    "Cursor",
+    "VS Code 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Zapier 공식 MCP 문서에 안내된 클라이언트이며 이번 조사에서는 연결·실행하지 않음.",
+  "officialUrl": "https://docs.zapier.com/mcp/home",
+  "officialSources": [
+    "https://docs.zapier.com/mcp/home"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://docs.zapier.com/mcp/home",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 성공한 도구 호출 1회에 플랜의 태스크 2개가 차감되고 실패한 호출은 차감되지 않는다. 서버 공유는 Team·Enterprise 플랜 조건이 있다.",
+  "license": null,
+  "requirements": [
+    "Zapier 계정과 연결할 각 앱의 계정 연결",
+    "Streamable HTTP를 지원하는 MCP 클라이언트"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "일반 Zap 자동화나 다른 Zapier 기능 소개와 구분한 MCP 서버 항목이다.",
+    "실행한 액션은 실제 메일 발송·자료 변경으로 이어지므로 노출할 액션과 승인 설정을 먼저 확인한다.",
+    "대표 영상 중 하나는 제작사 공식 채널이고 다른 하나에는 제휴 링크가 있으므로 언급 빈도를 중립적 품질평가로 해석하지 않는다."
+  ],
+  "starterPrompt": "오늘 받은 메일 중 회신이 필요한 것을 골라 요약하고, 회신 초안은 보내지 말고 초안 상태로만 만들어줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=zj0Ur38FBmc",
+        "title": "We Automated Our Workflow with Claude & Zapier MCP",
+        "channel": "SaaS Inspection",
+        "publishedAt": "2026-10-28",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude와 Zapier MCP를 연결해 메일 읽기·업무 생성·CRM 갱신·Slack 게시를 처리한 설정과 시행착오를 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "Zapier 가입 단축 링크(zc.s.gy)가 포함되어 있음. 제휴 여부는 확인하지 않음.",
+        "videoId": "zj0Ur38FBmc",
+        "mentionSummary": "설명에서 Claude와 Zapier MCP를 연결해 메일 읽기·업무 생성·CRM 갱신·Slack 게시를 처리한 설정과 시행착오를 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=zj0Ur38FBmc",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=DMeowX8YPVk",
+        "title": "Claude + Zapier: Connect any app your business runs on",
+        "channel": "Zapier",
+        "publishedAt": "2026-10-26",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "제작사 설명에서 Claude와 Zapier MCP로 9,000개 이상의 앱을 다루는 사례와 실시간 워크플로 구성을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "제작사 공식 채널이며 Anthropic 관계자가 함께 출연함.",
+        "videoId": "DMeowX8YPVk",
+        "mentionSummary": "제작사 설명에서 Claude와 Zapier MCP로 9,000개 이상의 앱을 다루는 사례와 실시간 워크플로 구성을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=DMeowX8YPVk",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": [
+      {
+        "url": "https://www.youtube.com/watch?v=80nvFVMiJqk",
+        "title": "Zapier MCP Connects Claude to 8,000 Apps (INSTANTLY)",
+        "channel": "Brock Mesarich | AI for Non Techies",
+        "publishedAt": "2025-04-03",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 Zapier MCP 서버 설정, 액션 추가, Claude Desktop 연결을 소개한다. 조사 기간 이전 영상이라 현재 설정 근거로 쓰지 않는다.",
+        "timestampSeconds": 405,
+        "timestampLabel": "Setting Up the MCP Server in Zapier",
+        "commercialContext": "Zapier MCP 단축 링크가 포함되어 있음. 제휴 여부는 확인하지 않음.",
+        "videoId": "80nvFVMiJqk",
+        "mentionSummary": "설명과 챕터에서 Zapier MCP 서버 설정, 액션 추가, Claude Desktop 연결을 소개한다. 조사 기간 이전 영상이라 현재 설정 근거로 쓰지 않는다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=80nvFVMiJqk&t=405s",
+        "withinPreferredWindow": false
+      }
+    ]
+  }
+}

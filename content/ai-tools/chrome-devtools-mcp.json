@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "chrome-devtools-mcp",
+  "slug": "chrome-devtools-mcp",
+  "type": "mcp",
+  "name": "Chrome DevTools MCP",
+  "outcome": "AI 개발 도구가 실제 Chrome 브라우저에서 페이지를 열고 콘솔 오류·네트워크·성능을 점검하게 한다.",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "웹 개발·품질관리 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Cursor",
+    "VS Code·Copilot",
+    "Gemini CLI 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Chrome DevTools 공식 저장소의 클라이언트 설정 안내를 확인했으며 직접 실행하지 않음.",
+  "officialUrl": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+  "officialSources": [
+    "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "오픈소스(Apache-2.0)로 배포되며 별도 서비스 요금은 확인되지 않았다. 사용하는 AI 클라이언트 이용료는 별도이다.",
+  "license": "Apache-2.0",
+  "requirements": [
+    "Node.js LTS와 npm",
+    "최신 안정판 Google Chrome",
+    "MCP 클라이언트"
+  ],
+  "connectionModes": [
+    "local"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "Playwright MCP·Claude in Chrome 등 다른 브라우저 도구와 구분한 항목이다.",
+    "저장소 안내 기준 브라우저 내용이 MCP 클라이언트에 노출되므로 민감한 계정 화면에서는 사용을 피한다.",
+    "사용 통계 수집과 성능 도구의 CrUX 조회는 기본 활성이며 옵션으로 끌 수 있다."
+  ],
+  "starterPrompt": "로컬에서 띄운 우리 웹페이지를 열어 콘솔 오류와 느린 네트워크 요청을 찾아 정리해줘. 파일은 수정하지 말고 원인 후보만 알려줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=BIX4ZAvt2us",
+        "title": "I Tested All 3 Browser Tools for Claude Code Here's the Best One",
+        "channel": "AyyazTech",
+        "publishedAt": "2026-02-17",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 Google의 Chrome DevTools MCP 설치 명령과 성능 분석·콘솔 오류 디버깅 시연을 다른 브라우저 도구와 비교한다.",
+        "timestampSeconds": 150,
+        "timestampLabel": "Tool 1: Chrome DevTools MCP (Google)",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "BIX4ZAvt2us",
+        "mentionSummary": "설명과 챕터에서 Google의 Chrome DevTools MCP 설치 명령과 성능 분석·콘솔 오류 디버깅 시연을 다른 브라우저 도구와 비교한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=BIX4ZAvt2us&t=150s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=db00Rt_6Tik",
+        "title": "I let Claude open Chrome itself — the entire dev loop just collapsed",
+        "channel": "Claude lab",
+        "publishedAt": "2026-05-19",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에 공식 ChromeDevTools 저장소와 Claude Code 설치 명령을 두고 도구 구성과 첫 사용 흐름을 소개한다.",
+        "timestampSeconds": 12,
+        "timestampLabel": "What chrome-devtools-mcp is",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "db00Rt_6Tik",
+        "mentionSummary": "설명에 공식 ChromeDevTools 저장소와 Claude Code 설치 명령을 두고 도구 구성과 첫 사용 흐름을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=db00Rt_6Tik&t=12s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": [
+      {
+        "url": "https://www.youtube.com/watch?v=vzL_KFPnLVw",
+        "title": "Automating QA Testing with Claude Code and Chrome DevTools MCP",
+        "channel": "Zainul Zain (Jai)",
+        "publishedAt": "2025-10-03",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude Code와 Chrome DevTools MCP로 QA 테스트를 자동화하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "vzL_KFPnLVw",
+        "mentionSummary": "설명에서 Claude Code와 Chrome DevTools MCP로 QA 테스트를 자동화하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=vzL_KFPnLVw",
+        "withinPreferredWindow": false
+      }
+    ]
+  }
+}

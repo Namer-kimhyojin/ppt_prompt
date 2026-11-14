@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "stripe-mcp",
+  "slug": "stripe-mcp",
+  "type": "mcp",
+  "name": "Stripe MCP Server",
+  "outcome": "AI 도구에서 Stripe 결제·고객·청구 자료를 조회하고 상품·결제 링크 등 연동 작업을 돕게 한다.",
+  "categories": [
+    "엑셀·데이터",
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "온라인 결제·구독 서비스 개발 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude",
+    "Claude Code",
+    "Codex",
+    "ChatGPT",
+    "Cursor",
+    "VS Code 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Stripe 공식 MCP 문서의 클라이언트별 설정을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://docs.stripe.com/mcp",
+  "officialSources": [
+    "https://docs.stripe.com/mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://docs.stripe.com/mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "MCP 연결 자체의 별도 요금은 공식 문서에 명시되지 않았다. 결제·송금 등 실행한 작업에는 Stripe 계정의 요금 조건이 적용된다.",
+  "license": null,
+  "requirements": [
+    "Stripe 계정",
+    "OAuth 인증 또는 Agent 태그가 있는 agent API 키",
+    "관리자의 MCP 접근 허용(팀 계정)"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "공식 문서 기준 2026-11-30 이후 전체 권한 비밀 키와 Agent 태그 없는 제한 키는 MCP에서 거부되므로 영상 속 API 키 설정은 바뀔 수 있다.",
+    "실제 돈이 움직이는 작업이 가능하므로 샌드박스에서 먼저 시험하고 도구 호출 승인 설정을 켠다.",
+    "일부 환불·송금 작업은 Stripe 대시보드의 사람 확인 절차를 거친다."
+  ],
+  "starterPrompt": "샌드박스 Stripe 계정에서 최근 30일 결제 실패 건을 원인별로 집계해 표로 보여줘. 어떤 자료도 생성·수정하지 마.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=G2SACOec6FA",
+        "title": "Add Stripe Payments with Claude Code (Stripe MCP Server)",
+        "channel": "MaksDevInsights",
+        "publishedAt": "2026-06-26",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에 공식 docs.stripe.com/mcp 링크를 두고 Claude Code에서 Stripe MCP를 OAuth·샌드박스로 인증해 구독 결제를 구현한다.",
+        "timestampSeconds": 210,
+        "timestampLabel": "Install & authenticate the MCP in Claude Code",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "G2SACOec6FA",
+        "mentionSummary": "설명에 공식 docs.stripe.com/mcp 링크를 두고 Claude Code에서 Stripe MCP를 OAuth·샌드박스로 인증해 구독 결제를 구현한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=G2SACOec6FA&t=210s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=hG7iXjUfuTc",
+        "title": "Claude Connector for Stripe Payments in 5 Minutes (Sandbox MCP & Skills Setup)",
+        "channel": "Pure Tech Lens",
+        "publishedAt": "2026-07-04",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 공식 Stripe MCP 커넥터 연결과 샌드박스 모드 선택, 권한 설정을 강조한다.",
+        "timestampSeconds": 76,
+        "timestampLabel": "How to Connect Stripe to Claude Code",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "hG7iXjUfuTc",
+        "mentionSummary": "설명과 챕터에서 공식 Stripe MCP 커넥터 연결과 샌드박스 모드 선택, 권한 설정을 강조한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=hG7iXjUfuTc&t=76s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=gg4occ9q92M",
+        "title": "Connect Stripe MCP to Claude Code in 3 Mins | Analyze Payments & Customer Data",
+        "channel": "AiNow",
+        "publishedAt": "2026-06-21",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Stripe MCP를 Claude Code에 연결해 고객·결제 자료를 조회·분석하는 흐름을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "gg4occ9q92M",
+        "mentionSummary": "설명에서 Stripe MCP를 Claude Code에 연결해 고객·결제 자료를 조회·분석하는 흐름을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=gg4occ9q92M",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

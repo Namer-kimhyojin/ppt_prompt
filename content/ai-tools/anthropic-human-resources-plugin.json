@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-human-resources-plugin",
+  "slug": "anthropic-human-resources-plugin",
+  "type": "plugin",
+  "name": "Anthropic Human Resources",
+  "outcome": "채용 제안서, 온보딩 계획, 성과 평가 양식, 규정 안내와 인력 현황 보고 초안 만들기",
+  "categories": [
+    "문서·보고서"
+  ],
+  "audience": [
+    "인사 담당자",
+    "팀 관리자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Cowork",
+    "Claude Code"
+  ],
+  "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+  "officialSources": [
+    "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+    "https://github.com/anthropics/knowledge-work-plugins"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 인사 시스템·채용 시스템 등 연결 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0 (상위 저장소)",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "/draft-offer, /onboarding, /performance-review, /policy-lookup, /comp-analysis, /people-report 명령",
+    "recruiting-pipeline, employee-handbook, compensation-benchmarking, org-planning, people-analytics, interview-prep 스킬",
+    "HRIS·ATS·보상 데이터·채팅·캘린더·메일 MCP 연결 구성(선택)"
+  ],
+  "relationships": {},
+  "caveats": [
+    "직원 개인정보를 다루므로 사내 보안·개인정보 기준과 연결 범위를 먼저 확인한다.",
+    "설정 예시(통화 USD, 미국식 복리후생 항목)는 국내 제도에 맞게 바꿔야 한다.",
+    "처우 제안서·규정 설명·보상 권고는 인사·법무 담당자의 검토 후 사용한다.",
+    "근거 영상 2개 모두 여러 플러그인을 함께 소개하는 영상의 한 구간이다."
+  ],
+  "starterPrompt": "/onboarding 다음 주 입사하는 홍보팀 신입 직원의 첫 주 일정과 준비물 체크리스트를 만들어줘. 우리 회사 규정에 없는 항목은 지어내지 말고 '확인 필요'로 표시해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=nA-_ANMtAU8",
+        "title": "Claude Just Got 13 New Superpowers… (Cowork Plugins)",
+        "channel": "Brock Mesarich | AI for Non Techies",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@BrockMesarich",
+        "publishedAt": "2026-02-25",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란 챕터에서 Cowork 플러그인 시연 중 HR 플러그인 사용 예를 별도 항목으로 소개한다.",
+        "timestampSeconds": 465,
+        "timestampLabel": "HR Plugin in Action",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "nA-_ANMtAU8",
+        "mentionSummary": "설명란 챕터에서 Cowork 플러그인 시연 중 HR 플러그인 사용 예를 별도 항목으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=nA-_ANMtAU8&t=465s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=1P6cTfxc1kU",
+        "title": "Claude AI - Official Anthropic Plugins in CloudCowork",
+        "channel": "HardReset_Pro",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@hardreset_pro",
+        "publishedAt": "2026-05-12",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 중 HR을 Enterprise Search·Customer Support·Bio Research와 함께 소개한다.",
+        "timestampSeconds": 541,
+        "timestampLabel": "Enterprise Search, HR, Customer Support, Bio Research",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "1P6cTfxc1kU",
+        "mentionSummary": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 중 HR을 Enterprise Search·Customer Support·Bio Research와 함께 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=1P6cTfxc1kU&t=541s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

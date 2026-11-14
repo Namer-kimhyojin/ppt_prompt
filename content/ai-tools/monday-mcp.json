@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "monday-mcp",
+  "slug": "monday-mcp",
+  "type": "mcp",
+  "name": "monday.com MCP",
+  "outcome": "monday.com 보드의 항목을 AI 대화에서 조회·생성하고 상태·담당자·마감일을 갱신한다.",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "프로젝트·업무 일정 관리 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "ChatGPT",
+    "Cursor",
+    "Copilot",
+    "Gemini 및 지원 AI 도구"
+  ],
+  "platformEvidence": "monday.com 공식 개발자 문서의 지원 플랫폼 목록을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://developer.monday.com/api-reference/docs/mondaycom-mcp",
+  "officialSources": [
+    "https://developer.monday.com/api-reference/docs/mondaycom-mcp",
+    "https://github.com/mondaycom/mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://developer.monday.com/api-reference/docs/mondaycom-mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 MCP 도구 호출은 GraphQL API 요청으로 처리되어 계정의 일일 API 호출 한도에 포함된다. 플랜별 조건은 도입 시 확인한다.",
+  "license": null,
+  "requirements": [
+    "monday.com 계정과 대상 보드 권한",
+    "API 토큰, OAuth 앱 또는 동적 클라이언트 등록 방식의 인증",
+    "관리자가 허용하지 않은 연결은 승인 필요"
+  ],
+  "connectionModes": [
+    "remote",
+    "local"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "공식 호스팅 서버(mcp.monday.com/mcp)를 기준으로 하며, 이전 SSE 주소나 로컬 npm 패키지 설정은 현재 안내와 다를 수 있다.",
+    "앱 개발용 Apps MCP는 별도 서버이다.",
+    "대표 영상 일부는 monday.com 파트너·컨설팅 채널이다."
+  ],
+  "starterPrompt": "우리 팀 보드에서 이번 주 마감인데 상태가 진행 전인 항목을 담당자별로 정리해줘. 항목은 수정하지 마.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=M_VDLEHXrEw",
+        "title": "Claude + monday.com Changed How I Work",
+        "channel": "Mastering monday",
+        "publishedAt": "2026-05-28",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 monday의 MCP 커넥터로 Claude를 연결하고 권한 승인, 보드 조회, 항목 생성·마감일 수정을 시연한다.",
+        "timestampSeconds": 91,
+        "timestampLabel": "Connecting monday.com to Claude",
+        "commercialContext": "제작자의 상담 예약·진단 앱 홍보 링크가 포함되어 있음.",
+        "videoId": "M_VDLEHXrEw",
+        "mentionSummary": "설명과 챕터에서 monday의 MCP 커넥터로 Claude를 연결하고 권한 승인, 보드 조회, 항목 생성·마감일 수정을 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=M_VDLEHXrEw&t=91s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=qUx9hSXelAA",
+        "title": "How to Connect Monday.com to Claude AI (Step‑by‑Step) 2026",
+        "channel": "Checkmark Academy",
+        "publishedAt": "2026-04-27",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 공식 MCP 통합으로 monday.com과 Claude를 연결하고 커넥터 승인·권한 관리 후 업무를 자동화하는 과정을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "qUx9hSXelAA",
+        "mentionSummary": "설명에서 공식 MCP 통합으로 monday.com과 Claude를 연결하고 커넥터 승인·권한 관리 후 업무를 자동화하는 과정을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=qUx9hSXelAA",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Tl90chl5B4w",
+        "title": "Connecter Monday à Claude : le tuto en 1 minute (Monday MCP)",
+        "channel": "Anaïs BLANQUET",
+        "publishedAt": "2026-04-23",
+        "language": "fr",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "프랑스어 설명에서 Monday MCP로 Claude가 보드를 읽고 항목을 만들 수 있게 연결하는 과정을 코드 없이 소개한다.",
+        "timestampSeconds": 27,
+        "timestampLabel": "Tuto étape 1",
+        "commercialContext": "제작자의 프리랜서 서비스 소개가 포함되어 있음.",
+        "videoId": "Tl90chl5B4w",
+        "mentionSummary": "프랑스어 설명에서 Monday MCP로 Claude가 보드를 읽고 항목을 만들 수 있게 연결하는 과정을 코드 없이 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Tl90chl5B4w&t=27s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

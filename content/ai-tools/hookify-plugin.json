@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "id": "hookify-plugin",
+  "slug": "hookify-plugin",
+  "type": "plugin",
+  "name": "Hookify",
+  "outcome": "AI 코딩 도구가 반복하는 실수나 위험 명령을 자연어 규칙으로 경고·차단하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "개발자",
+    "AI 코딩 환경을 관리하는 기술 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code"
+  ],
+  "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify",
+  "officialSources": [
+    "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0 (플러그인 LICENSE 파일 기준. README 본문에는 MIT로 표기)",
+  "requirements": [
+    "README 기준 Python 3.7 이상"
+  ],
+  "connectionModes": [],
+  "includedComponents": [
+    "/hookify 규칙 생성 명령(인수 없이 실행하면 최근 대화에서 교정한 행동 분석)",
+    "/hookify:list, /hookify:configure, /hookify:help 명령",
+    "프로젝트 .claude/ 폴더의 hookify.<이름>.local.md 규칙 파일(warn·block 동작)"
+  ],
+  "relationships": {
+    "related": [
+      "security-guidance-plugin"
+    ]
+  },
+  "caveats": [
+    "규칙 파일은 플러그인 폴더가 아니라 프로젝트의 .claude/ 폴더에 있어야 동작한다.",
+    "stop 이벤트의 block 동작 설명이 README 안에서 일관되지 않아 사용 전 시험이 필요하다.",
+    "event: all이나 규칙을 많이 쓰면 hook이 느려질 수 있다고 README에 적혀 있다.",
+    "README와 LICENSE 파일의 라이선스 표기가 다르므로 사용 전 확인이 필요하다."
+  ],
+  "starterPrompt": "/hookify 운영 서버 설정 파일(config/prod)을 수정하려고 하면 작업을 막고 담당자 확인이 필요하다는 안내를 보여줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=H_z8BhUJMHo",
+        "title": "Hookify for Claude Code: Turn Mistakes Into Enforced Rules",
+        "channel": "Kvint Labs",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@KvintVentures",
+        "publishedAt": "2026-08-07",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 Hookify 플러그인이 마크다운 hook 규칙을 쓰는 방식과 경고·차단 동작의 차이를 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "H_z8BhUJMHo",
+        "mentionSummary": "설명란에서 Hookify 플러그인이 마크다운 hook 규칙을 쓰는 방식과 경고·차단 동작의 차이를 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=H_z8BhUJMHo",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=tSIFk3YDsQo",
+        "title": "Control Claude with Hooks & Hookify + UI Testing with Playwright | Mastering Claude | Part 4",
+        "channel": "Code With Sally",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@CodeWithSally",
+        "publishedAt": "2026-05-24",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란 챕터에서 자연어로 hook을 만드는 Hookify 플러그인과 규칙 저장 위치, 일반 hook과의 차이를 다룬다.",
+        "timestampSeconds": 1746,
+        "timestampLabel": "The Hookify Plugin: Custom Hooks Made Easy",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "tSIFk3YDsQo",
+        "mentionSummary": "설명란 챕터에서 자연어로 hook을 만드는 Hookify 플러그인과 규칙 저장 위치, 일반 hook과의 차이를 다룬다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=tSIFk3YDsQo&t=1746s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Vf9YAhn1RyQ",
+        "title": "Claude Code Official Plugins: Stop Wasting Setup Time on the Wrong Tools!",
+        "channel": "DIY Smart Code",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@DIYSmartCode",
+        "publishedAt": "2026-03-05",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에 hookify 설치 명령과 공식 플러그인 경로를 적고 챕터에서 별도 항목으로 소개한다.",
+        "timestampSeconds": 396,
+        "timestampLabel": "Deep Dive — hookify: OS-Level Safety with Exit Code 2",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "Vf9YAhn1RyQ",
+        "mentionSummary": "설명란에 hookify 설치 명령과 공식 플러그인 경로를 적고 챕터에서 별도 항목으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Vf9YAhn1RyQ&t=396s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

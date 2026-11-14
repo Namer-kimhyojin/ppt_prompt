@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "taste-skill",
+  "slug": "taste-skill",
+  "type": "skill",
+  "name": "Taste Skill",
+  "outcome": "AI가 만드는 웹페이지의 획일적인 디자인을 피하고 아트 디렉션·참고 이미지·브라우저 점검을 거쳐 다듬기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "웹페이지·홍보 페이지 제작자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README가 npx skills 설치와 Claude Code·Codex 플러그인 설치를 안내한다.",
+  "officialUrl": "https://github.com/Leonxlnx/taste-skill",
+  "officialSources": [
+    "https://github.com/Leonxlnx/taste-skill",
+    "https://tasteskill.dev"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/Leonxlnx/taste-skill",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [
+    "Node 22 이상",
+    "Chrome·Edge·Chromium 브라우저",
+    "선택: ffmpeg"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-frontend-design",
+      "impeccable",
+      "ui-ux-pro-max"
+    ],
+    "distributionNote": "현재 저장소는 design-taste-frontend 스킬 하나만 담고 다른 변형 스킬은 별도 저장소로 옮겼다고 안내한다."
+  },
+  "caveats": [
+    "영상 시점의 13개 이상 변형 스킬 구성과 현재 저장소 구성은 다르다. 이동된 스킬은 taste-skill-classics 저장소를 확인한다.",
+    "디자인 품질을 보장하지 않으며 사람의 검토가 필요하다."
+  ],
+  "starterPrompt": "우리 기관 행사 소개 페이지를 새로 만들어줘. 먼저 디자인 방향과 참고할 시각 요소를 제안하고, 만든 뒤 브라우저 화면으로 점검해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "Plicz6wp6kk",
+        "url": "https://www.youtube.com/watch?v=Plicz6wp6kk",
+        "title": "Taste Skill GitHub Overview: How Its Design Dials Steer AI Frontend Output",
+        "channel": "Alex Hitt",
+        "publishedAt": "2026-10-08",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 leonxlnx/taste-skill 저장소를 명시하고 설치 경로, 디자인 조절값, 사전 점검 흐름을 해설한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Plicz6wp6kk",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "5MJ7hzwjRbo",
+        "url": "https://www.youtube.com/watch?v=5MJ7hzwjRbo",
+        "title": "This Claude Code Skill Just Destroyed AI Slop (Taste Skill)",
+        "channel": "Brandon Melville",
+        "publishedAt": "2026-09-04",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 Taste Skill과 저장소 링크를 명시하고 설치·전후 비교·재디자인 예시를 다룬다.",
+        "timestampSeconds": 76,
+        "timestampLabel": "Install the Skills Pack",
+        "commercialContext": "Typeless 협찬 구간과 제휴 링크, 채널 자체 Taste Toolkit 판매 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=5MJ7hzwjRbo&t=76s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "wEGVxJjlpkk",
+        "url": "https://www.youtube.com/watch?v=wEGVxJjlpkk",
+        "title": "Taste Skill — Stops AI From Building Generic Slop Frontends",
+        "channel": "Prism Labs",
+        "publishedAt": "2026-05-27",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 Leon Lin의 Taste Skill 저장소와 npx 설치 명령을 명시한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=wEGVxJjlpkk",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

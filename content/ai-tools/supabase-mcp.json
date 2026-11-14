@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "id": "supabase-mcp",
+  "slug": "supabase-mcp",
+  "type": "mcp",
+  "name": "Supabase MCP Server",
+  "outcome": "AI 개발 도구가 Supabase 프로젝트의 데이터베이스를 조회하고 스키마·마이그레이션 작업을 돕게 한다.",
+  "categories": [
+    "엑셀·데이터"
+  ],
+  "audience": [
+    "웹 서비스 개발·데이터 운영 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Claude.ai",
+    "ChatGPT",
+    "Codex",
+    "Cursor",
+    "VS Code 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Supabase 공식 MCP 문서의 클라이언트 목록을 확인했으며 직접 실행하지 않음.",
+  "officialUrl": "https://supabase.com/docs/guides/getting-started/mcp",
+  "officialSources": [
+    "https://supabase.com/docs/guides/getting-started/mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://supabase.com/docs/guides/getting-started/mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 브랜치 기능 등 일부 도구는 유료 플랜이 필요하다. 프로젝트 생성처럼 비용이 생기는 작업은 확인 절차를 거친다.",
+  "license": null,
+  "requirements": [
+    "Supabase 계정과 대상 프로젝트 권한",
+    "OAuth 로그인(기본) 또는 CI용 개인 액세스 토큰"
+  ],
+  "connectionModes": [
+    "remote",
+    "local"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "공식 문서는 운영 데이터베이스 연결을 꼭 필요할 때만 하고, 읽기 전용 모드와 단일 프로젝트 범위 지정을 권한다.",
+    "도구 호출 승인 설정을 켜 두고 프롬프트 주입 위험을 고려한다.",
+    "2025년 상반기 영상의 설치 방식(개인 액세스 토큰 필수 등)은 현재 안내와 다를 수 있다."
+  ],
+  "starterPrompt": "연결된 Supabase 프로젝트의 테이블 목록과 각 테이블의 행 수·주요 컬럼을 읽기 전용으로 정리해줘. 데이터는 변경하지 마.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=M5CsRj6zSCA",
+        "title": "5 MCP Servers That Make Claude Code 10x More Powerful (Full-Stack App Build)",
+        "channel": "Eric Tech",
+        "publishedAt": "2025-12-12",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명의 MCP 목록에 공식 Supabase MCP 문서 링크를 두고 데이터베이스·스토리지 작업에 사용하는 앱 제작을 시연한다.",
+        "timestampSeconds": 317,
+        "timestampLabel": "Installing MCP servers",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "M5CsRj6zSCA",
+        "mentionSummary": "설명의 MCP 목록에 공식 Supabase MCP 문서 링크를 두고 데이터베이스·스토리지 작업에 사용하는 앱 제작을 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=M5CsRj6zSCA&t=317s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=0OvYpVUQ2D4",
+        "title": "Connect Supabase to Claude Code in 3 Mins (Full Setup Tutorial)",
+        "channel": "AiNow",
+        "publishedAt": "2026-06-13",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에 mcp.supabase.com/mcp 추가 명령과 OAuth 인증 절차를 적고 테이블 조회를 시연한다.",
+        "timestampSeconds": 15,
+        "timestampLabel": "Configuring MCP Client and Permissions",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "0OvYpVUQ2D4",
+        "mentionSummary": "설명에 mcp.supabase.com/mcp 추가 명령과 OAuth 인증 절차를 적고 테이블 조회를 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=0OvYpVUQ2D4&t=15s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=QQU6ujAyphA",
+        "title": "How to Connect Claude Code to Supabase Using MCP (Step by Step) 2026",
+        "channel": "Checkmark Academy",
+        "publishedAt": "2026-07-31",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude Code를 MCP로 Supabase 데이터베이스에 연결하고 터미널에서 관리하는 과정을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "QQU6ujAyphA",
+        "mentionSummary": "설명에서 Claude Code를 MCP로 Supabase 데이터베이스에 연결하고 터미널에서 관리하는 과정을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=QQU6ujAyphA",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

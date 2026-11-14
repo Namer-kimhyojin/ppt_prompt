@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-theme-factory",
+  "slug": "anthropic-theme-factory",
+  "type": "skill",
+  "name": "Theme Factory (Anthropic)",
+  "outcome": "발표자료·문서·보고서·웹페이지에 미리 정한 색상·서체 테마를 적용하기",
+  "categories": [
+    "홍보·디자인",
+    "발표·제안서"
+  ],
+  "audience": [
+    "발표·보고자료 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/theme-factory/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills"
+    ],
+    "related": [
+      "anthropic-brand-guidelines",
+      "anthropic-pptx"
+    ],
+    "distributionNote": "example-skills 묶음에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "SKILL.md는 10개 기본 테마와 즉석 테마 생성을 안내한다. 기관 고유 디자인 규정이 있으면 Brand Guidelines 방식의 별도 스킬이 더 적합할 수 있다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "이 발표자료 초안에 어울리는 테마 3개를 제안하고, 고른 테마의 색상·서체를 전체 장표에 일관되게 적용해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "Iup1WlUyj9M",
+        "url": "https://www.youtube.com/watch?v=Iup1WlUyj9M",
+        "title": "How to Use Claude Skills as a Designer",
+        "channel": "Griffin Wooldridge",
+        "publishedAt": "2026-03-09",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "디자이너용 추천 스킬로 Theme Factory를 명시하고 챕터에서 따로 다룬다.",
+        "timestampSeconds": 197,
+        "timestampLabel": "Theme Factory",
+        "commercialContext": "설명에 Mobbin·Claude·Framer 등 제휴(affiliate) 링크가 있다고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Iup1WlUyj9M&t=197s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "mTkW6RO8moM",
+        "url": "https://www.youtube.com/watch?v=mTkW6RO8moM",
+        "title": "The Best Claude Skills for Brand and Marketing Design",
+        "channel": "Griffin Wooldridge",
+        "publishedAt": "2026-11-04",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에 Anthropic Theme Factory 저장소 링크를 명시하고 스킬 사용 전후 비교를 보여준다고 안내한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "Photoroom 광고(#ad)와 제휴 링크가 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=mTkW6RO8moM",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Je7IIfFHoBw",
+        "url": "https://www.youtube.com/watch?v=Je7IIfFHoBw",
+        "title": "10 Free Claude Skills Worth Turning On",
+        "channel": "The Tech Space",
+        "publishedAt": "2026-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명의 추천 목록에 theme-factory을(를) 명시하고 Anthropic 공식 스킬 모음에서 켜는 방법을 다룬다.",
+        "timestampSeconds": 46,
+        "timestampLabel": "Make things look good",
+        "commercialContext": "설명에 Anthropic과 제휴하지 않은 독립 채널이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Je7IIfFHoBw&t=46s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 Theme Factory을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "hwpxskill",
+  "slug": "hwpxskill",
+  "type": "skill",
+  "name": "HWPX Skill (Canine89)",
+  "outcome": "한글(HWPX) 양식의 서식·표 구조를 유지한 채 내용을 채우거나 공문·보고서 템플릿으로 새 문서 만들기",
+  "categories": [
+    "문서·보고서"
+  ],
+  "audience": [
+    "공문·보고서 작성 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README는 Claude Code·Codex CLI·Cursor의 스킬 폴더 복사 설치를 안내한다. Claude.ai 웹 업로드 경로는 README가 아니라 영상(에브리 ai)에서 소개되었다.",
+  "officialUrl": "https://github.com/Canine89/hwpxskill",
+  "officialSources": [
+    "https://github.com/Canine89/hwpxskill"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/Canine89/hwpxskill",
+    "directDownloadUrl": null
+  },
+  "costNotes": "2026-11-14 확인 시 저장소에 라이선스 파일과 표기가 없었다. 재사용·배포 조건은 제작자에게 확인이 필요하다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [
+    "Python 3.6 이상",
+    "lxml"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-docx"
+    ],
+    "distributionNote": "README는 jkf87/hwpx-skill의 흐름을 참고해 보완했다고 밝힌다. 이름이 비슷한 다른 HWPX 스킬과 구분한다."
+  },
+  "caveats": [
+    "대상은 HWPX다. 예전 .hwp 파일은 한글에서 .hwpx로 다시 저장해야 한다고 영상(에브리 ai)이 안내한다.",
+    "README는 한컴오피스 경고가 줄어들 수 있다고 할 뿐 경고 없는 열림을 보장하지 않는다. 바꾼 글은 원래 문단의 글자 분량 안에 맞아야 한다.",
+    "두 근거 영상은 제목과 소개 스킬 구성이 거의 같아 독립적으로 선정한 근거인지 확인할 수 없다."
+  ],
+  "starterPrompt": "첨부한 HWPX 보고서 양식의 표 구조와 서식은 그대로 두고, 아래 사업 개요 내용으로 각 칸을 채워줘. 쪽수가 원본과 달라지면 알려줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "fJRmL7I_lp4",
+        "url": "https://www.youtube.com/watch?v=fJRmL7I_lp4",
+        "title": "클로드 쓴다면 이 스킬 3개는 무조건 설치하세요 (비개발자용)",
+        "channel": "유튜브신쌤",
+        "publishedAt": "2026-08-30",
+        "language": "ko",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Canine89/hwpxskill 링크를 명시하고 비개발자용 추천 스킬 첫 번째로 한글 파일 만들기를 다룬다.",
+        "timestampSeconds": 64,
+        "timestampLabel": "첫 번째 — 한글 파일을 만들어주는 HWPX 스킬",
+        "commercialContext": "설명에 채널 운영자의 강의·출강 문의 안내가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=fJRmL7I_lp4&t=64s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "vYpSDXs6Tdw",
+        "url": "https://www.youtube.com/watch?v=vYpSDXs6Tdw",
+        "title": "클로드 쓴다면 이 스킬 3개는 무조건 설치하세요 (비개발자용·무료 자료 제공)",
+        "channel": "에브리 ai │ 자동화 • AI 에이전트 • 비즈니스",
+        "publishedAt": "2026-10-11",
+        "language": "ko",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 Canine89/hwpxskill 링크와 claude.ai 업로드 설치 순서를 명시하고 한글 양식 채우기를 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "영상 속 요청문 자료를 구독·좋아요 조건으로 채널 자체 사이트에서 배포한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=vYpSDXs6Tdw",
+        "withinPreferredWindow": true,
+        "channelRelationNote": "'유튜브신쌤'의 2026-08-30 영상과 제목·소개 스킬 3종·링크가 거의 같다. 서로 다른 채널이지만 독립적으로 선정한 근거인지는 확인할 수 없다."
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

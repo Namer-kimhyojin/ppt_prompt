@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "id": "ponytail-plugin",
+  "slug": "ponytail-plugin",
+  "type": "plugin",
+  "name": "Ponytail",
+  "outcome": "AI 코딩 도구가 필요한 만큼만 코드를 작성하도록 하고 변경분과 저장소를 간결성 관점에서 점검하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "개발자",
+    "업무 자동화 스크립트를 관리하는 기술 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex"
+  ],
+  "platformEvidence": "공식 README에 플러그인 설치 명령이 기재된 환경이다. 다른 에이전트용 규칙 파일·스킬 설치 방법도 안내되며 직접 실행하지 않았다.",
+  "officialUrl": "https://github.com/DietrichGebert/ponytail",
+  "officialSources": [
+    "https://github.com/DietrichGebert/ponytail"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/DietrichGebert/ponytail",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 코드는 MIT 라이선스이며 호스트 AI 이용료는 별도다. 금액은 조사하지 않았다.",
+  "license": "MIT",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "강도 조절 명령 /ponytail (lite·full·ultra·off)",
+    "/ponytail-review(변경분 검토), /ponytail-audit(저장소 점검), /ponytail-debt(미뤄 둔 작업 목록), /ponytail-gain, /ponytail-help 명령",
+    "세션 시작·종료 등 lifecycle hook",
+    "Claude Code 전용 비용·시간·토큰 표시줄"
+  ],
+  "relationships": {},
+  "caveats": [
+    "README의 코드·비용 절감 수치는 제작자 자체 벤치마크 결과이며 이번 조사에서 검증하지 않았다.",
+    "ttywood 영상의 비교에서는 한 작업에서 변경 코드가 줄었지만 다른 작업에서는 오히려 늘고 비용도 더 들었다고 정리한다.",
+    "README는 공식 GitHub 저장소나 npm 패키지에서만 설치하라고 안내한다.",
+    "일반 문서 업무보다 코드 작성·검토에 맞춘 도구다."
+  ],
+  "starterPrompt": "/ponytail-review 이번에 추가한 엑셀 업로드 처리 코드를 검토해서 없어도 되는 코드와 꼭 남겨야 하는 검증·오류 처리를 구분해 알려줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=2xuFcmUAQUc",
+        "title": "This Claude Code Plugin Writes 94% Less Code (ponytail)",
+        "channel": "Better Stack",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@betterstack",
+        "publishedAt": "2026-06-20",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Ponytail 플러그인의 작동 원칙과 벤치마크, 기본 Claude Code와 비교한 시연을 챕터로 소개하고 공식 저장소를 링크한다.",
+        "timestampSeconds": 337,
+        "timestampLabel": "Demo: Ponytail vs Default Claude Code",
+        "commercialContext": "개발·모니터링 서비스 기업 채널이다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "2xuFcmUAQUc",
+        "mentionSummary": "설명란에서 Ponytail 플러그인의 작동 원칙과 벤치마크, 기본 Claude Code와 비교한 시연을 챕터로 소개하고 공식 저장소를 링크한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=2xuFcmUAQUc&t=337s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=I3T9GL6Qy2s",
+        "title": "Testing the ponytail plugin for Claude Code, with and without (DietrichGebert/ponytail)",
+        "channel": "ttywood",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@ttywood",
+        "publishedAt": "2026-10-01",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Ponytail 플러그인 설치와 켜고 끈 상태의 같은 작업 비교, 검토 명령 실행 결과를 소개한다.",
+        "timestampSeconds": 57,
+        "timestampLabel": "Install and its token bill",
+        "commercialContext": "설명란에 협찬이 아니라고 적혀 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "I3T9GL6Qy2s",
+        "mentionSummary": "설명란에서 Ponytail 플러그인 설치와 켜고 끈 상태의 같은 작업 비교, 검토 명령 실행 결과를 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=I3T9GL6Qy2s&t=57s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=V66uCD4_0N8",
+        "title": "개발자들 사이에서 난리 난 Ponytail 초간단 설치 방법 | 직접 써보고 추천해요",
+        "channel": "미드나잇 로그",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@midnightlog-official",
+        "publishedAt": "2026-07-18",
+        "language": "ko",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "한국어 설명란에서 Ponytail 플러그인의 Claude Code·Codex 설치와 강도 조절, 검토 명령을 소개한다.",
+        "timestampSeconds": 176,
+        "timestampLabel": "설치는 딱 두 줄",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "V66uCD4_0N8",
+        "mentionSummary": "한국어 설명란에서 Ponytail 플러그인의 Claude Code·Codex 설치와 강도 조절, 검토 명령을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=V66uCD4_0N8&t=176s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

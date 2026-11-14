@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "id": "caveman-plugin",
+  "slug": "caveman-plugin",
+  "type": "plugin",
+  "name": "Caveman",
+  "outcome": "AI 코딩 도구의 답변과 읽는 분량을 줄여 토큰 사용량을 관리하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "개발자",
+    "AI 사용량을 관리하는 기술 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Gemini CLI"
+  ],
+  "platformEvidence": "공식 README에 플러그인·확장 설치 명령이 기재된 환경이다. README는 Codex 등 여러 에이전트 지원을 주장하고 Cowork는 아직 전체 검증 전이라고 적고 있으며 직접 실행하지 않았다.",
+  "officialUrl": "https://github.com/JuliusBrussee/caveman",
+  "officialSources": [
+    "https://github.com/JuliusBrussee/caveman"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/JuliusBrussee/caveman",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 코드는 Apache-2.0이며 호스트 AI 이용료는 별도다. README에 따르면 Auto 모델 라우팅은 계정 가입이 필요하고 일부 클라우드 기능은 제작사 서비스다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "답변 길이 모드 명령 /caveman, /ultracave, /megacave",
+    "/caveman-commit, /caveman-review, /caveman-compress, /caveman-stats 등 보조 명령",
+    "cavecrew 서브에이전트",
+    "선택 설치하는 CLI와 프록시"
+  ],
+  "relationships": {
+    "related": [
+      "ponytail-plugin"
+    ]
+  },
+  "caveats": [
+    "README 안에서도 절감률 표기가 다르며(소개 문구 65%, 측정값 입력 토큰 33.2%) 이번 조사에서 검증하지 않았다.",
+    "README에 따르면 CLI는 기본으로 사용 통계를 보내며 caveman telemetry off 또는 DO_NOT_TRACK=1로 끌 수 있다.",
+    "요청 단위로 과금되는 환경에서는 짧은 답변이 비용 절감으로 이어지지 않는다고 README에 적혀 있다.",
+    "영상 다수가 스킬 설치 방법으로 소개하므로 플러그인 설치와 구분해야 한다."
+  ],
+  "starterPrompt": "/caveman 이번 오류 로그를 보고 원인 후보와 고칠 파일만 짧게 알려줘. 코드와 명령어는 생략하지 말고 정확히 적어줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=Tiy4shEYXcc",
+        "title": "Claude Code Caveman: The 49K Star AI Hack You're Missing [2026]",
+        "channel": "Repo_AI_Review",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@Repo_AI_Review",
+        "publishedAt": "2026-04-28",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Caveman을 Claude Code 플러그인으로 소개하고 작동 방식, 커밋 메시지 기능, 보안·Windows 제약을 챕터로 다룬다.",
+        "timestampSeconds": 130,
+        "timestampLabel": "How the Plugin overrides RLHF natively",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "Tiy4shEYXcc",
+        "mentionSummary": "설명란에서 Caveman을 Claude Code 플러그인으로 소개하고 작동 방식, 커밋 메시지 기능, 보안·Windows 제약을 챕터로 다룬다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Tiy4shEYXcc&t=130s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=sBF3UumkL4Y",
+        "title": "9 Claude Code Plugins to Build 10x Faster",
+        "channel": "Austin Marchese",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@austin.marchese",
+        "publishedAt": "2026-05-13",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명란의 플러그인 설치 링크 목록에 Caveman 저장소를 포함해 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명란에 채널 운영자가 만드는 서비스(BuildPartner.ai) 홍보 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "sBF3UumkL4Y",
+        "mentionSummary": "설명란의 플러그인 설치 링크 목록에 Caveman 저장소를 포함해 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=sBF3UumkL4Y",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=4FO1Liu-ttk",
+        "title": "Caveman Claude Code Is the New Meta (Here's the Science)",
+        "channel": "Chase AI",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@Chase-H-AI",
+        "publishedAt": "2026-04-07",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Caveman 저장소를 링크하고 Claude Code 출력 축소 효과와 관련 연구를 함께 검토한다.",
+        "timestampSeconds": 53,
+        "timestampLabel": "Caveman",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "4FO1Liu-ttk",
+        "mentionSummary": "설명란에서 Caveman 저장소를 링크하고 Claude Code 출력 축소 효과와 관련 연구를 함께 검토한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=4FO1Liu-ttk&t=53s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=U--q2AEFjGw",
+        "title": "Claude Code : Jusqu'à 75% moins cher avec Caveman",
+        "channel": "Pentiminax",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@Pentiminax",
+        "publishedAt": "2026-04-14",
+        "language": "fr",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "프랑스어 설명란에서 Claude Code·Codex·Gemini CLI용 Caveman과 공식 저장소를 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "languageNote": "프랑스어 채널이며 보조 근거다.",
+        "videoId": "U--q2AEFjGw",
+        "mentionSummary": "프랑스어 설명란에서 Claude Code·Codex·Gemini CLI용 Caveman과 공식 저장소를 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=U--q2AEFjGw",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

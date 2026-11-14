@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "last30days-skill",
+  "slug": "last30days-skill",
+  "type": "skill",
+  "name": "last30days",
+  "outcome": "최근 30일간 Reddit·Hacker News·YouTube 등 공개 반응을 모아 출처가 달린 동향 요약 만들기",
+  "categories": [
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "시장·동향 조사 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README가 Claude Code 플러그인, npx skills(Codex·Cursor 등), claude.ai 웹 업로드용 .skill 파일 설치를 안내한다.",
+  "officialUrl": "https://github.com/mvanhorn/last30days-skill",
+  "officialSources": [
+    "https://github.com/mvanhorn/last30days-skill"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/mvanhorn/last30days-skill",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. Reddit·Hacker News·GitHub 등은 키 없이 쓸 수 있지만 X·TikTok·웹 검색 등 일부 출처는 API 키나 유료 크레딧이 필요하다고 README가 안내한다.",
+  "license": null,
+  "requirements": [
+    "Python 3.12 이상",
+    "선택: yt-dlp, 출처별 API 키"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "firecrawl-mcp"
+    ],
+    "distributionNote": "플러그인과 npx skills를 함께 설치하면 명령이 두 번 표시된다고 README가 안내한다. 한 가지 방식만 쓴다."
+  },
+  "caveats": [
+    "수집 범위는 해외 공개 커뮤니티 중심이다. 국내 포털·커뮤니티 여론을 대표하지 않는다.",
+    "추론용 API 키를 설정하면 주제와 본문 일부가 해당 제공자에게 전송된다고 README가 밝힌다.",
+    "영상의 스타 수·지원 출처 개수는 시점마다 달라 고정해 안내하지 않는다."
+  ],
+  "starterPrompt": "최근 30일간 해외 커뮤니티에서 \"AI 회의록 도구\"에 대해 나온 평가를 모아 장점·불만·자주 언급된 제품으로 나눠 출처와 함께 정리해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "8JrK4Kf4yd8",
+        "url": "https://www.youtube.com/watch?v=8JrK4Kf4yd8",
+        "title": "last30days-skill GitHub Explained: A 30-Day Cross-Platform Research Pipeline",
+        "channel": "Alex Hitt",
+        "publishedAt": "2026-10-29",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 mvanhorn/last30days-skill 저장소를 명시하고 키 없는 경로와 30일 범위 수집·정리 단계를 해설한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=8JrK4Kf4yd8",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "71ES9jzqa0Q",
+        "url": "https://www.youtube.com/watch?v=71ES9jzqa0Q",
+        "title": "The Claude Code Skill My Smartest Friends Use",
+        "channel": "Greg Isenberg",
+        "publishedAt": "2026-02-04",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "스킬 제작자 Matt Van Horn이 출연해 Last 30 Days 스킬의 개념과 실시간 조사 시연을 보여준다.",
+        "timestampSeconds": 99,
+        "timestampLabel": "What Is \"Last 30 Days\"",
+        "commercialContext": "스킬 제작자 Matt Van Horn이 출연해 직접 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=71ES9jzqa0Q&t=99s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "5rdWKt4OmT4",
+        "url": "https://www.youtube.com/watch?v=5rdWKt4OmT4",
+        "title": "This AI Skill Hit 38,000 Stars — Here's Why (last30days)",
+        "channel": "Prompt Engineer 48",
+        "publishedAt": "2026-06-10",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 last30days 설치 명령과 저장소를 명시하고 시연과 장단점·비용 요소를 다룬다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=5rdWKt4OmT4",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "h_qnTK_lqV8",
+        "url": "https://www.youtube.com/watch?v=h_qnTK_lqV8",
+        "title": "Stop Googling: Automate Your Research with the last30days-skill AI Agent!",
+        "channel": "Micro Learning",
+        "publishedAt": "2026-06-20",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 오픈소스 last30days-skill의 교차 플랫폼 조사 자동화를 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=h_qnTK_lqV8",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

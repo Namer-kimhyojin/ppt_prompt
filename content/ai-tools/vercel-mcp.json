@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "id": "vercel-mcp",
+  "slug": "vercel-mcp",
+  "type": "mcp",
+  "name": "Vercel MCP",
+  "outcome": "AI 개발 도구가 Vercel 프로젝트의 배포 상태·로그·문서를 조회하고 배포 작업을 돕게 한다.",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "웹 서비스 개발·배포 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Claude.ai·Claude Desktop",
+    "ChatGPT",
+    "Codex CLI",
+    "Cursor",
+    "VS Code 및 승인된 MCP 클라이언트"
+  ],
+  "platformEvidence": "Vercel 공식 문서의 지원 클라이언트 목록을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://vercel.com/docs/agent-resources/vercel-mcp",
+  "officialSources": [
+    "https://vercel.com/docs/agent-resources/vercel-mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://vercel.com/docs/agent-resources/vercel-mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 모든 Vercel 플랜에서 사용할 수 있으며 Vercel AI 제품 약관이 적용된다.",
+  "license": null,
+  "requirements": [
+    "Vercel 계정과 팀·프로젝트 권한",
+    "Vercel이 승인했거나 CIMD를 사용하는 MCP 클라이언트"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "연결한 AI 도구는 사용자 Vercel 계정과 같은 권한을 가지므로 사람 확인 단계를 켜 둔다.",
+    "공식 엔드포인트(mcp.vercel.com)인지 확인하고 제3자 원클릭 설치 주소를 점검한다.",
+    "Vercel에 직접 MCP 서버를 배포하는 방법을 다룬 영상과는 다른 항목이다."
+  ],
+  "starterPrompt": "최근 실패한 Vercel 배포의 빌드 로그를 읽고 실패 원인과 수정 후보를 정리해줘. 재배포는 하지 마.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=8lRAxqYx0Cw",
+        "title": "Connect Claude Code to Vercel in 3 Minutes (MCP Setup Guide)",
+        "channel": "Cody Bontecou",
+        "publishedAt": "2025-12-02",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에 공식 Vercel MCP 문서 링크를 두고 Claude Code를 공식 MCP 서버에 연결해 배포 로그·프로젝트 정보를 조회하는 방법을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "8lRAxqYx0Cw",
+        "mentionSummary": "설명에 공식 Vercel MCP 문서 링크를 두고 Claude Code를 공식 MCP 서버에 연결해 배포 로그·프로젝트 정보를 조회하는 방법을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=8lRAxqYx0Cw",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=M5CsRj6zSCA",
+        "title": "5 MCP Servers That Make Claude Code 10x More Powerful (Full-Stack App Build)",
+        "channel": "Eric Tech",
+        "publishedAt": "2025-12-12",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명의 MCP 목록에 Vercel MCP 공식 문서 링크를 두고 앱 배포 단계에서 사용한다.",
+        "timestampSeconds": 1556,
+        "timestampLabel": "Deploying to Vercel",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "M5CsRj6zSCA",
+        "mentionSummary": "설명의 MCP 목록에 Vercel MCP 공식 문서 링크를 두고 앱 배포 단계에서 사용한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=M5CsRj6zSCA&t=1556s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

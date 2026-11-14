@@ -1,0 +1,3321 @@
+{
+  "type": "plugin",
+  "checkedAt": "2026-11-14",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-legal-plugin",
+      "slug": "anthropic-legal-plugin",
+      "type": "plugin",
+      "name": "Anthropic Legal",
+      "outcome": "계약서 검토, NDA 1차 분류, 규정 준수 확인과 법무 문의 답변 초안 준비하기",
+      "categories": [
+        "문서·보고서"
+      ],
+      "audience": [
+        "법무 담당자",
+        "계약 검토 실무자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/legal",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/legal",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/legal",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건 및 연결 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/review-contract, /triage-nda, /vendor-check, /brief, /respond 명령",
+        "contract-review, nda-triage, compliance, canned-responses, legal-risk-assessment, meeting-briefing 스킬",
+        "Slack·Box·Egnyte·Microsoft 365·Atlassian 등 MCP 연결 구성",
+        "회사 기준을 적는 legal.local.md 플레이북 설정"
+      ],
+      "relationships": {
+        "related": [
+          "anthropics/claude-for-legal (2026-05 공개된 별도 법무 플러그인 묶음)"
+        ]
+      },
+      "caveats": [
+        "법률 자문을 대체하지 않으며 결과는 자격 있는 법무 담당자의 검토가 필요하다고 README에 명시돼 있다.",
+        "기본 플레이북은 미국 기준이므로 국내 법령과 회사 계약 기준을 legal.local.md에 직접 설정해야 한다.",
+        "2026년 5월 별도 저장소의 Claude for Legal 묶음이 공개돼 영상마다 지칭하는 법무 플러그인이 다를 수 있다.",
+        "Liam Barnes 영상은 문서 업로드·감사 기록·Word 내보내기 부족을 한계로 지적하며, 이 평가는 이번 조사에서 검증하지 않았다."
+      ],
+      "starterPrompt": "첨부한 용역 계약서를 우리 회사 계약 기준으로 검토해서 조항별 위험도, 수정 제안 문구, 법무 확인이 필요한 항목을 표로 정리해줘. 계약서에 근거가 없는 판단은 '확인 필요'로 표시해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 4,
+        "uniqueChannelCount": 4,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 1,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": true,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=J72b3ocm_xA",
+            "title": "Claude's Legal Plugin Wiped $300B Off the Market — Is It Worth It?",
+            "channel": "Liam Barnes",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@Liam-Barnes",
+            "publishedAt": "2026-02-05",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Cowork용 Anthropic 법무 플러그인 설치와 /review-contract·/triage-nda 시연을 소개하고 공식 저장소를 링크한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": "제작자가 직접 만든 계약 검토 플랫폼과 비교 시연한다고 설명란에 밝힌다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "J72b3ocm_xA",
+            "mentionSummary": "설명란에서 Cowork용 Anthropic 법무 플러그인 설치와 /review-contract·/triage-nda 시연을 소개하고 공식 저장소를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=J72b3ocm_xA",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=DLSpY5uxpk8",
+            "title": "How to Use Claude Cowork Legal Plugin",
+            "channel": "Jules Martin",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@JulesMartin7",
+            "publishedAt": "2026-03-09",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Claude Cowork 법무 플러그인의 Contract Review 스킬로 실제 계약서를 양측 관점에서 검토하는 과정을 소개한다.",
+            "timestampSeconds": 104,
+            "timestampLabel": "Using the AI Contract Review Skill",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "DLSpY5uxpk8",
+            "mentionSummary": "설명란에서 Claude Cowork 법무 플러그인의 Contract Review 스킬로 실제 계약서를 양측 관점에서 검토하는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=DLSpY5uxpk8&t=104s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=6iVtTnkOj1g",
+            "title": "Claude Cowork Legal - La fin du juriste?",
+            "channel": "Legal Pixels",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@LegalPixels",
+            "publishedAt": "2026-02-17",
+            "language": "fr",
+            "evidenceLevel": "youtube_title_and_page_metadata",
+            "mention": "프랑스어 영상 제목에서 Claude Cowork Legal을 직접 다룬다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일)와 oEmbed로 확인. 설명란 본문은 직접 확인하지 못했다.",
+            "languageNote": "프랑스어 채널이며 제목 수준의 보조 근거다.",
+            "videoId": "6iVtTnkOj1g",
+            "mentionSummary": "프랑스어 영상 제목에서 Claude Cowork Legal을 직접 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=6iVtTnkOj1g",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=oPz0ZYE_A5A",
+            "title": "So What? What Plug-ins are Available for Claude Cowork",
+            "channel": "Trust Insights",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@TrustInsights",
+            "publishedAt": null,
+            "publisherPagePublishedAt": "2026-02-06",
+            "language": "en",
+            "evidenceLevel": "publisher_transcript_and_youtube_oembed",
+            "evidenceUrl": "https://www.trustinsights.ai/blog/2026/02/so-what-plug-ins-for-claude-cowork/",
+            "mention": "제작자 공개 전사에서 Legal 플러그인이 변호사를 대체하지 않는다는 안내와 함께 기능을 언급한다.",
+            "timestampSeconds": 604,
+            "timestampLabel": "전사 화자 구간 머리글 기준 근사값",
+            "commercialContext": null,
+            "metadataVerification": "제작자 페이지의 원본 영상 링크와 YouTube oEmbed로 제목·채널 확인",
+            "limitations": "AI 생성 전사이며 타임스탬프는 화자 구간 머리글 기준 근사값이다. 기능 설명은 공식 README로 교차 확인했다.",
+            "videoId": "oPz0ZYE_A5A",
+            "mentionSummary": "제작자 공개 전사에서 Legal 플러그인이 변호사를 대체하지 않는다는 안내와 함께 기능을 언급한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=oPz0ZYE_A5A&t=604s",
+            "withinPreferredWindow": false
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-sales-plugin",
+      "slug": "anthropic-sales-plugin",
+      "type": "plugin",
+      "name": "Anthropic Sales",
+      "outcome": "고객 미팅 준비, 통화 후속 메일, 영업 파이프라인 점검과 주간 실적 정리하기",
+      "categories": [
+        "반복업무·서비스 연결",
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "영업 담당자",
+        "고객 관리 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 CRM·통화 기록·데이터 보강 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "setup, daily-briefing, call-prep, call-summary, draft-outreach, pipeline-review, forecast, account-research 등 영업 스킬",
+        "CRM·메일·캘린더·통화 기록·데이터 보강·채팅 MCP 연결 구성"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README 기준으로 CRM 기록이나 발송은 사용자가 확인한 뒤에 진행한다.",
+        "연결 서비스가 없으면 붙여넣은 메모·업로드 파일·웹 검색을 바탕으로 작업하고 확인하지 못한 범위를 알린다.",
+        "Salesforce와 Microsoft 365 연결은 조직 관리자가 먼저 활성화해야 한다.",
+        "README에 일부 스킬 이름과 동작이 바뀌었다고 적혀 있어 영상 시점의 명령과 다를 수 있다."
+      ],
+      "starterPrompt": "어제 고객 미팅 메모를 바탕으로 후속 메일 초안, 내부 공유용 요약, 다음 단계와 기한을 정리해줘. 메모에 없는 약속이나 금액은 쓰지 말아줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 1,
+        "undatedVideoCount": 1,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": true,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=rxInH0bQdG8",
+            "title": "How to Use Claude Cowork Plugins (Step-by-Step Tutorial)",
+            "channel": "Ryan & Matt Data Science",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@RyanAndMattDataScience",
+            "publishedAt": "2026-03-03",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 Sales 플러그인 설치 시연과 회사 정보 맞춤 설정을 별도 항목으로 소개한다.",
+            "timestampSeconds": 276,
+            "timestampLabel": "Installing a plugin (Sales plugin demo)",
+            "commercialContext": "설명란에 채널 운영자의 자동화 컨설팅과 커뮤니티 홍보 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "rxInH0bQdG8",
+            "mentionSummary": "설명란 챕터에서 Sales 플러그인 설치 시연과 회사 정보 맞춤 설정을 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=rxInH0bQdG8&t=276s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=oPz0ZYE_A5A",
+            "title": "So What? What Plug-ins are Available for Claude Cowork",
+            "channel": "Trust Insights",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@TrustInsights",
+            "publishedAt": null,
+            "publisherPagePublishedAt": "2026-02-06",
+            "language": "en",
+            "evidenceLevel": "publisher_transcript_and_youtube_oembed",
+            "evidenceUrl": "https://www.trustinsights.ai/blog/2026/02/so-what-plug-ins-for-claude-cowork/",
+            "mention": "제작자 공개 전사에서 Sales 플러그인의 통화 요약·매출 전망·파이프라인 검토 기능을 언급한다.",
+            "timestampSeconds": 443,
+            "timestampLabel": "전사 화자 구간 머리글 기준 근사값",
+            "commercialContext": null,
+            "metadataVerification": "제작자 페이지의 원본 영상 링크와 YouTube oEmbed로 제목·채널 확인",
+            "limitations": "AI 생성 전사이며 타임스탬프는 화자 구간 머리글 기준 근사값이다. 기능 설명은 공식 README로 교차 확인했다.",
+            "videoId": "oPz0ZYE_A5A",
+            "mentionSummary": "제작자 공개 전사에서 Sales 플러그인의 통화 요약·매출 전망·파이프라인 검토 기능을 언급한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=oPz0ZYE_A5A&t=443s",
+            "withinPreferredWindow": false
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "claude-financial-services-plugins",
+      "slug": "claude-financial-services-plugins",
+      "type": "plugin",
+      "name": "Claude for Financial Services",
+      "outcome": "재무 모델, 비교 기업 분석, 실적 요약과 투자 검토 자료 초안 만들기",
+      "categories": [
+        "엑셀·데이터",
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "재무·투자 분석 담당자",
+        "회계·자금 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "공식 저장소 README에 Cowork와 Claude Code 설치 방법이 기재돼 있으며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/financial-services",
+      "officialSources": [
+        "https://github.com/anthropics/financial-services",
+        "https://github.com/anthropics/financial-services-plugins",
+        "https://claude.com/blog/cowork-plugins-finance"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/financial-services",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건 확인이 필요하다. README에 따르면 일부 금융 데이터 커넥터는 제공사 구독이나 API 키가 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "financial-analysis 핵심 플러그인: 비교 기업 분석, DCF·LBO·3대 재무제표 모델, 엑셀 수식 점검, 경쟁 분석, PPT 템플릿 스킬",
+        "투자은행·주식 리서치·사모펀드·펀드 행정·운영·자산관리 상담용 추가 플러그인",
+        "LSEG·S&P Global 파트너 플러그인과 실적 검토·시장 조사 등 이름 붙은 에이전트 플러그인",
+        "금융 데이터·문서 저장소 MCP 연결 구성"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README에 투자·법률·세무·회계 자문이 아니며 모든 결과는 자격 있는 전문가의 확인을 거쳐야 한다고 명시돼 있다.",
+        "공식 저장소 이름이 financial-services-plugins에서 financial-services로 바뀌어 영상 속 링크와 다를 수 있다.",
+        "근거 영상은 개인 투자자의 주식 분석 활용 중심이며, 이 영상들을 투자 판단 근거로 쓰지 않는다.",
+        "핵심 플러그인(financial-analysis)을 먼저 설치하라고 안내한다."
+      ],
+      "starterPrompt": "첨부한 경쟁사 3곳의 사업보고서 수치로 매출·영업이익률 비교표를 엑셀로 만들고 수치마다 출처 페이지를 적어줘. 추정한 값은 별도 열로 구분해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=hq4BkBr2CsE",
+            "title": "Analyze Stocks with Claude's Finance Plugins (full install)",
+            "channel": "Professor Cubs",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@ProfessorCubs",
+            "publishedAt": "2026-06-01",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 공식 금융 플러그인 저장소를 링크하고 GitHub 설치와 시장 조사·실적 분석 플러그인 시연을 챕터로 소개한다.",
+            "timestampSeconds": 50,
+            "timestampLabel": "Installing plugins",
+            "commercialContext": "설명란에 제휴 링크가 포함될 수 있다는 고지가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "hq4BkBr2CsE",
+            "mentionSummary": "설명란에서 공식 금융 플러그인 저장소를 링크하고 GitHub 설치와 시장 조사·실적 분석 플러그인 시연을 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=hq4BkBr2CsE&t=50s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=fcQPTX8TbQY",
+            "title": "How AI Just Changed Stock Picking - Claude's New Finance Plugins",
+            "channel": "Raph",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@valuebyraph",
+            "publishedAt": "2026-05-08",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Anthropic 금융 플러그인 마켓플레이스와 Earnings Reviewer·Market Researcher·Financial Analysis 등을 개인 투자 관점으로 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": "설명란에 채널 운영자 웹사이트의 가이드 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "fcQPTX8TbQY",
+            "mentionSummary": "설명란에서 Anthropic 금융 플러그인 마켓플레이스와 Earnings Reviewer·Market Researcher·Financial Analysis 등을 개인 투자 관점으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=fcQPTX8TbQY",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-small-business-plugin",
+      "slug": "anthropic-small-business-plugin",
+      "type": "plugin",
+      "name": "Anthropic Small Business",
+      "outcome": "소규모 사업장의 미수금·지급·급여 준비, 영업 리드, 홍보 콘텐츠와 채용 공고 업무 처리하기",
+      "categories": [
+        "반복업무·서비스 연결",
+        "엑셀·데이터"
+      ],
+      "audience": [
+        "소규모 사업자",
+        "총무·경영지원 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/small-business",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/small-business",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/small-business",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건 및 연결 서비스의 계정·요금 조건 확인이 필요하다. Judith Creates 영상은 Pro·Max·Team 구독에 추가 비용 없이 포함된다고 설명하지만 이번 조사에서 확인하지 않았다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "요청을 알맞은 스킬로 연결하는 smb-router 스킬",
+        "재무 12개(미수금 독촉, 지급 처리, 월말 결산 준비, 급여 준비 등), 영업 8개, 마케팅 8개, 고객·제안 4개, 운영·채용 5개, 브리핑 2개, 설정·확장 5개 스킬(README 1.35.2 기준 44개)",
+        "선택형 MCP 커넥터 구성"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README에 재무·세무·법률·인사 자문이 아니며 결과를 직접 검토하라고 명시돼 있다.",
+        "발송·게시·결제·외부 시스템 기록 전에 승인을 받도록 설계돼 있다.",
+        "영상 시점에는 31개 스킬로 소개됐고 현재 README는 44개로 구성이 바뀌었다.",
+        "급여·세무 관련 스킬이 국내 제도와 맞는지는 별도로 확인해야 한다."
+      ],
+      "starterPrompt": "이번 달 거래처 미수금 엑셀을 연체 기간별로 정리하고, 거래처별 정중한 입금 요청 메일 초안을 써줘. 메일은 보내지 말고 초안만 보여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 4,
+        "uniqueChannelCount": 4,
+        "confirmedPreferredWindowChannelCount": 4,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=K7W9JeOU3H0",
+            "title": "Claude’s New Small Business Plugin Is Wild (31 Built-In Skills)",
+            "channel": "Nick Puru | AI Automation",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@NicholasPuru",
+            "publishedAt": "2026-05-30",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_chapters",
+            "mention": "제목과 설명란 챕터에서 Small Business 플러그인 설치, 커넥터, 승인 절차, 채용 공고·계약 검토 시연을 소개한다.",
+            "timestampSeconds": 145,
+            "timestampLabel": "Installing the plugin",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "K7W9JeOU3H0",
+            "mentionSummary": "제목과 설명란 챕터에서 Small Business 플러그인 설치, 커넥터, 승인 절차, 채용 공고·계약 검토 시연을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=K7W9JeOU3H0&t=145s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=zzo33HUOfxI",
+            "title": "Anthropic Just Dropped Claude for Small Businesses (31 Skills)",
+            "channel": "Brock Mesarich | AI for Non Techies",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@BrockMesarich",
+            "publishedAt": "2026-05-21",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Cowork용 Small Business 플러그인의 구성과 설치, 주요 스킬 3개, 앱 연결을 소개한다.",
+            "timestampSeconds": 89,
+            "timestampLabel": "How to Install the Plugin",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "zzo33HUOfxI",
+            "mentionSummary": "설명란에서 Cowork용 Small Business 플러그인의 구성과 설치, 주요 스킬 3개, 앱 연결을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=zzo33HUOfxI&t=89s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=sZ1iKKxdxEk",
+            "title": "Claude’s NEW Small Business Plugins: First Look & Demo",
+            "channel": "Judith Creates | AI Automation",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@judithcreates",
+            "publishedAt": "2026-05-25",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Small Business 플러그인 연결, 커넥터 개요, HubSpot 리드 분류 시연을 소개한다.",
+            "timestampSeconds": 86,
+            "timestampLabel": "Install the Plugin",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "sZ1iKKxdxEk",
+            "mentionSummary": "설명란에서 Small Business 플러그인 연결, 커넥터 개요, HubSpot 리드 분류 시연을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=sZ1iKKxdxEk&t=86s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=f_CC5GRbiYA",
+            "title": "Anthropic Just Dropped Claude for Small Businesses (44 Skills)",
+            "channel": "Ben AI",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@BenAI92",
+            "publishedAt": "2026-09-17",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_chapters",
+            "mention": "제목과 챕터에서 Small Business 플러그인 설치와 스킬 10개 활용, 예약 실행 설정을 소개한다.",
+            "timestampSeconds": 37,
+            "timestampLabel": "Installing the Plugin",
+            "commercialContext": "설명란에 일부 제휴 링크가 있다는 고지와 채널 운영자의 교육·대행 서비스 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "f_CC5GRbiYA",
+            "mentionSummary": "제목과 챕터에서 Small Business 플러그인 설치와 스킬 10개 활용, 예약 실행 설정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=f_CC5GRbiYA&t=37s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-data-plugin",
+      "slug": "anthropic-data-plugin",
+      "type": "plugin",
+      "name": "Anthropic Data",
+      "outcome": "데이터 파일 탐색, SQL 작성, 차트와 대화형 대시보드 제작, 분석 결과 검증하기",
+      "categories": [
+        "엑셀·데이터"
+      ],
+      "audience": [
+        "데이터 분석 담당자",
+        "보고서 작성 실무자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/data",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/data",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/data",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 데이터 웨어하우스·BI 도구의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/analyze, /explore-data, /write-query, /create-viz, /build-dashboard, /validate 명령",
+        "sql-queries, data-exploration, data-visualization, statistical-analysis, data-validation, interactive-dashboard-builder 스킬",
+        "데이터 웨어하우스·BI·노트북·스프레드시트 MCP 연결 권장 구성"
+      ],
+      "relationships": {},
+      "caveats": [
+        "데이터베이스를 연결하지 않으면 CSV·Excel 파일을 올리거나 SQL 결과를 붙여넣어 사용한다.",
+        "대시보드는 HTML 파일로 만들어지므로 사내 공유 방식은 따로 정해야 한다.",
+        "통계 해석과 계산 결과는 공유 전에 /validate와 담당자 검토로 확인한다."
+      ],
+      "starterPrompt": "첨부한 월별 매출 엑셀에서 빈 값과 이상값을 먼저 점검하고, 지역별 추이 차트와 필터가 있는 HTML 대시보드를 만들어줘. 계산 방식과 제외한 데이터는 따로 적어줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=1xUrv53tTCs",
+            "title": "Crazy Power BI Alternative! Build Interactive Dashboards with Claude Cowork’s Data Plugin",
+            "channel": "The GenAI Nerd Channel by Prof. Dries Faems",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@GenAI_Nerd_Channel",
+            "publishedAt": "2026-02-22",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Data 플러그인 활성화와 여러 시트 엑셀로 대화형 HTML 대시보드를 만드는 과정을 소개한다.",
+            "timestampSeconds": 176,
+            "timestampLabel": "Using the Data Plugin with Economic Data",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "1xUrv53tTCs",
+            "mentionSummary": "설명란에서 Data 플러그인 활성화와 여러 시트 엑셀로 대화형 HTML 대시보드를 만드는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=1xUrv53tTCs&t=176s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=t7TiSgb172o",
+            "title": "This Claude Plugin Built an Entire Dashboard in 8 minutes!",
+            "channel": "Prof. Ryan Ahmed",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@professor-ryanahmed",
+            "publishedAt": "2026-03-11",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Data 플러그인을 쓴 Cowork가 상품 리뷰 데이터로 차트와 대시보드를 만드는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": "설명란에 채널 운영자의 무료 라이브 세션(외부 교육 플랫폼) 홍보 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "t7TiSgb172o",
+            "mentionSummary": "설명란에서 Data 플러그인을 쓴 Cowork가 상품 리뷰 데이터로 차트와 대시보드를 만드는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=t7TiSgb172o",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=i0Ctvmxczr4",
+            "title": "4 Claude Plugins Every CFO Must Have",
+            "channel": "Nicolas Boucher",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@nicolasboucherfinance",
+            "publishedAt": "2026-11-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Data 플러그인을 별도 항목으로 소개한다.",
+            "timestampSeconds": 282,
+            "timestampLabel": "Claude Data plugin",
+            "commercialContext": "설명란에 채널 운영자의 무료 마스터클래스 신청 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "i0Ctvmxczr4",
+            "mentionSummary": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Data 플러그인을 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=i0Ctvmxczr4&t=282s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-claude-for-legal",
+      "slug": "anthropic-claude-for-legal",
+      "type": "plugin",
+      "name": "Claude for Legal",
+      "outcome": "업무 분야별 법무 플러그인으로 계약·개인정보·노무·지식재산 검토 초안 준비하기",
+      "categories": [
+        "문서·보고서",
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "법무팀",
+        "법률사무소 실무자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "공식 저장소 README에 Cowork와 Claude Code 설치 방법이 기재돼 있으며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-for-legal",
+      "officialSources": [
+        "https://github.com/anthropics/claude-for-legal",
+        "https://claude.com/resources/articles/claude-for-the-legal-industry"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-for-legal",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건 확인이 필요하다. README에 따르면 일부 커넥터와 Thomson Reuters CoCounsel 파트너 플러그인은 별도 구독이나 API 키가 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "commercial, corporate, employment, privacy, product, regulatory, ai-governance, ip, litigation 등 업무 분야별 12개 플러그인",
+        "README 기준 이름 붙은 에이전트 93개와 분야별 스킬·명령",
+        "Slack·Google Drive·Box·DocuSign·CourtListener 등 약 20개 커넥터",
+        "플러그인별 cold-start-interview 초기 설정",
+        "Thomson Reuters가 만든 CoCounsel Legal 파트너 플러그인"
+      ],
+      "relationships": {
+        "related": [
+          "anthropic-legal-plugin"
+        ]
+      },
+      "caveats": [
+        "README에 모든 결과는 변호사 검토용 초안이며 법률 자문이 아니라고 명시돼 있다.",
+        "각 플러그인의 cold-start-interview로 업무 기준을 먼저 설정해야 다른 스킬이 그 기준을 참고한다.",
+        "국내 법령과 실무 기준에 맞는지는 별도로 확인해야 한다.",
+        "2026년 1월 knowledge-work-plugins의 Legal 플러그인과 별개 저장소다."
+      ],
+      "starterPrompt": "검토 중인 해외 SaaS 공급사의 데이터 처리 부속서를 개인정보 관점에서 검토해 위험 조항, 추가 확인 질문, 협상 요청 문구 초안을 정리해줘. 법적 판단이 필요한 부분은 '변호사 확인 필요'로 표시해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=_p1skxxkHuQ",
+            "title": "Everything in Claude for Legal 2.0: 12 Plugins and 22 Connectors Explained",
+            "channel": "Liam Barnes",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@Liam-Barnes",
+            "publishedAt": "2026-05-14",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 12개 업무 분야 플러그인과 커넥터를 설명하고 설치, cold-start interview, 소송·지식재산 플러그인 시연을 챕터로 소개하며 공식 저장소를 링크한다.",
+            "timestampSeconds": 330,
+            "timestampLabel": "Installing Claude for Legal",
+            "commercialContext": "설명란에 채널 운영자의 법률 AI 도구 사이트와 상담 예약 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "_p1skxxkHuQ",
+            "mentionSummary": "설명란에서 12개 업무 분야 플러그인과 커넥터를 설명하고 설치, cold-start interview, 소송·지식재산 플러그인 시연을 챕터로 소개하며 공식 저장소를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=_p1skxxkHuQ&t=330s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=db6i06tTIAs",
+            "title": "Claude For Legal Easy Setup in 7 Minutes (Step by Step)",
+            "channel": "Alejo Pijuan",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@AlejoPijuanAI",
+            "publishedAt": "2026-06-14",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Cowork에 Claude for Legal 마켓플레이스를 추가하고 플러그인 3개 설치와 cold start interview를 진행하는 과정을 소개하며 공식 저장소를 링크한다.",
+            "timestampSeconds": 34,
+            "timestampLabel": "Add the Claude for Legal marketplace",
+            "commercialContext": "설명란에 채널 운영자 회사의 교육·컨설팅 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "db6i06tTIAs",
+            "mentionSummary": "설명란에서 Cowork에 Claude for Legal 마켓플레이스를 추가하고 플러그인 3개 설치와 cold start interview를 진행하는 과정을 소개하며 공식 저장소를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=db6i06tTIAs&t=34s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=rcAlxD0Cwpw",
+            "title": "Claude just unlocked 12 legal practice plugins — here's the catch",
+            "channel": "AI Playbook",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@ItsAIPlaybook",
+            "publishedAt": "2026-05-15",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 2026년 5월 12일 공개된 Claude for Legal의 12개 업무 플러그인과 커넥터를 인도 법률 실무 관점으로 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "rcAlxD0Cwpw",
+            "mentionSummary": "설명란에서 2026년 5월 12일 공개된 Claude for Legal의 12개 업무 플러그인과 커넥터를 인도 법률 실무 관점으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=rcAlxD0Cwpw",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "ralph-loop-plugin",
+      "slug": "ralph-loop-plugin",
+      "type": "plugin",
+      "name": "Ralph Loop",
+      "outcome": "테스트처럼 완료 조건이 분명한 개발 작업을 같은 지시로 반복 실행해 끝까지 진행하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "업무 도구를 만드는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/ralph-loop",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/ralph-loop",
+        "https://github.com/anthropics/claude-plugins-official",
+        "https://claude.com/plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/ralph-loop",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 반복 실행 횟수만큼 사용량이 늘어나므로 반복 상한 설정이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/ralph-loop 명령(반복 상한·완료 문구 옵션)",
+        "/cancel-ralph 명령",
+        "종료 시도를 가로채 같은 지시를 다시 넣는 Stop hook"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README는 --max-iterations로 반복 상한을 반드시 두라고 안내한다.",
+        "자동 검증(테스트·린터)이 가능한 작업에 적합하고, 사람의 판단이나 설계 결정이 필요한 작업에는 맞지 않는다고 README에 적혀 있다.",
+        "Windows에서는 Git for Windows의 bash가 필요하다.",
+        "초기 영상에는 이전 이름(ralph-wiggum)과 이전 저장소 경로가 등장한다."
+      ],
+      "starterPrompt": "/ralph-loop \"사내 엑셀 변환 스크립트의 실패하는 테스트를 모두 통과시켜줘. 테스트가 전부 통과하면 <promise>DONE</promise>를 출력해줘.\" --completion-promise \"DONE\" --max-iterations 10",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 4,
+        "uniqueChannelCount": 4,
+        "confirmedPreferredWindowChannelCount": 4,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=ny_BAA3eYaI",
+            "title": "Claude Ralph - The Bizarre Anthropic Plugin That Every Developer Is Missing",
+            "channel": "Better Stack",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@betterstack",
+            "publishedAt": "2025-12-30",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Ralph Wiggum 반복 기법과 Anthropic이 Claude Code용으로 바꾼 플러그인, 시연과 주의점을 챕터로 소개한다.",
+            "timestampSeconds": 161,
+            "timestampLabel": "Demo of the Ralph plugin in Claude Code",
+            "commercialContext": "개발·모니터링 서비스 기업 채널이다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "ny_BAA3eYaI",
+            "mentionSummary": "설명란에서 Ralph Wiggum 반복 기법과 Anthropic이 Claude Code용으로 바꾼 플러그인, 시연과 주의점을 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=ny_BAA3eYaI&t=161s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=jCsBFTgROKg",
+            "title": "I Tried Ralph Wiggum Plugin for Claude Code",
+            "channel": "AI Coding Daily",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@AICodingDaily",
+            "publishedAt": "2026-01-11",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Ralph Wiggum 방식을 Claude Code 플러그인으로 적용한 사용기를 소개하고 공식 플러그인 저장소와 설치 문서를 링크한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "jCsBFTgROKg",
+            "mentionSummary": "설명란에서 Ralph Wiggum 방식을 Claude Code 플러그인으로 적용한 사용기를 소개하고 공식 플러그인 저장소와 설치 문서를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=jCsBFTgROKg",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=uJUVUL8U7b4",
+            "title": "The Ralph Wiggum plugin makes Claude Code 100x more powerful (WOW!)",
+            "channel": "Alex Finn",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@AlexFinnOfficial",
+            "publishedAt": "2026-01-10",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에 ralph-loop 설치 명령과 예시 프롬프트를 적고 설치·실행·결과 검토를 챕터로 소개한다.",
+            "timestampSeconds": 146,
+            "timestampLabel": "Installing Ralph Wiggum",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "uJUVUL8U7b4",
+            "mentionSummary": "설명란에 ralph-loop 설치 명령과 예시 프롬프트를 적고 설치·실행·결과 검토를 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=uJUVUL8U7b4&t=146s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=UYgVIQcGjPI",
+            "title": "Ralph Loop: il plugin di Claude Code di cui tutti stanno parlando! (guida passo passo)",
+            "channel": "Simone Rizzo",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@simone_rizzo98",
+            "publishedAt": "2026-01-19",
+            "language": "it",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "이탈리아어 설명란에서 Ralph 방식과 Claude Code 공식 Ralph 플러그인 저장소를 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "languageNote": "이탈리아어 채널이며 보조 근거다.",
+            "videoId": "UYgVIQcGjPI",
+            "mentionSummary": "이탈리아어 설명란에서 Ralph 방식과 Claude Code 공식 Ralph 플러그인 저장소를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=UYgVIQcGjPI",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "security-guidance-plugin",
+      "slug": "security-guidance-plugin",
+      "type": "plugin",
+      "name": "Security Guidance",
+      "outcome": "AI가 작성·수정한 코드의 보안 위험을 작업 중과 커밋 시점에 점검하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "보안 검토 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스 README에 기재된 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+        "https://claude.com/plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. README에 따르면 패턴 경고 외의 LLM 검토는 토큰이나 구독 사용량을 소모한다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [
+        "README 기준 Claude Code CLI 2.1.144 이상",
+        "Python 3.8 이상"
+      ],
+      "connectionModes": [],
+      "includedComponents": [
+        "파일 수정 시 위험 코드 패턴을 알려주는 hook",
+        "응답 종료 시 변경분을 검토하는 Stop hook",
+        "커밋·푸시 시 관련 파일을 읽어 검토하는 에이전트 검토",
+        "프로젝트별 보안 규칙 파일(.claude/claude-security-guidance.md) 지원"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README에 사람의 코드 리뷰·정적/동적 분석·침투 테스트를 대체하지 않으며 누락과 오탐이 있을 수 있다고 적혀 있다.",
+        "변경 내용과 파일 내용이 모델 호출로 전송되므로 규칙 파일에 비밀 정보를 넣지 않는다.",
+        "인증 정보가 플러그인에 전달되지 않으면 LLM 검토는 건너뛰고 패턴 경고만 동작한다."
+      ],
+      "starterPrompt": "이번에 고친 업무 자동화 스크립트의 변경 내용을 보안 관점에서 검토해줘. 비밀번호·API 키가 코드에 들어갔는지, 외부 입력을 그대로 실행하는 부분이 있는지 우선 확인해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=6BMwAasALMI",
+            "title": "Claude Code Security Guidance Plugin Overview",
+            "channel": "Juan Romero - SOCFortress Cofounder",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@JuanRomero-SOCFortress",
+            "publishedAt": "2026-05-29",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Anthropic의 무료 security-guidance 플러그인과 3단계 점검 방식을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": "보안 서비스 회사 공동창업자의 채널이다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "6BMwAasALMI",
+            "mentionSummary": "설명란에서 Anthropic의 무료 security-guidance 플러그인과 3단계 점검 방식을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=6BMwAasALMI",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=pLh7lkozEDc",
+            "title": "Claude Checks Its Own Code for Security Holes: the Security-Guidance Plugin",
+            "channel": "AI Dev Minute",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@aidevminute",
+            "publishedAt": "2026-11-04",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에 설치 명령과 파일 수정·응답 종료·커밋 시점의 세 가지 점검, 사용자 규칙 파일을 정리해 소개한다.",
+            "timestampSeconds": 16,
+            "timestampLabel": "Check 1: every file edit",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "pLh7lkozEDc",
+            "mentionSummary": "설명란에 설치 명령과 파일 수정·응답 종료·커밋 시점의 세 가지 점검, 사용자 규칙 파일을 정리해 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=pLh7lkozEDc&t=16s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=5L6RIxPP7dw",
+            "title": "introducing claude code security guidance plugin",
+            "channel": "Raghav Mehra",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@ragsymecollections",
+            "publishedAt": "2026-05-27",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_page_metadata",
+            "mention": "영상 제목에서 Claude Code security guidance 플러그인을 직접 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일)로 확인. 설명란에는 관련 본문이 없었다.",
+            "videoId": "5L6RIxPP7dw",
+            "mentionSummary": "영상 제목에서 Claude Code security guidance 플러그인을 직접 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=5L6RIxPP7dw",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "frontend-design-plugin",
+      "slug": "frontend-design-plugin",
+      "type": "plugin",
+      "name": "Frontend Design",
+      "outcome": "웹 화면과 랜딩 페이지를 흔한 AI 디자인 틀에서 벗어난 완성도 있는 UI로 만들기",
+      "categories": [
+        "홍보·디자인"
+      ],
+      "audience": [
+        "웹 화면을 만드는 개발자",
+        "디자인 시안을 코드로 만드는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design",
+        "https://claude.com/plugins/frontend-design"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "frontend-design 스킬 1개(프런트엔드 작업 시 자동 적용)"
+      ],
+      "relationships": {
+        "related": [
+          "anthropics/skills 저장소의 동일 이름 스킬"
+        ]
+      },
+      "caveats": [
+        "플러그인 구성은 스킬 1개이며 명령이나 에이전트는 없다.",
+        "같은 스킬이 anthropics/skills 저장소에도 있어 영상에 따라 플러그인 또는 스킬로 소개된다.",
+        "결과 디자인의 품질은 이번 조사에서 실행 검증하지 않았다."
+      ],
+      "starterPrompt": "사내 교육 신청 안내용 한 페이지 웹 화면을 만들어줘. 기관 색상은 남색과 흰색이고, 일정·대상·신청 버튼이 첫 화면에 보이게 하고 모바일에서도 깨지지 않게 해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=DVlHZufvP10",
+            "title": "I Tried Frontend-Design Plugin in Claude Code",
+            "channel": "AI Coding Daily",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@AICodingDaily",
+            "publishedAt": "2025-12-03",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "제목과 설명란에서 공식 frontend-design 플러그인으로 SaaS 랜딩 페이지를 만들어 본 사용기를 소개하고 플러그인 스킬 원본을 링크한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "DVlHZufvP10",
+            "mentionSummary": "제목과 설명란에서 공식 frontend-design 플러그인으로 SaaS 랜딩 페이지를 만들어 본 사용기를 소개하고 플러그인 스킬 원본을 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=DVlHZufvP10",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=iOgOM6gXChw",
+            "title": "5 Claude Code Plugins You Should Install First",
+            "channel": "GritAI Studio",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@GritAIStudio",
+            "publishedAt": "2026-06-23",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란의 추천 플러그인 5개 중 하나로 Frontend Design을 소개하고 공식 마켓플레이스 설치 명령을 적었다.",
+            "timestampSeconds": 385,
+            "timestampLabel": "Starter Pack - My Top 5",
+            "commercialContext": "설명란에 채널 운영자의 웹사이트와 커뮤니티 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "iOgOM6gXChw",
+            "mentionSummary": "설명란의 추천 플러그인 5개 중 하나로 Frontend Design을 소개하고 공식 마켓플레이스 설치 명령을 적었다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=iOgOM6gXChw&t=385s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=TeR-MRKs7f8",
+            "title": "클로드 코드 플러그인, 이거 모르면 10배 손해봅니다",
+            "channel": "짐코딩",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@gymcoding",
+            "publishedAt": "2025-12-08",
+            "language": "ko",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "한국어 설명란 챕터에서 마켓플레이스 설치 방법과 함께 frontend-design 플러그인을 별도 항목으로 소개하고 랜딩 페이지 제작을 시연한다.",
+            "timestampSeconds": 510,
+            "timestampLabel": "frontend-design 플러그인 소개",
+            "commercialContext": "챕터에 채널 운영자의 강의 안내 구간이 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "TeR-MRKs7f8",
+            "mentionSummary": "한국어 설명란 챕터에서 마켓플레이스 설치 방법과 함께 frontend-design 플러그인을 별도 항목으로 소개하고 랜딩 페이지 제작을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=TeR-MRKs7f8&t=510s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "pr-review-toolkit-plugin",
+      "slug": "pr-review-toolkit-plugin",
+      "type": "plugin",
+      "name": "PR Review Toolkit",
+      "outcome": "코드 변경을 주석·테스트·오류 처리·타입·코드 품질 담당 에이전트로 나눠 검토하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "코드 리뷰 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit",
+        "https://claude.com/plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 여러 에이전트를 함께 실행하면 사용량이 늘어난다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (플러그인 LICENSE 파일 기준. README 본문에는 MIT로 표기)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "comment-analyzer, pr-test-analyzer, silent-failure-hunter, type-design-analyzer, code-reviewer, code-simplifier 에이전트 6개",
+        "commands 폴더의 검토 명령"
+      ],
+      "relationships": {},
+      "caveats": [
+        "요청이 모호하면 에이전트가 실행되지 않을 수 있어 검토 관점이나 파일을 구체적으로 지정하라고 README에 적혀 있다.",
+        "전체 코드보다 변경된 코드에 집중해 쓰도록 안내한다.",
+        "README와 LICENSE 파일의 라이선스 표기가 다르므로 사용 전 확인이 필요하다."
+      ],
+      "starterPrompt": "이번 커밋 전 변경 사항을 검토해줘. 특히 오류를 조용히 삼키는 부분과 테스트가 빠진 분기를 찾아 파일·줄 번호와 함께 알려줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=mn_a6KXjDO0",
+            "title": "PR Review Toolkit: Six Specialist Agents, One Verdict",
+            "channel": "Kvint Labs",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@KvintVentures",
+            "publishedAt": "2026-08-07",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "제목과 설명란에서 6개 전문 에이전트로 변경분을 나눠 검토하고 결과를 하나의 조치 계획으로 합치는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "mn_a6KXjDO0",
+            "mentionSummary": "제목과 설명란에서 6개 전문 에이전트로 변경분을 나눠 검토하고 결과를 하나의 조치 계획으로 합치는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=mn_a6KXjDO0",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=1WdkAY6rLxs",
+            "title": "Claude Code Skill 技術探討 #056｜pr-review-toolkit：多個專家 agent 分工審查你的程式碼改動",
+            "channel": "ChengHsien Yang",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@chenghsienyang8188",
+            "publishedAt": "2026-10-24",
+            "language": "zh-TW",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "중국어 설명란에서 Anthropic 공식 pr-review-toolkit 플러그인으로 커밋 전 코드를 검토해 문제를 찾고 한계를 정리한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "languageNote": "중국어(번체) 채널이다.",
+            "videoId": "1WdkAY6rLxs",
+            "mentionSummary": "중국어 설명란에서 Anthropic 공식 pr-review-toolkit 플러그인으로 커밋 전 코드를 검토해 문제를 찾고 한계를 정리한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=1WdkAY6rLxs",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=NE3BGt7QK6k",
+            "title": "Claude Code公式プラグイン紹介2 - コードレビュー品質改善編！",
+            "channel": "クロノITチャンネル",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@chronoit",
+            "publishedAt": "2026-02-22",
+            "language": "ja",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "일본어 설명란 챕터에서 공식 플러그인 code-review, pr-review-toolkit, code-simplifier, security-guidance를 차례로 소개한다.",
+            "timestampSeconds": 293,
+            "timestampLabel": "pr-review-toolkitの概要",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "languageNote": "일본어 채널이다.",
+            "videoId": "NE3BGt7QK6k",
+            "mentionSummary": "일본어 설명란 챕터에서 공식 플러그인 code-review, pr-review-toolkit, code-simplifier, security-guidance를 차례로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=NE3BGt7QK6k&t=293s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "codex-plugin-for-claude-code",
+      "slug": "codex-plugin-for-claude-code",
+      "type": "plugin",
+      "name": "Codex plugin for Claude Code",
+      "outcome": "Claude Code 작업 중에 OpenAI Codex로 코드 검토를 받거나 작업을 넘기기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "여러 AI 코딩 도구를 함께 쓰는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "OpenAI 공식 저장소 README에 기재된 설치 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/openai/codex-plugin-cc",
+      "officialSources": [
+        "https://github.com/openai/codex-plugin-cc"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/openai/codex-plugin-cc",
+        "directDownloadUrl": null
+      },
+      "costNotes": "README 기준 ChatGPT 구독(무료 포함) 또는 OpenAI API 키가 필요하며 Claude Code 이용 조건이 별도로 적용된다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [
+        "ChatGPT 계정 또는 OpenAI API 키",
+        "Node.js 18.18 이상"
+      ],
+      "connectionModes": [],
+      "includedComponents": [
+        "/codex:review, /codex:adversarial-review 검토 명령",
+        "/codex:rescue, /codex:transfer 작업 위임 명령",
+        "/codex:status, /codex:result, /codex:cancel, /codex:setup 관리 명령",
+        "선택형 리뷰 게이트"
+      ],
+      "relationships": {},
+      "caveats": [
+        "코드와 변경 내용이 OpenAI Codex로 전달되므로 회사 보안 정책을 먼저 확인한다.",
+        "Claude Code와 Codex 두 서비스의 계정·사용량 조건이 함께 적용된다.",
+        "영상의 정확도 2배 등 성능 주장은 이번 조사에서 검증하지 않았다."
+      ],
+      "starterPrompt": "/codex:review 이번 브랜치에서 바꾼 정산 계산 로직을 검토해줘. 숫자 반올림과 빈 값 처리에서 틀릴 수 있는 부분을 우선 알려줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=v46RSgreLNI",
+            "title": "Codex Plugin for Claude Code",
+            "channel": "Nick Babich",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@babichnick",
+            "publishedAt": "2026-04-01",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 OpenAI가 공개한 Claude Code용 Codex 플러그인과 코드 검토 활용법을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "v46RSgreLNI",
+            "mentionSummary": "설명란에서 OpenAI가 공개한 Claude Code용 Codex 플러그인과 코드 검토 활용법을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=v46RSgreLNI",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=Tp0wZIUjtUg",
+            "title": "NEW Official OpenAI Codex Plugin for Claude Code",
+            "channel": "AI Coding Daily",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@AICodingDaily",
+            "publishedAt": "2026-04-01",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "제목과 설명란에서 OpenAI가 공개한 공식 Codex 플러그인을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "Tp0wZIUjtUg",
+            "mentionSummary": "제목과 설명란에서 OpenAI가 공개한 공식 Codex 플러그인을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Tp0wZIUjtUg",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=Br2ottfP6jM",
+            "title": "Claude Code + Codex Plugin = 2x Code Accuracy",
+            "channel": "Eric Tech",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@EricWTech",
+            "publishedAt": "2026-04-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Codex 플러그인 설치, 슬래시 명령, 교차 검토 시연을 소개하고 공식 저장소를 링크한다.",
+            "timestampSeconds": 90,
+            "timestampLabel": "Install Codex plugin",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "Br2ottfP6jM",
+            "mentionSummary": "설명란에서 Codex 플러그인 설치, 슬래시 명령, 교차 검토 시연을 소개하고 공식 저장소를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Br2ottfP6jM&t=90s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "compound-engineering-plugin",
+      "slug": "compound-engineering-plugin",
+      "type": "plugin",
+      "name": "Compound Engineering",
+      "outcome": "AI 개발 작업을 기획·계획·구현·검토로 진행하고 배운 점을 다음 작업용 기록으로 남기기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "업무 도구를 만드는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Codex CLI",
+        "Codex App",
+        "Cursor"
+      ],
+      "platformEvidence": "공식 README에 설치 방법이 기재된 환경 일부를 기록했다. README는 이 밖의 여러 호스트도 지원한다고 적고 있으며 직접 실행하지 않았다.",
+      "officialUrl": "https://github.com/EveryInc/compound-engineering-plugin",
+      "officialSources": [
+        "https://github.com/EveryInc/compound-engineering-plugin",
+        "https://every.to/guides/compound-engineering"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/EveryInc/compound-engineering-plugin",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 코드의 라이선스와 별개로 각 호스트 AI의 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+      "license": "MIT",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/ce-brainstorm, /ce-plan, /ce-work, /ce-code-review, /ce-compound 등 핵심 반복 스킬",
+        "전체 과정을 이어서 실행하는 /lfg와 /ce-debug, /ce-ideate 등 보조 스킬",
+        "README 기준 38개 스킬"
+      ],
+      "relationships": {},
+      "caveats": [
+        "일반 문서 업무보다 소프트웨어 개발 절차에 맞춰져 있다.",
+        "영상 시점마다 스킬·에이전트 수가 다르게 소개되며 현재 구성은 README를 기준으로 확인한다.",
+        "작업 기록을 docs/solutions/ 폴더에 쌓으므로 저장소 관리 규칙과 맞는지 확인한다.",
+        "Every가 만든 플러그인이며 Peter Yang 채널 영상 등 제작자 출연 영상은 근거에서 제외했다."
+      ],
+      "starterPrompt": "/ce-brainstorm 부서 공용 회의실 예약 내역을 엑셀로 내보내는 기능을 추가하려고 해. 필요한 요구사항과 확인할 질문부터 정리해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 4,
+        "uniqueChannelCount": 4,
+        "confirmedPreferredWindowChannelCount": 4,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=4hLJ62m3OqI",
+            "title": "Compound Engineering: the AI coding workflow that actually learns",
+            "channel": "VelvetShark",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@velvetshark-com",
+            "publishedAt": "2026-01-23",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Compound Engineering 플러그인 저장소를 링크하고 설치와 brainstorm·plan·work·review·compound 단계를 챕터로 소개한다.",
+            "timestampSeconds": 209,
+            "timestampLabel": "Installing the plugin",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "4hLJ62m3OqI",
+            "mentionSummary": "설명란에서 Compound Engineering 플러그인 저장소를 링크하고 설치와 brainstorm·plan·work·review·compound 단계를 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=4hLJ62m3OqI&t=209s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=PMm_vRk7vfQ",
+            "title": "The Claude Code Plugin You'll WISH You Found Sooner",
+            "channel": "Sean Kochel",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@iamseankochel",
+            "publishedAt": "2026-04-15",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Every Inc의 Compound Engineering 플러그인 사용법을 소개하고 ideate부터 compound 명령까지 챕터로 나눈다.",
+            "timestampSeconds": 57,
+            "timestampLabel": "Ideate Command",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "PMm_vRk7vfQ",
+            "mentionSummary": "설명란에서 Every Inc의 Compound Engineering 플러그인 사용법을 소개하고 ideate부터 compound 명령까지 챕터로 나눈다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=PMm_vRk7vfQ&t=57s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=Dr8pRp5_auQ",
+            "title": "EveryInc Compound Engineering Plugin Guide for AI Developers",
+            "channel": "Eddy Says Hi #EddySaysHi",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@eddysayshi",
+            "publishedAt": "2026-06-22",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Compound Engineering 플러그인의 /ce-plan, /ce-work, /ce-compound 명령과 지원 호스트를 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "Dr8pRp5_auQ",
+            "mentionSummary": "설명란에서 Compound Engineering 플러그인의 /ce-plan, /ce-work, /ce-compound 명령과 지원 호스트를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Dr8pRp5_auQ",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=lSp6PtDa4EE",
+            "title": "Compound Engineering Plugin: Structured AI Coding Workflows Across Hosts",
+            "channel": "Alex To Go Eng",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@dudarikEng",
+            "publishedAt": "2026-11-03",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Claude Code·Codex·Cursor용 Compound Engineering 플러그인의 기획·계획·구현·검토 반복 구조를 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "lSp6PtDa4EE",
+            "mentionSummary": "설명란에서 Claude Code·Codex·Cursor용 Compound Engineering 플러그인의 기획·계획·구현·검토 반복 구조를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=lSp6PtDa4EE",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "everything-claude-code-plugin",
+      "slug": "everything-claude-code-plugin",
+      "type": "plugin",
+      "name": "Everything Claude Code (ECC)",
+      "outcome": "Claude Code에 개발용 에이전트·스킬·명령·hook 묶음을 한 번에 설치해 작업 방식 표준화하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "AI 코딩 환경을 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Codex"
+      ],
+      "platformEvidence": "공식 README에 플러그인 설치가 기재된 환경 일부를 기록했다. 다른 호스트는 README에서 베타·실험 지원으로 구분하며 직접 실행하지 않았다.",
+      "officialUrl": "https://github.com/affaan-m/everything-claude-code",
+      "officialSources": [
+        "https://github.com/affaan-m/everything-claude-code"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/affaan-m/everything-claude-code",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 코드는 MIT 라이선스이며 호스트 AI 이용료는 별도다. README에 유료 구독(ECC Pro) 후원 모델이 안내되므로 무료 코드와 유료 서비스를 구분한다. 금액은 조사하지 않았다.",
+      "license": "MIT",
+      "requirements": [
+        "README 기준 안내 설치 시 Node.js 18 이상, Git, Claude Code 2.1 이상"
+      ],
+      "connectionModes": [],
+      "includedComponents": [
+        "README 기준 전문 서브에이전트 71개, 스킬 314개, 명령 98개",
+        "세션 요약·지속 학습 등 hook",
+        "선택 적용하는 언어·프로젝트별 규칙 묶음(수동 복사)",
+        "프롬프트·hook·MCP 설정을 점검하는 AgentShield 보안 스캔"
+      ],
+      "relationships": {},
+      "caveats": [
+        "구성 요소가 매우 많아 필요한 부분만 골라 쓰는 방법도 영상에서 함께 다룬다.",
+        "플러그인 설치와 수동 설치를 섞으면 hook이 중복 실행될 수 있다고 README에 적혀 있다.",
+        "Windows 기본 환경에서는 일부 기능에 알려진 결함이 있고 일부 기능은 Bash·Python·WSL이 필요하다.",
+        "README는 비공식 미러에 악성코드가 있을 수 있으므로 공식 출처에서만 설치하라고 안내한다.",
+        "영상 시점마다 에이전트·스킬 수와 저장소 주소 표기가 다르다."
+      ],
+      "starterPrompt": "ECC 구성 중 우리 팀의 파이썬 업무 자동화 저장소에 꼭 필요한 에이전트와 명령만 골라 추천하고, 설치하지 않을 항목과 이유도 표로 정리해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=jPuJ9vUwxxM",
+            "title": "Everything Claude Code: The #1 Claude Code Plugin",
+            "channel": "Software Engineer Meets AI",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@SoftwareEngineerMeetsAI",
+            "publishedAt": "2026-06-25",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 ECC의 구성과 설치, 전체 플러그인 설치와 일부 파일만 골라 쓰는 방법을 비교해 소개한다.",
+            "timestampSeconds": 113,
+            "timestampLabel": "How to install ECC?",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "jPuJ9vUwxxM",
+            "mentionSummary": "설명란에서 ECC의 구성과 설치, 전체 플러그인 설치와 일부 파일만 골라 쓰는 방법을 비교해 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=jPuJ9vUwxxM&t=113s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=tvmTmPal6ik",
+            "title": "Everything Claude Code: The 102k-Star Resource That Makes Claude Code Unstoppable",
+            "channel": "Prism Labs",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@prismlabsai",
+            "publishedAt": "2026-03-23",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에 플러그인 마켓플레이스 설치 명령을 적고 에이전트·스킬·hook 구성과 설치 시연을 챕터로 소개한다.",
+            "timestampSeconds": 270,
+            "timestampLabel": "Installation demo",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "tvmTmPal6ik",
+            "mentionSummary": "설명란에 플러그인 마켓플레이스 설치 명령을 적고 에이전트·스킬·hook 구성과 설치 시연을 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=tvmTmPal6ik&t=270s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=4rN-UWKSmp0",
+            "title": "Claude Code 비용 80% 절감하는 settings.json 3줄과 14만명이 쓰는 everything-claude-code 설정법",
+            "channel": "헤이제임스, 플랫폼 하나 만들어줘",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@hey_james_ai",
+            "publishedAt": "2026-04-08",
+            "language": "ko",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "한국어 설명란에서 everything-claude-code 저장소 구성과 플러그인 설치 명령, 보안 스캐너를 소개한다.",
+            "timestampSeconds": 222,
+            "timestampLabel": "저장소 구성",
+            "commercialContext": "챕터에 광고 구간이 표시돼 있고 설명란에 채널 운영자의 유료 강의 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "4rN-UWKSmp0",
+            "mentionSummary": "한국어 설명란에서 everything-claude-code 저장소 구성과 플러그인 설치 명령, 보안 스캐너를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=4rN-UWKSmp0&t=222s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "ponytail-plugin",
+      "slug": "ponytail-plugin",
+      "type": "plugin",
+      "name": "Ponytail",
+      "outcome": "AI 코딩 도구가 필요한 만큼만 코드를 작성하도록 하고 변경분과 저장소를 간결성 관점에서 점검하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "업무 자동화 스크립트를 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Codex"
+      ],
+      "platformEvidence": "공식 README에 플러그인 설치 명령이 기재된 환경이다. 다른 에이전트용 규칙 파일·스킬 설치 방법도 안내되며 직접 실행하지 않았다.",
+      "officialUrl": "https://github.com/DietrichGebert/ponytail",
+      "officialSources": [
+        "https://github.com/DietrichGebert/ponytail"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/DietrichGebert/ponytail",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 코드는 MIT 라이선스이며 호스트 AI 이용료는 별도다. 금액은 조사하지 않았다.",
+      "license": "MIT",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "강도 조절 명령 /ponytail (lite·full·ultra·off)",
+        "/ponytail-review(변경분 검토), /ponytail-audit(저장소 점검), /ponytail-debt(미뤄 둔 작업 목록), /ponytail-gain, /ponytail-help 명령",
+        "세션 시작·종료 등 lifecycle hook",
+        "Claude Code 전용 비용·시간·토큰 표시줄"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README의 코드·비용 절감 수치는 제작자 자체 벤치마크 결과이며 이번 조사에서 검증하지 않았다.",
+        "ttywood 영상의 비교에서는 한 작업에서 변경 코드가 줄었지만 다른 작업에서는 오히려 늘고 비용도 더 들었다고 정리한다.",
+        "README는 공식 GitHub 저장소나 npm 패키지에서만 설치하라고 안내한다.",
+        "일반 문서 업무보다 코드 작성·검토에 맞춘 도구다."
+      ],
+      "starterPrompt": "/ponytail-review 이번에 추가한 엑셀 업로드 처리 코드를 검토해서 없어도 되는 코드와 꼭 남겨야 하는 검증·오류 처리를 구분해 알려줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=2xuFcmUAQUc",
+            "title": "This Claude Code Plugin Writes 94% Less Code (ponytail)",
+            "channel": "Better Stack",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@betterstack",
+            "publishedAt": "2026-06-20",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Ponytail 플러그인의 작동 원칙과 벤치마크, 기본 Claude Code와 비교한 시연을 챕터로 소개하고 공식 저장소를 링크한다.",
+            "timestampSeconds": 337,
+            "timestampLabel": "Demo: Ponytail vs Default Claude Code",
+            "commercialContext": "개발·모니터링 서비스 기업 채널이다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "2xuFcmUAQUc",
+            "mentionSummary": "설명란에서 Ponytail 플러그인의 작동 원칙과 벤치마크, 기본 Claude Code와 비교한 시연을 챕터로 소개하고 공식 저장소를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=2xuFcmUAQUc&t=337s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=I3T9GL6Qy2s",
+            "title": "Testing the ponytail plugin for Claude Code, with and without (DietrichGebert/ponytail)",
+            "channel": "ttywood",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@ttywood",
+            "publishedAt": "2026-10-01",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Ponytail 플러그인 설치와 켜고 끈 상태의 같은 작업 비교, 검토 명령 실행 결과를 소개한다.",
+            "timestampSeconds": 57,
+            "timestampLabel": "Install and its token bill",
+            "commercialContext": "설명란에 협찬이 아니라고 적혀 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "I3T9GL6Qy2s",
+            "mentionSummary": "설명란에서 Ponytail 플러그인 설치와 켜고 끈 상태의 같은 작업 비교, 검토 명령 실행 결과를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=I3T9GL6Qy2s&t=57s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=V66uCD4_0N8",
+            "title": "개발자들 사이에서 난리 난 Ponytail 초간단 설치 방법 | 직접 써보고 추천해요",
+            "channel": "미드나잇 로그",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@midnightlog-official",
+            "publishedAt": "2026-07-18",
+            "language": "ko",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "한국어 설명란에서 Ponytail 플러그인의 Claude Code·Codex 설치와 강도 조절, 검토 명령을 소개한다.",
+            "timestampSeconds": 176,
+            "timestampLabel": "설치는 딱 두 줄",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "V66uCD4_0N8",
+            "mentionSummary": "한국어 설명란에서 Ponytail 플러그인의 Claude Code·Codex 설치와 강도 조절, 검토 명령을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=V66uCD4_0N8&t=176s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "playground-plugin",
+      "slug": "playground-plugin",
+      "type": "plugin",
+      "name": "Playground",
+      "outcome": "디자인·데이터·개념 정리 같은 복잡한 요구를 조절 가능한 HTML 화면에서 맞춘 뒤 지시문으로 만들기",
+      "categories": [
+        "홍보·디자인",
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "화면 시안을 다듬는 기술 담당자",
+        "개발자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground",
+        "https://github.com/anthropics/claude-plugins-official"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "playground 스킬 1개",
+        "design-playground, data-explorer, concept-map, document-critique 템플릿"
+      ],
+      "relationships": {},
+      "caveats": [
+        "만들어진 HTML 화면에서 조절한 결과는 지시문으로 복사해 다시 Claude에 붙여넣는 방식이다.",
+        "말로 설명하기 어려운 시각·구조적 주제에 적합하고 단순한 질문에는 효과가 적다.",
+        "영상마다 템플릿 수를 다르게 소개하므로 현재 구성은 README로 확인한다."
+      ],
+      "starterPrompt": "우리 부서 월간 보고서 표지 레이아웃을 정하려고 해. 제목 크기, 색상, 여백, 로고 위치를 조절하며 미리 볼 수 있는 playground를 만들어줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=_VBmr6Rh56Y",
+            "title": "How to Use the Claude Code Playground Plugin",
+            "channel": "GritAI Studio",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@GritAIStudio",
+            "publishedAt": "2026-02-17",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Playground 플러그인 설치와 화면 구조, 템플릿, 직접 만든 playground 예시를 챕터로 소개하고 공식 플러그인 경로를 링크한다.",
+            "timestampSeconds": 102,
+            "timestampLabel": "Installation - One command setup",
+            "commercialContext": "설명란에 채널 운영자의 웹사이트와 커뮤니티 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "_VBmr6Rh56Y",
+            "mentionSummary": "설명란에서 Playground 플러그인 설치와 화면 구조, 템플릿, 직접 만든 playground 예시를 챕터로 소개하고 공식 플러그인 경로를 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=_VBmr6Rh56Y&t=102s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=HTrs7KCMiQ4",
+            "title": "Claude Code UI Was Painful - Then Anthropic Released Playground (4 Min Tutorial)",
+            "channel": "The Viable Edge",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@ViableEdge",
+            "publishedAt": "2026-01-31",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에 공식 마켓플레이스의 playground 설치 명령을 적고 화면 요소를 직접 조절하는 사용법을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "HTrs7KCMiQ4",
+            "mentionSummary": "설명란에 공식 마켓플레이스의 playground 설치 명령을 적고 화면 요소를 직접 조절하는 사용법을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=HTrs7KCMiQ4",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=m08fWdyGzbI",
+            "title": "this claude code playground plugin is kind of insane",
+            "channel": "Brown Guy AI",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@brownguyai",
+            "publishedAt": "2026-05-15",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_chapters",
+            "mention": "제목과 챕터에서 Playground 플러그인 설치와 개념 지도·템플릿 활용 사례를 소개한다.",
+            "timestampSeconds": 63,
+            "timestampLabel": "Installing and launching the Playground plugin",
+            "commercialContext": "설명란에 채널 운영자의 유료 그룹 가입 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "m08fWdyGzbI",
+            "mentionSummary": "제목과 챕터에서 Playground 플러그인 설치와 개념 지도·템플릿 활용 사례를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=m08fWdyGzbI&t=63s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "caveman-plugin",
+      "slug": "caveman-plugin",
+      "type": "plugin",
+      "name": "Caveman",
+      "outcome": "AI 코딩 도구의 답변과 읽는 분량을 줄여 토큰 사용량을 관리하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "AI 사용량을 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Gemini CLI"
+      ],
+      "platformEvidence": "공식 README에 플러그인·확장 설치 명령이 기재된 환경이다. README는 Codex 등 여러 에이전트 지원을 주장하고 Cowork는 아직 전체 검증 전이라고 적고 있으며 직접 실행하지 않았다.",
+      "officialUrl": "https://github.com/JuliusBrussee/caveman",
+      "officialSources": [
+        "https://github.com/JuliusBrussee/caveman"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/JuliusBrussee/caveman",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 코드는 Apache-2.0이며 호스트 AI 이용료는 별도다. README에 따르면 Auto 모델 라우팅은 계정 가입이 필요하고 일부 클라우드 기능은 제작사 서비스다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "답변 길이 모드 명령 /caveman, /ultracave, /megacave",
+        "/caveman-commit, /caveman-review, /caveman-compress, /caveman-stats 등 보조 명령",
+        "cavecrew 서브에이전트",
+        "선택 설치하는 CLI와 프록시"
+      ],
+      "relationships": {
+        "related": [
+          "ponytail-plugin"
+        ]
+      },
+      "caveats": [
+        "README 안에서도 절감률 표기가 다르며(소개 문구 65%, 측정값 입력 토큰 33.2%) 이번 조사에서 검증하지 않았다.",
+        "README에 따르면 CLI는 기본으로 사용 통계를 보내며 caveman telemetry off 또는 DO_NOT_TRACK=1로 끌 수 있다.",
+        "요청 단위로 과금되는 환경에서는 짧은 답변이 비용 절감으로 이어지지 않는다고 README에 적혀 있다.",
+        "영상 다수가 스킬 설치 방법으로 소개하므로 플러그인 설치와 구분해야 한다."
+      ],
+      "starterPrompt": "/caveman 이번 오류 로그를 보고 원인 후보와 고칠 파일만 짧게 알려줘. 코드와 명령어는 생략하지 말고 정확히 적어줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 4,
+        "uniqueChannelCount": 4,
+        "confirmedPreferredWindowChannelCount": 4,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=Tiy4shEYXcc",
+            "title": "Claude Code Caveman: The 49K Star AI Hack You're Missing [2026]",
+            "channel": "Repo_AI_Review",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@Repo_AI_Review",
+            "publishedAt": "2026-04-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Caveman을 Claude Code 플러그인으로 소개하고 작동 방식, 커밋 메시지 기능, 보안·Windows 제약을 챕터로 다룬다.",
+            "timestampSeconds": 130,
+            "timestampLabel": "How the Plugin overrides RLHF natively",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "Tiy4shEYXcc",
+            "mentionSummary": "설명란에서 Caveman을 Claude Code 플러그인으로 소개하고 작동 방식, 커밋 메시지 기능, 보안·Windows 제약을 챕터로 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Tiy4shEYXcc&t=130s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=sBF3UumkL4Y",
+            "title": "9 Claude Code Plugins to Build 10x Faster",
+            "channel": "Austin Marchese",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@austin.marchese",
+            "publishedAt": "2026-05-13",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명란의 플러그인 설치 링크 목록에 Caveman 저장소를 포함해 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": "설명란에 채널 운영자가 만드는 서비스(BuildPartner.ai) 홍보 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "sBF3UumkL4Y",
+            "mentionSummary": "설명란의 플러그인 설치 링크 목록에 Caveman 저장소를 포함해 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=sBF3UumkL4Y",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=4FO1Liu-ttk",
+            "title": "Caveman Claude Code Is the New Meta (Here's the Science)",
+            "channel": "Chase AI",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@Chase-H-AI",
+            "publishedAt": "2026-04-07",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Caveman 저장소를 링크하고 Claude Code 출력 축소 효과와 관련 연구를 함께 검토한다.",
+            "timestampSeconds": 53,
+            "timestampLabel": "Caveman",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "4FO1Liu-ttk",
+            "mentionSummary": "설명란에서 Caveman 저장소를 링크하고 Claude Code 출력 축소 효과와 관련 연구를 함께 검토한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=4FO1Liu-ttk&t=53s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=U--q2AEFjGw",
+            "title": "Claude Code : Jusqu'à 75% moins cher avec Caveman",
+            "channel": "Pentiminax",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@Pentiminax",
+            "publishedAt": "2026-04-14",
+            "language": "fr",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "프랑스어 설명란에서 Claude Code·Codex·Gemini CLI용 Caveman과 공식 저장소를 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "languageNote": "프랑스어 채널이며 보조 근거다.",
+            "videoId": "U--q2AEFjGw",
+            "mentionSummary": "프랑스어 설명란에서 Claude Code·Codex·Gemini CLI용 Caveman과 공식 저장소를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=U--q2AEFjGw",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "code-simplifier-plugin",
+      "slug": "code-simplifier-plugin",
+      "type": "plugin",
+      "name": "Code Simplifier",
+      "outcome": "방금 작성하거나 수정한 코드를 동작은 그대로 두고 읽기 쉽게 정리하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "업무 자동화 스크립트를 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier",
+        "https://github.com/anthropics/claude-plugins-official/blob/main/plugins/code-simplifier/agents/code-simplifier.md",
+        "https://claude.com/plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 에이전트 정의에 Opus 모델이 지정돼 있어 사용량에 영향을 줄 수 있다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "code-simplifier 에이전트 1개"
+      ],
+      "relationships": {
+        "related": [
+          "pr-review-toolkit-plugin"
+        ]
+      },
+      "caveats": [
+        "에이전트 정의상 별도 지시가 없으면 최근 수정한 코드만 정리한다.",
+        "정의 파일에 특정 코드 스타일 규칙(ES 모듈, function 키워드 선호 등)이 들어 있어 프로젝트 규칙과 다를 수 있다.",
+        "기능을 바꾸지 않는 것이 원칙이지만 결과는 테스트로 확인해야 한다."
+      ],
+      "starterPrompt": "방금 고친 보고서 자동 생성 함수의 중첩 조건문을 읽기 쉽게 정리해줘. 출력 결과는 바뀌면 안 되고, 바꾼 부분은 이유와 함께 요약해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=puynahM0Wew",
+            "title": "NEW Claude Code Plugin: Code Simplifier",
+            "channel": "AI Coding Daily",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@AICodingDaily",
+            "publishedAt": "2026-01-09",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "제목과 설명란에서 Claude Code 팀이 발표한 Code Simplifier 플러그인을 사용해 본 내용을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "puynahM0Wew",
+            "mentionSummary": "제목과 설명란에서 Claude Code 팀이 발표한 Code Simplifier 플러그인을 사용해 본 내용을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=puynahM0Wew",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=YsCxpB-y0jU",
+            "title": "Claude Code Author-Recommended Code-Simplifier Plugin - Usage Instructions",
+            "channel": "AttackOnLife🚀",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@aol-alanhe421",
+            "publishedAt": "2026-01-09",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 code-simplifier 플러그인 사용법을 소개하고 공식 에이전트 정의 파일을 링크한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "YsCxpB-y0jU",
+            "mentionSummary": "설명란에서 code-simplifier 플러그인 사용법을 소개하고 공식 에이전트 정의 파일을 링크한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=YsCxpB-y0jU",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=NE3BGt7QK6k",
+            "title": "Claude Code公式プラグイン紹介2 - コードレビュー品質改善編！",
+            "channel": "クロノITチャンネル",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@chronoit",
+            "publishedAt": "2026-02-22",
+            "language": "ja",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "일본어 설명란 챕터에서 공식 플러그인 code-simplifier의 설계 원칙을 별도 항목으로 소개한다.",
+            "timestampSeconds": 428,
+            "timestampLabel": "code-simplifierの設計哲学",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "languageNote": "일본어 채널이다.",
+            "videoId": "NE3BGt7QK6k",
+            "mentionSummary": "일본어 설명란 챕터에서 공식 플러그인 code-simplifier의 설계 원칙을 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=NE3BGt7QK6k&t=428s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "claude-hud-plugin",
+      "slug": "claude-hud-plugin",
+      "type": "plugin",
+      "name": "Claude HUD",
+      "outcome": "Claude Code 작업 중 맥락 사용량, 사용 한도, 실행 중인 도구·에이전트를 입력창 아래에서 확인하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "Claude Code 사용자",
+        "AI 사용량을 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "공식 README에 기재된 설치 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/jarrodwatts/claude-hud",
+      "officialSources": [
+        "https://github.com/jarrodwatts/claude-hud"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/jarrodwatts/claude-hud",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 코드는 MIT 라이선스이며 Claude Code 이용 조건이 별도로 적용된다. 금액은 조사하지 않았다.",
+      "license": "MIT",
+      "requirements": [
+        "README 기준 Claude Code 2.1.260 이상",
+        "README 기준 Node.js 22.18 이상(Bun으로 시작 가능)"
+      ],
+      "connectionModes": [],
+      "includedComponents": [
+        "Claude Code 상태 표시줄(statusline) 플러그인",
+        "/hud 설정 확인 명령과 레이아웃 설정",
+        "모델·브랜치·맥락 사용량·사용 한도·도구·에이전트·할 일 진행 표시"
+      ],
+      "relationships": {},
+      "caveats": [
+        "제3자 플러그인은 기본으로 자동 업데이트되지 않는다고 README에 적혀 있다.",
+        "--extra-cmd 옵션은 매번 셸 명령을 실행하므로 README가 임의 코드 실행에 해당한다고 경고한다.",
+        "현재 폴더의 세션 기록·설정·git 정보를 읽는다.",
+        "영상마다 요구 Node.js 버전과 설정 명령 이름이 다르게 소개되므로 README를 기준으로 확인한다."
+      ],
+      "starterPrompt": "/hud 설정을 확인하고, 맥락 사용량과 사용 한도만 보이는 간단한 표시 형태로 바꿔줘. 바꾸기 전에 어떤 설정 파일을 고치는지 먼저 알려줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 4,
+        "uniqueChannelCount": 4,
+        "confirmedPreferredWindowChannelCount": 4,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=oPhvxJFUSBs",
+            "title": "28K Stars: See What Claude Code Is Really Doing (Claude HUD)",
+            "channel": "AI Dev Minute",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@aidevminute",
+            "publishedAt": "2026-10-19",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에 Claude HUD 플러그인 설치 명령과 설정 명령, 표시 항목을 정리해 소개한다.",
+            "timestampSeconds": 13,
+            "timestampLabel": "Install: two commands + /claude-hud:setup",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "oPhvxJFUSBs",
+            "mentionSummary": "설명란에 Claude HUD 플러그인 설치 명령과 설정 명령, 표시 항목을 정리해 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=oPhvxJFUSBs&t=13s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=MoBUwYP4GiA",
+            "title": "Claude HUD Plugin Guide for Claude Code",
+            "channel": "Eddy Says Hi #EddySaysHi",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@eddysayshi",
+            "publishedAt": "2026-04-07",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Claude Code 상태 표시줄 API를 쓰는 Claude HUD 플러그인의 표시 항목과 사용 한도 확인 기능을 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "MoBUwYP4GiA",
+            "mentionSummary": "설명란에서 Claude Code 상태 표시줄 API를 쓰는 Claude HUD 플러그인의 표시 항목과 사용 한도 확인 기능을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=MoBUwYP4GiA",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=GCcIKOKyc88",
+            "title": "See Your Claude Code CLI Usage Live in VS Code (Claude HUD Setup)",
+            "channel": "Jamie Nudelman",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@jamienudelman",
+            "publishedAt": "2026-08-07",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Jarrod Watts의 무료 Claude Code 플러그인 Claude HUD 설치와 저장소 안전성 확인, 설정 마법사를 챕터로 소개한다.",
+            "timestampSeconds": 188,
+            "timestampLabel": "Installing the plugin in the Claude CLI",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "GCcIKOKyc88",
+            "mentionSummary": "설명란에서 Jarrod Watts의 무료 Claude Code 플러그인 Claude HUD 설치와 저장소 안전성 확인, 설정 마법사를 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=GCcIKOKyc88&t=188s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=AH99kGxhHug",
+            "title": "claude-hud: Real-Time Context Visibility for Claude Code",
+            "channel": "Alex To Go Eng",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@dudarikEng",
+            "publishedAt": "2026-05-26",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 맥락 사용량·도구·에이전트·할 일 진행을 상태 표시줄에 보여주는 Claude Code 플러그인으로 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "AH99kGxhHug",
+            "mentionSummary": "설명란에서 맥락 사용량·도구·에이전트·할 일 진행을 상태 표시줄에 보여주는 Claude Code 플러그인으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=AH99kGxhHug",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "understand-anything-plugin",
+      "slug": "understand-anything-plugin",
+      "type": "plugin",
+      "name": "Understand-Anything",
+      "outcome": "처음 맡은 코드베이스나 문서 묶음을 대화형 지식 그래프로 만들어 구조와 변경 영향 파악하기",
+      "categories": [
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "개발자",
+        "기존 시스템을 인수인계받는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "GitHub Copilot CLI",
+        "Codex"
+      ],
+      "platformEvidence": "공식 README에 설치 방법이 기재된 환경 일부를 기록했다. Codex 등 일부 환경은 설치 스크립트 방식이며 직접 실행하지 않았다.",
+      "officialUrl": "https://github.com/Egonex-AI/Understand-Anything",
+      "officialSources": [
+        "https://github.com/Egonex-AI/Understand-Anything",
+        "https://github.com/Lum1104/Understand-Anything"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/Egonex-AI/Understand-Anything",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 코드는 MIT 라이선스이며 호스트 AI 이용료는 별도다. README에 따르면 큰 프로젝트의 첫 분석은 토큰을 많이 사용할 수 있다. 금액은 조사하지 않았다.",
+      "license": "MIT",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/understand 그래프 생성 명령",
+        "/understand-dashboard 대화형 대시보드",
+        "/understand-chat, /understand-explain, /understand-diff, /understand-onboard, /understand-domain, /understand-knowledge 명령"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README는 분석 중 어떤 코드·데이터가 모델로 전달되는지 명확히 적지 않으므로 민감한 코드는 사용 전 설정을 확인한다.",
+        "만들어진 그래프를 git에 올릴 경우 .ua/ 폴더 내용을 먼저 검토하라고 README가 안내한다.",
+        "저장소 주소가 Lum1104에서 Egonex-AI로 바뀌어 영상 속 링크와 다르다.",
+        "제작 팀의 별도 제품 홍보가 README에 함께 있다."
+      ],
+      "starterPrompt": "/understand 이 사내 정산 시스템 저장소를 분석해서 주요 모듈, 데이터 흐름, 신규 담당자가 먼저 읽을 파일 5개를 정리해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=xkQ9HvGTMpc",
+            "title": "Understand-Anything Claude Code Plugin — Install, Run, Dashboard Walkthrough",
+            "channel": "Prompt Engineer 48",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@PromptEngineer48",
+            "publishedAt": "2026-06-01",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Understand-Anything 플러그인 설치와 실제 저장소 분석, 대시보드, /understand-chat·/understand-diff 명령, 장단점을 챕터로 소개한다.",
+            "timestampSeconds": 100,
+            "timestampLabel": "Installation (30 seconds)",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "xkQ9HvGTMpc",
+            "mentionSummary": "설명란에서 Understand-Anything 플러그인 설치와 실제 저장소 분석, 대시보드, /understand-chat·/understand-diff 명령, 장단점을 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=xkQ9HvGTMpc&t=100s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=VmIUXVlt7_I",
+            "title": "This AI Tool Maps Any Codebase Before You Touch It (Understand-Anything)",
+            "channel": "Better Stack",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@betterstack",
+            "publishedAt": "2026-05-20",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Understand-Anything을 Claude Code 플러그인으로 소개하고 실제 저장소 시연과 장단점을 챕터로 다룬다.",
+            "timestampSeconds": 94,
+            "timestampLabel": "Live Demo: Running Understand-Anything on a Real Repo",
+            "commercialContext": "개발·모니터링 서비스 기업 채널이다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "VmIUXVlt7_I",
+            "mentionSummary": "설명란에서 Understand-Anything을 Claude Code 플러그인으로 소개하고 실제 저장소 시연과 장단점을 챕터로 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=VmIUXVlt7_I&t=94s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=dSDFxtcQGIs",
+            "title": "I Connected Claude AI to My Codebase - 100% Offline Plugin (Understand Anything)",
+            "channel": "Ray Codes",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@RayCodingCorner",
+            "publishedAt": "2026-05-26",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 Understand Anything Claude 플러그인을 로컬 모델 환경과 함께 설치하고 코드베이스 그래프를 만드는 과정을 챕터로 소개한다.",
+            "timestampSeconds": 409,
+            "timestampLabel": "Installation",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "dSDFxtcQGIs",
+            "mentionSummary": "설명란에서 Understand Anything Claude 플러그인을 로컬 모델 환경과 함께 설치하고 코드베이스 그래프를 만드는 과정을 챕터로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=dSDFxtcQGIs&t=409s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-finance-plugin",
+      "slug": "anthropic-finance-plugin",
+      "type": "plugin",
+      "name": "Anthropic Finance",
+      "outcome": "분개 준비, 계정 대사, 손익계산서와 차이 분석, 결산 체크리스트 정리하기",
+      "categories": [
+        "엑셀·데이터",
+        "문서·보고서"
+      ],
+      "audience": [
+        "회계·재무 담당자",
+        "결산 실무자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/finance",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 ERP·데이터 웨어하우스 등 연결 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/journal-entry, /reconciliation, /income-statement, /variance-analysis, /sox-testing 명령",
+        "journal-entry-prep, reconciliation, financial-statements, variance-analysis, close-management, audit-support 스킬",
+        "ERP·데이터 웨어하우스·스프레드시트·BI 연결용 MCP 구성(선택)"
+      ],
+      "relationships": {
+        "related": [
+          "claude-financial-services-plugins"
+        ]
+      },
+      "caveats": [
+        "README에 재무·세무·감사 자문이 아니며 재무 보고나 공시에 쓰기 전 자격 있는 전문가가 검토해야 한다고 명시돼 있다.",
+        "예시와 감사 절차(SOX 등)는 미국 기준이므로 국내 회계 기준과 내부 결산 절차에 맞게 조정해야 한다.",
+        "투자 분석용 Claude for Financial Services 플러그인 묶음과는 다른 플러그인이다.",
+        "Nicolas Boucher 영상은 챕터 제목에서 'Claude Finance plugin'으로만 표기하며, 같은 영상의 Data·Operations·Legal과 함께 소개돼 이 플러그인으로 연결했다."
+      ],
+      "starterPrompt": "첨부한 10월 시산표와 은행 거래내역으로 보통예금 계정 대사표를 만들고, 차이가 나는 항목과 확인이 필요한 거래를 따로 정리해줘. 분개는 제안만 하고 확정하지 말아줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=i0Ctvmxczr4",
+            "title": "4 Claude Plugins Every CFO Must Have",
+            "channel": "Nicolas Boucher",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@nicolasboucherfinance",
+            "publishedAt": "2026-11-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Finance 플러그인을 별도 항목으로 소개한다.",
+            "timestampSeconds": 80,
+            "timestampLabel": "Claude Finance plugin",
+            "commercialContext": "설명란에 채널 운영자의 무료 마스터클래스 신청 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "limitations": "챕터 제목 기준이며 영상 본문은 시청하지 않았다.",
+            "videoId": "i0Ctvmxczr4",
+            "mentionSummary": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Finance 플러그인을 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=i0Ctvmxczr4&t=80s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=1P6cTfxc1kU",
+            "title": "Claude AI - Official Anthropic Plugins in CloudCowork",
+            "channel": "HardReset_Pro",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@hardreset_pro",
+            "publishedAt": "2026-05-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 15개를 훑으며 Finance 플러그인을 Product Management와 함께 소개한다.",
+            "timestampSeconds": 280,
+            "timestampLabel": "Finance and Product Management bundles",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "1P6cTfxc1kU",
+            "mentionSummary": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 15개를 훑으며 Finance 플러그인을 Product Management와 함께 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=1P6cTfxc1kU&t=280s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-operations-plugin",
+      "slug": "anthropic-operations-plugin",
+      "type": "plugin",
+      "name": "Anthropic Operations",
+      "outcome": "업무 절차서·런북 작성, 거래처 검토, 변경 요청과 경영진 보고용 현황 정리하기",
+      "categories": [
+        "문서·보고서",
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "운영·총무 담당자",
+        "프로젝트 관리 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/operations",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/operations",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/operations",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 연결 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/vendor-review, /process-doc, /change-request, /capacity-plan, /status-report, /runbook 명령",
+        "vendor-management, process-optimization, change-management, risk-assessment, compliance-tracking, resource-planning 스킬",
+        "ITSM·프로젝트 관리·지식 베이스·채팅·캘린더·메일 MCP 연결 구성(선택)"
+      ],
+      "relationships": {},
+      "caveats": [
+        "연결 서비스 없이도 입력한 자료로 동작하며, 회사명·결재 라인·준수 기준은 settings.local.json에 설정하거나 대화 중 입력한다.",
+        "준수 프레임워크 예시(SOC 2, ISO 27001)는 기관 기준에 맞게 바꿔야 한다.",
+        "근거 영상 2개 모두 여러 플러그인을 함께 소개하는 영상의 한 구간이다."
+      ],
+      "starterPrompt": "/process-doc 신규 직원 노트북 지급과 계정 발급 절차를 담당자별 역할표(RACI)와 단계별 체크리스트로 정리해줘. 우리 회사에 없는 절차는 '확인 필요'로 표시해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=i0Ctvmxczr4",
+            "title": "4 Claude Plugins Every CFO Must Have",
+            "channel": "Nicolas Boucher",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@nicolasboucherfinance",
+            "publishedAt": "2026-11-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Operations 플러그인을 별도 항목으로 소개한다.",
+            "timestampSeconds": 465,
+            "timestampLabel": "Claude Operations plugin",
+            "commercialContext": "설명란에 채널 운영자의 무료 마스터클래스 신청 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "i0Ctvmxczr4",
+            "mentionSummary": "설명란 챕터에서 재무 담당자용 플러그인 4개 중 하나로 Claude Operations 플러그인을 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=i0Ctvmxczr4&t=465s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=1P6cTfxc1kU",
+            "title": "Claude AI - Official Anthropic Plugins in CloudCowork",
+            "channel": "HardReset_Pro",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@hardreset_pro",
+            "publishedAt": "2026-05-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 중 Operations를 Sales와 함께 소개한다.",
+            "timestampSeconds": 372,
+            "timestampLabel": "Operations and Sales skills",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "1P6cTfxc1kU",
+            "mentionSummary": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 중 Operations를 Sales와 함께 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=1P6cTfxc1kU&t=372s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "anthropic-human-resources-plugin",
+      "slug": "anthropic-human-resources-plugin",
+      "type": "plugin",
+      "name": "Anthropic Human Resources",
+      "outcome": "채용 제안서, 온보딩 계획, 성과 평가 양식, 규정 안내와 인력 현황 보고 초안 만들기",
+      "categories": [
+        "문서·보고서"
+      ],
+      "audience": [
+        "인사 담당자",
+        "팀 관리자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Cowork",
+        "Claude Code"
+      ],
+      "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+      "officialSources": [
+        "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+        "https://github.com/anthropics/knowledge-work-plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/human-resources",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 인사 시스템·채용 시스템 등 연결 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (상위 저장소)",
+      "requirements": [],
+      "connectionModes": [],
+      "includedComponents": [
+        "/draft-offer, /onboarding, /performance-review, /policy-lookup, /comp-analysis, /people-report 명령",
+        "recruiting-pipeline, employee-handbook, compensation-benchmarking, org-planning, people-analytics, interview-prep 스킬",
+        "HRIS·ATS·보상 데이터·채팅·캘린더·메일 MCP 연결 구성(선택)"
+      ],
+      "relationships": {},
+      "caveats": [
+        "직원 개인정보를 다루므로 사내 보안·개인정보 기준과 연결 범위를 먼저 확인한다.",
+        "설정 예시(통화 USD, 미국식 복리후생 항목)는 국내 제도에 맞게 바꿔야 한다.",
+        "처우 제안서·규정 설명·보상 권고는 인사·법무 담당자의 검토 후 사용한다.",
+        "근거 영상 2개 모두 여러 플러그인을 함께 소개하는 영상의 한 구간이다."
+      ],
+      "starterPrompt": "/onboarding 다음 주 입사하는 홍보팀 신입 직원의 첫 주 일정과 준비물 체크리스트를 만들어줘. 우리 회사 규정에 없는 항목은 지어내지 말고 '확인 필요'로 표시해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=nA-_ANMtAU8",
+            "title": "Claude Just Got 13 New Superpowers… (Cowork Plugins)",
+            "channel": "Brock Mesarich | AI for Non Techies",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@BrockMesarich",
+            "publishedAt": "2026-02-25",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 Cowork 플러그인 시연 중 HR 플러그인 사용 예를 별도 항목으로 소개한다.",
+            "timestampSeconds": 465,
+            "timestampLabel": "HR Plugin in Action",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "nA-_ANMtAU8",
+            "mentionSummary": "설명란 챕터에서 Cowork 플러그인 시연 중 HR 플러그인 사용 예를 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=nA-_ANMtAU8&t=465s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=1P6cTfxc1kU",
+            "title": "Claude AI - Official Anthropic Plugins in CloudCowork",
+            "channel": "HardReset_Pro",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@hardreset_pro",
+            "publishedAt": "2026-05-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 중 HR을 Enterprise Search·Customer Support·Bio Research와 함께 소개한다.",
+            "timestampSeconds": 541,
+            "timestampLabel": "Enterprise Search, HR, Customer Support, Bio Research",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "1P6cTfxc1kU",
+            "mentionSummary": "설명란 챕터에서 Cowork의 Anthropic 공식 플러그인 중 HR을 Enterprise Search·Customer Support·Bio Research와 함께 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=1P6cTfxc1kU&t=541s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "hookify-plugin",
+      "slug": "hookify-plugin",
+      "type": "plugin",
+      "name": "Hookify",
+      "outcome": "AI 코딩 도구가 반복하는 실수나 위험 명령을 자연어 규칙으로 경고·차단하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "AI 코딩 환경을 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0 (플러그인 LICENSE 파일 기준. README 본문에는 MIT로 표기)",
+      "requirements": [
+        "README 기준 Python 3.7 이상"
+      ],
+      "connectionModes": [],
+      "includedComponents": [
+        "/hookify 규칙 생성 명령(인수 없이 실행하면 최근 대화에서 교정한 행동 분석)",
+        "/hookify:list, /hookify:configure, /hookify:help 명령",
+        "프로젝트 .claude/ 폴더의 hookify.<이름>.local.md 규칙 파일(warn·block 동작)"
+      ],
+      "relationships": {
+        "related": [
+          "security-guidance-plugin"
+        ]
+      },
+      "caveats": [
+        "규칙 파일은 플러그인 폴더가 아니라 프로젝트의 .claude/ 폴더에 있어야 동작한다.",
+        "stop 이벤트의 block 동작 설명이 README 안에서 일관되지 않아 사용 전 시험이 필요하다.",
+        "event: all이나 규칙을 많이 쓰면 hook이 느려질 수 있다고 README에 적혀 있다.",
+        "README와 LICENSE 파일의 라이선스 표기가 다르므로 사용 전 확인이 필요하다."
+      ],
+      "starterPrompt": "/hookify 운영 서버 설정 파일(config/prod)을 수정하려고 하면 작업을 막고 담당자 확인이 필요하다는 안내를 보여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=H_z8BhUJMHo",
+            "title": "Hookify for Claude Code: Turn Mistakes Into Enforced Rules",
+            "channel": "Kvint Labs",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@KvintVentures",
+            "publishedAt": "2026-08-07",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "설명란에서 Hookify 플러그인이 마크다운 hook 규칙을 쓰는 방식과 경고·차단 동작의 차이를 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "H_z8BhUJMHo",
+            "mentionSummary": "설명란에서 Hookify 플러그인이 마크다운 hook 규칙을 쓰는 방식과 경고·차단 동작의 차이를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=H_z8BhUJMHo",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=tSIFk3YDsQo",
+            "title": "Control Claude with Hooks & Hookify + UI Testing with Playwright | Mastering Claude | Part 4",
+            "channel": "Code With Sally",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@CodeWithSally",
+            "publishedAt": "2026-05-24",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란 챕터에서 자연어로 hook을 만드는 Hookify 플러그인과 규칙 저장 위치, 일반 hook과의 차이를 다룬다.",
+            "timestampSeconds": 1746,
+            "timestampLabel": "The Hookify Plugin: Custom Hooks Made Easy",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "tSIFk3YDsQo",
+            "mentionSummary": "설명란 챕터에서 자연어로 hook을 만드는 Hookify 플러그인과 규칙 저장 위치, 일반 hook과의 차이를 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=tSIFk3YDsQo&t=1746s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=Vf9YAhn1RyQ",
+            "title": "Claude Code Official Plugins: Stop Wasting Setup Time on the Wrong Tools!",
+            "channel": "DIY Smart Code",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@DIYSmartCode",
+            "publishedAt": "2026-03-05",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에 hookify 설치 명령과 공식 플러그인 경로를 적고 챕터에서 별도 항목으로 소개한다.",
+            "timestampSeconds": 396,
+            "timestampLabel": "Deep Dive — hookify: OS-Level Safety with Exit Code 2",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "Vf9YAhn1RyQ",
+            "mentionSummary": "설명란에 hookify 설치 명령과 공식 플러그인 경로를 적고 챕터에서 별도 항목으로 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Vf9YAhn1RyQ&t=396s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "commit-commands-plugin",
+      "slug": "commit-commands-plugin",
+      "type": "plugin",
+      "name": "Commit Commands",
+      "outcome": "변경 사항 커밋, 푸시, 풀 리퀘스트 생성과 오래된 브랜치 정리를 명령 하나로 처리하기",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "개발자",
+        "업무 도구 저장소를 관리하는 기술 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code"
+      ],
+      "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스에 등록된 플러그인이며 직접 실행한 환경은 아니다.",
+      "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands",
+      "officialSources": [
+        "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands",
+        "https://claude.com/plugins"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. 금액은 조사하지 않았다.",
+      "license": "Apache-2.0",
+      "requirements": [
+        "Git과 원격 저장소",
+        "/commit-push-pr 사용 시 인증된 GitHub CLI(gh)"
+      ],
+      "connectionModes": [],
+      "includedComponents": [
+        "/commit 커밋 메시지 자동 작성·커밋 명령",
+        "/commit-push-pr 커밋·푸시·PR 생성 명령",
+        "/clean_gone 원격에서 삭제된 로컬 브랜치 정리 명령"
+      ],
+      "relationships": {},
+      "caveats": [
+        "README는 푸시 전에 생성된 커밋 메시지와 변경 내용을 검토하라고 안내한다.",
+        "/commit-push-pr는 완료·테스트된 작업에 쓰도록 안내하며 main 브랜치에서는 새 브랜치를 만든다.",
+        "근거 영상 3개 모두 여러 플러그인을 함께 소개하는 영상이다."
+      ],
+      "starterPrompt": "/commit 이번에 고친 보고서 양식 생성 스크립트 변경 사항으로 커밋해줘. 커밋하기 전에 포함할 파일 목록과 메시지를 먼저 보여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=iOgOM6gXChw",
+            "title": "5 Claude Code Plugins You Should Install First",
+            "channel": "GritAI Studio",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@GritAIStudio",
+            "publishedAt": "2026-06-23",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란의 추천 플러그인 묶음 설치 명령에 commit-commands를 포함해 소개한다.",
+            "timestampSeconds": 385,
+            "timestampLabel": "Starter Pack - My Top 5",
+            "commercialContext": "설명란에 채널 운영자의 웹사이트와 커뮤니티 링크가 있다.",
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "iOgOM6gXChw",
+            "mentionSummary": "설명란의 추천 플러그인 묶음 설치 명령에 commit-commands를 포함해 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=iOgOM6gXChw&t=385s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=h-2AagAMXfQ",
+            "title": "Claude Code Plugins: Best Ones to Install + Build Your Own",
+            "channel": "Nyxo",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@Nyxo-space",
+            "publishedAt": "2026-11-07",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명란에서 첫 플러그인 설치 예시로 commit-commands 설치 명령을 적고 추천 플러그인 목록에 포함한다.",
+            "timestampSeconds": 45,
+            "timestampLabel": "2. Install your first plugin",
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "h-2AagAMXfQ",
+            "mentionSummary": "설명란에서 첫 플러그인 설치 예시로 commit-commands 설치 명령을 적고 추천 플러그인 목록에 포함한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=h-2AagAMXfQ&t=45s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=_3x8ecCaj64",
+            "title": "Claude Code Plugins: The Complete Guide (Skills, Agents, Hooks, MCP, LSP)",
+            "channel": "Hyperautomation Labs",
+            "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+            "channelUrl": "https://www.youtube.com/@hyperautomationlabs1045",
+            "publishedAt": "2026-03-09",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명란의 공식 마켓플레이스 개발 워크플로 플러그인 목록에 commit-commands를 포함해 소개한다.",
+            "timestampSeconds": null,
+            "timestampLabel": null,
+            "commercialContext": null,
+            "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+            "videoId": "_3x8ecCaj64",
+            "mentionSummary": "설명란의 공식 마켓플레이스 개발 워크플로 플러그인 목록에 commit-commands를 포함해 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=_3x8ecCaj64",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Anthropic Product Management (knowledge-work-plugins)",
+      "reason": "공식 저장소는 확인했으나 명시 영상이 HardReset_Pro의 공식 플러그인 개관 챕터 1개뿐이다. AI Product University 영상은 스스로 AI 생성 개념 소개라고 밝혀 시연 근거로 쓰지 않았고, Cowork Academy 영상은 별도 유료 PM 패키지를 다룬다."
+    },
+    {
+      "name": "Anthropic Customer Support (knowledge-work-plugins)",
+      "reason": "HardReset_Pro 개관 챕터와 Trust Insights 전사의 플러그인 이름 나열 외에 이 플러그인을 직접 소개한 두 번째 채널을 찾지 못했다."
+    },
+    {
+      "name": "Anthropic Enterprise Search (knowledge-work-plugins)",
+      "reason": "영상 대부분이 Claude의 Enterprise Search 기능 자체를 다루며, 플러그인을 명시한 근거는 HardReset_Pro 개관 챕터 1개뿐이다."
+    },
+    {
+      "name": "Code Review (claude-plugins-official)",
+      "reason": "검색된 영상 대부분이 2026년 3월 공개된 관리형 Code Review(GitHub 리뷰 서비스)를 다뤄 /code-review 플러그인과 구분되지 않는다. 플러그인을 명시한 채널은 クロノITチャンネル과 Nyxo 목록 언급뿐이라 보류했다."
+    },
+    {
+      "name": "Feature Dev (claude-plugins-official)",
+      "reason": "공식 README는 확인했으나 이 플러그인을 명시한 영상은 Nyxo 설명란의 추천 목록 1건뿐이다."
+    },
+    {
+      "name": "Claude Code Setup (claude-plugins-official)",
+      "reason": "DIY Smart Code 영상 1개 외에 명시 채널을 확인하지 못했다."
+    },
+    {
+      "name": "Figma 플러그인(Claude Code)",
+      "reason": "Tech With Tim 영상 1개만 claude.com/plugins/figma를 명시했고, 나머지 영상은 Figma MCP나 Figma 앱 쪽 플러그인을 다뤄 같은 도구로 셀 수 없다."
+    },
+    {
+      "name": "Graphify",
+      "reason": "영상은 많지만 공식 README 기준 PyPI CLI(graphifyy)와 스킬 등록 방식이며 플러그인 마켓플레이스 배포가 아니어서 플러그인 유형에서 제외했다."
+    },
+    {
+      "name": "GSD (Get Shit Done)",
+      "reason": "원 저장소가 2026-06-26 보관 처리되어 GSD Core로 이전됐고, 확인한 README에서 플러그인 배포 방식을 확인하지 못했다."
+    },
+    {
+      "name": "OpenAI Codex 플러그인 디렉터리 개별 플러그인",
+      "reason": "공식 디렉터리 항목이 대부분 GitHub·Slack·Notion 등 서비스 연결이라 MCP와 겹치며, 특정 Codex 플러그인을 두 채널 이상에서 명시한 영상을 찾지 못했다."
+    },
+    {
+      "name": "Brand Voice (knowledge-work-plugins partner-built)",
+      "reason": "플러그인을 명시한 YouTube 영상을 찾지 못했다."
+    },
+    {
+      "name": "Cowork Plugin Management (knowledge-work-plugins)",
+      "reason": "README를 확인하지 못했고, 직접 플러그인 만들기 영상들은 이 플러그인 이름을 명시하지 않았다."
+    },
+    {
+      "name": "AI Analyst Plus (ai-analyst-lab)",
+      "reason": "제작자 채널(AI Analyst Lab) 영상 1개만 확인했다."
+    }
+  ],
+  "leadReview": "2026-11-14 리드 검토: 기록별 영상 표본 oEmbed 대조, 엄격 채널 집계로 internal-comms·sentry-mcp 제외."
+}

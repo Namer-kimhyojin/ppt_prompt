@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-doc-coauthoring",
+  "slug": "anthropic-doc-coauthoring",
+  "type": "skill",
+  "name": "Doc Co-Authoring (Anthropic)",
+  "outcome": "기획서·제안서·결정 문서를 맥락 정리→초안→독자 관점 점검 순서로 함께 쓰기",
+  "categories": [
+    "문서·보고서",
+    "발표·제안서"
+  ],
+  "audience": [
+    "기획서·제안서 작성자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/doc-coauthoring/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+    "directDownloadUrl": null
+  },
+  "costNotes": "2026-11-14 확인 시 스킬 폴더에 별도 LICENSE.txt가 없었다. 저장소 README는 많은 스킬이 Apache 2.0이라고만 안내하므로 재사용 전 라이선스 확인이 필요하다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills"
+    ],
+    "related": [
+      "anthropic-docx"
+    ],
+    "distributionNote": "example-skills 묶음에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "파일을 바로 만들어 주는 스킬이 아니라 문서 작성 절차를 안내하는 스킬이다. Word 파일이 필요하면 DOCX 스킬과 함께 쓴다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "신규 사업 제안서를 같이 쓰자. 먼저 독자와 목적, 꼭 들어갈 내용을 질문으로 정리하고 목차 초안을 제안해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "K4zsTK2lsp4",
+        "url": "https://www.youtube.com/watch?v=K4zsTK2lsp4",
+        "title": "Claude Skills Explained: The Most Important Skills + Build Your Own (Full Guide)",
+        "channel": "Talal Awad",
+        "publishedAt": "2026-10-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "중요 스킬 목록 3번으로 Doc co-authoring을 챕터에 명시한다.",
+        "timestampSeconds": 277,
+        "timestampLabel": "#3 Doc co-authoring",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=K4zsTK2lsp4&t=277s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Je7IIfFHoBw",
+        "url": "https://www.youtube.com/watch?v=Je7IIfFHoBw",
+        "title": "10 Free Claude Skills Worth Turning On",
+        "channel": "The Tech Space",
+        "publishedAt": "2026-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명의 추천 목록에 doc-coauthoring을(를) 명시하고 Anthropic 공식 스킬 모음에서 켜는 방법을 다룬다.",
+        "timestampSeconds": 105,
+        "timestampLabel": "Write better, faster",
+        "commercialContext": "설명에 Anthropic과 제휴하지 않은 독립 채널이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Je7IIfFHoBw&t=105s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 Doc Co-Authoring을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

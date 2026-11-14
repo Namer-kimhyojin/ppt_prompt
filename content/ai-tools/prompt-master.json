@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "id": "prompt-master",
+  "slug": "prompt-master",
+  "type": "skill",
+  "name": "Prompt Master",
+  "outcome": "대충 적은 요청을 ChatGPT·Midjourney 등 사용할 AI 도구에 맞는 구조화된 프롬프트로 바꾸기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "여러 AI 도구를 쓰는 실무자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 README는 Claude.ai 스킬 업로드를 권장 경로로 안내하고, Claude Code 복제 설치는 권장하지 않는다(Not Suggested)고 표시한다.",
+  "officialUrl": "https://github.com/nidhinjs/prompt-master",
+  "officialSources": [
+    "https://github.com/nidhinjs/prompt-master"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/nidhinjs/prompt-master",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [],
+    "distributionNote": "단일 스킬 저장소다."
+  },
+  "caveats": [
+    "README의 토큰 절약 표현은 측정 결과가 아니라 설계 목표로 본다.",
+    "README에 나열된 도구·모델 이름과 지원 개수는 시점마다 달라 고정해 안내하지 않는다.",
+    "한국어 근거 영상 두 개는 제목과 소개 스킬 구성이 거의 같아 독립적으로 선정한 근거인지 확인할 수 없다."
+  ],
+  "starterPrompt": "이번 분기 실적을 요약하는 카드뉴스 이미지를 만들고 싶어. 이미지 생성 AI에 넣을 프롬프트로 바꿔주고, 빠진 정보가 있으면 먼저 질문해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "fJRmL7I_lp4",
+        "url": "https://www.youtube.com/watch?v=fJRmL7I_lp4",
+        "title": "클로드 쓴다면 이 스킬 3개는 무조건 설치하세요 (비개발자용)",
+        "channel": "유튜브신쌤",
+        "publishedAt": "2026-08-30",
+        "language": "ko",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 nidhinjs/prompt-master 링크를 명시하고 추천 스킬 세 번째로 프롬프트 대신 쓰기를 다룬다.",
+        "timestampSeconds": 275,
+        "timestampLabel": "세 번째 — 프롬프트를 대신 써주는 프롬프트 마스터",
+        "commercialContext": "설명에 채널 운영자의 강의·출강 문의 안내가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=fJRmL7I_lp4&t=275s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "vYpSDXs6Tdw",
+        "url": "https://www.youtube.com/watch?v=vYpSDXs6Tdw",
+        "title": "클로드 쓴다면 이 스킬 3개는 무조건 설치하세요 (비개발자용·무료 자료 제공)",
+        "channel": "에브리 ai │ 자동화 • AI 에이전트 • 비즈니스",
+        "publishedAt": "2026-10-11",
+        "language": "ko",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 nidhinjs/prompt-master 링크를 명시하고 한 줄 요청을 항목별 프롬프트로 바꾸는 스킬로 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "영상 속 요청문 자료를 구독·좋아요 조건으로 채널 자체 사이트에서 배포한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=vYpSDXs6Tdw",
+        "withinPreferredWindow": true,
+        "channelRelationNote": "'유튜브신쌤'의 2026-08-30 영상과 제목·소개 스킬 3종·링크가 거의 같다. 서로 다른 채널이지만 독립적으로 선정한 근거인지는 확인할 수 없다."
+      },
+      {
+        "videoId": "LCh85j4cm5A",
+        "url": "https://www.youtube.com/watch?v=LCh85j4cm5A",
+        "title": "Prompt Master Explained: Is It Right for You? (Claude Skill, Fit Check)",
+        "channel": "Tech On Cue",
+        "publishedAt": "2026-11-12",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 Prompt Master의 기능, Claude.ai·Claude Code 추가 방법, 한계를 정리한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=LCh85j4cm5A",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "WirH-s8XJQ4",
+        "url": "https://www.youtube.com/watch?v=WirH-s8XJQ4",
+        "title": "【AIキーワード解説】prompt-masterとは？AIツール別にプロンプトを書くClaudeのスキル",
+        "channel": "シンオン株式会社 (Synon,Inc) 公式",
+        "publishedAt": "2026-11-09",
+        "language": "ja",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 nidhinjs/prompt-master를 출처로 명시하고 도구별 프롬프트 작성 기능과 시작 방법을 해설한다.",
+        "timestampSeconds": 30,
+        "timestampLabel": "3行でわかるprompt-master",
+        "commercialContext": "기업 공식 채널이다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=WirH-s8XJQ4&t=30s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

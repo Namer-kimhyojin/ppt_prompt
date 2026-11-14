@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "id": "granola-mcp",
+  "slug": "granola-mcp",
+  "type": "mcp",
+  "name": "Granola MCP",
+  "outcome": "Granola 회의 노트를 AI 대화에서 검색하고 결정사항·후속 업무를 정리한다.",
+  "categories": [
+    "문서·보고서",
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "회의가 많은 기획·영업·관리 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "ChatGPT",
+    "Claude Code 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "Granola 공식 도움말의 연결 방법을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://docs.granola.ai/help-center/sharing/integrations/mcp",
+  "officialSources": [
+    "https://docs.granola.ai/help-center/sharing/integrations/mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://docs.granola.ai/help-center/sharing/integrations/mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서 기준 무료(Basic) 플랜은 최근 30일 노트만 읽을 수 있고, 전사본 조회와 쓰기 도구는 유료 플랜에서 제공된다.",
+  "license": null,
+  "requirements": [
+    "Granola 계정",
+    "Streamable HTTP와 OAuth 2.0을 지원하는 MCP 클라이언트"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "데스크톱 앱 로컬 자료를 읽는 커뮤니티 Granola MCP 서버들과 다른 공식 원격 서버(mcp.granola.ai/mcp) 항목이다.",
+    "MCP는 현재 활성 워크스페이스의 노트만 조회한다.",
+    "대표 영상 중 하나에 제휴 링크가 포함되어 있다."
+  ],
+  "starterPrompt": "지난주 회의 노트에서 결정된 사항과 담당자별 후속 업무를 찾아 표로 정리해줘. 각 항목에 회의 이름과 날짜를 붙여줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=wNnIEun8iiM",
+        "title": "Granola + Claude: Automate Meeting Notes",
+        "channel": "Jonathan Lewell",
+        "publishedAt": "2026-05-05",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 Claude Code에 Granola MCP를 설치·인증하고 회의 노트를 가져오는 과정을 시연한다.",
+        "timestampSeconds": 90,
+        "timestampLabel": "Running Setup Command",
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "wNnIEun8iiM",
+        "mentionSummary": "설명과 챕터에서 Claude Code에 Granola MCP를 설치·인증하고 회의 노트를 가져오는 과정을 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=wNnIEun8iiM&t=90s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=QWd_wyhsfM0",
+        "title": "Claude MCP Tutorial: Granola Meeting Notes in 90 Seconds",
+        "channel": "Darby Rollins | Gen AI University",
+        "publishedAt": "2026-03-03",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "제목과 설명에서 Claude 커넥터에 Granola를 추가하고 노트를 바로 불러오는 MCP 연결을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "제작자의 교육 커뮤니티·행사 홍보 링크가 포함되어 있음.",
+        "videoId": "QWd_wyhsfM0",
+        "mentionSummary": "제목과 설명에서 Claude 커넥터에 Granola를 추가하고 노트를 바로 불러오는 MCP 연결을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=QWd_wyhsfM0",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=WI38ZgCyRRU",
+        "title": "Granola App MCP Tutorial: Connect Notes to Claude (Full Tutorial)",
+        "channel": "Automation Stack",
+        "publishedAt": "2026-09-04",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터에서 Granola MCP 엔드포인트를 Claude·ChatGPT에 연결하고 노트 조회와 기록 기간 제한을 확인한다.",
+        "timestampSeconds": 26,
+        "timestampLabel": "Find Granola MCP settings",
+        "commercialContext": "제휴 링크가 포함될 수 있다고 설명에 공개함.",
+        "videoId": "WI38ZgCyRRU",
+        "mentionSummary": "설명과 챕터에서 Granola MCP 엔드포인트를 Claude·ChatGPT에 연결하고 노트 조회와 기록 기간 제한을 확인한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=WI38ZgCyRRU&t=26s",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

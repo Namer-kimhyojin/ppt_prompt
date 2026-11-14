@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-sales-plugin",
+  "slug": "anthropic-sales-plugin",
+  "type": "plugin",
+  "name": "Anthropic Sales",
+  "outcome": "고객 미팅 준비, 통화 후속 메일, 영업 파이프라인 점검과 주간 실적 정리하기",
+  "categories": [
+    "반복업무·서비스 연결",
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "영업 담당자",
+    "고객 관리 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Cowork",
+    "Claude Code"
+  ],
+  "platformEvidence": "제작자 README에 기재된 지원 환경이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+  "officialSources": [
+    "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+    "https://github.com/anthropics/knowledge-work-plugins"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/knowledge-work-plugins/tree/main/sales",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건과 CRM·통화 기록·데이터 보강 서비스의 계정·요금 조건 확인이 필요하다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0 (상위 저장소)",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "setup, daily-briefing, call-prep, call-summary, draft-outreach, pipeline-review, forecast, account-research 등 영업 스킬",
+    "CRM·메일·캘린더·통화 기록·데이터 보강·채팅 MCP 연결 구성"
+  ],
+  "relationships": {},
+  "caveats": [
+    "README 기준으로 CRM 기록이나 발송은 사용자가 확인한 뒤에 진행한다.",
+    "연결 서비스가 없으면 붙여넣은 메모·업로드 파일·웹 검색을 바탕으로 작업하고 확인하지 못한 범위를 알린다.",
+    "Salesforce와 Microsoft 365 연결은 조직 관리자가 먼저 활성화해야 한다.",
+    "README에 일부 스킬 이름과 동작이 바뀌었다고 적혀 있어 영상 시점의 명령과 다를 수 있다."
+  ],
+  "starterPrompt": "어제 고객 미팅 메모를 바탕으로 후속 메일 초안, 내부 공유용 요약, 다음 단계와 기한을 정리해줘. 메모에 없는 약속이나 금액은 쓰지 말아줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 1,
+    "undatedVideoCount": 1,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": true,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=rxInH0bQdG8",
+        "title": "How to Use Claude Cowork Plugins (Step-by-Step Tutorial)",
+        "channel": "Ryan & Matt Data Science",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@RyanAndMattDataScience",
+        "publishedAt": "2026-03-03",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란 챕터에서 Sales 플러그인 설치 시연과 회사 정보 맞춤 설정을 별도 항목으로 소개한다.",
+        "timestampSeconds": 276,
+        "timestampLabel": "Installing a plugin (Sales plugin demo)",
+        "commercialContext": "설명란에 채널 운영자의 자동화 컨설팅과 커뮤니티 홍보 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "rxInH0bQdG8",
+        "mentionSummary": "설명란 챕터에서 Sales 플러그인 설치 시연과 회사 정보 맞춤 설정을 별도 항목으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=rxInH0bQdG8&t=276s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=oPz0ZYE_A5A",
+        "title": "So What? What Plug-ins are Available for Claude Cowork",
+        "channel": "Trust Insights",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@TrustInsights",
+        "publishedAt": null,
+        "publisherPagePublishedAt": "2026-02-06",
+        "language": "en",
+        "evidenceLevel": "publisher_transcript_and_youtube_oembed",
+        "evidenceUrl": "https://www.trustinsights.ai/blog/2026/02/so-what-plug-ins-for-claude-cowork/",
+        "mention": "제작자 공개 전사에서 Sales 플러그인의 통화 요약·매출 전망·파이프라인 검토 기능을 언급한다.",
+        "timestampSeconds": 443,
+        "timestampLabel": "전사 화자 구간 머리글 기준 근사값",
+        "commercialContext": null,
+        "metadataVerification": "제작자 페이지의 원본 영상 링크와 YouTube oEmbed로 제목·채널 확인",
+        "limitations": "AI 생성 전사이며 타임스탬프는 화자 구간 머리글 기준 근사값이다. 기능 설명은 공식 README로 교차 확인했다.",
+        "videoId": "oPz0ZYE_A5A",
+        "mentionSummary": "제작자 공개 전사에서 Sales 플러그인의 통화 요약·매출 전망·파이프라인 검토 기능을 언급한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=oPz0ZYE_A5A&t=443s",
+        "withinPreferredWindow": false
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

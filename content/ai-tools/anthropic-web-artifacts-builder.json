@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-web-artifacts-builder",
+  "slug": "anthropic-web-artifacts-builder",
+  "type": "skill",
+  "name": "Web Artifacts Builder (Anthropic)",
+  "outcome": "여러 화면·상태 관리가 필요한 Claude 아티팩트(웹 도구)를 React·Tailwind로 만들기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "업무용 웹 도구 제작자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/web-artifacts-builder/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills"
+    ],
+    "related": [
+      "anthropic-frontend-design",
+      "anthropic-webapp-testing"
+    ],
+    "distributionNote": "example-skills 묶음에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "SKILL.md는 단순한 단일 HTML·JSX 아티팩트에는 쓰지 말라고 안내한다.",
+    "결과가 그럴듯해 보여도 코드 품질·접근성·동작은 별도 검토가 필요하다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "팀 휴가 신청 현황을 입력하고 월별로 볼 수 있는 간단한 웹 도구를 아티팩트로 만들어줘. 입력, 목록, 달력 보기 세 화면으로 나눠줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "IsSbuWXM2HI",
+        "url": "https://www.youtube.com/watch?v=IsSbuWXM2HI",
+        "title": "Claude Skills Explained: Web Artifacts Builder | Instructions vs. Real Coding Judgment",
+        "channel": "humanitarians ai",
+        "publishedAt": "2026-11-03",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "제목과 설명에서 web-artifacts-builder 스킬을 단독 주제로 다루며 구조화된 작업 흐름과 검토 필요성을 설명한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "채널이 설명에서 AI 생성 교육 콘텐츠라고 표기한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=IsSbuWXM2HI",
+        "withinPreferredWindow": true,
+        "channelRelationNote": "설명의 코드 링크가 github.com/nikbearbrown 계정을 가리킨다. 'Nik Bear Brown' 채널과 운영 주체가 연관되었을 수 있다."
+      },
+      {
+        "videoId": "K4zsTK2lsp4",
+        "url": "https://www.youtube.com/watch?v=K4zsTK2lsp4",
+        "title": "Claude Skills Explained: The Most Important Skills + Build Your Own (Full Guide)",
+        "channel": "Talal Awad",
+        "publishedAt": "2026-10-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "중요 스킬 목록 5번으로 Web artifacts builder를 챕터에 명시한다.",
+        "timestampSeconds": 316,
+        "timestampLabel": "#5 Web artifacts builder",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=K4zsTK2lsp4&t=316s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 Web Artifacts Builder을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

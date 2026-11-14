@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-financial-services-plugins",
+  "slug": "claude-financial-services-plugins",
+  "type": "plugin",
+  "name": "Claude for Financial Services",
+  "outcome": "재무 모델, 비교 기업 분석, 실적 요약과 투자 검토 자료 초안 만들기",
+  "categories": [
+    "엑셀·데이터",
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "재무·투자 분석 담당자",
+    "회계·자금 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Cowork",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소 README에 Cowork와 Claude Code 설치 방법이 기재돼 있으며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/financial-services",
+  "officialSources": [
+    "https://github.com/anthropics/financial-services",
+    "https://github.com/anthropics/financial-services-plugins",
+    "https://claude.com/blog/cowork-plugins-finance"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/financial-services",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건 확인이 필요하다. README에 따르면 일부 금융 데이터 커넥터는 제공사 구독이나 API 키가 필요하다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "financial-analysis 핵심 플러그인: 비교 기업 분석, DCF·LBO·3대 재무제표 모델, 엑셀 수식 점검, 경쟁 분석, PPT 템플릿 스킬",
+    "투자은행·주식 리서치·사모펀드·펀드 행정·운영·자산관리 상담용 추가 플러그인",
+    "LSEG·S&P Global 파트너 플러그인과 실적 검토·시장 조사 등 이름 붙은 에이전트 플러그인",
+    "금융 데이터·문서 저장소 MCP 연결 구성"
+  ],
+  "relationships": {},
+  "caveats": [
+    "README에 투자·법률·세무·회계 자문이 아니며 모든 결과는 자격 있는 전문가의 확인을 거쳐야 한다고 명시돼 있다.",
+    "공식 저장소 이름이 financial-services-plugins에서 financial-services로 바뀌어 영상 속 링크와 다를 수 있다.",
+    "근거 영상은 개인 투자자의 주식 분석 활용 중심이며, 이 영상들을 투자 판단 근거로 쓰지 않는다.",
+    "핵심 플러그인(financial-analysis)을 먼저 설치하라고 안내한다."
+  ],
+  "starterPrompt": "첨부한 경쟁사 3곳의 사업보고서 수치로 매출·영업이익률 비교표를 엑셀로 만들고 수치마다 출처 페이지를 적어줘. 추정한 값은 별도 열로 구분해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=hq4BkBr2CsE",
+        "title": "Analyze Stocks with Claude's Finance Plugins (full install)",
+        "channel": "Professor Cubs",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@ProfessorCubs",
+        "publishedAt": "2026-06-01",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 공식 금융 플러그인 저장소를 링크하고 GitHub 설치와 시장 조사·실적 분석 플러그인 시연을 챕터로 소개한다.",
+        "timestampSeconds": 50,
+        "timestampLabel": "Installing plugins",
+        "commercialContext": "설명란에 제휴 링크가 포함될 수 있다는 고지가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "hq4BkBr2CsE",
+        "mentionSummary": "설명란에서 공식 금융 플러그인 저장소를 링크하고 GitHub 설치와 시장 조사·실적 분석 플러그인 시연을 챕터로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=hq4BkBr2CsE&t=50s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=fcQPTX8TbQY",
+        "title": "How AI Just Changed Stock Picking - Claude's New Finance Plugins",
+        "channel": "Raph",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@valuebyraph",
+        "publishedAt": "2026-05-08",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 Anthropic 금융 플러그인 마켓플레이스와 Earnings Reviewer·Market Researcher·Financial Analysis 등을 개인 투자 관점으로 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명란에 채널 운영자 웹사이트의 가이드 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "fcQPTX8TbQY",
+        "mentionSummary": "설명란에서 Anthropic 금융 플러그인 마켓플레이스와 Earnings Reviewer·Market Researcher·Financial Analysis 등을 개인 투자 관점으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=fcQPTX8TbQY",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

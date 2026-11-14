@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "id": "vercel-find-skills",
+  "slug": "vercel-find-skills",
+  "type": "skill",
+  "name": "find-skills (Vercel)",
+  "outcome": "하려는 업무를 말하면 맞는 공개 스킬 후보를 찾아 보여주고 설치를 돕기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "AI 업무 환경 관리자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "vercel-labs/skills 저장소의 스킬이며 npx skills CLI로 여러 에이전트에 설치한다. 영상(AI Dev Minute)은 Claude Code 설치 위치를 ~/.claude/skills로 안내한다.",
+  "officialUrl": "https://github.com/vercel-labs/skills/tree/main/skills/find-skills",
+  "officialSources": [
+    "https://github.com/vercel-labs/skills/tree/main/skills/find-skills",
+    "https://github.com/vercel-labs/skills",
+    "https://skills.sh"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/vercel-labs/skills/tree/main/skills/find-skills",
+    "directDownloadUrl": null
+  },
+  "costNotes": "vercel-labs/skills 저장소 라이선스는 MIT다. 찾은 스킬마다 라이선스·요금 조건이 다르다.",
+  "license": null,
+  "requirements": [
+    "Node.js(npx skills CLI, 영상 AI Dev Minute 기준 22.20 이상)"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-skill-creator"
+    ],
+    "distributionNote": "skills.sh 등록부와 npx skills CLI를 쓰는 탐색용 스킬이다."
+  },
+  "caveats": [
+    "남이 만든 스킬 설치는 그 지시문과 스크립트를 에이전트에 맡기는 일이다. 영상(ELD)도 출처·본문·보안 점검을 먼저 하라고 안내한다.",
+    "설치 수 순위는 품질 검증 결과가 아니다."
+  ],
+  "starterPrompt": "엑셀 월간 보고서를 자동으로 정리할 수 있는 스킬이 있는지 찾아줘. 후보별 제작자, 설치 수, 라이선스를 비교하고 설치는 내가 고른 뒤에 해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "5b6fN1Rq8Hg",
+        "url": "https://www.youtube.com/watch?v=5b6fN1Rq8Hg",
+        "title": "find-skills: The Most Installed Claude Code Skill (3.9M Installs)",
+        "channel": "AI Dev Minute",
+        "publishedAt": "2026-10-20",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 find-skills의 동작 순서와 vercel-labs/skills 설치 명령을 명시한다.",
+        "timestampSeconds": 15,
+        "timestampLabel": "Install: one command",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=5b6fN1Rq8Hg&t=15s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "I8f_tHBzb88",
+        "url": "https://www.youtube.com/watch?v=I8f_tHBzb88",
+        "title": "find-skills — 말하면 맞는 에이전트 스킬을 찾아 주는 스킬, 설치 전에 볼 것까지",
+        "channel": "ELD",
+        "publishedAt": "2026-11-09",
+        "language": "ko",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 vercel-labs/skills의 find-skills를 원 출처로 정리하고 엑셀 보고서 스킬 찾기 예시와 설치 전 점검 사항을 다룬다.",
+        "timestampSeconds": 39,
+        "timestampLabel": "find-skills 는 무엇 — npx skills · skills.sh",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=I8f_tHBzb88&t=39s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "QV-bnv9o5HY",
+        "url": "https://www.youtube.com/watch?v=QV-bnv9o5HY",
+        "title": "Turn Claude into a Self-Improving MACHINE with \"Find Skills\" upgrade",
+        "channel": "James McAulay",
+        "publishedAt": "2026-07-08",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 Vercel이 만든 메타 스킬 find-skills를 Claude Cowork·Code에서 쓰는 방법을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 운영자의 자체 스킬 모음 페이지 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=QV-bnv9o5HY",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "4_L-QYtWep4",
+        "url": "https://www.youtube.com/watch?v=4_L-QYtWep4",
+        "title": "Stop Hunting for Agent Skills Manually: Meet find-skills",
+        "channel": "NextGen AI",
+        "publishedAt": "2026-08-29",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 find-skills 설치 명령과 스킬 검색·설치 흐름을 명시한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=4_L-QYtWep4",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

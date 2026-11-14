@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "id": "planning-with-files",
+  "slug": "planning-with-files",
+  "type": "skill",
+  "name": "Planning with Files",
+  "outcome": "긴 작업의 계획·조사 내용·진행 상황을 파일 세 개로 남겨 대화가 초기화돼도 이어서 작업하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "장시간 AI 작업 운영자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor"
+  ],
+  "platformEvidence": "공식 README가 npx skills 설치와 IDE별 설치 안내(Claude Code는 플러그인·SKILL.md·훅)를 제공한다.",
+  "officialUrl": "https://github.com/OthmanAdi/planning-with-files",
+  "officialSources": [
+    "https://github.com/OthmanAdi/planning-with-files",
+    "https://planningwithfiles.tech/"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/OthmanAdi/planning-with-files",
+    "directDownloadUrl": null
+  },
+  "costNotes": "저장소 라이선스는 MIT다. 실행 AI 서비스 요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "superpowers-plugin",
+      "claude-mem-plugin"
+    ],
+    "distributionNote": "영어 외 언어 변형 스킬도 같은 저장소에서 배포된다."
+  },
+  "caveats": [
+    "작업 계획을 파일로 유지하는 도구이며 장기 기억(메모리) 도구가 아니라고 영상(Tech On Cue)이 구분한다.",
+    "훅이 매 턴 계획 파일을 문맥에 넣으므로 사용량이 늘 수 있다."
+  ],
+  "starterPrompt": "이번 주 경쟁사 자료 조사를 계획 파일로 관리해줘. 할 일, 찾은 내용, 진행 상황을 각각 파일에 정리하고 단계가 끝날 때마다 갱신해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "제작자 저장소에서 스킬 존재와 설치 경로를 확인하고, 해당 스킬 이름 또는 저장소를 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "tnzHA4W5IKU",
+        "url": "https://www.youtube.com/watch?v=tnzHA4W5IKU",
+        "title": "Planning with Files Explained: Is It Right for You? (Plans That Survive /clear, Fit Check)",
+        "channel": "Tech On Cue",
+        "publishedAt": "2026-11-11",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 Planning with Files의 세 파일 구조, 훅, 적합 대상과 한계를 정리한다.",
+        "timestampSeconds": 18,
+        "timestampLabel": "What it is",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=tnzHA4W5IKU&t=18s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Vg2ypKmtK8M",
+        "url": "https://www.youtube.com/watch?v=Vg2ypKmtK8M",
+        "title": "This Skill Gives OpenCode a Manus Brain",
+        "channel": "Brandon Melville",
+        "publishedAt": "2026-05-01",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_with_search_snippet",
+        "mentionSummary": "설명에서 Planning with Files를 OpenCode용 계획·기억 보조 스킬로 소개하고 저장소를 링크한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 유료 커뮤니티 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Vg2ypKmtK8M",
+        "withinPreferredWindow": true,
+        "metadataCaveat": "저장소 링크(github.com/othmanadi/planning-with-files)는 YouTube 검색 결과 설명 발췌에서 확인했다."
+      },
+      {
+        "videoId": "EaatL5NsFYs",
+        "url": "https://www.youtube.com/watch?v=EaatL5NsFYs",
+        "title": "The $2 Billion AI Planning Method That Turns Claude Code Into a Senior Project Manager",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-19",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에서 Planning with Files 스킬과 OthmanAdi 저장소를 명시한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 자료 폴더 링크가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=EaatL5NsFYs",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

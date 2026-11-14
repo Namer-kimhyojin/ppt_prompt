@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-canvas-design",
+  "slug": "anthropic-canvas-design",
+  "type": "skill",
+  "name": "Canvas Design (Anthropic)",
+  "outcome": "포스터·안내 이미지 같은 정적 시각물을 PNG·PDF로 만들기",
+  "categories": [
+    "홍보·디자인"
+  ],
+  "audience": [
+    "홍보물 제작 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/canvas-design/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills"
+    ],
+    "related": [
+      "anthropic-brand-guidelines",
+      "anthropic-theme-factory"
+    ],
+    "distributionNote": "example-skills 묶음에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "SKILL.md는 기존 작가 작품을 모방하지 않는 독자 디자인을 만들도록 안내한다. 사진 합성·실사 이미지 생성 도구가 아니다.",
+    "한글 글꼴 표시 여부는 실행 환경의 글꼴 설치에 따라 달라질 수 있다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "사내 세미나 안내 포스터를 A4 세로 PDF로 만들어줘. 제목, 일시, 장소, 신청 방법이 한눈에 보이게 해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "uniqueVideoCount": 6,
+    "uniqueChannelCount": 5,
+    "confirmedPreferredWindowChannelCount": 5,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "Iup1WlUyj9M",
+        "url": "https://www.youtube.com/watch?v=Iup1WlUyj9M",
+        "title": "How to Use Claude Skills as a Designer",
+        "channel": "Griffin Wooldridge",
+        "publishedAt": "2026-03-09",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "디자이너용 추천 스킬로 Canvas Design을 명시하고 챕터에서 따로 다룬다.",
+        "timestampSeconds": 336,
+        "timestampLabel": "Canvas Design",
+        "commercialContext": "설명에 Mobbin·Claude·Framer 등 제휴(affiliate) 링크가 있다고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Iup1WlUyj9M&t=336s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "mTkW6RO8moM",
+        "url": "https://www.youtube.com/watch?v=mTkW6RO8moM",
+        "title": "The Best Claude Skills for Brand and Marketing Design",
+        "channel": "Griffin Wooldridge",
+        "publishedAt": "2026-11-04",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description",
+        "mentionSummary": "설명에 Anthropic Canvas Design 저장소 링크를 명시하고 스킬 사용 전후 비교를 보여준다고 안내한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "Photoroom 광고(#ad)와 제휴 링크가 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=mTkW6RO8moM",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Je7IIfFHoBw",
+        "url": "https://www.youtube.com/watch?v=Je7IIfFHoBw",
+        "title": "10 Free Claude Skills Worth Turning On",
+        "channel": "The Tech Space",
+        "publishedAt": "2026-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명의 추천 목록에 canvas-design을(를) 명시하고 Anthropic 공식 스킬 모음에서 켜는 방법을 다룬다.",
+        "timestampSeconds": 46,
+        "timestampLabel": "Make things look good",
+        "commercialContext": "설명에 Anthropic과 제휴하지 않은 독립 채널이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Je7IIfFHoBw&t=46s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "i8v9e8hzH88",
+        "url": "https://www.youtube.com/watch?v=i8v9e8hzH88",
+        "title": "6 Claude Skills Worth Using, and What You Actually Get",
+        "channel": "Latest Build",
+        "publishedAt": "2026-11-01",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명과 챕터에서 쓸 만한 스킬 6개 중 하나로 Canvas design을(를) 명시하고 결과물을 보여준다.",
+        "timestampSeconds": 60,
+        "timestampLabel": "3. Canvas design",
+        "commercialContext": "설명에 선정이 벤치마크나 순위가 아니라 편의·결과 기준이라고 표기되어 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=i8v9e8hzH88&t=60s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "Kts-JWEBGeY",
+        "url": "https://www.youtube.com/watch?v=Kts-JWEBGeY",
+        "title": "Claude Code Creative Skills Tested: Four of Five Work, Documents Don't",
+        "channel": "SkipCI",
+        "publishedAt": "2026-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명에서 Anthropic의 algorithmic-art와 canvas-design 스킬을 공개 저장소 기준으로 시험한 결과를 다룬다.",
+        "timestampSeconds": 149,
+        "timestampLabel": "Generative art and posters",
+        "commercialContext": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=Kts-JWEBGeY&t=149s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 Canvas Design을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

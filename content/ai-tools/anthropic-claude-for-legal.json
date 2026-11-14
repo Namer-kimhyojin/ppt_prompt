@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-claude-for-legal",
+  "slug": "anthropic-claude-for-legal",
+  "type": "plugin",
+  "name": "Claude for Legal",
+  "outcome": "업무 분야별 법무 플러그인으로 계약·개인정보·노무·지식재산 검토 초안 준비하기",
+  "categories": [
+    "문서·보고서",
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "법무팀",
+    "법률사무소 실무자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Cowork",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소 README에 Cowork와 Claude Code 설치 방법이 기재돼 있으며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/claude-for-legal",
+  "officialSources": [
+    "https://github.com/anthropics/claude-for-legal",
+    "https://claude.com/resources/articles/claude-for-the-legal-industry"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/claude-for-legal",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 호스트 AI 이용 조건 확인이 필요하다. README에 따르면 일부 커넥터와 Thomson Reuters CoCounsel 파트너 플러그인은 별도 구독이나 API 키가 필요하다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0",
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [
+    "commercial, corporate, employment, privacy, product, regulatory, ai-governance, ip, litigation 등 업무 분야별 12개 플러그인",
+    "README 기준 이름 붙은 에이전트 93개와 분야별 스킬·명령",
+    "Slack·Google Drive·Box·DocuSign·CourtListener 등 약 20개 커넥터",
+    "플러그인별 cold-start-interview 초기 설정",
+    "Thomson Reuters가 만든 CoCounsel Legal 파트너 플러그인"
+  ],
+  "relationships": {
+    "related": [
+      "anthropic-legal-plugin"
+    ]
+  },
+  "caveats": [
+    "README에 모든 결과는 변호사 검토용 초안이며 법률 자문이 아니라고 명시돼 있다.",
+    "각 플러그인의 cold-start-interview로 업무 기준을 먼저 설정해야 다른 스킬이 그 기준을 참고한다.",
+    "국내 법령과 실무 기준에 맞는지는 별도로 확인해야 한다.",
+    "2026년 1월 knowledge-work-plugins의 Legal 플러그인과 별개 저장소다."
+  ],
+  "starterPrompt": "검토 중인 해외 SaaS 공급사의 데이터 처리 부속서를 개인정보 관점에서 검토해 위험 조항, 추가 확인 질문, 협상 요청 문구 초안을 정리해줘. 법적 판단이 필요한 부분은 '변호사 확인 필요'로 표시해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=_p1skxxkHuQ",
+        "title": "Everything in Claude for Legal 2.0: 12 Plugins and 22 Connectors Explained",
+        "channel": "Liam Barnes",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@Liam-Barnes",
+        "publishedAt": "2026-05-14",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 12개 업무 분야 플러그인과 커넥터를 설명하고 설치, cold-start interview, 소송·지식재산 플러그인 시연을 챕터로 소개하며 공식 저장소를 링크한다.",
+        "timestampSeconds": 330,
+        "timestampLabel": "Installing Claude for Legal",
+        "commercialContext": "설명란에 채널 운영자의 법률 AI 도구 사이트와 상담 예약 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "_p1skxxkHuQ",
+        "mentionSummary": "설명란에서 12개 업무 분야 플러그인과 커넥터를 설명하고 설치, cold-start interview, 소송·지식재산 플러그인 시연을 챕터로 소개하며 공식 저장소를 링크한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=_p1skxxkHuQ&t=330s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=db6i06tTIAs",
+        "title": "Claude For Legal Easy Setup in 7 Minutes (Step by Step)",
+        "channel": "Alejo Pijuan",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@AlejoPijuanAI",
+        "publishedAt": "2026-06-14",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Cowork에 Claude for Legal 마켓플레이스를 추가하고 플러그인 3개 설치와 cold start interview를 진행하는 과정을 소개하며 공식 저장소를 링크한다.",
+        "timestampSeconds": 34,
+        "timestampLabel": "Add the Claude for Legal marketplace",
+        "commercialContext": "설명란에 채널 운영자 회사의 교육·컨설팅 링크가 있다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "db6i06tTIAs",
+        "mentionSummary": "설명란에서 Cowork에 Claude for Legal 마켓플레이스를 추가하고 플러그인 3개 설치와 cold start interview를 진행하는 과정을 소개하며 공식 저장소를 링크한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=db6i06tTIAs&t=34s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=rcAlxD0Cwpw",
+        "title": "Claude just unlocked 12 legal practice plugins — here's the catch",
+        "channel": "AI Playbook",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@ItsAIPlaybook",
+        "publishedAt": "2026-05-15",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 2026년 5월 12일 공개된 Claude for Legal의 12개 업무 플러그인과 커넥터를 인도 법률 실무 관점으로 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "rcAlxD0Cwpw",
+        "mentionSummary": "설명란에서 2026년 5월 12일 공개된 Claude for Legal의 12개 업무 플러그인과 커넥터를 인도 법률 실무 관점으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=rcAlxD0Cwpw",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

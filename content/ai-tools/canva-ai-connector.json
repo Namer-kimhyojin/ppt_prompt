@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "id": "canva-ai-connector",
+  "slug": "canva-ai-connector",
+  "type": "mcp",
+  "name": "Canva AI Connector (Canva MCP)",
+  "outcome": "AI 대화에서 Canva 디자인을 만들고 템플릿을 채우거나 내보낸다.",
+  "categories": [
+    "홍보·디자인",
+    "발표·제안서"
+  ],
+  "audience": [
+    "홍보물·발표자료 제작 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "Microsoft Copilot 및 지원 AI 도구"
+  ],
+  "platformEvidence": "Canva 공식 도움말의 연결 가능 AI 도구 목록을 확인했으며 직접 연결하지 않음.",
+  "officialUrl": "https://www.canva.com/help/mcp-agent-setup/",
+  "officialSources": [
+    "https://www.canva.com/help/mcp-agent-setup/",
+    "https://www.canva.dev/docs/connect/mcp-server/"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://www.canva.com/help/mcp-agent-setup/",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 도움말에 모든 계정에서 이용 가능하다는 문구와 Canva Free·Pro Lite를 제외한다는 문구가 함께 있어 플랜 조건을 확정하지 않는다. 팀 계정은 관리자 허용이 필요할 수 있다.",
+  "license": null,
+  "requirements": [
+    "Canva 계정",
+    "연결할 AI 도구의 커넥터 설정 및 Canva 계정 승인",
+    "팀 계정은 관리자의 타사 통합 허용"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "앱 개발자용으로 로컬에서 실행하는 Canva Dev MCP Server와 다른 항목이다.",
+    "공식 도움말의 플랜 안내가 문단마다 달라 실제 계정에서 이용 가능 여부를 확인해야 한다.",
+    "영상 중 하나에 할인 쿠폰 문구가 있어 언급을 중립적 평가로 해석하지 않는다."
+  ],
+  "starterPrompt": "이 행사 개요를 바탕으로 Canva에서 A4 세로 안내 포스터 초안을 만들어줘. 제목·일시·장소·문의처만 넣고 확인 후 내보낼게.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=GeYhR-iLA2U",
+        "title": "Claude + Canva MCP — Generate & Edit Designs With AI (No Prompting Loops)",
+        "channel": "Prompt Engineer 48",
+        "publishedAt": "2026-06-03",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에서 공식 Canva MCP 커넥터를 Claude 설정에 연결하고 디자인 생성·편집·내보내기를 시연한다.",
+        "timestampSeconds": 32,
+        "timestampLabel": "Connecting Canva MCP in Claude settings",
+        "commercialContext": "10% 할인 쿠폰 문구가 있음. Canva와의 관계는 확인하지 않음.",
+        "videoId": "GeYhR-iLA2U",
+        "mentionSummary": "설명에서 공식 Canva MCP 커넥터를 Claude 설정에 연결하고 디자인 생성·편집·내보내기를 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=GeYhR-iLA2U&t=32s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=s81pKaCNOWA",
+        "title": "I Let Claude Build My Executive Presentation (Canva MCP Workflow)",
+        "channel": "Rapid Reskill",
+        "publishedAt": "2026-02-16",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Canva MCP로 Claude와 Canva를 연결해 임원 보고용 발표자료를 만드는 워크플로를 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "제작자의 교육 서비스 홍보 링크가 포함되어 있음.",
+        "videoId": "s81pKaCNOWA",
+        "mentionSummary": "설명에서 Canva MCP로 Claude와 Canva를 연결해 임원 보고용 발표자료를 만드는 워크플로를 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=s81pKaCNOWA",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": [
+      {
+        "url": "https://www.youtube.com/watch?v=W92qV3yPVPI",
+        "title": "Create Stunning Proposals with Canva MCP + Claude",
+        "channel": "Mistrata",
+        "publishedAt": "2025-10-19",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude 안에서 Canva의 MCP 서버를 사용하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+        "timestampSeconds": null,
+        "commercialContext": null,
+        "videoId": "W92qV3yPVPI",
+        "mentionSummary": "설명에서 Claude 안에서 Canva의 MCP 서버를 사용하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=W92qV3yPVPI",
+        "withinPreferredWindow": false
+      }
+    ]
+  }
+}

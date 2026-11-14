@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-hud-plugin",
+  "slug": "claude-hud-plugin",
+  "type": "plugin",
+  "name": "Claude HUD",
+  "outcome": "Claude Code 작업 중 맥락 사용량, 사용 한도, 실행 중인 도구·에이전트를 입력창 아래에서 확인하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "Claude Code 사용자",
+    "AI 사용량을 관리하는 기술 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 README에 기재된 설치 환경이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/jarrodwatts/claude-hud",
+  "officialSources": [
+    "https://github.com/jarrodwatts/claude-hud"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/jarrodwatts/claude-hud",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 코드는 MIT 라이선스이며 Claude Code 이용 조건이 별도로 적용된다. 금액은 조사하지 않았다.",
+  "license": "MIT",
+  "requirements": [
+    "README 기준 Claude Code 2.1.260 이상",
+    "README 기준 Node.js 22.18 이상(Bun으로 시작 가능)"
+  ],
+  "connectionModes": [],
+  "includedComponents": [
+    "Claude Code 상태 표시줄(statusline) 플러그인",
+    "/hud 설정 확인 명령과 레이아웃 설정",
+    "모델·브랜치·맥락 사용량·사용 한도·도구·에이전트·할 일 진행 표시"
+  ],
+  "relationships": {},
+  "caveats": [
+    "제3자 플러그인은 기본으로 자동 업데이트되지 않는다고 README에 적혀 있다.",
+    "--extra-cmd 옵션은 매번 셸 명령을 실행하므로 README가 임의 코드 실행에 해당한다고 경고한다.",
+    "현재 폴더의 세션 기록·설정·git 정보를 읽는다.",
+    "영상마다 요구 Node.js 버전과 설정 명령 이름이 다르게 소개되므로 README를 기준으로 확인한다."
+  ],
+  "starterPrompt": "/hud 설정을 확인하고, 맥락 사용량과 사용 한도만 보이는 간단한 표시 형태로 바꿔줘. 바꾸기 전에 어떤 설정 파일을 고치는지 먼저 알려줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=oPhvxJFUSBs",
+        "title": "28K Stars: See What Claude Code Is Really Doing (Claude HUD)",
+        "channel": "AI Dev Minute",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@aidevminute",
+        "publishedAt": "2026-10-19",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에 Claude HUD 플러그인 설치 명령과 설정 명령, 표시 항목을 정리해 소개한다.",
+        "timestampSeconds": 13,
+        "timestampLabel": "Install: two commands + /claude-hud:setup",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "oPhvxJFUSBs",
+        "mentionSummary": "설명란에 Claude HUD 플러그인 설치 명령과 설정 명령, 표시 항목을 정리해 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=oPhvxJFUSBs&t=13s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=MoBUwYP4GiA",
+        "title": "Claude HUD Plugin Guide for Claude Code",
+        "channel": "Eddy Says Hi #EddySaysHi",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@eddysayshi",
+        "publishedAt": "2026-04-07",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 Claude Code 상태 표시줄 API를 쓰는 Claude HUD 플러그인의 표시 항목과 사용 한도 확인 기능을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "MoBUwYP4GiA",
+        "mentionSummary": "설명란에서 Claude Code 상태 표시줄 API를 쓰는 Claude HUD 플러그인의 표시 항목과 사용 한도 확인 기능을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=MoBUwYP4GiA",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=GCcIKOKyc88",
+        "title": "See Your Claude Code CLI Usage Live in VS Code (Claude HUD Setup)",
+        "channel": "Jamie Nudelman",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@jamienudelman",
+        "publishedAt": "2026-08-07",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에서 Jarrod Watts의 무료 Claude Code 플러그인 Claude HUD 설치와 저장소 안전성 확인, 설정 마법사를 챕터로 소개한다.",
+        "timestampSeconds": 188,
+        "timestampLabel": "Installing the plugin in the Claude CLI",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "GCcIKOKyc88",
+        "mentionSummary": "설명란에서 Jarrod Watts의 무료 Claude Code 플러그인 Claude HUD 설치와 저장소 안전성 확인, 설정 마법사를 챕터로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=GCcIKOKyc88&t=188s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=AH99kGxhHug",
+        "title": "claude-hud: Real-Time Context Visibility for Claude Code",
+        "channel": "Alex To Go Eng",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@dudarikEng",
+        "publishedAt": "2026-05-26",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 맥락 사용량·도구·에이전트·할 일 진행을 상태 표시줄에 보여주는 Claude Code 플러그인으로 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "AH99kGxhHug",
+        "mentionSummary": "설명란에서 맥락 사용량·도구·에이전트·할 일 진행을 상태 표시줄에 보여주는 Claude Code 플러그인으로 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=AH99kGxhHug",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

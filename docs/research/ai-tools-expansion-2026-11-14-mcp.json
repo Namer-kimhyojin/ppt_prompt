@@ -1,0 +1,2644 @@
+{
+  "type": "mcp",
+  "checkedAt": "2026-11-14",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "zapier-mcp",
+      "slug": "zapier-mcp",
+      "type": "mcp",
+      "name": "Zapier MCP",
+      "outcome": "Zapier에 연결된 메일·캘린더·메신저 등 여러 앱의 작업을 AI 대화에서 실행한다.",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "반복 업무 자동화·사무 운영 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "ChatGPT",
+        "Gemini",
+        "Cursor",
+        "VS Code 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Zapier 공식 MCP 문서에 안내된 클라이언트이며 이번 조사에서는 연결·실행하지 않음.",
+      "officialUrl": "https://docs.zapier.com/mcp/home",
+      "officialSources": [
+        "https://docs.zapier.com/mcp/home"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.zapier.com/mcp/home",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 성공한 도구 호출 1회에 플랜의 태스크 2개가 차감되고 실패한 호출은 차감되지 않는다. 서버 공유는 Team·Enterprise 플랜 조건이 있다.",
+      "license": null,
+      "requirements": [
+        "Zapier 계정과 연결할 각 앱의 계정 연결",
+        "Streamable HTTP를 지원하는 MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "일반 Zap 자동화나 다른 Zapier 기능 소개와 구분한 MCP 서버 항목이다.",
+        "실행한 액션은 실제 메일 발송·자료 변경으로 이어지므로 노출할 액션과 승인 설정을 먼저 확인한다.",
+        "대표 영상 중 하나는 제작사 공식 채널이고 다른 하나에는 제휴 링크가 있으므로 언급 빈도를 중립적 품질평가로 해석하지 않는다."
+      ],
+      "starterPrompt": "오늘 받은 메일 중 회신이 필요한 것을 골라 요약하고, 회신 초안은 보내지 말고 초안 상태로만 만들어줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=zj0Ur38FBmc",
+            "title": "We Automated Our Workflow with Claude & Zapier MCP",
+            "channel": "SaaS Inspection",
+            "publishedAt": "2026-10-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude와 Zapier MCP를 연결해 메일 읽기·업무 생성·CRM 갱신·Slack 게시를 처리한 설정과 시행착오를 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "Zapier 가입 단축 링크(zc.s.gy)가 포함되어 있음. 제휴 여부는 확인하지 않음.",
+            "videoId": "zj0Ur38FBmc",
+            "mentionSummary": "설명에서 Claude와 Zapier MCP를 연결해 메일 읽기·업무 생성·CRM 갱신·Slack 게시를 처리한 설정과 시행착오를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=zj0Ur38FBmc",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=DMeowX8YPVk",
+            "title": "Claude + Zapier: Connect any app your business runs on",
+            "channel": "Zapier",
+            "publishedAt": "2026-10-26",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "제작사 설명에서 Claude와 Zapier MCP로 9,000개 이상의 앱을 다루는 사례와 실시간 워크플로 구성을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "제작사 공식 채널이며 Anthropic 관계자가 함께 출연함.",
+            "videoId": "DMeowX8YPVk",
+            "mentionSummary": "제작사 설명에서 Claude와 Zapier MCP로 9,000개 이상의 앱을 다루는 사례와 실시간 워크플로 구성을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=DMeowX8YPVk",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": [
+          {
+            "url": "https://www.youtube.com/watch?v=80nvFVMiJqk",
+            "title": "Zapier MCP Connects Claude to 8,000 Apps (INSTANTLY)",
+            "channel": "Brock Mesarich | AI for Non Techies",
+            "publishedAt": "2025-04-03",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Zapier MCP 서버 설정, 액션 추가, Claude Desktop 연결을 소개한다. 조사 기간 이전 영상이라 현재 설정 근거로 쓰지 않는다.",
+            "timestampSeconds": 405,
+            "timestampLabel": "Setting Up the MCP Server in Zapier",
+            "commercialContext": "Zapier MCP 단축 링크가 포함되어 있음. 제휴 여부는 확인하지 않음.",
+            "videoId": "80nvFVMiJqk",
+            "mentionSummary": "설명과 챕터에서 Zapier MCP 서버 설정, 액션 추가, Claude Desktop 연결을 소개한다. 조사 기간 이전 영상이라 현재 설정 근거로 쓰지 않는다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=80nvFVMiJqk&t=405s",
+            "withinPreferredWindow": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "atlassian-rovo-mcp",
+      "slug": "atlassian-rovo-mcp",
+      "type": "mcp",
+      "name": "Atlassian Rovo MCP Server",
+      "outcome": "Jira 이슈와 Confluence 문서를 AI 대화에서 검색·요약하고 권한 범위에서 작성·수정한다.",
+      "categories": [
+        "조사·자료 정리",
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "프로젝트 관리·협업 문서 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "Claude Code",
+        "ChatGPT",
+        "Cursor",
+        "VS Code",
+        "Gemini 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Atlassian 공식 시작 안내의 클라이언트 목록과 설정 가이드를 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/",
+      "officialSources": [
+        "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 안내 기준 통합 검색 등 일부 Teamwork Graph 도구 호출은 Rovo 크레딧을 사용한다. 그 밖의 플랜 조건은 도입 시 확인한다.",
+      "license": null,
+      "requirements": [
+        "Atlassian Cloud 계정과 대상 Jira·Confluence 접근권한",
+        "OAuth 2.1 인증 또는 관리자가 허용한 API 토큰"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 안내상 v1 엔드포인트는 v2(mcp.atlassian.com/v2/mcp)로 전환 중이므로 영상 속 v1·SSE 설치 명령은 현재 주소와 다를 수 있다.",
+        "이름이 비슷한 커뮤니티 Jira·Confluence MCP 서버를 다룬 영상은 근거로 합산하지 않았다.",
+        "AI가 수행하는 변경은 연결한 사용자 권한으로 실행되므로 이슈 생성·수정 전 내용을 확인한다."
+      ],
+      "starterPrompt": "이번 스프린트 Jira 이슈 중 지연된 항목과 관련 Confluence 문서를 찾아 주간 보고용 표로 정리해줘. 각 항목에 원문 링크를 붙여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=-nImrNMZVpY",
+            "title": "Connect Claude AI to Jira in 5 Minutes | MCP Tutorial",
+            "channel": "Thetips4you",
+            "publishedAt": "2026-03-03",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에서 Atlassian 공식 MCP 서버로 Claude Code와 Jira·Confluence를 연결하고 OAuth 인증, 이슈 생성, 문서 검색을 소개한다.",
+            "timestampSeconds": 300,
+            "timestampLabel": "Configuration setup",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "-nImrNMZVpY",
+            "mentionSummary": "설명에서 Atlassian 공식 MCP 서버로 Claude Code와 Jira·Confluence를 연결하고 OAuth 인증, 이슈 생성, 문서 검색을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=-nImrNMZVpY&t=300s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=gfoCwgUCKQo",
+            "title": "Connect Atlassian (Jira) MCP to Claude Code in 2 Minutes (Part 2/3)",
+            "channel": "AiNow",
+            "publishedAt": "2026-05-29",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에서 Atlassian 공식 원격 MCP 서버를 Claude Code에 추가하고 OAuth 흐름과 Jira 이슈 조회·댓글 작성을 시연한다.",
+            "timestampSeconds": 6,
+            "timestampLabel": "Command to Add Atlassian MCP",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "gfoCwgUCKQo",
+            "mentionSummary": "설명에서 Atlassian 공식 원격 MCP 서버를 Claude Code에 추가하고 OAuth 흐름과 Jira 이슈 조회·댓글 작성을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=gfoCwgUCKQo&t=6s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=1LGQE96nqh8",
+            "title": "How to Connect Claude AI to Jira | Automate Workflows | (Full Tutorial) 2026",
+            "channel": "Checkmark Academy",
+            "publishedAt": "2026-04-21",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Atlassian MCP 커넥터로 Claude와 Jira를 연결하고 권한 승인 후 자연어로 프로젝트를 다루는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "1LGQE96nqh8",
+            "mentionSummary": "설명에서 Atlassian MCP 커넥터로 Claude와 Jira를 연결하고 권한 승인 후 자연어로 프로젝트를 다루는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=1LGQE96nqh8",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "canva-ai-connector",
+      "slug": "canva-ai-connector",
+      "type": "mcp",
+      "name": "Canva AI Connector (Canva MCP)",
+      "outcome": "AI 대화에서 Canva 디자인을 만들고 템플릿을 채우거나 내보낸다.",
+      "categories": [
+        "홍보·디자인",
+        "발표·제안서"
+      ],
+      "audience": [
+        "홍보물·발표자료 제작 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "ChatGPT",
+        "Claude",
+        "Gemini",
+        "Microsoft Copilot 및 지원 AI 도구"
+      ],
+      "platformEvidence": "Canva 공식 도움말의 연결 가능 AI 도구 목록을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://www.canva.com/help/mcp-agent-setup/",
+      "officialSources": [
+        "https://www.canva.com/help/mcp-agent-setup/",
+        "https://www.canva.dev/docs/connect/mcp-server/"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://www.canva.com/help/mcp-agent-setup/",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 도움말에 모든 계정에서 이용 가능하다는 문구와 Canva Free·Pro Lite를 제외한다는 문구가 함께 있어 플랜 조건을 확정하지 않는다. 팀 계정은 관리자 허용이 필요할 수 있다.",
+      "license": null,
+      "requirements": [
+        "Canva 계정",
+        "연결할 AI 도구의 커넥터 설정 및 Canva 계정 승인",
+        "팀 계정은 관리자의 타사 통합 허용"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "앱 개발자용으로 로컬에서 실행하는 Canva Dev MCP Server와 다른 항목이다.",
+        "공식 도움말의 플랜 안내가 문단마다 달라 실제 계정에서 이용 가능 여부를 확인해야 한다.",
+        "영상 중 하나에 할인 쿠폰 문구가 있어 언급을 중립적 평가로 해석하지 않는다."
+      ],
+      "starterPrompt": "이 행사 개요를 바탕으로 Canva에서 A4 세로 안내 포스터 초안을 만들어줘. 제목·일시·장소·문의처만 넣고 확인 후 내보낼게.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=GeYhR-iLA2U",
+            "title": "Claude + Canva MCP — Generate & Edit Designs With AI (No Prompting Loops)",
+            "channel": "Prompt Engineer 48",
+            "publishedAt": "2026-06-03",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에서 공식 Canva MCP 커넥터를 Claude 설정에 연결하고 디자인 생성·편집·내보내기를 시연한다.",
+            "timestampSeconds": 32,
+            "timestampLabel": "Connecting Canva MCP in Claude settings",
+            "commercialContext": "10% 할인 쿠폰 문구가 있음. Canva와의 관계는 확인하지 않음.",
+            "videoId": "GeYhR-iLA2U",
+            "mentionSummary": "설명에서 공식 Canva MCP 커넥터를 Claude 설정에 연결하고 디자인 생성·편집·내보내기를 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=GeYhR-iLA2U&t=32s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=s81pKaCNOWA",
+            "title": "I Let Claude Build My Executive Presentation (Canva MCP Workflow)",
+            "channel": "Rapid Reskill",
+            "publishedAt": "2026-02-16",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Canva MCP로 Claude와 Canva를 연결해 임원 보고용 발표자료를 만드는 워크플로를 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "제작자의 교육 서비스 홍보 링크가 포함되어 있음.",
+            "videoId": "s81pKaCNOWA",
+            "mentionSummary": "설명에서 Canva MCP로 Claude와 Canva를 연결해 임원 보고용 발표자료를 만드는 워크플로를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=s81pKaCNOWA",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": [
+          {
+            "url": "https://www.youtube.com/watch?v=W92qV3yPVPI",
+            "title": "Create Stunning Proposals with Canva MCP + Claude",
+            "channel": "Mistrata",
+            "publishedAt": "2025-10-19",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude 안에서 Canva의 MCP 서버를 사용하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+            "timestampSeconds": null,
+            "commercialContext": null,
+            "videoId": "W92qV3yPVPI",
+            "mentionSummary": "설명에서 Claude 안에서 Canva의 MCP 서버를 사용하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=W92qV3yPVPI",
+            "withinPreferredWindow": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "figma-mcp",
+      "slug": "figma-mcp",
+      "type": "mcp",
+      "name": "Figma MCP Server",
+      "outcome": "Figma 디자인 맥락을 AI 코딩 도구에 전달하고 화면·다이어그램을 Figma 캔버스에 작성한다.",
+      "categories": [
+        "홍보·디자인"
+      ],
+      "audience": [
+        "디자인·웹 제작 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Claude Desktop",
+        "Cursor",
+        "VS Code",
+        "Codex 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Figma 공식 MCP 문서의 클라이언트 지원표를 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://developers.figma.com/docs/figma-mcp-server/",
+      "officialSources": [
+        "https://developers.figma.com/docs/figma-mcp-server/"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developers.figma.com/docs/figma-mcp-server/",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 원격 서버로 drafts 밖 파일에 쓰려면 Full seat가 필요하며 쓰기는 베타 기간 무료, 이후 사용량 기반 예정이다. 데스크톱 서버는 Professional 이상 플랜의 Dev 또는 Full seat가 필요하다.",
+      "license": null,
+      "requirements": [
+        "Figma 계정과 대상 파일 권한",
+        "원격 서버를 지원하는 MCP 클라이언트 또는 Figma 데스크톱 앱(데스크톱 서버)"
+      ],
+      "connectionModes": [
+        "remote",
+        "local"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "커뮤니티 Talk to Figma 서버나 Figma Console MCP를 다룬 영상은 근거로 합산하지 않았다.",
+        "영상 일부는 Figma MCP를 Anthropic 발표처럼 설명하지만 공식 제공자는 Figma이다.",
+        "생성된 코드·디자인 품질은 파일 구조와 컴포넌트 정리 상태에 따라 달라진다."
+      ],
+      "starterPrompt": "선택한 Figma 프레임의 레이아웃과 색상 변수를 읽어 HTML·CSS 시안으로 옮겨줘. 사용한 변수 이름을 함께 표시해줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=CoS44JrUgL4",
+            "title": "You can now push UI designs from Claude Code BACK to Figma! (NEW Figma MCP)",
+            "channel": "AI Builder Space",
+            "publishedAt": "2026-02-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Claude Code에 Figma MCP를 설치·인증하고 코드 화면을 Figma로 보내는 양방향 흐름을 소개한다.",
+            "timestampSeconds": 47,
+            "timestampLabel": "Installation — Claude Code Terminal",
+            "commercialContext": "제작자의 가이드 링크가 포함되어 있음. 협찬 여부는 확인하지 않음.",
+            "videoId": "CoS44JrUgL4",
+            "mentionSummary": "설명과 챕터에서 Claude Code에 Figma MCP를 설치·인증하고 코드 화면을 Figma로 보내는 양방향 흐름을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=CoS44JrUgL4&t=47s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=tADoBahZm-Q",
+            "title": "Claude Code + Figma MCP (Full Setup for Designers)",
+            "channel": "Limuel Castro",
+            "publishedAt": "2026-04-14",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 공식 Figma MCP 가이드 링크를 두고 Claude Code와 Figma 원격 MCP 연결 및 디자인-코드 동기화를 시연한다.",
+            "timestampSeconds": 98,
+            "timestampLabel": "Connect Figma MCP",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "tADoBahZm-Q",
+            "mentionSummary": "설명에 공식 Figma MCP 가이드 링크를 두고 Claude Code와 Figma 원격 MCP 연결 및 디자인-코드 동기화를 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=tADoBahZm-Q&t=98s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=Id2IYmAR4Pw",
+            "title": "Connect Figma MCP to Claude Code and Update a Figma Design Live",
+            "channel": "AiNow",
+            "publishedAt": "2026-06-07",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 공식 플러그인 설치와 mcp.figma.com/mcp 수동 추가 명령을 적고 Figma 디자인을 실시간 수정한다.",
+            "timestampSeconds": 10,
+            "timestampLabel": "Method 1: Installing the Official Figma Plugin",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "Id2IYmAR4Pw",
+            "mentionSummary": "설명에 공식 플러그인 설치와 mcp.figma.com/mcp 수동 추가 명령을 적고 Figma 디자인을 실시간 수정한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Id2IYmAR4Pw&t=10s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "hubspot-mcp",
+      "slug": "hubspot-mcp",
+      "type": "mcp",
+      "name": "HubSpot MCP Server",
+      "outcome": "HubSpot CRM의 연락처·회사·딜·티켓 자료를 AI 대화에서 조회하고 권한 범위에서 갱신한다.",
+      "categories": [
+        "엑셀·데이터",
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "영업·마케팅·고객관리 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "HubSpot 공식 MCP 페이지는 MCP 호환 AI 도구 전반을 안내하며 이번 조사에서는 연결하지 않음.",
+      "officialUrl": "https://developers.hubspot.com/mcp",
+      "officialSources": [
+        "https://developers.hubspot.com/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developers.hubspot.com/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 페이지에 플랜 조건이 명시되지 않았다. HubSpot 구독 등급별 이용 가능 여부는 도입 시 확인한다.",
+      "license": null,
+      "requirements": [
+        "HubSpot 계정과 CRM 객체 접근권한",
+        "계정 관리자의 최초 연결",
+        "직접 연결하는 경우 HubSpot 개발자 플랫폼의 사용자 수준 앱과 OAuth 범위 설정"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "HubSpot CLI로 로컬 실행하는 개발자용 Developer MCP Server와 구분한 원격 CRM 서버 항목이다.",
+        "공식 페이지의 객체별 읽기·쓰기 목록과 FAQ의 읽기 전용 설명이 엇갈리므로 실제 쓰기 범위를 확인한다.",
+        "Windsor.ai 등 제3자 HubSpot 커넥터와 2025년 로컬 패키지 영상은 근거로 합산하지 않았다."
+      ],
+      "starterPrompt": "이번 달 단계가 바뀌지 않은 딜을 담당자별로 정리하고 다음 연락이 필요한 항목을 표로 보여줘. CRM 값은 수정하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=9z84The2cuw",
+            "title": "I Gave Claude Access to HubSpot. Here's the Honest Result.",
+            "channel": "Vasilij Nevlev | AiGentic Lab",
+            "publishedAt": "2026-03-05",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 HubSpot MCP 공식 문서·변경 이력 링크를 두고 Claude 연결 후 잘 되는 점과 부족한 점을 정리한다.",
+            "timestampSeconds": 97,
+            "timestampLabel": "Connect HubSpot with Claude",
+            "commercialContext": "제작자의 컨설팅 진단 홍보와 HubSpot 프롬프트 자료 링크가 포함되어 있음.",
+            "videoId": "9z84The2cuw",
+            "mentionSummary": "설명에 HubSpot MCP 공식 문서·변경 이력 링크를 두고 Claude 연결 후 잘 되는 점과 부족한 점을 정리한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=9z84The2cuw&t=97s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=_Y_OC6Uvvos",
+            "title": "Headless CRM with Hubspot's MCP Server and Claude",
+            "channel": "Trelliswork",
+            "publishedAt": "2026-01-13",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude 프로젝트에 HubSpot MCP 연결을 켜고 자연어로 CRM 기록을 갱신하는 흐름을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "_Y_OC6Uvvos",
+            "mentionSummary": "설명에서 Claude 프로젝트에 HubSpot MCP 연결을 켜고 자연어로 CRM 기록을 갱신하는 흐름을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=_Y_OC6Uvvos",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "asana-mcp",
+      "slug": "asana-mcp",
+      "type": "mcp",
+      "name": "Asana MCP Server",
+      "outcome": "Asana 작업·프로젝트를 AI 대화에서 조회·생성하고 진행 현황 요약을 만든다.",
+      "categories": [
+        "반복업무·서비스 연결",
+        "문서·보고서"
+      ],
+      "audience": [
+        "프로젝트·업무 일정 관리 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "ChatGPT",
+        "Claude Code",
+        "Codex",
+        "Cursor",
+        "VS Code 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Asana 공식 개발자 문서의 지원 클라이언트를 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://developers.asana.com/docs/using-asanas-mcp-server",
+      "officialSources": [
+        "https://developers.asana.com/docs/using-asanas-mcp-server"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developers.asana.com/docs/using-asanas-mcp-server",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서에 별도 요금은 명시되지 않았다. Enterprise+ 등 상위 플랜은 관리자가 MCP 클라이언트별 허용·차단을 설정할 수 있다.",
+      "license": null,
+      "requirements": [
+        "Asana 계정과 워크스페이스 권한",
+        "OAuth와 Streamable HTTP를 지원하는 MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서 기준 베타 V1 엔드포인트(mcp.asana.com/sse)는 2026-05-11 종료되었으므로 V2(mcp.asana.com/v2/mcp) 기준으로 확인한다.",
+        "대표 영상 중 하나는 MCP 게이트웨이 제품사 채널로 자사 제품 연동을 함께 소개한다.",
+        "워크스페이스 관리자가 클라이언트를 차단하면 인증이 실패할 수 있다."
+      ],
+      "starterPrompt": "내 Asana 작업 중 이번 주 마감인 항목을 프로젝트별로 정리하고, 지연 위험이 있는 작업에는 이유를 한 줄씩 적어줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=icj4_tiKkDs",
+            "title": "Asana MCP Server Tutorial: Connect to Claude Desktop",
+            "channel": "MCP Manager by Usercentrics",
+            "publishedAt": "2026-02-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Asana V2 MCP 서버의 개선점과 Claude Desktop 연결 방법 3가지를 소개한다.",
+            "timestampSeconds": 109,
+            "timestampLabel": "How to Connect Asana MCP Server to Claude Desktop (3 Methods)",
+            "commercialContext": "MCP 게이트웨이 제품사 채널이며 자사 제품 링크가 포함되어 있음.",
+            "videoId": "icj4_tiKkDs",
+            "mentionSummary": "설명과 챕터에서 Asana V2 MCP 서버의 개선점과 Claude Desktop 연결 방법 3가지를 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=icj4_tiKkDs&t=109s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=daqu67Le0tU",
+            "title": "How to Connect Asana to Claude AI (Step‑by‑Step) 2026",
+            "channel": "Checkmark Academy",
+            "publishedAt": "2026-04-27",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 공식 MCP 커넥터로 Asana와 Claude를 연결하고 작업 생성·주간 보고 작성까지 다룬다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "daqu67Le0tU",
+            "mentionSummary": "설명에서 공식 MCP 커넥터로 Asana와 Claude를 연결하고 작업 생성·주간 보고 작성까지 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=daqu67Le0tU",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=dvkO_EtIgd0",
+            "title": "Connect Asana with Claude",
+            "channel": "XYZ Lab",
+            "publishedAt": "2026-03-22",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude 설정의 Connectors에서 Asana를 찾아 로그인·승인하는 연결 순서를 안내한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "dvkO_EtIgd0",
+            "mentionSummary": "설명에서 Claude 설정의 Connectors에서 Asana를 찾아 로그인·승인하는 연결 순서를 안내한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=dvkO_EtIgd0",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "slack-mcp",
+      "slug": "slack-mcp",
+      "type": "mcp",
+      "name": "Slack MCP Server",
+      "outcome": "Slack 채널·메시지·파일을 AI 대화에서 검색해 맥락을 모으고 권한 범위에서 메시지·캔버스를 작성한다.",
+      "categories": [
+        "조사·자료 정리",
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "사내 소통·협업 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude.ai",
+        "Claude Code",
+        "Perplexity",
+        "Cursor"
+      ],
+      "platformEvidence": "Slack 공식 개발자 문서에 파트너 클라이언트로 안내된 목록이며 이번 조사에서는 연결하지 않음.",
+      "officialUrl": "https://docs.slack.dev/ai/mcp-server",
+      "officialSources": [
+        "https://docs.slack.dev/ai/mcp-server"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.slack.dev/ai/mcp-server",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서에 플랜 조건은 명시되지 않았다. 워크스페이스 관리자가 MCP 클라이언트 통합을 승인·관리한다.",
+      "license": null,
+      "requirements": [
+        "Slack 워크스페이스 계정",
+        "관리자가 승인한 MCP 클라이언트 앱과 OAuth 동의"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서 기준 SSE 연결과 동적 클라이언트 등록(DCR)을 지원하지 않으므로 직접 만든 클라이언트는 등록된 Slack 앱이 필요하다.",
+        "제3자 Slack MCP 서비스(Insightful Pipe 등)를 다룬 영상은 근거로 합산하지 않았다.",
+        "대표 영상 중 하나는 연결 오류 해결 과정을 다루며 설치 성공 사례가 아니다."
+      ],
+      "starterPrompt": "지난주 프로젝트 채널에서 결정된 사항과 담당자가 정해지지 않은 요청을 찾아 정리해줘. 메시지는 보내지 말고 원문 링크만 붙여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=oAnsIYzdics",
+            "title": "How Slack's MCP App Works with Anthropic's Claude",
+            "channel": "The Ken Yeung",
+            "publishedAt": "2026-02-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Salesforce가 MCP 서버로 Slack과 Claude를 연결해 메시지 초안 작성·채널 게시를 지원한다고 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "설명에 화면 출처가 Salesforce로 표기되어 있음.",
+            "videoId": "oAnsIYzdics",
+            "mentionSummary": "설명에서 Salesforce가 MCP 서버로 Slack과 Claude를 연결해 메시지 초안 작성·채널 게시를 지원한다고 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=oAnsIYzdics",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=n3VQxljYw6w",
+            "title": "Claude Code and Slack MCP Server Troubleshooting Session",
+            "channel": "SheK8S",
+            "publishedAt": "2026-04-01",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude Code와 Slack MCP Server 연결 시 Slack이 DCR을 지원하지 않아 생기는 오류를 해결하는 과정을 다룬다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "n3VQxljYw6w",
+            "mentionSummary": "설명에서 Claude Code와 Slack MCP Server 연결 시 Slack이 DCR을 지원하지 않아 생기는 오류를 해결하는 과정을 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=n3VQxljYw6w",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=MPUdoqI02pk",
+            "title": "Top 10 MCP Servers for Claude Code in 2026 (Ranked & Tested)",
+            "channel": "AImagic",
+            "publishedAt": "2026-10-04",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Slack을 범위가 고정된 원격 MCP 서버로 9위에 소개하고 서버 주소 mcp.slack.com을 명시한다.",
+            "timestampSeconds": 17,
+            "timestampLabel": "#9 Slack: a remote server with pinned scopes",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "MPUdoqI02pk",
+            "mentionSummary": "설명과 챕터에서 Slack을 범위가 고정된 원격 MCP 서버로 9위에 소개하고 서버 주소 mcp.slack.com을 명시한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=MPUdoqI02pk&t=17s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": [
+          {
+            "url": "https://www.youtube.com/watch?v=sbkwv-HVhQU",
+            "title": "Connect Slack to Claude with MCP",
+            "channel": "Anthropic",
+            "publishedAt": "2025-10-01",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Slack MCP 서버로 채널·DM·공유 파일을 검색해 회의 준비와 업무 현황 정리에 쓰는 흐름을 소개한다. 조사 기간 이전 영상이다.",
+            "timestampSeconds": null,
+            "commercialContext": "클라이언트 제작사(Anthropic) 공식 채널임.",
+            "videoId": "sbkwv-HVhQU",
+            "mentionSummary": "설명에서 Slack MCP 서버로 채널·DM·공유 파일을 검색해 회의 준비와 업무 현황 정리에 쓰는 흐름을 소개한다. 조사 기간 이전 영상이다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=sbkwv-HVhQU",
+            "withinPreferredWindow": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "airtable-mcp",
+      "slug": "airtable-mcp",
+      "type": "mcp",
+      "name": "Airtable MCP Server",
+      "outcome": "Airtable 베이스의 레코드를 AI 대화에서 조회·분석·생성하고 인터페이스·자동화 초안을 만든다.",
+      "categories": [
+        "엑셀·데이터",
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "데이터 관리·업무 시스템 운영 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "Claude Code",
+        "ChatGPT",
+        "Cursor",
+        "Codex CLI 및 원격 MCP 지원 클라이언트"
+      ],
+      "platformEvidence": "Airtable 공식 지원 문서의 빠른 시작 클라이언트를 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://support.airtable.com/docs/using-the-airtable-mcp-server",
+      "officialSources": [
+        "https://support.airtable.com/docs/using-the-airtable-mcp-server"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://support.airtable.com/docs/using-the-airtable-mcp-server",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 모든 플랜에서 이용 가능하며 MCP 사용에 별도 Airtable 요금은 없다. 기존 API 호출 한도와 베이스 레코드 한도는 그대로 적용된다.",
+      "license": null,
+      "requirements": [
+        "Airtable 계정과 대상 베이스 권한",
+        "OAuth 또는 개인 액세스 토큰(PAT)",
+        "Enterprise 계정은 관리자 허용이 필요할 수 있음"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서 기준 레코드 생성은 요청당 10건으로 제한되고 자동화는 초안으로만 저장된다.",
+        "제3자 Airtable MCP 서비스(Viasocket 등)나 직접 만든 서버를 다룬 영상은 근거로 합산하지 않았다.",
+        "도구 이름과 동작은 변경될 수 있다고 공식 문서가 안내한다."
+      ],
+      "starterPrompt": "고객 문의 베이스에서 이번 달 미처리 건을 유형별로 집계하고 오래된 순서로 10건을 보여줘. 레코드는 수정하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=vtkSC-2XQxE",
+            "title": "Airtable Just Released an MCP Server — Here's How to Use It with Claude",
+            "channel": "Kevin Farugia AI Automation",
+            "publishedAt": "2026-02-16",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Airtable 공식 MCP 서버를 Claude와 연결하고 토큰 생성부터 레코드 조회·입력까지 안내한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "vtkSC-2XQxE",
+            "mentionSummary": "설명에서 Airtable 공식 MCP 서버를 Claude와 연결하고 토큰 생성부터 레코드 조회·입력까지 안내한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=vtkSC-2XQxE",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=YbuDzItHxM0",
+            "title": "Build Airtable Automations & Interfaces using Claude (& Airtable MCP)",
+            "channel": "Business Automated!",
+            "publishedAt": "2026-08-04",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 Claude 디렉터리의 Airtable 커넥터 링크를 두고 휴가 신청 자동화와 승인 인터페이스 생성을 시연한다.",
+            "timestampSeconds": 19,
+            "timestampLabel": "Setting Up Claude and Airtable Connectors",
+            "commercialContext": "제작자의 튜토리얼 사이트 링크가 포함되어 있음.",
+            "videoId": "YbuDzItHxM0",
+            "mentionSummary": "설명에 Claude 디렉터리의 Airtable 커넥터 링크를 두고 휴가 신청 자동화와 승인 인터페이스 생성을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=YbuDzItHxM0&t=19s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=HJaIpSn1nw0",
+            "title": "Build Airtable Bases Faster with Claude and MCP | BuiltOnAir S25E4",
+            "channel": "BuiltOnAir Podcast",
+            "publishedAt": "2026-07-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Claude와 Airtable MCP로 베이스·자동화를 만드는 방법과 인터페이스 편집 한계를 다룬다.",
+            "timestampSeconds": 165,
+            "timestampLabel": "Creating automations through MCP",
+            "commercialContext": "커뮤니티 가입 링크가 포함되어 있음.",
+            "videoId": "HJaIpSn1nw0",
+            "mentionSummary": "설명과 챕터에서 Claude와 Airtable MCP로 베이스·자동화를 만드는 방법과 인터페이스 편집 한계를 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=HJaIpSn1nw0&t=165s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "miro-mcp",
+      "slug": "miro-mcp",
+      "type": "mcp",
+      "name": "Miro MCP Server",
+      "outcome": "Miro 보드를 AI 대화에서 요약·검색하고 다이어그램·표·문서를 보드에 만든다.",
+      "categories": [
+        "발표·제안서",
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "기획·회의 진행·협업 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "Claude Code",
+        "ChatGPT",
+        "Codex",
+        "Cursor",
+        "VS Code",
+        "Gemini CLI 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Miro 공식 개발자 문서의 연결 경로를 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://developers.miro.com/docs/miro-mcp",
+      "officialSources": [
+        "https://developers.miro.com/docs/miro-mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developers.miro.com/docs/miro-mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 무료 팀을 포함한 모든 Miro 플랜에서 사용할 수 있으며 표준 API 호출 한도가 적용된다.",
+      "license": null,
+      "requirements": [
+        "Miro 계정과 대상 보드 권한",
+        "OAuth 2.1을 지원하는 MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "개인이 만든 커뮤니티 Miro MCP 서버 영상은 근거로 합산하지 않았다.",
+        "Enterprise 플랜은 관리자 보안 설정에 따라 사용 범위가 달라질 수 있다.",
+        "대표 영상 중 하나는 제작사 공식 채널이고 다른 하나에는 Miro 제휴 링크가 있다."
+      ],
+      "starterPrompt": "이 회의 메모를 바탕으로 Miro 보드에 회고 보드를 만들어줘. 잘된 점·개선할 점·실행 항목 세 영역으로 나눠줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=5UYzLtFcQt0",
+            "title": "Claude + Miro MCP: Full Tutorial with Claude Code & GitHub",
+            "channel": "Miro",
+            "publishedAt": "2026-02-24",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "제작사 설명과 챕터에서 Miro MCP 서버 기능과 Claude Desktop 커넥터 연결, 코드 구조 시각화를 시연한다.",
+            "timestampSeconds": 443,
+            "timestampLabel": "Demo Part 1: Connecting Miro with Claude Desktop App",
+            "commercialContext": "제작사 공식 채널임.",
+            "videoId": "5UYzLtFcQt0",
+            "mentionSummary": "제작사 설명과 챕터에서 Miro MCP 서버 기능과 Claude Desktop 커넥터 연결, 코드 구조 시각화를 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=5UYzLtFcQt0&t=443s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=72vNlNEbytQ",
+            "title": "I Build a Miro Retrospective Board in 2 Minutes With Claude (Full Setup Guide)",
+            "channel": "David Pereira",
+            "publishedAt": "2026-09-22",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude Desktop에 Miro MCP를 연결해 회고 보드를 만들고 결과를 실행 항목으로 정리하는 흐름을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "Miro 제휴 추적 링크(miro.pxf.io)가 포함되어 있음.",
+            "videoId": "72vNlNEbytQ",
+            "mentionSummary": "설명에서 Claude Desktop에 Miro MCP를 연결해 회고 보드를 만들고 결과를 실행 항목으로 정리하는 흐름을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=72vNlNEbytQ",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "exa-mcp",
+      "slug": "exa-mcp",
+      "type": "mcp",
+      "name": "Exa MCP",
+      "outcome": "웹을 검색하고 지정한 페이지의 본문을 정리된 형태로 가져와 조사 자료를 만든다.",
+      "categories": [
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "자료 조사·시장 조사 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Code",
+        "Claude Desktop·웹",
+        "ChatGPT",
+        "Codex",
+        "Cursor",
+        "VS Code 및 기타 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Exa 공식 MCP 문서의 클라이언트별 안내를 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://docs.exa.ai/reference/exa-mcp",
+      "officialSources": [
+        "https://docs.exa.ai/reference/exa-mcp",
+        "https://github.com/exa-labs/exa-mcp-server"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.exa.ai/reference/exa-mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 검색·페이지 가져오기는 API 키 없이 무료 호출 한도 안에서 시험할 수 있고, 한도를 넘으면 로그인 또는 API 키가 필요하다. 신규 계정에는 무료 크레딧이 제공된다.",
+      "license": null,
+      "requirements": [
+        "MCP 클라이언트",
+        "무료 한도 이상 사용 시 Exa 계정 OAuth 로그인 또는 API 키"
+      ],
+      "connectionModes": [
+        "remote",
+        "local"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "로컬 실행(npx exa-mcp-server)은 MCP 서버만 로컬에서 실행하는 방식이며 검색은 Exa 서비스를 사용한다.",
+        "영상 중 일부는 코딩 문서 검색 용도로 소개하며, 공식 도구 목록은 시점에 따라 바뀔 수 있다.",
+        "검색 결과는 원문 확인이 필요하며 수집 날짜를 함께 기록하는 것이 좋다."
+      ],
+      "starterPrompt": "국내 공공기관의 생성형 AI 업무 활용 지침을 웹에서 찾아 기관명·발표일·핵심 내용 표로 정리해줘. 출처 주소를 모두 남겨줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=w-rXEUTOIas",
+            "title": "Two MCPs That Save 97% of Your Context Window",
+            "channel": "Ray Fernando",
+            "publishedAt": "2025-11-23",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 exa.ai MCP를 Claude Code·Cursor·Codex에 설정하고 문서 검색에 쓰는 과정을 소개한다.",
+            "timestampSeconds": 207,
+            "timestampLabel": "Configuring exa.ai in Claude Code",
+            "commercialContext": "도구 링크가 단축 주소(rfer.me)로 연결됨. 제휴 여부는 확인하지 않음.",
+            "videoId": "w-rXEUTOIas",
+            "mentionSummary": "설명과 챕터에서 exa.ai MCP를 Claude Code·Cursor·Codex에 설정하고 문서 검색에 쓰는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=w-rXEUTOIas&t=207s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=P6xWWBzraRo",
+            "title": "Replacing Claude WebSearch with MCP Exa inside Claude Code (setup demo)",
+            "channel": "Wassel ALAZHAR",
+            "publishedAt": "2025-12-27",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude Code에 Exa MCP 서버를 추가해 web_search_exa 실시간 웹 검색을 쓰는 설정을 시연한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "P6xWWBzraRo",
+            "mentionSummary": "설명에서 Claude Code에 Exa MCP 서버를 추가해 web_search_exa 실시간 웹 검색을 쓰는 설정을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=P6xWWBzraRo",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=zOi0TlmcNKU",
+            "title": "Your AI Agent is Broken Without This | EXA MCP",
+            "channel": "Bootoshi",
+            "publishedAt": "2026-01-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 공식 docs.exa.ai/mcp 링크를 두고 Claude Code 설치와 세 가지 도구, 검색 시연을 소개한다.",
+            "timestampSeconds": 120,
+            "timestampLabel": "How to install (Claude Code)",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "zOi0TlmcNKU",
+            "mentionSummary": "설명에 공식 docs.exa.ai/mcp 링크를 두고 Claude Code 설치와 세 가지 도구, 검색 시연을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=zOi0TlmcNKU&t=120s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "n8n-instance-mcp",
+      "slug": "n8n-instance-mcp",
+      "type": "mcp",
+      "name": "n8n 인스턴스 MCP 서버",
+      "outcome": "AI 도구에서 n8n 워크플로를 검색·실행하고 새 워크플로를 만들거나 고친다.",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "업무 자동화 구축·운영 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude",
+        "Claude Code",
+        "Codex",
+        "OpenCode 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "n8n 공식 문서의 연결 방식과 영상의 클라이언트 설정을 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://docs.n8n.io/advanced-ai/accessing-n8n-mcp-server/",
+      "officialSources": [
+        "https://docs.n8n.io/advanced-ai/accessing-n8n-mcp-server/"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.n8n.io/advanced-ai/accessing-n8n-mcp-server/",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서에 플랜별 조건은 명시되지 않았다. n8n Cloud 또는 자체 운영 인스턴스의 버전·요금 조건을 따른다.",
+      "license": null,
+      "requirements": [
+        "n8n 인스턴스(Cloud 또는 자체 운영)와 소유자·관리자의 MCP 접근 활성화",
+        "OAuth 또는 개인 액세스 토큰",
+        "클라우드 AI 클라이언트에서 접근 가능한 인스턴스 주소"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "워크플로 안에서 쓰는 MCP Server Trigger 노드나 커뮤니티 n8n-mcp 프로젝트와 구분한 인스턴스 단위 기능이다.",
+        "공식 문서 기준 워크플로별로 MCP 접근을 켜야 실행할 수 있으며, 연결한 모든 클라이언트가 허용된 워크플로를 동일하게 본다.",
+        "대표 영상 중 하나는 제작사 공식 채널이고 다른 영상에는 호스팅 제휴 링크가 있다."
+      ],
+      "starterPrompt": "지금 MCP로 열려 있는 n8n 워크플로 목록과 각 트리거·용도를 표로 정리해줘. 실행은 하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=JihC9nR_DqQ",
+            "title": "One Click Connect n8n to AI Tools [Instance Level MCP]",
+            "channel": "n8n",
+            "publishedAt": "2025-11-26",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "제작사 설명과 챕터에서 인스턴스 단위 MCP 기능, 활성화 방법, Claude 등 외부 앱 연결을 소개한다.",
+            "timestampSeconds": 47,
+            "timestampLabel": "How to Enable Feature",
+            "commercialContext": "제작사 공식 채널임.",
+            "videoId": "JihC9nR_DqQ",
+            "mentionSummary": "제작사 설명과 챕터에서 인스턴스 단위 MCP 기능, 활성화 방법, Claude 등 외부 앱 연결을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=JihC9nR_DqQ&t=47s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=xDTddwmcBcM",
+            "title": "OpenAI Codex: How To Install n8n MCP Server",
+            "channel": "Mike Murphy | AI Handyman",
+            "publishedAt": "2026-05-07",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 n8n 인스턴스 MCP를 켜고 Codex에 연결해 워크플로를 만드는 과정을 다룬다.",
+            "timestampSeconds": 74,
+            "timestampLabel": "Enable n8n MCP",
+            "commercialContext": "Hostinger VPS 제휴 링크가 포함되어 있음.",
+            "videoId": "xDTddwmcBcM",
+            "mentionSummary": "설명과 챕터에서 n8n 인스턴스 MCP를 켜고 Codex에 연결해 워크플로를 만드는 과정을 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=xDTddwmcBcM&t=74s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=kTBsEzo3UWo",
+            "title": "Native n8n MCP Full Guide | Build Workflows with OpenCode AI Agent (FREE)",
+            "channel": "DevAndACup",
+            "publishedAt": "2026-05-14",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 n8n의 새 네이티브 인스턴스 MCP를 설정하고 OpenCode·Claude Code 등 코딩 에이전트로 워크플로를 만드는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "kTBsEzo3UWo",
+            "mentionSummary": "설명에서 n8n의 새 네이티브 인스턴스 MCP를 설정하고 OpenCode·Claude Code 등 코딩 에이전트로 워크플로를 만드는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=kTBsEzo3UWo",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "linear-mcp",
+      "slug": "linear-mcp",
+      "type": "mcp",
+      "name": "Linear MCP Server",
+      "outcome": "Linear 이슈·프로젝트·문서를 AI 도구에서 찾고 만들고 갱신한다.",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "제품·개발 프로젝트 관리 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude",
+        "Claude Code",
+        "Codex",
+        "Cursor",
+        "VS Code",
+        "Windsurf",
+        "Zed 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Linear 공식 MCP 문서의 클라이언트 목록을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://linear.app/docs/mcp",
+      "officialSources": [
+        "https://linear.app/docs/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://linear.app/docs/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서에 MCP 자체의 별도 요금은 명시되지 않았다. Claude 자동 연결(베타)은 Claude Team·Enterprise 플랜과 양쪽 관리자 권한이 필요하다.",
+      "license": null,
+      "requirements": [
+        "Linear 워크스페이스 계정",
+        "OAuth 2.1 인증 또는 Bearer 방식의 API 키"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서 기준 SSE 엔드포인트는 사용 중단 예정이며 읽기 전용 엔드포인트(mcp/readonly)도 제공된다.",
+        "LinearB 등 이름이 비슷한 다른 제품의 MCP 영상은 합산하지 않았다.",
+        "대표 영상 중 하나는 Firecrawl 제작사 채널이며 Linear를 함께 연결하는 예제로 다룬다."
+      ],
+      "starterPrompt": "이번 사이클 Linear 이슈 중 담당자가 없거나 마감이 지난 항목을 찾아 우선순위별로 정리해줘. 이슈는 수정하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=RYE7y2ziFBU",
+            "title": "Claude Managed Agents: Full MCP Setup with Firecrawl and Linear",
+            "channel": "Firecrawl",
+            "publishedAt": "2026-04-09",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에서 Claude Managed Agents에 Linear를 OAuth 방식 MCP 도구로 연결해 작업을 자동 생성하는 구성을 다룬다.",
+            "timestampSeconds": 28,
+            "timestampLabel": "Credential Vaults Setup",
+            "commercialContext": "Firecrawl 제작사 공식 채널임. Linear와의 상업 관계는 확인하지 않음.",
+            "videoId": "RYE7y2ziFBU",
+            "mentionSummary": "설명에서 Claude Managed Agents에 Linear를 OAuth 방식 MCP 도구로 연결해 작업을 자동 생성하는 구성을 다룬다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=RYE7y2ziFBU&t=28s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=-E5DvxMqZB0",
+            "title": "How to Set Up Linear MCP with Claude Code | Linear MCP Claude Code Tutorial (2026)",
+            "channel": "Patchwave Tutorials",
+            "publishedAt": "2026-06-25",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "제목과 설명에서 Claude Code에 Linear MCP를 설정하는 튜토리얼임을 밝힌다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "-E5DvxMqZB0",
+            "mentionSummary": "제목과 설명에서 Claude Code에 Linear MCP를 설정하는 튜토리얼임을 밝힌다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=-E5DvxMqZB0",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=GwprPPJi7XY",
+            "title": "How to Connect Claude to Linear - Step By Step",
+            "channel": "Mindly Nova",
+            "publishedAt": "2026-08-31",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 공식 Linear MCP 연결을 설정하고 Claude를 승인해 이슈를 검색·생성·수정하는 방법을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "GwprPPJi7XY",
+            "mentionSummary": "설명에서 공식 Linear MCP 연결을 설정하고 Claude를 승인해 이슈를 검색·생성·수정하는 방법을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=GwprPPJi7XY",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supabase-mcp",
+      "slug": "supabase-mcp",
+      "type": "mcp",
+      "name": "Supabase MCP Server",
+      "outcome": "AI 개발 도구가 Supabase 프로젝트의 데이터베이스를 조회하고 스키마·마이그레이션 작업을 돕게 한다.",
+      "categories": [
+        "엑셀·데이터"
+      ],
+      "audience": [
+        "웹 서비스 개발·데이터 운영 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Claude.ai",
+        "ChatGPT",
+        "Codex",
+        "Cursor",
+        "VS Code 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Supabase 공식 MCP 문서의 클라이언트 목록을 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://supabase.com/docs/guides/getting-started/mcp",
+      "officialSources": [
+        "https://supabase.com/docs/guides/getting-started/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://supabase.com/docs/guides/getting-started/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 브랜치 기능 등 일부 도구는 유료 플랜이 필요하다. 프로젝트 생성처럼 비용이 생기는 작업은 확인 절차를 거친다.",
+      "license": null,
+      "requirements": [
+        "Supabase 계정과 대상 프로젝트 권한",
+        "OAuth 로그인(기본) 또는 CI용 개인 액세스 토큰"
+      ],
+      "connectionModes": [
+        "remote",
+        "local"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서는 운영 데이터베이스 연결을 꼭 필요할 때만 하고, 읽기 전용 모드와 단일 프로젝트 범위 지정을 권한다.",
+        "도구 호출 승인 설정을 켜 두고 프롬프트 주입 위험을 고려한다.",
+        "2025년 상반기 영상의 설치 방식(개인 액세스 토큰 필수 등)은 현재 안내와 다를 수 있다."
+      ],
+      "starterPrompt": "연결된 Supabase 프로젝트의 테이블 목록과 각 테이블의 행 수·주요 컬럼을 읽기 전용으로 정리해줘. 데이터는 변경하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=M5CsRj6zSCA",
+            "title": "5 MCP Servers That Make Claude Code 10x More Powerful (Full-Stack App Build)",
+            "channel": "Eric Tech",
+            "publishedAt": "2025-12-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명의 MCP 목록에 공식 Supabase MCP 문서 링크를 두고 데이터베이스·스토리지 작업에 사용하는 앱 제작을 시연한다.",
+            "timestampSeconds": 317,
+            "timestampLabel": "Installing MCP servers",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "M5CsRj6zSCA",
+            "mentionSummary": "설명의 MCP 목록에 공식 Supabase MCP 문서 링크를 두고 데이터베이스·스토리지 작업에 사용하는 앱 제작을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=M5CsRj6zSCA&t=317s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=0OvYpVUQ2D4",
+            "title": "Connect Supabase to Claude Code in 3 Mins (Full Setup Tutorial)",
+            "channel": "AiNow",
+            "publishedAt": "2026-06-13",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 mcp.supabase.com/mcp 추가 명령과 OAuth 인증 절차를 적고 테이블 조회를 시연한다.",
+            "timestampSeconds": 15,
+            "timestampLabel": "Configuring MCP Client and Permissions",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "0OvYpVUQ2D4",
+            "mentionSummary": "설명에 mcp.supabase.com/mcp 추가 명령과 OAuth 인증 절차를 적고 테이블 조회를 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=0OvYpVUQ2D4&t=15s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=QQU6ujAyphA",
+            "title": "How to Connect Claude Code to Supabase Using MCP (Step by Step) 2026",
+            "channel": "Checkmark Academy",
+            "publishedAt": "2026-07-31",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude Code를 MCP로 Supabase 데이터베이스에 연결하고 터미널에서 관리하는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "QQU6ujAyphA",
+            "mentionSummary": "설명에서 Claude Code를 MCP로 Supabase 데이터베이스에 연결하고 터미널에서 관리하는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=QQU6ujAyphA",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "stripe-mcp",
+      "slug": "stripe-mcp",
+      "type": "mcp",
+      "name": "Stripe MCP Server",
+      "outcome": "AI 도구에서 Stripe 결제·고객·청구 자료를 조회하고 상품·결제 링크 등 연동 작업을 돕게 한다.",
+      "categories": [
+        "엑셀·데이터",
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "온라인 결제·구독 서비스 개발 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude",
+        "Claude Code",
+        "Codex",
+        "ChatGPT",
+        "Cursor",
+        "VS Code 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Stripe 공식 MCP 문서의 클라이언트별 설정을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://docs.stripe.com/mcp",
+      "officialSources": [
+        "https://docs.stripe.com/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.stripe.com/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "MCP 연결 자체의 별도 요금은 공식 문서에 명시되지 않았다. 결제·송금 등 실행한 작업에는 Stripe 계정의 요금 조건이 적용된다.",
+      "license": null,
+      "requirements": [
+        "Stripe 계정",
+        "OAuth 인증 또는 Agent 태그가 있는 agent API 키",
+        "관리자의 MCP 접근 허용(팀 계정)"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서 기준 2026-11-30 이후 전체 권한 비밀 키와 Agent 태그 없는 제한 키는 MCP에서 거부되므로 영상 속 API 키 설정은 바뀔 수 있다.",
+        "실제 돈이 움직이는 작업이 가능하므로 샌드박스에서 먼저 시험하고 도구 호출 승인 설정을 켠다.",
+        "일부 환불·송금 작업은 Stripe 대시보드의 사람 확인 절차를 거친다."
+      ],
+      "starterPrompt": "샌드박스 Stripe 계정에서 최근 30일 결제 실패 건을 원인별로 집계해 표로 보여줘. 어떤 자료도 생성·수정하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=G2SACOec6FA",
+            "title": "Add Stripe Payments with Claude Code (Stripe MCP Server)",
+            "channel": "MaksDevInsights",
+            "publishedAt": "2026-06-26",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 공식 docs.stripe.com/mcp 링크를 두고 Claude Code에서 Stripe MCP를 OAuth·샌드박스로 인증해 구독 결제를 구현한다.",
+            "timestampSeconds": 210,
+            "timestampLabel": "Install & authenticate the MCP in Claude Code",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "G2SACOec6FA",
+            "mentionSummary": "설명에 공식 docs.stripe.com/mcp 링크를 두고 Claude Code에서 Stripe MCP를 OAuth·샌드박스로 인증해 구독 결제를 구현한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=G2SACOec6FA&t=210s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=hG7iXjUfuTc",
+            "title": "Claude Connector for Stripe Payments in 5 Minutes (Sandbox MCP & Skills Setup)",
+            "channel": "Pure Tech Lens",
+            "publishedAt": "2026-07-04",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 공식 Stripe MCP 커넥터 연결과 샌드박스 모드 선택, 권한 설정을 강조한다.",
+            "timestampSeconds": 76,
+            "timestampLabel": "How to Connect Stripe to Claude Code",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "hG7iXjUfuTc",
+            "mentionSummary": "설명과 챕터에서 공식 Stripe MCP 커넥터 연결과 샌드박스 모드 선택, 권한 설정을 강조한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=hG7iXjUfuTc&t=76s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=gg4occ9q92M",
+            "title": "Connect Stripe MCP to Claude Code in 3 Mins | Analyze Payments & Customer Data",
+            "channel": "AiNow",
+            "publishedAt": "2026-06-21",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Stripe MCP를 Claude Code에 연결해 고객·결제 자료를 조회·분석하는 흐름을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "gg4occ9q92M",
+            "mentionSummary": "설명에서 Stripe MCP를 Claude Code에 연결해 고객·결제 자료를 조회·분석하는 흐름을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=gg4occ9q92M",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "monday-mcp",
+      "slug": "monday-mcp",
+      "type": "mcp",
+      "name": "monday.com MCP",
+      "outcome": "monday.com 보드의 항목을 AI 대화에서 조회·생성하고 상태·담당자·마감일을 갱신한다.",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "프로젝트·업무 일정 관리 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "ChatGPT",
+        "Cursor",
+        "Copilot",
+        "Gemini 및 지원 AI 도구"
+      ],
+      "platformEvidence": "monday.com 공식 개발자 문서의 지원 플랫폼 목록을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://developer.monday.com/api-reference/docs/mondaycom-mcp",
+      "officialSources": [
+        "https://developer.monday.com/api-reference/docs/mondaycom-mcp",
+        "https://github.com/mondaycom/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developer.monday.com/api-reference/docs/mondaycom-mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 MCP 도구 호출은 GraphQL API 요청으로 처리되어 계정의 일일 API 호출 한도에 포함된다. 플랜별 조건은 도입 시 확인한다.",
+      "license": null,
+      "requirements": [
+        "monday.com 계정과 대상 보드 권한",
+        "API 토큰, OAuth 앱 또는 동적 클라이언트 등록 방식의 인증",
+        "관리자가 허용하지 않은 연결은 승인 필요"
+      ],
+      "connectionModes": [
+        "remote",
+        "local"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 호스팅 서버(mcp.monday.com/mcp)를 기준으로 하며, 이전 SSE 주소나 로컬 npm 패키지 설정은 현재 안내와 다를 수 있다.",
+        "앱 개발용 Apps MCP는 별도 서버이다.",
+        "대표 영상 일부는 monday.com 파트너·컨설팅 채널이다."
+      ],
+      "starterPrompt": "우리 팀 보드에서 이번 주 마감인데 상태가 진행 전인 항목을 담당자별로 정리해줘. 항목은 수정하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=M_VDLEHXrEw",
+            "title": "Claude + monday.com Changed How I Work",
+            "channel": "Mastering monday",
+            "publishedAt": "2026-05-28",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 monday의 MCP 커넥터로 Claude를 연결하고 권한 승인, 보드 조회, 항목 생성·마감일 수정을 시연한다.",
+            "timestampSeconds": 91,
+            "timestampLabel": "Connecting monday.com to Claude",
+            "commercialContext": "제작자의 상담 예약·진단 앱 홍보 링크가 포함되어 있음.",
+            "videoId": "M_VDLEHXrEw",
+            "mentionSummary": "설명과 챕터에서 monday의 MCP 커넥터로 Claude를 연결하고 권한 승인, 보드 조회, 항목 생성·마감일 수정을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=M_VDLEHXrEw&t=91s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=qUx9hSXelAA",
+            "title": "How to Connect Monday.com to Claude AI (Step‑by‑Step) 2026",
+            "channel": "Checkmark Academy",
+            "publishedAt": "2026-04-27",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 공식 MCP 통합으로 monday.com과 Claude를 연결하고 커넥터 승인·권한 관리 후 업무를 자동화하는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "qUx9hSXelAA",
+            "mentionSummary": "설명에서 공식 MCP 통합으로 monday.com과 Claude를 연결하고 커넥터 승인·권한 관리 후 업무를 자동화하는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=qUx9hSXelAA",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=Tl90chl5B4w",
+            "title": "Connecter Monday à Claude : le tuto en 1 minute (Monday MCP)",
+            "channel": "Anaïs BLANQUET",
+            "publishedAt": "2026-04-23",
+            "language": "fr",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "프랑스어 설명에서 Monday MCP로 Claude가 보드를 읽고 항목을 만들 수 있게 연결하는 과정을 코드 없이 소개한다.",
+            "timestampSeconds": 27,
+            "timestampLabel": "Tuto étape 1",
+            "commercialContext": "제작자의 프리랜서 서비스 소개가 포함되어 있음.",
+            "videoId": "Tl90chl5B4w",
+            "mentionSummary": "프랑스어 설명에서 Monday MCP로 Claude가 보드를 읽고 항목을 만들 수 있게 연결하는 과정을 코드 없이 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=Tl90chl5B4w&t=27s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "granola-mcp",
+      "slug": "granola-mcp",
+      "type": "mcp",
+      "name": "Granola MCP",
+      "outcome": "Granola 회의 노트를 AI 대화에서 검색하고 결정사항·후속 업무를 정리한다.",
+      "categories": [
+        "문서·보고서",
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "회의가 많은 기획·영업·관리 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "ChatGPT",
+        "Claude Code 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Granola 공식 도움말의 연결 방법을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://docs.granola.ai/help-center/sharing/integrations/mcp",
+      "officialSources": [
+        "https://docs.granola.ai/help-center/sharing/integrations/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.granola.ai/help-center/sharing/integrations/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 무료(Basic) 플랜은 최근 30일 노트만 읽을 수 있고, 전사본 조회와 쓰기 도구는 유료 플랜에서 제공된다.",
+      "license": null,
+      "requirements": [
+        "Granola 계정",
+        "Streamable HTTP와 OAuth 2.0을 지원하는 MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "데스크톱 앱 로컬 자료를 읽는 커뮤니티 Granola MCP 서버들과 다른 공식 원격 서버(mcp.granola.ai/mcp) 항목이다.",
+        "MCP는 현재 활성 워크스페이스의 노트만 조회한다.",
+        "대표 영상 중 하나에 제휴 링크가 포함되어 있다."
+      ],
+      "starterPrompt": "지난주 회의 노트에서 결정된 사항과 담당자별 후속 업무를 찾아 표로 정리해줘. 각 항목에 회의 이름과 날짜를 붙여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=wNnIEun8iiM",
+            "title": "Granola + Claude: Automate Meeting Notes",
+            "channel": "Jonathan Lewell",
+            "publishedAt": "2026-05-05",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Claude Code에 Granola MCP를 설치·인증하고 회의 노트를 가져오는 과정을 시연한다.",
+            "timestampSeconds": 90,
+            "timestampLabel": "Running Setup Command",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "wNnIEun8iiM",
+            "mentionSummary": "설명과 챕터에서 Claude Code에 Granola MCP를 설치·인증하고 회의 노트를 가져오는 과정을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=wNnIEun8iiM&t=90s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=QWd_wyhsfM0",
+            "title": "Claude MCP Tutorial: Granola Meeting Notes in 90 Seconds",
+            "channel": "Darby Rollins | Gen AI University",
+            "publishedAt": "2026-03-03",
+            "language": "en",
+            "evidenceLevel": "youtube_title_and_description",
+            "mention": "제목과 설명에서 Claude 커넥터에 Granola를 추가하고 노트를 바로 불러오는 MCP 연결을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "제작자의 교육 커뮤니티·행사 홍보 링크가 포함되어 있음.",
+            "videoId": "QWd_wyhsfM0",
+            "mentionSummary": "제목과 설명에서 Claude 커넥터에 Granola를 추가하고 노트를 바로 불러오는 MCP 연결을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=QWd_wyhsfM0",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=WI38ZgCyRRU",
+            "title": "Granola App MCP Tutorial: Connect Notes to Claude (Full Tutorial)",
+            "channel": "Automation Stack",
+            "publishedAt": "2026-09-04",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Granola MCP 엔드포인트를 Claude·ChatGPT에 연결하고 노트 조회와 기록 기간 제한을 확인한다.",
+            "timestampSeconds": 26,
+            "timestampLabel": "Find Granola MCP settings",
+            "commercialContext": "제휴 링크가 포함될 수 있다고 설명에 공개함.",
+            "videoId": "WI38ZgCyRRU",
+            "mentionSummary": "설명과 챕터에서 Granola MCP 엔드포인트를 Claude·ChatGPT에 연결하고 노트 조회와 기록 기간 제한을 확인한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=WI38ZgCyRRU&t=26s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "gamma-mcp",
+      "slug": "gamma-mcp",
+      "type": "mcp",
+      "name": "Gamma MCP Server",
+      "outcome": "AI 대화에서 Gamma 발표자료·문서·웹페이지를 만들고 수정하거나 PDF·PPTX로 내보낸다.",
+      "categories": [
+        "발표·제안서",
+        "홍보·디자인"
+      ],
+      "audience": [
+        "발표자료·제안서 작성 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "ChatGPT",
+        "Slack(Gamma 앱) 및 OAuth 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Gamma 공식 개발자 문서의 커넥터 목록을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://developers.gamma.app/mcp/gamma-mcp-server",
+      "officialSources": [
+        "https://developers.gamma.app/mcp/gamma-mcp-server"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developers.gamma.app/mcp/gamma-mcp-server",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 모든 Gamma 플랜에서 사용할 수 있고 생성·편집·이미지 생성은 크레딧을 사용한다. 조회·내보내기·복제는 크레딧을 쓰지 않으며 분석 도구는 Pro 이상이 필요하다.",
+      "license": null,
+      "requirements": [
+        "Gamma 계정과 워크스페이스 선택·권한 승인",
+        "OAuth와 동적 클라이언트 등록을 지원하는 클라이언트(직접 연결 시 리디렉션 주소 사전 등록)"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "Gamma 공개 API를 API 키로 감싼 커뮤니티 Gamma MCP 서버들과 다른 공식 호스팅 서버(mcp.gamma.app/mcp) 항목이다.",
+        "공식 문서 기준 Claude용 Gamma 커넥터는 이 MCP 서버를 사용한다.",
+        "대표 영상 일부에 제휴 링크나 제작자 배포 자료 홍보가 있다."
+      ],
+      "starterPrompt": "이 사업 개요를 바탕으로 Gamma에서 10장 내외의 제안 발표자료 초안을 만들어줘. 장표마다 핵심 메시지 한 줄을 먼저 보여줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=kMQ39bEFKTA",
+            "title": "How to Connect Claude to Gamma (MCP Setup + Free Skill) — 4K AI Designs in Minutes",
+            "channel": "Zack Deris",
+            "publishedAt": "2026-08-10",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Gamma MCP(커넥터)를 Claude에 연결하고 제안 발표자료·인포그래픽 생성과 편집을 시연한다.",
+            "timestampSeconds": 68,
+            "timestampLabel": "Step 1: Connect the Gamma MCP to Claude",
+            "commercialContext": "제작자의 무료 스킬 배포 사이트 링크가 포함되어 있음.",
+            "videoId": "kMQ39bEFKTA",
+            "mentionSummary": "설명과 챕터에서 Gamma MCP(커넥터)를 Claude에 연결하고 제안 발표자료·인포그래픽 생성과 편집을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=kMQ39bEFKTA&t=68s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=okz1M7V1Spg",
+            "title": "How To Make AI-Powered Slides in Claude with Gamma",
+            "channel": "Lvl 99 TechSkillz",
+            "publishedAt": "2026-03-20",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Claude 설정의 Gamma 커넥터 연결과 발표자료 생성·수정 흐름을 소개한다.",
+            "timestampSeconds": 0,
+            "timestampLabel": "Connect Gamma",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "okz1M7V1Spg",
+            "mentionSummary": "설명과 챕터에서 Claude 설정의 Gamma 커넥터 연결과 발표자료 생성·수정 흐름을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=okz1M7V1Spg&t=0s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=567Y2qiEUM0",
+            "title": "How to Connect Claude AI to Gamma and Create Presentations Automatically",
+            "channel": "Checkmark Academy",
+            "publishedAt": "2026-03-22",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude의 Connectors에서 Gamma를 켜고 한 번의 요청으로 발표자료를 만드는 과정을 안내한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "567Y2qiEUM0",
+            "mentionSummary": "설명에서 Claude의 Connectors에서 Gamma를 켜고 한 번의 요청으로 발표자료를 만드는 과정을 안내한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=567Y2qiEUM0",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "webflow-mcp",
+      "slug": "webflow-mcp",
+      "type": "mcp",
+      "name": "Webflow MCP Server",
+      "outcome": "AI 도구에서 Webflow 사이트의 페이지·CMS·SEO 설정을 조회하고 수정한다.",
+      "categories": [
+        "홍보·디자인"
+      ],
+      "audience": [
+        "웹사이트 운영·마케팅 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude Code",
+        "Claude Desktop",
+        "ChatGPT",
+        "Codex",
+        "Cursor 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Webflow 공식 MCP 문서의 클라이언트 목록을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://developers.webflow.com/mcp",
+      "officialSources": [
+        "https://developers.webflow.com/mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://developers.webflow.com/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 페이지 브랜치·팀 관리는 Enterprise, 분석·최적화 기능은 유료 사이트 플랜의 추가 기능이 필요하다. 그 밖의 비용 조건은 도입 시 확인한다.",
+      "license": null,
+      "requirements": [
+        "Webflow 계정과 대상 워크스페이스·사이트 권한",
+        "Designer 작업 일부는 Designer에서 MCP Bridge App 실행"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "공식 문서 기준 새 사이트 생성, 클래식 인터랙션 제작 등은 MCP로 자동화할 수 없다.",
+        "한 번의 인증은 하나의 워크스페이스에만 적용된다.",
+        "대표 영상 중 하나는 Webflow 에이전시 채널이며 제작사 공식 채널 영상은 보조 근거로만 둔다."
+      ],
+      "starterPrompt": "우리 Webflow 사이트의 페이지별 SEO 제목과 메타 설명을 표로 정리하고, 빠졌거나 너무 긴 항목만 표시해줘. 사이트는 수정하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=icjPi7on7j0",
+            "title": "How to Use Claude Code with Webflow (Webflow MCP Tutorial 2026)",
+            "channel": "Flowout",
+            "publishedAt": "2026-10-14",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 공식 MCP 문서 링크를 두고 Claude Code에 Webflow MCP를 연결해 페이지 수정·CMS 구성·SEO 설정을 시연한다.",
+            "timestampSeconds": 60,
+            "timestampLabel": "How to connect the Webflow MCP to Claude Code",
+            "commercialContext": "Webflow 에이전시 채널이며 자사 서비스 안내가 포함되어 있음.",
+            "videoId": "icjPi7on7j0",
+            "mentionSummary": "설명에 공식 MCP 문서 링크를 두고 Claude Code에 Webflow MCP를 연결해 페이지 수정·CMS 구성·SEO 설정을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=icjPi7on7j0&t=60s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=AfflFlSuj_c",
+            "title": "Webflow MCP Update: I’ll never use webflow the same...",
+            "channel": "Richard Pines",
+            "publishedAt": "2026-04-02",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude·Claude Code가 Webflow Designer를 더 직접 다루게 한 Webflow MCP 업데이트를 시험한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "AfflFlSuj_c",
+            "mentionSummary": "설명에서 Claude·Claude Code가 Webflow Designer를 더 직접 다루게 한 Webflow MCP 업데이트를 시험한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=AfflFlSuj_c",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": [
+          {
+            "url": "https://www.youtube.com/watch?v=r2Az8ajekAQ",
+            "title": "Manage Webflow with AI: Things you can do with Webflow MCP and Claude",
+            "channel": "Webflow",
+            "publishedAt": "2026-04-22",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "제작사 설명에서 Webflow MCP와 Claude 커넥터로 사이트 개요 조회, SEO 제목 점검·수정을 시연한다.",
+            "timestampSeconds": null,
+            "commercialContext": "제작사 공식 채널임.",
+            "videoId": "r2Az8ajekAQ",
+            "mentionSummary": "제작사 설명에서 Webflow MCP와 Claude 커넥터로 사이트 개요 조회, SEO 제목 점검·수정을 시연한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=r2Az8ajekAQ",
+            "withinPreferredWindow": true
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "apify-mcp",
+      "slug": "apify-mcp",
+      "type": "mcp",
+      "name": "Apify MCP Server",
+      "outcome": "Apify의 수집용 Actor를 AI 대화에서 찾아 실행하고 웹 자료를 구조화된 목록으로 가져온다.",
+      "categories": [
+        "조사·자료 정리"
+      ],
+      "audience": [
+        "시장·채용·경쟁사 자료 조사 담당자"
+      ],
+      "listingTier": "general",
+      "platforms": [
+        "Claude",
+        "Claude Desktop",
+        "Claude Code",
+        "Cursor",
+        "VS Code 및 MCP 호환 클라이언트"
+      ],
+      "platformEvidence": "Apify 공식 문서의 클라이언트 안내를 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://docs.apify.com/platform/integrations/mcp",
+      "officialSources": [
+        "https://docs.apify.com/platform/integrations/mcp",
+        "https://github.com/apify/apify-mcp-server"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://docs.apify.com/platform/integrations/mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서에 MCP 사용 자체의 크레딧 단가는 명시되지 않았다. Actor 실행은 Apify 계정 사용량에 포함되므로 콘솔에서 사용량을 확인한다.",
+      "license": null,
+      "requirements": [
+        "Actor 실행 시 Apify 계정 OAuth 또는 API 토큰",
+        "MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "remote",
+        "local"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "수집 대상 사이트의 이용약관과 개인정보 처리 기준은 사용자가 따로 확인해야 한다.",
+        "공식 문서 기준 원격 서버 기본 설정에서 익명 사용 통계가 수집되며 끌 수 있다.",
+        "대표 영상 중 하나는 제작사 공식 채널이다."
+      ],
+      "starterPrompt": "지정한 경쟁사 3곳의 공개 웹사이트에서 제품명·가격·주요 기능을 수집해 비교표로 만들어줘. 출처 주소와 수집 날짜를 남겨줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 3,
+        "uniqueChannelCount": 3,
+        "confirmedPreferredWindowChannelCount": 3,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=m9ohM7iCYv8",
+            "title": "Find Jobs with Claude Code and Apify MCP in 5 mins : Full tutorial",
+            "channel": "AiNow",
+            "publishedAt": "2026-06-27",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Apify MCP 서버를 Claude Code에 연결해 채용 공고 목록을 구조화해 수집하는 과정을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "m9ohM7iCYv8",
+            "mentionSummary": "설명에서 Apify MCP 서버를 Claude Code에 연결해 채용 공고 목록을 구조화해 수집하는 과정을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=m9ohM7iCYv8",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=yWezkZHGGSE",
+            "title": "How to Connect Apify to Claude AI",
+            "channel": "Online Fanatic",
+            "publishedAt": "2026-07-06",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude 커넥터 목록의 Apify를 설치하고 API 토큰으로 연결하는 순서를 안내한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "yWezkZHGGSE",
+            "mentionSummary": "설명에서 Claude 커넥터 목록의 Apify를 설치하고 API 토큰으로 연결하는 순서를 안내한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=yWezkZHGGSE",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=XP5mbTNe-8o",
+            "title": "Complete AI Visibility Audit with Claude Cowork + Apify MCP | SEO/GEO/AIO Strategy",
+            "channel": "Apify",
+            "publishedAt": "2026-03-18",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "제작사 설명에 mcp.apify.com과 공식 MCP 문서 링크를 두고 Claude Cowork로 검색 노출 진단을 수행한다.",
+            "timestampSeconds": null,
+            "commercialContext": "제작사 공식 채널임.",
+            "videoId": "XP5mbTNe-8o",
+            "mentionSummary": "제작사 설명에 mcp.apify.com과 공식 MCP 문서 링크를 두고 Claude Cowork로 검색 노출 진단을 수행한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=XP5mbTNe-8o",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "vercel-mcp",
+      "slug": "vercel-mcp",
+      "type": "mcp",
+      "name": "Vercel MCP",
+      "outcome": "AI 개발 도구가 Vercel 프로젝트의 배포 상태·로그·문서를 조회하고 배포 작업을 돕게 한다.",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "웹 서비스 개발·배포 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Claude.ai·Claude Desktop",
+        "ChatGPT",
+        "Codex CLI",
+        "Cursor",
+        "VS Code 및 승인된 MCP 클라이언트"
+      ],
+      "platformEvidence": "Vercel 공식 문서의 지원 클라이언트 목록을 확인했으며 직접 연결하지 않음.",
+      "officialUrl": "https://vercel.com/docs/agent-resources/vercel-mcp",
+      "officialSources": [
+        "https://vercel.com/docs/agent-resources/vercel-mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://vercel.com/docs/agent-resources/vercel-mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "공식 문서 기준 모든 Vercel 플랜에서 사용할 수 있으며 Vercel AI 제품 약관이 적용된다.",
+      "license": null,
+      "requirements": [
+        "Vercel 계정과 팀·프로젝트 권한",
+        "Vercel이 승인했거나 CIMD를 사용하는 MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "remote"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "연결한 AI 도구는 사용자 Vercel 계정과 같은 권한을 가지므로 사람 확인 단계를 켜 둔다.",
+        "공식 엔드포인트(mcp.vercel.com)인지 확인하고 제3자 원클릭 설치 주소를 점검한다.",
+        "Vercel에 직접 MCP 서버를 배포하는 방법을 다룬 영상과는 다른 항목이다."
+      ],
+      "starterPrompt": "최근 실패한 Vercel 배포의 빌드 로그를 읽고 실패 원인과 수정 후보를 정리해줘. 재배포는 하지 마.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=8lRAxqYx0Cw",
+            "title": "Connect Claude Code to Vercel in 3 Minutes (MCP Setup Guide)",
+            "channel": "Cody Bontecou",
+            "publishedAt": "2025-12-02",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에 공식 Vercel MCP 문서 링크를 두고 Claude Code를 공식 MCP 서버에 연결해 배포 로그·프로젝트 정보를 조회하는 방법을 소개한다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "8lRAxqYx0Cw",
+            "mentionSummary": "설명에 공식 Vercel MCP 문서 링크를 두고 Claude Code를 공식 MCP 서버에 연결해 배포 로그·프로젝트 정보를 조회하는 방법을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=8lRAxqYx0Cw",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=M5CsRj6zSCA",
+            "title": "5 MCP Servers That Make Claude Code 10x More Powerful (Full-Stack App Build)",
+            "channel": "Eric Tech",
+            "publishedAt": "2025-12-12",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명의 MCP 목록에 Vercel MCP 공식 문서 링크를 두고 앱 배포 단계에서 사용한다.",
+            "timestampSeconds": 1556,
+            "timestampLabel": "Deploying to Vercel",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "M5CsRj6zSCA",
+            "mentionSummary": "설명의 MCP 목록에 Vercel MCP 공식 문서 링크를 두고 앱 배포 단계에서 사용한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=M5CsRj6zSCA&t=1556s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": []
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "chrome-devtools-mcp",
+      "slug": "chrome-devtools-mcp",
+      "type": "mcp",
+      "name": "Chrome DevTools MCP",
+      "outcome": "AI 개발 도구가 실제 Chrome 브라우저에서 페이지를 열고 콘솔 오류·네트워크·성능을 점검하게 한다.",
+      "categories": [
+        "반복업무·서비스 연결"
+      ],
+      "audience": [
+        "웹 개발·품질관리 담당자"
+      ],
+      "listingTier": "technical",
+      "platforms": [
+        "Claude Code",
+        "Cursor",
+        "VS Code·Copilot",
+        "Gemini CLI 및 지원 MCP 클라이언트"
+      ],
+      "platformEvidence": "Chrome DevTools 공식 저장소의 클라이언트 설정 안내를 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "officialSources": [
+        "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+      ],
+      "distribution": {
+        "mode": "official-link",
+        "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+        "directDownloadUrl": null
+      },
+      "costNotes": "오픈소스(Apache-2.0)로 배포되며 별도 서비스 요금은 확인되지 않았다. 사용하는 AI 클라이언트 이용료는 별도이다.",
+      "license": "Apache-2.0",
+      "requirements": [
+        "Node.js LTS와 npm",
+        "최신 안정판 Google Chrome",
+        "MCP 클라이언트"
+      ],
+      "connectionModes": [
+        "local"
+      ],
+      "includedComponents": [],
+      "relationships": {},
+      "caveats": [
+        "Playwright MCP·Claude in Chrome 등 다른 브라우저 도구와 구분한 항목이다.",
+        "저장소 안내 기준 브라우저 내용이 MCP 클라이언트에 노출되므로 민감한 계정 화면에서는 사용을 피한다.",
+        "사용 통계 수집과 성능 도구의 CrUX 조회는 기본 활성이며 옵션으로 끌 수 있다."
+      ],
+      "starterPrompt": "로컬에서 띄운 우리 웹페이지를 열어 콘솔 오류와 느린 네트워크 요청을 찾아 정리해줘. 파일은 수정하지 말고 원인 후보만 알려줘.",
+      "starterPromptStatus": "editorial-example-not-execution-tested",
+      "publicationStatus": "published",
+      "reviewStatus": "source-reviewed",
+      "sourceCheckedAt": "2026-11-14",
+      "guideUpdatedAt": "2026-11-14",
+      "verifiedAt": null,
+      "verification": {
+        "installation": "not-tested",
+        "connection": "not-tested",
+        "representativeTask": "not-tested"
+      },
+      "youtubeEvidence": {
+        "checkedAt": "2026-11-14",
+        "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+        "uniqueVideoCount": 2,
+        "uniqueChannelCount": 2,
+        "confirmedPreferredWindowChannelCount": 2,
+        "undatedVideoCount": 0,
+        "outsidePreferredWindowVideoCount": 0,
+        "containsDateCaveats": false,
+        "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+        "videos": [
+          {
+            "url": "https://www.youtube.com/watch?v=BIX4ZAvt2us",
+            "title": "I Tested All 3 Browser Tools for Claude Code Here's the Best One",
+            "channel": "AyyazTech",
+            "publishedAt": "2026-02-17",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명과 챕터에서 Google의 Chrome DevTools MCP 설치 명령과 성능 분석·콘솔 오류 디버깅 시연을 다른 브라우저 도구와 비교한다.",
+            "timestampSeconds": 150,
+            "timestampLabel": "Tool 1: Chrome DevTools MCP (Google)",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "BIX4ZAvt2us",
+            "mentionSummary": "설명과 챕터에서 Google의 Chrome DevTools MCP 설치 명령과 성능 분석·콘솔 오류 디버깅 시연을 다른 브라우저 도구와 비교한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=BIX4ZAvt2us&t=150s",
+            "withinPreferredWindow": true
+          },
+          {
+            "url": "https://www.youtube.com/watch?v=db00Rt_6Tik",
+            "title": "I let Claude open Chrome itself — the entire dev loop just collapsed",
+            "channel": "Claude lab",
+            "publishedAt": "2026-05-19",
+            "language": "en",
+            "evidenceLevel": "youtube_description_and_chapters",
+            "mention": "설명에 공식 ChromeDevTools 저장소와 Claude Code 설치 명령을 두고 도구 구성과 첫 사용 흐름을 소개한다.",
+            "timestampSeconds": 12,
+            "timestampLabel": "What chrome-devtools-mcp is",
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "db00Rt_6Tik",
+            "mentionSummary": "설명에 공식 ChromeDevTools 저장소와 Claude Code 설치 명령을 두고 도구 구성과 첫 사용 흐름을 소개한다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=db00Rt_6Tik&t=12s",
+            "withinPreferredWindow": true
+          }
+        ],
+        "supplementalVideos": [
+          {
+            "url": "https://www.youtube.com/watch?v=vzL_KFPnLVw",
+            "title": "Automating QA Testing with Claude Code and Chrome DevTools MCP",
+            "channel": "Zainul Zain (Jai)",
+            "publishedAt": "2025-10-03",
+            "language": "en",
+            "evidenceLevel": "youtube_description",
+            "mention": "설명에서 Claude Code와 Chrome DevTools MCP로 QA 테스트를 자동화하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+            "timestampSeconds": null,
+            "commercialContext": "협찬 여부는 확인하지 않음.",
+            "videoId": "vzL_KFPnLVw",
+            "mentionSummary": "설명에서 Claude Code와 Chrome DevTools MCP로 QA 테스트를 자동화하는 방법을 소개한다. 조사 기간 이전 영상이다.",
+            "checkedAt": "2026-11-14",
+            "deepLink": "https://www.youtube.com/watch?v=vzL_KFPnLVw",
+            "withinPreferredWindow": false
+          }
+        ]
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "name": "ClickUp MCP Server",
+      "reason": "공식 원격 서버(mcp.clickup.com/mcp)는 확인했으나, 조사 기간 영상 설명이 공식 MCP 서버를 명시하지 않거나(일반 연결 안내) Composio 등 제3자 경로, ClickUp Brain의 MCP 클라이언트 기능을 다뤄 공식 서버 근거 2개 채널을 확보하지 못했다."
+    },
+    {
+      "name": "Box MCP Server",
+      "reason": "공식 원격 서버(mcp.box.com)는 확인했으나 조사 기간 내 영상은 제작사 채널 1개뿐이고, 다른 채널 영상(Appsecco)은 2025-09 게시이며 로컬 STDIO 방식의 다른 구현을 다뤄 합산할 수 없다."
+    },
+    {
+      "name": "Google Workspace MCP (Gmail·Drive·Calendar)",
+      "reason": "Google이 제공하는 Workspace 전용 공식 MCP 서버를 이번 조사에서 확인하지 못했다. 검색된 영상은 커뮤니티 서버, Google Workspace CLI, Claude 내장 커넥터가 섞여 있어 같은 구현체 근거로 합산할 수 없다."
+    },
+    {
+      "name": "Microsoft 365 / Work IQ MCP",
+      "reason": "영상이 Anthropic의 Microsoft 365 커넥터, Copilot Studio용 Work IQ MCP, 개인 구현 서버를 각각 다뤄 하나의 공식 MCP 서버에 대한 서로 다른 채널 2개 근거를 확보하지 못했다."
+    },
+    {
+      "name": "Make MCP Server",
+      "reason": "공식 문서(developers.make.com/mcp-server)는 확인되나 영상 근거가 2025년 상반기에 몰려 있고 같은 회사(Pickert)의 두 채널이라 독립 채널 2개로 보기 어렵다. 2026년 영상은 Make 공식 MCP 서버를 명시하지 않는다."
+    },
+    {
+      "name": "Fireflies MCP Server",
+      "reason": "공식 원격 서버(api.fireflies.ai/mcp)는 확인했으나 발견한 소개 영상 3개가 모두 제작사 채널(Fireflies AI)이었다. 다른 채널의 명시적 소개 영상을 찾지 못했다."
+    },
+    {
+      "name": "Brave Search MCP Server",
+      "reason": "Brave 공식 서버(brave/brave-search-mcp-server)가 있으나 검색된 영상 다수가 2025년 이전·커뮤니티 패키지·구형 참조 서버를 다뤄 공식 구현체를 명시한 조사 기간 내 채널 2개를 확인하지 못했다."
+    },
+    {
+      "name": "Tavily MCP / Perplexity MCP",
+      "reason": "검색된 영상이 조사 기간 이전이거나 공식 패키지와 커뮤니티 래퍼를 구분하지 않아 같은 구현체 근거로 확인하지 못했다."
+    },
+    {
+      "name": "Cloudflare MCP Servers",
+      "reason": "Cloudflare는 여러 개의 제품별 MCP 서버를 운영하며, 영상이 Workers로 직접 MCP 서버를 만드는 방법과 공식 서버 사용을 섞어 다뤄 특정 서버 기준 2개 채널 근거를 정리하지 못했다."
+    },
+    {
+      "name": "Desktop Commander MCP / Blender MCP",
+      "reason": "제작자 주체가 커뮤니티이거나(Desktop Commander) 공식·커뮤니티 구현이 같은 이름으로 함께 소개되어(Blender MCP) 이번 조사 시간 안에 구현체 구분과 영상 검증을 마치지 못했다."
+    },
+    {
+      "name": "Sentry MCP Server",
+      "reason": "리드 검토에서 제외: 두 채널 중 하나가 자동 생성으로 보이는 저품질 채널이라 2개 채널 기준을 충족한다고 보기 어려움."
+    }
+  ],
+  "leadReview": "2026-11-14 리드 검토: 기록별 영상 표본 oEmbed 대조, 엄격 채널 집계로 internal-comms·sentry-mcp 제외."
+}

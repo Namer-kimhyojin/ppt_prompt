@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "hubspot-mcp",
+  "slug": "hubspot-mcp",
+  "type": "mcp",
+  "name": "HubSpot MCP Server",
+  "outcome": "HubSpot CRM의 연락처·회사·딜·티켓 자료를 AI 대화에서 조회하고 권한 범위에서 갱신한다.",
+  "categories": [
+    "엑셀·데이터",
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "영업·마케팅·고객관리 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude 및 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "HubSpot 공식 MCP 페이지는 MCP 호환 AI 도구 전반을 안내하며 이번 조사에서는 연결하지 않음.",
+  "officialUrl": "https://developers.hubspot.com/mcp",
+  "officialSources": [
+    "https://developers.hubspot.com/mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://developers.hubspot.com/mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 페이지에 플랜 조건이 명시되지 않았다. HubSpot 구독 등급별 이용 가능 여부는 도입 시 확인한다.",
+  "license": null,
+  "requirements": [
+    "HubSpot 계정과 CRM 객체 접근권한",
+    "계정 관리자의 최초 연결",
+    "직접 연결하는 경우 HubSpot 개발자 플랫폼의 사용자 수준 앱과 OAuth 범위 설정"
+  ],
+  "connectionModes": [
+    "remote"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "HubSpot CLI로 로컬 실행하는 개발자용 Developer MCP Server와 구분한 원격 CRM 서버 항목이다.",
+    "공식 페이지의 객체별 읽기·쓰기 목록과 FAQ의 읽기 전용 설명이 엇갈리므로 실제 쓰기 범위를 확인한다.",
+    "Windsor.ai 등 제3자 HubSpot 커넥터와 2025년 로컬 패키지 영상은 근거로 합산하지 않았다."
+  ],
+  "starterPrompt": "이번 달 단계가 바뀌지 않은 딜을 담당자별로 정리하고 다음 연락이 필요한 항목을 표로 보여줘. CRM 값은 수정하지 마.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-mcp.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=9z84The2cuw",
+        "title": "I Gave Claude Access to HubSpot. Here's the Honest Result.",
+        "channel": "Vasilij Nevlev | AiGentic Lab",
+        "publishedAt": "2026-03-05",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에 HubSpot MCP 공식 문서·변경 이력 링크를 두고 Claude 연결 후 잘 되는 점과 부족한 점을 정리한다.",
+        "timestampSeconds": 97,
+        "timestampLabel": "Connect HubSpot with Claude",
+        "commercialContext": "제작자의 컨설팅 진단 홍보와 HubSpot 프롬프트 자료 링크가 포함되어 있음.",
+        "videoId": "9z84The2cuw",
+        "mentionSummary": "설명에 HubSpot MCP 공식 문서·변경 이력 링크를 두고 Claude 연결 후 잘 되는 점과 부족한 점을 정리한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=9z84The2cuw&t=97s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=_Y_OC6Uvvos",
+        "title": "Headless CRM with Hubspot's MCP Server and Claude",
+        "channel": "Trelliswork",
+        "publishedAt": "2026-01-13",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Claude 프로젝트에 HubSpot MCP 연결을 켜고 자연어로 CRM 기록을 갱신하는 흐름을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "협찬 여부는 확인하지 않음.",
+        "videoId": "_Y_OC6Uvvos",
+        "mentionSummary": "설명에서 Claude 프로젝트에 HubSpot MCP 연결을 켜고 자연어로 CRM 기록을 갱신하는 흐름을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=_Y_OC6Uvvos",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

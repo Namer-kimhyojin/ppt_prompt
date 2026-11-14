@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "id": "security-guidance-plugin",
+  "slug": "security-guidance-plugin",
+  "type": "plugin",
+  "name": "Security Guidance",
+  "outcome": "AI가 작성·수정한 코드의 보안 위험을 작업 중과 커밋 시점에 점검하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "개발자",
+    "보안 검토 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code"
+  ],
+  "platformEvidence": "Anthropic 공식 Claude Code 플러그인 마켓플레이스 README에 기재된 환경이며 직접 실행한 환경은 아니다.",
+  "officialUrl": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+  "officialSources": [
+    "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+    "https://claude.com/plugins"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 플러그인 코드와 별개로 Claude Code 이용 조건이 적용된다. README에 따르면 패턴 경고 외의 LLM 검토는 토큰이나 구독 사용량을 소모한다. 금액은 조사하지 않았다.",
+  "license": "Apache-2.0",
+  "requirements": [
+    "README 기준 Claude Code CLI 2.1.144 이상",
+    "Python 3.8 이상"
+  ],
+  "connectionModes": [],
+  "includedComponents": [
+    "파일 수정 시 위험 코드 패턴을 알려주는 hook",
+    "응답 종료 시 변경분을 검토하는 Stop hook",
+    "커밋·푸시 시 관련 파일을 읽어 검토하는 에이전트 검토",
+    "프로젝트별 보안 규칙 파일(.claude/claude-security-guidance.md) 지원"
+  ],
+  "relationships": {},
+  "caveats": [
+    "README에 사람의 코드 리뷰·정적/동적 분석·침투 테스트를 대체하지 않으며 누락과 오탐이 있을 수 있다고 적혀 있다.",
+    "변경 내용과 파일 내용이 모델 호출로 전송되므로 규칙 파일에 비밀 정보를 넣지 않는다.",
+    "인증 정보가 플러그인에 전달되지 않으면 LLM 검토는 건너뛰고 패턴 경고만 동작한다."
+  ],
+  "starterPrompt": "이번에 고친 업무 자동화 스크립트의 변경 내용을 보안 관점에서 검토해줘. 비밀번호·API 키가 코드에 들어갔는지, 외부 입력을 그대로 실행하는 부분이 있는지 우선 확인해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-plugins.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=6BMwAasALMI",
+        "title": "Claude Code Security Guidance Plugin Overview",
+        "channel": "Juan Romero - SOCFortress Cofounder",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@JuanRomero-SOCFortress",
+        "publishedAt": "2026-05-29",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_description",
+        "mention": "설명란에서 Anthropic의 무료 security-guidance 플러그인과 3단계 점검 방식을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "보안 서비스 회사 공동창업자의 채널이다.",
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "6BMwAasALMI",
+        "mentionSummary": "설명란에서 Anthropic의 무료 security-guidance 플러그인과 3단계 점검 방식을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6BMwAasALMI",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=pLh7lkozEDc",
+        "title": "Claude Checks Its Own Code for Security Holes: the Security-Guidance Plugin",
+        "channel": "AI Dev Minute",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@aidevminute",
+        "publishedAt": "2026-11-04",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명란에 설치 명령과 파일 수정·응답 종료·커밋 시점의 세 가지 점검, 사용자 규칙 파일을 정리해 소개한다.",
+        "timestampSeconds": 16,
+        "timestampLabel": "Check 1: every file edit",
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일·설명란)와 oEmbed로 확인",
+        "videoId": "pLh7lkozEDc",
+        "mentionSummary": "설명란에 설치 명령과 파일 수정·응답 종료·커밋 시점의 세 가지 점검, 사용자 규칙 파일을 정리해 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=pLh7lkozEDc&t=16s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=5L6RIxPP7dw",
+        "title": "introducing claude code security guidance plugin",
+        "channel": "Raghav Mehra",
+        "creatorRelationship": "third_party_presenter_affiliations_not_verified",
+        "channelUrl": "https://www.youtube.com/@ragsymecollections",
+        "publishedAt": "2026-05-27",
+        "language": "en",
+        "evidenceLevel": "youtube_title_and_page_metadata",
+        "mention": "영상 제목에서 Claude Code security guidance 플러그인을 직접 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": null,
+        "metadataVerification": "YouTube 영상 페이지 메타데이터(제목·채널·게시일)로 확인. 설명란에는 관련 본문이 없었다.",
+        "videoId": "5L6RIxPP7dw",
+        "mentionSummary": "영상 제목에서 Claude Code security guidance 플러그인을 직접 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=5L6RIxPP7dw",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-mcp-builder",
+  "slug": "anthropic-mcp-builder",
+  "type": "skill",
+  "name": "MCP Builder (Anthropic)",
+  "outcome": "외부 서비스·API를 AI가 쓸 수 있게 연결하는 MCP 서버를 설계·구현하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "사내 서비스 연동 개발자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 저장소가 Claude Code 플러그인 마켓플레이스의 example-skills 묶음 설치 경로를 안내하고, Claude.ai 유료 요금제에서 예제 스킬을 쓸 수 있다고 설명한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/mcp-builder/SKILL.md",
+    "https://github.com/anthropics/skills/blob/main/.claude-plugin/marketplace.json"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+    "directDownloadUrl": null
+  },
+  "costNotes": "스킬 폴더의 LICENSE.txt가 Apache License 2.0이다. 실행하는 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [
+    "Python(FastMCP) 또는 Node/TypeScript(MCP SDK) 개발 환경"
+  ],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-example-skills"
+    ],
+    "related": [
+      "anthropic-skill-creator"
+    ],
+    "distributionNote": "example-skills 묶음에 포함된 개별 스킬. 묶음을 설치했다면 따로 설치할 필요가 없다."
+  },
+  "caveats": [
+    "MCP 서버를 새로 만드는 개발용 스킬이다. 이미 공개된 MCP를 연결하는 용도가 아니다.",
+    "ChengHsien Yang 영상은 같은 이름의 스킬을 도서 부록 기록으로 실행했다고 밝히며 Anthropic 저장소 링크를 직접 달지 않았다.",
+    "공식 저장소는 예제 스킬을 시연·교육 목적이라고 밝히고 중요한 업무에 쓰기 전 자체 환경에서 시험하라고 권한다."
+  ],
+  "starterPrompt": "사내 공지 게시판 API 문서를 바탕으로 최근 공지 조회와 키워드 검색 두 기능만 가진 MCP 서버 설계안을 먼저 작성해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "공식 저장소에서 스킬 존재를 확인하고, 해당 스킬 이름을 제목·설명·챕터에 명시한 서로 다른 채널 2개 이상을 확인했다. 검색 발견 표본이며 전체 인기순위가 아니다.",
+    "implementationMatchNote": "Skillmdpro는 공식 저장소를 링크하고 ITコーチ 영상은 공식 스킬이라고 설명한다. ChengHsien Yang·CharlieCowanAI는 저장소 출처를 명시하지 않았다.",
+    "uniqueVideoCount": 4,
+    "uniqueChannelCount": 4,
+    "confirmedPreferredWindowChannelCount": 4,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/ai-tools-expansion-2026-11-14-skills.json",
+    "videos": [
+      {
+        "videoId": "rBYvwm7wdDs",
+        "url": "https://www.youtube.com/watch?v=rBYvwm7wdDs",
+        "title": "Claude Code Skill 技術探討 #003｜mcp-builder：讓 Claude 76 秒做出能跑的 MCP server",
+        "channel": "ChengHsien Yang",
+        "publishedAt": "2026-09-27",
+        "language": "zh-Hant",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "제목과 설명에서 mcp-builder 스킬을 단독 주제로 다루며 Python FastMCP 서버를 만들고 테스트 스크립트로 검증하는 과정을 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에서 영상 대본·음성·자막이 AI로 자동 생성되었고, 도서 《AI Skill 10 倍速指南》 부록 스킬의 실행 기록을 바탕으로 한다고 밝힌다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=rBYvwm7wdDs",
+        "withinPreferredWindow": true,
+        "metadataCaveat": "설명이 Anthropic 저장소 링크를 직접 명시하지 않는다. 도서 부록 스킬 실행 기록이라고 밝히므로 공식 구현과 동일 파일인지는 확인하지 않았다."
+      },
+      {
+        "videoId": "YzV_3F35stk",
+        "url": "https://www.youtube.com/watch?v=YzV_3F35stk",
+        "title": "【完全解説】Claude codeでカスタムコネクタを作る! mcp-builderを使って対話で完成",
+        "channel": "ITコーチ・たそがれのAIコーディングラボ",
+        "publishedAt": "2026-06-04",
+        "language": "ja",
+        "evidenceLevel": "youtube_watch_page_title_description_and_chapters",
+        "mentionSummary": "제목과 설명에서 mcp-builder를 MCP 서버 작성용 공식 스킬로 소개하고 대화로 사용자 지정 커넥터를 만드는 과정을 다룬다.",
+        "timestampSeconds": 494,
+        "timestampLabel": "カスタムコネクタの制作",
+        "commercialContext": "설명에 채널 운영자의 LINE 무료 상담 안내가 있다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=YzV_3F35stk&t=494s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "WsmavjOodGU",
+        "url": "https://www.youtube.com/watch?v=WsmavjOodGU",
+        "title": "Build your first MCP Server - connect Claude to your systems",
+        "channel": "CharlieCowanAI",
+        "publishedAt": "2026-04-08",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_description_and_chapters",
+        "mentionSummary": "설명과 챕터에서 Claude Code의 MCP Builder Skill로 MCP 서버를 만드는 방법을 다룬다.",
+        "timestampSeconds": 1609,
+        "timestampLabel": "MCP Builder Skill in Claude Code",
+        "commercialContext": "운영자 회사(Kowalah) 웨비나 녹화이며 자사 플랫폼 MCP 서버를 시연한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=WsmavjOodGU&t=1609s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "6lZkkv2XmCI",
+        "url": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "title": "17 Official Claude Skills From Anthropic That Will Change How You Use AI",
+        "channel": "Skillmdpro",
+        "publishedAt": "2026-03-17",
+        "language": "en",
+        "evidenceLevel": "youtube_watch_page_title_and_description",
+        "mentionSummary": "설명의 공식 스킬 17종 목록에 MCP Builder을(를) 명시하고 전체 설치 방법과 함께 소개한다.",
+        "timestampSeconds": null,
+        "timestampLabel": null,
+        "commercialContext": "설명에 채널 자체 'Skill.md Pro Resources' 자료 링크가 있다. 협찬 표기는 확인되지 않았다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=6lZkkv2XmCI",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}
