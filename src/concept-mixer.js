@@ -166,6 +166,15 @@
       : MIXER_SAMPLE_PLACEHOLDER;
   }
 
+  function addMixerCacheBuster(url) {
+    const source = String(url || '');
+    if (!source || /^data:|^blob:/i.test(source)) return source;
+    const hashIndex = source.indexOf('#');
+    const base = hashIndex >= 0 ? source.slice(0, hashIndex) : source;
+    const hash = hashIndex >= 0 ? source.slice(hashIndex) : '';
+    return `${base}${base.includes('?') ? '&' : '?'}t=${Date.now()}${hash}`;
+  }
+
   function bindRegisteredMixerSampleFallback(image, itemId) {
     if (!image) return;
     const safeId = String(itemId || '').replace(/[^a-zA-Z0-9._-]/g, '');
@@ -9462,7 +9471,7 @@
     const hasCustomSubjectSample = Boolean(customSubjectSamples[0]);
     let subjectImageUrl = customSubjectSamples[0] || UNSPLASH_CACHE[subject.id] || getRegisteredMixerSampleUrl(subject.id);
     if (customSubjectSamples[0]) {
-      subjectImageUrl += `?t=${Date.now()}`;
+      subjectImageUrl = addMixerCacheBuster(subjectImageUrl);
     }
 
     // 2. 화풍(Medium) 참고 이미지 관련 처리
@@ -9470,7 +9479,7 @@
     const hasCustomMediumSample = Boolean(customMediumSamples[0]);
     let mediumImageUrl = customMediumSamples[0] || UNSPLASH_CACHE[medium.id] || getRegisteredMixerSampleUrl(medium.id);
     if (customMediumSamples[0]) {
-      mediumImageUrl += `?t=${Date.now()}`;
+      mediumImageUrl = addMixerCacheBuster(mediumImageUrl);
     }
 
     // 3가지 이상의 풍성한 색상으로 쉬머 애니메이션용 그라데이션 선언
@@ -10034,7 +10043,7 @@
         const result = await response.json();
         
         if (result.ok && result.url) {
-          const cacheBusterUrl = `${result.url}?t=${Date.now()}`;
+          const cacheBusterUrl = addMixerCacheBuster(result.url);
           setCustomSample(subject.id, 0, result.url);
           if (subjectImg) subjectImg.src = cacheBusterUrl;
           isSubjectOverlayOpen = false;
@@ -10273,7 +10282,7 @@
         const result = await response.json();
         
         if (result.ok && result.url) {
-          const cacheBusterUrl = `${result.url}?t=${Date.now()}`;
+          const cacheBusterUrl = addMixerCacheBuster(result.url);
           setCustomSample(medium.id, 0, result.url);
           if (mediumImg) mediumImg.src = cacheBusterUrl;
           isMediumOverlayOpen = false;

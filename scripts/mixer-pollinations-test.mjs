@@ -105,11 +105,33 @@ try {
       assert.match(await page.evaluate(id => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(id)[0], itemId), /^\/api\/mixer-reference\?asset=[a-f0-9]{32}$/u);
       await page.locator('#btnMixerResultConfirm').click();
       await page.waitForFunction(id => document.getElementById(id)?.getAttribute('aria-expanded') === 'false', `btn${kind}SampleSettings`);
+      const previewSelector = kind === 'Subject' ? '#subjectSampleHalf img' : '#mediumSampleHalf img';
+      await page.waitForFunction(({ selector, expectedItemId }) => {
+        const img = document.querySelector(selector);
+        const stored = window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(expectedItemId)[0];
+        if (!img || !stored || !img.complete || img.naturalWidth < 1) return false;
+        const visibleUrl = new URL(img.getAttribute('src'), window.location.origin);
+        const storedUrl = new URL(stored, window.location.origin);
+        return visibleUrl.pathname === storedUrl.pathname
+          && visibleUrl.searchParams.get('asset') === storedUrl.searchParams.get('asset')
+          && visibleUrl.searchParams.has('t');
+      }, { selector: previewSelector, expectedItemId: itemId });
     }
     assert.equal(requests, 2);
     await page.reload();
     await openMixer();
-    for (const id of ['mix-steel-hot-rolling', 'med-3d']) assert.match(await page.evaluate(itemId => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(itemId)[0], id), /^\/api\/mixer-reference\?asset=[a-f0-9]{32}$/u);
+    for (const [id, selector] of [['mix-steel-hot-rolling', '#subjectSampleHalf img'], ['med-3d', '#mediumSampleHalf img']]) {
+      assert.match(await page.evaluate(itemId => window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(itemId)[0], id), /^\/api\/mixer-reference\?asset=[a-f0-9]{32}$/u);
+      await page.waitForFunction(({ expectedItemId, imageSelector }) => {
+        const img = document.querySelector(imageSelector);
+        const stored = window.CONCEPT_MIXER_PRESETS.getCustomSamplesForMed(expectedItemId)[0];
+        if (!img || !stored || !img.complete || img.naturalWidth < 1) return false;
+        const visibleUrl = new URL(img.getAttribute('src'), window.location.origin);
+        const storedUrl = new URL(stored, window.location.origin);
+        return visibleUrl.searchParams.get('asset') === storedUrl.searchParams.get('asset')
+          && visibleUrl.searchParams.has('t');
+      }, { expectedItemId: id, imageSelector: selector });
+    }
     await page.locator('#btnSubjectSampleSettings').click();
     const closeError = async text => {
       await page.locator('#mixerResultOverlay').getByText(text, { exact: false }).waitFor();
