@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { buildAiTools } from "./build-ai-tools.mjs";
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
 const outputDir = path.resolve(repoRoot, "dist-static");
@@ -240,6 +241,19 @@ for (const filename of [
 ]) {
   await fs.copyFile(path.join(repoRoot, "static-pages", filename), path.join(outputDir, filename));
 }
+const aiTools = await buildAiTools({ repoRoot, outputDir });
+const sitemapPath = path.join(outputDir, "sitemap.xml");
+const sitemap = await fs.readFile(sitemapPath, "utf8");
+if (!sitemap.includes("</urlset>")) throw new Error("사이트맵 닫는 태그를 찾지 못했습니다.");
+const aiToolUrls = aiTools.pages.map((page) => `  <url><loc>${escapeHtml(page.url)}</loc><lastmod>${escapeHtml(page.modifiedAt)}</lastmod></url>`).join("\n");
+await fs.writeFile(sitemapPath, sitemap.replace("</urlset>", `${aiToolUrls}\n</urlset>`), "utf8");
+const feedPath = path.join(outputDir, "feed.xml");
+let feed = await fs.readFile(feedPath, "utf8");
+if (!feed.includes("</feed>")) throw new Error("피드 닫는 태그를 찾지 못했습니다.");
+const newestGuideDate = aiTools.pages.map((page) => page.modifiedAt).sort().at(-1);
+feed = feed.replace(/<updated>[^<]+<\/updated>/u, `<updated>${newestGuideDate}T00:00:00+09:00</updated>`);
+const aiToolEntries = aiTools.pages.map((page) => `  <entry><title>${escapeHtml(page.title)}</title><id>${escapeHtml(page.url)}</id><link href="${escapeHtml(page.url)}" /><updated>${escapeHtml(page.modifiedAt)}T00:00:00+09:00</updated><summary>${escapeHtml(page.description)}</summary></entry>`).join("\n");
+await fs.writeFile(feedPath, feed.replace("</feed>", `${aiToolEntries}\n</feed>`), "utf8");
 markProfile("write-generated-pages");
 
 let fileCount = 0;

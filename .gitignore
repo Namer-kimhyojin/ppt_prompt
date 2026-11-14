@@ -13,6 +13,7 @@ server/config.local.js
 dist-static/
 static-deploy.json
 .playwright-mcp/
+output/
 .claude/
 backup/
 backups/

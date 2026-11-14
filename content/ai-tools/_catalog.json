@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "researchedAt": "2026-11-14",
+  "status": "published",
+  "preferredPublishedWindow": {
+    "from": "2025-11-14",
+    "to": "2026-11-14"
+  },
+  "methodology": {
+    "sample": "검색으로 발견한 영상 중 선정 도구의 명시적 언급이 확인된 표본",
+    "evidence": "영상 제목·설명·챕터·제작자 공개 전사 및 일부 미러 메타데이터 보강",
+    "minimumDistinctChannels": 2,
+    "familyLevelException": "anthropic-pptx는 GitHub 참조 구현 1채널과 Claude 내장 PowerPoint 스킬 1채널의 계열 수준 근거다.",
+    "executionTested": false,
+    "wholeVideosWatched": false,
+    "limitations": [
+      "유튜브 전수 인기순위가 아니다.",
+      "동일 영상의 미러와 재검색 결과는 중복으로 세지 않는다.",
+      "서로 다른 채널 수는 상업적 독립성이나 품질을 뜻하지 않는다.",
+      "영상 게시일 미확인과 조사기간 밖 자료를 따로 표시했다.",
+      "공식 출처 확인과 실제 설치·연결·업무 수행 확인을 구분한다."
+    ]
+  },
+  "stats": {
+    "itemCount": 13,
+    "exactToolRepeatedItems": 12,
+    "skillFamilyEvidenceItems": 1,
+    "byType": {
+      "skill": 4,
+      "plugin": 4,
+      "mcp": 5
+    },
+    "citedUniqueVideoCount": 25,
+    "citedUniqueChannelCount": 24,
+    "mentionLinks": 29,
+    "confirmedWindowVideos": 22,
+    "undatedVideos": 1,
+    "outsidePreferredWindowVideos": 2,
+    "supplementalVideos": 1
+  },
+  "groups": {
+    "skill": [
+      {
+        "id": "anthropic-skill-creator",
+        "file": "anthropic-skill-creator.json"
+      },
+      {
+        "id": "anthropic-pptx",
+        "file": "anthropic-pptx.json"
+      },
+      {
+        "id": "obsidian-skills",
+        "file": "obsidian-skills.json"
+      },
+      {
+        "id": "remotion-agent-skills",
+        "file": "remotion-agent-skills.json"
+      }
+    ],
+    "plugin": [
+      {
+        "id": "anthropic-productivity-plugin",
+        "file": "anthropic-productivity-plugin.json"
+      },
+      {
+        "id": "anthropic-marketing-plugin",
+        "file": "anthropic-marketing-plugin.json"
+      },
+      {
+        "id": "superpowers-plugin",
+        "file": "superpowers-plugin.json"
+      },
+      {
+        "id": "claude-mem-plugin",
+        "file": "claude-mem-plugin.json"
+      }
+    ],
+    "mcp": [
+      {
+        "id": "notion-mcp",
+        "file": "notion-mcp.json"
+      },
+      {
+        "id": "firecrawl-mcp",
+        "file": "firecrawl-mcp.json"
+      },
+      {
+        "id": "playwright-mcp",
+        "file": "playwright-mcp.json"
+      },
+      {
+        "id": "context7-mcp",
+        "file": "context7-mcp.json"
+      },
+      {
+        "id": "github-mcp",
+        "file": "github-mcp.json"
+      }
+    ]
+  },
+  "researchFiles": [
+    "docs/research/youtube-mcp-2026-11-14.json",
+    "docs/research/youtube-plugins-2026-11-14.json",
+    "docs/research/youtube-skills-2026-11-14.json"
+  ],
+  "report": "docs/ai-tools-youtube-research-2026-11-14.md"
+}

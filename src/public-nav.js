@@ -78,7 +78,7 @@
   var TOP_LINKS = [
     { label: "기능", href: "/features", dropdown: true, match: /^\/features/ },
     { label: "실무 가이드", href: "/guides/", match: /^\/guides\//, notMatch: /ppt-slide-planner-skill/ },
-    { label: "스킬 다운로드", href: "/guides/ppt-slide-planner-skill", match: /ppt-slide-planner-skill/ },
+    { label: "AI 업무 도구", href: "/ai-tools/", match: /^\/ai-tools(?:\/|$)|ppt-slide-planner-skill/ },
     { label: "소개", href: "/about", match: /^\/about/ }
   ];
 

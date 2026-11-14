@@ -43,7 +43,7 @@ await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const address = server.address();
 const origin = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ channel: "msedge", headless: true });
-const expectedNavLabels = ["실무 가이드", "스킬 다운로드", "소개", "작업 도구 열기"];
+const expectedNavLabels = ["실무 가이드", "AI 업무 도구", "소개", "작업 도구 열기"];
 const toolGuides = new Map([
   ["common-prompt", "commonPrompt"], ["pptx-request", "pptxPrompt"], ["document-design", "documentDesign"], ["slide-splitter", "generator"], ["form-image", "formImage"],
   ["map-image", "mapPrompt"], ["promotion-image", "promotion"], ["qr-code", "qrGenerator"],

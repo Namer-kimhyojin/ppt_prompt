@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "context7-mcp",
+  "slug": "context7-mcp",
+  "type": "mcp",
+  "name": "Context7 MCP",
+  "outcome": "개발 도구가 라이브러리의 현재 문서를 참고하도록 연결한다.",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "개발·웹 운영 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "Claude Code",
+    "Codex",
+    "Cursor",
+    "VS Code",
+    "기타 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "공식 설치 문서에 플랫폼별 안내가 있으며 이번 조사에서는 실행하지 않음.",
+  "officialUrl": "https://context7.com/docs/installation",
+  "officialSources": [
+    "https://context7.com/docs/installation",
+    "https://github.com/upstash/context7"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://context7.com/docs/installation",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 문서는 계정 로그인과 플랜별 사용 조건을 안내한다. 정확한 한도·요금은 도입 시 공식 가격 안내를 확인한다.",
+  "license": null,
+  "requirements": [
+    "지원 MCP 클라이언트",
+    "선택한 연결 방식에 맞는 계정 인증 또는 API 키"
+  ],
+  "connectionModes": [
+    "remote",
+    "local-stdio-option"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "일반 문헌 조사보다 소프트웨어 라이브러리 문서 조회에 맞는 전문 항목이다.",
+    "현재 플러그인 배포 방식도 안내되므로 이미 포함된 MCP를 중복 등록하지 않도록 제공 방식을 구분한다.",
+    "2025년 영상 1개는 반복 언급의 보조 근거이며 현재 설치법의 근거로 사용하지 않는다."
+  ],
+  "starterPrompt": "이 프로젝트가 사용하는 라이브러리 버전의 공식 문서를 찾아 필요한 API와 사용 예제를 확인해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 1,
+    "containsDateCaveats": true,
+    "researchFile": "docs/research/youtube-mcp-2026-11-14.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=uiPSA1htycs",
+        "title": "The Best MCP Servers for AI Coding Agents",
+        "channel": "Program With Erik",
+        "publishedAt": "2026-09-01",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "MCP 목록의 Documentation, source control, and code 묶음에서 upstash/context7 공식 저장소를 명시한다.",
+        "timestampSeconds": null,
+        "commercialContext": "뉴스레터와 개인 사이트 링크가 있음. 협찬 여부는 확인하지 않음.",
+        "videoId": "uiPSA1htycs",
+        "mentionSummary": "MCP 목록의 Documentation, source control, and code 묶음에서 upstash/context7 공식 저장소를 명시한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=uiPSA1htycs",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=egFcVjP_oDQ",
+        "title": "Context7: (не)секретний буст для Cursor, Claude Code і Codex",
+        "channel": "Відчайдушний програміст",
+        "publishedAt": "2026-05-15",
+        "language": "uk",
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Context7을 최신 라이브러리 문서 접근용 MCP로 명시하며 Cursor·Claude Code·Codex 등록과 규칙 사용을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "개인 소셜 링크가 있음. 협찬 여부는 확인하지 않음.",
+        "videoId": "egFcVjP_oDQ",
+        "mentionSummary": "설명에서 Context7을 최신 라이브러리 문서 접근용 MCP로 명시하며 Cursor·Claude Code·Codex 등록과 규칙 사용을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=egFcVjP_oDQ",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=323l56VqJQw",
+        "title": "Context7 MCP Tutorial: Get Instant RAG for Your AI Coders",
+        "channel": "AI LABS",
+        "publishedAt": "2025-04-24",
+        "language": "en",
+        "outsidePreferredDateWindow": true,
+        "evidenceLevel": "youtube_description",
+        "mention": "설명에서 Context7 MCP와 Cursor 연결 및 문서 기반 코드 작성을 소개한다. 과거 설치·지원 범위 주장은 현재 정보로 사용하지 않는다.",
+        "timestampSeconds": null,
+        "commercialContext": "제작자의 커뮤니티 홍보 링크가 포함되어 있음.",
+        "videoId": "323l56VqJQw",
+        "mentionSummary": "설명에서 Context7 MCP와 Cursor 연결 및 문서 기반 코드 작성을 소개한다. 과거 설치·지원 범위 주장은 현재 정보로 사용하지 않는다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=323l56VqJQw",
+        "withinPreferredWindow": false
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

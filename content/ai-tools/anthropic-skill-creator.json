@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-skill-creator",
+  "slug": "anthropic-skill-creator",
+  "type": "skill",
+  "name": "Skill Creator",
+  "outcome": "반복하는 업무 절차를 재사용 가능한 스킬로 만들고 예제와 평가로 개선하기",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "반복업무를 표준화할 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 Claude 스킬 구현. 사용환경별 설치·평가 기능 제공 여부는 별도 확인이 필요하다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공개 스킬 소스와 별개로 실행하는 AI 서비스의 계정·사용료 조건이 적용된다. 금액은 이번 조사에서 확인하지 않았다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "related": [
+      "anthropic-document-skills"
+    ],
+    "distributionNote": "스킬은 플러그인 형태로 묶여 배포될 수 있다. 동일 기능을 별도 추천처럼 중복 집계하지 않는다."
+  },
+  "caveats": [
+    "동명 커뮤니티 skill-creator와 Anthropic 구현을 구분한다.",
+    "영상의 벤치마크 결과를 이 카탈로그의 검증 결과로 표시하지 않는다."
+  ],
+  "starterPrompt": "매주 반복하는 업무 절차와 좋은 결과 예시를 바탕으로 재사용 가능한 스킬 초안을 만들어줘. 필요한 입력과 결과 확인 기준을 먼저 정리해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/youtube-skills-2026-11-14.json",
+    "videos": [
+      {
+        "videoId": "KjEFy5wjFQg",
+        "url": "https://www.youtube.com/watch?v=KjEFy5wjFQg",
+        "title": "Top 10 Claude Code Skills, Plugins & CLIs (April 2026)",
+        "channel": "Chase AI",
+        "publishedAt": "2026-04-09",
+        "language": "en",
+        "evidenceLevel": "youtube_indexed_description_and_chapter",
+        "mentionSummary": "10개 추천 도구 목록에서 Skill Creator를 명시하고 12:05부터 해당 항목을 다룬다.",
+        "timestampSeconds": 725,
+        "creatorCompanionUrl": "https://chaseai.io/blog/top-10-claude-code-skills-plugins-clis-april-2026",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=KjEFy5wjFQg&t=725s",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "hSv7ZZ_5M7U",
+        "url": "https://www.youtube.com/watch?v=hSv7ZZ_5M7U",
+        "title": "The Only Claude Skill You Need (skill-creator)",
+        "channel": "Dan Schwab",
+        "publishedAt": "2026-03-20",
+        "language": "en",
+        "evidenceLevel": "youtube_indexed_title_and_description",
+        "mentionSummary": "설명에서 Anthropic 공식 Skill Creator를 명시하고 스킬 생성 과정을 소개한다.",
+        "timestampSeconds": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=hSv7ZZ_5M7U",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

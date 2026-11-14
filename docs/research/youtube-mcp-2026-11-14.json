@@ -1,0 +1,267 @@
+{
+  "researchedAt": "2026-11-14",
+  "preferredPublishedSince": "2025-11-14",
+  "scope": "MCP 서버·서비스의 유튜브 반복 언급 후보 조사. 영어 영상 중심, Context7에 우크라이나어 보조 영상 1개와 이전 연도 영어 영상 1개 포함.",
+  "method": "웹 검색으로 영상을 발견한 뒤 YouTube 공개 watch 페이지의 ytInitialPlayerResponse.videoDetails(제목·채널·설명), microformat 게시일과 필요한 oEmbed 메타데이터를 확인했다. 영상 설명·챕터를 분석했으며 전체 영상 시청·자막 분석·도구 설치·실행 검증은 하지 않았다.",
+  "countingRule": "independentChannelCount는 같은 영상을 중복 세지 않은 서로 다른 채널 계정 수이다. 상업적 독립성이나 추천의 중립성을 뜻하지 않으며 제작사·제휴 링크가 있는 영상은 따로 표시했다. 유튜브 전수조사나 전체 인기순위가 아니다.",
+  "items": [
+    {
+      "id": "playwright-mcp",
+      "name": "Playwright MCP",
+      "type": "mcp",
+      "outcome": "브라우저에서 업무 흐름을 확인하고 반복 조작·웹 테스트를 자동화한다.",
+      "category": "반복업무·서비스 연결",
+      "audience": "웹 운영·개발·품질관리 담당자",
+      "platforms": ["VS Code", "Cursor", "Claude Code", "Claude Desktop", "Codex 및 기타 MCP 클라이언트"],
+      "platformEvidence": "공식 문서에 안내된 환경이며 이번 조사에서 호환 실행을 시험한 것은 아님.",
+      "officialUrl": "https://playwright.dev/docs/getting-started-mcp",
+      "repositoryUrl": "https://github.com/microsoft/playwright-mcp",
+      "officialCheckedAt": "2026-11-14",
+      "connectionMode": ["local"],
+      "requirements": ["공식 문서 기준 Node.js 20 이상", "MCP 클라이언트", "접근할 사이트에 필요한 사용자 계정"],
+      "costNotes": "클라이언트 AI 이용료와 접속 대상 서비스 조건은 별도 확인한다. 특정 요금이나 무료 이용량을 이번 목록에서 확정하지 않는다.",
+      "caveats": ["Playwright CLI·Playwright Test와 구분한 MCP 서버 항목이다.", "연결 성공만으로 사이트별 조작 성공이나 테스트 품질이 검증되는 것은 아니다."],
+      "evidenceStatus": "youtube-repeated-mention-and-official-source-checked",
+      "executionVerifiedAt": null,
+      "independentChannelCount": 3,
+      "sourceVideos": [
+        {
+          "url": "https://www.youtube.com/watch?v=e-ynk72_Z3c",
+          "title": "Playwright MCP Tutorial 2026 | AI Browser Automation with Codex, Claude Code & VS Code",
+          "channel": "Mitchell Agoma",
+          "publishedAt": "2026-07-18",
+          "language": "en",
+          "evidenceLevel": "youtube_description_and_chapters",
+          "mention": "설명에 공식 Playwright MCP 설치와 브라우저 탐색·테스트 전환을 명시하고 환경별 설정 챕터를 제공한다.",
+          "timestampSeconds": 1278,
+          "timestampLabel": "Configure Playwright MCP in Codex",
+          "commercialContext": "설명에 AI 생성 내레이션·썸네일 사용 공개. 협찬 여부는 확인하지 않음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=h3lPYb6SfQM",
+          "title": "Playwright MCP + Copilot: AI Driven Test Automation",
+          "channel": "Testing Funda by Zeeshan Asghar",
+          "publishedAt": "2026-03-30",
+          "language": "en",
+          "evidenceLevel": "youtube_description_and_chapters",
+          "mention": "설명과 챕터가 Playwright MCP와 Copilot 연결, 서버 확인, 로그인 흐름과 테스트 생성을 명시한다.",
+          "timestampSeconds": 201,
+          "timestampLabel": "Integrating Playwright MCP server with GitHub Copilot",
+          "commercialContext": "교육 채널의 홍보 링크가 있음. 협찬 여부는 확인하지 않음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=uiPSA1htycs",
+          "title": "The Best MCP Servers for AI Coding Agents",
+          "channel": "Program With Erik",
+          "publishedAt": "2026-09-01",
+          "language": "en",
+          "evidenceLevel": "youtube_description",
+          "mention": "All MCP Server Links의 Browser debugging and testing 묶음에 microsoft/playwright-mcp 공식 저장소를 명시한다.",
+          "timestampSeconds": null,
+          "commercialContext": "뉴스레터와 개인 사이트 링크가 있음. 협찬 여부는 확인하지 않음."
+        }
+      ]
+    },
+    {
+      "id": "firecrawl-mcp",
+      "name": "Firecrawl MCP",
+      "type": "mcp",
+      "outcome": "웹 자료를 검색하고 페이지 내용을 Markdown이나 구조화 자료로 정리한다.",
+      "category": "조사·자료 정리",
+      "audience": "자료 조사·시장 조사·자동화 담당자",
+      "platforms": ["Claude Code", "Claude Desktop", "Codex", "Cursor", "기타 지원 MCP 클라이언트"],
+      "platformEvidence": "공식 MCP 시작 안내의 클라이언트별 문서 연결을 확인했으며 직접 실행하지 않음.",
+      "officialUrl": "https://docs.firecrawl.dev/mcp-server",
+      "repositoryUrl": "https://github.com/firecrawl/firecrawl-mcp-server",
+      "officialCheckedAt": "2026-11-14",
+      "connectionMode": ["remote", "local-server-option"],
+      "requirements": ["MCP 클라이언트", "전체 도구 이용 시 서비스 계정 로그인 또는 API 키 및 해당 플랜 조건 확인"],
+      "costNotes": "공식 안내에 무계정 Search·Scrape·Parse의 일일 제한과 로그인/API 키 방식이 구분되어 있다. 전체 도구와 사용 한도는 팀 플랜에 따른다.",
+      "caveats": ["Firecrawl CLI나 일반 API 소개와 구분한 MCP 서버 항목이다.", "로컬 MCP 서버 실행과 Firecrawl 서비스의 완전한 로컬 자체 운영은 같은 의미가 아니다.", "대표 영상에 제작사 홍보와 제휴 링크가 있으므로 언급 빈도를 중립적 품질평가로 해석하지 않는다."],
+      "evidenceStatus": "youtube-repeated-mention-and-official-source-checked",
+      "executionVerifiedAt": null,
+      "independentChannelCount": 2,
+      "sourceVideos": [
+        {
+          "url": "https://www.youtube.com/watch?v=4efAzBiTeVo",
+          "title": "Turn Any Website Into LLM Ready Data INSTANTLY",
+          "channel": "Nate Herk | AI Automation",
+          "publishedAt": "2026-02-11",
+          "language": "en",
+          "evidenceLevel": "youtube_description_and_chapters",
+          "mention": "설명에서 Claude Code에 Firecrawl MCP를 설정하고 채용 목록·브랜드 정보를 추출하는 예제를 명시한다.",
+          "timestampSeconds": 131,
+          "timestampLabel": "Setting Up Firecrawl MCP",
+          "commercialContext": "Firecrawl partners/nate 링크와 할인 안내가 포함되어 있음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=aovuyqN2QPE",
+          "title": "Firecrawl MCP Server: Search Scrape And Crawl The Web",
+          "channel": "Firecrawl",
+          "publishedAt": "2026-06-23",
+          "language": "en",
+          "evidenceLevel": "youtube_description",
+          "mention": "제작사 설명에서 Claude Code용 Firecrawl MCP 설치, keyless 설정과 웹 검색·스크래핑을 소개한다.",
+          "timestampSeconds": null,
+          "commercialContext": "제작사 공식 채널이며 프로모션 크레딧 코드가 포함되어 있음."
+        }
+      ]
+    },
+    {
+      "id": "context7-mcp",
+      "name": "Context7 MCP",
+      "type": "mcp",
+      "outcome": "개발 도구가 라이브러리의 현재 문서를 참고하도록 연결한다.",
+      "category": "반복업무·서비스 연결",
+      "audience": "개발·웹 운영 담당자",
+      "platforms": ["Claude Code", "Codex", "Cursor", "VS Code", "기타 지원 MCP 클라이언트"],
+      "platformEvidence": "공식 설치 문서에 플랫폼별 안내가 있으며 이번 조사에서는 실행하지 않음.",
+      "officialUrl": "https://context7.com/docs/installation",
+      "repositoryUrl": "https://github.com/upstash/context7",
+      "officialCheckedAt": "2026-11-14",
+      "connectionMode": ["remote", "local-stdio-option"],
+      "requirements": ["지원 MCP 클라이언트", "선택한 연결 방식에 맞는 계정 인증 또는 API 키"],
+      "costNotes": "공식 문서는 계정 로그인과 플랜별 사용 조건을 안내한다. 정확한 한도·요금은 도입 시 공식 가격 안내를 확인한다.",
+      "caveats": ["일반 문헌 조사보다 소프트웨어 라이브러리 문서 조회에 맞는 전문 항목이다.", "현재 플러그인 배포 방식도 안내되므로 이미 포함된 MCP를 중복 등록하지 않도록 제공 방식을 구분한다.", "2025년 영상 1개는 반복 언급의 보조 근거이며 현재 설치법의 근거로 사용하지 않는다."],
+      "evidenceStatus": "youtube-repeated-mention-and-official-source-checked",
+      "executionVerifiedAt": null,
+      "independentChannelCount": 3,
+      "sourceVideos": [
+        {
+          "url": "https://www.youtube.com/watch?v=uiPSA1htycs",
+          "title": "The Best MCP Servers for AI Coding Agents",
+          "channel": "Program With Erik",
+          "publishedAt": "2026-09-01",
+          "language": "en",
+          "evidenceLevel": "youtube_description",
+          "mention": "MCP 목록의 Documentation, source control, and code 묶음에서 upstash/context7 공식 저장소를 명시한다.",
+          "timestampSeconds": null,
+          "commercialContext": "뉴스레터와 개인 사이트 링크가 있음. 협찬 여부는 확인하지 않음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=egFcVjP_oDQ",
+          "title": "Context7: (не)секретний буст для Cursor, Claude Code і Codex",
+          "channel": "Відчайдушний програміст",
+          "publishedAt": "2026-05-15",
+          "language": "uk",
+          "evidenceLevel": "youtube_description",
+          "mention": "설명에서 Context7을 최신 라이브러리 문서 접근용 MCP로 명시하며 Cursor·Claude Code·Codex 등록과 규칙 사용을 소개한다.",
+          "timestampSeconds": null,
+          "commercialContext": "개인 소셜 링크가 있음. 협찬 여부는 확인하지 않음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=323l56VqJQw",
+          "title": "Context7 MCP Tutorial: Get Instant RAG for Your AI Coders",
+          "channel": "AI LABS",
+          "publishedAt": "2025-04-24",
+          "language": "en",
+          "outsidePreferredDateWindow": true,
+          "evidenceLevel": "youtube_description",
+          "mention": "설명에서 Context7 MCP와 Cursor 연결 및 문서 기반 코드 작성을 소개한다. 과거 설치·지원 범위 주장은 현재 정보로 사용하지 않는다.",
+          "timestampSeconds": null,
+          "commercialContext": "제작자의 커뮤니티 홍보 링크가 포함되어 있음."
+        }
+      ]
+    },
+    {
+      "id": "github-mcp",
+      "name": "GitHub MCP Server",
+      "type": "mcp",
+      "outcome": "저장소·이슈·PR 자료를 AI 작업에 연결해 개발 현황 확인과 협업 작업을 돕는다.",
+      "category": "반복업무·서비스 연결",
+      "audience": "개발 프로젝트·서비스 운영 담당자",
+      "platforms": ["VS Code", "Codex", "기타 지원 MCP 클라이언트"],
+      "platformEvidence": "GitHub 공식 저장소의 설치 안내와 영상의 Codex 설정 링크를 확인했으며 실행하지 않음.",
+      "officialUrl": "https://github.com/github/github-mcp-server",
+      "officialCheckedAt": "2026-11-14",
+      "connectionMode": ["remote", "local"],
+      "requirements": ["GitHub 계정과 대상 저장소 권한", "선택한 클라이언트에 맞는 OAuth 또는 개인 액세스 토큰 설정"],
+      "costNotes": "GitHub·호스트 AI 서비스 이용 조건은 별도이다. 특정 기능의 플랜 포함 여부는 도입 시 확인한다.",
+      "caveats": ["Git MCP, GitHub CLI, GitHub Copilot 자체를 이 항목과 같은 제품으로 계산하지 않는다.", "읽기·쓰기 기능은 허용된 권한과 활성 toolset에 따라 달라진다."],
+      "evidenceStatus": "youtube-repeated-mention-and-official-source-checked",
+      "executionVerifiedAt": null,
+      "independentChannelCount": 2,
+      "sourceVideos": [
+        {
+          "url": "https://www.youtube.com/watch?v=uiPSA1htycs",
+          "title": "The Best MCP Servers for AI Coding Agents",
+          "channel": "Program With Erik",
+          "publishedAt": "2026-09-01",
+          "language": "en",
+          "evidenceLevel": "youtube_description",
+          "mention": "MCP 목록에서 GitHub 공식 github/github-mcp-server 저장소를 명시한다.",
+          "timestampSeconds": null,
+          "commercialContext": "뉴스레터와 개인 사이트 링크가 있음. 협찬 여부는 확인하지 않음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=84-sHkG4AQU",
+          "title": "Top 7 AI Agent Tools That Actually Work",
+          "channel": "Tech With Tim",
+          "publishedAt": "2026-09-17",
+          "language": "en",
+          "evidenceLevel": "youtube_description_and_chapters",
+          "mention": "설명에 GitHub MCP 공식 저장소의 install-codex 안내를 연결하고 GitHub MCP 전용 챕터를 둔다.",
+          "timestampSeconds": 135,
+          "timestampLabel": "#1 - GitHub MCP",
+          "commercialContext": "Browser Use·기타 서비스 제휴/혜택 링크가 있음. GitHub와의 상업 관계는 확인하지 않음."
+        }
+      ]
+    },
+    {
+      "id": "notion-mcp",
+      "name": "Notion MCP",
+      "type": "mcp",
+      "outcome": "Notion의 업무 지식·문서·데이터베이스를 AI와 연결해 읽고 정리한다.",
+      "category": "조사·자료 정리",
+      "audience": "문서·업무 지식·협업 관리 담당자",
+      "platforms": ["Claude", "Claude Code", "Cursor", "ChatGPT 및 지원 MCP 클라이언트"],
+      "platformEvidence": "Notion 공식 안내에 연결 가능한 AI 도구가 소개되며 이번 조사에서는 연결·실행하지 않음.",
+      "officialUrl": "https://developers.notion.com/guides/mcp/overview",
+      "additionalOfficialUrl": "https://www.notion.com/help/notion-mcp",
+      "officialCheckedAt": "2026-11-14",
+      "connectionMode": ["remote"],
+      "requirements": ["Notion 계정·워크스페이스 접근권한", "호스트 앱의 MCP 연결 및 계정 인증"],
+      "costNotes": "Notion 및 연결하는 AI 서비스의 계정·플랜 조건은 별도 확인한다. 이 조사에서는 구체적인 비용을 확정하지 않는다.",
+      "caveats": ["공식 원격 Notion MCP를 대상으로 한다. 이름이 같은 커뮤니티 로컬 서버의 과거 영상을 근거로 합산하지 않는다.", "자료 접근과 변경 가능 범위는 실제 연결 계정의 권한에 따른다."],
+      "evidenceStatus": "youtube-repeated-mention-and-official-source-checked",
+      "executionVerifiedAt": null,
+      "independentChannelCount": 2,
+      "sourceVideos": [
+        {
+          "url": "https://www.youtube.com/watch?v=pp-sYoaTH4E",
+          "title": "Claude MCP Tutorial: Notion in 90 Seconds",
+          "channel": "Darby Rollins | Gen AI University",
+          "publishedAt": "2026-04-26",
+          "language": "en",
+          "evidenceLevel": "youtube_description_and_chapters",
+          "mention": "설명 STEP 2에 공식 Notion MCP 인증을 명시하고 연결·권한·첫 프롬프트 흐름을 소개한다.",
+          "timestampSeconds": 12,
+          "timestampLabel": "Step 2: Authorize",
+          "commercialContext": "제작자의 교육 커뮤니티·행사 홍보 링크가 포함되어 있음."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=0sMpsbkCfRY",
+          "title": "How to Give Claude Access to Your Notion workspace (MCP Setup)",
+          "channel": "Chris Punt",
+          "publishedAt": "2026-05-21",
+          "language": "en",
+          "evidenceLevel": "youtube_description_and_chapters",
+          "mention": "설명에 공식 mcp.notion.com/mcp 연결 주소를 명시하고 Claude Chat·Cowork·Code와 읽기·쓰기 권한 설정을 소개한다.",
+          "timestampSeconds": 443,
+          "timestampLabel": "Connecting Notion with Claude Code",
+          "commercialContext": "제작자의 컨설팅·커뮤니티·템플릿 서비스 홍보 링크가 포함되어 있음."
+        }
+      ]
+    }
+  ],
+  "excludedOrDeferred": [
+    {
+      "name": "Google Workspace MCP / Filesystem MCP",
+      "reason": "이번 조사에서는 개별 구현체를 특정하는 서로 다른 채널 2개 이상의 근거 확보를 완료하지 못했다. 일반 Google Workspace CLI·앱 소개를 MCP 반복 언급으로 세지 않았다."
+    },
+    {
+      "name": "구형 커뮤니티 Notion MCP 소개 영상",
+      "reason": "공식 원격 Notion MCP와 같은 구현체인지 확인하기 어려운 2025년 영상은 본 목록의 반복 언급 수에서 제외했다."
+    }
+  ]
+}

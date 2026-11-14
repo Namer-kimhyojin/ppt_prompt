@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "id": "anthropic-pptx",
+  "slug": "anthropic-pptx",
+  "type": "skill",
+  "name": "PPTX (Anthropic)",
+  "outcome": "편집 가능한 PowerPoint 발표자료를 생성·수정하고 템플릿·발표자 메모를 다루기",
+  "categories": [
+    "발표·제안서"
+  ],
+  "audience": [
+    "보고·발표자료 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude",
+    "Claude Code"
+  ],
+  "platformEvidence": "공식 Claude 스킬 구현. document-skills 플러그인으로 묶어 설치하는 경로와 Claude 내장 기능은 구분해 안내한다.",
+  "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+  "officialSources": [
+    "https://github.com/anthropics/skills/tree/main/skills/pptx",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/pptx/SKILL.md"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+    "directDownloadUrl": null
+  },
+  "costNotes": "현재 공식 저장소 README는 문서 스킬을 Apache 2.0으로 안내한다. 실행 AI 서비스의 계정·요금은 별도다.",
+  "license": null,
+  "requirements": [],
+  "connectionModes": [],
+  "includedComponents": [],
+  "relationships": {
+    "includes": [],
+    "includedBy": [
+      "anthropic-document-skills"
+    ],
+    "related": [
+      "ppt-slide-planner"
+    ],
+    "distributionNote": "document-skills 묶음에 포함된 개별 스킬. 묶음 설치 시 재설치가 필요한 것처럼 안내하지 않는다."
+  },
+  "caveats": [
+    "영상의 Claude 내장 PPTX 기능과 GitHub 참조 구현은 동일 동작을 보장하지 않는다.",
+    "두 번째 반복 언급 근거는 우선 기간 시작보다 8일 오래된 영상이다. 최근 12개월 반복 언급 순위로 표시하지 않는다.",
+    "기획안 생성용 ppt-slide-planner와 실제 PPTX 파일 편집·생성용 이 스킬을 구분한다."
+  ],
+  "starterPrompt": "첨부 보고서를 편집 가능한 8장 발표자료로 정리해줘. 원문 수치와 출처를 유지하고 각 장에 발표자 메모를 포함해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "Anthropic PPTX 스킬 계열의 소개를 서로 다른 채널 2개에서 확인했다. GitHub 참조 구현을 명시한 근거는 1개이며 다른 하나는 Claude 내장 PowerPoint 스킬 소개다.",
+    "matchScope": "skill-family",
+    "referenceImplementationChannelCount": 1,
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 1,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 1,
+    "containsDateCaveats": true,
+    "researchFile": "docs/research/youtube-skills-2026-11-14.json",
+    "videos": [
+      {
+        "videoId": "F6JTJ9GeSOY",
+        "implementationMatch": "official-reference-skills",
+        "url": "https://www.youtube.com/watch?v=F6JTJ9GeSOY",
+        "title": "Claude Code's Document Skills Are an UNFAIR ADVANTAGE",
+        "channel": "Mark Kashef",
+        "publishedAt": "2025-12-04",
+        "language": "en",
+        "evidenceLevel": "youtube_indexed_description",
+        "mentionSummary": "설명에서 PowerPoint를 포함한 문서 산출물을 재현하고 Anthropic 공식 Claude Code 스킬을 가져오는 방법을 명시한다.",
+        "timestampSeconds": null,
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=F6JTJ9GeSOY",
+        "withinPreferredWindow": true
+      },
+      {
+        "videoId": "wO8EboopboU",
+        "implementationMatch": "built-in-skill-family",
+        "url": "https://www.youtube.com/watch?v=wO8EboopboU",
+        "title": "Claude Skills Explained - Step-by-Step Tutorial for Beginners",
+        "channel": "Kevin Stratvert",
+        "publishedAt": "2025-11-06",
+        "language": "en",
+        "evidenceLevel": "youtube_indexed_description_with_creator_page",
+        "mentionSummary": "PowerPoint skill을 사용한 브랜드 발표자료 제작을 명시한다.",
+        "timestampSeconds": null,
+        "outsidePreferredWindow": true,
+        "creatorCompanionUrl": "https://kevinstratvert.com/2025/11/06/claude-skills-explained-step-by-step-tutorial-for-beginners/",
+        "sponsorshipDisclosed": "Intuit/QuickBooks Online",
+        "host": "David DeWinter",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=wO8EboopboU",
+        "withinPreferredWindow": false
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

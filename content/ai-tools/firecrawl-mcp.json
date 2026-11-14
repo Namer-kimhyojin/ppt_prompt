@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "id": "firecrawl-mcp",
+  "slug": "firecrawl-mcp",
+  "type": "mcp",
+  "name": "Firecrawl MCP",
+  "outcome": "웹 자료를 검색하고 페이지 내용을 Markdown이나 구조화 자료로 정리한다.",
+  "categories": [
+    "조사·자료 정리"
+  ],
+  "audience": [
+    "자료 조사·시장 조사·자동화 담당자"
+  ],
+  "listingTier": "general",
+  "platforms": [
+    "Claude Code",
+    "Claude Desktop",
+    "Codex",
+    "Cursor",
+    "기타 지원 MCP 클라이언트"
+  ],
+  "platformEvidence": "공식 MCP 시작 안내의 클라이언트별 문서 연결을 확인했으며 직접 실행하지 않음.",
+  "officialUrl": "https://docs.firecrawl.dev/mcp-server",
+  "officialSources": [
+    "https://docs.firecrawl.dev/mcp-server",
+    "https://github.com/firecrawl/firecrawl-mcp-server"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://docs.firecrawl.dev/mcp-server",
+    "directDownloadUrl": null
+  },
+  "costNotes": "공식 안내에 무계정 Search·Scrape·Parse의 일일 제한과 로그인/API 키 방식이 구분되어 있다. 전체 도구와 사용 한도는 팀 플랜에 따른다.",
+  "license": null,
+  "requirements": [
+    "MCP 클라이언트",
+    "전체 도구 이용 시 서비스 계정 로그인 또는 API 키 및 해당 플랜 조건 확인"
+  ],
+  "connectionModes": [
+    "remote",
+    "local-server-option"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "Firecrawl CLI나 일반 API 소개와 구분한 MCP 서버 항목이다.",
+    "로컬 MCP 서버 실행과 Firecrawl 서비스의 완전한 로컬 자체 운영은 같은 의미가 아니다.",
+    "대표 영상에 제작사 홍보와 제휴 링크가 있으므로 언급 빈도를 중립적 품질평가로 해석하지 않는다."
+  ],
+  "starterPrompt": "내가 지정한 공개 웹페이지들의 주요 내용을 수집해 비교표로 정리해줘. 항목마다 원문 주소와 확인한 날짜를 남겨줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 2,
+    "uniqueChannelCount": 2,
+    "confirmedPreferredWindowChannelCount": 2,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/youtube-mcp-2026-11-14.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=4efAzBiTeVo",
+        "title": "Turn Any Website Into LLM Ready Data INSTANTLY",
+        "channel": "Nate Herk | AI Automation",
+        "publishedAt": "2026-02-11",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에서 Claude Code에 Firecrawl MCP를 설정하고 채용 목록·브랜드 정보를 추출하는 예제를 명시한다.",
+        "timestampSeconds": 131,
+        "timestampLabel": "Setting Up Firecrawl MCP",
+        "commercialContext": "Firecrawl partners/nate 링크와 할인 안내가 포함되어 있음.",
+        "videoId": "4efAzBiTeVo",
+        "mentionSummary": "설명에서 Claude Code에 Firecrawl MCP를 설정하고 채용 목록·브랜드 정보를 추출하는 예제를 명시한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=4efAzBiTeVo&t=131s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=aovuyqN2QPE",
+        "title": "Firecrawl MCP Server: Search Scrape And Crawl The Web",
+        "channel": "Firecrawl",
+        "publishedAt": "2026-06-23",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "제작사 설명에서 Claude Code용 Firecrawl MCP 설치, keyless 설정과 웹 검색·스크래핑을 소개한다.",
+        "timestampSeconds": null,
+        "commercialContext": "제작사 공식 채널이며 프로모션 크레딧 코드가 포함되어 있음.",
+        "videoId": "aovuyqN2QPE",
+        "mentionSummary": "제작사 설명에서 Claude Code용 Firecrawl MCP 설치, keyless 설정과 웹 검색·스크래핑을 소개한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=aovuyqN2QPE",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

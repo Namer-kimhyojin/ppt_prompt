@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "playwright-mcp",
+  "slug": "playwright-mcp",
+  "type": "mcp",
+  "name": "Playwright MCP",
+  "outcome": "브라우저에서 업무 흐름을 확인하고 반복 조작·웹 테스트를 자동화한다.",
+  "categories": [
+    "반복업무·서비스 연결"
+  ],
+  "audience": [
+    "웹 운영·개발·품질관리 담당자"
+  ],
+  "listingTier": "technical",
+  "platforms": [
+    "VS Code",
+    "Cursor",
+    "Claude Code",
+    "Claude Desktop",
+    "Codex 및 기타 MCP 클라이언트"
+  ],
+  "platformEvidence": "공식 문서에 안내된 환경이며 이번 조사에서 호환 실행을 시험한 것은 아님.",
+  "officialUrl": "https://playwright.dev/docs/getting-started-mcp",
+  "officialSources": [
+    "https://playwright.dev/docs/getting-started-mcp",
+    "https://github.com/microsoft/playwright-mcp"
+  ],
+  "distribution": {
+    "mode": "official-link",
+    "url": "https://playwright.dev/docs/getting-started-mcp",
+    "directDownloadUrl": null
+  },
+  "costNotes": "클라이언트 AI 이용료와 접속 대상 서비스 조건은 별도 확인한다. 특정 요금이나 무료 이용량을 이번 목록에서 확정하지 않는다.",
+  "license": null,
+  "requirements": [
+    "공식 문서 기준 Node.js 20 이상",
+    "MCP 클라이언트",
+    "접근할 사이트에 필요한 사용자 계정"
+  ],
+  "connectionModes": [
+    "local"
+  ],
+  "includedComponents": [],
+  "relationships": {},
+  "caveats": [
+    "Playwright CLI·Playwright Test와 구분한 MCP 서버 항목이다.",
+    "연결 성공만으로 사이트별 조작 성공이나 테스트 품질이 검증되는 것은 아니다."
+  ],
+  "starterPrompt": "내가 지정한 테스트 사이트에서 조회 화면의 탐색 흐름을 확인하고 재현 가능한 문제와 화면 위치를 정리해줘.",
+  "starterPromptStatus": "editorial-example-not-execution-tested",
+  "publicationStatus": "published",
+  "reviewStatus": "source-reviewed",
+  "sourceCheckedAt": "2026-11-14",
+  "guideUpdatedAt": "2026-11-14",
+  "verifiedAt": null,
+  "verification": {
+    "installation": "not-tested",
+    "connection": "not-tested",
+    "representativeTask": "not-tested"
+  },
+  "youtubeEvidence": {
+    "checkedAt": "2026-11-14",
+    "selectionBasis": "명시적으로 같은 도구를 소개한 서로 다른 채널 2개 이상. 검색 발견 표본이며 전체 인기순위가 아님.",
+    "uniqueVideoCount": 3,
+    "uniqueChannelCount": 3,
+    "confirmedPreferredWindowChannelCount": 3,
+    "undatedVideoCount": 0,
+    "outsidePreferredWindowVideoCount": 0,
+    "containsDateCaveats": false,
+    "researchFile": "docs/research/youtube-mcp-2026-11-14.json",
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=e-ynk72_Z3c",
+        "title": "Playwright MCP Tutorial 2026 | AI Browser Automation with Codex, Claude Code & VS Code",
+        "channel": "Mitchell Agoma",
+        "publishedAt": "2026-07-18",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명에 공식 Playwright MCP 설치와 브라우저 탐색·테스트 전환을 명시하고 환경별 설정 챕터를 제공한다.",
+        "timestampSeconds": 1278,
+        "timestampLabel": "Configure Playwright MCP in Codex",
+        "commercialContext": "설명에 AI 생성 내레이션·썸네일 사용 공개. 협찬 여부는 확인하지 않음.",
+        "videoId": "e-ynk72_Z3c",
+        "mentionSummary": "설명에 공식 Playwright MCP 설치와 브라우저 탐색·테스트 전환을 명시하고 환경별 설정 챕터를 제공한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=e-ynk72_Z3c&t=1278s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=h3lPYb6SfQM",
+        "title": "Playwright MCP + Copilot: AI Driven Test Automation",
+        "channel": "Testing Funda by Zeeshan Asghar",
+        "publishedAt": "2026-03-30",
+        "language": "en",
+        "evidenceLevel": "youtube_description_and_chapters",
+        "mention": "설명과 챕터가 Playwright MCP와 Copilot 연결, 서버 확인, 로그인 흐름과 테스트 생성을 명시한다.",
+        "timestampSeconds": 201,
+        "timestampLabel": "Integrating Playwright MCP server with GitHub Copilot",
+        "commercialContext": "교육 채널의 홍보 링크가 있음. 협찬 여부는 확인하지 않음.",
+        "videoId": "h3lPYb6SfQM",
+        "mentionSummary": "설명과 챕터가 Playwright MCP와 Copilot 연결, 서버 확인, 로그인 흐름과 테스트 생성을 명시한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=h3lPYb6SfQM&t=201s",
+        "withinPreferredWindow": true
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=uiPSA1htycs",
+        "title": "The Best MCP Servers for AI Coding Agents",
+        "channel": "Program With Erik",
+        "publishedAt": "2026-09-01",
+        "language": "en",
+        "evidenceLevel": "youtube_description",
+        "mention": "All MCP Server Links의 Browser debugging and testing 묶음에 microsoft/playwright-mcp 공식 저장소를 명시한다.",
+        "timestampSeconds": null,
+        "commercialContext": "뉴스레터와 개인 사이트 링크가 있음. 협찬 여부는 확인하지 않음.",
+        "videoId": "uiPSA1htycs",
+        "mentionSummary": "All MCP Server Links의 Browser debugging and testing 묶음에 microsoft/playwright-mcp 공식 저장소를 명시한다.",
+        "checkedAt": "2026-11-14",
+        "deepLink": "https://www.youtube.com/watch?v=uiPSA1htycs",
+        "withinPreferredWindow": true
+      }
+    ],
+    "supplementalVideos": []
+  }
+}

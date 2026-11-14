@@ -6,6 +6,7 @@ import { randomBytes } from "node:crypto";
 import { config } from "./config.js";
 import { generateImage } from "./google-image-api.js";
 import { sendVerificationEmail, sendEmailChangeConfirmation } from "./mailer.js";
+import { buildAiTools } from "../scripts/build-ai-tools.mjs";
 import {
   PASSWORD_MIN_LENGTH,
   adminSessionCookie,
@@ -84,6 +85,30 @@ const MIME_TYPES = new Map([
   [".zip", "application/zip"],
 ]);
 
+let aiToolsPreviewPromise;
+async function serveAiTools(req, res, pathname) {
+  const match = /^\/ai-tools(?:\/([a-z0-9-]+))?\/?$/u.exec(pathname);
+  if (!match) return sendText(res, 404, "Not found");
+  if (!pathname.endsWith("/")) {
+    const query = new URL(req.url, "http://localhost").search;
+    res.writeHead(302, { Location: `${pathname}/${query}`, "Cache-Control": "no-store" });
+    return res.end();
+  }
+  const outputDir = path.join(config.repoRoot, "tmp", "ai-tools-preview");
+  if (!aiToolsPreviewPromise) {
+    aiToolsPreviewPromise = buildAiTools({ repoRoot: config.repoRoot, outputDir }).catch((error) => {
+      aiToolsPreviewPromise = null;
+      throw error;
+    });
+  }
+  const { pages } = await aiToolsPreviewPromise;
+  const relative = `ai-tools/${match[1] ? match[1] + "/" : ""}index.html`;
+  if (!pages.some((page) => page.path === relative)) return sendText(res, 404, "Not found");
+  const body = await fs.readFile(path.join(outputDir, relative));
+  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Content-Length": body.length, "Cache-Control": "no-store" });
+  res.end(body);
+}
+
 function sendJson(res, statusCode, payload) {
   const body = JSON.stringify(payload, null, 2);
   res.writeHead(statusCode, {
@@ -128,7 +153,7 @@ function resolveStaticPath(urlPath) {
 
   const segments = decoded.split("/").filter(Boolean);
   const blockedSegments = new Set([
-    "server", "scripts", "docs", "node_modules", "backup", "backups",
+    "server", "scripts", "docs", "content", "node_modules", "backup", "backups",
     "tmp", "scratch", "partials", "비주얼 믹스 가이드",
   ]);
   const basename = segments.at(-1)?.toLowerCase() || "";
@@ -1660,6 +1685,9 @@ async function handleRequest(req, res) {
     if (url.pathname === "/sitemap.xml") {
       res.writeHead(302, { Location: "/static-pages/sitemap.xml", "Cache-Control": "no-store" });
       return res.end();
+    }
+    if (url.pathname === "/ai-tools" || url.pathname.startsWith("/ai-tools/")) {
+      return serveAiTools(req, res, url.pathname);
     }
     if (url.pathname === "/guides" || url.pathname === "/guides/") {
       res.writeHead(302, { Location: "/static-pages/guides/index.html", "Cache-Control": "no-store" });

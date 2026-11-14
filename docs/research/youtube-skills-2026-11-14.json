@@ -1,0 +1,275 @@
+{
+  "researchedAt": "2026-11-14",
+  "preferredPublishedWindow": {
+    "from": "2025-11-14",
+    "to": "2026-11-14"
+  },
+  "methodology": {
+    "selection": "직접 YouTube 검색 색인에서 제목·설명·챕터에 특정 스킬이 나타나는 항목을 우선 선정했다. 서로 다른 채널 2개 이상을 반복 언급 근거로 삼되 날짜·근거 수준을 별도로 기록했다.",
+    "limitations": [
+      "유튜브 전체를 조사한 순위가 아니라 검색으로 발견한 표본이다.",
+      "영상 전체를 재생하거나 모든 자막을 검토하지 않았다. 설명·챕터·제목과 공식 배포처를 조사했다.",
+      "일부 YouTube 원문 열기는 throttled로 실패하여 검색에 색인된 YouTube 설명을 사용했다.",
+      "각 도구를 설치하거나 실행하지 않았으며 실제 업무 품질은 검증하지 않았다.",
+      "오래된 영상의 설치 명령·개수·가격은 현재 안내로 그대로 전재하지 않는다."
+    ],
+    "counting": "동일 영상의 미러·요약·재검색은 추가 언급으로 계산하지 않는다. 제공 업체의 공식 설명과 제3자 영상은 별도 근거로 취급한다.",
+    "languagesObserved": [
+      "en",
+      "ko",
+      "pl",
+      "ja"
+    ]
+  },
+  "items": [
+    {
+      "id": "anthropic-skill-creator",
+      "name": "Skill Creator",
+      "type": "skill",
+      "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+      "officialEvidenceUrl": "https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md",
+      "category": "반복업무·서비스 연결",
+      "outcome": "반복하는 업무 절차를 재사용 가능한 스킬로 만들고 예제와 평가로 개선하기",
+      "platformNotes": "공식 Claude 스킬 구현. 사용환경별 설치·평가 기능 제공 여부는 별도 확인이 필요하다.",
+      "costNotes": "공개 스킬 소스와 별개로 실행하는 AI 서비스의 계정·사용료 조건이 적용된다. 금액은 이번 조사에서 확인하지 않았다.",
+      "caveats": [
+        "동명 커뮤니티 skill-creator와 Anthropic 구현을 구분한다.",
+        "영상의 벤치마크 결과를 이 카탈로그의 검증 결과로 표시하지 않는다."
+      ],
+      "relations": {
+        "includes": [],
+        "related": [
+          "anthropic-document-skills"
+        ],
+        "distributionNote": "스킬은 플러그인 형태로 묶여 배포될 수 있다. 동일 기능을 별도 추천처럼 중복 집계하지 않는다."
+      },
+      "evidenceStatus": "repeated_mentions_source_checked_not_tested",
+      "independentChannelCount": 2,
+      "withinPreferredWindowChannelCount": 2,
+      "sourceVideos": [
+        {
+          "videoId": "KjEFy5wjFQg",
+          "url": "https://www.youtube.com/watch?v=KjEFy5wjFQg",
+          "title": "Top 10 Claude Code Skills, Plugins & CLIs (April 2026)",
+          "channel": "Chase AI",
+          "publishedAt": "2026-04-09",
+          "language": "en",
+          "evidenceLevel": "youtube_indexed_description_and_chapter",
+          "mentionSummary": "10개 추천 도구 목록에서 Skill Creator를 명시하고 12:05부터 해당 항목을 다룬다.",
+          "timestampSeconds": 725,
+          "creatorCompanionUrl": "https://chaseai.io/blog/top-10-claude-code-skills-plugins-clis-april-2026"
+        },
+        {
+          "videoId": "hSv7ZZ_5M7U",
+          "url": "https://www.youtube.com/watch?v=hSv7ZZ_5M7U",
+          "title": "The Only Claude Skill You Need (skill-creator)",
+          "channel": "Dan Schwab",
+          "publishedAt": "2026-03-20",
+          "language": "en",
+          "evidenceLevel": "youtube_indexed_title_and_description",
+          "mentionSummary": "설명에서 Anthropic 공식 Skill Creator를 명시하고 스킬 생성 과정을 소개한다.",
+          "timestampSeconds": null
+        }
+      ]
+    },
+    {
+      "id": "remotion-agent-skills",
+      "name": "Remotion Agent Skills",
+      "type": "skill",
+      "officialUrl": "https://www.remotion.dev/docs/ai/skills",
+      "category": "홍보·디자인",
+      "outcome": "영상 장면과 모션 그래픽을 코드로 만들고 미리보기·수정·영상 출력으로 연결하기",
+      "platformNotes": "공식 문서가 Claude Code, Codex, Cursor, Kimi Code, OpenCode 등을 안내한다. Remotion 프로젝트와 실행환경이 필요하다.",
+      "costNotes": "스킬 설치와 AI 이용료, Remotion 사용 조건, 추가 음성·이미지 서비스 비용은 별도다. 현재 금액이나 무료 범위는 확정하지 않았다.",
+      "caveats": [
+        "영상에 등장하는 별도 음성 생성 스킬이나 ElevenLabs가 Remotion 스킬에 자동 포함된다고 안내하지 않는다.",
+        "1월 영상의 스킬 구성과 현재 공식 스킬 목록은 다를 수 있다."
+      ],
+      "relations": {
+        "includes": [
+          "remotion-best-practices",
+          "remotion-create",
+          "remotion-render"
+        ],
+        "related": [],
+        "distributionNote": "Remotion 공식 스킬 묶음의 대표 항목으로 등록한다. 개별 하위 스킬과 중복 추천 집계를 하지 않는다."
+      },
+      "evidenceStatus": "repeated_mentions_source_checked_not_tested",
+      "independentChannelCount": 2,
+      "withinPreferredWindowChannelCount": 2,
+      "sourceVideos": [
+        {
+          "videoId": "FVrNRnfC8oM",
+          "url": "https://www.youtube.com/watch?v=FVrNRnfC8oM",
+          "title": "This Claude Skill Just Changed EVERYTHING (Remotion)",
+          "channel": "Brock Mesarich | AI for Non Techies",
+          "publishedAt": "2026-01-25",
+          "language": "en",
+          "evidenceLevel": "youtube_indexed_description_and_chapter",
+          "mentionSummary": "Remotion 스킬 설치와 영상 생성을 소개하며 5:15에 사용법, 8:00에 생성 과정을 배치한다.",
+          "timestampSeconds": 315
+        },
+        {
+          "videoId": "7OR-L0AySn8",
+          "url": "https://www.youtube.com/watch?v=7OR-L0AySn8",
+          "title": "How people are generating videos with Claude Code (Remotion Skill)",
+          "channel": "Leonardo Grigorio | Build & Ship with AI",
+          "publishedAt": "2026-01-22",
+          "language": "en",
+          "evidenceLevel": "youtube_indexed_description_and_chapter",
+          "mentionSummary": "공식 Agent Skills 설치와 인터페이스 애니메이션 제작·수정을 소개한다.",
+          "timestampSeconds": 34
+        }
+      ],
+      "supplementalVideos": [
+        {
+          "videoId": "S-foS0vfqIg",
+          "url": "https://www.youtube.com/watch?v=S-foS0vfqIg",
+          "title": "Claude Code 영상 제작 기능 써봤는데 미쳤습니다 | 클로드 코드 + Remotion Skill Ai 영상 자동화 실전 가이드",
+          "channel": "AI싱크클럽",
+          "publishedAt": null,
+          "language": "ko",
+          "evidenceLevel": "youtube_indexed_title_with_mirror_channel_metadata",
+          "mentionSummary": "제목에서 Remotion Skill을 이용한 영상 자동화 실전 가이드를 명시한다. 게시일은 확정하지 않았다.",
+          "timestampSeconds": null,
+          "metadataSupportingUrl": "https://zolotube.com/channel?id=UCouEEn-xhyTN9K6wSXjBbVQ",
+          "metadataCaveat": "채널명은 미러 채널 페이지로 보강. 본문·게시일 원문 재확인 필요.",
+          "qualifiesAsDeepMentionEvidence": false
+        }
+      ]
+    },
+    {
+      "id": "obsidian-skills",
+      "name": "Obsidian Skills",
+      "type": "skill",
+      "officialUrl": "https://github.com/obsidianmd/obsidian-skills",
+      "previousOfficialUrl": "https://github.com/kepano/obsidian-skills",
+      "sourceMigrationObserved": "2026-11-14 원본 URL이 obsidianmd/obsidian-skills로 리다이렉트되는 것을 확인했다.",
+      "category": "조사·자료 정리",
+      "outcome": "Obsidian 노트의 링크·속성·Bases·Canvas를 활용해 자료와 업무 지식을 정리하기",
+      "platformNotes": "공식 저장소는 스킬 설치와 Claude Code·Codex·Cursor 플러그인 경로를 함께 안내한다. 안내는 실제 선택 환경별로 분리해야 한다.",
+      "costNotes": "공식 저장소에 MIT 라이선스가 표시되어 있다. 실행 AI·Obsidian 부가 서비스 등의 이용 조건은 별도 확인 대상이다.",
+      "caveats": [
+        "Obsidian 앱 내부의 일반 커뮤니티 플러그인과 AI 에이전트용 스킬 묶음을 구분한다.",
+        "영상의 5개 구성과 현재 저장소의 추가 구성은 다르므로 하위 개수를 고정하지 않는다.",
+        "한국어·영어 외 보완 표본으로 폴란드어·일본어 영상이 포함된다."
+      ],
+      "relations": {
+        "includes": [
+          "obsidian-markdown",
+          "obsidian-bases",
+          "json-canvas",
+          "obsidian-cli"
+        ],
+        "related": [],
+        "distributionNote": "스킬 묶음이며 플러그인 배포 방식도 있다. 같은 프로젝트는 대표 카드 하나에서 제공 방식을 선택한다."
+      },
+      "evidenceStatus": "repeated_mentions_source_checked_not_tested",
+      "independentChannelCount": 2,
+      "withinPreferredWindowChannelCount": 2,
+      "sourceVideos": [
+        {
+          "videoId": "z-4t8MgIbCo",
+          "url": "https://www.youtube.com/watch?v=z-4t8MgIbCo",
+          "title": "Top 10 Skills, Plugins, and CLIs at Claude Code (April 2026)",
+          "channel": "Robert Szewczyk",
+          "publishedAt": "2026-04-16",
+          "language": "pl",
+          "evidenceLevel": "youtube_indexed_description",
+          "mentionSummary": "설명에 Obsidian Skills를 별도 항목으로 명시하고 Obsidian 지식베이스와 Claude Code 통합에 연결한다.",
+          "timestampSeconds": null,
+          "titleLanguageNote": "검색 결과의 번역 제목을 기록했다."
+        },
+        {
+          "videoId": "2pc9uCOe8aA",
+          "url": "https://www.youtube.com/watch?v=2pc9uCOe8aA",
+          "title": "The Official Obsidian AI Plugin (obsidian-skills) Is a Game Changer! A Guide to Installation and ...",
+          "channel": "NAOYA IMURA / Claude Cowork × Obsidian 実践",
+          "publishedAt": "2026-03-30",
+          "language": "ja",
+          "evidenceLevel": "youtube_indexed_description_with_transcript_mirror_metadata",
+          "mentionSummary": "YouTube 검색 설명에서 obsidian-skills의 5가지 스킬 설치·활용을 명시한다. Glasp에 표시된 자막 일부는 obsidian-skills 소개를 확인하는 보완 자료로 사용했다.",
+          "timestampSeconds": null,
+          "metadataSupportingUrl": "https://glasp.co/youtube/2pc9uCOe8aA",
+          "metadataCaveat": "채널명·정확한 게시일은 Glasp 메타데이터로 보강했으며 전체 자막을 검증한 것은 아니다.",
+          "titleLanguageNote": "검색 결과의 번역 제목을 기록했다."
+        }
+      ]
+    },
+    {
+      "id": "anthropic-pptx",
+      "name": "PPTX (Anthropic)",
+      "type": "skill",
+      "officialUrl": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+      "officialEvidenceUrl": "https://raw.githubusercontent.com/anthropics/skills/main/skills/pptx/SKILL.md",
+      "category": "발표·제안서",
+      "outcome": "편집 가능한 PowerPoint 발표자료를 생성·수정하고 템플릿·발표자 메모를 다루기",
+      "platformNotes": "공식 Claude 스킬 구현. document-skills 플러그인으로 묶어 설치하는 경로와 Claude 내장 기능은 구분해 안내한다.",
+      "costNotes": "현재 공식 저장소 README는 문서 스킬을 Apache 2.0으로 안내한다. 실행 AI 서비스의 계정·요금은 별도다.",
+      "caveats": [
+        "영상의 Claude 내장 PPTX 기능과 GitHub 참조 구현은 동일 동작을 보장하지 않는다.",
+        "두 번째 반복 언급 근거는 우선 기간 시작보다 8일 오래된 영상이다. 최근 12개월 반복 언급 순위로 표시하지 않는다.",
+        "기획안 생성용 ppt-slide-planner와 실제 PPTX 파일 편집·생성용 이 스킬을 구분한다."
+      ],
+      "relations": {
+        "includes": [],
+        "includedBy": [
+          "anthropic-document-skills"
+        ],
+        "related": [
+          "ppt-slide-planner"
+        ],
+        "distributionNote": "document-skills 묶음에 포함된 개별 스킬. 묶음 설치 시 재설치가 필요한 것처럼 안내하지 않는다."
+      },
+      "evidenceStatus": "repeated_mentions_with_out_of_window_source_not_tested",
+      "independentChannelCount": 2,
+      "withinPreferredWindowChannelCount": 1,
+      "sourceVideos": [
+        {
+          "videoId": "F6JTJ9GeSOY",
+          "url": "https://www.youtube.com/watch?v=F6JTJ9GeSOY",
+          "title": "Claude Code's Document Skills Are an UNFAIR ADVANTAGE",
+          "channel": "Mark Kashef",
+          "publishedAt": "2025-12-04",
+          "language": "en",
+          "evidenceLevel": "youtube_indexed_description",
+          "mentionSummary": "설명에서 PowerPoint를 포함한 문서 산출물을 재현하고 Anthropic 공식 Claude Code 스킬을 가져오는 방법을 명시한다.",
+          "timestampSeconds": null
+        },
+        {
+          "videoId": "wO8EboopboU",
+          "url": "https://www.youtube.com/watch?v=wO8EboopboU",
+          "title": "Claude Skills Explained - Step-by-Step Tutorial for Beginners",
+          "channel": "Kevin Stratvert",
+          "publishedAt": "2025-11-06",
+          "language": "en",
+          "evidenceLevel": "youtube_indexed_description_with_creator_page",
+          "mentionSummary": "PowerPoint skill을 사용한 브랜드 발표자료 제작을 명시한다.",
+          "timestampSeconds": null,
+          "outsidePreferredWindow": true,
+          "creatorCompanionUrl": "https://kevinstratvert.com/2025/11/06/claude-skills-explained-step-by-step-tutorial-for-beginners/",
+          "sponsorshipDisclosed": "Intuit/QuickBooks Online",
+          "host": "David DeWinter"
+        }
+      ]
+    }
+  ],
+  "deferred": [
+    {
+      "name": "XLSX / DOCX / PDF (Anthropic)",
+      "reason": "공식 배포처와 Mark Kashef 영상은 확인했으나 각 개별 스킬을 명시하는 두 번째 독립 YouTube 원문 근거를 이번 표본에서 충분히 확보하지 못해 반복 언급 목록 확정은 보류한다."
+    },
+    {
+      "name": "Talal Awad의 Excel·PowerPoint 소개 영상",
+      "url": "https://www.youtube.com/watch?v=K4zsTK2lsp4",
+      "reason": "미러에 설명과 챕터는 있으나 원문 열기가 throttled였다. 보완 후보로만 남기며 위 반복 언급 수에는 포함하지 않았다."
+    }
+  ],
+  "officialSources": [
+    "https://github.com/anthropics/skills",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md",
+    "https://raw.githubusercontent.com/anthropics/skills/main/skills/pptx/SKILL.md",
+    "https://github.com/obsidianmd/obsidian-skills",
+    "https://www.remotion.dev/docs/ai/skills"
+  ]
+}
